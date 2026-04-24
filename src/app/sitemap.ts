@@ -4,7 +4,7 @@ import { adminClient } from '@/lib/supabase'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books-org.vercel.app'
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books.org'
   const supabase = adminClient()
 
   const [{ data: books }, { data: countries }, { data: bans }] = await Promise.all([
