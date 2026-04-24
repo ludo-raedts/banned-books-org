@@ -16,7 +16,31 @@ const SOURCES = [
     name: 'Open Library',
     url: 'https://openlibrary.org',
     description:
-      'Book cover images and descriptions are fetched from the Open Library API (openlibrary.org), a project of the Internet Archive. Open Library data is published under a CC0 public domain dedication.',
+      'Book cover images and descriptions are fetched from the Open Library API, a project of the Internet Archive. Open Library data is published under a CC0 public domain dedication.',
+  },
+  {
+    name: 'PEN America',
+    url: 'https://pen.org',
+    description:
+      'PEN America tracks and publishes detailed data on book bans in the United States, including school and library challenges. Their Index of School Book Bans is one of the most comprehensive records of US educational censorship.',
+  },
+  {
+    name: 'American Library Association (ALA)',
+    url: 'https://www.ala.org',
+    description:
+      'The ALA\'s Office for Intellectual Freedom documents challenged and banned books across the United States. Their annual lists of the most frequently challenged books are a key reference for US school and library bans.',
+  },
+  {
+    name: 'Reporters Without Borders (RSF)',
+    url: 'https://rsf.org',
+    description:
+      'RSF monitors press and publishing freedom worldwide, including government-level book bans and censorship. Their annual World Press Freedom Index provides context for bans in authoritarian regimes.',
+  },
+  {
+    name: 'Index on Censorship',
+    url: 'https://www.indexoncensorship.org',
+    description:
+      'Index on Censorship is a UK-based organisation that publishes reports and case studies on censorship globally, including book bans and literary suppression across different political systems.',
   },
 ]
 
