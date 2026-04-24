@@ -97,7 +97,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
         else map.set(ban.country_code, { code: ban.country_code, name, count: 1 })
       }
     }
-    return [...map.values()].sort((a, b) => b.count - a.count)
+    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name))
   }, [books])
 
   const filtered = useMemo(() => {
