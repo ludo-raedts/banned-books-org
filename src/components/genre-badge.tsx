@@ -14,6 +14,8 @@ const GENRES: Record<string, { label: string; classes: string }> = {
   'romance':           { label: 'Romance',            classes: 'bg-rose-100 text-rose-700' },
   'thriller':          { label: 'Thriller',           classes: 'bg-orange-100 text-orange-700' },
   'magical-realism':   { label: 'Magical realism',    classes: 'bg-purple-100 text-purple-700' },
+  'graphic-novel':     { label: 'Graphic novel',      classes: 'bg-emerald-100 text-emerald-700' },
+  'horror':            { label: 'Horror',             classes: 'bg-red-100 text-red-700' },
 }
 
 export function genreLabel(slug: string) {
