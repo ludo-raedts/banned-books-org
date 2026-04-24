@@ -10,8 +10,8 @@ import { readFileSync } from 'fs'
 const supabase = adminClient()
 const BATCH_DELAY_MS = 2000
 const COVER_DELAY_MS = 300
-const MIN_COUNT = 15          // only books with >= this many ban instances
-const MAX_BOOKS  = 400        // safety ceiling
+const MIN_COUNT = 5           // only books with >= this many ban instances
+const MAX_BOOKS  = 600        // safety ceiling
 
 interface RankedBook {
   title: string
