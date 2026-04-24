@@ -85,7 +85,12 @@ export default async function HomePage({
     ? books.filter((b) => getReasons(b).includes(activeReason))
     : books
 
-  const [featured, ...rest] = filtered
+  const dayOfYear = Math.floor(
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86_400_000
+  )
+  const featuredIndex = filtered.length > 0 ? dayOfYear % filtered.length : 0
+  const featured = filtered[featuredIndex]
+  const rest = filtered.filter((_, i) => i !== featuredIndex)
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
