@@ -10,9 +10,9 @@ import GenreBadge from '@/components/genre-badge'
 type Ban = {
   id: number
   year_started: number | null
-  action_type: string
   status: string
   countries: { name_en: string } | null
+  scopes: { label_en: string } | null
   ban_reason_links: { reasons: { slug: string } | null }[]
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
 }
@@ -50,8 +50,9 @@ export default async function BookPage({
       id, title, slug, cover_url, description, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
-        id, year_started, action_type, status,
+        id, year_started, status,
         countries(name_en),
+        scopes(label_en),
         ban_reason_links(reasons(slug)),
         ban_source_links(ban_sources(source_name, source_url))
       )
@@ -72,7 +73,6 @@ export default async function BookPage({
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
-      {/* Back link */}
       <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors">
         ← All books
       </Link>
@@ -131,7 +131,7 @@ export default async function BookPage({
                 <tr>
                   <th className="text-left px-4 py-2.5">Country</th>
                   <th className="text-left px-4 py-2.5">Year</th>
-                  <th className="text-left px-4 py-2.5">Type</th>
+                  <th className="text-left px-4 py-2.5">Where</th>
                   <th className="text-left px-4 py-2.5">Reasons</th>
                   <th className="text-left px-4 py-2.5">Source</th>
                 </tr>
@@ -144,14 +144,16 @@ export default async function BookPage({
                       <td className="px-4 py-3 font-medium text-gray-900">
                         {ban.countries?.name_en ?? '—'}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">
+                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
                         {ban.year_started ?? '—'}
-                      </td>
-                      <td className="px-4 py-3 text-gray-600 capitalize">
-                        {ban.action_type}
                         {ban.status === 'historical' && (
-                          <span className="ml-1.5 text-xs text-gray-400">(historical)</span>
+                          <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+                            lifted
+                          </span>
                         )}
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">
+                        {ban.scopes?.label_en ?? '—'}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
