@@ -46,15 +46,15 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="flex-1">{children}</div>
-        <footer className="border-t mt-10">
-          <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400">
+        <footer className="border-t border-gray-200 dark:border-gray-800 mt-10">
+          <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400 dark:text-gray-500">
             <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>
             <nav className="flex flex-wrap gap-x-5 gap-y-1">
-              <Link href="/scope/school" className="hover:text-gray-700 transition-colors">School bans</Link>
-              <Link href="/scope/government" className="hover:text-gray-700 transition-colors">Government bans</Link>
-              <Link href="/sources" className="hover:text-gray-700 transition-colors">Sources</Link>
+              <Link href="/scope/school" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">School bans</Link>
+              <Link href="/scope/government" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Government bans</Link>
+              <Link href="/sources" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Sources</Link>
             </nav>
           </div>
         </footer>

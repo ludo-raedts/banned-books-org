@@ -60,12 +60,12 @@ function FilterPill({
 }) {
   const activeClass = color === 'red'
     ? 'bg-red-600 text-white border-red-600'
-    : 'bg-gray-900 text-white border-gray-900'
+    : 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100'
   return (
     <button
       onClick={onClick}
       className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
-        active ? activeClass : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+        active ? activeClass : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
       }`}
     >
       {children}
@@ -166,7 +166,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
           placeholder="Search by title or author…"
           value={q}
           onChange={e => setQ(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 bg-white"
+          className="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
         />
       </div>
 
@@ -178,7 +178,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
         <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
         <FilterPill active={scope === 'public_library'} onClick={() => setScope(scope === 'public_library' ? null : 'public_library')}>📚 Libraries</FilterPill>
 
-        <span className="self-center text-gray-200 select-none">|</span>
+        <span className="self-center text-gray-200 dark:text-gray-700 select-none">|</span>
 
         {/* Active bans only */}
         <FilterPill active={activeOnly} onClick={() => setActiveOnly(!activeOnly)} color="red">
@@ -190,8 +190,10 @@ export default function BookBrowser({ books }: { books: Book[] }) {
           <select
             value={country}
             onChange={e => setCountry(e.target.value)}
-            className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white cursor-pointer focus:outline-none ${
-              country ? 'border-gray-900 text-gray-900' : 'border-gray-200 text-gray-600 hover:border-gray-400'
+            className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+              country
+                ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
+                : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
             }`}
           >
             <option value="">🌍 All countries</option>
@@ -202,7 +204,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
           <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
         </div>
 
-        <span className="self-center text-gray-200 select-none">|</span>
+        <span className="self-center text-gray-200 dark:text-gray-700 select-none">|</span>
 
         {/* Reasons */}
         {FILTER_REASONS.map(slug => (
@@ -219,7 +221,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
         {anyFilter && (
           <button
             onClick={clearAll}
-            className="px-3 py-1.5 rounded-full text-sm border border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors"
+            className="px-3 py-1.5 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             ✕ Clear
           </button>
@@ -227,50 +229,50 @@ export default function BookBrowser({ books }: { books: Book[] }) {
       </div>
 
       {/* ── Result count ── */}
-      <p className="text-sm text-gray-400 mb-8">
+      <p className="text-sm text-gray-400 dark:text-gray-500 mb-8">
         {anyFilter
-          ? <><span className="font-medium text-gray-700">{filtered.length.toLocaleString()}</span> of {books.length.toLocaleString()} books</>
-          : <><span className="font-medium text-gray-700">{books.length.toLocaleString()}</span> books</>
+          ? <><span className="font-medium text-gray-700 dark:text-gray-200">{filtered.length.toLocaleString()}</span> of {books.length.toLocaleString()} books</>
+          : <><span className="font-medium text-gray-700 dark:text-gray-200">{books.length.toLocaleString()}</span> books</>
         }
       </p>
 
       {filtered.length === 0 && (
-        <p className="text-gray-500 text-sm">No books match your filters. <button onClick={clearAll} className="underline">Clear filters</button></p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">No books match your filters. <button onClick={clearAll} className="underline">Clear filters</button></p>
       )}
 
       {/* ── Featured ── */}
       {featured && (
         <Link href={`/books/${featured.slug}`} className="block mb-10 group">
-          <div className="flex gap-6 border rounded-xl p-5 hover:border-gray-400 transition-colors bg-white">
+          <div className="flex gap-6 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:border-gray-400 dark:hover:border-gray-500 transition-colors bg-white dark:bg-gray-900">
             <div className="shrink-0">
               {featured.cover_url ? (
                 <Image src={featured.cover_url} alt={`Cover of ${featured.title}`} width={110} height={165}
                   className="rounded shadow-sm object-cover" priority sizes="110px" />
               ) : (
-                <div className="w-[110px] h-[165px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs text-center p-2">
+                <div className="w-[110px] h-[165px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
                   No cover
                 </div>
               )}
             </div>
             <div className="flex flex-col justify-center gap-2 min-w-0">
               <div>
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Featured</p>
+                <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Featured</p>
                 <h2 className="text-xl font-bold group-hover:underline leading-snug">{featured.title}</h2>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                   {authorName(featured)}
                   {featured.first_published_year && (
-                    <span className="text-gray-400"> · {featured.first_published_year}</span>
+                    <span className="text-gray-400 dark:text-gray-500"> · {featured.first_published_year}</span>
                   )}
                 </p>
               </div>
               {featured.description && (
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{featured.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">{featured.description}</p>
               )}
               <div className="flex flex-wrap gap-1.5">
                 {featured.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
                 {getReasons(featured.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
               </div>
-              <p className="text-sm font-medium text-red-600">{banLabel(featured.bans)}</p>
+              <p className="text-sm font-medium text-red-500 dark:text-red-400">{banLabel(featured.bans)}</p>
             </div>
           </div>
         </Link>
@@ -287,21 +289,21 @@ export default function BookBrowser({ books }: { books: Book[] }) {
                     className="rounded shadow-sm object-cover w-full"
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 23vw" />
                 ) : (
-                  <div className="w-full aspect-[2/3] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs text-center p-3">
+                  <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
                     {book.title}
                   </div>
                 )}
               </div>
               <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-              <p className="text-xs text-gray-500 mt-0.5">{authorName(book)}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{authorName(book)}</p>
               {book.description && (
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">{book.description}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description}</p>
               )}
               <div className="flex flex-wrap gap-1 mt-1.5">
                 {book.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
                 {getReasons(book.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
               </div>
-              <p className="text-xs font-medium text-red-600 mt-1.5">{banLabel(book.bans)}</p>
+              <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1.5">{banLabel(book.bans)}</p>
             </Link>
           ))}
         </div>

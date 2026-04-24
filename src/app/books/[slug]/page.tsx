@@ -108,13 +108,13 @@ export default async function BookPage({
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All books
       </Link>
 
       {/* Hero */}
-      <div className="flex gap-8 mb-10">
-        <div className="shrink-0">
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10">
+        <div className="shrink-0 flex justify-center sm:block">
           {book.cover_url ? (
             <Image
               src={book.cover_url}
@@ -122,19 +122,20 @@ export default async function BookPage({
               width={160}
               height={240}
               className="rounded-lg shadow-md object-cover"
+              priority
             />
           ) : (
-            <div className="w-[160px] h-[240px] bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm text-center p-4">
+            <div className="w-[160px] h-[240px] bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm text-center p-4">
               No cover
             </div>
           )}
         </div>
         <div className="flex flex-col justify-center gap-2 min-w-0">
           <h1 className="text-2xl font-bold leading-snug">{book.title}</h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {author}
             {book.first_published_year && (
-              <span className="text-gray-400"> · {book.first_published_year}</span>
+              <span className="text-gray-400 dark:text-gray-500"> · {book.first_published_year}</span>
             )}
           </p>
           {book.genres.length > 0 && (
@@ -144,7 +145,7 @@ export default async function BookPage({
               ))}
             </div>
           )}
-          <p className="text-sm font-medium text-red-600">
+          <p className="text-sm font-medium text-red-500 dark:text-red-400">
             Banned in {book.bans.length}{' '}
             {book.bans.length === 1 ? 'country' : 'countries'}
           </p>
@@ -153,76 +154,78 @@ export default async function BookPage({
 
       {/* Description */}
       {book.description && (
-        <p className="text-gray-700 leading-relaxed mb-10">{book.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-10">{book.description}</p>
       )}
 
       {/* Bans table */}
       {sortedBans.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3">Bans</h2>
-          <div className="border rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-2.5">Country</th>
-                  <th className="text-left px-4 py-2.5">Year</th>
-                  <th className="text-left px-4 py-2.5">Where</th>
-                  <th className="text-left px-4 py-2.5">Reasons</th>
-                  <th className="text-left px-4 py-2.5">Source</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {sortedBans.map((ban) => {
-                  const source = ban.ban_source_links[0]?.ban_sources
-                  return (
-                    <tr key={ban.id} className="align-top">
-                      <td className="px-4 py-3 font-medium text-gray-900">
-                        <Link
-                          href={`/countries/${ban.country_code}`}
-                          className="hover:underline"
-                        >
-                          {ban.countries?.name_en ?? ban.country_code}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                        {ban.year_started ?? '—'}
-                        {ban.status === 'historical' && (
-                          <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
-                            lifted
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-gray-600">
-                        {ban.scopes?.label_en ?? '—'}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-wrap gap-1">
-                          {ban.ban_reason_links.map((l) =>
-                            l.reasons ? (
-                              <ReasonBadge key={l.reasons.slug} slug={l.reasons.slug} />
-                            ) : null
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        {source ? (
-                          <a
-                            href={source.source_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
+          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">
+                  <tr>
+                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Country</th>
+                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Year</th>
+                    <th className="text-left px-4 py-2.5 whitespace-nowrap hidden sm:table-cell">Where</th>
+                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Reasons</th>
+                    <th className="text-left px-4 py-2.5 whitespace-nowrap hidden sm:table-cell">Source</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {sortedBans.map((ban) => {
+                    const source = ban.ban_source_links[0]?.ban_sources
+                    return (
+                      <tr key={ban.id} className="align-top">
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                          <Link
+                            href={`/countries/${ban.country_code}`}
+                            className="hover:underline"
                           >
-                            {source.source_name}
-                          </a>
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                            {ban.countries?.name_en ?? ban.country_code}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                          {ban.year_started ?? '—'}
+                          {ban.status === 'historical' && (
+                            <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                              lifted
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                          {ban.scopes?.label_en ?? '—'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-wrap gap-1">
+                            {ban.ban_reason_links.map((l) =>
+                              l.reasons ? (
+                                <ReasonBadge key={l.reasons.slug} slug={l.reasons.slug} />
+                              ) : null
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 hidden sm:table-cell">
+                          {source ? (
+                            <a
+                              href={source.source_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+                            >
+                              {source.source_name}
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 dark:text-gray-600">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       )}
@@ -230,12 +233,12 @@ export default async function BookPage({
       {/* Find this book */}
       <section>
         <h2 className="text-lg font-semibold mb-3">Find this book</h2>
-        <div className="border rounded-xl p-5 flex flex-col sm:flex-row gap-3">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col sm:flex-row gap-3">
           <a
             href={`https://bookshop.org/search?keywords=${titleQuery}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 hover:border-gray-400 text-sm font-medium text-gray-700 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
           >
             Bookshop.org
           </a>
@@ -243,7 +246,7 @@ export default async function BookPage({
             href={`https://www.kobo.com/search?query=${titleQuery}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 hover:border-gray-400 text-sm font-medium text-gray-700 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
           >
             Kobo
           </a>

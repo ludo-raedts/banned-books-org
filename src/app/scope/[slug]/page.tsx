@@ -105,13 +105,13 @@ export default async function ScopePage({
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All books
       </Link>
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-1">{scope.label_en} bans</h1>
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
           {books.length} {books.length === 1 ? 'book' : 'books'} banned in a {scope.label_en.toLowerCase()} context
         </p>
       </div>
@@ -136,7 +136,7 @@ export default async function ScopePage({
                     className="rounded shadow-sm object-cover w-full"
                   />
                 ) : (
-                  <div className="w-full aspect-[2/3] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs text-center p-3">
+                  <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
                     {book.title}
                   </div>
                 )}
@@ -144,9 +144,9 @@ export default async function ScopePage({
               <h3 className="text-sm font-semibold leading-snug group-hover:underline">
                 {book.title}
               </h3>
-              <p className="text-xs text-gray-500 mt-0.5">{authorName(book)}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{authorName(book)}</p>
               {book.description && (
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">
                   {book.description}
                 </p>
               )}
@@ -158,7 +158,7 @@ export default async function ScopePage({
                   <ReasonBadge key={r} slug={r} />
                 ))}
               </div>
-              <p className="text-xs font-medium text-red-600 mt-1.5">
+              <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1.5">
                 {banLabel(book.bans)}
               </p>
             </Link>
