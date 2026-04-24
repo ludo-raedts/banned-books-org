@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge, { reasonLabel, reasonIcon } from '@/components/reason-badge'
+import GenreBadge from '@/components/genre-badge'
 
 const FILTER_REASONS = ['lgbtq', 'political', 'religious', 'sexual', 'violence', 'racial']
 
@@ -12,12 +13,25 @@ type Book = {
   title: string
   slug: string
   cover_url: string | null
+  description: string | null
   first_published_year: number | null
+  genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
   bans: {
     id: number
+    countries: { name_en: string } | null
     ban_reason_links: { reasons: { slug: string } | null }[]
   }[]
+}
+
+function banLabel(book: Book): string {
+  const n = book.bans.length
+  if (n === 0) return 'No recorded bans'
+  if (n === 1) {
+    const country = book.bans[0].countries?.name_en
+    return country ? `Banned in ${country}` : 'Banned in 1 country'
+  }
+  return `Banned in ${n} countries`
 }
 
 function getReasons(book: Book): string[] {
@@ -39,6 +53,7 @@ function authorName(book: Book): string {
     .join(', ')
 }
 
+
 export default async function HomePage({
   searchParams,
 }: {
@@ -54,9 +69,9 @@ export default async function HomePage({
     const { data, error } = await supabase
       .from('books')
       .select(`
-        id, title, slug, cover_url, first_published_year,
+        id, title, slug, cover_url, description, first_published_year, genres,
         book_authors(authors(display_name)),
-        bans(id, ban_reason_links(reasons(slug)))
+        bans(id, countries(name_en), ban_reason_links(reasons(slug)))
       `)
       .order('title')
 
@@ -150,16 +165,20 @@ export default async function HomePage({
                   )}
                 </p>
               </div>
+              {featured.description && (
+                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                  {featured.description}
+                </p>
+              )}
               <div className="flex flex-wrap gap-1.5">
+                {featured.genres.map((slug) => (
+                  <GenreBadge key={slug} slug={slug} />
+                ))}
                 {getReasons(featured).map((slug) => (
                   <ReasonBadge key={slug} slug={slug} />
                 ))}
               </div>
-              <p className="text-sm text-gray-500">
-                Banned in{' '}
-                <span className="font-semibold text-gray-900">{featured.bans.length}</span>{' '}
-                {featured.bans.length === 1 ? 'country' : 'countries'}
-              </p>
+              <p className="text-sm font-medium text-red-600">{banLabel(featured)}</p>
             </div>
           </div>
         </Link>
@@ -193,15 +212,20 @@ export default async function HomePage({
                 {book.title}
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">{authorName(book)}</p>
+              {book.description && (
+                <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">
+                  {book.description}
+                </p>
+              )}
               <div className="flex flex-wrap gap-1 mt-1.5">
+                {book.genres.map((slug) => (
+                  <GenreBadge key={slug} slug={slug} />
+                ))}
                 {getReasons(book).map((slug) => (
                   <ReasonBadge key={slug} slug={slug} />
                 ))}
               </div>
-              <p className="text-xs text-gray-400 mt-1.5">
-                Banned in {book.bans.length}{' '}
-                {book.bans.length === 1 ? 'country' : 'countries'}
-              </p>
+              <p className="text-xs font-medium text-red-600 mt-1.5">{banLabel(book)}</p>
             </Link>
           ))}
         </div>
