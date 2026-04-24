@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     default: 'Banned Books',
     template: '%s | Banned Books',
   },
-  description: 'An international catalogue of books banned by governments and schools worldwide. Browse 60+ titles by country, genre, and reason.',
+  description: 'An international catalogue of books banned by governments and schools worldwide. Browse by country, genre, and reason.',
   openGraph: {
     siteName: 'Banned Books',
     type: 'website',

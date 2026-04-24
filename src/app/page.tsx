@@ -1,7 +1,16 @@
 export const dynamic = 'force-dynamic'
 
+import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase'
 import BookBrowser, { type Book } from '@/components/book-browser'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
+  const n = count ?? 0
+  return {
+    description: `An international catalogue of ${n.toLocaleString('en')} books banned by governments and schools worldwide. Browse by country, genre, and reason.`,
+  }
+}
 
 export default async function HomePage() {
   let books: Book[] = []
