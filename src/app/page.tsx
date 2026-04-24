@@ -98,7 +98,12 @@ export default async function HomePage({
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-1">Banned Books</h1>
         <p className="text-gray-500 text-sm">
-          An international catalogue of books banned by governments and schools.
+          An international catalogue of{' '}
+          <span className="font-semibold text-gray-700">{books.length.toLocaleString()} books</span>{' '}
+          banned by governments and schools worldwide.
+          {activeReason && filtered.length !== books.length && (
+            <span className="ml-1">Showing {filtered.length.toLocaleString()} matching this filter.</span>
+          )}
         </p>
       </div>
 
