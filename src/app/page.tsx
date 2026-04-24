@@ -42,10 +42,11 @@ export default async function HomePage() {
     <main className="max-w-5xl mx-auto px-4 py-10">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-1">Banned Books</h1>
-        <p className="text-gray-500 text-sm">
-          An international catalogue of{' '}
+        <p className="text-gray-500 text-sm max-w-xl leading-relaxed">
+          An independent catalogue of{' '}
           <span className="font-semibold text-gray-700">{books.length.toLocaleString()} books</span>{' '}
-          banned by governments and schools worldwide.
+          banned or challenged by governments, schools, and libraries across the world —
+          from Cold War censorship to today&rsquo;s classroom removals.
         </p>
       </div>
 
