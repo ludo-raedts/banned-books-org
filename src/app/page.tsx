@@ -28,7 +28,7 @@ export default async function HomePage() {
         An international catalogue of books banned by country.
       </p>
       <ul className="space-y-4">
-        {(books as Book[])?.map((book) => (
+        {(books as unknown as Book[])?.map((book) => (
           <li key={book.id} className="border rounded-lg p-4">
             <h2 className="text-lg font-semibold">{book.title}</h2>
             <p className="text-gray-600 text-sm">
