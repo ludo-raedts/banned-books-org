@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import GenreBadge from './genre-badge'
@@ -130,6 +130,21 @@ export default function BookBrowser({ books }: { books: Book[] }) {
 
   const visible = rest.slice(0, page * PAGE_SIZE)
   const hasMore = visible.length < rest.length
+
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const loadMore = useCallback(() => {
+    if (hasMore) setPage(p => p + 1)
+  }, [hasMore])
+
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) loadMore()
+    }, { rootMargin: '200px' })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [loadMore])
 
   const anyFilter = !!(q || scope || country || activeOnly || reason)
 
@@ -292,16 +307,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
         </div>
       )}
 
-      {hasMore && (
-        <div className="mt-10 flex flex-col items-center gap-1.5">
-          <button
-            onClick={() => setPage(p => p + 1)}
-            className="px-6 py-2.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:border-gray-500 hover:text-gray-900 transition-colors"
-          >
-            Load more · {rest.length - visible.length} remaining
-          </button>
-        </div>
-      )}
+      <div ref={sentinelRef} className="h-4" />
     </>
   )
 }
