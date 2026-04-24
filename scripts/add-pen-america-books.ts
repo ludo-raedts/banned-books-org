@@ -140,7 +140,7 @@ async function main() {
             else { console.warn(`    [warn] author insert: ${ae.message}`); }
           } else {
             authorId = newAuthor.id
-            authorMap.set(b.author_slug, authorId)
+            authorMap.set(b.author_slug, newAuthor.id)
           }
         }
 
