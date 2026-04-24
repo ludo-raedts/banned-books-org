@@ -31,11 +31,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <div className="flex-1">{children}</div>
         <footer className="border-t mt-10">
-          <div className="max-w-5xl mx-auto px-4 py-5 flex items-center justify-between text-xs text-gray-400">
-            <span>Banned Books — an open catalogue of censored literature</span>
-            <Link href="/sources" className="hover:text-gray-700 transition-colors">
-              Sources
-            </Link>
+          <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400">
+            <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>
+            <nav className="flex flex-wrap gap-x-5 gap-y-1">
+              <Link href="/scope/school" className="hover:text-gray-700 transition-colors">School bans</Link>
+              <Link href="/scope/government" className="hover:text-gray-700 transition-colors">Government bans</Link>
+              <Link href="/sources" className="hover:text-gray-700 transition-colors">Sources</Link>
+            </nav>
           </div>
         </footer>
       </body>
