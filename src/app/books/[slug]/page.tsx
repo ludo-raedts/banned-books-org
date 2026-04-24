@@ -1,11 +1,45 @@
 export const dynamic = 'force-dynamic'
 
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const { data } = await adminClient()
+    .from('books')
+    .select('title, description, cover_url, book_authors(authors(display_name))')
+    .eq('slug', slug)
+    .single()
+
+  if (!data) return {}
+
+  const author = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
+    .map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
+
+  const title = `${data.title}${author ? ` by ${author}` : ''}`
+  const description = data.description
+    ? data.description.slice(0, 155) + (data.description.length > 155 ? '…' : '')
+    : `${data.title}${author ? ` by ${author}` : ''} is among the most banned books in the world.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      ...(data.cover_url ? { images: [{ url: data.cover_url }] } : {}),
+    },
+  }
+}
 
 type Ban = {
   id: number
@@ -215,6 +249,23 @@ export default async function BookPage({
           </a>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Book',
+            name: book.title,
+            author: author
+              ? { '@type': 'Person', name: author }
+              : undefined,
+            datePublished: book.first_published_year?.toString(),
+            description: book.description ?? undefined,
+            image: book.cover_url ?? undefined,
+          }),
+        }}
+      />
     </main>
   )
 }

@@ -13,9 +13,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books-org.vercel.app'
+
 export const metadata: Metadata = {
-  title: "Banned Books",
-  description: "An international catalogue of books banned by governments and schools.",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'Banned Books',
+    template: '%s | Banned Books',
+  },
+  description: 'An international catalogue of books banned by governments and schools worldwide. Browse 60+ titles by country, genre, and reason.',
+  openGraph: {
+    siteName: 'Banned Books',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

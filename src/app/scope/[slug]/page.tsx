@@ -1,11 +1,32 @@
 export const dynamic = 'force-dynamic'
 
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const { data } = await adminClient()
+    .from('scopes')
+    .select('label_en')
+    .eq('slug', slug.replace(/-/g, '_'))
+    .single()
+
+  if (!data) return {}
+
+  const title = `${data.label_en} Bans`
+  const description = `Browse all books banned in a ${data.label_en.toLowerCase()} context and the reasons behind their censorship.`
+
+  return { title, description, openGraph: { title, description } }
+}
 
 type Book = {
   id: number
