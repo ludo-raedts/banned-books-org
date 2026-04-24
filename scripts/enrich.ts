@@ -199,30 +199,50 @@ async function enrich() {
   ]
 
   for (const { book: bookData, authorSlugs, bans: banList, wikiUrl } of newBooks) {
-    if (bookBySlug(bookData.slug)) {
-      console.log(`Already exists, skipping: ${bookData.title}`)
-      continue
-    }
-
+    const existingBook = bookBySlug(bookData.slug)
     const cover = covers[bookData.slug] ?? { coverUrl: null, workId: null }
 
-    const { data: newBook, error: be } = await supabase.from('books').insert({
-      ...bookData,
-      cover_url: cover.coverUrl,
-      openlibrary_work_id: cover.workId,
-    }).select('id').single()
-    if (be) throw be
+    let bookId: number
 
-    for (const slug of authorSlugs) {
-      const aId = authorIds[slug]
-      if (!aId) throw new Error(`Author ID missing: ${slug}`)
-      const { error } = await supabase.from('book_authors').insert({ book_id: newBook.id, author_id: aId })
-      if (error) throw error
+    if (existingBook) {
+      // Book exists — check whether each ban is already present
+      bookId = existingBook.id
+      const { data: existingBansForBook } = await supabase
+        .from('bans')
+        .select('id, country_code')
+        .eq('book_id', bookId)
+
+      const missingBans = banList.filter(
+        ban => !existingBansForBook!.some(b => b.country_code === ban.cc)
+      )
+
+      if (missingBans.length === 0) {
+        console.log(`Complete, skipping: ${bookData.title}`)
+        continue
+      }
+
+      console.log(`Book exists but missing ${missingBans.length} ban(s): ${bookData.title}`)
+      banList.splice(0, banList.length, ...missingBans)
+    } else {
+      const { data: newBook, error: be } = await supabase.from('books').insert({
+        ...bookData,
+        cover_url: cover.coverUrl,
+        openlibrary_work_id: cover.workId,
+      }).select('id').single()
+      if (be) throw be
+      bookId = newBook.id
+
+      for (const slug of authorSlugs) {
+        const aId = authorIds[slug]
+        if (!aId) throw new Error(`Author ID missing: ${slug}`)
+        const { error } = await supabase.from('book_authors').insert({ book_id: bookId, author_id: aId })
+        if (error) throw error
+      }
     }
 
     for (const ban of banList) {
       const { data: newBan, error: bane } = await supabase.from('bans').insert({
-        book_id: newBook.id,
+        book_id: bookId,
         country_code: ban.cc,
         scope_id: ban.scope,
         action_type: ban.actionType,
