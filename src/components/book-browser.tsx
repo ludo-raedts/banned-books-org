@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import GenreBadge from './genre-badge'
@@ -73,12 +73,15 @@ function FilterPill({
   )
 }
 
+const PAGE_SIZE = 48
+
 export default function BookBrowser({ books }: { books: Book[] }) {
   const [q, setQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
   const [country, setCountry] = useState('')
   const [activeOnly, setActiveOnly] = useState(false)
   const [reason, setReason] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
 
   // Derive sorted country list from ban data
   const countries = useMemo(() => {
@@ -116,11 +119,17 @@ export default function BookBrowser({ books }: { books: Book[] }) {
     })
   }, [books, q, scope, country, activeOnly, reason])
 
+  // Reset to page 1 whenever filters change
+  useEffect(() => { setPage(1) }, [q, scope, country, activeOnly, reason])
+
   // Daily-rotating featured book (stable within one day, rotates overnight)
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86_400_000)
   const featuredIndex = filtered.length > 0 ? dayOfYear % filtered.length : 0
   const featured = filtered[featuredIndex]
   const rest = filtered.filter((_, i) => i !== featuredIndex)
+
+  const visible = rest.slice(0, page * PAGE_SIZE)
+  const hasMore = visible.length < rest.length
 
   const anyFilter = !!(q || scope || country || activeOnly || reason)
 
@@ -221,7 +230,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
             <div className="shrink-0">
               {featured.cover_url ? (
                 <Image src={featured.cover_url} alt={`Cover of ${featured.title}`} width={110} height={165}
-                  className="rounded shadow-sm object-cover" />
+                  className="rounded shadow-sm object-cover" priority sizes="110px" />
               ) : (
                 <div className="w-[110px] h-[165px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs text-center p-2">
                   No cover
@@ -255,12 +264,13 @@ export default function BookBrowser({ books }: { books: Book[] }) {
       {/* ── Grid ── */}
       {rest.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          {rest.map(book => (
+          {visible.map(book => (
             <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-col">
               <div className="mb-2">
                 {book.cover_url ? (
                   <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
-                    className="rounded shadow-sm object-cover w-full" />
+                    className="rounded shadow-sm object-cover w-full"
+                    sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 23vw" />
                 ) : (
                   <div className="w-full aspect-[2/3] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs text-center p-3">
                     {book.title}
@@ -279,6 +289,17 @@ export default function BookBrowser({ books }: { books: Book[] }) {
               <p className="text-xs font-medium text-red-600 mt-1.5">{banLabel(book.bans)}</p>
             </Link>
           ))}
+        </div>
+      )}
+
+      {hasMore && (
+        <div className="mt-10 flex flex-col items-center gap-1.5">
+          <button
+            onClick={() => setPage(p => p + 1)}
+            className="px-6 py-2.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 hover:border-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Load more · {rest.length - visible.length} remaining
+          </button>
         </div>
       )}
     </>
