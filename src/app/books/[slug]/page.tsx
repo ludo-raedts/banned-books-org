@@ -11,6 +11,7 @@ type Ban = {
   id: number
   year_started: number | null
   status: string
+  country_code: string
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
   ban_reason_links: { reasons: { slug: string } | null }[]
@@ -50,7 +51,7 @@ export default async function BookPage({
       id, title, slug, cover_url, description, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
-        id, year_started, status,
+        id, year_started, status, country_code,
         countries(name_en),
         scopes(label_en),
         ban_reason_links(reasons(slug)),
@@ -142,7 +143,12 @@ export default async function BookPage({
                   return (
                     <tr key={ban.id} className="align-top">
                       <td className="px-4 py-3 font-medium text-gray-900">
-                        {ban.countries?.name_en ?? '—'}
+                        <Link
+                          href={`/countries/${ban.country_code}`}
+                          className="hover:underline"
+                        >
+                          {ban.countries?.name_en ?? ban.country_code}
+                        </Link>
                       </td>
                       <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
                         {ban.year_started ?? '—'}
