@@ -3,7 +3,7 @@ import { adminClient } from '@/lib/supabase'
 type Book = {
   id: number
   title: string
-  book_authors: { author: { display_name: string } }[]
+  book_authors: { authors: { display_name: string } | null }[]
   bans: { id: number }[]
 }
 
@@ -14,7 +14,7 @@ export default async function HomePage() {
     .select(`
       id,
       title,
-      book_authors(author:authors(display_name)),
+      book_authors(authors(display_name)),
       bans(id)
     `)
     .order('title')
@@ -32,7 +32,7 @@ export default async function HomePage() {
           <li key={book.id} className="border rounded-lg p-4">
             <h2 className="text-lg font-semibold">{book.title}</h2>
             <p className="text-gray-600 text-sm">
-              {book.book_authors[0]?.author?.display_name}
+              {book.book_authors[0]?.authors?.display_name}
             </p>
             <p className="text-red-600 text-sm mt-1">
               Banned in {book.bans.length}{' '}
