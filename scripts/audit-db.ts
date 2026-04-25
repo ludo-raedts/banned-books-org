@@ -4,8 +4,8 @@ async function main() {
   const s = adminClient()
 
   const { data: allBooks } = await s.from('books').select('id, slug, title, cover_url, description')
-  const { data: bansRaw } = await s.from('bans').select('book_id, country_code')
-  const { data: baRaw } = await s.from('book_authors').select('book_id, authors(display_name)')
+  const { data: bansRaw } = await s.from('bans').select('book_id, country_code').limit(5000)
+  const { data: baRaw } = await s.from('book_authors').select('book_id, authors(display_name)').limit(5000)
 
   const authorMap = new Map<number, string>()
   for (const ba of (baRaw ?? []) as any[]) {
