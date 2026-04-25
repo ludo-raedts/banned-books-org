@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 
+import React from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -46,6 +47,7 @@ type Ban = {
   year_started: number | null
   status: string
   country_code: string
+  description: string | null
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
   ban_reason_links: { reasons: { slug: string } | null }[]
@@ -85,7 +87,7 @@ export default async function BookPage({
       id, title, slug, cover_url, description, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
-        id, year_started, status, country_code,
+        id, year_started, status, country_code, description,
         countries(name_en),
         scopes(label_en),
         ban_reason_links(reasons(slug)),
@@ -177,50 +179,59 @@ export default async function BookPage({
                   {sortedBans.map((ban) => {
                     const source = ban.ban_source_links[0]?.ban_sources
                     return (
-                      <tr key={ban.id} className="align-top">
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
-                          <Link
-                            href={`/countries/${ban.country_code}`}
-                            className="hover:underline"
-                          >
-                            {ban.countries?.name_en ?? ban.country_code}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                          {ban.year_started ?? '—'}
-                          {ban.status === 'historical' && (
-                            <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-                              lifted
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
-                          {ban.scopes?.label_en ?? '—'}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-wrap gap-1">
-                            {ban.ban_reason_links.map((l) =>
-                              l.reasons ? (
-                                <ReasonBadge key={l.reasons.slug} slug={l.reasons.slug} />
-                              ) : null
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 hidden sm:table-cell">
-                          {source ? (
-                            <a
-                              href={source.source_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+                      <React.Fragment key={ban.id}>
+                        <tr className="align-top">
+                          <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                            <Link
+                              href={`/countries/${ban.country_code}`}
+                              className="hover:underline"
                             >
-                              {source.source_name}
-                            </a>
-                          ) : (
-                            <span className="text-gray-400 dark:text-gray-600">—</span>
-                          )}
-                        </td>
-                      </tr>
+                              {ban.countries?.name_en ?? ban.country_code}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                            {ban.year_started ?? '—'}
+                            {ban.status === 'historical' && (
+                              <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                                lifted
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                            {ban.scopes?.label_en ?? '—'}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex flex-wrap gap-1">
+                              {ban.ban_reason_links.map((l) =>
+                                l.reasons ? (
+                                  <ReasonBadge key={l.reasons.slug} slug={l.reasons.slug} />
+                                ) : null
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 hidden sm:table-cell">
+                            {source ? (
+                              <a
+                                href={source.source_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+                              >
+                                {source.source_name}
+                              </a>
+                            ) : (
+                              <span className="text-gray-400 dark:text-gray-600">—</span>
+                            )}
+                          </td>
+                        </tr>
+                        {ban.description && (
+                          <tr className="bg-amber-50/50 dark:bg-amber-900/10">
+                            <td colSpan={5} className="px-4 pb-3 pt-0 text-xs text-gray-600 dark:text-gray-400 italic leading-relaxed">
+                              {ban.description}
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     )
                   })}
                 </tbody>

@@ -40,11 +40,13 @@ export default async function StatsPage() {
     { data: bookAuthorsRaw },
     { data: countriesRaw },
     { count: totalBooks },
+    { count: totalBans },
   ] = await Promise.all([
-    supabase.from('bans').select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))'),
-    supabase.from('book_authors').select('book_id, authors(display_name, slug)'),
+    supabase.from('bans').select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))').limit(5000),
+    supabase.from('book_authors').select('book_id, authors(display_name, slug)').limit(5000),
     supabase.from('countries').select('code, name_en'),
     supabase.from('books').select('*', { count: 'exact', head: true }),
+    supabase.from('bans').select('*', { count: 'exact', head: true }),
   ])
 
   const bans = (bansRaw ?? []) as unknown as Array<{
@@ -124,7 +126,7 @@ export default async function StatsPage() {
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
           <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString()} books</span> and{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{bans.length.toLocaleString()} bans</span> across{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBans ?? 0).toLocaleString()} bans</span> across{' '}
           <span className="font-semibold text-gray-900 dark:text-gray-100">{countryCounts.size} countries</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
@@ -134,7 +136,7 @@ export default async function StatsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {[
           { label: 'Books catalogued', value: (totalBooks ?? 0).toLocaleString() },
-          { label: 'Total bans recorded', value: bans.length.toLocaleString() },
+          { label: 'Total bans recorded', value: (totalBans ?? 0).toLocaleString() },
           { label: 'Countries & territories', value: countryCounts.size.toString() },
           { label: 'Currently banned', value: activeBans.toLocaleString(), sub: `${historicalBans.toLocaleString()} lifted` },
         ].map(stat => (

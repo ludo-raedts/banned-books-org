@@ -1,19 +1,15 @@
 import { adminClient } from '../src/lib/supabase'
 const supabase = adminClient()
 async function main() {
-  const { data } = await supabase.from('books').select('slug').order('slug')
+  const { data } = await supabase.from('books').select('slug,title').order('title')
   const slugs = new Set((data||[]).map((b:any)=>b.slug))
+  // Check alternate slugs for some books
   const check = [
-    'otkan-kunlar','az-i-ya','kvachi-kvachantiradze',
-    'fire-and-night-rainis','voices-of-spring-maironis',
-    'the-forty-days-of-musa-dagh','the-bastard-of-istanbul',
-    'the-jewel-of-medina','fahrenheit-451',
-    'da-vinci-code','the-da-vinci-code',
-    'zorba-the-greek','captain-michalis',
-    'the-gulag-archipelago','the-white-steamship',
-    'the-tin-drum','ulysses'
+    'absolutely-true-diary','the-absolutely-true-diary-of-a-part-time-indian',
+    'speak','speak-halse-anderson','stamped','push','in-the-dream-house',
+    'a-little-life','lawn-boy','front-desk','class-act','new-kid',
+    'hey-kiddo','identical','burned','tricks'
   ]
   for(const s of check) console.log(s+':', slugs.has(s)?'EXISTS':'missing')
-  console.log('\nTotal:', slugs.size)
 }
 main().catch(console.error)

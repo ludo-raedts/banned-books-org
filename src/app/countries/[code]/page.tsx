@@ -83,7 +83,7 @@ export default async function CountryPage({
   if (ce || !country) notFound()
 
   // Count bans per country for ranking
-  const { data: allBans } = await supabase.from('bans').select('country_code')
+  const { data: allBans } = await supabase.from('bans').select('country_code').limit(5000)
   const banCounts: Record<string, number> = {}
   allBans!.forEach((b) => { banCounts[b.country_code] = (banCounts[b.country_code] ?? 0) + 1 })
 

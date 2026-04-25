@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import BottomNav from "@/components/bottom-nav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,7 +53,7 @@ export default function RootLayout({
             <Link href="/" className="font-semibold text-sm tracking-tight hover:opacity-80 transition-opacity">
               📕 Banned Books
             </Link>
-            <nav className="flex items-center gap-1 flex-1">
+            <nav className="hidden sm:flex items-center gap-1 flex-1">
               <Link href="/countries" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Countries</Link>
               <Link href="/stats" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Stats</Link>
               <Link href="/reasons" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Reasons</Link>
@@ -60,8 +61,8 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <div className="flex-1">{children}</div>
-        <footer className="border-t border-gray-200 dark:border-gray-800 mt-10">
+        <div className="flex-1 pb-16 sm:pb-0">{children}</div>
+        <footer className="border-t border-gray-200 dark:border-gray-800 mt-10 mb-16 sm:mb-0">
           <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400 dark:text-gray-500">
             <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>
             <nav className="flex flex-wrap gap-x-5 gap-y-1">
@@ -74,6 +75,7 @@ export default function RootLayout({
             </nav>
           </div>
         </footer>
+        <BottomNav />
       </body>
     </html>
   );
