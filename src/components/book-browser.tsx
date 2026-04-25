@@ -123,10 +123,12 @@ export default function BookBrowser({ books }: { books: Book[] }) {
   useEffect(() => { setPage(1) }, [q, scope, country, activeOnly, reason])
 
   // Daily-rotating featured book (stable within one day, rotates overnight)
+  // Only books with a cover are eligible to be featured
+  const withCover = filtered.filter(b => b.cover_url)
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86_400_000)
-  const featuredIndex = filtered.length > 0 ? dayOfYear % filtered.length : 0
-  const featured = filtered[featuredIndex]
-  const rest = filtered.filter((_, i) => i !== featuredIndex)
+  const featuredIndex = withCover.length > 0 ? dayOfYear % withCover.length : -1
+  const featured = featuredIndex >= 0 ? withCover[featuredIndex] : null
+  const rest = featured ? filtered.filter(b => b !== featured) : filtered
 
   const visible = rest.slice(0, page * PAGE_SIZE)
   const hasMore = visible.length < rest.length
