@@ -114,10 +114,26 @@ export default async function CountryPage({
   if (error) throw error
   const books = (data as unknown as Book[]) ?? []
 
+  // Build timeline: bans by decade (or by year if ≤ 30 distinct years)
+  const countryBansForTimeline = books.flatMap(b =>
+    b.bans.map(ban => ban.year_started)
+  ).filter((y): y is number => !!y)
+
+  const yearCounts = new Map<number, number>()
+  for (const y of countryBansForTimeline) yearCounts.set(y, (yearCounts.get(y) ?? 0) + 1)
+  const useYears = yearCounts.size <= 35
+  const timelineCounts = new Map<number, number>()
+  for (const y of countryBansForTimeline) {
+    const key = useYears ? y : Math.floor(y / 10) * 10
+    timelineCounts.set(key, (timelineCounts.get(key) ?? 0) + 1)
+  }
+  const timeline = [...timelineCounts.entries()].sort((a, b) => a[0] - b[0]).map(([k, v]) => ({ key: k, count: v }))
+  const maxTimeline = Math.max(...timeline.map(t => t.count), 1)
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
-        ← All books
+      <Link href="/countries" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
+        ← All countries
       </Link>
 
       {/* Header */}
@@ -142,6 +158,36 @@ export default async function CountryPage({
       {/* Description */}
       {country.description && (
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-10 max-w-2xl">{country.description}</p>
+      )}
+
+      {/* Timeline */}
+      {timeline.length >= 3 && (
+        <div className="mb-10">
+          <h2 className="text-base font-semibold mb-4 text-gray-700 dark:text-gray-300">
+            Bans {useYears ? 'by year' : 'by decade'}
+          </h2>
+          {/* dir=rtl on outer starts scroll at right (newest); dir=ltr on inner keeps order */}
+          <div className="overflow-x-auto pb-1" dir="rtl">
+            <div className="inline-flex items-end gap-1 h-20" dir="ltr">
+              {timeline.map(t => (
+                <div key={t.key} className="flex flex-col items-center gap-1 shrink-0" style={{ minWidth: useYears ? '1.5rem' : '2.5rem' }}>
+                  <div
+                    className="rounded-t bg-red-500 dark:bg-red-600"
+                    style={{
+                      width: useYears ? '1rem' : '2rem',
+                      height: `${(t.count / maxTimeline * 64).toFixed(0)}px`,
+                      minHeight: '2px',
+                    }}
+                    title={`${t.key}${useYears ? '' : 's'}: ${t.count}`}
+                  />
+                  <span className="text-[9px] text-gray-400 dark:text-gray-500 tabular-nums">
+                    {useYears ? t.key : `${t.key}s`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Book grid */}

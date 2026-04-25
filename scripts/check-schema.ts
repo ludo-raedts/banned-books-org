@@ -1,7 +1,9 @@
 import { adminClient } from '../src/lib/supabase'
 const supabase = adminClient()
 async function main() {
-  const { data: reasons } = await supabase.from('reasons').select('id, slug')
-  console.log('Reason slugs:', reasons?.map(r => r.slug).join(', '))
+  const { data } = await supabase.from('countries').select('code, name_en, description').not('description','is',null)
+  for(const c of (data||[]) as any[]) {
+    console.log(`\n${c.code} (${c.name_en}):\n${c.description}`)
+  }
 }
 main().catch(console.error)

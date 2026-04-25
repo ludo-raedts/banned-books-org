@@ -1,0 +1,113 @@
+export const dynamic = 'force-dynamic'
+
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { adminClient } from '@/lib/supabase'
+
+export const metadata: Metadata = {
+  title: 'Countries — Where Books Are Banned',
+  description: 'Browse all countries where books have been banned or challenged. From authoritarian censorship to school board removals — an international map of literary suppression.',
+}
+
+function countryFlag(code: string): string {
+  if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
+  return [...code.toUpperCase()].map(c =>
+    String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
+  ).join('')
+}
+
+export default async function CountriesPage() {
+  const supabase = adminClient()
+
+  const [{ data: countries }, { data: bansRaw }] = await Promise.all([
+    supabase.from('countries').select('code, name_en, description'),
+    supabase.from('bans').select('country_code, status'),
+  ])
+
+  const bans = bansRaw ?? []
+  const countMap = new Map<string, number>()
+  const activeMap = new Map<string, number>()
+  for (const ban of bans) {
+    countMap.set(ban.country_code, (countMap.get(ban.country_code) ?? 0) + 1)
+    if (ban.status === 'active') activeMap.set(ban.country_code, (activeMap.get(ban.country_code) ?? 0) + 1)
+  }
+
+  const ranked = (countries ?? [])
+    .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
+    .filter(c => c.count > 0)
+    .sort((a, b) => b.count - a.count)
+
+  const maxCount = ranked[0]?.count ?? 1
+
+  // Separate defunct states
+  const defunct = ['SU', 'CS', 'DD', 'YU']
+  const active = ranked.filter(c => !defunct.includes(c.code))
+  const historical = ranked.filter(c => defunct.includes(c.code))
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-3">Countries &amp; Territories</h1>
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-sm">
+          Bans recorded across{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{ranked.length} countries and territories</span>.
+          Click any country to browse its banned books and censorship history.
+          Defunct states like the Soviet Union and Nazi Germany are listed separately.
+        </p>
+      </div>
+
+      {/* Country list */}
+      <div className="space-y-1.5 mb-12">
+        {active.map((c, i) => (
+          <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
+            <span className="w-6 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+            <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
+            <span className="w-44 shrink-0 text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:underline truncate">{c.name_en}</span>
+            <div className="flex-1 flex items-center gap-2 min-w-0">
+              <div
+                className="h-4 rounded bg-red-400 dark:bg-red-600 shrink-0"
+                style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
+              />
+              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
+            </div>
+            {c.active > 0 && (
+              <span className="shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">{c.active} active</span>
+            )}
+          </Link>
+        ))}
+      </div>
+
+      {historical.length > 0 && (
+        <>
+          <h2 className="text-base font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs mb-3">
+            Defunct states
+          </h2>
+          <div className="space-y-1.5 mb-10">
+            {historical.map(c => (
+              <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
+                <span className="w-6 shrink-0" />
+                <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
+                <span className="w-44 shrink-0 text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:underline truncate">{c.name_en}</span>
+                <div className="flex-1 flex items-center gap-2 min-w-0">
+                  <div
+                    className="h-4 rounded bg-gray-400 dark:bg-gray-600 shrink-0"
+                    style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
+                  />
+                  <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div className="text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 pt-6">
+        <p>
+          Coverage is uneven: well-documented democracies like the United States appear to have more bans
+          because their censorship attempts are systematically recorded. Bans in closed authoritarian states
+          often go undocumented. This catalogue is a work in progress.
+        </p>
+      </div>
+    </main>
+  )
+}
