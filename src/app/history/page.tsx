@@ -60,7 +60,7 @@ export default function HistoryPage() {
         <figure className="mb-12 -mx-4 sm:mx-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Bundesarchiv_Bild_102-14597%2C_Berlin%2C_Opernplatz%2C_B%C3%BCcherverbrennung.jpg/1280px-Bundesarchiv_Bild_102-14597%2C_Berlin%2C_Opernplatz%2C_B%C3%BCcherverbrennung.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bundesarchiv_Bild_102-14597%2C_Berlin%2C_Opernplatz%2C_B%C3%BCcherverbrennung.jpg/1280px-Bundesarchiv_Bild_102-14597%2C_Berlin%2C_Opernplatz%2C_B%C3%BCcherverbrennung.jpg"
             alt="Nazi book burning at the Opernplatz in Berlin, May 1933 — public destruction of thousands of banned books"
             className="w-full sm:rounded-xl object-cover"
             loading="eager"
