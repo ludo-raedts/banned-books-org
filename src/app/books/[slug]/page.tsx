@@ -162,20 +162,18 @@ export default async function BookPage({
       {/* About the book */}
       {(book.description_book ?? book.description) && (
         <section className="mb-8">
-          {book.description_book && (
-            <h2 className="text-base font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs mb-2">About the book</h2>
-          )}
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">About this book</h2>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             {book.description_book ?? book.description}
           </p>
         </section>
       )}
 
-      {/* About the ban */}
+      {/* Why it was banned */}
       {book.description_ban && (
-        <section className="mb-8">
-          <h2 className="text-base font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs mb-2">About the ban</h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{book.description_ban}</p>
+        <section className="mb-8 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 px-5 py-4">
+          <h2 className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-2">Why it was banned</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
         </section>
       )}
 
