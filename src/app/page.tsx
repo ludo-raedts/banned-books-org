@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import BookBrowser, { type Book } from '@/components/book-browser'
 
@@ -49,6 +50,17 @@ export default async function HomePage() {
           from Cold War censorship to today&rsquo;s classroom removals.
         </p>
       </div>
+
+      <Link
+        href="/history"
+        className="group flex items-center justify-between gap-4 mb-8 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+      >
+        <div className="min-w-0">
+          <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-0.5">Essay</p>
+          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">The long shadow of censorship: a history of banned books</p>
+        </div>
+        <span className="text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0">→</span>
+      </Link>
 
       {fetchError && (
         <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-8">
