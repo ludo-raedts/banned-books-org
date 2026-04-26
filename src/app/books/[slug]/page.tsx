@@ -125,10 +125,11 @@ export default async function BookPage({
             <Image
               src={book.cover_url}
               alt={`Cover of ${book.title}`}
-              width={160}
-              height={240}
+              width={240}
+              height={360}
               className="rounded-lg shadow-md object-cover"
               priority
+              sizes="240px"
             />
           ) : (
             <div className="w-[160px] h-[240px] bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm text-center p-4">

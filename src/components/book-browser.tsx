@@ -178,8 +178,8 @@ export default function BookBrowser({ books }: { books: Book[] }) {
           <div className="flex gap-4 sm:gap-6 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-5 hover:border-gray-400 dark:hover:border-gray-500 transition-colors bg-white dark:bg-gray-900">
             <div className="shrink-0">
               {featured.cover_url ? (
-                <Image src={featured.cover_url} alt={`Cover of ${featured.title}`} width={90} height={135}
-                  className="rounded shadow-sm object-cover sm:w-[110px] sm:h-[165px]" priority sizes="(max-width: 640px) 90px, 110px" />
+                <Image src={featured.cover_url} alt={`Cover of ${featured.title}`} width={200} height={300}
+                  className="rounded shadow-sm object-cover sm:w-[110px] sm:h-[165px]" priority sizes="200px" />
               ) : (
                 <div className="w-[90px] h-[135px] sm:w-[110px] sm:h-[165px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
                   No cover
@@ -288,7 +288,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
                 {book.cover_url ? (
                   <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
                     className="rounded shadow-sm object-cover w-full"
-                    sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 23vw" />
+                    sizes="160px" />
                 ) : (
                   <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
                     {book.title}

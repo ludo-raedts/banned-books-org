@@ -123,7 +123,7 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
                 <div className="mb-2">
                   {book.cover_url ? (
                     <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
-                      className="rounded shadow-sm object-cover w-full" />
+                      className="rounded shadow-sm object-cover w-full" sizes="160px" />
                   ) : (
                     <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
                       {book.title}

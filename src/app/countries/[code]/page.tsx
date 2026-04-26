@@ -209,6 +209,7 @@ export default async function CountryPage({
                         width={160}
                         height={240}
                         className="rounded shadow-sm object-cover w-full"
+                        sizes="160px"
                       />
                     ) : (
                       <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
