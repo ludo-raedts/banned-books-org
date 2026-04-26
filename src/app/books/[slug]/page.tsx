@@ -62,6 +62,7 @@ type BookDetail = {
   description: string | null
   first_published_year: number | null
   genres: string[]
+  gutenberg_id: number | null
   book_authors: { authors: { display_name: string } | null }[]
   bans: Ban[]
 }
@@ -84,7 +85,7 @@ export default async function BookPage({
   const { data, error } = await supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, description, first_published_year, genres,
+      id, title, slug, cover_url, description, first_published_year, genres, gutenberg_id,
       book_authors(authors(display_name)),
       bans(
         id, year_started, status, country_code, description,
@@ -244,7 +245,21 @@ export default async function BookPage({
       {/* Find this book */}
       <section>
         <h2 className="text-lg font-semibold mb-3">Find this book</h2>
-        <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col sm:flex-row gap-3">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-3">
+          {book.gutenberg_id && (
+            <a
+              href={`https://www.gutenberg.org/ebooks/${book.gutenberg_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              Read free on Project Gutenberg
+            </a>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3">
           <a
             href={`https://bookshop.org/search?keywords=${titleQuery}`}
             target="_blank"
@@ -261,6 +276,7 @@ export default async function BookPage({
           >
             Kobo
           </a>
+          </div>
         </div>
       </section>
 
