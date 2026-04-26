@@ -40,8 +40,8 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="mb-8">
+    <main className="max-w-5xl mx-auto px-4 py-6">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold tracking-tight mb-1">Banned Books</h1>
         <p className="text-gray-500 text-sm max-w-xl leading-relaxed">
           An independent catalogue of{' '}
@@ -53,13 +53,9 @@ export default async function HomePage() {
 
       <Link
         href="/history"
-        className="group flex items-center justify-between gap-4 mb-8 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+        className="md:hidden group inline-flex items-center gap-1.5 mb-4 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
       >
-        <div className="min-w-0">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-0.5">Essay</p>
-          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">The long shadow of censorship: a history of banned books</p>
-        </div>
-        <span className="text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0">→</span>
+        Essay: The long shadow of censorship →
       </Link>
 
       {fetchError && (

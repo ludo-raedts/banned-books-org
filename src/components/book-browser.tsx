@@ -157,7 +157,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
   return (
     <div className="flex flex-col">
       {/* ── Search — always first ── */}
-      <div className="order-1 relative mb-4">
+      <div className="order-1 relative mb-3">
         <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -268,7 +268,7 @@ export default function BookBrowser({ books }: { books: Book[] }) {
       </div>
 
       {/* ── Result count ── */}
-      <p className="order-4 sm:order-3 text-sm text-gray-400 dark:text-gray-500 mb-6 sm:mb-8">
+      <p className="order-4 sm:order-3 text-sm text-gray-400 dark:text-gray-500 mb-4 sm:mb-5">
         {anyFilter
           ? <><span className="font-medium text-gray-700 dark:text-gray-200">{filtered.length.toLocaleString()}</span> of {books.length.toLocaleString()} books</>
           : <><span className="font-medium text-gray-700 dark:text-gray-200">{books.length.toLocaleString()}</span> books</>
