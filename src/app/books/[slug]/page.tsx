@@ -17,7 +17,7 @@ export async function generateMetadata({
   const { slug } = await params
   const { data } = await adminClient()
     .from('books')
-    .select('title, description, cover_url, book_authors(authors(display_name))')
+    .select('title, description, description_book, cover_url, book_authors(authors(display_name))')
     .eq('slug', slug)
     .single()
 
@@ -27,8 +27,9 @@ export async function generateMetadata({
     .map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
 
   const title = `${data.title}${author ? ` by ${author}` : ''}`
-  const description = data.description
-    ? data.description.slice(0, 155) + (data.description.length > 155 ? '…' : '')
+  const metaDesc = (data as { description_book?: string | null }).description_book ?? data.description
+  const description = metaDesc
+    ? metaDesc.slice(0, 155) + (metaDesc.length > 155 ? '…' : '')
     : `${data.title}${author ? ` by ${author}` : ''} is among the most banned books in the world.`
 
   return {
@@ -60,6 +61,8 @@ type BookDetail = {
   slug: string
   cover_url: string | null
   description: string | null
+  description_book: string | null
+  description_ban: string | null
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
@@ -85,7 +88,7 @@ export default async function BookPage({
   const { data, error } = await supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, description, first_published_year, genres, gutenberg_id,
+      id, title, slug, cover_url, description, description_book, description_ban, first_published_year, genres, gutenberg_id,
       book_authors(authors(display_name)),
       bans(
         id, year_started, status, country_code, description,
@@ -155,9 +158,24 @@ export default async function BookPage({
         </div>
       </div>
 
-      {/* Description */}
-      {book.description && (
-        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-10">{book.description}</p>
+      {/* About the book */}
+      {(book.description_book ?? book.description) && (
+        <section className="mb-8">
+          {book.description_book && (
+            <h2 className="text-base font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs mb-2">About the book</h2>
+          )}
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            {book.description_book ?? book.description}
+          </p>
+        </section>
+      )}
+
+      {/* About the ban */}
+      {book.description_ban && (
+        <section className="mb-8">
+          <h2 className="text-base font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs mb-2">About the ban</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{book.description_ban}</p>
+        </section>
       )}
 
       {/* Bans table */}
@@ -291,7 +309,7 @@ export default async function BookPage({
               ? { '@type': 'Person', name: author }
               : undefined,
             datePublished: book.first_published_year?.toString(),
-            description: book.description ?? undefined,
+            description: book.description_book ?? book.description ?? undefined,
             image: book.cover_url ?? undefined,
           }),
         }}
