@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
