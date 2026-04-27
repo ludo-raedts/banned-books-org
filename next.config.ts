@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'covers.openlibrary.org' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
     ],
     deviceSizes: [320, 640, 960],
     imageSizes: [160, 240, 360],
