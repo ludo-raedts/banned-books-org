@@ -66,6 +66,7 @@ type BookDetail = {
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
+  isbn13: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -88,7 +89,7 @@ export default async function BookPage({
   const { data, error } = await supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, description, description_book, description_ban, first_published_year, genres, gutenberg_id,
+      id, title, slug, cover_url, description, description_book, description_ban, first_published_year, genres, gutenberg_id, isbn13,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, status, country_code, description,
@@ -319,12 +320,26 @@ export default async function BookPage({
             '@context': 'https://schema.org',
             '@type': 'Book',
             name: book.title,
-            author: author
-              ? { '@type': 'Person', name: author }
-              : undefined,
-            datePublished: book.first_published_year?.toString(),
-            description: book.description_book ?? book.description ?? undefined,
-            image: book.cover_url ?? undefined,
+            url: `https://www.banned-books.org/books/${book.slug}`,
+            ...(author ? { author: { '@type': 'Person', name: author } } : {}),
+            ...(book.first_published_year ? { datePublished: book.first_published_year.toString() } : {}),
+            ...(book.description_book ?? book.description ? { description: book.description_book ?? book.description } : {}),
+            ...(book.cover_url ? { image: book.cover_url } : {}),
+            ...(book.isbn13 ? { isbn: book.isbn13 } : {}),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.banned-books.org' },
+              { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://www.banned-books.org' },
+              { '@type': 'ListItem', position: 3, name: book.title, item: `https://www.banned-books.org/books/${book.slug}` },
+            ],
           }),
         }}
       />
