@@ -68,12 +68,16 @@ export default async function StatsPage() {
   const maxCountry = topCountries[0]?.count ?? 1
 
   // ── Top authors ────────────────────────────────────────────────────
+  const authorSlugMap = new Map<string, string | null>()
   const bookAuthorMap = new Map<number, string[]>()
-  for (const ba of (bookAuthorsRaw ?? []) as unknown as Array<{ book_id: number; authors: { display_name: string } | null }>) {
+  for (const ba of (bookAuthorsRaw ?? []) as unknown as Array<{ book_id: number; authors: { display_name: string; slug: string | null } | null }>) {
     if (!ba.authors?.display_name) continue
     const list = bookAuthorMap.get(ba.book_id) ?? []
     list.push(ba.authors.display_name)
     bookAuthorMap.set(ba.book_id, list)
+    if (!authorSlugMap.has(ba.authors.display_name)) {
+      authorSlugMap.set(ba.authors.display_name, ba.authors.slug ?? null)
+    }
   }
   const authorCounts = new Map<string, number>()
   for (const ban of bans) {
@@ -84,7 +88,7 @@ export default async function StatsPage() {
   const topAuthors = [...authorCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
-    .map(([name, count]) => ({ name, count }))
+    .map(([name, count]) => ({ name, count, slug: authorSlugMap.get(name) ?? null }))
 
   // ── Top reasons ────────────────────────────────────────────────────
   const reasonCounts = new Map<string, number>()
@@ -187,7 +191,11 @@ export default async function StatsPage() {
           {topAuthors.map((a, i) => (
             <div key={a.name} className="flex items-center gap-3">
               <span className="w-5 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
-              <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
+              {a.slug ? (
+                <Link href={`/authors/${a.slug}`} className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 hover:underline">{a.name}</Link>
+              ) : (
+                <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
+              )}
               <div className="flex items-center gap-2">
                 <div className="hidden sm:flex gap-1">
                   {Array.from({ length: Math.min(a.count, 20) }).map((_, j) => (

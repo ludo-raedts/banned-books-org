@@ -66,7 +66,7 @@ type BookDetail = {
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
-  book_authors: { authors: { display_name: string } | null }[]
+  book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
 
@@ -89,7 +89,7 @@ export default async function BookPage({
     .from('books')
     .select(`
       id, title, slug, cover_url, description, description_book, description_ban, first_published_year, genres, gutenberg_id,
-      book_authors(authors(display_name)),
+      book_authors(authors(display_name, slug)),
       bans(
         id, year_started, status, country_code, description,
         countries(name_en),
@@ -140,7 +140,22 @@ export default async function BookPage({
         <div className="flex flex-col justify-center gap-2 min-w-0">
           <h1 className="text-2xl font-bold leading-snug">{book.title}</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {author}
+            {book.book_authors.map((ba, i) => {
+              if (!ba.authors) return null
+              const { display_name, slug: authorSlug } = ba.authors
+              return (
+                <span key={i}>
+                  {i > 0 && ', '}
+                  {authorSlug ? (
+                    <Link href={`/authors/${authorSlug}`} className="hover:underline">
+                      {display_name}
+                    </Link>
+                  ) : (
+                    display_name
+                  )}
+                </span>
+              )
+            })}
             {book.first_published_year && (
               <span className="text-gray-400 dark:text-gray-500"> · {book.first_published_year}</span>
             )}
