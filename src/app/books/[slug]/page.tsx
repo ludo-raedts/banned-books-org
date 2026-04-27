@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
-import ReasonBadge from '@/components/reason-badge'
+import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 
 export async function generateMetadata({
@@ -51,7 +51,7 @@ type Ban = {
   description: string | null
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
-  ban_reason_links: { reasons: { slug: string } | null }[]
+  ban_reason_links: { reasons: { id: number; slug: string } | null }[]
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
 }
 
@@ -63,6 +63,7 @@ type BookDetail = {
   description: string | null
   description_book: string | null
   description_ban: string | null
+  censorship_context: string | null
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
@@ -89,13 +90,14 @@ export default async function BookPage({
   const { data, error } = await supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, description, description_book, description_ban, first_published_year, genres, gutenberg_id, isbn13,
+      id, title, slug, cover_url, description, description_book, description_ban,
+      censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, status, country_code, description,
         countries(name_en),
         scopes(label_en),
-        ban_reason_links(reasons(slug)),
+        ban_reason_links(reasons(id, slug)),
         ban_source_links(ban_sources(source_name, source_url))
       )
     `)
@@ -110,6 +112,57 @@ export default async function BookPage({
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
   )
+
+  // ── Similar books ────────────────────────────────────────────────────────────
+  const bookReasonIds = [...new Set(
+    book.bans.flatMap(b =>
+      b.ban_reason_links.map(l => l.reasons?.id).filter((id): id is number => id != null)
+    )
+  )]
+
+  let similarBooks: { slug: string; title: string; cover_url: string | null }[] = []
+
+  if (bookReasonIds.length >= 1) {
+    const { data: matches } = await supabase
+      .from('ban_reason_links')
+      .select('reason_id, bans!inner(book_id)')
+      .in('reason_id', bookReasonIds)
+
+    const bookReasonCounts = new Map<number, Set<number>>()
+    for (const m of (matches ?? []) as unknown as { reason_id: number; bans: { book_id: number } }[]) {
+      const bookId = m.bans.book_id
+      if (bookId === book.id) continue
+      if (!bookReasonCounts.has(bookId)) bookReasonCounts.set(bookId, new Set())
+      bookReasonCounts.get(bookId)!.add(m.reason_id)
+    }
+
+    const topIds = [...bookReasonCounts.entries()]
+      .filter(([, reasons]) => reasons.size >= 2)
+      .sort((a, b) => b[1].size - a[1].size)
+      .slice(0, 4)
+      .map(([id]) => id)
+
+    if (topIds.length > 0) {
+      const { data: simBooks } = await supabase
+        .from('books')
+        .select('slug, title, cover_url')
+        .in('id', topIds)
+      similarBooks = (simBooks ?? []) as typeof similarBooks
+    }
+  }
+
+  // ── Deduplicated metadata for Related section ────────────────────────────────
+  const uniqueCountries = [...new Map(
+    book.bans
+      .filter(b => b.countries)
+      .map(b => [b.country_code, { code: b.country_code, name: b.countries!.name_en }])
+  ).values()]
+
+  const uniqueReasonSlugs = [...new Set(
+    book.bans.flatMap(b => b.ban_reason_links.map(l => l.reasons?.slug).filter(Boolean) as string[])
+  )]
+
+  const primaryAuthor = book.book_authors[0]?.authors
 
   const titleQuery = encodeURIComponent(book.title)
 
@@ -190,6 +243,14 @@ export default async function BookPage({
         <section className="mb-8 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 px-5 py-4">
           <h2 className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-2">Why it was banned</h2>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
+        </section>
+      )}
+
+      {/* Censorship history (AI-generated context) */}
+      {book.censorship_context && (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Censorship history</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{book.censorship_context}</p>
         </section>
       )}
 
@@ -275,6 +336,82 @@ export default async function BookPage({
         </section>
       )}
 
+      {/* Related */}
+      {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0) && (
+        <section className="mb-10">
+          <h2 className="text-lg font-semibold mb-4">Related</h2>
+          <div className="flex flex-col gap-5">
+
+            {/* Author + countries + reasons chips */}
+            <div className="flex flex-wrap gap-2">
+              {primaryAuthor?.slug && (
+                <Link
+                  href={`/authors/${primaryAuthor.slug}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  ✍️ More books by {primaryAuthor.display_name}
+                </Link>
+              )}
+              {uniqueCountries.map(c => (
+                <Link
+                  key={c.code}
+                  href={`/countries/${c.code}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  🌍 Books banned in {c.name}
+                </Link>
+              ))}
+              {uniqueReasonSlugs.map(rSlug => (
+                <Link
+                  key={rSlug}
+                  href={`/reasons/${rSlug}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  More {reasonLabel(rSlug)} bans
+                </Link>
+              ))}
+            </div>
+
+            {/* Similar books */}
+            {similarBooks.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+                  You might also find these banned
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {similarBooks.map(sim => (
+                    <Link
+                      key={sim.slug}
+                      href={`/books/${sim.slug}`}
+                      className="group flex flex-col gap-2"
+                    >
+                      <div className="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        {sim.cover_url ? (
+                          <Image
+                            src={sim.cover_url}
+                            alt={`Cover of ${sim.title}`}
+                            width={160}
+                            height={240}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
+                            No cover
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:underline">
+                        {sim.title}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Find this book */}
       <section>
         <h2 className="text-lg font-semibold mb-3">Find this book</h2>
@@ -293,22 +430,22 @@ export default async function BookPage({
             </a>
           )}
           <div className="flex flex-col sm:flex-row gap-3">
-          <a
-            href={`https://bookshop.org/search?keywords=${titleQuery}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
-          >
-            Bookshop.org
-          </a>
-          <a
-            href={`https://www.kobo.com/search?query=${titleQuery}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
-          >
-            Kobo
-          </a>
+            <a
+              href={`https://bookshop.org/search?keywords=${titleQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+            >
+              Bookshop.org
+            </a>
+            <a
+              href={`https://www.kobo.com/search?query=${titleQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+            >
+              Kobo
+            </a>
           </div>
         </div>
       </section>
