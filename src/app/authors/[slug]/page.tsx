@@ -8,6 +8,17 @@ import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 
+type Author = {
+  id: number
+  display_name: string
+  slug: string
+  bio: string | null
+  birth_year: number | null
+  death_year: number | null
+  birth_country: string | null
+  photo_url: string | null
+}
+
 type Ban = {
   id: number
   status: string
@@ -56,11 +67,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url')
     .eq('slug', slug)
     .single()
 
   if (!author) notFound()
+  const a = author as unknown as Author
 
   const { data: bookLinks } = await supabase
     .from('book_authors')
@@ -86,6 +98,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const countryCount = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
   const activeBanCount = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
 
+  const lifespan = a.birth_year
+    ? `${a.birth_year}${a.birth_country ? `, ${a.birth_country}` : ''} — ${a.death_year ?? 'present'}`
+    : null
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <Link
@@ -95,14 +111,35 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         ← Stats
       </Link>
 
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight mb-3">{author.display_name}</h1>
-        <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
-          <span className="font-medium text-red-500 dark:text-red-400">
-            {books.length} {books.length === 1 ? 'book' : 'books'} banned
-          </span>
-          <span>{totalBans} bans across {countryCount} {countryCount === 1 ? 'country' : 'countries'}</span>
-          {activeBanCount > 0 && <span>{activeBanCount} currently active</span>}
+      {/* Hero */}
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10">
+        {a.photo_url && (
+          <div className="shrink-0 flex justify-center sm:block">
+            <Image
+              src={a.photo_url}
+              alt={a.display_name}
+              width={160}
+              height={200}
+              className="rounded-lg shadow-md object-cover object-top w-[120px] h-[150px] sm:w-[160px] sm:h-[200px]"
+              sizes="160px"
+            />
+          </div>
+        )}
+        <div className="flex flex-col justify-center gap-2 min-w-0">
+          <h1 className="text-3xl font-bold tracking-tight">{a.display_name}</h1>
+          {lifespan && (
+            <p className="text-sm text-gray-500 dark:text-gray-400">{lifespan}</p>
+          )}
+          <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <span className="font-medium text-red-500 dark:text-red-400">
+              {books.length} {books.length === 1 ? 'book' : 'books'} banned
+            </span>
+            <span>{totalBans} bans across {countryCount} {countryCount === 1 ? 'country' : 'countries'}</span>
+            {activeBanCount > 0 && <span>{activeBanCount} currently active</span>}
+          </div>
+          {a.bio && (
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
+          )}
         </div>
       </div>
 
