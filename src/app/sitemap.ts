@@ -7,10 +7,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books.org'
   const supabase = adminClient()
 
-  const [{ data: books }, { data: countries }, { data: bans }] = await Promise.all([
+  const [{ data: books }, { data: countries }, { data: bans }, { data: authors }] = await Promise.all([
     supabase.from('books').select('slug, created_at'),
     supabase.from('countries').select('code'),
     supabase.from('bans').select('country_code'),
+    supabase.from('authors').select('slug').not('slug', 'is', null),
   ])
 
   const countriesWithBans = new Set((bans ?? []).map((b) => b.country_code))
@@ -33,6 +34,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${base}/countries/${c.code}`,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
+      })),
+    ...(authors ?? [])
+      .filter((a) => a.slug)
+      .map((a) => ({
+        url: `${base}/authors/${a.slug}`,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
       })),
   ]
 }
