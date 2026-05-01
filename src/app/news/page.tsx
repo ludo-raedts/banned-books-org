@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Banned Books News — Weekly censorship briefing',
-  description: 'A weekly summary of news about book bans, censorship, and literary freedom worldwide.',
+  description: 'News about book bans, censorship, and literary freedom worldwide.',
   alternates: { canonical: '/news' },
 }
 
@@ -111,7 +111,7 @@ export default async function NewsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-2">News</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-          A weekly digest of news about book bans, censorship, and literary freedom worldwide.
+          News about book bans, censorship, and literary freedom worldwide.
           Sourced from PEN America, Index on Censorship, Publishers Weekly, and Freedom to Read Canada.
         </p>
       </div>
