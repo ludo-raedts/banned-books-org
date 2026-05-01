@@ -80,73 +80,91 @@ export default function ReadingListPage() {
         </div>
 
         {/* Categories */}
-        {CATEGORIES.map(({ slug, heading }) => {
+        {CATEGORIES.map(({ slug, heading }, catIdx) => {
           const books = BOOKS.filter((b) => b.category === slug)
           if (books.length === 0) return null
+          const letter = String.fromCharCode(65 + catIdx)
           return (
-            <section key={slug} className="mb-14">
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-6 pb-2 border-b border-gray-200 dark:border-gray-800">
-                {heading}
-              </h2>
-              <div className="flex flex-col gap-8">
-                {books.map((book) => (
-                  <article key={`${book.author}-${book.title}`} className="group">
-                    {/* Title + author */}
-                    <div className="mb-2">
-                      {book.internalSlug ? (
-                        <Link
-                          href={`/books/${book.internalSlug}`}
-                          className="font-semibold text-gray-900 dark:text-gray-100 hover:underline underline-offset-2"
-                        >
-                          {book.title}
-                        </Link>
-                      ) : (
-                        <span className="font-semibold text-gray-900 dark:text-gray-100">
-                          {book.title}
+            <section key={slug} className="mt-16 first:mt-0">
+              {/* Category label + heading */}
+              <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 mb-8">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">
+                  {letter}
+                </p>
+                <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300 leading-snug">
+                  {heading}
+                </h2>
+              </div>
+
+              {/* Books */}
+              <div>
+                {books.map((book, bookIdx) => {
+                  const isLast = bookIdx === books.length - 1
+                  return (
+                    <article
+                      key={`${book.author}-${book.title}`}
+                      className={`pb-8 mb-8 ${isLast ? '' : 'border-b border-gray-100 dark:border-gray-800'}`}
+                    >
+                      {/* Title + author + database badge */}
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-3">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 leading-snug">
+                          {book.internalSlug ? (
+                            <Link
+                              href={`/books/${book.internalSlug}`}
+                              className="hover:underline underline-offset-2"
+                            >
+                              {book.title}
+                            </Link>
+                          ) : (
+                            book.title
+                          )}
+                        </h3>
+                        <span className="text-gray-400 dark:text-gray-500 text-sm font-normal">·</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">
+                          {book.author}
                         </span>
-                      )}
-                      <span className="text-gray-500 dark:text-gray-400 ml-2 text-sm">
-                        {book.author}
-                      </span>
-                    </div>
+                        {book.isOfficiallyBanned && book.internalSlug && (
+                          <Link
+                            href={`/books/${book.internalSlug}`}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 text-xs font-medium hover:bg-green-200 dark:hover:bg-green-900 transition-colors"
+                          >
+                            📚 In our database
+                          </Link>
+                        )}
+                      </div>
 
-                    {/* Badges */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {book.isOfficiallyBanned && book.internalSlug && (
-                        <Link
-                          href={`/books/${book.internalSlug}`}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-xs font-medium hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
-                        >
-                          📚 In our database
-                        </Link>
-                      )}
-                      {book.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                      {book.description}
-                    </p>
-
-                    {/* Why we recommend it — collapsible via native details */}
-                    <details className="group/details">
-                      <summary className="cursor-pointer text-xs font-medium text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 select-none list-none flex items-center gap-1 transition-colors">
-                        <span className="group-open/details:hidden">▸ Why we recommend it</span>
-                        <span className="hidden group-open/details:inline">▾ Why we recommend it</span>
-                      </summary>
-                      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed pl-3 border-l-2 border-gray-200 dark:border-gray-700">
-                        {book.whyWeRecommend}
+                      {/* Description */}
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                        {book.description}
                       </p>
-                    </details>
-                  </article>
-                ))}
+
+                      {/* Tags — below description */}
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {book.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Why we recommend it */}
+                      <details className="group/details">
+                        <summary className="cursor-pointer list-none select-none inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                          <span className="group-open/details:hidden">▸ Why we recommend it</span>
+                          <span className="hidden group-open/details:inline">▾ Why we recommend it</span>
+                        </summary>
+                        <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-300 dark:border-amber-700 px-4 py-3 rounded-r-md">
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {book.whyWeRecommend}
+                          </p>
+                        </div>
+                      </details>
+                    </article>
+                  )
+                })}
               </div>
             </section>
           )
