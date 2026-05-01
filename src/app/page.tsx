@@ -59,7 +59,7 @@ export default async function HomePage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
-      <div className="mb-4">
+      <div className="mb-3">
         <h1 className="text-3xl font-bold tracking-tight mb-1">Banned Books</h1>
         <p className="text-gray-500 text-sm max-w-xl leading-relaxed">
           An independent catalogue of{' '}
@@ -68,13 +68,6 @@ export default async function HomePage() {
           from Cold War censorship to today&rsquo;s classroom removals.
         </p>
       </div>
-
-      <Link
-        href="/history"
-        className="md:hidden group inline-flex items-center gap-1.5 mb-4 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-      >
-        Essay: The long shadow of censorship →
-      </Link>
 
       {fetchError && (
         <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-8">

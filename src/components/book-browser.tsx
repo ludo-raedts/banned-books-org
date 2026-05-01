@@ -59,15 +59,9 @@ function getReasons(bans: Ban[]): string[] {
 }
 
 function FilterPill({
-  active,
-  onClick,
-  children,
-  color = 'dark',
+  active, onClick, children, color = 'dark',
 }: {
-  active: boolean
-  onClick: () => void
-  children: React.ReactNode
-  color?: 'dark' | 'red'
+  active: boolean; onClick: () => void; children: React.ReactNode; color?: 'dark' | 'red'
 }) {
   const activeClass = color === 'red'
     ? 'bg-red-600 text-white border-red-600'
@@ -86,7 +80,7 @@ function FilterPill({
 
 const PAGE_SIZE = 48
 
-export default function BookBrowser({ books, latestNews = [] }: { books: Book[], latestNews?: NewsPreview[] }) {
+export default function BookBrowser({ books, latestNews = [] }: { books: Book[]; latestNews?: NewsPreview[] }) {
   const [q, setQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
   const [country, setCountry] = useState('')
@@ -118,12 +112,11 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
         const inAuthor = book.book_authors.some(ba => ba.authors?.display_name.toLowerCase().includes(lq))
         if (!inTitle && !inAuthor) return false
       }
-      if (scope   && !book.bans.some(b => b.scopes?.slug === scope))            return false
-      if (country && !book.bans.some(b => b.country_code === country))           return false
-      if (activeOnly && !book.bans.some(b => b.status === 'active'))             return false
+      if (scope    && !book.bans.some(b => b.scopes?.slug === scope))     return false
+      if (country  && !book.bans.some(b => b.country_code === country))   return false
+      if (activeOnly && !book.bans.some(b => b.status === 'active'))      return false
       if (reason) {
-        const slugs = getReasons(book.bans)
-        if (!slugs.includes(reason)) return false
+        if (!getReasons(book.bans).includes(reason)) return false
       }
       return true
     })
@@ -132,8 +125,7 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
   useEffect(() => { setPage(1) }, [q, scope, country, activeOnly, reason])
 
   const featuredPool = useMemo(() =>
-    books
-      .filter(b => b.cover_url && b.description)
+    books.filter(b => b.cover_url && b.description)
       .sort((a, b) => b.bans.length - a.bans.length)
       .slice(0, 50),
     [books]
@@ -150,63 +142,31 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
   const hasMore = visible.length < rest.length
 
   const sentinelRef = useRef<HTMLDivElement>(null)
-  const loadMore = useCallback(() => {
-    if (hasMore) setPage(p => p + 1)
-  }, [hasMore])
-
+  const loadMore = useCallback(() => { if (hasMore) setPage(p => p + 1) }, [hasMore])
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) loadMore()
-    }, { rootMargin: '200px' })
+    const observer = new IntersectionObserver(
+      entries => { if (entries[0].isIntersecting) loadMore() },
+      { rootMargin: '200px' }
+    )
     observer.observe(el)
     return () => observer.disconnect()
   }, [loadMore])
 
   const anyFilter = !!(q || scope || country || activeOnly || reason)
-
-  function clearAll() {
-    setQ(''); setScope(null); setCountry(''); setActiveOnly(false); setReason(null)
-  }
+  function clearAll() { setQ(''); setScope(null); setCountry(''); setActiveOnly(false); setReason(null) }
 
   const hasNews = latestNews.length > 0
 
-  // News panel — shared markup rendered in two positions (desktop sidebar / mobile inline)
-  const newsPanel = hasNews ? (
-    <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Latest news</h2>
-        <Link href="/news" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          All news →
-        </Link>
-      </div>
-      <div>
-        {latestNews.map(item => (
-          <div key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-3 mb-3 last:mb-0">
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              {item.summary.length > 100 ? item.summary.slice(0, 100).trimEnd() + '…' : item.summary}
-            </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-              {item.source_name}
-              {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  ) : null
-
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
 
-      {/* ── Two-column header: controls (left) + news (right) ── */}
-      <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-8 lg:items-start' : undefined}>
-
-        {/* Left column: search + filters + count */}
+      {/* ── ROW 2: Search (left 2/3) + News panel (right 1/3, desktop only) ── */}
+      <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start' : undefined}>
+        {/* Search */}
         <div className={hasNews ? 'lg:col-span-2' : undefined}>
-          {/* Search */}
-          <div className="relative mb-3">
+          <div className="relative">
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -220,84 +180,96 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
               className="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
-
-          {/* Filters */}
-          <div className="mb-3">
-            <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 sm:flex-wrap sm:overflow-x-visible sm:mx-0 sm:px-0 sm:pb-0">
-              <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
-              <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
-              <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
-              <FilterPill active={scope === 'public_library'} onClick={() => setScope(scope === 'public_library' ? null : 'public_library')}>📚 Libraries</FilterPill>
-              <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
-              <FilterPill active={activeOnly} onClick={() => setActiveOnly(!activeOnly)} color="red">
-                🚫 Currently banned
-              </FilterPill>
-              <div className="relative shrink-0">
-                <select
-                  value={country}
-                  onChange={e => setCountry(e.target.value)}
-                  className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
-                    country
-                      ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
-                      : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
-                  }`}
-                >
-                  <option value="">🌍 All countries</option>
-                  {countries.map(c => (
-                    <option key={c.code} value={c.code}>{c.name} ({c.count})</option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
-              </div>
-              <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
-              {FILTER_REASONS.map(slug => (
-                <FilterPill
-                  key={slug}
-                  active={reason === slug}
-                  onClick={() => setReason(reason === slug ? null : slug)}
-                >
-                  <span aria-hidden>{reasonIcon(slug)}</span>
-                  {' '}{reasonLabel(slug)}
-                </FilterPill>
-              ))}
-              {anyFilter && (
-                <button
-                  onClick={clearAll}
-                  className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                  ✕ Clear
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Count */}
-          <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">
-            {anyFilter
-              ? <><span className="font-medium text-gray-700 dark:text-gray-200">{filtered.length.toLocaleString()}</span> of {books.length.toLocaleString()} books</>
-              : <><span className="font-medium text-gray-700 dark:text-gray-200">{books.length.toLocaleString()}</span> books</>
-            }
-          </p>
         </div>
 
-        {/* Right column: news panel on desktop */}
-        {newsPanel && (
+        {/* News panel — desktop only, aligned to search bar top */}
+        {hasNews && (
           <div className="hidden lg:block">
-            {newsPanel}
+            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Latest news
+                </span>
+                <Link href="/news" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                  All news →
+                </Link>
+              </div>
+              <div>
+                {latestNews.map(item => (
+                  <Link
+                    key={item.id}
+                    href="/news"
+                    className="block border-l-2 border-gray-200 dark:border-gray-700 pl-3 mb-3 last:mb-0 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group/item"
+                  >
+                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-2 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
+                      {item.summary}
+                    </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                      {item.source_name}
+                      {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* News panel on mobile — between filters and grid */}
-      {newsPanel && (
-        <div className="lg:hidden mb-6">
-          {newsPanel}
+      {/* ── ROW 3: Filters (full width) + count ── */}
+      <div>
+        <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 sm:flex-wrap sm:overflow-x-visible sm:mx-0 sm:px-0 sm:pb-0">
+          <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
+          <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
+          <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
+          <FilterPill active={scope === 'public_library'} onClick={() => setScope(scope === 'public_library' ? null : 'public_library')}>📚 Libraries</FilterPill>
+          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <FilterPill active={activeOnly} onClick={() => setActiveOnly(!activeOnly)} color="red">
+            🚫 Currently banned
+          </FilterPill>
+          <div className="relative shrink-0">
+            <select
+              value={country}
+              onChange={e => setCountry(e.target.value)}
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+                country
+                  ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
+              }`}
+            >
+              <option value="">🌍 All countries</option>
+              {countries.map(c => (
+                <option key={c.code} value={c.code}>{c.name} ({c.count})</option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
+          </div>
+          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          {FILTER_REASONS.map(slug => (
+            <FilterPill key={slug} active={reason === slug} onClick={() => setReason(reason === slug ? null : slug)}>
+              <span aria-hidden>{reasonIcon(slug)}</span>{' '}{reasonLabel(slug)}
+            </FilterPill>
+          ))}
+          {anyFilter && (
+            <button
+              onClick={clearAll}
+              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              ✕ Clear
+            </button>
+          )}
         </div>
-      )}
+        <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
+          {anyFilter
+            ? <><span className="font-medium text-gray-700 dark:text-gray-200">{filtered.length.toLocaleString()}</span> of {books.length.toLocaleString()} books</>
+            : <><span className="font-medium text-gray-700 dark:text-gray-200">{books.length.toLocaleString()}</span> books</>
+          }
+        </p>
+      </div>
 
-      {/* ── Featured — full width ── */}
+      {/* ── ROW 4: Featured — full width ── */}
       {featured && (
-        <Link href={`/books/${featured.slug}`} className="block mb-8 group">
+        <Link href={`/books/${featured.slug}`} className="block group">
           <div className="flex gap-4 sm:gap-6 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-5 hover:border-gray-400 dark:hover:border-gray-500 transition-colors bg-white dark:bg-gray-900">
             <div className="shrink-0">
               {featured.cover_url ? (
@@ -334,10 +306,13 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
       )}
 
       {filtered.length === 0 && (
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">No books match your filters. <button onClick={clearAll} className="underline">Clear filters</button></p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
+          No books match your filters.{' '}
+          <button onClick={clearAll} className="underline">Clear filters</button>
+        </p>
       )}
 
-      {/* ── Grid — full width ── */}
+      {/* ── ROW 5: Book grid — full width ── */}
       {rest.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {visible.map(book => (
@@ -345,8 +320,7 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[],
               <div className="mb-2">
                 {book.cover_url ? (
                   <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
-                    className="rounded shadow-sm object-cover w-full"
-                    sizes="160px" />
+                    className="rounded shadow-sm object-cover w-full" sizes="160px" />
                 ) : (
                   <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
                     {book.title}
