@@ -19,22 +19,30 @@ export default async function HomePage() {
 
   try {
     const supabase = adminClient()
-    const { data, error } = await supabase
-      .from('books')
-      .select(`
-        id, title, slug, cover_url, description, first_published_year, genres,
-        book_authors(authors(display_name)),
-        bans(
-          id, status, country_code,
-          countries(name_en),
-          scopes(slug, label_en),
-          ban_reason_links(reasons(slug))
-        )
-      `)
-      .order('title')
-
-    if (error) fetchError = error.message
-    else books = (data as unknown as Book[]) ?? []
+    const SELECT = `
+      id, title, slug, cover_url, description, first_published_year, genres,
+      book_authors(authors(display_name)),
+      bans(
+        id, status, country_code,
+        countries(name_en),
+        scopes(slug, label_en),
+        ban_reason_links(reasons(slug))
+      )
+    `
+    // Supabase/PostgREST caps at 1000 rows per request; fetch all pages
+    const PAGE = 1000
+    let offset = 0
+    while (true) {
+      const { data, error } = await supabase
+        .from('books')
+        .select(SELECT)
+        .order('title')
+        .range(offset, offset + PAGE - 1)
+      if (error) { fetchError = error.message; break }
+      books = books.concat((data as unknown as Book[]) ?? [])
+      if (!data || data.length < PAGE) break
+      offset += PAGE
+    }
   } catch (err) {
     fetchError = err instanceof Error ? err.message : 'Unexpected error'
   }
