@@ -80,17 +80,13 @@ export default function ReadingListPage() {
         </div>
 
         {/* Categories */}
-        {CATEGORIES.map(({ slug, heading }, catIdx) => {
+        {CATEGORIES.map(({ slug, heading }) => {
           const books = BOOKS.filter((b) => b.category === slug)
           if (books.length === 0) return null
-          const letter = String.fromCharCode(65 + catIdx)
           return (
             <section key={slug} className="mt-16 first:mt-0">
-              {/* Category label + heading */}
+              {/* Category heading */}
               <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 mb-8">
-                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">
-                  {letter}
-                </p>
                 <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300 leading-snug">
                   {heading}
                 </h2>
