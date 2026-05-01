@@ -112,12 +112,10 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
         const inAuthor = book.book_authors.some(ba => ba.authors?.display_name.toLowerCase().includes(lq))
         if (!inTitle && !inAuthor) return false
       }
-      if (scope    && !book.bans.some(b => b.scopes?.slug === scope))     return false
-      if (country  && !book.bans.some(b => b.country_code === country))   return false
-      if (activeOnly && !book.bans.some(b => b.status === 'active'))      return false
-      if (reason) {
-        if (!getReasons(book.bans).includes(reason)) return false
-      }
+      if (scope    && !book.bans.some(b => b.scopes?.slug === scope))   return false
+      if (country  && !book.bans.some(b => b.country_code === country)) return false
+      if (activeOnly && !book.bans.some(b => b.status === 'active'))    return false
+      if (reason && !getReasons(book.bans).includes(reason))            return false
       return true
     })
   }, [books, q, scope, country, activeOnly, reason])
@@ -162,10 +160,14 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
   return (
     <div className="flex flex-col gap-4">
 
-      {/* ── ROW 2: Search (left 2/3) + News panel (right 1/3, desktop only) ── */}
-      <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start' : undefined}>
-        {/* Search */}
-        <div className={hasNews ? 'lg:col-span-2' : undefined}>
+      {/* ── Two-column section: [search + compact featured] | [news] ── */}
+      {/* CSS grid default is items-stretch — both columns match height automatically */}
+      <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6' : undefined}>
+
+        {/* LEFT: search bar + compact featured card */}
+        <div className={`flex flex-col gap-3${hasNews ? ' lg:col-span-2' : ''}`}>
+
+          {/* Search */}
           <div className="relative">
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,28 +182,79 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
               className="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
+
+          {/* Compact featured card — visible on all screen sizes */}
+          {featured && (
+            <Link
+              href={`/books/${featured.slug}`}
+              className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+            >
+              <div className="flex gap-3">
+                {/* Cover ~80px wide */}
+                <div className="shrink-0 w-20">
+                  {featured.cover_url ? (
+                    <Image
+                      src={featured.cover_url}
+                      alt={`Cover of ${featured.title}`}
+                      width={80}
+                      height={120}
+                      className="rounded shadow-sm object-cover w-20 h-[120px]"
+                      priority
+                      sizes="80px"
+                    />
+                  ) : (
+                    <div className="w-20 h-[120px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
+                      No cover
+                    </div>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                  <div>
+                    <h2 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:underline">
+                      {featured.title}
+                    </h2>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      {authorName(featured)}
+                      {featured.first_published_year && (
+                        <span className="text-gray-400 dark:text-gray-500"> · {featured.first_published_year}</span>
+                      )}
+                    </p>
+                  </div>
+                  {featured.description && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-3">
+                      {featured.description}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-1">
+                    {featured.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
+                    {getReasons(featured.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
+                  </div>
+                  <p className="text-xs font-medium text-red-500 dark:text-red-400">{banLabel(featured.bans)}</p>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
-        {/* News panel — desktop only, aligned to search bar top */}
+        {/* RIGHT: news panel — hidden on mobile, stretches to match left column height */}
         {hasNews && (
           <div className="hidden lg:block">
-            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                   Latest news
                 </span>
-                <Link href="/news" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                  All news →
-                </Link>
               </div>
-              <div>
+              <div className="flex flex-col flex-1 divide-y divide-gray-100 dark:divide-gray-800">
                 {latestNews.map(item => (
                   <Link
                     key={item.id}
                     href="/news"
-                    className="block border-l-2 border-gray-200 dark:border-gray-700 pl-3 mb-3 last:mb-0 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group/item"
+                    className="py-2.5 group/item first:pt-0"
                   >
-                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-2 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
+                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
                       {item.summary}
                     </p>
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
@@ -211,12 +264,18 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
                   </Link>
                 ))}
               </div>
+              <Link
+                href="/news"
+                className="mt-3 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors text-right block"
+              >
+                All news →
+              </Link>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── ROW 3: Filters (full width) + count ── */}
+      {/* ── Filters + count — full width ── */}
       <div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 sm:flex-wrap sm:overflow-x-visible sm:mx-0 sm:px-0 sm:pb-0">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
@@ -267,44 +326,6 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
         </p>
       </div>
 
-      {/* ── ROW 4: Featured — full width ── */}
-      {featured && (
-        <Link href={`/books/${featured.slug}`} className="block group">
-          <div className="flex gap-4 sm:gap-6 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-5 hover:border-gray-400 dark:hover:border-gray-500 transition-colors bg-white dark:bg-gray-900">
-            <div className="shrink-0">
-              {featured.cover_url ? (
-                <Image src={featured.cover_url} alt={`Cover of ${featured.title}`} width={200} height={300}
-                  className="rounded shadow-sm object-cover sm:w-[110px] sm:h-[165px]" priority sizes="200px" />
-              ) : (
-                <div className="w-[90px] h-[135px] sm:w-[110px] sm:h-[165px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
-                  No cover
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col justify-center gap-2 min-w-0">
-              <div>
-                <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Featured</p>
-                <h2 className="text-lg sm:text-xl font-bold group-hover:underline leading-snug">{featured.title}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                  {authorName(featured)}
-                  {featured.first_published_year && (
-                    <span className="text-gray-400 dark:text-gray-500"> · {featured.first_published_year}</span>
-                  )}
-                </p>
-              </div>
-              {featured.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 sm:line-clamp-3">{featured.description}</p>
-              )}
-              <div className="flex flex-wrap gap-1.5">
-                {featured.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
-                {getReasons(featured.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
-              </div>
-              <p className="text-sm font-medium text-red-500 dark:text-red-400">{banLabel(featured.bans)}</p>
-            </div>
-          </div>
-        </Link>
-      )}
-
       {filtered.length === 0 && (
         <p className="text-gray-500 dark:text-gray-400 text-sm">
           No books match your filters.{' '}
@@ -312,7 +333,7 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
         </p>
       )}
 
-      {/* ── ROW 5: Book grid — full width ── */}
+      {/* ── Book grid — full width ── */}
       {rest.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {visible.map(book => (
