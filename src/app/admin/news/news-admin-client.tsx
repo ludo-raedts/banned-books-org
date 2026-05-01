@@ -118,7 +118,7 @@ export default function NewsAdminClient({ initialItems }: { initialItems: NewsIt
     setFetching(true)
     setFetchMsg(null)
     try {
-      const res = await fetch('/api/admin/fetch-news', { method: 'POST' })
+      const res = await fetch('/api/admin/fetch-news', { method: 'POST', credentials: 'include' })
       const data = await res.json()
       if (!res.ok) {
         setFetchMsg(`Error: ${data.error}`)
@@ -138,6 +138,7 @@ export default function NewsAdminClient({ initialItems }: { initialItems: NewsIt
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'reject_all' }),
+      credentials: 'include',
     })
     setRejectingAll(false)
     if (res.ok) setItems([])
