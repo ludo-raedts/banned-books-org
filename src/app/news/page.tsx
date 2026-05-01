@@ -1,0 +1,151 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { adminClient } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Banned Books News — Weekly censorship briefing',
+  description: 'A weekly summary of news about book bans, censorship, and literary freedom worldwide.',
+  alternates: { canonical: '/news' },
+}
+
+type NewsItem = {
+  id: number
+  title: string
+  source_name: string
+  source_url: string
+  published_at: string | null
+  summary: string
+  published_week: string
+}
+
+type BookRef = { slug: string; title: string }
+type CountryRef = { code: string; name_en: string }
+
+function formatWeek(dateStr: string): string {
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+}
+
+function linkify(text: string, books: BookRef[], countries: CountryRef[]): React.ReactNode[] {
+  let remaining = text
+  const parts: React.ReactNode[] = []
+  let key = 0
+
+  // Build a map of phrases to replace (longest first to avoid partial matches)
+  const replacements: Array<{ phrase: string; node: React.ReactNode }> = []
+
+  for (const book of books) {
+    if (text.toLowerCase().includes(book.title.toLowerCase())) {
+      replacements.push({
+        phrase: book.title,
+        node: <Link key={`b-${key++}`} href={`/books/${book.slug}`} className="text-gray-900 dark:text-gray-100 underline underline-offset-2 hover:no-underline">{book.title}</Link>,
+      })
+    }
+  }
+  for (const country of countries) {
+    if (text.toLowerCase().includes(country.name_en.toLowerCase())) {
+      replacements.push({
+        phrase: country.name_en,
+        node: <Link key={`c-${key++}`} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 dark:text-gray-400 underline underline-offset-2 hover:no-underline">{country.name_en}</Link>,
+      })
+    }
+  }
+
+  // Sort longest match first to avoid partial replacements
+  replacements.sort((a, b) => b.phrase.length - a.phrase.length)
+
+  // Simple greedy replacement (first match wins per position)
+  while (remaining.length > 0) {
+    let matched = false
+    for (const { phrase, node } of replacements) {
+      const idx = remaining.toLowerCase().indexOf(phrase.toLowerCase())
+      if (idx === -1) continue
+      if (idx > 0) parts.push(remaining.slice(0, idx))
+      parts.push(node)
+      remaining = remaining.slice(idx + phrase.length)
+      matched = true
+      break
+    }
+    if (!matched) { parts.push(remaining); break }
+  }
+
+  return parts
+}
+
+export default async function NewsPage() {
+  const supabase = adminClient()
+
+  const [{ data: rawItems }, { data: books }, { data: countries }] = await Promise.all([
+    supabase
+      .from('news_items')
+      .select('id, title, source_name, source_url, published_at, summary, published_week')
+      .eq('status', 'published')
+      .order('published_week', { ascending: false })
+      .order('published_at', { ascending: false }),
+    supabase.from('books').select('slug, title'),
+    supabase.from('countries').select('code, name_en'),
+  ])
+
+  const items = (rawItems ?? []) as NewsItem[]
+  const bookRefs = (books ?? []) as BookRef[]
+  const countryRefs = (countries ?? []) as CountryRef[]
+
+  // Group by published_week
+  const byWeek = new Map<string, NewsItem[]>()
+  for (const item of items) {
+    const week = item.published_week ?? 'unknown'
+    const existing = byWeek.get(week) ?? []
+    existing.push(item)
+    byWeek.set(week, existing)
+  }
+
+  const weeks = [...byWeek.entries()]
+
+  return (
+    <main className="max-w-2xl mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">News</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+          A weekly digest of news about book bans, censorship, and literary freedom worldwide.
+          Sourced from PEN America, Index on Censorship, Publishers Weekly, and Freedom to Read Canada.
+        </p>
+      </div>
+
+      {weeks.length === 0 && (
+        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
+      )}
+
+      {weeks.map(([week, weekItems]) => (
+        <section key={week} className="mb-10">
+          <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+            Week of {week !== 'unknown' ? formatWeek(week) : '—'}
+          </h2>
+          <div className="flex flex-col gap-6">
+            {weekItems.map(item => (
+              <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {linkify(item.summary, bookRefs, countryRefs)}
+                </p>
+                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
+                  >
+                    {item.source_name}
+                  </a>
+                  {item.published_at && (
+                    <span> · {new Date(item.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                  )}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </main>
+  )
+}

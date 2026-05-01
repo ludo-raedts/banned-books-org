@@ -62,6 +62,7 @@ export default function RootLayout({
               <Link href="/reasons" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Reasons</Link>
               <Link href="/history" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">History</Link>
               <Link href="/sources" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Sources</Link>
+              <Link href="/news" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">News</Link>
               <Link href="/about" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">About</Link>
             </nav>
           </div>
@@ -78,6 +79,7 @@ export default function RootLayout({
               <Link href="/scope/government" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Government bans</Link>
               <Link href="/history" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">History</Link>
               <Link href="/sources" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Sources</Link>
+              <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
             </nav>
           </div>
