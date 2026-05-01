@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
   res.cookies.set('admin_session', secret, {
     httpOnly: true,
     sameSite: 'strict',
-    path: '/admin',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7,
     secure: process.env.NODE_ENV === 'production',
   })
   return res
