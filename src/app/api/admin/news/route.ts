@@ -11,7 +11,16 @@ function currentMonday(): string {
 
 export async function PATCH(req: NextRequest) {
   const { id, action, summary } = await req.json()
-  if (!id || !action) return NextResponse.json({ error: 'Missing id or action' }, { status: 400 })
+  if (!action) return NextResponse.json({ error: 'Missing action' }, { status: 400 })
+
+  if (action === 'reject_all') {
+    const supabase = adminClient()
+    const { error } = await supabase.from('news_items').update({ status: 'rejected' }).eq('status', 'draft')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
+
+  if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
 
   const supabase = adminClient()
 

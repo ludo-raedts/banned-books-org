@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type NewsItem = {
   id: number
@@ -104,20 +105,73 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
 
 export default function NewsAdminClient({ initialItems }: { initialItems: NewsItem[] }) {
   const [items, setItems] = useState<NewsItem[]>(initialItems)
+  const [fetching, setFetching] = useState(false)
+  const [fetchMsg, setFetchMsg] = useState<string | null>(null)
+  const [rejectingAll, setRejectingAll] = useState(false)
+  const router = useRouter()
 
   function onDone(id: number) {
     setItems(prev => prev.filter(i => i.id !== id))
   }
 
-  if (items.length === 0) {
-    return <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No drafts — run the fetch-news script to populate.</p>
+  async function fetchNow() {
+    setFetching(true)
+    setFetchMsg(null)
+    try {
+      const res = await fetch('/api/admin/fetch-news', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) {
+        setFetchMsg(`Error: ${data.error}`)
+      } else {
+        setFetchMsg(`Done — ${data.saved} new draft${data.saved !== 1 ? 's' : ''} added, ${data.skipped} skipped as not relevant${data.errors?.length ? `, ${data.errors.length} error(s)` : ''}`)
+        router.refresh()
+      }
+    } catch {
+      setFetchMsg('Network error')
+    }
+    setFetching(false)
+  }
+
+  async function rejectAll() {
+    setRejectingAll(true)
+    const res = await fetch('/api/admin/news', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reject_all' }),
+    })
+    setRejectingAll(false)
+    if (res.ok) setItems([])
   }
 
   return (
     <div className="flex flex-col gap-4">
-      {items.map(item => (
-        <NewsRow key={item.id} item={item} onDone={onDone} />
-      ))}
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          onClick={fetchNow}
+          disabled={fetching || rejectingAll}
+          className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50 hover:opacity-90"
+        >
+          {fetching ? 'Fetching…' : 'Fetch news now'}
+        </button>
+        {items.length > 0 && (
+          <button
+            onClick={rejectAll}
+            disabled={fetching || rejectingAll}
+            className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium disabled:opacity-50 hover:bg-red-700"
+          >
+            {rejectingAll ? 'Rejecting…' : 'Reject all'}
+          </button>
+        )}
+        {fetchMsg && <span className="text-sm text-gray-600 dark:text-gray-400">{fetchMsg}</span>}
+      </div>
+
+      {items.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No drafts — run the fetch-news script to populate.</p>
+      ) : (
+        items.map(item => (
+          <NewsRow key={item.id} item={item} onDone={onDone} />
+        ))
+      )}
     </div>
   )
 }
