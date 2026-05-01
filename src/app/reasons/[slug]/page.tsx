@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${icon} ${label} — Books Banned for ${label} Content`,
     description: `Browse books banned or challenged for ${label.toLowerCase()} content. ${REASON_INTROS[slug]?.slice(0, 120) ?? ''}`,
+    alternates: { canonical: `/reasons/${slug}` },
   }
 }
 

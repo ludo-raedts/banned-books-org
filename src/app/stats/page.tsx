@@ -8,6 +8,7 @@ import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 export const metadata: Metadata = {
   title: 'Stats — The State of Literary Censorship',
   description: 'Top lists and statistics: most banned countries, most challenged authors, reasons for banning, and a timeline of censorship through history.',
+  alternates: { canonical: '/stats' },
 }
 
 function countryFlag(code: string): string {

@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${author.display_name} — Banned Books`,
     description: `Books by ${author.display_name} that have been banned or challenged worldwide.`,
+    alternates: { canonical: `/authors/${slug}` },
   }
 }
 

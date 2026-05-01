@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       'From Emperor Qin to school board hearings — how book banning has functioned as a confession of fear across two thousand years of human history.',
     type: 'article',
   },
+  alternates: { canonical: '/history' },
 }
 
 const jsonLd = {

@@ -25,7 +25,7 @@ export async function generateMetadata({
   const title = `${data.label_en} Bans`
   const description = `Browse all books banned in a ${data.label_en.toLowerCase()} context and the reasons behind their censorship.`
 
-  return { title, description, openGraph: { title, description } }
+  return { title, description, alternates: { canonical: `/scope/${slug}` }, openGraph: { title, description } }
 }
 
 type Book = {

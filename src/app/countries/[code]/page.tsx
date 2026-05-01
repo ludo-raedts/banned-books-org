@@ -27,7 +27,7 @@ export async function generateMetadata({
     ? data.description.slice(0, 155) + (data.description.length > 155 ? '…' : '')
     : `Browse books banned in ${data.name_en} and learn about the history of censorship there.`
 
-  return { title, description, openGraph: { title, description } }
+  return { title, description, alternates: { canonical: `/countries/${code.toLowerCase()}` }, openGraph: { title, description } }
 }
 
 type Book = {

@@ -8,6 +8,7 @@ import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 export const metadata: Metadata = {
   title: 'Reasons — Why Books Are Banned',
   description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious blasphemy, and more.',
+  alternates: { canonical: '/reasons' },
 }
 
 const REASON_COLORS: Record<string, string> = {

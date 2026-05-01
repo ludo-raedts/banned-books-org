@@ -3,6 +3,7 @@ import Link from 'next/link'
 export const metadata = {
   title: 'Sources — Banned Books',
   description: 'Data sources used to build the Banned Books catalogue.',
+  alternates: { canonical: '/sources' },
 }
 
 const SOURCES = [

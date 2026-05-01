@@ -5,6 +5,7 @@ import ContactForm from '@/components/contact-form'
 export const metadata: Metadata = {
   title: 'About',
   description: 'About the Banned Books catalogue — an independent open database of books banned by governments, schools, and libraries worldwide.',
+  alternates: { canonical: '/about' },
 }
 
 async function getStats() {

@@ -7,6 +7,7 @@ import { adminClient } from '@/lib/supabase'
 export const metadata: Metadata = {
   title: 'Countries — Where Books Are Banned',
   description: 'Browse all countries where books have been banned or challenged. From authoritarian censorship to school board removals — an international map of literary suppression.',
+  alternates: { canonical: '/countries' },
 }
 
 function countryFlag(code: string): string {

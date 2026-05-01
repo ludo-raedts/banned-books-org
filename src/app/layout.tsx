@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books.org'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.banned-books.org'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  alternates: {
+    canonical: '/',
   },
 };
 

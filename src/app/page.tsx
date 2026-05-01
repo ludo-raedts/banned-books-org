@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const n = count ?? 0
   return {
     description: `An international catalogue of ${n.toLocaleString('en')} books banned by governments and schools worldwide. Browse by country, genre, and reason.`,
+    alternates: { canonical: '/' },
   }
 }
 
