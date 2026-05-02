@@ -24,6 +24,7 @@ export type Book = {
   slug: string
   cover_url: string | null
   description: string | null
+  description_book: string | null
   first_published_year: number | null
   genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
@@ -271,9 +272,9 @@ export default function BookBrowser({
                         )}
                       </p>
                     </div>
-                    {featuredBook.description && (
+                    {(featuredBook.description_book || featuredBook.description) && (
                       <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
-                        {featuredBook.description}
+                        {featuredBook.description_book || featuredBook.description}
                       </p>
                     )}
                     <div className="flex flex-wrap gap-1">
@@ -504,8 +505,8 @@ export default function BookBrowser({
               </div>
               <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{authorName(book)}</p>
-              {book.description && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description}</p>
+              {(book.description_book || book.description) && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book || book.description}</p>
               )}
               <div className="flex flex-wrap gap-1 mt-1.5">
                 {book.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}

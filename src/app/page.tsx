@@ -21,7 +21,7 @@ export default async function HomePage() {
   try {
     const supabase = adminClient()
     const SELECT = `
-      id, title, slug, cover_url, description, first_published_year, genres,
+      id, title, slug, cover_url, description, description_book, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
         id, status, country_code,
@@ -58,7 +58,7 @@ export default async function HomePage() {
   const bookCount = books.length
 
   // Server-side random featured book — different on every request (force-dynamic)
-  const eligible = books.filter(b => b.cover_url && b.description)
+  const eligible = books.filter(b => b.cover_url && (b.description_book || b.description))
   const featuredBook: Book | null = eligible.length > 0
     ? eligible[Math.floor(Math.random() * eligible.length)]
     : null
