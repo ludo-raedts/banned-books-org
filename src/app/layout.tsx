@@ -69,7 +69,7 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <div className="flex-1 pb-16 sm:pb-0">{children}</div>
+        <div className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] sm:pb-0">{children}</div>
         <footer className="border-t border-gray-200 dark:border-gray-800 mt-10 mb-16 sm:mb-0">
           <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400 dark:text-gray-500">
             <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>

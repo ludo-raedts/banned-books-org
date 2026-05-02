@@ -362,7 +362,11 @@ export default function BookBrowser({
 
       {/* ── Filters + count — full width ── */}
       <div>
-        <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 sm:flex-wrap sm:overflow-x-visible sm:mx-0 sm:px-0 sm:pb-0">
+        <div className="mb-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter the database</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">Narrow the catalogue by institution, country, status, or reason.</p>
+        </div>
+        <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
           <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
           <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
@@ -420,6 +424,16 @@ export default function BookBrowser({
 
       {/* ── Book grid — full width ── */}
       {rest.length > 0 && (
+        <div id="book-grid">
+          <div className="mb-4">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Explore banned books worldwide</h2>
+            <p className="text-sm text-gray-400 dark:text-gray-500">
+              {anyFilter
+                ? <>Showing {filtered.length.toLocaleString()} of {books.length.toLocaleString()} documented books</>
+                : <>Showing {books.length.toLocaleString()} documented books</>
+              }
+            </p>
+          </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {visible.map(book => (
             <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-col">
@@ -445,6 +459,7 @@ export default function BookBrowser({
               <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1.5">{banLabel(book.bans)}</p>
             </Link>
           ))}
+        </div>
         </div>
       )}
 

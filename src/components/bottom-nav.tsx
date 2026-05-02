@@ -23,12 +23,12 @@ export default function BottomNav() {
             href={item.href}
             className={`flex-1 flex flex-col items-center justify-center py-2.5 gap-0.5 transition-colors ${
               active
-                ? 'text-gray-900 dark:text-gray-100'
+                ? 'text-brand dark:text-red-400'
                 : 'text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
             <span className="text-xl leading-none">{item.icon}</span>
-            <span className={`text-[10px] font-medium tracking-tight ${active ? 'text-gray-900 dark:text-gray-100' : ''}`}>
+            <span className={`text-[10px] font-medium tracking-tight ${active ? 'text-brand dark:text-red-400' : ''}`}>
               {item.label}
             </span>
           </Link>
