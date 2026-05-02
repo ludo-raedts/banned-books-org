@@ -80,7 +80,17 @@ function FilterPill({
 
 const PAGE_SIZE = 48
 
-export default function BookBrowser({ books, latestNews = [] }: { books: Book[]; latestNews?: NewsPreview[] }) {
+export default function BookBrowser({
+  books,
+  latestNews = [],
+  featuredBook = null,
+  bookCount = 0,
+}: {
+  books: Book[]
+  latestNews?: NewsPreview[]
+  featuredBook?: Book | null
+  bookCount?: number
+}) {
   const [q, setQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
   const [country, setCountry] = useState('')
@@ -122,20 +132,8 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
 
   useEffect(() => { setPage(1) }, [q, scope, country, activeOnly, reason])
 
-  const featuredPool = useMemo(() =>
-    books.filter(b => b.cover_url && b.description)
-      .sort((a, b) => b.bans.length - a.bans.length)
-      .slice(0, 50),
-    [books]
-  )
-
-  const [featuredIdx, setFeaturedIdx] = useState<number>(-1)
-  useEffect(() => {
-    if (featuredPool.length > 0) setFeaturedIdx(Math.floor(Math.random() * featuredPool.length))
-  }, [featuredPool.length])
-
-  const featured = featuredIdx >= 0 ? featuredPool[featuredIdx] : null
-  const rest = featured ? filtered.filter(b => b !== featured) : filtered
+  // Use server-provided featuredBook; exclude it from the grid by ID
+  const rest = featuredBook ? filtered.filter(b => b.id !== featuredBook.id) : filtered
   const visible = rest.slice(0, page * PAGE_SIZE)
   const hasMore = visible.length < rest.length
 
@@ -156,96 +154,112 @@ export default function BookBrowser({ books, latestNews = [] }: { books: Book[];
   function clearAll() { setQ(''); setScope(null); setCountry(''); setActiveOnly(false); setReason(null) }
 
   const hasNews = latestNews.length > 0
+  const displayCount = bookCount > 0 ? bookCount : books.length
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
 
-      {/* ── Two-column section: [search + compact featured] | [news] ── */}
-      {/* CSS grid default is items-stretch — both columns match height automatically */}
+      {/* ── TOP SECTION: 2-col on desktop ── */}
       <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6' : undefined}>
 
-        {/* LEFT: search bar + compact featured card */}
-        <div className={`flex flex-col gap-3${hasNews ? ' lg:col-span-2' : ''}`}>
+        {/* LEFT: Hero + Search + Featured */}
+        <div className={`flex flex-col gap-4${hasNews ? ' lg:col-span-2' : ''}`}>
+
+          {/* Hero */}
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-2">
+              Books are still being banned
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl mb-3">
+              An independent catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
+            </p>
+            {displayCount > 0 && (
+              <div className="inline-flex items-center px-3 py-1.5 bg-brand-light dark:bg-brand-dark/20 rounded-full text-sm text-brand font-medium">
+                {displayCount.toLocaleString()} books documented — across countries, schools, libraries, and governments
+              </div>
+            )}
+          </div>
 
           {/* Search */}
           <div className="relative">
-            <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
               </svg>
             </span>
             <input
               type="search"
-              placeholder="Search by title or author…"
+              placeholder="Search banned books, authors, or topics…"
               value={q}
               onChange={e => setQ(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full pl-11 pr-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 min-h-[52px]"
             />
           </div>
 
-          {/* Compact featured card — visible on all screen sizes */}
-          {featured && (
-            <Link
-              href={`/books/${featured.slug}`}
-              className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
-            >
-              <div className="flex gap-3">
-                {/* Cover ~80px wide */}
-                <div className="shrink-0 w-20">
-                  {featured.cover_url ? (
-                    <Image
-                      src={featured.cover_url}
-                      alt={`Cover of ${featured.title}`}
-                      width={80}
-                      height={120}
-                      className="rounded shadow-sm object-cover w-20 h-[120px]"
-                      priority
-                      sizes="80px"
-                    />
-                  ) : (
-                    <div className="w-20 h-[120px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
-                      No cover
+          {/* Compact featured card */}
+          {featuredBook && (
+            <div>
+              <p className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">Featured entry</p>
+              <Link
+                href={`/books/${featuredBook.slug}`}
+                className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              >
+                <div className="flex gap-3">
+                  <div className="shrink-0 w-20">
+                    {featuredBook.cover_url ? (
+                      <Image
+                        src={featuredBook.cover_url}
+                        alt={`Cover of ${featuredBook.title}`}
+                        width={80}
+                        height={120}
+                        className="rounded shadow-sm object-cover w-20 h-[120px]"
+                        priority
+                        sizes="80px"
+                      />
+                    ) : (
+                      <div className="w-20 h-[120px] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
+                        No cover
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                    <div>
+                      <h2 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:underline">
+                        {featuredBook.title}
+                      </h2>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        {authorName(featuredBook)}
+                        {featuredBook.first_published_year && (
+                          <span className="text-gray-400 dark:text-gray-500"> · {featuredBook.first_published_year}</span>
+                        )}
+                      </p>
                     </div>
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-                  <div>
-                    <h2 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:underline">
-                      {featured.title}
-                    </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      {authorName(featured)}
-                      {featured.first_published_year && (
-                        <span className="text-gray-400 dark:text-gray-500"> · {featured.first_published_year}</span>
-                      )}
-                    </p>
+                    {featuredBook.description && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
+                        {featuredBook.description}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-1">
+                      {featuredBook.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
+                      {getReasons(featuredBook.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
+                    </div>
+                    <p className="text-xs font-medium text-red-500 dark:text-red-400">{banLabel(featuredBook.bans)}</p>
                   </div>
-                  {featured.description && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-3">
-                      {featured.description}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-1">
-                    {featured.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
-                    {getReasons(featured.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
-                  </div>
-                  <p className="text-xs font-medium text-red-500 dark:text-red-400">{banLabel(featured.bans)}</p>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           )}
         </div>
 
-        {/* RIGHT: news panel — hidden on mobile, stretches to match left column height */}
+        {/* RIGHT: News panel — desktop only */}
         {hasNews && (
           <div className="hidden lg:block">
             <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col">
-              <div className="flex items-center justify-between mb-3">
+              <div className="mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  Latest news
+                  Happening now
                 </span>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
               </div>
               <div className="flex flex-col flex-1 divide-y divide-gray-100 dark:divide-gray-800">
                 {latestNews.map(item => (
