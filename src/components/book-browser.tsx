@@ -289,6 +289,77 @@ export default function BookBrowser({
         )}
       </div>
 
+      {/* ── EXPLORE CATALOGUE — full width ── */}
+      <div>
+        <h2 className="text-xl font-bold tracking-tight mb-1">Explore the catalogue</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Start with a book, a country, a reason, or a curated reading list.
+        </p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { icon: '📚', title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books →', href: '#book-grid' },
+            { icon: '🌍', title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries →', href: '/countries' },
+            { icon: '🔍', title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons →', href: '/reasons' },
+            { icon: '📖', title: 'Reading list', text: 'A curated starting point for understanding censorship.', cta: 'View reading list →', href: '/reading-list' },
+          ].map(card => (
+            <Link
+              key={card.title}
+              href={card.href}
+              className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow"
+            >
+              <span className="text-2xl mb-2">{card.icon}</span>
+              <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{card.title}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1">{card.text}</span>
+              <span className="text-sm text-brand font-medium mt-3">{card.cta}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── MOBILE NEWS — hidden on desktop ── */}
+      {hasNews && (
+        <div className="lg:hidden">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Happening now</h2>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mb-3">Book bans are not history.</p>
+          <div className="divide-y divide-gray-100 dark:divide-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            {latestNews.map(item => (
+              <div key={item.id} className="px-4 py-3">
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug line-clamp-2 mb-1">
+                  {item.summary}
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  {item.source_name}
+                  {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                </p>
+              </div>
+            ))}
+          </div>
+          <Link
+            href="/news"
+            className="mt-3 text-sm text-brand font-medium block"
+          >
+            All news →
+          </Link>
+        </div>
+      )}
+
+      {/* ── PATTERNS — full width ── */}
+      <div>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Patterns behind censorship</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+          Some books are banned once. Others are restricted across countries, systems, and decades.
+        </p>
+        <ul className="flex flex-col gap-2">
+          {['Most banned books', 'Books banned in multiple countries', 'Recent bans'].map(label => (
+            <li key={label}>
+              <Link href="/stats" className="text-sm text-brand hover:underline">
+                → {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* ── Filters + count — full width ── */}
       <div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 sm:flex-wrap sm:overflow-x-visible sm:mx-0 sm:px-0 sm:pb-0">
