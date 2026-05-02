@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase'
-import BookBrowser, { type Book, type NewsPreview } from '@/components/book-browser'
+import BookBrowser, { type Book, type NewsPreview, type PatternStats } from '@/components/book-browser'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
@@ -63,6 +63,26 @@ export default async function HomePage() {
     ? eligible[Math.floor(Math.random() * eligible.length)]
     : null
 
+  // Pattern stats — computed from loaded books (no extra DB round-trip)
+  let mostBannedTitle = ''
+  let mostBannedSlug = ''
+  let mostBannedCount = 0
+  let multiBannedCount = 0
+  let activeBansCount = 0
+  for (const book of books) {
+    if (book.bans.length > mostBannedCount) {
+      mostBannedCount = book.bans.length
+      mostBannedTitle = book.title
+      mostBannedSlug = book.slug
+    }
+    const distinctCountries = new Set(book.bans.map(b => b.country_code)).size
+    if (distinctCountries >= 3) multiBannedCount++
+    activeBansCount += book.bans.filter(b => b.status === 'active').length
+  }
+  const patternStats: PatternStats | null = books.length > 0
+    ? { mostBannedTitle, mostBannedSlug, multiBannedCount, activeBansCount }
+    : null
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
       {fetchError && (
@@ -77,6 +97,7 @@ export default async function HomePage() {
           latestNews={latestNews}
           featuredBook={featuredBook}
           bookCount={bookCount}
+          patternStats={patternStats}
         />
       )}
 

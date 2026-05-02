@@ -60,20 +60,20 @@ export default async function CountriesPage() {
       {/* Country list */}
       <div className="space-y-1.5 mb-12">
         {active.map((c, i) => (
-          <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
+          <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-2 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
             <span className="w-6 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
             <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
             <span className="w-44 shrink-0 text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:underline truncate">{c.name_en}</span>
             <div className="flex-1 flex items-center gap-2 min-w-0">
               <div
                 className="h-4 rounded bg-red-400 dark:bg-red-600 shrink-0"
-                style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
+                style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, maxWidth: 'calc(100% - 2.5rem)', minWidth: '3px' }}
               />
-              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
+              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400 shrink-0">{c.count}</span>
             </div>
-            {c.active > 0 && (
-              <span className="shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">{c.active} active</span>
-            )}
+            <span className="w-20 text-right shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">
+              {c.active > 0 ? `${c.active} active` : ''}
+            </span>
           </Link>
         ))}
       </div>

@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BookOpen, Globe, Search as SearchIcon, List } from 'lucide-react'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
 
@@ -34,6 +35,13 @@ export type NewsPreview = {
   source_name: string
   published_at: string | null
   summary: string
+}
+
+export type PatternStats = {
+  mostBannedTitle: string
+  mostBannedSlug: string
+  multiBannedCount: number
+  activeBansCount: number
 }
 
 function formatNewsDate(iso: string) {
@@ -85,11 +93,13 @@ export default function BookBrowser({
   latestNews = [],
   featuredBook = null,
   bookCount = 0,
+  patternStats = null,
 }: {
   books: Book[]
   latestNews?: NewsPreview[]
   featuredBook?: Book | null
   bookCount?: number
+  patternStats?: PatternStats | null
 }) {
   const [q, setQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
@@ -174,26 +184,52 @@ export default function BookBrowser({
               An independent catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
             </p>
             {displayCount > 0 && (
-              <div className="inline-flex items-center px-3 py-1.5 bg-brand-light dark:bg-brand-dark/20 rounded-full text-sm text-brand font-medium">
-                {displayCount.toLocaleString()} books documented — across countries, schools, libraries, and governments
-              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                — {displayCount.toLocaleString()} books documented across countries, schools, libraries, and governments
+              </p>
             )}
           </div>
 
           {/* Search */}
-          <div className="relative">
-            <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-              </svg>
-            </span>
-            <input
-              type="search"
-              placeholder="Search banned books, authors, or topics…"
-              value={q}
-              onChange={e => setQ(e.target.value)}
-              className="w-full pl-11 pr-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 min-h-[52px]"
-            />
+          <div>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400 pointer-events-none">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                </svg>
+              </span>
+              <input
+                type="search"
+                placeholder="Search banned books, authors, or topics…"
+                value={q}
+                onChange={e => setQ(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && window.innerWidth < 1024) {
+                    document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
+                }}
+                className={`w-full pl-11 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 min-h-[52px] ${q ? 'pr-10' : 'pr-4'}`}
+              />
+              {q && (
+                <button
+                  onClick={() => setQ('')}
+                  aria-label="Clear search"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+            {q && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 animate-fade-in">
+                {filtered.length > 0
+                  ? <>Showing results for <span className="font-medium">&ldquo;{q}&rdquo;</span> — {filtered.length.toLocaleString()} {filtered.length === 1 ? 'book' : 'books'} found</>
+                  : <>No books found for <span className="font-medium">&ldquo;{q}&rdquo;</span></>
+                }
+              </p>
+            )}
           </div>
 
           {/* Compact featured card */}
@@ -256,7 +292,7 @@ export default function BookBrowser({
           <div className="hidden lg:block">
             <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col">
               <div className="mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                   Happening now
                 </span>
                 <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
@@ -297,20 +333,19 @@ export default function BookBrowser({
         </p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
-            { icon: '📚', title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books →', href: '#book-grid' },
-            { icon: '🌍', title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries →', href: '/countries' },
-            { icon: '🔍', title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons →', href: '/reasons' },
-            { icon: '📖', title: 'Reading list', text: 'A curated starting point for understanding censorship.', cta: 'View reading list →', href: '/reading-list' },
-          ].map(card => (
+            { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', href: '#book-grid' },
+            { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', href: '/countries' },
+            { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', href: '/reasons' },
+            { Icon: List, title: 'Reading list', text: 'A curated starting point for understanding censorship.', href: '/reading-list' },
+          ].map(({ Icon, title, text, href }) => (
             <Link
-              key={card.title}
-              href={card.href}
-              className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow"
+              key={title}
+              href={href}
+              className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer"
             >
-              <span className="text-2xl mb-2">{card.icon}</span>
-              <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{card.title}</span>
-              <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1">{card.text}</span>
-              <span className="text-sm text-brand font-medium mt-3">{card.cta}</span>
+              <Icon className="w-6 h-6 text-brand mb-3" />
+              <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
             </Link>
           ))}
         </div>
@@ -343,22 +378,41 @@ export default function BookBrowser({
         </div>
       )}
 
-      {/* ── PATTERNS — full width ── */}
-      <div>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Patterns behind censorship</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-          Some books are banned once. Others are restricted across countries, systems, and decades.
-        </p>
-        <ul className="flex flex-col gap-2">
-          {['Most banned books', 'Books banned in multiple countries', 'Recent bans'].map(label => (
-            <li key={label}>
-              <Link href="/stats" className="text-sm text-brand hover:underline">
-                → {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* ── BY THE NUMBERS — full width ── */}
+      {patternStats && (
+        <div>
+          <p className="text-sm uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-4">By the numbers</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Link
+              href={`/books/${patternStats.mostBannedSlug}`}
+              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
+            >
+              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 leading-snug line-clamp-2">
+                {patternStats.mostBannedTitle}
+              </p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Most documented book</p>
+            </Link>
+            <Link
+              href="/stats"
+              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
+            >
+              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 tabular-nums">
+                {patternStats.multiBannedCount.toLocaleString()}
+              </p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Books banned in 3+ countries</p>
+            </Link>
+            <Link
+              href="/stats"
+              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
+            >
+              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 tabular-nums">
+                {patternStats.activeBansCount.toLocaleString()}
+              </p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Active bans documented</p>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* ── Filters + count — full width ── */}
       <div>

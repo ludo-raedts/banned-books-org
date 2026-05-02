@@ -1,13 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @theme inline {
@@ -18,6 +14,16 @@
   --color-brand: #8B2020;
   --color-brand-light: #F5E8E8;
   --color-brand-dark: #5C1010;
+  --animate-fade-in: fade-in 0.15s ease-out;
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
