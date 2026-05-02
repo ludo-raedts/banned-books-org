@@ -323,18 +323,18 @@ export default function BookBrowser({
       </div>
 
       {/* ── EXPLORE CATALOGUE — full width ── */}
-      {!isSearching && <div>
+      {!isSearching && <div className="-mt-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Explore the catalogue</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Start with a book, a country, a reason, or a curated reading list.
         </p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
-            { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', href: '#book-grid' },
-            { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', href: '/countries' },
-            { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', href: '/reasons' },
-            { Icon: List, title: 'Reading list', text: 'A curated starting point for understanding censorship.', href: '/reading-list' },
-          ].map(({ Icon, title, text, href }) => (
+            { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books', href: '#book-grid' },
+            { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries', href: '/countries' },
+            { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons', href: '/reasons' },
+            { Icon: List, title: 'Reading list', text: 'A curated starting point for understanding censorship.', cta: 'View reading list', href: '/reading-list' },
+          ].map(({ Icon, title, text, cta, href }) => (
             <Link
               key={title}
               href={href}
@@ -343,6 +343,7 @@ export default function BookBrowser({
               <Icon className="w-6 h-6 text-brand mb-3" />
               <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
               <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
+              <span className="text-sm text-brand font-medium mt-auto pt-3">{cta} →</span>
             </Link>
           ))}
         </div>

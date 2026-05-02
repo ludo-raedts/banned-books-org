@@ -8,6 +8,8 @@ export type StatCard = {
   label: string
   sub: string
   href: string
+  isTitle?: boolean   // true = book title card; false/undefined = number card
+  fullTitle?: string  // untruncated title for tooltip
 }
 
 export default function RotatingStats({ stats }: { stats: StatCard[] }) {
@@ -60,19 +62,27 @@ export default function RotatingStats({ stats }: { stats: StatCard[] }) {
         className="grid grid-cols-1 sm:grid-cols-3 gap-4"
         style={{ opacity: fading ? 0 : 1, transition: 'opacity 400ms ease' }}
       >
-        {currentStats.map((stat, i) => (
-          <Link
-            key={i}
-            href={stat.href}
-            className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
-          >
-            <p className="text-2xl font-bold text-brand-dark dark:text-red-300 leading-snug line-clamp-2">
-              {stat.largeText}
-            </p>
-            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{stat.sub}</p>
-          </Link>
-        ))}
+        {currentStats.map((stat, i) => {
+          const sizeClass = stat.isTitle
+            ? (stat.largeText.length > 35 ? 'text-lg' : 'text-xl')
+            : 'text-3xl'
+          return (
+            <Link
+              key={i}
+              href={stat.href}
+              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
+            >
+              <p
+                title={stat.fullTitle || stat.largeText}
+                className={`${sizeClass} font-bold text-brand-dark dark:text-red-300 leading-snug line-clamp-2`}
+              >
+                {stat.largeText}
+              </p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{stat.sub}</p>
+            </Link>
+          )
+        })}
       </div>
       {sets > 1 && (
         <div className="flex justify-center gap-2 mt-4">
