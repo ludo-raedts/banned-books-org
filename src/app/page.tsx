@@ -2,7 +2,8 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase'
-import BookBrowser, { type Book, type NewsPreview, type PatternStats } from '@/components/book-browser'
+import BookBrowser, { type Book, type NewsPreview } from '@/components/book-browser'
+import { type StatCard } from '@/components/rotating-stats'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
@@ -24,7 +25,7 @@ export default async function HomePage() {
       id, title, slug, cover_url, description, description_book, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
-        id, status, country_code,
+        id, status, country_code, year_started,
         countries(name_en),
         scopes(slug, label_en),
         ban_reason_links(reasons(slug))
@@ -63,12 +64,14 @@ export default async function HomePage() {
     ? eligible[Math.floor(Math.random() * eligible.length)]
     : null
 
-  // Pattern stats — computed from loaded books (no extra DB round-trip)
-  let mostBannedTitle = ''
-  let mostBannedSlug = ''
-  let mostBannedCount = 0
-  let multiBannedCount = 0
-  let activeBansCount = 0
+  // Rotating stats — computed from loaded books (no extra DB round-trips)
+  const currentYear = new Date().getFullYear()
+  let mostBannedTitle = '', mostBannedSlug = '', mostBannedCount = 0
+  let mostCountriesTitle = '', mostCountriesSlug = '', mostCountriesCount = 0
+  let recentBanTitle = '', recentBanSlug = '', recentBanYear = 0
+  let oldestBanTitle = '', oldestBanSlug = '', oldestBanYear = Infinity
+  let multiBannedCount = 0, totalBans = 0, recentBansCount = 0
+
   for (const book of books) {
     if (book.bans.length > mostBannedCount) {
       mostBannedCount = book.bans.length
@@ -76,12 +79,73 @@ export default async function HomePage() {
       mostBannedSlug = book.slug
     }
     const distinctCountries = new Set(book.bans.map(b => b.country_code)).size
+    if (distinctCountries > mostCountriesCount) {
+      mostCountriesCount = distinctCountries
+      mostCountriesTitle = book.title
+      mostCountriesSlug = book.slug
+    }
     if (distinctCountries >= 3) multiBannedCount++
-    activeBansCount += book.bans.filter(b => b.status === 'active').length
+    for (const ban of book.bans) {
+      totalBans++
+      if (ban.year_started != null) {
+        if (ban.year_started > recentBanYear) {
+          recentBanYear = ban.year_started
+          recentBanTitle = book.title
+          recentBanSlug = book.slug
+        }
+        if (ban.year_started < oldestBanYear) {
+          oldestBanYear = ban.year_started
+          oldestBanTitle = book.title
+          oldestBanSlug = book.slug
+        }
+        if (ban.year_started >= currentYear - 15) recentBansCount++
+      }
+    }
   }
-  const patternStats: PatternStats | null = books.length > 0
-    ? { mostBannedTitle, mostBannedSlug, multiBannedCount, activeBansCount }
-    : null
+
+  const totalBooks = books.length
+  const multiBannedPct = totalBooks > 0 ? Math.round(multiBannedCount / totalBooks * 100) : 0
+  const recentBansPct = totalBans > 0 ? Math.round(recentBansCount / totalBans * 100) : 0
+  const trunc = (s: string, n: number) => s.length > n ? s.slice(0, n) + '…' : s
+
+  const rotatingStats: StatCard[] = books.length > 0 ? [
+    {
+      largeText: trunc(mostBannedTitle, 40),
+      label: 'Most documented book',
+      sub: `${mostBannedCount} recorded bans`,
+      href: `/books/${mostBannedSlug}`,
+    },
+    {
+      largeText: trunc(mostCountriesTitle, 40),
+      label: 'Banned in most countries',
+      sub: `Restricted across ${mostCountriesCount} countries`,
+      href: `/books/${mostCountriesSlug}`,
+    },
+    {
+      largeText: trunc(recentBanTitle, 40),
+      label: 'Most recently documented ban',
+      sub: recentBanYear > 0 ? `Banned in ${recentBanYear}` : 'Year unknown',
+      href: `/books/${recentBanSlug}`,
+    },
+    {
+      largeText: trunc(oldestBanTitle, 40),
+      label: 'Oldest ban on record',
+      sub: isFinite(oldestBanYear) ? `First documented in ${oldestBanYear}` : 'Year unknown',
+      href: `/books/${oldestBanSlug}`,
+    },
+    {
+      largeText: multiBannedCount.toLocaleString('en'),
+      label: 'Books banned in 3+ countries',
+      sub: `${multiBannedPct}% of all documented books`,
+      href: '/stats',
+    },
+    {
+      largeText: `${recentBansPct}%`,
+      label: 'Of all bans in the last 15 years',
+      sub: `${recentBansCount.toLocaleString('en')} bans since ${currentYear - 15}`,
+      href: '/stats',
+    },
+  ] : []
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
@@ -97,7 +161,7 @@ export default async function HomePage() {
           latestNews={latestNews}
           featuredBook={featuredBook}
           bookCount={bookCount}
-          patternStats={patternStats}
+          rotatingStats={rotatingStats}
         />
       )}
 

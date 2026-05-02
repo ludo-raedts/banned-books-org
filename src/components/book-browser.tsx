@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { BookOpen, Globe, Search as SearchIcon, List } from 'lucide-react'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
+import RotatingStats, { type StatCard } from './rotating-stats'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -13,6 +14,7 @@ export type Ban = {
   id: number
   status: string
   country_code: string
+  year_started: number | null
   countries: { name_en: string } | null
   scopes: { slug: string; label_en: string } | null
   ban_reason_links: { reasons: { slug: string } | null }[]
@@ -36,13 +38,6 @@ export type NewsPreview = {
   source_name: string
   published_at: string | null
   summary: string
-}
-
-export type PatternStats = {
-  mostBannedTitle: string
-  mostBannedSlug: string
-  multiBannedCount: number
-  activeBansCount: number
 }
 
 function formatNewsDate(iso: string) {
@@ -94,13 +89,13 @@ export default function BookBrowser({
   latestNews = [],
   featuredBook = null,
   bookCount = 0,
-  patternStats = null,
+  rotatingStats = [],
 }: {
   books: Book[]
   latestNews?: NewsPreview[]
   featuredBook?: Book | null
   bookCount?: number
-  patternStats?: PatternStats | null
+  rotatingStats?: StatCard[]
 }) {
   const [q, setQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
@@ -183,7 +178,7 @@ export default function BookBrowser({
               Books are still being banned
             </h1>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl mb-3">
-              An independent catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
+              A growing catalogue of books banned, challenged, or removed across the world.
             </p>
             {displayCount > 0 && (
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -237,7 +232,7 @@ export default function BookBrowser({
           {/* Compact featured card */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">Featured entry</p>
+              <p className="text-xs font-medium text-brand italic border-l-2 border-brand pl-2 mb-2">Featured entry</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
                 className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
@@ -380,39 +375,14 @@ export default function BookBrowser({
         </div>
       )}
 
-      {/* ── BY THE NUMBERS — full width ── */}
-      {patternStats && !isSearching && (
+      {/* ── PATTERNS / ROTATING STATS — full width ── */}
+      {rotatingStats.length > 0 && !isSearching && (
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">By the numbers</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Link
-              href={`/books/${patternStats.mostBannedSlug}`}
-              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
-            >
-              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 leading-snug line-clamp-2">
-                {patternStats.mostBannedTitle}
-              </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Most documented book</p>
-            </Link>
-            <Link
-              href="/stats"
-              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
-            >
-              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 tabular-nums">
-                {patternStats.multiBannedCount.toLocaleString()}
-              </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Books banned in 3+ countries</p>
-            </Link>
-            <Link
-              href="/stats"
-              className="bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
-            >
-              <p className="text-2xl font-bold text-brand-dark dark:text-red-300 tabular-nums">
-                {patternStats.activeBansCount.toLocaleString()}
-              </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">Active bans documented</p>
-            </Link>
-          </div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Patterns behind censorship</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Some books are banned once. Others repeatedly, across countries and decades.
+          </p>
+          <RotatingStats stats={rotatingStats} />
         </div>
       )}
 
@@ -420,7 +390,7 @@ export default function BookBrowser({
       <div>
         <div className="mb-3">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Filter the database</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-500">Narrow the catalogue by institution, country, status, or reason.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500">Explore how and why books are restricted — by institution, country, or reason.</p>
         </div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
@@ -486,7 +456,7 @@ export default function BookBrowser({
             <p className="text-sm text-gray-400 dark:text-gray-500">
               {anyFilter
                 ? <>Showing {filtered.length.toLocaleString()} of {books.length.toLocaleString()} documented books</>
-                : <>Showing {books.length.toLocaleString()} documented books</>
+                : <>Showing {books.length.toLocaleString()} documented books — from political memoirs to controversial fiction.</>
               }
             </p>
           </div>
@@ -528,7 +498,7 @@ export default function BookBrowser({
               Access to knowledge should not depend on where you live, what you believe, or who is in power.
             </p>
             <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">
-              This project is incomplete and evolving. Every documented book is a small act against forgetting.
+              This project documents what is being restricted — and why.
             </p>
           </div>
         </div>
