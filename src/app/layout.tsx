@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import BottomNav from "@/components/bottom-nav";
 import NavLink from "@/components/nav-link";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -88,6 +90,8 @@ export default function RootLayout({
           </div>
         </footer>
         <BottomNav />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
