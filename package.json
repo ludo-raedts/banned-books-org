@@ -14,6 +14,7 @@
     "@supabase/supabase-js": "^2.104.1",
     "@tailwindcss/typography": "^0.5.19",
     "franc-min": "^6.2.0",
+    "lucide-react": "^1.14.0",
     "next": "16.2.4",
     "openai": "^6.35.0",
     "react": "19.2.4",
