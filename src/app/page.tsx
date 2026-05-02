@@ -101,17 +101,6 @@ export default async function HomePage() {
         />
       )}
 
-      {/* Closing purpose block */}
-      <div className="mt-16 bg-gray-50 dark:bg-gray-900/60 rounded-xl py-16 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-            Access to knowledge should not depend on where you live, what you believe, or who is in power.
-          </p>
-          <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">
-            This project is incomplete and evolving. Every documented book is a small act against forgetting.
-          </p>
-        </div>
-      </div>
     </main>
   )
 }

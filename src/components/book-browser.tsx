@@ -161,6 +161,7 @@ export default function BookBrowser({
   }, [loadMore])
 
   const anyFilter = !!(q || scope || country || activeOnly || reason)
+  const isSearching = q.length > 0
   function clearAll() { setQ(''); setScope(null); setCountry(''); setActiveOnly(false); setReason(null) }
 
   const hasNews = latestNews.length > 0
@@ -204,7 +205,7 @@ export default function BookBrowser({
                 value={q}
                 onChange={e => setQ(e.target.value)}
                 onKeyDown={e => {
-                  if (e.key === 'Enter' && window.innerWidth < 1024) {
+                  if (e.key === 'Enter') {
                     document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }
                 }}
@@ -233,7 +234,7 @@ export default function BookBrowser({
           </div>
 
           {/* Compact featured card */}
-          {featuredBook && (
+          {featuredBook && !isSearching && (
             <div>
               <p className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">Featured entry</p>
               <Link
@@ -326,8 +327,8 @@ export default function BookBrowser({
       </div>
 
       {/* ── EXPLORE CATALOGUE — full width ── */}
-      <div>
-        <h2 className="text-xl font-bold tracking-tight mb-1">Explore the catalogue</h2>
+      {!isSearching && <div>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Explore the catalogue</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Start with a book, a country, a reason, or a curated reading list.
         </p>
@@ -349,10 +350,10 @@ export default function BookBrowser({
             </Link>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* ── MOBILE NEWS — hidden on desktop ── */}
-      {hasNews && (
+      {hasNews && !isSearching && (
         <div className="lg:hidden">
           <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Happening now</h2>
           <p className="text-sm text-gray-400 dark:text-gray-500 mb-3">Book bans are not history.</p>
@@ -379,9 +380,9 @@ export default function BookBrowser({
       )}
 
       {/* ── BY THE NUMBERS — full width ── */}
-      {patternStats && (
+      {patternStats && !isSearching && (
         <div>
-          <p className="text-sm uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-4">By the numbers</p>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">By the numbers</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link
               href={`/books/${patternStats.mostBannedSlug}`}
@@ -417,8 +418,8 @@ export default function BookBrowser({
       {/* ── Filters + count — full width ── */}
       <div>
         <div className="mb-3">
-          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter the database</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500">Narrow the catalogue by institution, country, status, or reason.</p>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Filter the database</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-500">Narrow the catalogue by institution, country, status, or reason.</p>
         </div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
@@ -480,7 +481,7 @@ export default function BookBrowser({
       {rest.length > 0 && (
         <div id="book-grid">
           <div className="mb-4">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Explore banned books worldwide</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Explore banned books worldwide</h2>
             <p className="text-sm text-gray-400 dark:text-gray-500">
               {anyFilter
                 ? <>Showing {filtered.length.toLocaleString()} of {books.length.toLocaleString()} documented books</>
@@ -518,6 +519,19 @@ export default function BookBrowser({
       )}
 
       <div ref={sentinelRef} className="h-4" />
+
+      {!isSearching && (
+        <div className="mt-8 bg-gray-50 dark:bg-gray-900/60 rounded-xl py-16 px-6 text-center">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+              Access to knowledge should not depend on where you live, what you believe, or who is in power.
+            </p>
+            <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">
+              This project is incomplete and evolving. Every documented book is a small act against forgetting.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
