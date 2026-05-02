@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import BottomNav from "@/components/bottom-nav";
+import NavLink from "@/components/nav-link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,18 +54,18 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 h-12 flex items-center gap-6">
-            <Link href="/" className="font-semibold text-sm tracking-tight hover:opacity-80 transition-opacity">
+            <Link href="/" className="font-semibold text-sm tracking-tight text-brand hover:opacity-80 transition-opacity">
               📕 Banned Books
             </Link>
             <nav className="hidden sm:flex items-center gap-1 flex-1">
-              <Link href="/countries" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Countries</Link>
-              <Link href="/stats" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Stats</Link>
-              <Link href="/reasons" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Reasons</Link>
-              <Link href="/history" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">History</Link>
-              <Link href="/sources" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Sources</Link>
-              <Link href="/news" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">News</Link>
-              <Link href="/about" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">About</Link>
-              <Link href="/reading-list" className="px-3 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Reading list</Link>
+              <NavLink href="/countries">Countries</NavLink>
+              <NavLink href="/stats">Stats</NavLink>
+              <NavLink href="/reasons">Reasons</NavLink>
+              <NavLink href="/history">History</NavLink>
+              <NavLink href="/sources">Sources</NavLink>
+              <NavLink href="/news">News</NavLink>
+              <NavLink href="/about">About</NavLink>
+              <NavLink href="/reading-list">Reading list</NavLink>
             </nav>
           </div>
         </header>

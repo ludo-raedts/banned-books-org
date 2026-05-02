@@ -69,9 +69,9 @@ export default async function ReasonsPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight mb-3">Why Books Are Banned</h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-sm">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Why Books Are Banned</h1>
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Every ban has an official justification. The stated reason — obscenity, blasphemy, political
           subversion — tells us what the authorities wanted to protect. The book itself tells us what
           they were afraid of.
@@ -91,7 +91,7 @@ export default async function ReasonsPage() {
                 <h2 className="text-lg font-bold mt-1">{reasonLabel(r.slug)}</h2>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold tabular-nums">{r.count}</div>
+                <div className="text-2xl font-bold tabular-nums text-brand">{r.count}</div>
                 <div className="text-xs opacity-70">{r.pct}% of bans</div>
               </div>
             </div>

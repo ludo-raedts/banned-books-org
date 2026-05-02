@@ -47,9 +47,9 @@ export default async function CountriesPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-3">Countries &amp; Territories</h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-sm">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Countries &amp; Territories</h1>
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Bans recorded across{' '}
           <span className="font-semibold text-gray-900 dark:text-gray-100">{ranked.length} countries and territories</span>.
           Click any country to browse its banned books and censorship history.

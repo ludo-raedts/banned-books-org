@@ -108,9 +108,9 @@ export default async function NewsPage() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
-      <div className="mb-8">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
         <h1 className="text-3xl font-bold tracking-tight mb-2">News</h1>
-        <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           News about book bans, censorship, and literary freedom worldwide.
           Sourced from PEN America, Index on Censorship, Publishers Weekly, and Freedom to Read Canada.
         </p>

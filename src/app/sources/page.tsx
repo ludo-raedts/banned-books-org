@@ -52,10 +52,12 @@ export default function SourcesPage() {
         ← All books
       </Link>
 
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Sources</h1>
-      <p className="text-gray-500 text-sm mb-10">
-        This catalogue is built on publicly available data. Below are the primary sources we use.
-      </p>
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Sources</h1>
+        <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+          This catalogue is built on publicly available data. Below are the primary sources we use.
+        </p>
+      </div>
 
       <div className="flex flex-col gap-6">
         {SOURCES.map((source) => (

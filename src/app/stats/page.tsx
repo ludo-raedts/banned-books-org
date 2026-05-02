@@ -125,9 +125,9 @@ export default async function StatsPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       {/* Hero */}
-      <div className="mb-12">
-        <h1 className="text-3xl font-bold tracking-tight mb-3">The State of Literary Censorship</h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">The State of Literary Censorship</h1>
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
           <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString()} books</span> and{' '}
@@ -146,7 +146,7 @@ export default async function StatsPage() {
           { label: 'Currently banned', value: activeBans.toLocaleString(), sub: `${historicalBans.toLocaleString()} lifted` },
         ].map(stat => (
           <div key={stat.label} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-            <div className="text-2xl font-bold tabular-nums">{stat.value}</div>
+            <div className="text-3xl font-bold tabular-nums text-brand">{stat.value}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{stat.label}</div>
             {stat.sub && <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{stat.sub}</div>}
           </div>

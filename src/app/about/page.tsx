@@ -48,13 +48,15 @@ export default async function AboutPage() {
       />
 
       {/* Hero */}
-      <div className="bg-gray-50 dark:bg-gray-900/60 border-b border-gray-200 dark:border-gray-800">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-b border-brand/20">
         <div className="max-w-3xl mx-auto px-4 py-14">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">About Banned Books</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
-            Banned Books is an independent, open catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
-            We document the who, where, when, and why of literary censorship — from Cold War prohibitions to today&apos;s classroom removals.
-          </p>
+          <div className="border-l-4 border-brand pl-6">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">About Banned Books</h1>
+            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl">
+              Banned Books is an independent, open catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
+              We document the who, where, when, and why of literary censorship — from Cold War prohibitions to today&apos;s classroom removals.
+            </p>
+          </div>
         </div>
       </div>
 

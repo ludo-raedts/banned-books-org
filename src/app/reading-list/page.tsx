@@ -86,7 +86,7 @@ export default function ReadingListPage() {
           return (
             <section key={slug} className="mt-16 first:mt-0">
               {/* Category heading */}
-              <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 mb-8">
+              <div className="border-l-4 border-brand pl-4 mb-8">
                 <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300 leading-snug">
                   {heading}
                 </h2>

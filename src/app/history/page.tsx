@@ -43,14 +43,14 @@ export default function HistoryPage() {
         </Link>
 
         {/* Header */}
-        <div className="mb-12">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+        <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 -mx-4 sm:mx-0 rounded-r-xl">
+          <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">
             Essay
           </p>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
             The long shadow of censorship: a history of banned books
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
             There is something almost paradoxical about banned books. The act of suppressing a text
             often guarantees its survival. If anything, censorship is less a tool of control than a
             confession of fear — fear of ideas, of dissent, of readers thinking for themselves.
