@@ -27,6 +27,8 @@ export type Book = {
   cover_url: string | null
   description: string | null
   description_book: string | null
+  openlibrary_work_id?: string | null
+  isbn13?: string | null
   first_published_year: number | null
   genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
@@ -166,8 +168,8 @@ export default function BookBrowser({
   return (
     <div className="flex flex-col gap-8">
 
-      {/* ── TOP SECTION: 2-col on desktop ── */}
-      <div className={hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6' : undefined}>
+      {/* ── TOP SECTION: 2-col on desktop (collapses when searching) ── */}
+      <div className={!isSearching && hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6' : undefined}>
 
         {/* LEFT: Hero + Search + Featured */}
         <div className={`flex flex-col gap-4${hasNews ? ' lg:col-span-2' : ''}`}>
@@ -196,7 +198,7 @@ export default function BookBrowser({
                 </svg>
               </span>
               <input
-                type="search"
+                type="text"
                 placeholder="Search banned books, authors, or topics…"
                 value={q}
                 onChange={e => setQ(e.target.value)}
@@ -232,7 +234,7 @@ export default function BookBrowser({
           {/* Compact featured card */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-xs font-medium text-brand italic border-l-2 border-brand pl-2 mb-2">Featured entry</p>
+              <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">Featured entry</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
                 className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
@@ -284,8 +286,8 @@ export default function BookBrowser({
           )}
         </div>
 
-        {/* RIGHT: News panel — desktop only */}
-        {hasNews && (
+        {/* RIGHT: News panel — desktop only, hidden when searching */}
+        {hasNews && !isSearching && (
           <div className="hidden lg:block">
             <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col">
               <div className="mb-3">
@@ -343,7 +345,8 @@ export default function BookBrowser({
               <Icon className="w-6 h-6 text-brand mb-3" />
               <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
               <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
-              <span className="text-sm text-brand font-medium mt-auto pt-3">{cta} →</span>
+              <div className="flex-1" />
+              <span className="text-sm text-brand font-medium mt-3">{cta} →</span>
             </Link>
           ))}
         </div>

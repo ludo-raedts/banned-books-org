@@ -22,7 +22,7 @@ export default async function HomePage() {
   try {
     const supabase = adminClient()
     const SELECT = `
-      id, title, slug, cover_url, description, description_book, first_published_year, genres,
+      id, title, slug, cover_url, description, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
         id, status, country_code, year_started,
@@ -71,6 +71,7 @@ export default async function HomePage() {
     title: string; slug: string
     banCount: number; distinctCountries: number
     maxYear: number | null; minYear: number | null
+    qualified: boolean
   }
   const bookMetas: BookMeta[] = []
   let multiBannedCount = 0, totalBans = 0, recentBansCount = 0
@@ -88,7 +89,8 @@ export default async function HomePage() {
         if (ban.year_started >= currentYear - 15) recentBansCount++
       }
     }
-    bookMetas.push({ title: book.title, slug: book.slug, banCount: book.bans.length, distinctCountries, maxYear, minYear })
+    const qualified = !!(book.openlibrary_work_id || book.isbn13)
+    bookMetas.push({ title: book.title, slug: book.slug, banCount: book.bans.length, distinctCountries, maxYear, minYear, qualified })
   }
 
   function pickBest(
@@ -106,18 +108,21 @@ export default async function HomePage() {
     return sorted[0] ?? null
   }
 
+  const qualifiedMetas = bookMetas.filter(m => m.qualified)
+
   // Set 1: cards 1, 2, 3 — all different books
   const used1 = new Set<string>()
   const card1 = pickBest(bookMetas, m => m.banCount, true, used1)
   if (card1) used1.add(card1.slug)
   const card2 = pickBest(bookMetas, m => m.distinctCountries, true, used1)
   if (card2) used1.add(card2.slug)
-  const card3 = pickBest(bookMetas, m => m.maxYear, true, used1)
+  // Cards 3 & 4 use quality filter: only bibliographically verified books
+  const card3 = pickBest(qualifiedMetas, m => m.maxYear, true, used1)
 
   // Set 2: card 4 — different from card 3
   const used2 = new Set<string>()
   if (card3) used2.add(card3.slug)
-  const card4 = pickBest(bookMetas, m => m.minYear, false, used2)
+  const card4 = pickBest(qualifiedMetas, m => m.minYear, false, used2)
 
   const totalBooks = books.length
   const multiBannedPct = totalBooks > 0 ? Math.round(multiBannedCount / totalBooks * 100) : 0
