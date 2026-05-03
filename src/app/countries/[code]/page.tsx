@@ -18,23 +18,18 @@ export async function generateMetadata({
   const upperCode = code.toUpperCase()
   const supabase = adminClient()
 
-  const [{ data: country }, { data: bans }] = await Promise.all([
+  // rows: 1 | fields: [name_en] | reason: page title
+  // rows: 1 (count only) | reason: ban count for title/description
+  const [{ data: country }, { count: N }] = await Promise.all([
     supabase.from('countries').select('name_en').eq('code', upperCode).single(),
-    supabase.from('bans').select('year_started').eq('country_code', upperCode),
+    supabase.from('bans').select('*', { count: 'exact', head: true }).eq('country_code', upperCode),
   ])
 
   if (!country) return {}
 
-  const N = (bans ?? []).length
-  const years = (bans ?? []).map((b) => b.year_started).filter((y): y is number => !!y)
-  const earliest = years.length > 0 ? Math.min(...years) : null
-  const latest = years.length > 0 ? Math.max(...years) : null
-
-  const title = `Books Banned in ${country.name_en} — ${N} ${N === 1 ? 'ban' : 'bans'} | Banned Books`
-  const description =
-    earliest && latest
-      ? `Browse all ${N} books banned or challenged in ${country.name_en}. Covers bans from ${earliest} to ${latest}.`
-      : `Browse all ${N} books banned or challenged in ${country.name_en}.`
+  const banCount = N ?? 0
+  const title = `Books Banned in ${country.name_en} — ${banCount} ${banCount === 1 ? 'ban' : 'bans'} | Banned Books`
+  const description = `Browse all ${banCount} books banned or challenged in ${country.name_en}.`
 
   return { title, description, alternates: { canonical: `/countries/${code.toLowerCase()}` }, openGraph: { title, description } }
 }
@@ -83,29 +78,17 @@ export default async function CountryPage({
   const upperCode = code.toUpperCase()
   const supabase = adminClient()
 
-  // Load country + all countries (for ranking)
-  const [{ data: country, error: ce }, { data: allCountries }] = await Promise.all([
-    supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).single(),
-    supabase.from('countries').select('code'),
-  ])
+  // rows: 1 | fields: [code, name_en, slug, description] | reason: country header + description
+  const { data: country, error: ce } = await supabase
+    .from('countries').select('code, name_en, slug, description').eq('code', upperCode).single()
 
   if (ce || !country) notFound()
 
-  // Count bans per country for ranking
-  const { data: allBans } = await supabase.from('bans').select('country_code').limit(5000)
-  const banCounts: Record<string, number> = {}
-  allBans!.forEach((b) => { banCounts[b.country_code] = (banCounts[b.country_code] ?? 0) + 1 })
+  // rows: 1 (count only) | reason: ban count display
+  const { count: banCount } = await supabase
+    .from('bans').select('*', { count: 'exact', head: true }).eq('country_code', upperCode)
 
-  const ranked = Object.entries(banCounts)
-    .sort(([, a], [, b]) => b - a)
-    .map(([cc], i) => ({ code: cc, rank: i + 1 }))
-
-  const totalCountries = (allCountries ?? []).filter((c) => (banCounts[c.code] ?? 0) > 0).length
-  const rankEntry = ranked.find((r) => r.code === upperCode)
-  const rank = rankEntry?.rank ?? null
-  const banCount = banCounts[upperCode] ?? 0
-
-  // Load books banned in this country
+  // rows: ≤100 | fields: book card data | reason: paginated grid; first page only
   const { data, error } = await supabase
     .from('books')
     .select(`
@@ -119,9 +102,11 @@ export default async function CountryPage({
     `)
     .eq('bans.country_code', upperCode)
     .order('title')
+    .range(0, 99)
 
   if (error) throw error
   const books = (data as unknown as Book[]) ?? []
+  const totalBanCount = banCount ?? 0
 
   // Build timeline: bans by decade (or by year if ≤ 30 distinct years)
   const countryBansForTimeline = books.flatMap(b =>
@@ -151,15 +136,7 @@ export default async function CountryPage({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{country.name_en}</h1>
           <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-medium text-red-500 dark:text-red-400">{banCount} banned {banCount === 1 ? 'book' : 'books'}</span>
-            {rank && (
-              <>
-                <span className="text-gray-300 dark:text-gray-600">·</span>
-                <span>
-                  Ranked <span className="font-semibold text-gray-700 dark:text-gray-200">#{rank}</span> of {totalCountries} countries
-                </span>
-              </>
-            )}
+            <span className="font-medium text-red-500 dark:text-red-400">{totalBanCount} banned {totalBanCount === 1 ? 'book' : 'books'}</span>
           </div>
         </div>
       </div>
@@ -204,7 +181,14 @@ export default async function CountryPage({
         <p className="text-gray-500">No banned books recorded for this country yet.</p>
       ) : (
         <>
-          <h2 className="text-lg font-semibold mb-4">Banned books</h2>
+          <h2 className="text-lg font-semibold mb-4">
+            Banned books
+            {totalBanCount > 100 && (
+              <span className="ml-2 text-sm font-normal text-gray-400 dark:text-gray-500">
+                (showing first 100 of {totalBanCount})
+              </span>
+            )}
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
             {books.map((book) => {
               const ban = book.bans[0]

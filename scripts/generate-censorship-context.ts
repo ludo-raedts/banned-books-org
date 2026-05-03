@@ -78,7 +78,7 @@ function listCountries(bans: BanRow[]): string {
 
 function buildContext(book: BookRow): string | null {
   const bans = book.bans
-  if (bans.length < 2) return null
+  if (bans.length === 0) return null
 
   // Collect all reason slugs, ranked by frequency
   const reasonCounts = new Map<string, number>()
@@ -119,12 +119,17 @@ function buildContext(book: BookRow): string | null {
   const secondaryNote = secondaryLabels.length > 0
     ? `, as well as ${secondaryLabels.join(' and ').toLowerCase()}`
     : ''
-  sentences.push(`${book.title} has been banned or restricted in multiple countries primarily for ${reasonFragment}${secondaryNote}.`)
-
-  // Sentence 2: geographic and temporal scope
-  const countryList = listCountries(bans)
-  const yearNote = earliestYear ? ` since at least ${earliestYear}` : ''
-  sentences.push(`The book has faced formal bans or removal orders in ${countryList}${yearNote}.`)
+  if (bans.length === 1) {
+    const country = bans[0].countries?.name_en ?? bans[0].country_code
+    const yearNote = earliestYear ? ` in ${earliestYear}` : ''
+    sentences.push(`${book.title} was banned or restricted in ${country}${yearNote} for ${reasonFragment}${secondaryNote}.`)
+  } else {
+    sentences.push(`${book.title} has been banned or restricted in multiple countries primarily for ${reasonFragment}${secondaryNote}.`)
+    // Sentence 2: geographic and temporal scope (only meaningful for multi-ban)
+    const countryList = listCountries(bans)
+    const yearNote2 = earliestYear ? ` since at least ${earliestYear}` : ''
+    sentences.push(`The book has faced formal bans or removal orders in ${countryList}${yearNote2}.`)
+  }
 
   // Sentence 3: scope breakdown (gov vs school) if both present
   if (govBans.length > 0 && schoolBans.length > 0) {
@@ -141,7 +146,7 @@ function buildContext(book: BookRow): string | null {
     const liftedList = liftedCountries.length === 1 ? liftedCountries[0] : liftedCountries.join(' and ')
     sentences.push(`Bans in ${liftedList} have since been lifted or lapsed, though restrictions remain active elsewhere.`)
   } else if (historicalBans.length > 0 && activeBans.length === 0) {
-    sentences.push(`All documented bans have since been lifted or lapsed; the book now circulates freely in the countries listed.`)
+    sentences.push(`The documented ban has since been lifted or lapsed; the book now circulates freely.`)
   }
 
   // Sentence 5: conclusion
@@ -168,11 +173,11 @@ async function main() {
 
   const books = allBooks as unknown as BookRow[]
   const qualifying = books
-    .filter(b => b.bans.length >= 2)
+    .filter(b => b.bans.length >= 1)
     .sort((a, b) => b.bans.length - a.bans.length)
     .slice(0, LIMIT)
 
-  const totalQualifying = books.filter(b => b.bans.length >= 2).length
+  const totalQualifying = books.filter(b => b.bans.length >= 1).length
   console.log(`Qualifying books: ${totalQualifying} total`)
   console.log(`Processing: ${qualifying.length} (limit=${LIMIT}, apply=${APPLY})\n`)
 

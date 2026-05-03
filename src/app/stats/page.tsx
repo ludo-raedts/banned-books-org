@@ -7,11 +7,14 @@ import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = adminClient()
-  const [{ count: bookCount }, { count: banCount }] = await Promise.all([
+  const [{ count: bookCount }, { count: banCount }, { data: countryRows }] = await Promise.all([
+    // rows: 0 (count only) | reason: total books for meta description
     supabase.from('books').select('*', { count: 'exact', head: true }),
+    // rows: 0 (count only) | reason: total bans for meta description
     supabase.from('bans').select('*', { count: 'exact', head: true }),
+    // rows: ≤10000 | fields: [country_code] | reason: COUNT(DISTINCT) unavailable in PostgREST
+    supabase.from('bans').select('country_code').range(0, 9999),
   ])
-  const { data: countryRows } = await supabase.from('bans').select('country_code')
   const countryCount = new Set((countryRows ?? []).map((r) => r.country_code)).size
   return {
     title: 'Censorship by the Numbers — Banned Books',
@@ -47,24 +50,48 @@ const CURRENT_DECADE = Math.floor(new Date().getFullYear() / 10) * 10
 export default async function StatsPage() {
   const supabase = adminClient()
 
-  const [
-    { data: bansRaw },
-    { data: bookAuthorsRaw },
-    { data: countriesRaw },
-    { count: totalBooks },
-    { count: totalBans },
-  ] = await Promise.all([
-    supabase.from('bans').select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))').limit(5000),
-    supabase.from('book_authors').select('book_id, authors(display_name, slug)').limit(5000),
-    supabase.from('countries').select('code, name_en'),
+  // rows: 0 (count only) × 2 | rows: ~50 countries | reason: stat cards + country map
+  const [{ count: totalBooks }, { count: totalBans }, { data: countriesRaw }] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
+    supabase.from('countries').select('code, name_en'),
   ])
 
-  const bans = (bansRaw ?? []) as unknown as Array<{
-    id: number; book_id: number; country_code: string; year_started: number | null; status: string
-    ban_reason_links: Array<{ reasons: { slug: string } | null }>
-  }>
+  // rows: all bans | fields: [id, book_id, country_code, year_started, status, reasons] | reason: timeline + top countries + top reasons
+  type BanRow = { id: number; book_id: number; country_code: string; year_started: number | null; status: string; ban_reason_links: Array<{ reasons: { slug: string } | null }> }
+  let bansRaw: BanRow[] = []
+  {
+    let offset = 0
+    while (true) {
+      const { data } = await supabase
+        .from('bans')
+        .select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))')
+        .range(offset, offset + 999)
+      if (!data || data.length === 0) break
+      bansRaw = bansRaw.concat(data as unknown as BanRow[])
+      if (data.length < 1000) break
+      offset += 1000
+    }
+  }
+
+  // rows: all book_authors | fields: [book_id, author display+slug] | reason: top-authors leaderboard
+  type BARow = { book_id: number; authors: { display_name: string; slug: string | null } | null }
+  let bookAuthorsRaw: BARow[] = []
+  {
+    let offset = 0
+    while (true) {
+      const { data } = await supabase
+        .from('book_authors')
+        .select('book_id, authors(display_name, slug)')
+        .range(offset, offset + 999)
+      if (!data || data.length === 0) break
+      bookAuthorsRaw = bookAuthorsRaw.concat(data as unknown as BARow[])
+      if (data.length < 1000) break
+      offset += 1000
+    }
+  }
+
+  const bans = bansRaw
 
   const countryMap = new Map((countriesRaw ?? []).map(c => [c.code, c.name_en]))
 
@@ -82,7 +109,7 @@ export default async function StatsPage() {
   // ── Top authors ────────────────────────────────────────────────────
   const authorSlugMap = new Map<string, string | null>()
   const bookAuthorMap = new Map<number, string[]>()
-  for (const ba of (bookAuthorsRaw ?? []) as unknown as Array<{ book_id: number; authors: { display_name: string; slug: string | null } | null }>) {
+  for (const ba of bookAuthorsRaw) {
     if (!ba.authors?.display_name) continue
     const list = bookAuthorMap.get(ba.book_id) ?? []
     list.push(ba.authors.display_name)

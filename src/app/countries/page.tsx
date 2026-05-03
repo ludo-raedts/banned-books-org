@@ -20,18 +20,15 @@ function countryFlag(code: string): string {
 export default async function CountriesPage() {
   const supabase = adminClient()
 
-  const [{ data: countries }, { data: bansRaw }] = await Promise.all([
+  const [{ data: countries }, { data: banCounts }] = await Promise.all([
+    // rows: ~50 | fields: [code, name_en, description] | reason: full country list for index page
     supabase.from('countries').select('code, name_en, description'),
-    supabase.from('bans').select('country_code, status'),
+    // rows: ~50 | fields: [country_code, total_bans, active_bans] | reason: materialized view — one row per country, no scan of bans table
+    supabase.from('mv_ban_counts').select('country_code, total_bans, active_bans'),
   ])
 
-  const bans = bansRaw ?? []
-  const countMap = new Map<string, number>()
-  const activeMap = new Map<string, number>()
-  for (const ban of bans) {
-    countMap.set(ban.country_code, (countMap.get(ban.country_code) ?? 0) + 1)
-    if (ban.status === 'active') activeMap.set(ban.country_code, (activeMap.get(ban.country_code) ?? 0) + 1)
-  }
+  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.active_bans as number]))
 
   const ranked = (countries ?? [])
     .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))

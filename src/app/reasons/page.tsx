@@ -44,20 +44,23 @@ const REASON_DESCRIPTIONS: Record<string, string> = {
 export default async function ReasonsPage() {
   const supabase = adminClient()
 
-  const { data: bansRaw } = await supabase
-    .from('bans')
-    .select('id, ban_reason_links(reasons(slug))')
-
-  const bans = (bansRaw ?? []) as unknown as Array<{
-    id: number
-    ban_reason_links: Array<{ reasons: { slug: string } | null }>
-  }>
-
+  // Paginate ban_reason_links — 6500+ rows, PostgREST default cap is 1000
+  // rows: all | fields: [reason slug] | reason: count per reason; skip bans table entirely
   const reasonCounts = new Map<string, number>()
-  for (const ban of bans) {
-    for (const link of ban.ban_reason_links) {
-      const slug = link.reasons?.slug
-      if (slug) reasonCounts.set(slug, (reasonCounts.get(slug) ?? 0) + 1)
+  {
+    let offset = 0
+    while (true) {
+      const { data } = await supabase
+        .from('ban_reason_links')
+        .select('reasons(slug)')
+        .range(offset, offset + 999)
+      if (!data || data.length === 0) break
+      for (const link of data as unknown as Array<{ reasons: { slug: string } | null }>) {
+        const slug = link.reasons?.slug
+        if (slug) reasonCounts.set(slug, (reasonCounts.get(slug) ?? 0) + 1)
+      }
+      if (data.length < 1000) break
+      offset += 1000
     }
   }
 

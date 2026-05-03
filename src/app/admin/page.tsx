@@ -14,12 +14,14 @@ export default async function AdminPage() {
     { count: noDescCount },
     { data: countryRows },
   ] = await Promise.all([
+    // rows: 0 (count only) × 5 | reason: dashboard stat cards
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('news_items').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('books').select('*', { count: 'exact', head: true }).is('cover_url', null),
     supabase.from('books').select('*', { count: 'exact', head: true }).is('description_book', null),
-    supabase.from('bans').select('country_code'),
+    // rows: ≤10000 | fields: [country_code] | reason: COUNT(DISTINCT) unavailable in PostgREST
+    supabase.from('bans').select('country_code').range(0, 9999),
   ])
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size

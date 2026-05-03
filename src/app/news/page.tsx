@@ -83,14 +83,17 @@ export default async function NewsPage() {
   const supabase = adminClient()
 
   const [{ data: rawItems }, { data: books }, { data: countries }] = await Promise.all([
+    // rows: all published news | fields: display fields only | reason: full news feed
     supabase
       .from('news_items')
       .select('id, title, source_name, source_url, published_at, summary, published_week')
       .eq('status', 'published')
       .order('published_week', { ascending: false })
       .order('published_at', { ascending: false }),
-    supabase.from('books').select('slug, title'),
-    supabase.from('countries').select('code, name_en'),
+    // rows: ≤10000 | fields: [slug, title] | reason: linkify book titles in news summaries
+    supabase.from('books').select('slug, title').range(0, 9999),
+    // rows: ≤300 | fields: [code, name_en] | reason: linkify country names in news summaries
+    supabase.from('countries').select('code, name_en').range(0, 299),
   ])
 
   const items = (rawItems ?? []) as NewsItem[]

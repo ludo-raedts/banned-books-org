@@ -63,27 +63,50 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
   const { data: reason } = await supabase.from('reasons').select('id, slug').eq('slug', slug).single()
   if (!reason) notFound()
 
-  const { data: banLinks } = await supabase
-    .from('ban_reason_links')
-    .select('ban_id, bans(book_id)')
-    .eq('reason_id', reason.id)
+  // Paginate ban_reason_links — popular reasons (lgbtq, political) can exceed 1000 rows
+  // rows: all links for this reason | fields: [book_id via bans] | reason: collect full book ID set
+  const bookIdSet = new Set<number>()
+  {
+    let offset = 0
+    while (true) {
+      const { data } = await supabase
+        .from('ban_reason_links')
+        .select('bans(book_id)')
+        .eq('reason_id', reason.id)
+        .range(offset, offset + 999)
+      if (!data || data.length === 0) break
+      for (const bl of data) {
+        const id = (bl.bans as any)?.book_id
+        if (id) bookIdSet.add(id)
+      }
+      if (data.length < 1000) break
+      offset += 1000
+    }
+  }
 
-  const bookIds = [...new Set(
-    (banLinks ?? []).map(bl => (bl.bans as any)?.book_id).filter(Boolean)
-  )]
+  const bookIds = [...bookIdSet]
 
+  // Paginate books — .in() with 1000+ IDs needs range pagination
+  // rows: all books for this reason | fields: card + ban data | reason: reason detail grid
   let books: Book[] = []
   if (bookIds.length > 0) {
-    const { data } = await supabase
-      .from('books')
-      .select(`
-        id, title, slug, cover_url, description, first_published_year, genres,
-        book_authors(authors(display_name)),
-        bans(id, status, country_code, countries(name_en), ban_reason_links(reasons(slug)))
-      `)
-      .in('id', bookIds)
-      .order('title')
-    books = (data as unknown as Book[]) ?? []
+    let offset = 0
+    while (true) {
+      const { data } = await supabase
+        .from('books')
+        .select(`
+          id, title, slug, cover_url, description, first_published_year, genres,
+          book_authors(authors(display_name)),
+          bans(id, status, country_code, countries(name_en), ban_reason_links(reasons(slug)))
+        `)
+        .in('id', bookIds)
+        .order('title')
+        .range(offset, offset + 999)
+      if (!data || data.length === 0) break
+      books = books.concat(data as unknown as Book[])
+      if (data.length < 1000) break
+      offset += 1000
+    }
   }
 
   const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)

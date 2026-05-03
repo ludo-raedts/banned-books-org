@@ -21,8 +21,9 @@ export default async function HomePage() {
 
   try {
     const supabase = adminClient()
+    // rows: all books (paginated 1000/req) | fields: card + filter data, no full descriptions | reason: client-side browser + filters
     const SELECT = `
-      id, title, slug, cover_url, description, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
+      id, title, slug, cover_url, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
       book_authors(authors(display_name)),
       bans(
         id, status, country_code, year_started,
@@ -59,7 +60,7 @@ export default async function HomePage() {
   const bookCount = books.length
 
   // Server-side random featured book — different on every request (force-dynamic)
-  const eligible = books.filter(b => b.description_book || b.description)
+  const eligible = books.filter(b => b.description_book)
   const featuredBook: Book | null = eligible.length > 0
     ? eligible[Math.floor(Math.random() * eligible.length)]
     : null
