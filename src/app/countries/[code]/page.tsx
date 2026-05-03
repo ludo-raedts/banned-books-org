@@ -15,18 +15,26 @@ export async function generateMetadata({
   params: Promise<{ code: string }>
 }): Promise<Metadata> {
   const { code } = await params
-  const { data } = await adminClient()
-    .from('countries')
-    .select('name_en, description')
-    .eq('code', code.toUpperCase())
-    .single()
+  const upperCode = code.toUpperCase()
+  const supabase = adminClient()
 
-  if (!data) return {}
+  const [{ data: country }, { data: bans }] = await Promise.all([
+    supabase.from('countries').select('name_en').eq('code', upperCode).single(),
+    supabase.from('bans').select('year_started').eq('country_code', upperCode),
+  ])
 
-  const title = `Books Banned in ${data.name_en}`
-  const description = data.description
-    ? data.description.slice(0, 155) + (data.description.length > 155 ? '…' : '')
-    : `Browse books banned in ${data.name_en} and learn about the history of censorship there.`
+  if (!country) return {}
+
+  const N = (bans ?? []).length
+  const years = (bans ?? []).map((b) => b.year_started).filter((y): y is number => !!y)
+  const earliest = years.length > 0 ? Math.min(...years) : null
+  const latest = years.length > 0 ? Math.max(...years) : null
+
+  const title = `Books Banned in ${country.name_en} — ${N} ${N === 1 ? 'ban' : 'bans'} | Banned Books`
+  const description =
+    earliest && latest
+      ? `Browse all ${N} books banned or challenged in ${country.name_en}. Covers bans from ${earliest} to ${latest}.`
+      : `Browse all ${N} books banned or challenged in ${country.name_en}.`
 
   return { title, description, alternates: { canonical: `/countries/${code.toLowerCase()}` }, openGraph: { title, description } }
 }

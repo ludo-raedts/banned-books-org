@@ -54,11 +54,28 @@ function getReasons(bans: Ban[]): string[] {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const { data: author } = await adminClient().from('authors').select('display_name').eq('slug', slug).single()
+  const supabase = adminClient()
+  const { data: author } = await supabase.from('authors').select('id, display_name').eq('slug', slug).single()
   if (!author) return {}
+
+  const { data: bookLinks } = await supabase
+    .from('book_authors')
+    .select('book_id')
+    .eq('author_id', (author as unknown as { id: number }).id)
+
+  const bookIds = (bookLinks ?? []).map((bl: { book_id: number }) => bl.book_id)
+  let countryCount = 0
+  if (bookIds.length > 0) {
+    const { data: bans } = await supabase
+      .from('bans')
+      .select('country_code')
+      .in('book_id', bookIds)
+    countryCount = new Set((bans ?? []).map((b) => b.country_code)).size
+  }
+
   return {
     title: `${author.display_name} — Banned Books`,
-    description: `Books by ${author.display_name} that have been banned or challenged worldwide.`,
+    description: `Browse all banned and challenged works by ${author.display_name}, documented across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`,
     alternates: { canonical: `/authors/${slug}` },
   }
 }

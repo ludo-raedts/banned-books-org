@@ -1,8 +1,6 @@
-import Link from 'next/link'
-
 export const metadata = {
   title: 'Sources — Banned Books',
-  description: 'Data sources used to build the Banned Books catalogue.',
+  description: 'Sources and methodology behind the Banned Books catalogue. Data drawn from PEN America, ALA, Wikipedia, and government records.',
   alternates: { canonical: '/sources' },
 }
 
@@ -47,12 +45,9 @@ const SOURCES = [
 
 export default function SourcesPage() {
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors">
-        ← All books
-      </Link>
-
+    <main className="max-w-3xl mx-auto px-6 py-10">
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Reference</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Sources</h1>
         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           This catalogue is built on publicly available data. Below are the primary sources we use.

@@ -5,10 +5,19 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
-export const metadata: Metadata = {
-  title: 'Stats — The State of Literary Censorship',
-  description: 'Top lists and statistics: most banned countries, most challenged authors, reasons for banning, and a timeline of censorship through history.',
-  alternates: { canonical: '/stats' },
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = adminClient()
+  const [{ count: bookCount }, { count: banCount }] = await Promise.all([
+    supabase.from('books').select('*', { count: 'exact', head: true }),
+    supabase.from('bans').select('*', { count: 'exact', head: true }),
+  ])
+  const { data: countryRows } = await supabase.from('bans').select('country_code')
+  const countryCount = new Set((countryRows ?? []).map((r) => r.country_code)).size
+  return {
+    title: 'Censorship by the Numbers — Banned Books',
+    description: `Statistics on literary censorship worldwide: over ${(bookCount ?? 0).toLocaleString()} banned books, ${(banCount ?? 0).toLocaleString()} documented bans across ${countryCount} countries.`,
+    alternates: { canonical: '/stats' },
+  }
 }
 
 function countryFlag(code: string): string {
@@ -131,7 +140,8 @@ export default async function StatsPage() {
 
       {/* ── 1. Hero ── */}
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">The State of Literary Censorship</h1>
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Data</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Censorship by the numbers</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
@@ -159,8 +169,9 @@ export default async function StatsPage() {
       </div>
 
       {/* ── 2. Where bans are concentrated (compact top 5) ── */}
-      <section className="mb-14">
-        <h2 className="text-xl font-bold mb-4">Where bans are concentrated</h2>
+      <section className="mb-16">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Where bans are concentrated</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Top 5 countries by total ban count.</p>
         <div className="space-y-2">
           {top5Countries.map((c) => (
             <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group">
@@ -182,9 +193,9 @@ export default async function StatsPage() {
       </section>
 
       {/* ── 3. Authors ── */}
-      <section className="mb-14">
-        <h2 className="text-xl font-bold mb-1">The Authors They Wanted Silenced</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic mb-5">
+      <section className="mb-16">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">The Authors They Wanted Silenced</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
           Authors whose work has been repeatedly challenged or banned across institutions and borders.
         </p>
         <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
@@ -222,16 +233,13 @@ export default async function StatsPage() {
       </section>
 
       {/* ── 4. Why Books Get Banned ── */}
-      <section className="mb-14">
-        <div className="flex items-baseline justify-between mb-5">
-          <h2 className="text-xl font-bold">Why Books Get Banned</h2>
+      <section className="mb-16">
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Why Books Get Banned</h2>
           <Link href="/reasons" className="text-sm text-gray-500 dark:text-gray-400 hover:underline">All reasons →</Link>
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-2xl leading-relaxed">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
           The stated reasons for banning a book reveal as much about the censor as the censored.
-          Sexual content and obscenity charges have been used to suppress everything from D.H. Lawrence
-          to Lady Chatterley&apos;s Lover. Political bans have targeted anyone from Soviet dissidents to
-          American students writing about civil rights.
         </p>
         <div className="space-y-3">
           {topReasons.map(r => (
@@ -251,15 +259,12 @@ export default async function StatsPage() {
       </section>
 
       {/* ── 5. Bans Through History (timeline) ── */}
-      <section className="mb-10">
-        <h2 className="text-xl font-bold mb-5">Bans Through History</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-2xl leading-relaxed">
-          Literary censorship is not a recent phenomenon. The Catholic Church&apos;s Index Librorum Prohibitorum
-          ran from 1559 to 1966. The 20th century saw surges under fascism, communism, and McCarthyism.
-          The 2020s spike reflects a wave of school board book removals in the United States, with the ALA
-          reporting record numbers of book challenges in 2021, 2022, and 2023.
+      <section className="mb-16">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Bans Through History</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
           {bansWithoutYear > 0 && (
-            <> ({bansWithoutYear.toLocaleString()} bans in this catalogue have no recorded year and are excluded from this chart.)</>
+            <> {bansWithoutYear.toLocaleString()} bans with no recorded year are excluded.</>
           )}
         </p>
         <div className="overflow-x-auto pb-1" dir="rtl">

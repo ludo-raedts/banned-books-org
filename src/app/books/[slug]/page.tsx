@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { slug } = await params
   const { data } = await adminClient()
     .from('books')
-    .select('title, description, description_book, cover_url, book_authors(authors(display_name))')
+    .select('title, description, description_book, cover_url, book_authors(authors(display_name)), bans(id)')
     .eq('slug', slug)
     .single()
 
@@ -27,11 +27,11 @@ export async function generateMetadata({
   const author = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
     .map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
 
-  const title = `${data.title}${author ? ` by ${author}` : ''}`
-  const metaDesc = (data as { description_book?: string | null }).description_book ?? data.description
-  const description = metaDesc
-    ? metaDesc.slice(0, 155) + (metaDesc.length > 155 ? '…' : '')
-    : `${data.title}${author ? ` by ${author}` : ''} is among the most banned books in the world.`
+  const N = (data.bans as unknown as { id: number }[]).length
+  const rawTitle = `${data.title}${author ? ` by ${author}` : ''} — Banned in ${N} ${N === 1 ? 'country' : 'countries'} | Banned Books`
+  const title = rawTitle.length > 155 ? rawTitle.slice(0, 152) + '…' : rawTitle
+  const rawDesc = `${data.title} has been banned or challenged in ${N} ${N === 1 ? 'country' : 'countries'}. Learn where, when, and why this book was censored.`
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, 152) + '…' : rawDesc
 
   return {
     title,
@@ -381,7 +381,7 @@ export default async function BookPage({
             {similarBooks.length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-                  You might also find these banned
+                  Books banned for similar reasons
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {similarBooks.map(sim => (

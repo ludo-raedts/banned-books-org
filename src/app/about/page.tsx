@@ -3,8 +3,8 @@ import { adminClient } from '@/lib/supabase'
 import ContactForm from '@/components/contact-form'
 
 export const metadata: Metadata = {
-  title: 'About',
-  description: 'About the Banned Books catalogue — an independent open database of books banned by governments, schools, and libraries worldwide.',
+  title: 'About — Banned Books',
+  description: 'Banned Books is an open catalogue of censored literature, documenting books banned by governments and schools worldwide.',
   alternates: { canonical: '/about' },
 }
 
@@ -47,20 +47,15 @@ export default async function AboutPage() {
         }}
       />
 
-      {/* Hero */}
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-b border-brand/20">
-        <div className="max-w-3xl mx-auto px-4 py-14">
-          <div className="border-l-4 border-brand pl-6">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">About Banned Books</h1>
-            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl">
-              Banned Books is an independent, open catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
-              We document the who, where, when, and why of literary censorship — from Cold War prohibitions to today&apos;s classroom removals.
-            </p>
-          </div>
-        </div>
+      <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-14">
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">About</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">About this project</h1>
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+          Banned Books is an independent, open catalogue of books banned, challenged, or removed by governments, schools, and libraries worldwide.
+          We document the who, where, when, and why of literary censorship — from Cold War prohibitions to today&apos;s classroom removals.
+        </p>
       </div>
-
-      <main className="max-w-3xl mx-auto px-4 py-12 flex flex-col gap-14">
 
         {/* Section 1 — The project */}
         <section>

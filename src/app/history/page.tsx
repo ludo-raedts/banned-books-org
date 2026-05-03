@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'The Long Shadow of Censorship: A History of Banned Books',
+  title: 'History of Book Banning — From Ancient Rome to Today',
   description:
-    'An in-depth look at the history of banned books, from ancient censorship to modern book bans — including Nazi book burnings, the Catholic Index, and contemporary debates on free speech.',
+    'A history of censorship from the burning of the Library of Alexandria to modern school board challenges. How book banning evolved across 2,000 years.',
   openGraph: {
-    title: 'The Long Shadow of Censorship: A History of Banned Books',
+    title: 'History of Book Banning — From Ancient Rome to Today',
     description:
-      'From Emperor Qin to school board hearings — how book banning has functioned as a confession of fear across two thousand years of human history.',
+      'A history of censorship from the burning of the Library of Alexandria to modern school board challenges. How book banning evolved across 2,000 years.',
     type: 'article',
   },
   alternates: { canonical: '/history' },
@@ -34,16 +34,10 @@ export default function HistoryPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-2xl mx-auto px-4 py-10">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 mb-10 transition-colors"
-        >
-          ← All books
-        </Link>
+      <main className="max-w-3xl mx-auto px-6 py-10">
 
         {/* Header */}
-        <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 -mx-4 sm:mx-0 rounded-r-xl">
+        <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
           <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">
             Essay
           </p>

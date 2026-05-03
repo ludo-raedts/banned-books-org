@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 
 export const metadata: Metadata = {
-  title: 'Countries — Where Books Are Banned',
-  description: 'Browse all countries where books have been banned or challenged. From authoritarian censorship to school board removals — an international map of literary suppression.',
+  title: 'Countries Where Books Are Banned',
+  description: 'Browse books banned or challenged in 30 countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.',
   alternates: { canonical: '/countries' },
 }
 
@@ -47,13 +47,11 @@ export default async function CountriesPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Countries &amp; Territories</h1>
+      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Catalogue</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Countries</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-          Bans recorded across{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{ranked.length} countries and territories</span>.
-          Click any country to browse its banned books and censorship history.
-          Defunct states like the Soviet Union and Nazi Germany are listed separately.
+          Browse books banned in 30 countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 

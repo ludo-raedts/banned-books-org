@@ -4,10 +4,12 @@ import { adminClient } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  title: 'Banned Books News — Weekly censorship briefing',
-  description: 'News about book bans, censorship, and literary freedom worldwide.',
-  alternates: { canonical: '/news' },
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Book Ban News — Latest Censorship Updates | Banned Books',
+    description: 'Latest news on book bans and censorship worldwide.',
+    alternates: { canonical: '/news' },
+  }
 }
 
 type NewsItem = {
@@ -107,8 +109,9 @@ export default async function NewsPage() {
   const weeks = [...byWeek.entries()]
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-8">
+    <main className="max-w-4xl mx-auto px-6 py-8">
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Latest</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">News</h1>
         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           News about book bans, censorship, and literary freedom worldwide.
