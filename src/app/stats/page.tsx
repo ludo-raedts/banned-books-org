@@ -33,6 +33,8 @@ const REASON_COLORS: Record<string, string> = {
   other:     'bg-gray-500',
 }
 
+const CURRENT_DECADE = Math.floor(new Date().getFullYear() / 10) * 10
+
 export default async function StatsPage() {
   const supabase = adminClient()
 
@@ -62,11 +64,11 @@ export default async function StatsPage() {
   for (const ban of bans) {
     countryCounts.set(ban.country_code, (countryCounts.get(ban.country_code) ?? 0) + 1)
   }
-  const topCountries = [...countryCounts.entries()]
+  const allTopCountries = [...countryCounts.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
     .map(([code, count]) => ({ code, name: countryMap.get(code) ?? code, count }))
-  const maxCountry = topCountries[0]?.count ?? 1
+  const top5Countries = allTopCountries.slice(0, 5)
+  const maxCountry = top5Countries[0]?.count ?? 1
 
   // ── Top authors ────────────────────────────────────────────────────
   const authorSlugMap = new Map<string, string | null>()
@@ -88,8 +90,10 @@ export default async function StatsPage() {
   }
   const topAuthors = [...authorCounts.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
+    .filter(([, count]) => count >= 2)
+    .slice(0, 15)
     .map(([name, count]) => ({ name, count, slug: authorSlugMap.get(name) ?? null }))
+  const maxAuthor = topAuthors[0]?.count ?? 1
 
   // ── Top reasons ────────────────────────────────────────────────────
   const reasonCounts = new Map<string, number>()
@@ -107,7 +111,7 @@ export default async function StatsPage() {
   // ── Timeline by decade ─────────────────────────────────────────────
   const decadeCounts = new Map<number, number>()
   for (const ban of bans) {
-    if (!ban.year_started) continue
+    if (!ban.year_started || ban.year_started < 1000) continue
     const decade = Math.floor(ban.year_started / 10) * 10
     decadeCounts.set(decade, (decadeCounts.get(decade) ?? 0) + 1)
   }
@@ -115,7 +119,7 @@ export default async function StatsPage() {
     .sort((a, b) => a[0] - b[0])
     .map(([decade, count]) => ({ decade, count }))
   const maxDecade = Math.max(...decades.map(d => d.count), 1)
-  const bansWithYear = bans.filter(b => b.year_started).length
+  const bansWithYear = bans.filter(b => b.year_started && b.year_started >= 1000).length
   const bansWithoutYear = bans.length - bansWithYear
 
   // ── Active vs historical ───────────────────────────────────────────
@@ -124,7 +128,8 @@ export default async function StatsPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      {/* Hero */}
+
+      {/* ── 1. Hero ── */}
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
         <h1 className="text-3xl font-bold tracking-tight mb-2">The State of Literary Censorship</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
@@ -137,13 +142,13 @@ export default async function StatsPage() {
         </p>
       </div>
 
-      {/* Summary stats */}
+      {/* ── 1. Stat cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {[
-          { label: 'Books catalogued', value: (totalBooks ?? 0).toLocaleString() },
-          { label: 'Total bans recorded', value: (totalBans ?? 0).toLocaleString() },
-          { label: 'Countries & territories', value: countryCounts.size.toString() },
-          { label: 'Currently banned', value: activeBans.toLocaleString(), sub: `${historicalBans.toLocaleString()} lifted` },
+          { label: 'Books catalogued',       value: (totalBooks ?? 0).toLocaleString() },
+          { label: 'Total bans recorded',    value: (totalBans ?? 0).toLocaleString() },
+          { label: 'Countries & territories',value: countryCounts.size.toString() },
+          { label: 'Currently banned',       value: activeBans.toLocaleString(), sub: `${historicalBans.toLocaleString()} lifted` },
         ].map(stat => (
           <div key={stat.label} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
             <div className="text-3xl font-bold tabular-nums text-brand">{stat.value}</div>
@@ -153,58 +158,61 @@ export default async function StatsPage() {
         ))}
       </div>
 
-      {/* Top countries */}
+      {/* ── 2. Where bans are concentrated (compact top 5) ── */}
       <section className="mb-14">
-        <div className="flex items-baseline justify-between mb-5">
-          <h2 className="text-xl font-bold">Where Books Are Banned Most</h2>
-          <Link href="/countries" className="text-sm text-gray-500 dark:text-gray-400 hover:underline">All countries →</Link>
-        </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-2xl leading-relaxed">
-          The United States dominates this list not because of authoritarian government censorship, but because
-          of the American Library Association&apos;s meticulous documentation of school and library book challenges —
-          hundreds per year, most of them targeting books on race and sexuality. Remove the US from the ranking
-          and a very different picture of state-sponsored literary suppression emerges.
-        </p>
+        <h2 className="text-xl font-bold mb-4">Where bans are concentrated</h2>
         <div className="space-y-2">
-          {topCountries.map((c, i) => (
+          {top5Countries.map((c) => (
             <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group">
-              <span className="w-5 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
-              <span className="text-lg leading-none shrink-0" aria-hidden="true">{countryFlag(c.code)}</span>
-              <span className="w-36 shrink-0 text-sm text-gray-700 dark:text-gray-300 group-hover:underline truncate">{c.name}</span>
+              <span className="text-base leading-none shrink-0 w-6">{countryFlag(c.code)}</span>
+              <span className="w-32 shrink-0 text-sm text-gray-700 dark:text-gray-300 group-hover:underline truncate">{c.name}</span>
               <div className="flex-1 flex items-center gap-2 min-w-0">
-                <div className="h-6 rounded bg-red-500 dark:bg-red-600 transition-all shrink-0" style={{ width: `${(c.count / maxCountry * 100).toFixed(1)}%`, minWidth: '2px' }} />
-                <span className="text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300">{c.count}</span>
+                <div
+                  className="h-4 rounded bg-brand transition-all shrink-0"
+                  style={{ width: `${(c.count / maxCountry * 100).toFixed(1)}%`, minWidth: '4px' }}
+                />
+                <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
               </div>
             </Link>
           ))}
         </div>
+        <Link href="/countries" className="inline-block mt-4 text-sm text-gray-500 dark:text-gray-400 hover:underline">
+          See all countries →
+        </Link>
       </section>
 
-      {/* Top authors */}
+      {/* ── 3. Authors ── */}
       <section className="mb-14">
-        <h2 className="text-xl font-bold mb-5">The Authors They Wanted Silenced</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-2xl leading-relaxed">
-          Some authors were banned once in a single country; others were targeted repeatedly across decades
-          and continents. The most censored writers are often those who wrote most truthfully about power,
-          oppression, sexuality, or religious doubt — precisely the things those in power most wanted suppressed.
+        <h2 className="text-xl font-bold mb-1">The Authors They Wanted Silenced</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic mb-5">
+          Authors whose work has been repeatedly challenged or banned across institutions and borders.
         </p>
-        <div className="space-y-2.5">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
           {topAuthors.map((a, i) => (
-            <div key={a.name} className="flex items-center gap-3">
-              <span className="w-5 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
-              {a.slug ? (
-                <Link href={`/authors/${a.slug}`} className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 hover:underline">{a.name}</Link>
-              ) : (
-                <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
-              )}
-              <div className="flex items-center gap-2">
-                <div className="hidden sm:flex gap-1">
-                  {Array.from({ length: Math.min(a.count, 20) }).map((_, j) => (
-                    <div key={j} className="w-2 h-2 rounded-full bg-red-400 dark:bg-red-500 shrink-0" />
-                  ))}
-                  {a.count > 20 && <span className="text-xs text-gray-400">+{a.count - 20}</span>}
-                </div>
-                <span className="text-sm font-semibold tabular-nums text-red-500 dark:text-red-400 w-12 text-right">
+            <div
+              key={a.name}
+              className="relative group border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+            >
+              {/* Background data bar */}
+              <div
+                className="absolute inset-y-0 left-0 rounded-r-sm pointer-events-none bg-brand"
+                style={{ width: `${(a.count / maxAuthor * 100).toFixed(1)}%`, opacity: 0.08 }}
+              />
+              {/* Row content */}
+              <div className="relative z-10 flex items-center gap-3 py-3 px-4">
+                <span className="w-8 text-right text-sm text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+                {a.slug ? (
+                  <Link
+                    href={`/authors/${a.slug}`}
+                    className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 hover:underline flex items-center gap-1"
+                  >
+                    {a.name}
+                    <span className="opacity-0 group-hover:opacity-60 transition-opacity text-xs">→</span>
+                  </Link>
+                ) : (
+                  <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
+                )}
+                <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-brand text-white text-xs font-medium tabular-nums">
                   {a.count} {a.count === 1 ? 'ban' : 'bans'}
                 </span>
               </div>
@@ -213,7 +221,7 @@ export default async function StatsPage() {
         </div>
       </section>
 
-      {/* Top reasons */}
+      {/* ── 4. Why Books Get Banned ── */}
       <section className="mb-14">
         <div className="flex items-baseline justify-between mb-5">
           <h2 className="text-xl font-bold">Why Books Get Banned</h2>
@@ -233,7 +241,7 @@ export default async function StatsPage() {
               <div className="flex-1 flex items-center gap-2 min-w-0">
                 <div
                   className={`h-5 rounded shrink-0 ${REASON_COLORS[r.slug] ?? 'bg-gray-400'}`}
-                  style={{ width: `${(r.count / maxReason * 100).toFixed(1)}%`, minWidth: '2px' }}
+                  style={{ width: `${(r.count / maxReason * 100).toFixed(1)}%`, minWidth: '4px' }}
                 />
                 <span className="text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300">{r.count}</span>
               </div>
@@ -242,7 +250,7 @@ export default async function StatsPage() {
         </div>
       </section>
 
-      {/* Timeline */}
+      {/* ── 5. Bans Through History (timeline) ── */}
       <section className="mb-10">
         <h2 className="text-xl font-bold mb-5">Bans Through History</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-2xl leading-relaxed">
@@ -254,24 +262,36 @@ export default async function StatsPage() {
             <> ({bansWithoutYear.toLocaleString()} bans in this catalogue have no recorded year and are excluded from this chart.)</>
           )}
         </p>
-        {/* dir=rtl on outer makes scroll start at right (newest); dir=ltr on inner keeps natural order */}
         <div className="overflow-x-auto pb-1" dir="rtl">
-          <div className="inline-flex items-end gap-1 h-32" dir="ltr">
-            {decades.map(d => (
-              <div key={d.decade} className="flex flex-col items-center gap-1 shrink-0" style={{ minWidth: '2.5rem' }}>
-                <div
-                  className="w-8 rounded-t bg-red-500 dark:bg-red-600 transition-all"
-                  style={{ height: `${(d.count / maxDecade * 112).toFixed(0)}px`, minHeight: '2px' }}
-                  title={`${d.decade}s: ${d.count} bans`}
-                />
-                <span className="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums">{d.decade}s</span>
-              </div>
-            ))}
+          <div className="inline-flex items-end gap-1 min-w-max" style={{ height: '9rem' }} dir="ltr">
+            {decades.map((d, i) => {
+              const isOngoing = d.decade === CURRENT_DECADE
+              const barH = Math.max(Math.round(d.count / maxDecade * 112), 4)
+              // On mobile show every other label; use CSS classes
+              const labelClass = i % 2 === 0
+                ? 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums'
+                : 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums hidden md:block'
+              return (
+                <div key={d.decade} className="flex flex-col items-center shrink-0" style={{ width: '2.5rem' }}>
+                  {isOngoing && (
+                    <span className="text-[9px] text-brand font-medium mb-0.5 leading-none">now</span>
+                  )}
+                  <div className="flex-1 flex items-end">
+                    <div
+                      className={`w-8 rounded-t transition-all ${isOngoing ? 'bg-brand' : 'bg-red-500 dark:bg-red-600'}`}
+                      style={{ height: `${barH}px` }}
+                      title={`${d.decade}s: ${d.count} ban${d.count !== 1 ? 's' : ''}`}
+                    />
+                  </div>
+                  <span className={labelClass}>{d.decade}s</span>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── 6. Closing disclaimer ── */}
       <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
         <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
           These statistics represent only what has been documented. The true scale of literary censorship —
