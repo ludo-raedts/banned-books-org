@@ -19,7 +19,10 @@ export default async function AdminNewsPage() {
           <h1 className="text-2xl font-bold">News drafts</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} awaiting review</p>
         </div>
-        <a href="/" className="text-sm text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Site</a>
+        <div className="flex items-center gap-4">
+          <a href="/admin/books" className="text-sm text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Books</a>
+          <a href="/" className="text-sm text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Site</a>
+        </div>
       </div>
       <NewsAdminClient initialItems={items} />
     </main>
