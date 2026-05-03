@@ -22,7 +22,7 @@ function LoginForm() {
     })
     setLoading(false)
     if (res.ok) {
-      const from = searchParams.get('from') ?? '/admin/news'
+      const from = searchParams.get('from') ?? '/admin'
       router.push(from)
     } else {
       setError('Incorrect password.')

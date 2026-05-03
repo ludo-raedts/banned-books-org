@@ -51,7 +51,7 @@ export default async function AdminBooksPage() {
           <h1 className="text-2xl font-bold">Books</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{all.length.toLocaleString()} books in catalogue</p>
         </div>
-        <a href="/admin/news" className="text-sm text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← News admin</a>
+        <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Admin dashboard</a>
       </div>
       <BooksListClient books={all} />
     </main>
