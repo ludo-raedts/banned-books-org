@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
+import { useState, useRef } from 'react'
+import { ALLOWED_IMAGE_HOSTS } from '@/lib/allowed-image-hosts'
 import type { BookEditData } from './page'
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
+type ImgStatus = 'idle' | 'loading' | 'loaded' | 'error'
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -16,6 +17,10 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   )
 }
 
+function getHostname(url: string): string | null {
+  try { return new URL(url).hostname } catch { return null }
+}
+
 const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
 const textareaCls = `${inputCls} resize-y`
 
@@ -24,15 +29,29 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
   const [year, setYear] = useState(book.first_published_year?.toString() ?? '')
   const [genres, setGenres] = useState((book.genres ?? []).join(', '))
   const [coverUrl, setCoverUrl] = useState(book.cover_url ?? '')
+  const [imgStatus, setImgStatus] = useState<ImgStatus>(book.cover_url ? 'loading' : 'idle')
   const [descriptionBook, setDescriptionBook] = useState(book.description_book ?? '')
   const [descriptionBan, setDescriptionBan] = useState(book.description_ban ?? '')
   const [censorshipContext, setCensorshipContext] = useState(book.censorship_context ?? '')
   const [aiDrafted, setAiDrafted] = useState(book.ai_drafted ?? false)
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [showHostWarning, setShowHostWarning] = useState(false)
+  const [hostAdded, setHostAdded] = useState(false)
+  const imgKey = useRef(0)
 
-  async function handleSave() {
+  function handleCoverUrlChange(val: string) {
+    setCoverUrl(val)
+    setImgStatus(val ? 'loading' : 'idle')
+    imgKey.current += 1
+  }
+
+  const hostname = coverUrl ? getHostname(coverUrl) : null
+  const isAllowedHost = hostname ? ALLOWED_IMAGE_HOSTS.includes(hostname) : true
+
+  async function performSave() {
     setSaveState('saving')
+    setShowHostWarning(false)
     setErrorMsg('')
     try {
       const body: Record<string, unknown> = {
@@ -62,6 +81,31 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
     }
   }
 
+  async function handleSaveAnyway() {
+    // Add unknown hostname to allowed list
+    if (hostname && !isAllowedHost) {
+      try {
+        await fetch('/api/admin/books/add-image-host', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hostname }),
+        })
+        setHostAdded(true)
+      } catch {
+        // non-fatal — DB save still proceeds
+      }
+    }
+    await performSave()
+  }
+
+  function handleSaveClick() {
+    if (coverUrl && !isAllowedHost) {
+      setShowHostWarning(true)
+    } else {
+      performSave()
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Edit form */}
@@ -78,21 +122,40 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
           <input type="text" value={genres} onChange={e => setGenres(e.target.value)} className={inputCls} placeholder="young-adult, literary-fiction" />
         </Field>
 
-        <Field label="Cover URL" hint="Paste a direct image URL — changes appear in the preview instantly">
+        <Field label="Cover URL" hint="Paste a direct image URL — preview updates immediately">
           <div className="flex gap-4 items-start">
-            <input
-              type="url"
-              value={coverUrl}
-              onChange={e => setCoverUrl(e.target.value)}
-              className={`${inputCls} flex-1`}
-              placeholder="https://…"
-            />
-            <div className="shrink-0 w-[54px] h-[80px] rounded overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
-              {coverUrl ? (
-                <Image src={coverUrl} alt="Cover preview" width={54} height={80} className="w-full h-full object-cover" unoptimized />
-              ) : (
-                <div className="w-full h-full" />
+            <div className="flex-1 flex flex-col gap-1.5">
+              <input
+                type="url"
+                value={coverUrl}
+                onChange={e => handleCoverUrlChange(e.target.value)}
+                className={inputCls}
+                placeholder="https://…"
+              />
+              {coverUrl && imgStatus === 'loaded' && (
+                <p className="text-xs text-green-600 dark:text-green-400">✓ Image loaded</p>
               )}
+              {coverUrl && imgStatus === 'error' && (
+                <p className="text-xs text-red-600 dark:text-red-400">⚠ Image failed to load — this URL may not work on the site</p>
+              )}
+            </div>
+            {/* Preview using plain <img> so any hostname works */}
+            <div className={`shrink-0 w-[54px] h-[80px] rounded overflow-hidden border bg-gray-100 dark:bg-gray-800 ${
+              imgStatus === 'loaded' ? 'border-green-400 dark:border-green-600' :
+              imgStatus === 'error'  ? 'border-red-400 dark:border-red-600' :
+              'border-gray-200 dark:border-gray-700'
+            }`}>
+              {coverUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={imgKey.current}
+                  src={coverUrl}
+                  alt="Cover preview"
+                  className="w-full h-full object-cover"
+                  onLoad={() => setImgStatus('loaded')}
+                  onError={() => setImgStatus('error')}
+                />
+              ) : null}
             </div>
           </div>
         </Field>
@@ -121,22 +184,55 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
           </label>
         </Field>
 
+        {/* Unknown hostname warning */}
+        {showHostWarning && hostname && (
+          <div className="rounded-lg border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 p-4 flex flex-col gap-3">
+            <p className="text-sm text-amber-800 dark:text-amber-300">
+              ⚠ <strong>{hostname}</strong> is not in the Next.js image allowlist. The cover may not display correctly on the site.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveAnyway}
+                disabled={saveState === 'saving'}
+                className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium disabled:opacity-50 transition-colors"
+              >
+                Save anyway
+              </button>
+              <button
+                onClick={() => setShowHostWarning(false)}
+                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Host added notice */}
+        {hostAdded && (
+          <p className="text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg px-3 py-2">
+            ✓ <strong>{hostname}</strong> added to <code>src/lib/allowed-image-hosts.ts</code> — remember to push to GitHub to apply the config change.
+          </p>
+        )}
+
         {/* Save button */}
-        <div className="flex items-center gap-3 pt-1">
-          <button
-            onClick={handleSave}
-            disabled={saveState === 'saving'}
-            className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
-          >
-            {saveState === 'saving' ? 'Saving…' : 'Save changes'}
-          </button>
-          {saveState === 'saved' && (
-            <span className="text-sm text-green-600 dark:text-green-400">Saved ✓</span>
-          )}
-          {saveState === 'error' && (
-            <span className="text-sm text-red-600 dark:text-red-400">{errorMsg}</span>
-          )}
-        </div>
+        {!showHostWarning && (
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              onClick={handleSaveClick}
+              disabled={saveState === 'saving'}
+              className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+            >
+              {saveState === 'saving' ? 'Saving…' : 'Save changes'}
+            </button>
+            {saveState === 'saved' && (
+              <span className="text-sm text-green-600 dark:text-green-400">Saved ✓</span>
+            )}
+            {saveState === 'error' && (
+              <span className="text-sm text-red-600 dark:text-red-400">{errorMsg}</span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Read-only info */}

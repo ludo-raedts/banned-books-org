@@ -1,17 +1,9 @@
 import type { NextConfig } from "next";
+import { ALLOWED_IMAGE_HOSTS } from "./src/lib/allowed-image-hosts";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'covers.openlibrary.org' },
-      { protocol: 'https', hostname: 'upload.wikimedia.org' },
-      { protocol: 'https', hostname: 'books.google.com' },
-      { protocol: 'https', hostname: 'books.google.fr' },
-      { protocol: 'https', hostname: 'books.google.nl' },
-      { protocol: 'https', hostname: 'books.google.co.uk' },
-      { protocol: 'https', hostname: 'books.google.de' },
-      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
-    ],
+    remotePatterns: ALLOWED_IMAGE_HOSTS.map(hostname => ({ protocol: 'https' as const, hostname })),
     deviceSizes: [320, 640, 960],
     imageSizes: [160, 240, 360],
     formats: ['image/webp'],
