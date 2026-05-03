@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
@@ -165,9 +166,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                       sizes="160px"
                     />
                   ) : (
-                    <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
-                      {book.title}
-                    </div>
+                    <BookCoverPlaceholder title={book.title} author={a.display_name} slug={book.slug} />
                   )}
                 </div>
                 <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>

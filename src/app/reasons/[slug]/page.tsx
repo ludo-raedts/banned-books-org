@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
@@ -126,9 +127,7 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
                     <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
                       className="rounded shadow-sm object-cover w-full" sizes="160px" />
                   ) : (
-                    <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-3">
-                      {book.title}
-                    </div>
+                    <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} />
                   )}
                 </div>
                 <h3 className="text-sm font-semibold leading-snug group-hover:underline">{book.title}</h3>

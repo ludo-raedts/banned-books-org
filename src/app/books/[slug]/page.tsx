@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import React from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
@@ -187,9 +188,12 @@ export default async function BookPage({
               sizes="240px"
             />
           ) : (
-            <div className="w-[160px] h-[240px] bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm text-center p-4">
-              No cover
-            </div>
+            <BookCoverPlaceholder
+              title={book.title}
+              author={authorName(book)}
+              slug={book.slug}
+              className="w-[240px]"
+            />
           )}
         </div>
         <div className="flex flex-col justify-center gap-2 min-w-0">
@@ -396,9 +400,7 @@ export default async function BookPage({
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500 text-xs text-center p-2">
-                            No cover
-                          </div>
+                          <BookCoverPlaceholder title={sim.title} slug={sim.slug} className="h-full" />
                         )}
                       </div>
                       <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:underline">

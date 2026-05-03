@@ -59,7 +59,7 @@ export default async function HomePage() {
   const bookCount = books.length
 
   // Server-side random featured book — different on every request (force-dynamic)
-  const eligible = books.filter(b => b.cover_url && (b.description_book || b.description))
+  const eligible = books.filter(b => b.description_book || b.description)
   const featuredBook: Book | null = eligible.length > 0
     ? eligible[Math.floor(Math.random() * eligible.length)]
     : null
