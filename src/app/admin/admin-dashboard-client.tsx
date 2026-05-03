@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap } from 'lucide-react'
+import DataQualityCard from './data-quality-card'
 
 interface Props {
   bookCount: number
@@ -99,6 +100,9 @@ export default function AdminDashboardClient({
             <dd className="tabular-nums font-medium">{noDescCount.toLocaleString()}</dd>
           </dl>
         </div>
+
+        {/* Data quality — spans full row */}
+        <DataQualityCard />
 
         {/* Quick actions */}
         <div className={cardCls}>
