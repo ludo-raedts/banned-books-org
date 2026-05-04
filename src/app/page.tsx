@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase'
 import BookBrowser, { type Book, type NewsPreview, type CountryOption } from '@/components/book-browser'
-import { type StatCard } from '@/components/rotating-stats'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
@@ -98,76 +97,6 @@ export default async function HomePage() {
     .sort((a, b) => a.name_en.localeCompare(b.name_en))
     .map(c => ({ code: c.code, name: c.name_en, count: countMap.get(c.code) ?? 0 }))
 
-  // ── Rotating stats — computed from all lightweight books ──────────────────────
-  const currentYear = new Date().getFullYear()
-  interface BookMeta {
-    title: string; slug: string
-    banCount: number; distinctCountries: number
-    maxYear: number | null; minYear: number | null
-    qualified: boolean
-  }
-  const bookMetas: BookMeta[] = []
-  let multiBannedCount = 0, totalBans = 0, recentBansCount = 0
-
-  for (const book of allBooksLight) {
-    const distinctCountries = new Set(book.bans.map(b => b.country_code)).size
-    if (distinctCountries >= 3) multiBannedCount++
-    let maxYear: number | null = null, minYear: number | null = null
-    for (const ban of book.bans) {
-      totalBans++
-      if (ban.year_started != null) {
-        if (maxYear === null || ban.year_started > maxYear) maxYear = ban.year_started
-        if (minYear === null || ban.year_started < minYear) minYear = ban.year_started
-        if (ban.year_started >= currentYear - 15) recentBansCount++
-      }
-    }
-    bookMetas.push({
-      title: book.title, slug: book.slug,
-      banCount: book.bans.length, distinctCountries,
-      maxYear, minYear,
-      qualified: !!(book.openlibrary_work_id || book.isbn13),
-    })
-  }
-
-  function pickBest(
-    metas: BookMeta[],
-    getValue: (m: BookMeta) => number | null,
-    descending: boolean,
-    exclude: Set<string>
-  ): BookMeta | null {
-    const sorted = metas
-      .filter(m => !exclude.has(m.slug) && getValue(m) !== null)
-      .sort((a, b) => {
-        const va = getValue(a)!; const vb = getValue(b)!
-        return descending ? vb - va : va - vb
-      })
-    return sorted[0] ?? null
-  }
-
-  const qualifiedMetas = bookMetas.filter(m => m.qualified)
-  const used1 = new Set<string>()
-  const card1 = pickBest(bookMetas, m => m.banCount, true, used1)
-  if (card1) used1.add(card1.slug)
-  const card2 = pickBest(bookMetas, m => m.distinctCountries, true, used1)
-  if (card2) used1.add(card2.slug)
-  const card3 = pickBest(qualifiedMetas, m => m.maxYear, true, used1)
-  const used2 = new Set<string>()
-  if (card3) used2.add(card3.slug)
-  const card4 = pickBest(qualifiedMetas, m => m.minYear, false, used2)
-
-  const multiBannedPct = totalCount > 0 ? Math.round(multiBannedCount / totalCount * 100) : 0
-  const recentBansPct = totalBans > 0 ? Math.round(recentBansCount / totalBans * 100) : 0
-  const trunc = (s: string, n: number) => s.length > n ? s.slice(0, n) + '…' : s
-
-  const rotatingStats: StatCard[] = totalCount > 0 ? [
-    ...(card1 ? [{ largeText: trunc(card1.title, 40), fullTitle: card1.title, isTitle: true, label: 'Most documented book', sub: `${card1.banCount} recorded bans`, href: `/books/${card1.slug}` }] : []),
-    ...(card2 ? [{ largeText: trunc(card2.title, 40), fullTitle: card2.title, isTitle: true, label: 'Banned in most countries', sub: `Restricted across ${card2.distinctCountries} countries`, href: `/books/${card2.slug}` }] : []),
-    ...(card3 ? [{ largeText: trunc(card3.title, 40), fullTitle: card3.title, isTitle: true, label: 'Most recently documented ban', sub: card3.maxYear ? `Banned in ${card3.maxYear}` : 'Year unknown', href: `/books/${card3.slug}` }] : []),
-    ...(card4 ? [{ largeText: trunc(card4.title, 40), fullTitle: card4.title, isTitle: true, label: 'Oldest ban on record', sub: card4.minYear ? `First documented in ${card4.minYear}` : 'Year unknown', href: `/books/${card4.slug}` }] : []),
-    { largeText: multiBannedCount.toLocaleString('en'), label: 'Books banned in 3+ countries', sub: `${multiBannedPct}% of all documented books`, href: '/stats' },
-    { largeText: `${recentBansPct}%`, label: 'Of all bans in the last 15 years', sub: `${recentBansCount.toLocaleString('en')} bans since ${currentYear - 15}`, href: '/stats' },
-  ] : []
-
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
       {fetchError && (
@@ -181,7 +110,6 @@ export default async function HomePage() {
           totalCount={totalCount}
           latestNews={latestNews}
           featuredBook={featuredBook}
-          rotatingStats={rotatingStats}
           countries={countries}
         />
       )}

@@ -4,10 +4,9 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
-import { BookOpen, Globe, Search as SearchIcon, List } from 'lucide-react'
+import { BookOpen, Globe, Search as SearchIcon } from 'lucide-react'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
-import RotatingStats, { type StatCard } from './rotating-stats'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -142,14 +141,12 @@ export default function BookBrowser({
   totalCount = 0,
   latestNews = [],
   featuredBook = null,
-  rotatingStats = [],
   countries = [],
 }: {
   initialBooks: Book[]
   totalCount?: number
   latestNews?: NewsPreview[]
   featuredBook?: Book | null
-  rotatingStats?: StatCard[]
   countries?: CountryOption[]
 }) {
   const [q, setQ] = useState('')
@@ -316,7 +313,7 @@ export default function BookBrowser({
           {/* Featured book */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">Featured entry</p>
+              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Featured entry</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
                 className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
@@ -356,6 +353,29 @@ export default function BookBrowser({
               </Link>
             </div>
           )}
+
+          {/* Explore cards — inside left column so both columns balance */}
+          {!isSearching && (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Explore the catalogue</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Start with a book, a country, or a reason.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books', href: '#book-grid' },
+                  { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries', href: '/countries' },
+                  { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons', href: '/reasons' },
+                ].map(({ Icon, title, text, cta, href }) => (
+                  <Link key={title} href={href} className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow">
+                    <Icon className="w-6 h-6 text-brand mb-3" />
+                    <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
+                    <div className="flex-1" />
+                    <span className="text-sm text-brand font-medium mt-3">{cta} →</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* News sidebar — desktop only */}
@@ -366,45 +386,12 @@ export default function BookBrowser({
         )}
       </div>
 
-      {/* ── Explore cards ── */}
-      {!isSearching && (
-        <div className="-mt-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Explore the catalogue</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Start with a book, a country, a reason, or a curated reading list.</p>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books', href: '#book-grid' },
-              { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries', href: '/countries' },
-              { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons', href: '/reasons' },
-              { Icon: List, title: 'Reading list', text: 'A curated starting point for understanding censorship.', cta: 'View reading list', href: '/reading-list' },
-            ].map(({ Icon, title, text, cta, href }) => (
-              <Link key={title} href={href} className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow">
-                <Icon className="w-6 h-6 text-brand mb-3" />
-                <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
-                <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
-                <div className="flex-1" />
-                <span className="text-sm text-brand font-medium mt-3">{cta} →</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* ── Mobile news ── */}
       {hasNews && !isSearching && (
         <div className="lg:hidden">
           <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Happening now</h2>
           <p className="text-sm text-gray-400 dark:text-gray-500 mb-3">Book bans are not history.</p>
           <NewsPanel items={latestNews} />
-        </div>
-      )}
-
-      {/* ── Rotating stats ── */}
-      {rotatingStats.length > 0 && !isSearching && (
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Patterns behind censorship</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Some books are banned once. Others repeatedly, across countries and decades.</p>
-          <RotatingStats stats={rotatingStats} />
         </div>
       )}
 
