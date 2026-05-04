@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
+import TrendingWidget from '@/components/trending-widget'
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = adminClient()
@@ -195,7 +196,12 @@ export default async function StatsPage() {
         ))}
       </div>
 
-      {/* ── 2. Where bans are concentrated (compact top 5) ── */}
+      {/* ── 2. Trending this week ── */}
+      <section className="mb-16">
+        <TrendingWidget />
+      </section>
+
+      {/* ── 3. Where bans are concentrated (compact top 5) ── */}
       <section className="mb-16">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Where bans are concentrated</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Top 5 countries by total ban count.</p>
