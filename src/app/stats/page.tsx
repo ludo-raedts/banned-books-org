@@ -372,7 +372,28 @@ export default async function StatsPage({
         </div>
       </section>
 
-      {/* ── 8. Closing disclaimer ── */}
+      {/* ── 8. Browse by year ── */}
+      <section className="mb-16">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Browse by Year</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">All documented bans that started in a given year.</p>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: CURRENT_DECADE + 10 - 2015 + 1 }, (_, i) => 2015 + i)
+            .filter(y => y <= new Date().getFullYear())
+            .reverse()
+            .map(y => (
+              <Link
+                key={y}
+                href={`/banned-books/${y}`}
+                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-brand hover:text-brand dark:hover:border-brand dark:hover:text-brand transition-colors"
+              >
+                {y}
+              </Link>
+            ))
+          }
+        </div>
+      </section>
+
+      {/* ── 9. Closing disclaimer ── */}
       <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
         <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
           These statistics represent only what has been documented. The true scale of literary censorship —
