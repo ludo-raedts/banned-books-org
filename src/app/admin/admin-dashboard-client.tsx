@@ -512,6 +512,12 @@ export default function AdminDashboardClient({
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Common tasks.</p>
           </div>
           <div className="flex flex-col gap-2 text-sm mt-1">
+            <a
+              href="/admin/scripts"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Scripts reference
+            </a>
             <button
               onClick={handleFetchNews}
               disabled={fetchState === 'loading'}
