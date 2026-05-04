@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge, { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import ReasonControls from '@/components/reason-controls'
+import { Suspense } from 'react'
 
 const REASON_INTROS: Record<string, string> = {
   lgbtq: 'LGBTQ+ content has become the primary driver of book challenges in American schools since 2020, with the American Library Association reporting it as the most cited reason in its annual challenged books survey. Titles featuring same-sex relationships, transgender characters, or frank depictions of queer identity have been removed from school libraries at record rates. Internationally, the picture is darker still: in dozens of countries, books with LGBTQ+ themes are subject to outright government bans under laws criminalizing "homosexual propaganda" or "immoral content."',
@@ -28,7 +30,7 @@ type Book = {
   id: number; title: string; slug: string; cover_url: string | null
   description: string | null; first_published_year: number | null; genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
-  bans: { id: number; status: string; country_code: string; countries: { name_en: string } | null; ban_reason_links: { reasons: { slug: string } | null }[] }[]
+  bans: { id: number; status: string; country_code: string; year_started: number | null; countries: { name_en: string } | null; ban_reason_links: { reasons: { slug: string } | null }[] }[]
 }
 
 function authorName(book: Book) {
@@ -53,8 +55,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function ReasonPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ReasonPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ country?: string; year?: string; active?: string; sort?: string }>
+}) {
   const { slug } = await params
+  const { country: filterCountry = '', year: filterYear = '', active: filterActiveStr, sort: filterSort = 'bans' } = await searchParams
+  const filterActive = filterActiveStr === '1'
+  const filterYearNum = filterYear ? parseInt(filterYear, 10) : null
   const label = reasonLabel(slug)
   if (!label || label === slug) notFound()
 
@@ -97,7 +108,7 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
         .select(`
           id, title, slug, cover_url, description, first_published_year, genres,
           book_authors(authors(display_name)),
-          bans(id, status, country_code, countries(name_en), ban_reason_links(reasons(slug)))
+          bans(id, status, country_code, year_started, countries(name_en), ban_reason_links(reasons(slug)))
         `)
         .in('id', bookIds)
         .order('title')
@@ -108,6 +119,43 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
       offset += 1000
     }
   }
+
+  // ── Build filter option lists from full unfiltered set ───────────────────────
+  const countryMap = new Map<string, string>()
+  for (const book of books) {
+    for (const ban of book.bans) {
+      if (!countryMap.has(ban.country_code)) {
+        countryMap.set(ban.country_code, ban.countries?.name_en ?? ban.country_code)
+      }
+    }
+  }
+  const countryOptions = [...countryMap.entries()]
+    .sort((a, b) => a[1].localeCompare(b[1]))
+    .map(([code, name]) => ({ code, name }))
+
+  const availableYears = [...new Set(
+    books.flatMap(b => b.bans.map(bn => bn.year_started).filter((y): y is number => y != null))
+  )].sort((a, b) => b - a)
+
+  // ── Apply filters ─────────────────────────────────────────────────────────────
+  const filtered = books.filter(book => {
+    let bans = book.bans
+    if (filterCountry) bans = bans.filter(b => b.country_code === filterCountry)
+    if (filterYearNum) bans = bans.filter(b => b.year_started === filterYearNum)
+    if (filterActive) bans = bans.filter(b => b.status === 'active')
+    return bans.length > 0
+  })
+
+  // ── Sort ──────────────────────────────────────────────────────────────────────
+  const sorted = [...filtered].sort((a, b) => {
+    if (filterSort === 'title') return a.title.localeCompare(b.title)
+    if (filterSort === 'year') {
+      const aYear = Math.min(...a.bans.map(bn => bn.year_started ?? 9999))
+      const bYear = Math.min(...b.bans.map(bn => bn.year_started ?? 9999))
+      return aYear - bYear
+    }
+    return b.bans.length - a.bans.length
+  })
 
   const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)
   const activeBans = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
@@ -136,11 +184,21 @@ export default async function ReasonPage({ params }: { params: Promise<{ slug: s
         )}
       </div>
 
-      {books.length === 0 ? (
-        <p className="text-gray-500">No books recorded for this reason yet.</p>
+      <Suspense>
+        <ReasonControls
+          current={{ country: filterCountry, year: filterYear, active: filterActive, sort: filterSort }}
+          countries={countryOptions}
+          years={availableYears}
+          totalBooks={books.length}
+          filteredBooks={sorted.length}
+        />
+      </Suspense>
+
+      {sorted.length === 0 ? (
+        <p className="text-gray-500">No books match the current filters.</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          {books.map(book => {
+          {sorted.map(book => {
             const activeBanList = book.bans.filter(b => b.status === 'active')
             const displayBans = activeBanList.length > 0 ? activeBanList : book.bans.slice(0, 3)
             return (
