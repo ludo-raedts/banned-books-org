@@ -11,6 +11,7 @@ import { headers } from 'next/headers'
 import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import ShareButtons from '@/components/share-buttons'
 
 export async function generateMetadata({
   params,
@@ -237,6 +238,11 @@ export default async function BookPage({
             Banned in {book.bans.length}{' '}
             {book.bans.length === 1 ? 'country' : 'countries'}
           </p>
+          <ShareButtons
+            url={`https://www.banned-books.org/books/${book.slug}`}
+            title={book.title}
+            banCount={book.bans.length}
+          />
         </div>
       </div>
 
