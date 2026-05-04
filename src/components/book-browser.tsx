@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
@@ -142,12 +142,14 @@ export default function BookBrowser({
   latestNews = [],
   featuredBook = null,
   countries = [],
+  trendingSlot,
 }: {
   initialBooks: Book[]
   totalCount?: number
   latestNews?: NewsPreview[]
   featuredBook?: Book | null
   countries?: CountryOption[]
+  trendingSlot?: React.ReactNode
 }) {
   const [q, setQ] = useState('')
   const [debouncedQ, setDebouncedQ] = useState('')
@@ -378,10 +380,44 @@ export default function BookBrowser({
           )}
         </div>
 
-        {/* News sidebar — desktop only */}
-        {hasNews && !isSearching && (
+        {/* News + Trending sidebar — desktop only */}
+        {(hasNews || trendingSlot) && !isSearching && (
           <div className="hidden lg:block">
-            <NewsPanel items={latestNews} compact />
+            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col gap-5">
+              {hasNews && (
+                <div className="flex flex-col">
+                  <div className="mb-3">
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Happening now</span>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
+                  </div>
+                  <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
+                    {latestNews.map(item => (
+                      <Link key={item.id} href="/news" className="py-2.5 group/item first:pt-0">
+                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
+                          {item.summary}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                          {item.source_name}
+                          {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link href="/news" className="mt-3 text-xs text-right text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors block">
+                    All news →
+                  </Link>
+                </div>
+              )}
+              {trendingSlot && (
+                <div className={hasNews ? 'border-t border-gray-200 dark:border-gray-700 pt-4' : ''}>
+                  <div className="mb-3">
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trending this week</span>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Most visited in the last 7 days.</p>
+                  </div>
+                  {trendingSlot}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

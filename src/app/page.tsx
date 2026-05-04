@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase'
 import BookBrowser, { type Book, type NewsPreview, type CountryOption } from '@/components/book-browser'
+import TrendingWidget from '@/components/trending-widget'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
@@ -111,6 +112,7 @@ export default async function HomePage() {
           latestNews={latestNews}
           featuredBook={featuredBook}
           countries={countries}
+          trendingSlot={<TrendingWidget compact showHeader={false} />}
         />
       )}
     </main>
