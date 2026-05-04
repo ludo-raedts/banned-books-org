@@ -217,6 +217,12 @@ export default async function StatsPage() {
         <Link href="/countries" className="inline-block mt-4 text-sm text-gray-500 dark:text-gray-400 hover:underline">
           See all countries →
         </Link>
+        <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+          The US dominates this chart because its bans are systematically recorded.{' '}
+          <Link href="/methodology" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+            Why the data looks this way →
+          </Link>
+        </p>
       </section>
 
       {/* ── 3. Authors ── */}

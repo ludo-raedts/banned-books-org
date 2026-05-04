@@ -7,6 +7,8 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+import { headers } from 'next/headers'
+import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 
@@ -110,6 +112,8 @@ export default async function BookPage({
 
   const book = data as unknown as BookDetail
   const author = authorName(book)
+
+  void trackPageview('book', book.id, new Request('https://x', { headers: await headers() }))
 
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)

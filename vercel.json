@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/fetch-news",
       "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/cron/cleanup-pageviews",
+      "schedule": "0 3 * * 1"
     }
   ]
 }

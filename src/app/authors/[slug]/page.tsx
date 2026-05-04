@@ -6,6 +6,8 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+import { headers } from 'next/headers'
+import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 
@@ -92,6 +94,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   if (!author) notFound()
   const a = author as unknown as Author
+
+  void trackPageview('author', author.id, new Request('https://x', { headers: await headers() }))
 
   const { data: bookLinks } = await supabase
     .from('book_authors')

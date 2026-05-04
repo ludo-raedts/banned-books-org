@@ -1,5 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import AdminDashboardClient from './admin-dashboard-client'
+import type { TrendingBookRow, TrendingAuthorRow } from './admin-dashboard-client'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,6 +27,93 @@ export default async function AdminPage() {
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
 
+  // ── Trending / pageview data ──────────────────────────────────────────────────
+  let trendingBooks: TrendingBookRow[] = []
+  let trendingAuthors: TrendingAuthorRow[] = []
+  let viewsThisWeek = 0
+  let viewsLastWeek = 0
+  let firstViewDate: string | null = null
+
+  try {
+    const [
+      { data: booksThisWeek },
+      { data: booksLastWeek },
+      { data: authorsThisWeek },
+      { data: authorsLastWeek },
+      { data: weeklyTotals },
+      { data: firstView },
+    ] = await Promise.all([
+      supabase.from('v_top_books_this_week').select('entity_id, views'),
+      supabase.from('v_top_books_last_week').select('entity_id, views'),
+      supabase.from('v_top_authors_this_week').select('entity_id, views'),
+      supabase.from('v_top_authors_last_week').select('entity_id, views'),
+      supabase.from('v_weekly_totals').select('views_this_week, views_last_week').single(),
+      supabase.from('pageviews').select('viewed_at').order('viewed_at', { ascending: true }).limit(1).single(),
+    ])
+
+    viewsThisWeek = Number(weeklyTotals?.views_this_week ?? 0)
+    viewsLastWeek = Number(weeklyTotals?.views_last_week ?? 0)
+    firstViewDate = firstView?.viewed_at ?? null
+
+    // ── Books ──────────────────────────────────────────────────────────────────
+    const topBookEntries = (booksThisWeek ?? []).slice(0, 5)
+    const topBookIds = topBookEntries.map(r => Number(r.entity_id))
+    if (topBookIds.length > 0) {
+      const { data: bookDetails } = await supabase
+        .from('books')
+        .select('id, title, slug')
+        .in('id', topBookIds)
+      const bookMap = new Map((bookDetails ?? []).map(b => [b.id, b]))
+      const lastWeekRankMap = new Map(
+        (booksLastWeek ?? []).map((r, i) => [Number(r.entity_id), i + 1])
+      )
+      trendingBooks = topBookEntries
+        .map((r, i) => {
+          const book = bookMap.get(Number(r.entity_id))
+          if (!book?.slug) return null
+          return {
+            rank: i + 1,
+            entityId: Number(r.entity_id),
+            views: Number(r.views),
+            lastWeekRank: lastWeekRankMap.get(Number(r.entity_id)) ?? null,
+            title: book.title,
+            slug: book.slug,
+          }
+        })
+        .filter((b): b is TrendingBookRow => b !== null)
+    }
+
+    // ── Authors ────────────────────────────────────────────────────────────────
+    const topAuthorEntries = (authorsThisWeek ?? []).slice(0, 5)
+    const topAuthorIds = topAuthorEntries.map(r => Number(r.entity_id))
+    if (topAuthorIds.length > 0) {
+      const { data: authorDetails } = await supabase
+        .from('authors')
+        .select('id, display_name, slug')
+        .in('id', topAuthorIds)
+      const authorMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
+      const lastWeekRankMap = new Map(
+        (authorsLastWeek ?? []).map((r, i) => [Number(r.entity_id), i + 1])
+      )
+      trendingAuthors = topAuthorEntries
+        .map((r, i) => {
+          const author = authorMap.get(Number(r.entity_id))
+          if (!author?.slug) return null
+          return {
+            rank: i + 1,
+            entityId: Number(r.entity_id),
+            views: Number(r.views),
+            lastWeekRank: lastWeekRankMap.get(Number(r.entity_id)) ?? null,
+            name: author.display_name,
+            slug: author.slug,
+          }
+        })
+        .filter((a): a is TrendingAuthorRow => a !== null)
+    }
+  } catch {
+    // pageviews table not yet created — show empty state
+  }
+
   return (
     <AdminDashboardClient
       bookCount={bookCount ?? 0}
@@ -34,6 +122,11 @@ export default async function AdminPage() {
       countryCount={countryCount}
       noCoverCount={noCoverCount ?? 0}
       noDescCount={noDescCount ?? 0}
+      trendingBooks={trendingBooks}
+      trendingAuthors={trendingAuthors}
+      viewsThisWeek={viewsThisWeek}
+      viewsLastWeek={viewsLastWeek}
+      firstViewDate={firstViewDate}
     />
   )
 }

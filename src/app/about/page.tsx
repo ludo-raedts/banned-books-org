@@ -73,6 +73,14 @@ export default async function AboutPage() {
               school board removals in Florida in 2025. Every ban includes a source citation. Every book has a page. The site is free,
               non-commercial, and built in the open.
             </p>
+            <p>
+              The numbers skew toward the United States because US bans are systematically reported.
+              That reflects transparency, not uniquely American censorship. Read our{' '}
+              <a href="/methodology" className="underline text-gray-900 dark:text-gray-100 hover:opacity-70">
+                methodology essay
+              </a>{' '}
+              for an honest account of what this data can and cannot tell you.
+            </p>
           </div>
         </section>
 

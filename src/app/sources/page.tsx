@@ -73,6 +73,31 @@ export default function SourcesPage() {
         ))}
       </div>
 
+      <div className="mt-10 border rounded-xl p-6">
+        <h2 className="text-lg font-semibold mb-3">Data limitations</h2>
+        <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex flex-col gap-3">
+          <p>
+            This catalogue is not a neutral global census of book bans — it is a record of what has
+            been documented. Coverage is strongest for the United States, where PEN America and the ALA
+            provide structured, annual data. It is weakest for closed authoritarian states, where
+            censorship is pervasive but rarely reported through accessible channels.
+          </p>
+          <p>
+            US bans are also structurally different: most are school-district removals — local
+            administrative decisions — rather than national prohibitions. Each removal is counted
+            separately, which inflates the US total relative to countries where a single government
+            decree bans a book everywhere at once.
+          </p>
+          <p>
+            Read the full explanation in our{' '}
+            <a href="/methodology" className="underline hover:text-gray-800 dark:hover:text-gray-200">
+              methodology essay
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+
       <p className="mt-10 text-xs text-gray-400 leading-relaxed">
         If you spot an error or want to suggest a source, please{' '}
         <a

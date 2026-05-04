@@ -52,6 +52,16 @@ export default async function CountriesPage() {
         </p>
       </div>
 
+      {/* Context banner */}
+      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl px-5 py-4 mb-6 text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
+        <strong>Note on coverage:</strong> The United States appears first because US bans are
+        systematically tracked by PEN America and the ALA. Bans in authoritarian states are
+        far more common but often undocumented.{' '}
+        <Link href="/methodology" className="underline hover:text-amber-700 dark:hover:text-amber-100">
+          Read more about how this data is collected →
+        </Link>
+      </div>
+
       {/* Country list */}
       <div className="space-y-1.5 mb-12">
         {active.map((c, i) => (
