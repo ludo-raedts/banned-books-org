@@ -468,7 +468,7 @@ export default function AdminDashboardClient({
 
         {/* Materialized views card */}
         <div className={`${cardCls} col-span-full`}>
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
@@ -483,7 +483,7 @@ export default function AdminDashboardClient({
               {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
             </button>
           </div>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm mt-1">
+          <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm mt-1">
             <dt className="text-gray-500 dark:text-gray-400">Data last changed</dt>
             <dd className="tabular-nums">
               {dataLastChanged
