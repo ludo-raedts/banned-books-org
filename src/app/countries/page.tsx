@@ -4,26 +4,42 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 
-export const metadata: Metadata = {
-  title: 'Countries Where Books Are Banned',
-  description: 'Browse books banned or challenged in 30 countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.',
-  alternates: { canonical: '/countries' },
+const DEFUNCT = ['SU', 'CS', 'DD', 'YU']
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = adminClient()
+  const { data: banCounts } = await supabase.from('mv_ban_counts').select('country_code, total_bans')
+  const { data: countries } = await supabase.from('countries').select('code')
+  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const activeCount = (countries ?? [])
+    .filter(c => !DEFUNCT.includes(c.code) && (countMap.get(c.code) ?? 0) > 0)
+    .length
+  return {
+    title: 'Countries Where Books Are Banned',
+    description: `Browse books banned or challenged in ${activeCount} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.`,
+    alternates: { canonical: '/countries' },
+  }
 }
 
 function countryFlag(code: string): string {
-  if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
+  if (DEFUNCT.includes(code)) return '🚩'
   return [...code.toUpperCase()].map(c =>
     String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
   ).join('')
 }
 
-export default async function CountriesPage() {
+export default async function CountriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>
+}) {
+  const { sort } = await searchParams
+  const isAlpha = sort === 'alpha'
+
   const supabase = adminClient()
 
   const [{ data: countries }, { data: banCounts }] = await Promise.all([
-    // rows: ~50 | fields: [code, name_en, description] | reason: full country list for index page
     supabase.from('countries').select('code, name_en, description'),
-    // rows: ~50 | fields: [country_code, total_bans, active_bans] | reason: materialized view — one row per country, no scan of bans table
     supabase.from('mv_ban_counts').select('country_code, total_bans, active_bans'),
   ])
 
@@ -33,14 +49,15 @@ export default async function CountriesPage() {
   const ranked = (countries ?? [])
     .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
     .filter(c => c.count > 0)
-    .sort((a, b) => b.count - a.count)
+    .sort(isAlpha
+      ? (a, b) => a.name_en.localeCompare(b.name_en)
+      : (a, b) => b.count - a.count
+    )
 
-  const maxCount = ranked[0]?.count ?? 1
+  const maxCount = Math.max(...ranked.map(c => c.count), 1)
 
-  // Separate defunct states
-  const defunct = ['SU', 'CS', 'DD', 'YU']
-  const active = ranked.filter(c => !defunct.includes(c.code))
-  const historical = ranked.filter(c => defunct.includes(c.code))
+  const active = ranked.filter(c => !DEFUNCT.includes(c.code))
+  const historical = ranked.filter(c => DEFUNCT.includes(c.code))
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -48,7 +65,7 @@ export default async function CountriesPage() {
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Catalogue</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Countries</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-          Browse books banned in 30 countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
+          Browse books banned in {active.length} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 
@@ -62,11 +79,39 @@ export default async function CountriesPage() {
         </Link>
       </div>
 
+      {/* Sort toggle */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">Sort:</span>
+        <Link
+          href="/countries"
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+            !isAlpha
+              ? 'bg-brand text-white border-brand'
+              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+          }`}
+        >
+          By volume
+        </Link>
+        <Link
+          href="/countries?sort=alpha"
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+            isAlpha
+              ? 'bg-brand text-white border-brand'
+              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+          }`}
+        >
+          Alphabetical
+        </Link>
+      </div>
+
       {/* Country list */}
       <div className="space-y-1.5 mb-12">
         {active.map((c, i) => (
           <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-2 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
-            <span className="w-6 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+            {isAlpha
+              ? <span className="w-6 shrink-0" />
+              : <span className="w-6 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+            }
             <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
             <span className="w-44 shrink-0 text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:underline truncate">{c.name_en}</span>
             <div className="flex-1 flex items-center gap-2 min-w-0">
