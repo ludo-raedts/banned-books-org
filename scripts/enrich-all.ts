@@ -66,9 +66,11 @@ const steps: Step[] = [
   },
   {
     name: 'Cover images',
-    script: 'enrich-covers.ts',
-    args: APPLY ? ['--apply'] : [],
+    script: 'enrich-covers-continuous.ts',
+    // --once = single pass (don't loop); also uses ISBN-13 which we enrich in step 1
+    args: APPLY ? ['--once'] : ['--once'],
     gpt: false,
+    alwaysWrites: true,
   },
   {
     name: 'Gutenberg IDs',
