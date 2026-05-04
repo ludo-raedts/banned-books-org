@@ -26,7 +26,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
     if (next.reason) p.set('reason', next.reason)
     if (next.active) p.set('active', '1')
     const qs = p.toString()
-    router.push(qs ? `${pathname}?${qs}` : pathname)
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
   const hasFilter = !!(current.country || current.reason || current.active)
