@@ -108,6 +108,61 @@ export default async function CountryPage({
   const books = (data as unknown as Book[]) ?? []
   const totalBanCount = banCount ?? 0
 
+  // ── Related countries: find countries with most book overlap ──────────────────
+  // Step 1: collect all book_ids banned in this country (paginated, lightweight)
+  let allBookIds: number[] = []
+  {
+    let offset = 0
+    while (true) {
+      const { data: idRows } = await supabase
+        .from('bans').select('book_id').eq('country_code', upperCode).range(offset, offset + 999)
+      if (!idRows || idRows.length === 0) break
+      allBookIds = allBookIds.concat(idRows.map(r => r.book_id as number))
+      if (idRows.length < 1000) break
+      offset += 1000
+    }
+  }
+
+  // Step 2: for those book_ids, find bans in other countries (batched parallel)
+  const overlapCounts = new Map<string, number>()
+  if (allBookIds.length > 0) {
+    const CHUNK = 400
+    const chunks: number[][] = []
+    for (let i = 0; i < allBookIds.length; i += CHUNK) chunks.push(allBookIds.slice(i, i + CHUNK))
+    const results = await Promise.all(
+      chunks.map(chunk =>
+        supabase.from('bans').select('country_code, book_id').in('book_id', chunk).neq('country_code', upperCode)
+      )
+    )
+    for (const { data: rows } of results) {
+      const seen = new Set<string>() // count each country once per book
+      for (const row of (rows ?? []) as { country_code: string; book_id: number }[]) {
+        const key = `${row.country_code}:${row.book_id}`
+        if (!seen.has(key)) {
+          seen.add(key)
+          overlapCounts.set(row.country_code, (overlapCounts.get(row.country_code) ?? 0) + 1)
+        }
+      }
+    }
+  }
+
+  // Step 3: pick top 5 and fetch their names
+  const top5Codes = [...overlapCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([code, count]) => ({ code, count }))
+
+  type RelatedCountry = { code: string; name_en: string; count: number }
+  let relatedCountries: RelatedCountry[] = []
+  if (top5Codes.length > 0) {
+    const { data: names } = await supabase
+      .from('countries').select('code, name_en').in('code', top5Codes.map(c => c.code))
+    const nameMap = new Map((names ?? []).map(c => [c.code, c.name_en]))
+    relatedCountries = top5Codes.map(({ code, count }) => ({
+      code, count, name_en: nameMap.get(code) ?? code,
+    }))
+  }
+
   // Build timeline: bans by decade (or by year if ≤ 30 distinct years)
   const countryBansForTimeline = books.flatMap(b =>
     b.bans.map(ban => ban.year_started)
@@ -227,6 +282,33 @@ export default async function CountryPage({
             })}
           </div>
         </>
+      )}
+      {/* Related countries */}
+      {relatedCountries.length > 0 && (
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <h2 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">
+            Countries with similar bans
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedCountries.map(rc => (
+              <Link
+                key={rc.code}
+                href={`/countries/${rc.code.toLowerCase()}`}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group"
+              >
+                <span className="text-xl leading-none">{countryFlag(rc.code)}</span>
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug">
+                    {rc.name_en}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                    {rc.count} {rc.count === 1 ? 'book' : 'books'} in common
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       )}
     </main>
   )
