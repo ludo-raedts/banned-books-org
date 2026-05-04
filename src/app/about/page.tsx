@@ -137,9 +137,12 @@ export default async function AboutPage() {
               restriction, or challenge. We do not make editorial judgments about whether a ban was
               justified — we document what happened.
             </p>
-            <p>
+            <p className="flex flex-wrap gap-x-5 gap-y-1">
               <Link href="/methodology" className="underline hover:text-gray-900 dark:hover:text-gray-100 transition-colors font-medium">
                 Read the full methodology →
+              </Link>
+              <Link href="/challenged-books" className="underline hover:text-gray-900 dark:hover:text-gray-100 transition-colors font-medium">
+                Browse challenged books →
               </Link>
             </p>
           </div>

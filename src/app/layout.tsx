@@ -82,6 +82,7 @@ export default function RootLayout({
               <Link href="/countries" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Countries</Link>
               <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Stats</Link>
               <Link href="/reasons" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reasons</Link>
+              <Link href="/challenged-books" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Challenged books</Link>
               <Link href="/scope/school" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">School bans</Link>
               <Link href="/scope/government" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Government bans</Link>
               <Link href="/history" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">History</Link>

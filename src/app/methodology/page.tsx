@@ -58,8 +58,13 @@ export default function MethodologyPage() {
         <p>
           In this catalogue, we document both. A school ban in Florida and a government ban in Iran are both
           recorded as bans, though we distinguish them by scope ("school" vs. "government") and status
-          ("challenged" vs. "banned" vs. "historical"). The US number is high partly because school-level
+          ("active" vs. "historical"). The US number is high partly because school-level
           decisions are included and tracked. Most countries' equivalents are never reported.
+          See our{' '}
+          <Link href="/challenged-books" className="text-red-700 dark:text-red-400 underline hover:text-red-900">
+            challenged books page
+          </Link>
+          {' '}for the full list of school-scope bans and an explanation of challenge vs. ban terminology.
         </p>
 
         <blockquote className="border-l-4 border-red-700 pl-6 my-8 text-xl text-gray-700 dark:text-gray-300 italic not-italic">
