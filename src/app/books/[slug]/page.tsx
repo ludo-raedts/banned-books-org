@@ -44,6 +44,9 @@ export async function generateMetadata({
       description,
       ...(data.cover_url ? { images: [{ url: data.cover_url }] } : {}),
     },
+    twitter: {
+      card: data.cover_url ? 'summary_large_image' : 'summary',
+    },
   }
 }
 

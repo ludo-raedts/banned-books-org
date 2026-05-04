@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import BookBrowser, { type Book, type NewsPreview, type CountryOption } from '@/components/book-browser'
 import TrendingWidget from '@/components/trending-widget'
@@ -98,8 +99,21 @@ export default async function HomePage() {
     .sort((a, b) => a.name_en.localeCompare(b.name_en))
     .map(c => ({ code: c.code, name: c.name_en, count: countMap.get(c.code) ?? 0 }))
 
+  const countryCount = countries.length
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-2">
+          The World&apos;s Books Under Censorship
+        </h1>
+        <p className="text-base text-gray-500 dark:text-gray-400">
+          {totalCount.toLocaleString('en')} books documented across {countryCount} {countryCount === 1 ? 'country' : 'countries'} — real bans, real sources.{' '}
+          <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+            See statistics →
+          </Link>
+        </p>
+      </div>
       {fetchError && (
         <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-8">
           Could not load books: {fetchError}

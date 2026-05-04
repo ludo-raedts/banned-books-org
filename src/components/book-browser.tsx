@@ -244,32 +244,6 @@ export default function BookBrowser({
 
         <div className={`flex flex-col gap-4${hasNews ? ' lg:col-span-2' : ''}`}>
 
-          {/* Hero */}
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-2">
-              Books are still being banned
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
-              A growing catalogue of books banned, challenged, or removed across the world.
-            </p>
-            {/* Prominent stat row */}
-            {totalCount > 0 && (
-              <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 mt-3">
-                <span className="text-xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
-                  {totalCount.toLocaleString()}
-                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> books</span>
-                </span>
-                <span className="text-xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
-                  {countries.length}
-                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> countries</span>
-                </span>
-                <Link href="/stats" className="text-sm text-gray-400 dark:text-gray-500 hover:text-brand dark:hover:text-brand transition-colors">
-                  See statistics →
-                </Link>
-              </div>
-            )}
-          </div>
-
           {/* Search */}
           <div>
             <div className="relative">
