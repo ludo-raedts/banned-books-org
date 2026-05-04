@@ -110,8 +110,13 @@ export default async function ReasonsPage() {
         ))}
       </div>
 
-      <p className="mt-8 text-xs text-gray-400 dark:text-gray-500">
+      <p className="mt-6 text-xs text-gray-400 dark:text-gray-500">
         Note: a single ban can be recorded with multiple reasons. Percentages are calculated from the total number of reason assignments, not total bans.
+      </p>
+      <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+          See the 100 most banned books →
+        </Link>
       </p>
     </main>
   )

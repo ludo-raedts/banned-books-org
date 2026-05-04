@@ -115,6 +115,13 @@ export default async function CountriesPage({
         </Link>
       </div>
 
+      <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
+        Looking for the most-banned titles?{' '}
+        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+          See the 100 most banned books →
+        </Link>
+      </p>
+
       {/* Sort + filter controls */}
       <Suspense>
         <CountriesControls
