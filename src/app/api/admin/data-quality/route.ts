@@ -43,6 +43,7 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     { count: noCoverBooks },
     { count: noDescBooks },
     { count: noDescBanBooks },
+    { count: noIsbnBooks },
   ] = await Promise.all([
     sb.from('bans').select('*', { count: 'exact', head: true }),
     sb.from('bans').select('*', { count: 'exact', head: true }).is('year_started', null),
@@ -50,6 +51,7 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     sb.from('books').select('*', { count: 'exact', head: true }).is('cover_url', null),
     sb.from('books').select('*', { count: 'exact', head: true }).is('description_book', null),
     sb.from('books').select('*', { count: 'exact', head: true }).is('description_ban', null),
+    sb.from('books').select('*', { count: 'exact', head: true }).is('isbn13', null),
   ])
 
   // No genre: genres defaults to '{}' (NOT NULL), check empty array
@@ -104,6 +106,7 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     { key: 'duplicates', label: 'Duplicate books', type: 'book', count: dupCount, total: tbooks },
     { key: 'no_cover', label: 'No cover', type: 'book', count: noCoverBooks ?? 0, total: tbooks },
     { key: 'no_description', label: 'No description', type: 'book', count: noDescBooks ?? 0, total: tbooks },
+    { key: 'no_isbn', label: 'No ISBN-13', type: 'book', count: noIsbnBooks ?? 0, total: tbooks },
   ]
 
   return { totalBans: tb, totalBooks: tbooks, metrics }
@@ -229,6 +232,7 @@ async function fetchDetail(sb: ReturnType<typeof adminClient>, metric: string, l
     no_genre:      { col: 'genres', emptyArr: true },
     no_cover:      { col: 'cover_url', isNull: true },
     no_description: { col: 'description_book', isNull: true },
+    no_isbn:       { col: 'isbn13', isNull: true },
   }
 
   if (metric in bookFilters) {

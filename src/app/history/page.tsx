@@ -22,7 +22,7 @@ const jsonLd = {
     'An in-depth look at the history of banned books, from ancient censorship to modern book bans, including Nazi book burnings and contemporary debates on free speech.',
   author: { '@type': 'Organization', name: 'banned-books.org' },
   publisher: { '@type': 'Organization', name: 'banned-books.org' },
-  mainEntityOfPage: 'https://banned-books.org/history',
+  mainEntityOfPage: 'https://www.banned-books.org/history',
   about: ['Book banning', 'Censorship', 'Freedom of speech', 'Nazi book burnings', 'Mein Kampf'],
 }
 

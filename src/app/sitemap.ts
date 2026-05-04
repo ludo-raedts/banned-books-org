@@ -4,7 +4,7 @@ import { adminClient } from '@/lib/supabase'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://banned-books.org'
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.banned-books.org'
   const supabase = adminClient()
 
   // Paginate books to avoid Supabase 1000-row cap
