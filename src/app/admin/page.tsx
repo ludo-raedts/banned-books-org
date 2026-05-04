@@ -14,6 +14,7 @@ export default async function AdminPage() {
     { count: noCoverCount },
     { count: noDescCount },
     { data: countryRows },
+    { data: refreshLog },
   ] = await Promise.all([
     // rows: 0 (count only) × 5 | reason: dashboard stat cards
     supabase.from('books').select('*', { count: 'exact', head: true }),
@@ -23,9 +24,14 @@ export default async function AdminPage() {
     supabase.from('books').select('*', { count: 'exact', head: true }).is('description_book', null),
     // rows: ≤10000 | fields: [country_code] | reason: COUNT(DISTINCT) unavailable in PostgREST
     supabase.from('bans').select('country_code').range(0, 9999),
+    // rows: 2 | reason: materialized view freshness card
+    supabase.from('mv_refresh_log').select('key, updated_at'),
   ])
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
+  const logMap = new Map((refreshLog ?? []).map(r => [r.key, r.updated_at as string]))
+  const dataLastChanged  = logMap.get('data_last_changed') ?? null
+  const viewsLastRefreshed = logMap.get('last_refreshed') ?? null
 
   // ── Trending / pageview data ──────────────────────────────────────────────────
   let trendingBooks: TrendingBookRow[] = []
@@ -148,6 +154,8 @@ export default async function AdminPage() {
       countriesLastWeek={countriesLastWeek}
       referrersThisWeek={referrersThisWeek}
       referrersLastWeek={referrersLastWeek}
+      dataLastChanged={dataLastChanged}
+      viewsLastRefreshed={viewsLastRefreshed}
     />
   )
 }

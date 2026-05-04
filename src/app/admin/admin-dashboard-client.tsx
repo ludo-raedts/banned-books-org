@@ -220,6 +220,8 @@ interface Props {
   countriesLastWeek: CountryViewRow[]
   referrersThisWeek: ReferrerViewRow[]
   referrersLastWeek: ReferrerViewRow[]
+  dataLastChanged: string | null
+  viewsLastRefreshed: string | null
 }
 
 function RankChange({ thisWeekRank, lastWeekRank }: { thisWeekRank: number; lastWeekRank: number | null }) {
@@ -281,9 +283,29 @@ export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount, noCoverCount, noDescCount,
   trendingBooks, trendingAuthors, viewsThisWeek, viewsLastWeek, firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
+  dataLastChanged, viewsLastRefreshed,
 }: Props) {
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [fetchMsg, setFetchMsg] = useState('')
+  const [refreshState, setRefreshState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [refreshMsg, setRefreshMsg] = useState('')
+  const [lastRefreshed, setLastRefreshed] = useState(viewsLastRefreshed)
+
+  async function handleRefreshViews() {
+    setRefreshState('loading')
+    setRefreshMsg('')
+    try {
+      const res = await fetch('/api/admin/refresh-views', { method: 'POST', credentials: 'include' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setLastRefreshed(new Date().toISOString())
+      setRefreshMsg(data.message ?? 'Done.')
+      setRefreshState('done')
+    } catch (err) {
+      setRefreshMsg(err instanceof Error ? err.message : 'Failed')
+      setRefreshState('error')
+    }
+  }
 
   async function handleFetchNews() {
     setFetchState('loading')
@@ -443,6 +465,44 @@ export default function AdminDashboardClient({
 
         {/* Row 4 — Data quality (full width) */}
         <DataQualityCard />
+
+        {/* Materialized views card */}
+        <div className={`${cardCls} col-span-full`}>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                Pre-aggregated data used by the countries and stats pages. Refresh after bulk imports.
+              </p>
+            </div>
+            <button
+              onClick={handleRefreshViews}
+              disabled={refreshState === 'loading'}
+              className="shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+            >
+              {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
+            </button>
+          </div>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm mt-1">
+            <dt className="text-gray-500 dark:text-gray-400">Data last changed</dt>
+            <dd className="tabular-nums">
+              {dataLastChanged
+                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Views last refreshed</dt>
+            <dd className="tabular-nums">
+              {lastRefreshed
+                ? new Date(lastRefreshed).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+          </dl>
+          {refreshMsg && (
+            <p className={`text-xs mt-1 ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {refreshMsg}
+            </p>
+          )}
+        </div>
 
         {/* Row 4 — Quick actions (full width) */}
         <div className={`${cardCls} col-span-full`}>

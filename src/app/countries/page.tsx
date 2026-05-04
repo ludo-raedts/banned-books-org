@@ -59,41 +59,17 @@ export default async function CountriesPage({
     .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
     .filter(c => c.count > 0)
 
-  // ── Apply reason filter: fetch per-country counts for that reason ──
-  // filteredCountMap / filteredActiveMap replace total counts when a filter is active
+  // ── Apply reason filter: single lookup against pre-aggregated view ──
   let filteredCountMap: Map<string, number> | null = null
   let filteredActiveMap: Map<string, number> | null = null
 
   if (filterReason) {
-    const { data: reasonRow } = await supabase
-      .from('reasons').select('id').eq('slug', filterReason).single()
-    if (reasonRow) {
-      let allBanIds: number[] = []
-      let offset = 0
-      while (true) {
-        const { data } = await supabase
-          .from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id)
-          .range(offset, offset + 999)
-        if (!data || data.length === 0) break
-        allBanIds = allBanIds.concat(data.map(l => l.ban_id as number))
-        if (data.length < 1000) break
-        offset += 1000
-      }
-      filteredCountMap  = new Map<string, number>()
-      filteredActiveMap = new Map<string, number>()
-      for (let i = 0; i < allBanIds.length; i += 500) {
-        const { data: bansChunk } = await supabase
-          .from('bans').select('country_code, status').in('id', allBanIds.slice(i, i + 500))
-        for (const b of bansChunk ?? []) {
-          filteredCountMap.set(b.country_code, (filteredCountMap.get(b.country_code) ?? 0) + 1)
-          if (b.status === 'active')
-            filteredActiveMap.set(b.country_code, (filteredActiveMap.get(b.country_code) ?? 0) + 1)
-        }
-      }
-    } else {
-      filteredCountMap  = new Map() // unknown reason → show nothing
-      filteredActiveMap = new Map()
-    }
+    const { data: reasonRows } = await supabase
+      .from('mv_country_reason_counts')
+      .select('country_code, total_bans, active_bans')
+      .eq('reason_slug', filterReason)
+    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, r.total_bans as number]))
+    filteredActiveMap = new Map((reasonRows ?? []).map(r => [r.country_code, r.active_bans as number]))
   }
 
   // ── Merge base with filtered counts, then sort & filter ───────────
