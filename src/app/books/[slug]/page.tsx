@@ -454,6 +454,11 @@ export default async function BookPage({
               Kobo
             </a>
           </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
+            <Link href="/why-not-amazon" className="hover:underline">
+              Why we don&apos;t link to Amazon
+            </Link>
+          </p>
         </div>
       </section>
 
