@@ -40,9 +40,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: '/',
-    types: {
-      'application/rss+xml': '/feed.xml',
-    },
   },
 };
 
@@ -56,6 +53,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="Banned Books — Latest Censorship News" href="/feed.xml" />
+      </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 h-12 flex items-center gap-6">
