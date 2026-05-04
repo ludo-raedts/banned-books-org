@@ -497,12 +497,12 @@ export default function BookBrowser({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
             {gridBooks.map(book => (
               <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-col">
-                <div className="mb-2">
+                <div className="mb-2 aspect-[2/3] w-full relative overflow-hidden rounded shadow-sm">
                   {book.cover_url ? (
-                    <Image src={book.cover_url} alt={`Cover of ${book.title}`} width={160} height={240}
-                      className="rounded shadow-sm object-cover w-full" sizes="160px" />
+                    <Image src={book.cover_url} alt={`Cover of ${book.title}`} fill
+                      className="object-cover" sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw" />
                   ) : (
-                    <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} />
+                    <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
                   )}
                 </div>
                 <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
