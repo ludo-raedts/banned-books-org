@@ -5,10 +5,14 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
-export const metadata: Metadata = {
-  title: 'Reasons — Why Books Are Banned',
-  description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious blasphemy, and more.',
-  alternates: { canonical: '/reasons' },
+export async function generateMetadata(): Promise<Metadata> {
+  const { count } = await adminClient().from('reasons').select('*', { count: 'exact', head: true })
+  const n = count ?? 0
+  return {
+    title: `Why Books Are Banned — ${n} Documented Reasons | Banned Books`,
+    description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious blasphemy, and more.',
+    alternates: { canonical: '/reasons' },
+  }
 }
 
 const REASON_COLORS: Record<string, string> = {
@@ -73,7 +77,8 @@ export default async function ReasonsPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Why Books Are Banned</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-1">Why Books Are Banned</h1>
+        <p className="text-sm text-brand/70 dark:text-brand/60 mb-2">{reasons.length} documented reasons</p>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Every ban has an official justification. The stated reason — obscenity, blasphemy, political
           subversion — tells us what the authorities wanted to protect. The book itself tells us what

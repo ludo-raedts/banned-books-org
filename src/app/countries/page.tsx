@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     .filter(c => !DEFUNCT.includes(c.code) && (countMap.get(c.code) ?? 0) > 0)
     .length
   return {
-    title: 'Countries Where Books Are Banned',
+    title: `Books Banned by Country — ${activeCount} Countries | Banned Books`,
     description: `Browse books banned or challenged in ${activeCount} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.`,
     alternates: { canonical: '/countries' },
   }
@@ -99,9 +99,9 @@ export default async function CountriesPage({
     <main className="max-w-5xl mx-auto px-4 py-10">
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Catalogue</p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Countries</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Books Banned by Country</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-          Browse books banned in {base.filter(c => !DEFUNCT.includes(c.code)).length} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
+          {base.filter(c => !DEFUNCT.includes(c.code)).length} countries with documented book bans — from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 
