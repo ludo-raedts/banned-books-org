@@ -33,6 +33,10 @@ export default async function AdminPage() {
   let viewsThisWeek = 0
   let viewsLastWeek = 0
   let firstViewDate: string | null = null
+  let countriesThisWeek: { country: string | null; views: number }[] = []
+  let countriesLastWeek: { country: string | null; views: number }[] = []
+  let referrersThisWeek: { referrer_host: string | null; views: number }[] = []
+  let referrersLastWeek: { referrer_host: string | null; views: number }[] = []
 
   try {
     const [
@@ -42,6 +46,10 @@ export default async function AdminPage() {
       { data: authorsLastWeek },
       { data: weeklyTotals },
       { data: firstView },
+      { data: countriesThisWeekRaw },
+      { data: countriesLastWeekRaw },
+      { data: referrersThisWeekRaw },
+      { data: referrersLastWeekRaw },
     ] = await Promise.all([
       supabase.from('v_top_books_this_week').select('entity_id, views'),
       supabase.from('v_top_books_last_week').select('entity_id, views'),
@@ -49,7 +57,16 @@ export default async function AdminPage() {
       supabase.from('v_top_authors_last_week').select('entity_id, views'),
       supabase.from('v_weekly_totals').select('views_this_week, views_last_week').single(),
       supabase.from('pageviews').select('viewed_at').order('viewed_at', { ascending: true }).limit(1).single(),
+      supabase.from('v_top_countries_this_week').select('country, views'),
+      supabase.from('v_top_countries_last_week').select('country, views'),
+      supabase.from('v_top_referrers_this_week').select('referrer_host, views'),
+      supabase.from('v_top_referrers_last_week').select('referrer_host, views'),
     ])
+
+    countriesThisWeek = (countriesThisWeekRaw ?? []).map(r => ({ country: r.country, views: Number(r.views) }))
+    countriesLastWeek = (countriesLastWeekRaw ?? []).map(r => ({ country: r.country, views: Number(r.views) }))
+    referrersThisWeek = (referrersThisWeekRaw ?? []).map(r => ({ referrer_host: r.referrer_host, views: Number(r.views) }))
+    referrersLastWeek = (referrersLastWeekRaw ?? []).map(r => ({ referrer_host: r.referrer_host, views: Number(r.views) }))
 
     viewsThisWeek = Number(weeklyTotals?.views_this_week ?? 0)
     viewsLastWeek = Number(weeklyTotals?.views_last_week ?? 0)
@@ -127,6 +144,10 @@ export default async function AdminPage() {
       viewsThisWeek={viewsThisWeek}
       viewsLastWeek={viewsLastWeek}
       firstViewDate={firstViewDate}
+      countriesThisWeek={countriesThisWeek}
+      countriesLastWeek={countriesLastWeek}
+      referrersThisWeek={referrersThisWeek}
+      referrersLastWeek={referrersLastWeek}
     />
   )
 }
