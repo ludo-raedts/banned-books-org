@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BOOKS, CATEGORIES } from './books-data'
+import ReadingListCover from './reading-list-cover'
 
 export const metadata: Metadata = {
   title: 'Reading List — Books About Censorship | Banned Books',
@@ -99,63 +100,73 @@ export default function ReadingListPage() {
                       key={`${book.author}-${book.title}`}
                       className={`pb-8 mb-8 ${isLast ? '' : 'border-b border-gray-100 dark:border-gray-800'}`}
                     >
-                      {/* Title + author + database badge */}
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-3">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 leading-snug">
-                          {book.internalSlug ? (
-                            <Link
-                              href={`/books/${book.internalSlug}`}
-                              className="hover:underline underline-offset-2"
-                            >
-                              {book.title}
-                            </Link>
-                          ) : (
-                            book.title
-                          )}
-                        </h3>
-                        <span className="text-gray-400 dark:text-gray-500 text-sm font-normal">·</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">
-                          {book.author}
-                        </span>
-                        {book.isOfficiallyBanned && book.internalSlug && (
-                          <Link
-                            href={`/books/${book.internalSlug}`}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 text-xs font-medium hover:bg-green-200 dark:hover:bg-green-900 transition-colors"
-                          >
-                            📚 In our database
-                          </Link>
-                        )}
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                        {book.description}
-                      </p>
-
-                      {/* Tags — below description */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {book.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Why we recommend it */}
-                      <details className="group/details">
-                        <summary className="cursor-pointer list-none select-none inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
-                          <span className="group-open/details:hidden">▸ Why we recommend it</span>
-                          <span className="hidden group-open/details:inline">▾ Why we recommend it</span>
-                        </summary>
-                        <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-300 dark:border-amber-700 px-4 py-3 rounded-r-md">
-                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                            {book.whyWeRecommend}
-                          </p>
+                      <div className="flex gap-4 sm:gap-5">
+                        {/* Cover thumbnail */}
+                        <div className="shrink-0 w-16 sm:w-20">
+                          <ReadingListCover isbn={book.isbn} title={book.title} author={book.author} />
                         </div>
-                      </details>
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          {/* Title + author + database badge */}
+                          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-2">
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug">
+                              {book.internalSlug ? (
+                                <Link
+                                  href={`/books/${book.internalSlug}`}
+                                  className="hover:underline underline-offset-2"
+                                >
+                                  {book.title}
+                                </Link>
+                              ) : (
+                                book.title
+                              )}
+                            </h3>
+                            <span className="text-gray-400 dark:text-gray-500 text-sm font-normal">·</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">
+                              {book.author}
+                            </span>
+                            {book.isOfficiallyBanned && book.internalSlug && (
+                              <Link
+                                href={`/books/${book.internalSlug}`}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 text-xs font-medium hover:bg-green-200 dark:hover:bg-green-900 transition-colors"
+                              >
+                                📚 In our database
+                              </Link>
+                            )}
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                            {book.description}
+                          </p>
+
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {book.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+
+                          {/* Why we recommend it */}
+                          <details className="group/details">
+                            <summary className="cursor-pointer list-none select-none inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                              <span className="group-open/details:hidden">▸ Why we recommend it</span>
+                              <span className="hidden group-open/details:inline">▾ Why we recommend it</span>
+                            </summary>
+                            <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-300 dark:border-amber-700 px-4 py-3 rounded-r-md">
+                              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {book.whyWeRecommend}
+                              </p>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
                     </article>
                   )
                 })}

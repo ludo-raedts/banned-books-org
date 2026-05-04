@@ -20,6 +20,7 @@ export const CATEGORIES: { slug: CategorySlug; heading: string }[] = [
 export type ReadingListBook = {
   title: string
   author: string
+  isbn?: string
   category: CategorySlug
   description: string
   whyWeRecommend: string
@@ -33,6 +34,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'On Book Banning',
     author: 'Ira Wells',
+    isbn: '9781771966634',
     category: 'censorship-book-banning',
     description:
       'A scholarly yet accessible study of how and why books get banned in democratic societies. Wells traces the history of censorship from the earliest printed texts through to today\'s school board battles, arguing that book banning is never really about protecting readers — it is about controlling who has access to ideas. Drawing on legal theory, literary history, and political philosophy, he examines how the same arguments recur across centuries: that certain books are dangerous to children, destabilising to society, or offensive to community standards.',
@@ -44,6 +46,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: "You Can't Say That!",
     author: 'Leonard S. Marcus',
+    isbn: '9780763690366',
     category: 'censorship-book-banning',
     description:
       'Children\'s literature historian Leonard Marcus interviews writers and illustrators whose books for young readers have been challenged or banned — from Judy Blume to Roald Dahl to Toni Morrison. The result is both a defence of children\'s literature and a damning portrait of the adults who try to restrict it. Marcus shows how often banning is driven by adult anxieties rather than any real harm to children, and how the books that get challenged most are often the ones that matter most: books about race, sexuality, family, death, and freedom.',
@@ -55,6 +58,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: "Banned Books: The World's Most Controversial Books",
     author: 'DK',
+    isbn: '9780744076875',
     category: 'censorship-book-banning',
     description:
       'A visually striking reference guide that documents some of the most famous banned and challenged books in history, from Galileo\'s astronomical treatises to contemporary novels. Each entry explains the context of the ban, the charges levelled, the authorities behind it, and — often — the irony that the attempt to suppress the book only increased its fame. Spanning religious censorship, political repression, obscenity prosecutions, and school board challenges, this is a broad survey that works as both an introduction and a reference.',
@@ -68,6 +72,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Autocracy, Inc.',
     author: 'Anne Applebaum',
+    isbn: '9780385549936',
     category: 'authoritarianism-propaganda',
     description:
       "Applebaum's urgent analysis of how modern autocracies co-operate across borders to entrench their power. Where earlier authoritarianism depended on ideology, today's autocrats — from Moscow to Beijing to Caracas — share tactics, money, technology, and propaganda techniques, creating an international infrastructure of repression. This is not a book about book banning specifically, but it is essential to understanding the political systems within which censorship thrives and survives.",
@@ -79,6 +84,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'How Propaganda Works',
     author: 'Jason Stanley',
+    isbn: '9780691164427',
     category: 'authoritarianism-propaganda',
     description:
       'Yale philosopher Jason Stanley offers a rigorous philosophical analysis of how propaganda functions in democratic societies — not just in obvious totalitarian settings. He distinguishes between the sincere and demagogic use of language, and shows how certain political speech undermines the epistemic commons that democracy depends on. An essential theoretical grounding for why controlling the information environment is so central to political power.',
@@ -90,6 +96,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Twilight of Democracy',
     author: 'Anne Applebaum',
+    isbn: '9780385545808',
     category: 'authoritarianism-propaganda',
     description:
       "A short, personal, and devastating book about the rise of authoritarianism within Applebaum's own social circle — among intellectuals and journalists who have turned from liberalism toward nationalist populism. She traces what she calls the \"clerisy\" appeal of authoritarian politics: the comfort of simple narratives, the pleasure of belonging, the satisfaction of having enemies. Especially sharp on Poland and Hungary, and on how democracies hollow themselves out from the inside.",
@@ -101,6 +108,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'The Road to Unfreedom',
     author: 'Timothy Snyder',
+    isbn: '9780525574460',
     category: 'authoritarianism-propaganda',
     description:
       "Historian Timothy Snyder traces the ideological roots of Russia's 21st-century authoritarianism, from the fascist philosopher Ivan Ilyin to the information warfare of recent elections. Snyder argues that Russia has developed a coherent politics of \"eternity\" — a propaganda system based not on truth or lies but on the abolition of factuality itself. Where earlier totalitarianism demanded that you believe the propaganda, this system demands only that you stop believing anything.",
@@ -114,6 +122,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Pedagogy of the Oppressed',
     author: 'Paulo Freire',
+    isbn: '9780826412768',
     category: 'education-liberation',
     description:
       'First published in 1968, this foundational text of critical pedagogy argues that traditional education functions as a tool of oppression — what Freire calls the "banking model", in which passive students receive deposits of information from authoritative teachers. True education, he argues, begins with dialogue and with treating the student\'s own experience as a valid subject of inquiry. Deeply influential on educators, liberation theologians, and social movements worldwide, and itself banned under several authoritarian regimes.',
@@ -125,6 +134,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Teaching to Transgress',
     author: 'bell hooks',
+    isbn: '9780415908085',
     category: 'education-liberation',
     description:
       'bell hooks argues that education should be a practice of freedom — but that this requires teachers and students willing to transgress comfortable boundaries. Drawing on her own experience as a Black woman in predominantly white classrooms, she describes the political stakes of what gets taught, how it gets taught, and who gets to speak. A deeply personal and rigorous argument for why whose knowledge counts as knowledge is never a neutral question.',
@@ -138,6 +148,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Orientalism',
     author: 'Edward W. Said',
+    isbn: '9780394740676',
     category: 'empire-race-history',
     description:
       "Said's landmark 1978 study of how Western scholarship, literature, and political discourse constructed \"the Orient\" — not as a factual description but as a system of knowledge that justified imperial domination. Orientalism shows how representation is never neutral: to name, categorise, and describe a culture is also to claim authority over it. Arguably the most influential academic book of the past fifty years, and intensely controversial precisely because it exposes the political function of intellectual categories.",
@@ -149,6 +160,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'How to Hide an Empire',
     author: 'Daniel Immerwahr',
+    isbn: '9780374172145',
     category: 'empire-race-history',
     description:
       "A brilliantly written history of the United States' territorial empire — the colonies, bases, and territories that most Americans neither know about nor think of when they imagine their country. Immerwahr shows how \"America\" as typically imagined erases the experiences of tens of millions of people who live under US jurisdiction but lack full political rights. A model of how official national narratives are constructed by what they deliberately omit.",
@@ -171,6 +183,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'The New Jim Crow',
     author: 'Michelle Alexander',
+    isbn: '9781595586438',
     category: 'empire-race-history',
     description:
       'Legal scholar Michelle Alexander argues that mass incarceration in the United States functions as a new racial caste system, maintaining the social subordination of Black Americans through criminal law rather than Jim Crow statutes. One of the most frequently banned books in American schools — targeted precisely because it makes a structural rather than individual argument about race in America.',
@@ -182,6 +195,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Stamped from the Beginning',
     author: 'Ibram X. Kendi',
+    isbn: '9781568584638',
     category: 'empire-race-history',
     description:
       'A comprehensive history of racist ideas in America, tracing how ideas about Black inferiority were constructed and deployed across five centuries. Kendi argues that racist ideas were not the cause of racist policies but their justification — created after the fact to rationalise exploitation and segregation. One of the most challenged books in American education, frequently removed from school curricula for the directness of its historical argument.',
@@ -228,6 +242,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'The Jakarta Method',
     author: 'Vincent Bevins',
+    isbn: '9781541724006',
     category: 'war-nationalism-memory',
     description:
       "Bevins uncovers one of the most significant episodes of Cold War violence to be almost entirely absent from mainstream Western history: the 1965 mass killings in Indonesia, orchestrated with US support, in which as many as a million suspected communists were murdered. He shows how this event — and similar US-backed massacres across the Global South — were erased from Western consciousness through systematic propaganda and deliberate historical omission.",
@@ -241,6 +256,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: "The Handmaid's Tale",
     author: 'Margaret Atwood',
+    isbn: '9780385490818',
     category: 'fiction-censorship',
     description:
       "Set in the near-future theocracy of Gilead, Atwood's 1985 novel follows Offred, a handmaid assigned to bear children for an elite family in a world where women are stripped of their names, property, and reproductive autonomy. One of the most frequently banned books in North America, targeted for sexual content, perceived anti-Christian sentiment, and profanity. The regularity of its banning only affirms what the novel itself predicts.",
@@ -253,6 +269,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: '1984',
     author: 'George Orwell',
+    isbn: '9780451524935',
     category: 'fiction-censorship',
     description:
       "Orwell's foundational portrait of totalitarian surveillance and information control. In the superstate of Oceania, history is continuously rewritten, language is weaponised through Newspeak, and independent thought is a crime. Published in 1949, it gave us a vocabulary — Big Brother, doublethink, memory hole, Thought Police — that has never stopped being useful. Simultaneously the most prescribed and the most frequently banned novel of the twentieth century.",
@@ -265,6 +282,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Fahrenheit 451',
     author: 'Ray Bradbury',
+    isbn: '9781451673319',
     category: 'fiction-censorship',
     description:
       "Bradbury's 1953 novel imagines a future America where television has replaced reading and books are burned by firemen to prevent the discomfort they cause. Montag, a fireman who begins to question his role, is a parable of the reader who wakes up. Among the great ironies of modern censorship: Fahrenheit 451 has repeatedly been banned and challenged in US schools for language and content — a book about the burning of books, being burned.",
@@ -288,6 +306,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'The Memory Police',
     author: 'Yoko Ogawa',
+    isbn: '9781101873946',
     category: 'fiction-censorship',
     description:
       "On a nameless island, objects disappear one by one — ribbons, birds, bells — and with them the memory of what they were. The secret police hunt down those who remember the vanished things. Ogawa's haunting 1994 Japanese novel is one of the great literary meditations on state-sanctioned forgetting and the violence of enforced amnesia, translated into English and widely read two decades after its first publication.",
@@ -299,6 +318,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'The Satanic Verses',
     author: 'Salman Rushdie',
+    isbn: '9780670825370',
     category: 'fiction-censorship',
     description:
       "Rushdie's 1988 novel, a turbulent magical-realist exploration of migration, faith, and identity, triggered one of the most extreme censorship episodes in modern history: a fatwa calling for Rushdie's death, issued by Ayatollah Khomeini. The novel was banned in multiple countries, bookshops were bombed, translators were attacked, and Rushdie spent years in hiding. Whatever one thinks of the novel's content, the response to it is one of the defining episodes in the history of literary censorship.",
@@ -313,6 +333,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Freedom Is a Constant Struggle',
     author: 'Angela Y. Davis',
+    isbn: '9781608465644',
     category: 'conflict-prison-resistance',
     description:
       'A collection of essays, speeches, and interviews in which Davis connects Black liberation movements in America with Palestinian solidarity, prison abolition, and global anti-capitalist struggle. Davis argues that these fights are not parallel but intersecting — that the same structures of state power that enabled chattel slavery now enable mass incarceration, militarism, and occupation.',
@@ -346,6 +367,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'I Am Malala',
     author: 'Malala Yousafzai',
+    isbn: '9780316322409',
     category: 'conflict-prison-resistance',
     description:
       'The memoir of Malala Yousafzai, the Pakistani activist who was shot by the Taliban for advocating girls\' education and went on to become the youngest Nobel Peace Prize laureate. Her account of growing up in the Swat Valley — where schools for girls were destroyed, music was banned, and books were burned — is one of the most direct accounts of what a society without educational freedom looks like from the inside.',
@@ -357,6 +379,7 @@ export const BOOKS: ReadingListBook[] = [
   {
     title: 'Reading Lolita in Tehran',
     author: 'Azar Nafisi',
+    isbn: '9780375504907',
     category: 'conflict-prison-resistance',
     description:
       'Iranian-American literary scholar Azar Nafisi describes a secret book club she conducted in Tehran after the Islamic Revolution — gathering a small group of female students to read Western novels that were banned or stigmatised by the new regime. A meditation on what reading means when it is dangerous, and on literature as a form of private resistance that the state cannot fully extinguish.',
