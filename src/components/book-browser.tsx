@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { BookOpen, Globe, Search as SearchIcon } from 'lucide-react'
 import GenreBadge from './genre-badge'
@@ -151,6 +152,8 @@ export default function BookBrowser({
   countries?: CountryOption[]
   trendingSlot?: React.ReactNode
 }) {
+  const router = useRouter()
+
   const [q, setQ] = useState('')
   const [debouncedQ, setDebouncedQ] = useState('')
   const [scope, setScope] = useState<string | null>(null)
@@ -164,7 +167,77 @@ export default function BookBrowser({
   const [loadingFilter, setLoadingFilter] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
 
-  // Debounce search input
+  // ── Autocomplete state ──────────────────────────────────────────────────────
+  type Suggestion = { id: number; slug: string; title: string; cover_url: string | null; author: string; banCount: number }
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  // Autocomplete fetch — 200ms debounce
+  useEffect(() => {
+    if (q.length < 2) { setSuggestions([]); setShowSuggestions(false); return }
+    const id = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/books?q=${encodeURIComponent(q)}&limit=5`)
+        const { books } = await res.json()
+        const mapped: Suggestion[] = (books ?? []).map((b: Book) => ({
+          id: b.id,
+          slug: b.slug,
+          title: b.title,
+          cover_url: b.cover_url,
+          author: b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
+          banCount: b.bans.length,
+        }))
+        setSuggestions(mapped)
+        setShowSuggestions(mapped.length > 0)
+        setSelectedIndex(-1)
+      } catch { /* ignore */ }
+    }, 200)
+    return () => clearTimeout(id)
+  }, [q])
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  function handleSuggestionSelect(slug: string) {
+    setShowSuggestions(false)
+    setQ('')
+    router.push(`/books/${slug}`)
+  }
+
+  function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (!showSuggestions || suggestions.length === 0) {
+      if (e.key === 'Enter') document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedIndex(i => Math.min(i + 1, suggestions.length - 1))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedIndex(i => Math.max(i - 1, -1))
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault()
+      handleSuggestionSelect(suggestions[selectedIndex].slug)
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false)
+      setSelectedIndex(-1)
+    } else if (e.key === 'Enter') {
+      setShowSuggestions(false)
+      document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  // Debounce search input (for grid filtering — 300ms)
   useEffect(() => {
     const id = setTimeout(() => setDebouncedQ(q), 300)
     return () => clearTimeout(id)
@@ -245,33 +318,67 @@ export default function BookBrowser({
         <div className={`flex flex-col gap-4${hasNews ? ' lg:col-span-2' : ''}`}>
 
           {/* Search */}
-          <div>
+          <div ref={searchWrapperRef}>
             <div className="relative">
-              <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400 pointer-events-none">
+              <span className="absolute inset-y-0 left-4 flex items-center text-gray-400 pointer-events-none">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
                 </svg>
               </span>
               <input
                 type="text"
-                placeholder="Search banned books, authors, or topics…"
+                role="combobox"
+                aria-expanded={showSuggestions}
+                aria-autocomplete="list"
+                placeholder={`Search ${totalCount > 0 ? totalCount.toLocaleString() + ' ' : ''}banned books…`}
                 value={q}
-                onChange={e => setQ(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }}
-                className={`w-full pl-11 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 min-h-[52px] ${q ? 'pr-10' : 'pr-4'}`}
+                onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
+                onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
+                onKeyDown={handleSearchKeyDown}
+                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 transition-colors min-h-[56px] shadow-sm ${q ? 'pr-11' : 'pr-4'}`}
               />
               {q && (
                 <button
-                  onClick={() => setQ('')}
+                  onClick={() => { setQ(''); setSuggestions([]); setShowSuggestions(false) }}
                   aria-label="Clear search"
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
+              )}
+
+              {/* Autocomplete dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden">
+                  {suggestions.map((s, i) => (
+                    <button
+                      key={s.id}
+                      onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s.slug) }}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+                        i === selectedIndex
+                          ? 'bg-gray-100 dark:bg-gray-800'
+                          : 'hover:bg-gray-50 dark:hover:bg-gray-800/60'
+                      } ${i > 0 ? 'border-t border-gray-100 dark:border-gray-800' : ''}`}
+                    >
+                      <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        {s.cover_url ? (
+                          <Image src={s.cover_url} alt="" width={32} height={44} className="w-full h-full object-cover" sizes="32px" />
+                        ) : (
+                          <BookCoverPlaceholder title={s.title} slug={s.slug} className="h-full" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.title}</p>
+                        {s.author && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{s.author}</p>}
+                      </div>
+                      <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                        {s.banCount} {s.banCount === 1 ? 'ban' : 'bans'}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
             {q && (
