@@ -54,24 +54,20 @@ export default async function CountriesPage({
   const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.active_bans as number]))
   const availableReasons = (reasonsData ?? []).map(r => r.slug)
 
-  // ── Build country list (unfiltered sort/base) ──────────────────────
-  const ranked = (countries ?? [])
+  // ── Base country list ─────────────────────────────────────────────
+  const base = (countries ?? [])
     .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
     .filter(c => c.count > 0)
-    .sort(isAlpha
-      ? (a, b) => a.name_en.localeCompare(b.name_en)
-      : (a, b) => b.count - a.count
-    )
 
-  const maxCount = ranked[0] ? Math.max(...ranked.map(c => c.count)) : 1
+  // ── Apply reason filter: fetch per-country counts for that reason ──
+  // filteredCountMap / filteredActiveMap replace total counts when a filter is active
+  let filteredCountMap: Map<string, number> | null = null
+  let filteredActiveMap: Map<string, number> | null = null
 
-  // ── Apply reason filter (targeted queries, avoids full bans scan) ──
-  let reasonCountryCodes: Set<string> | null = null
   if (filterReason) {
     const { data: reasonRow } = await supabase
       .from('reasons').select('id').eq('slug', filterReason).single()
     if (reasonRow) {
-      // Get all ban_ids for this reason, then their country codes
       let allBanIds: number[] = []
       let offset = 0
       while (true) {
@@ -83,30 +79,45 @@ export default async function CountriesPage({
         if (data.length < 1000) break
         offset += 1000
       }
-      // Fetch country codes in batches (avoid URL length limits on .in())
-      reasonCountryCodes = new Set<string>()
+      filteredCountMap  = new Map<string, number>()
+      filteredActiveMap = new Map<string, number>()
       for (let i = 0; i < allBanIds.length; i += 500) {
         const { data: bansChunk } = await supabase
-          .from('bans').select('country_code').in('id', allBanIds.slice(i, i + 500))
-        for (const b of bansChunk ?? []) reasonCountryCodes.add(b.country_code)
+          .from('bans').select('country_code, status').in('id', allBanIds.slice(i, i + 500))
+        for (const b of bansChunk ?? []) {
+          filteredCountMap.set(b.country_code, (filteredCountMap.get(b.country_code) ?? 0) + 1)
+          if (b.status === 'active')
+            filteredActiveMap.set(b.country_code, (filteredActiveMap.get(b.country_code) ?? 0) + 1)
+        }
       }
     } else {
-      reasonCountryCodes = new Set() // unknown reason → show nothing
+      filteredCountMap  = new Map() // unknown reason → show nothing
+      filteredActiveMap = new Map()
     }
   }
 
-  // ── Separate and apply filters ─────────────────────────────────────
+  // ── Merge base with filtered counts, then sort & filter ───────────
   const isFiltered = !!(filterReason || filterActive)
 
-  function applyFilters<T extends { code: string; active: number }>(list: T[]): T[] {
-    let out = list
-    if (reasonCountryCodes) out = out.filter(c => reasonCountryCodes!.has(c.code))
-    if (filterActive) out = out.filter(c => c.active > 0)
-    return out
-  }
+  const merged = base.map(c => ({
+    ...c,
+    displayCount:  filteredCountMap  ? (filteredCountMap.get(c.code)  ?? 0) : c.count,
+    displayActive: filteredActiveMap ? (filteredActiveMap.get(c.code) ?? 0) : c.active,
+  }))
 
-  const activeCountries  = applyFilters(ranked.filter(c => !DEFUNCT.includes(c.code)))
-  const historicalCountries = applyFilters(ranked.filter(c => DEFUNCT.includes(c.code)))
+  const visible = merged
+    .filter(c => c.displayCount > 0)
+    .filter(c => !filterActive || c.displayActive > 0)
+
+  const sorted = [...visible].sort(isAlpha
+    ? (a, b) => a.name_en.localeCompare(b.name_en)
+    : (a, b) => b.displayCount - a.displayCount
+  )
+
+  const maxCount = sorted[0] ? Math.max(...sorted.map(c => c.displayCount)) : 1
+
+  const activeCountries    = sorted.filter(c => !DEFUNCT.includes(c.code))
+  const historicalCountries = sorted.filter(c => DEFUNCT.includes(c.code))
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -114,7 +125,7 @@ export default async function CountriesPage({
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Catalogue</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Countries</h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-          Browse books banned in {ranked.filter(c => !DEFUNCT.includes(c.code)).length} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
+          Browse books banned in {base.filter(c => !DEFUNCT.includes(c.code)).length} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 
@@ -138,7 +149,7 @@ export default async function CountriesPage({
 
       {isFiltered && (
         <p className="text-xs text-brand mb-4">
-          Showing {activeCountries.length} countr{activeCountries.length !== 1 ? 'ies' : 'y'} matching your filters.
+          Showing {activeCountries.length + historicalCountries.length} countr{activeCountries.length + historicalCountries.length !== 1 ? 'ies' : 'y'} matching your filters.
         </p>
       )}
 
@@ -155,12 +166,12 @@ export default async function CountriesPage({
             <div className="flex-1 flex items-center gap-2 min-w-0">
               <div
                 className="h-4 rounded bg-red-400 dark:bg-red-600 shrink-0"
-                style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, maxWidth: 'calc(100% - 2.5rem)', minWidth: '3px' }}
+                style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, maxWidth: 'calc(100% - 2.5rem)', minWidth: '3px' }}
               />
-              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400 shrink-0">{c.count}</span>
+              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400 shrink-0">{c.displayCount}</span>
             </div>
             <span className="w-20 text-right shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">
-              {c.active > 0 ? `${c.active} active` : ''}
+              {c.displayActive > 0 ? `${c.displayActive} active` : ''}
             </span>
           </Link>
         ))}
@@ -180,9 +191,9 @@ export default async function CountriesPage({
                 <div className="flex-1 flex items-center gap-2 min-w-0">
                   <div
                     className="h-4 rounded bg-gray-400 dark:bg-gray-600 shrink-0"
-                    style={{ width: `${(c.count / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
+                    style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
                   />
-                  <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
+                  <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.displayCount}</span>
                 </div>
               </Link>
             ))}
