@@ -161,6 +161,20 @@ export default async function BookPage({
     }
   }
 
+  // ── Recent news mentioning this book ────────────────────────────────────────
+  let recentNews: { id: number; title: string; source_name: string; source_url: string; published_at: string | null; summary: string }[] = []
+  if (book.title.length >= 4) {
+    const safeTitle = book.title.replace(/'/g, "''")
+    const { data: newsData } = await supabase
+      .from('news_items')
+      .select('id, title, source_url, source_name, published_at, summary')
+      .eq('status', 'published')
+      .or(`title.ilike.%${safeTitle}%,summary.ilike.%${safeTitle}%`)
+      .order('published_at', { ascending: false })
+      .limit(3)
+    recentNews = (newsData ?? []) as typeof recentNews
+  }
+
   // ── Deduplicated metadata for Related section ────────────────────────────────
   const uniqueCountries = [...new Map(
     book.bans
@@ -424,6 +438,42 @@ export default async function BookPage({
                 </div>
               </div>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* Recent news */}
+      {recentNews.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">Recent news</h2>
+            <Link href="/news" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+              All news →
+            </Link>
+          </div>
+          <div className="flex flex-col gap-3">
+            {recentNews.map((item) => (
+              <a
+                key={item.id}
+                href={item.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              >
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug mb-1">
+                  {item.title}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-1.5">
+                  {item.summary}
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  {item.source_name}
+                  {item.published_at && (
+                    <> · {new Date(item.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</>
+                  )}
+                </p>
+              </a>
+            ))}
           </div>
         </section>
       )}
