@@ -73,6 +73,16 @@ export default function ReadingListPage() {
           </p>
         </div>
 
+        {/* Classics callout */}
+        <div className="mb-6 flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Looking for Orwell, Nabokov, Flaubert?
+          </p>
+          <Link href="/banned-classics" className="shrink-0 text-sm font-medium text-brand hover:underline transition-colors">
+            Banned classic literature →
+          </Link>
+        </div>
+
         {/* Disclaimer */}
         <div className="mb-10 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
           Inclusion on this list does not mean every book has been officially banned. Some are

@@ -116,6 +116,10 @@ export default async function HomePage() {
           <Link href="/top-100-banned-books" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
             100 most banned books →
           </Link>
+          {' · '}
+          <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+            Banned classics →
+          </Link>
         </p>
       </div>
       {fetchError && (

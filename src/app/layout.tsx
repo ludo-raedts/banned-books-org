@@ -89,6 +89,7 @@ export default function RootLayout({
               <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
               <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>
+              <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Classics</Link>
             </nav>
             <Link href="/admin/login" className="text-xs text-gray-300 dark:text-gray-700 hover:text-gray-500 dark:hover:text-gray-500 transition-colors mt-1 sm:mt-0 sm:ml-5">Admin</Link>
           </div>

@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Core
     { url: base, changeFrequency: 'daily', priority: 1.0 },
     { url: `${base}/top-100-banned-books`, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${base}/banned-classics`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/banned-books/2026`, changeFrequency: 'daily', priority: 0.9 },
     { url: `${base}/banned-books/2025`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/banned-books/2024`, changeFrequency: 'monthly', priority: 0.8 },
