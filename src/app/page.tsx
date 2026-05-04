@@ -64,11 +64,11 @@ export default async function HomePage() {
 
   const totalCount = allBooksLight.length
 
-  // ── Pick featured book from eligible (has description_book) ───────────────────
+  // ── Pick book of the day — deterministic per calendar date ──────────────────
   const eligible = allBooksLight.filter(b => b.description_book)
-  const pickedLight = eligible.length > 0
-    ? eligible[Math.floor(Math.random() * eligible.length)]
-    : null
+  const seed = new Date().toISOString().slice(0, 10)
+  const idx = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % eligible.length
+  const pickedLight = eligible.length > 0 ? eligible[idx] : null
 
   // ── Parallel: initial 48 books (full) + featured full + news + countries ──────
   const [

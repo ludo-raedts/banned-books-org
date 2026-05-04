@@ -289,7 +289,7 @@ export default function BookBrowser({
           {/* Featured book */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Featured entry</p>
+              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Book of the day</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
                 className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
