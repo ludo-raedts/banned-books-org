@@ -44,6 +44,9 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     { count: noDescBooks },
     { count: noDescBanBooks },
     { count: noIsbnBooks },
+    { count: totalAuthors },
+    { count: noBioAuthors },
+    { count: noPhotoAuthors },
   ] = await Promise.all([
     sb.from('bans').select('*', { count: 'exact', head: true }),
     sb.from('bans').select('*', { count: 'exact', head: true }).is('year_started', null),
@@ -52,6 +55,9 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     sb.from('books').select('*', { count: 'exact', head: true }).is('description_book', null),
     sb.from('books').select('*', { count: 'exact', head: true }).is('description_ban', null),
     sb.from('books').select('*', { count: 'exact', head: true }).is('isbn13', null),
+    sb.from('authors').select('*', { count: 'exact', head: true }),
+    sb.from('authors').select('*', { count: 'exact', head: true }).is('bio', null),
+    sb.from('authors').select('*', { count: 'exact', head: true }).is('photo_url', null),
   ])
 
   // No genre: genres defaults to '{}' (NOT NULL), check empty array
@@ -93,6 +99,7 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
 
   const tb = totalBans ?? 0
   const tbooks = totalBooks ?? 0
+  const tauthors = totalAuthors ?? 0
 
   const metrics: Metric[] = [
     { key: 'no_ban_reason', label: 'No ban reason', type: 'ban', count: tb - banIdsWithReason.size, total: tb },
@@ -107,6 +114,8 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     { key: 'no_cover', label: 'No cover', type: 'book', count: noCoverBooks ?? 0, total: tbooks },
     { key: 'no_description', label: 'No description', type: 'book', count: noDescBooks ?? 0, total: tbooks },
     { key: 'no_isbn', label: 'No ISBN-13', type: 'book', count: noIsbnBooks ?? 0, total: tbooks },
+    { key: 'author_no_bio', label: 'Authors without bio', type: 'book', count: noBioAuthors ?? 0, total: tauthors },
+    { key: 'author_no_photo', label: 'Authors without photo', type: 'book', count: noPhotoAuthors ?? 0, total: tauthors },
   ]
 
   return { totalBans: tb, totalBooks: tbooks, metrics }
@@ -317,6 +326,26 @@ async function fetchDetail(sb: ReturnType<typeof adminClient>, metric: string, l
     rows.sort((a, b) => b.count - a.count)
 
     return { rows: rows.slice(0, limit), total: rows.length, type: 'duplicates' }
+  }
+
+  // Author bio/photo metrics — reuse BookDetailRow shape (book_id = author_id)
+  if (metric === 'author_no_bio' || metric === 'author_no_photo') {
+    const col = metric === 'author_no_bio' ? 'bio' : 'photo_url'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, count } = await (sb.from('authors') as any)
+      .select('id, display_name, slug, birth_year', { count: 'exact' })
+      .is(col, null)
+      .order('display_name')
+      .range(0, limit - 1)
+    const rows: BookDetailRow[] = (data ?? []).map((a: any) => ({
+      book_id: a.id,
+      title: a.display_name,
+      slug: a.slug ?? '',
+      author: a.birth_year ? String(a.birth_year) : '',
+      ban_count: 0,
+      created_at: null,
+    }))
+    return { rows, total: count ?? rows.length, type: 'book' }
   }
 
   return { rows: [], total: 0, type: 'unknown' }

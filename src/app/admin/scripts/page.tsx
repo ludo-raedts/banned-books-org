@@ -129,6 +129,7 @@ export default function ScriptsPage() {
               ['Add ban reason descriptions (why banned)', 'enrich-ban-descriptions-gpt.ts --apply'],
               ['Add censorship context per country/book', 'enrich-censorship-context-gpt.ts --apply'],
               ['Classify ban reasons (political, religious…)', 'enrich-reasons.ts --apply'],
+              ['Fill author bios from Wikipedia', 'enrich-author-bios.ts --apply'],
               ['Check for duplicate books', 'check-dupes.ts'],
               ['Audit overall data quality', 'audit-db.ts'],
               ['Refresh materialized views after import', 'refresh-mv.ts'],
@@ -256,6 +257,25 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --l
             flags={[
               { flag: '--apply', desc: 'Update ban reason classifications' },
             ]}
+          />
+
+          <Script
+            name="enrich-author-bios.ts"
+            what="Fills missing author bios, birth year, death year, birth country, and photos using Wikipedia as primary source. Only touches authors with no bio — safe to re-run. Does not hallucinate — only writes when Wikipedia returns a relevant article."
+            tags={['free']}
+            command={`# Dry-run — shows what would be filled, no writes
+npx tsx --env-file=.env.local scripts/enrich-author-bios.ts
+
+# Fill up to 50 authors (default batch)
+npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply
+
+# Fill up to 200 authors
+npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply --limit=200`}
+            flags={[
+              { flag: '--apply', desc: 'Write bio, birth_year, death_year, birth_country, photo_url to DB' },
+              { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
+            ]}
+            note="Wikipedia intro extract is used as-is (HTML stripped). Censorship mentions in the full article are appended if not already in the intro. Birth/death years are extracted from Wikipedia categories."
           />
         </div>
 

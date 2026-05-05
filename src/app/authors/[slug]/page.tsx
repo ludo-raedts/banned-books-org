@@ -75,10 +75,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     countryCount = new Set((bans ?? []).map((b) => b.country_code)).size
   }
 
+  const title = `${author.display_name} — Banned Books | banned-books.org`
+  const description = `${author.display_name}'s books have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}. See the full list.`
   return {
-    title: `${author.display_name} — Banned Books`,
-    description: `Browse all banned and challenged works by ${author.display_name}, documented across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`,
+    title,
+    description,
     alternates: { canonical: `/authors/${slug}` },
+    openGraph: { title, description },
+    twitter: { card: 'summary' },
   }
 }
 
@@ -124,6 +128,50 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const lifespan = a.birth_year
     ? `${a.birth_year}${a.birth_country ? `, ${a.birth_country}` : ''} — ${a.death_year ?? 'present'}`
     : null
+
+  // ── Other frequently banned authors (top 5 by ban count, excluding this one) ──
+  type RelatedAuthor = { id: number; display_name: string; slug: string; banCount: number }
+  let relatedAuthors: RelatedAuthor[] = []
+  try {
+    // Fetch top authors by ban count from mv_ban_counts is not available; use a join approach.
+    // Get all book_author links + their ban counts from our already-loaded books data for context,
+    // but we need the global top — so query directly.
+    const { data: topLinks } = await supabase
+      .from('book_authors')
+      .select('author_id, books(bans(id))')
+      .neq('author_id', author.id)
+      .limit(2000)
+
+    if (topLinks) {
+      const authorBanMap = new Map<number, number>()
+      for (const link of topLinks as unknown as { author_id: number; books: { bans: { id: number }[] } | null }[]) {
+        const count = link.books?.bans?.length ?? 0
+        authorBanMap.set(link.author_id, (authorBanMap.get(link.author_id) ?? 0) + count)
+      }
+      const top5Ids = [...authorBanMap.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([id, count]) => ({ id, count }))
+
+      if (top5Ids.length > 0) {
+        const { data: authorDetails } = await supabase
+          .from('authors')
+          .select('id, display_name, slug')
+          .in('id', top5Ids.map(x => x.id))
+          .not('slug', 'is', null)
+        const nameMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
+        relatedAuthors = top5Ids
+          .map(({ id, count }) => {
+            const det = nameMap.get(id)
+            if (!det?.slug) return null
+            return { id, display_name: det.display_name, slug: det.slug, banCount: count }
+          })
+          .filter((x): x is RelatedAuthor => x !== null)
+      }
+    }
+  } catch {
+    // Non-fatal
+  }
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -244,6 +292,33 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               </Link>
             )
           })}
+        </div>
+      )}
+
+      {/* Other frequently banned authors */}
+      {relatedAuthors.length > 0 && (
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <h2 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">
+            Other frequently banned authors
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedAuthors.map(ra => (
+              <Link
+                key={ra.id}
+                href={`/authors/${ra.slug}`}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group"
+              >
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug">
+                    {ra.display_name}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                    {ra.banCount} {ra.banCount === 1 ? 'ban' : 'bans'}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </main>

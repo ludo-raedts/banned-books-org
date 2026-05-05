@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
 
@@ -350,6 +350,21 @@ export default function AdminDashboardClient({
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500">{bookCount.toLocaleString()} books in database</p>
           <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage books →</span>
+        </a>
+
+        {/* Row 1 — Writers */}
+        <a href="/admin/authors" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
+          <div className="flex items-center justify-between">
+            <Users className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Writers</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Edit author bios, photos, birth year, and country.
+            </p>
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Add bios from Wikipedia or manually</p>
+          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage writers →</span>
         </a>
 
         {/* Row 1 — News */}
