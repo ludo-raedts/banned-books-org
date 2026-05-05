@@ -575,40 +575,49 @@ export default function BookBrowser({
 
       {gridBooks.length > 0 && (
         <div id="book-grid">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-            {gridBooks.map(book => (
-              <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-col">
-                <div className="mb-2 aspect-[2/3] w-full relative overflow-hidden rounded shadow-sm">
-                  {book.cover_url ? (
-                    <Image src={book.cover_url} alt={`Cover of ${book.title}`} fill
-                      className="object-cover" sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw" />
-                  ) : (
-                    <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
-                  )}
-                </div>
-                <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{authorName(book)}</p>
-                {book.description_book && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
-                )}
-                <div className="flex flex-wrap gap-1 mt-1.5">
-                  {book.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
-                  {getReasons(book.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
-                </div>
-                <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1.5">{banLabel(book.bans)}</p>
-              </Link>
-            ))}
+          <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
+            {gridBooks.map(book => {
+              const reasons = getReasons(book.bans)
+              return (
+                <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-row gap-3 items-start sm:flex-col sm:gap-0">
+                  {/* Cover */}
+                  <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] sm:mb-2 relative overflow-hidden rounded shadow-sm">
+                    {book.cover_url ? (
+                      <Image src={book.cover_url} alt={`Cover of ${book.title}`} fill
+                        className="object-cover" sizes="(max-width: 640px) 60px, (max-width: 768px) 33vw, 25vw" />
+                    ) : (
+                      <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
+                    )}
+                  </div>
+                  {/* Text */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
+                    {book.description_book && (
+                      <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
+                    )}
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {book.genres.slice(0, 2).map(slug => <GenreBadge key={slug} slug={slug} />)}
+                      {reasons.slice(0, 2).map(slug => <ReasonBadge key={slug} slug={slug} />)}
+                    </div>
+                    <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1">{banLabel(book.bans)}</p>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}
 
       {loadingFilter && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-2 animate-pulse">
-              <div className="bg-gray-100 dark:bg-gray-800 rounded aspect-[2/3] w-full" />
-              <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-3/4" />
-              <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
+            <div key={i} className="flex flex-row gap-3 sm:flex-col sm:gap-2 animate-pulse items-start">
+              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded" />
+              <div className="flex-1 min-w-0 flex flex-col gap-2 pt-1">
+                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-3/4" />
+                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
+              </div>
             </div>
           ))}
         </div>

@@ -120,47 +120,50 @@ export default async function ScopePage({
       {books.length === 0 ? (
         <p className="text-gray-500">No books recorded for this category yet.</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
           {books.map((book) => (
             <Link
               key={book.id}
               href={`/books/${book.slug}`}
-              className="group flex flex-col"
+              className="group flex flex-row gap-3 items-start sm:flex-col sm:gap-0"
             >
-              <div className="mb-2">
+              {/* Cover */}
+              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:mb-2 relative overflow-hidden rounded shadow-sm">
                 {book.cover_url ? (
                   <Image
                     src={book.cover_url}
                     alt={`Cover of ${book.title}`}
-                    width={160}
-                    height={240}
-                    className="rounded shadow-sm object-cover w-full"
-                    sizes="160px"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 60px, 160px"
                   />
                 ) : (
-                  <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} />
+                  <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
                 )}
               </div>
-              <h3 className="text-sm font-semibold leading-snug group-hover:underline">
-                {book.title}
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{authorName(book)}</p>
-              {book.description && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">
-                  {book.description}
+              {/* Text */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">
+                  {book.title}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
+                {book.description && (
+                  <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">
+                    {book.description}
+                  </p>
+                )}
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {book.genres.slice(0, 2).map((g) => (
+                    <GenreBadge key={g} slug={g} />
+                  ))}
+                  {getReasons(book).slice(0, 2).map((r) => (
+                    <ReasonBadge key={r} slug={r} />
+                  ))}
+                </div>
+                <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1">
+                  {banLabel(book.bans)}
                 </p>
-              )}
-              <div className="flex flex-wrap gap-1 mt-1.5">
-                {book.genres.map((g) => (
-                  <GenreBadge key={g} slug={g} />
-                ))}
-                {getReasons(book).map((r) => (
-                  <ReasonBadge key={r} slug={r} />
-                ))}
               </div>
-              <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1.5">
-                {banLabel(book.bans)}
-              </p>
             </Link>
           ))}
         </div>

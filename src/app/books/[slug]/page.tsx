@@ -197,24 +197,24 @@ export default async function BookPage({
       </Link>
 
       {/* Hero */}
-      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10">
-        <div className="shrink-0 flex justify-center sm:block">
+      <div className="flex flex-row gap-4 sm:gap-8 mb-8 sm:mb-10 items-start">
+        <div className="shrink-0">
           {book.cover_url ? (
             <Image
               src={book.cover_url}
               alt={`Cover of ${book.title}`}
               width={240}
               height={360}
-              className="rounded-lg shadow-md object-cover"
+              className="rounded-lg shadow-md object-cover w-[110px] sm:w-[200px] h-auto"
               priority
-              sizes="240px"
+              sizes="(max-width: 640px) 110px, 200px"
             />
           ) : (
             <BookCoverPlaceholder
               title={book.title}
               author={authorName(book)}
               slug={book.slug}
-              className="w-[240px]"
+              className="w-[110px] sm:w-[200px]"
             />
           )}
         </div>
@@ -295,11 +295,11 @@ export default async function BookPage({
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">
                   <tr>
-                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Country</th>
-                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Year</th>
-                    <th className="text-left px-4 py-2.5 whitespace-nowrap hidden sm:table-cell">Where</th>
-                    <th className="text-left px-4 py-2.5 whitespace-nowrap">Reasons</th>
-                    <th className="text-left px-4 py-2.5 whitespace-nowrap hidden sm:table-cell">Source</th>
+                    <th className="text-left px-3 py-2.5 whitespace-nowrap">Country</th>
+                    <th className="text-left px-3 py-2.5 whitespace-nowrap">Year</th>
+                    <th className="text-left px-3 py-2.5 whitespace-nowrap hidden sm:table-cell">Where</th>
+                    <th className="text-left px-3 py-2.5 whitespace-nowrap">Reasons</th>
+                    <th className="text-left px-3 py-2.5 whitespace-nowrap hidden sm:table-cell">Source</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -308,7 +308,7 @@ export default async function BookPage({
                     return (
                       <React.Fragment key={ban.id}>
                         <tr className="align-top">
-                          <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                          <td className="px-3 py-2.5 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap text-xs sm:text-sm">
                             <Link
                               href={`/countries/${ban.country_code}`}
                               className="hover:underline"
@@ -316,18 +316,18 @@ export default async function BookPage({
                               {ban.countries?.name_en ?? ban.country_code}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                          <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 whitespace-nowrap text-xs sm:text-sm">
                             {ban.year_started ?? '—'}
                             {ban.status === 'historical' && (
-                              <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                              <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                                 lifted
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                          <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
                             {ban.scopes?.label_en ?? '—'}
                           </td>
-                          <td className="px-4 py-3">
+                          <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1">
                               {ban.ban_reason_links.map((l) =>
                                 l.reasons ? (
@@ -336,13 +336,13 @@ export default async function BookPage({
                               )}
                             </div>
                           </td>
-                          <td className="px-4 py-3 hidden sm:table-cell">
+                          <td className="px-3 py-2.5 hidden sm:table-cell">
                             {source ? (
                               <a
                                 href={source.source_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+                                className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap text-xs"
                               >
                                 {source.source_name}
                               </a>
@@ -353,7 +353,7 @@ export default async function BookPage({
                         </tr>
                         {ban.description && (
                           <tr className="bg-amber-50/50 dark:bg-amber-900/10">
-                            <td colSpan={5} className="px-4 pb-3 pt-0 text-xs text-gray-600 dark:text-gray-400 italic leading-relaxed">
+                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 dark:text-gray-400 italic leading-relaxed">
                               {ban.description}
                             </td>
                           </tr>
