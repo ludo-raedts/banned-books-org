@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { normalizeNewsDisplay } from '@/lib/news-display'
 
 type NewsItem = {
   id: number
@@ -33,6 +34,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
     onDone(item.id)
   }
 
+  const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
@@ -43,10 +45,10 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
             rel="nofollow noopener noreferrer"
             className="font-semibold text-sm hover:underline leading-snug"
           >
-            {item.title}
+            {title}
           </a>
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            {item.source_name} · {formatDate(item.published_at)}
+            {sourceName} · {formatDate(item.published_at)}
           </p>
         </div>
       </div>

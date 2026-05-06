@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import { normalizeNewsDisplay } from '@/lib/news-display'
 
 export const dynamic = 'force-dynamic'
 
@@ -141,26 +142,39 @@ export default async function NewsPage() {
             Week of {week !== 'unknown' ? formatWeek(week) : '—'}
           </h2>
           <div className="flex flex-col gap-6">
-            {weekItems.map(item => (
-              <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
-                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {linkify(item.summary, bookRefs, countryRefs)}
-                </p>
-                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                  <a
-                    href={item.source_url}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
-                  >
-                    {item.source_name}
-                  </a>
-                  {item.published_at && (
-                    <span> · {new Date(item.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
-                  )}
-                </p>
-              </article>
-            ))}
+            {weekItems.map(item => {
+              const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+              return (
+                <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
+                    <a
+                      href={item.source_url}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="hover:underline underline-offset-2"
+                    >
+                      {title}
+                    </a>
+                  </h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {linkify(item.summary, bookRefs, countryRefs)}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                    <a
+                      href={item.source_url}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
+                    >
+                      {sourceName}
+                    </a>
+                    {item.published_at && (
+                      <span> · {new Date(item.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                    )}
+                  </p>
+                </article>
+              )
+            })}
           </div>
         </section>
       ))}

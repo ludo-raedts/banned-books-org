@@ -8,6 +8,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { BookOpen, Globe, Search as SearchIcon } from 'lucide-react'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
+import { normalizeNewsDisplay } from '@/lib/news-display'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -37,6 +38,7 @@ export type Book = {
 
 export type NewsPreview = {
   id: number
+  title: string
   source_name: string
   published_at: string | null
   summary: string
@@ -116,17 +118,20 @@ function NewsPanel({ items, compact }: { items: NewsPreview[]; compact?: boolean
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
       </div>
       <div className={`${compact ? 'flex flex-col flex-1 divide-y divide-gray-100 dark:divide-gray-800' : 'divide-y divide-gray-100 dark:divide-gray-800'}`}>
-        {items.map(item => (
-          <Link key={item.id} href="/news" className={`group/item ${compact ? 'py-2.5 first:pt-0' : 'px-4 py-3'}`}>
-            <p className={`text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-${compact ? 3 : 2} group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors`}>
-              {item.summary}
-            </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-              {item.source_name}
-              {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
-            </p>
-          </Link>
-        ))}
+        {items.map(item => {
+          const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+          return (
+            <Link key={item.id} href="/news" className={`group/item ${compact ? 'py-2.5 first:pt-0' : 'px-4 py-3'}`}>
+              <p className={`text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-${compact ? 3 : 2} group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors`}>
+                {item.summary}
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                {sourceName}
+                {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+              </p>
+            </Link>
+          )
+        })}
       </div>
       <Link href="/news" className={`${compact ? 'mt-3 text-xs text-right' : 'px-4 py-3 text-sm text-brand font-medium'} text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors block`}>
         All news →
