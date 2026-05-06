@@ -477,17 +477,20 @@ export default function BookBrowser({
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
                   </div>
                   <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
-                    {latestNews.map(item => (
-                      <Link key={item.id} href="/news" className="py-2.5 group/item first:pt-0">
-                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
-                          {item.summary}
-                        </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                          {item.source_name}
-                          {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
-                        </p>
-                      </Link>
-                    ))}
+                    {latestNews.map(item => {
+                      const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+                      return (
+                        <Link key={item.id} href="/news" className="py-2.5 group/item first:pt-0">
+                          <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
+                            {item.summary}
+                          </p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                            {sourceName}
+                            {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                          </p>
+                        </Link>
+                      )
+                    })}
                   </div>
                   <Link href="/news" className="mt-3 text-xs text-right text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors block">
                     All news →
