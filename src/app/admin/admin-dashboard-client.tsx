@@ -266,47 +266,29 @@ function RankChange({ thisWeekRank, lastWeekRank }: { thisWeekRank: number; last
 }
 
 function TrendingSection({
-  icon,
+  Icon,
   label,
   items,
   linkPrefix,
   nameKey,
 }: {
-  icon: string
+  Icon: typeof BookOpen
   label: string
   items: (TrendingBookRow | TrendingAuthorRow)[]
   linkPrefix: string
   nameKey: 'title' | 'name'
 }) {
-  const [first, ...rest] = items
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1.5">
-        <span aria-hidden>{icon}</span>
+        <Icon className="w-3.5 h-3.5" aria-hidden />
         <span>{label}</span>
       </p>
       {items.length === 0 ? (
         <p className="text-sm text-gray-400 dark:text-gray-500 italic">No data yet.</p>
       ) : (
         <div className="flex flex-col">
-          {/* #1 — promoted */}
-          <Link
-            href={`/${linkPrefix}/${first.slug}`}
-            className="group flex items-baseline gap-3 py-2 px-2 -mx-2 rounded-md hover:bg-brand-light/40 dark:hover:bg-brand/10 transition-colors"
-          >
-            <span className="text-base font-bold text-brand tabular-nums shrink-0 w-5 text-center leading-none">1</span>
-            <span className="flex-1 min-w-0 text-[0.95rem] font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-brand dark:group-hover:text-red-400">
-              {(first as any)[nameKey]}
-            </span>
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums shrink-0">
-              {first.views.toLocaleString()}
-            </span>
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 shrink-0 -ml-1">views</span>
-            <RankChange thisWeekRank={first.rank} lastWeekRank={first.lastWeekRank} />
-          </Link>
-
-          {/* #2-5 — slim rows */}
-          {rest.map(item => (
+          {items.map(item => (
             <Link
               key={item.entityId}
               href={`/${linkPrefix}/${item.slug}`}
@@ -464,14 +446,14 @@ export default function AdminDashboardClient({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 mt-1">
               <TrendingSection
-                icon="📚"
+                Icon={BookOpen}
                 label="Books"
                 items={trendingBooks}
                 linkPrefix="books"
                 nameKey="title"
               />
               <TrendingSection
-                icon="✍️"
+                Icon={Users}
                 label="Authors"
                 items={trendingAuthors}
                 linkPrefix="authors"
