@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { adminClient } from '@/lib/supabase'
+import { notifyIndexNow } from '@/lib/indexnow'
 
 const ALLOWED_FIELDS = new Set([
   'title', 'first_published_year', 'genres', 'cover_url',
@@ -44,6 +45,8 @@ export async function PATCH(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+
+  notifyIndexNow([`/books/${slug}`])
 
   return NextResponse.json({ ok: true, updated: Object.keys(updates) })
 }

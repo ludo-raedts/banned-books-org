@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { adminClient } from '@/lib/supabase'
+import { notifyIndexNow } from '@/lib/indexnow'
 
 const ALLOWED_FIELDS = new Set([
   'display_name', 'bio', 'birth_year', 'death_year', 'birth_country', 'photo_url',
@@ -43,6 +44,8 @@ export async function PATCH(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+
+  notifyIndexNow([`/authors/${slug}`])
 
   return NextResponse.json({ ok: true, updated: Object.keys(updates) })
 }
