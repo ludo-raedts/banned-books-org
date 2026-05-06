@@ -148,7 +148,7 @@ export default async function ScopePage({
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
                 {book.description && (
-                  <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">
+                  <p className="max-sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">
                     {book.description}
                   </p>
                 )}

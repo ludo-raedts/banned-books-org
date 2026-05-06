@@ -587,7 +587,7 @@ export default function BookBrowser({
                     <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
                     {book.description_book && (
-                      <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
+                      <p className="max-sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {book.genres.slice(0, 2).map(slug => <GenreBadge key={slug} slug={slug} />)}
