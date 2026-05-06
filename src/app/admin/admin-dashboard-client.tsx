@@ -353,13 +353,20 @@ export default function AdminDashboardClient({
       const res = await fetch('/api/admin/indexnow-bulk', { method: 'POST', credentials: 'include' })
       const data = await res.json().catch(() => ({}))
       if (!res.ok && res.status !== 207) throw new Error(data.error ?? `HTTP ${res.status}`)
-      const failed = (data.results ?? []).filter((r: { ok: boolean }) => !r.ok).length
-      setIndexNowMsg(
-        failed > 0
-          ? `Submitted ${data.total} URLs in ${data.batches} batches — ${failed} batch(es) failed.`
-          : `Submitted ${data.total} URLs in ${data.batches} batch${data.batches === 1 ? '' : 'es'}.`,
-      )
-      setIndexNowState(failed > 0 ? 'error' : 'done')
+      type BatchResult = { ok: boolean; status: number; error?: string; count: number }
+      const results: BatchResult[] = data.results ?? []
+      const failed = results.filter((r) => !r.ok)
+      if (failed.length > 0) {
+        const first = failed[0]
+        setIndexNowMsg(
+          `Submitted ${data.total} URLs in ${data.batches} batch${data.batches === 1 ? '' : 'es'} — ` +
+            `${failed.length} failed. Upstream: HTTP ${first.status} ${first.error ?? ''}`.trim(),
+        )
+        setIndexNowState('error')
+      } else {
+        setIndexNowMsg(`Submitted ${data.total} URLs in ${data.batches} batch${data.batches === 1 ? '' : 'es'}.`)
+        setIndexNowState('done')
+      }
     } catch (err) {
       setIndexNowMsg(err instanceof Error ? err.message : 'Failed')
       setIndexNowState('error')
