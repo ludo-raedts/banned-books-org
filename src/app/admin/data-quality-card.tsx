@@ -311,7 +311,7 @@ export default function DataQualityCard() {
                 <span className="text-sm font-medium text-gray-800 dark:text-gray-200 min-w-0 truncate">{m.label}</span>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-sm tabular-nums text-gray-600 dark:text-gray-300">
-                    {m.count.toLocaleString()}
+                    {m.count.toLocaleString('en')}
                     <span className="text-gray-400 dark:text-gray-500 ml-1">({p}%)</span>
                   </span>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priority.badge}`}>

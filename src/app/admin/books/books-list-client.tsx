@@ -40,7 +40,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
       ) : (
         <>
           <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
-            {filtered.length.toLocaleString()} result{filtered.length !== 1 ? 's' : ''}
+            {filtered.length.toLocaleString('en')} result{filtered.length !== 1 ? 's' : ''}
             {totalPages > 1 && ` — page ${page + 1} of ${totalPages}`}
           </p>
 

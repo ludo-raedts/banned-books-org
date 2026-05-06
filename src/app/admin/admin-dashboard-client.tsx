@@ -129,7 +129,7 @@ function TrafficCard({
       {/* Headline stat — page views for the selected week */}
       <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 dark:border-gray-800 py-4 -mx-2 px-2">
         <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-none">
-          {totalViews.toLocaleString()}
+          {totalViews.toLocaleString('en')}
         </span>
         <span className="text-sm text-gray-500 dark:text-gray-400">page views</span>
         {totalPct !== null && (
@@ -140,7 +140,7 @@ function TrafficCard({
           }`}>
             {totalPct > 0 ? `↑ ${totalPct}%` : totalPct < 0 ? `↓ ${Math.abs(totalPct)}%` : '→ 0%'}
             <span className="text-gray-400 dark:text-gray-500 font-normal ml-1">
-              vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString()})
+              vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString('en')})
             </span>
           </span>
         )}
@@ -170,7 +170,7 @@ function TrafficCard({
                     color="red"
                   />
                   <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-right shrink-0 tabular-nums">
-                    {row.views.toLocaleString()}
+                    {row.views.toLocaleString('en')}
                   </span>
                   <ViewDelta
                     thisWeek={row.views}
@@ -205,7 +205,7 @@ function TrafficCard({
                     </span>
                     <MiniBar value={row.views} max={maxReferrerViews} color="blue" />
                     <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-right shrink-0 tabular-nums">
-                      {row.views.toLocaleString()}
+                      {row.views.toLocaleString('en')}
                     </span>
                     <ViewDelta
                       thisWeek={row.views}
@@ -219,7 +219,7 @@ function TrafficCard({
               })}
               {directViews > 0 && (
                 <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                  Direct / no referrer — {directViews.toLocaleString()} views
+                  Direct / no referrer — {directViews.toLocaleString('en')} views
                 </p>
               )}
             </div>
@@ -303,7 +303,7 @@ function TrendingSection({
                 {(item as any)[nameKey]}
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
-                {item.views.toLocaleString()}
+                {item.views.toLocaleString('en')}
               </span>
               <RankChange thisWeekRank={item.rank} lastWeekRank={item.lastWeekRank} />
             </Link>
@@ -346,7 +346,7 @@ export default function AdminDashboardClient({
     sitemapCounts.reasons
 
   async function handleIndexNowBulk() {
-    if (!confirm(`Submit ~${sitemapTotal.toLocaleString()} URLs to IndexNow (Bing)?`)) return
+    if (!confirm(`Submit ~${sitemapTotal.toLocaleString('en')} URLs to IndexNow (Bing)?`)) return
     setIndexNowState('loading')
     setIndexNowMsg('')
     try {
@@ -426,7 +426,7 @@ export default function AdminDashboardClient({
               Edit book descriptions, covers, genres, and censorship context.
             </p>
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500">{bookCount.toLocaleString()} books in database</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">{bookCount.toLocaleString('en')} books in database</p>
           <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage books →</span>
         </a>
 
@@ -474,9 +474,9 @@ export default function AdminDashboardClient({
           </div>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm mt-1">
             <dt className="text-gray-500 dark:text-gray-400">Books</dt>
-            <dd className="tabular-nums font-medium">{bookCount.toLocaleString()}</dd>
+            <dd className="tabular-nums font-medium">{bookCount.toLocaleString('en')}</dd>
             <dt className="text-gray-500 dark:text-gray-400">Bans</dt>
-            <dd className="tabular-nums font-medium">{banCount.toLocaleString()}</dd>
+            <dd className="tabular-nums font-medium">{banCount.toLocaleString('en')}</dd>
             <dt className="text-gray-500 dark:text-gray-400">Countries</dt>
             <dd className="tabular-nums font-medium">{countryCount}</dd>
           </dl>
@@ -503,7 +503,7 @@ export default function AdminDashboardClient({
                 </div>
                 {pageviewsSizeBytes !== null && pageviewsRows !== null && (
                   <p className="mt-1.5 text-[11px] text-gray-400 dark:text-gray-500 tabular-nums">
-                    Pageviews · {formatBytes(pageviewsSizeBytes)} · {pageviewsRows.toLocaleString()} rows
+                    Pageviews · {formatBytes(pageviewsSizeBytes)} · {pageviewsRows.toLocaleString('en')} rows
                   </p>
                 )}
               </div>
@@ -606,7 +606,7 @@ export default function AdminDashboardClient({
                   </a>
                 </dt>
                 <dd className="tabular-nums font-medium text-gray-900 dark:text-gray-100">
-                  {count.toLocaleString()}
+                  {count.toLocaleString('en')}
                 </dd>
                 <dd className="text-xs text-gray-500 dark:text-gray-400">{note}</dd>
               </div>
@@ -615,7 +615,7 @@ export default function AdminDashboardClient({
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
             Total:{' '}
             <span className="tabular-nums">
-              {sitemapTotal.toLocaleString()}
+              {sitemapTotal.toLocaleString('en')}
             </span>{' '}
             URLs. Excluded: search, filter/query-string variants, pagination,{' '}
             <code>/admin</code>, <code>/api</code>.

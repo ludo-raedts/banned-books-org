@@ -84,8 +84,8 @@ export default async function AboutPage() {
               or institution that decided a book was too dangerous for its citizens or students to read.
             </p>
             <p>
-              The catalogue currently documents <strong>{stats.books.toLocaleString()} books</strong> and{' '}
-              <strong>{stats.bans.toLocaleString()} bans</strong> across{' '}
+              The catalogue currently documents <strong>{stats.books.toLocaleString('en')} books</strong> and{' '}
+              <strong>{stats.bans.toLocaleString('en')} bans</strong> across{' '}
               <strong>{stats.countries} countries and territories</strong>, from the Vatican&apos;s Index Librorum
               Prohibitorum (1559) to school board removals in 2025. The site is free, non-commercial, and built in
               the open.
@@ -98,11 +98,11 @@ export default async function AboutPage() {
           <h2 className="text-xl font-semibold mb-4">By the numbers</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
-              { value: stats.books.toLocaleString(), label: 'Books catalogued' },
-              { value: stats.bans.toLocaleString(), label: 'Bans documented' },
+              { value: stats.books.toLocaleString('en'), label: 'Books catalogued' },
+              { value: stats.bans.toLocaleString('en'), label: 'Bans documented' },
               { value: stats.countries.toString(), label: 'Countries & territories' },
-              { value: stats.activeBans.toLocaleString(), label: 'Currently active bans' },
-              { value: stats.sources.toLocaleString(), label: 'Source citations' },
+              { value: stats.activeBans.toLocaleString('en'), label: 'Currently active bans' },
+              { value: stats.sources.toLocaleString('en'), label: 'Source citations' },
               { value: '1559', label: 'Earliest ban recorded' },
             ].map(({ value, label }) => (
               <div key={label} className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 px-4 py-5 flex flex-col gap-1">
@@ -154,7 +154,7 @@ export default async function AboutPage() {
           <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
             <p>
               The database is updated continuously. This page was last rendered on <strong>{stats.updatedAt}</strong>.
-              There are currently <strong>{stats.sources.toLocaleString()} source citations</strong> attached to bans
+              There are currently <strong>{stats.sources.toLocaleString('en')} source citations</strong> attached to bans
               in the catalogue, drawn primarily from PEN America, the American Library Association, Index on Censorship,
               Freedom to Read Canada, and Wikipedia&apos;s lists of banned books.
             </p>

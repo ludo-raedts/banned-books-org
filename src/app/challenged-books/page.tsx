@@ -163,7 +163,7 @@ export default async function ChallengedBooksPage() {
           <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Challenged books</p>
           <h1 className="text-3xl font-bold tracking-tight mb-2">Challenged Books — Attempted Censorship</h1>
           <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-            {total.toLocaleString()} books formally challenged and removed or restricted from schools and libraries.
+            {total.toLocaleString('en')} books formally challenged and removed or restricted from schools and libraries.
             Most originate from PEN America and the American Library Association.
           </p>
         </div>
@@ -225,7 +225,7 @@ export default async function ChallengedBooksPage() {
         {/* Book grid */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {total.toLocaleString()} challenged {total === 1 ? 'book' : 'books'}
+            {total.toLocaleString('en')} challenged {total === 1 ? 'book' : 'books'}
           </h2>
           <Link href="/scope/school" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
             View as scope page →

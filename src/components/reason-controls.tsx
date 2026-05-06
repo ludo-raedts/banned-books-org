@@ -105,7 +105,7 @@ export default function ReasonControls({ current, countries, years, totalBooks, 
 
       {isFiltered && (
         <p className="text-xs text-brand">
-          Showing {filteredBooks.toLocaleString()} of {totalBooks.toLocaleString()} books
+          Showing {filteredBooks.toLocaleString('en')} of {totalBooks.toLocaleString('en')} books
         </p>
       )}
     </div>

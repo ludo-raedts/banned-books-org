@@ -16,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
     supabase.from('bans').select('country_code').range(0, 9999),
   ])
   const countryCount = new Set((countryRows ?? []).map((r) => r.country_code)).size
-  const books = (bookCount ?? 0).toLocaleString()
-  const bans = (banCount ?? 0).toLocaleString()
+  const books = (bookCount ?? 0).toLocaleString('en')
+  const bans = (banCount ?? 0).toLocaleString('en')
   return {
     title: 'Global book censorship statistics – Banned Books',
     description: `${books} banned books and ${bans} documented bans across ${countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
@@ -196,8 +196,8 @@ export default async function StatsPage({
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString()} books</span> and{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBans ?? 0).toLocaleString()} bans</span> across{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString('en')} books</span> and{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBans ?? 0).toLocaleString('en')} bans</span> across{' '}
           <span className="font-semibold text-gray-900 dark:text-gray-100">{countryCounts.size} countries</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
@@ -206,10 +206,10 @@ export default async function StatsPage({
       {/* ── 2. Stat cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {[
-          { label: 'Books catalogued',        value: (totalBooks ?? 0).toLocaleString() },
-          { label: 'Total bans recorded',     value: (totalBans ?? 0).toLocaleString() },
+          { label: 'Books catalogued',        value: (totalBooks ?? 0).toLocaleString('en') },
+          { label: 'Total bans recorded',     value: (totalBans ?? 0).toLocaleString('en') },
           { label: 'Countries & territories', value: countryCounts.size.toString() },
-          { label: 'Currently banned',        value: activeBans.toLocaleString(), sub: `${historicalBans.toLocaleString()} lifted` },
+          { label: 'Currently banned',        value: activeBans.toLocaleString('en'), sub: `${historicalBans.toLocaleString('en')} lifted` },
         ].map(stat => (
           <div key={stat.label} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
             <div className="text-3xl font-bold tabular-nums text-brand">{stat.value}</div>
@@ -324,7 +324,7 @@ export default async function StatsPage({
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
           {timelineWithoutYear > 0 && (
-            <> {timelineWithoutYear.toLocaleString()} bans with no recorded year are excluded.</>
+            <> {timelineWithoutYear.toLocaleString('en')} bans with no recorded year are excluded.</>
           )}
         </p>
 
@@ -338,7 +338,7 @@ export default async function StatsPage({
         </Suspense>
         {isFiltered && (
           <p className="text-xs text-brand mb-4">
-            Showing {timelineBans.length.toLocaleString()} ban{timelineBans.length !== 1 ? 's' : ''} matching your filters.
+            Showing {timelineBans.length.toLocaleString('en')} ban{timelineBans.length !== 1 ? 's' : ''} matching your filters.
           </p>
         )}
 
