@@ -105,7 +105,7 @@ export default async function HomePage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
-      <div className="mb-8">
+      <div className="mb-5">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-2">
           The World&apos;s Books Under Censorship
         </h1>
@@ -125,7 +125,7 @@ export default async function HomePage() {
         </p>
       </div>
       {fetchError && (
-        <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-8">
+        <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-5">
           Could not load books: {fetchError}
         </p>
       )}
@@ -138,6 +138,7 @@ export default async function HomePage() {
           countries={countries}
           trendingSlot={
             <TrendingTabs
+              key="trending-tabs"
               trendingSlot={<TrendingWidget compact showHeader={false} />}
               risingSlot={<RisingWidget compact />}
             />

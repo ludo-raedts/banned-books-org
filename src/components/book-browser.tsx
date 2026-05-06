@@ -310,12 +310,12 @@ export default function BookBrowser({
   const gridBooks = featuredBook ? displayBooks.filter(b => b.id !== featuredBook.id) : displayBooks
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-5">
 
       {/* ── TOP: Hero + Search + Featured / News sidebar ── */}
-      <div className={!isSearching && hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-6' : undefined}>
+      <div className={!isSearching && hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-5' : undefined}>
 
-        <div className={`flex flex-col gap-4${hasNews ? ' lg:col-span-2' : ''}`}>
+        <div className={`flex flex-col gap-3${hasNews ? ' lg:col-span-2' : ''}`}>
 
           {/* Search */}
           <div ref={searchWrapperRef}>
@@ -335,7 +335,7 @@ export default function BookBrowser({
                 onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
                 onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
                 onKeyDown={handleSearchKeyDown}
-                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 transition-colors min-h-[56px] shadow-sm ${q ? 'pr-11' : 'pr-4'}`}
+                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand transition-colors min-h-[60px] shadow-md hover:shadow-lg ${q ? 'pr-11' : 'pr-4'}`}
               />
               {q && (
                 <button
@@ -396,41 +396,41 @@ export default function BookBrowser({
           {/* Featured book */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Book of the day</p>
+              <p className="text-sm font-semibold text-brand-dark dark:text-red-300 mb-2">Book of the day</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
-                className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+                className="group block border border-brand/20 dark:border-brand/30 rounded-lg p-5 bg-brand-light dark:bg-brand-dark/20 hover:border-brand/40 dark:hover:border-brand/50 hover:shadow-sm transition-all"
               >
-                <div className="flex gap-3">
-                  <div className="shrink-0 w-20">
+                <div className="flex gap-4">
+                  <div className="shrink-0 w-24">
                     {featuredBook.cover_url ? (
                       <Image
                         src={featuredBook.cover_url}
                         alt={`Cover of ${featuredBook.title}`}
-                        width={80} height={120}
-                        className="rounded shadow-sm object-cover w-20 h-[120px]"
-                        priority sizes="80px"
+                        width={96} height={144}
+                        className="rounded shadow-md object-cover w-24 h-[144px]"
+                        priority sizes="96px"
                       />
                     ) : (
-                      <BookCoverPlaceholder title={featuredBook.title} author={authorName(featuredBook)} slug={featuredBook.slug} className="w-20 h-[120px]" />
+                      <BookCoverPlaceholder title={featuredBook.title} author={authorName(featuredBook)} slug={featuredBook.slug} className="w-24 h-[144px]" />
                     )}
                   </div>
-                  <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                  <div className="flex flex-col gap-2 min-w-0 flex-1">
                     <div>
-                      <h2 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:underline">{featuredBook.title}</h2>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      <h2 className="text-base font-semibold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:underline">{featuredBook.title}</h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
                         {authorName(featuredBook)}
                         {featuredBook.first_published_year && <span className="text-gray-400 dark:text-gray-500"> · {featuredBook.first_published_year}</span>}
                       </p>
                     </div>
                     {featuredBook.description_book && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">{featuredBook.description_book}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2">{featuredBook.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1">
                       {featuredBook.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
                       {getReasons(featuredBook.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
                     </div>
-                    <p className="text-xs font-medium text-red-500 dark:text-red-400">{banLabel(featuredBook.bans)}</p>
+                    <p className="text-xs font-medium text-brand dark:text-red-400">{banLabel(featuredBook.bans)}</p>
                   </div>
                 </div>
               </Link>
@@ -464,7 +464,7 @@ export default function BookBrowser({
         {/* News + Trending sidebar — desktop only */}
         {(hasNews || trendingSlot) && !isSearching && (
           <div className="hidden lg:block">
-            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col gap-5">
+            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col gap-4">
               {hasNews && (
                 <div className="flex flex-col">
                   <div className="mb-3">
@@ -492,8 +492,7 @@ export default function BookBrowser({
               {trendingSlot && (
                 <div className={hasNews ? 'border-t border-gray-200 dark:border-gray-700 pt-4' : ''}>
                   <div className="mb-3">
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trending this week</span>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Most visited in the last 7 days.</p>
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trending</span>
                   </div>
                   {trendingSlot}
                 </div>
@@ -630,7 +629,7 @@ export default function BookBrowser({
       )}
 
       {!isSearching && !anyFilter && (
-        <div className="mt-8 bg-gray-50 dark:bg-gray-900/60 rounded-xl py-16 px-6 text-center">
+        <div className="mt-4 bg-gray-50 dark:bg-gray-900/60 rounded-xl py-10 px-6 text-center">
           <div className="max-w-2xl mx-auto">
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
               Access to knowledge should not depend on where you live, what you believe, or who is in power.
