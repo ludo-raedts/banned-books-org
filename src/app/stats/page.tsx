@@ -16,9 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
     supabase.from('bans').select('country_code').range(0, 9999),
   ])
   const countryCount = new Set((countryRows ?? []).map((r) => r.country_code)).size
+  const books = (bookCount ?? 0).toLocaleString()
+  const bans = (banCount ?? 0).toLocaleString()
   return {
-    title: 'Censorship by the Numbers — Banned Books',
-    description: `Statistics on literary censorship worldwide: over ${(bookCount ?? 0).toLocaleString()} banned books, ${(banCount ?? 0).toLocaleString()} documented bans across ${countryCount} countries.`,
+    title: 'Global book censorship statistics – Banned Books',
+    description: `${books} banned books and ${bans} documented bans across ${countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
     alternates: { canonical: '/stats' },
   }
 }

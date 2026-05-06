@@ -19,19 +19,50 @@ export async function generateMetadata({
   const supabase = adminClient()
 
   // rows: 1 | fields: [name_en] | reason: page title
-  // rows: 1 (count only) | reason: ban count for title/description
-  const [{ data: country }, { count: N }] = await Promise.all([
+  // rows: 1 (count only) | reason: ban count for description
+  // rows: ≤500 | fields: reason slugs | reason: count distinct reasons for description
+  const [{ data: country }, { count: N }, { data: reasonSample }] = await Promise.all([
     supabase.from('countries').select('name_en').eq('code', upperCode).single(),
     supabase.from('bans').select('*', { count: 'exact', head: true }).eq('country_code', upperCode),
+    supabase
+      .from('bans')
+      .select('ban_reason_links(reasons(slug))')
+      .eq('country_code', upperCode)
+      .limit(500),
   ])
 
   if (!country) return {}
 
   const banCount = N ?? 0
-  const title = `Books Banned in ${country.name_en} — ${banCount} ${banCount === 1 ? 'ban' : 'bans'} | Banned Books`
-  const description = `Browse all ${banCount} books banned or challenged in ${country.name_en}.`
+  const reasonSet = new Set<string>()
+  for (const b of (reasonSample ?? []) as unknown as {
+    ban_reason_links: { reasons: { slug: string } | null }[]
+  }[]) {
+    for (const l of b.ban_reason_links) {
+      const s = l.reasons?.slug
+      if (s) reasonSet.add(s)
+    }
+  }
+  const reasonVariety = reasonSet.size
 
-  return { title, description, alternates: { canonical: `/countries/${code.toLowerCase()}` }, openGraph: { title, description } }
+  const title = `Books banned in ${country.name_en} – censorship history and examples`
+
+  let description: string
+  if (banCount === 0) {
+    description = `Books banned or challenged in ${country.name_en} — censorship history, dates, scope, and source citations for every documented entry.`
+  } else if (reasonVariety > 1) {
+    description = `${banCount} ${banCount === 1 ? 'book' : 'books'} banned or challenged in ${country.name_en}, spanning ${reasonVariety} distinct censorship reasons. Browse the catalogue: dates, scope, and source citations.`
+  } else {
+    description = `${banCount} ${banCount === 1 ? 'book' : 'books'} banned or challenged in ${country.name_en}. Browse the catalogue with dates, scope, and source citations on every entry.`
+  }
+  if (description.length > 160) description = description.slice(0, 157) + '…'
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/countries/${code.toLowerCase()}` },
+    openGraph: { title, description },
+  }
 }
 
 type Book = {

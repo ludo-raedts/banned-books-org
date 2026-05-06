@@ -13,6 +13,21 @@ import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
 
+const BOOK_REASON_PHRASE: Record<string, string> = {
+  lgbtq: 'LGBTQ+ content',
+  political: 'political content',
+  religious: 'religious content',
+  sexual: 'sexual content',
+  violence: 'violent content',
+  racial: 'racial content',
+  drugs: 'drug references',
+  obscenity: 'obscenity',
+  blasphemy: 'blasphemy',
+  moral: 'moral grounds',
+  language: 'language reasons',
+  other: 'other reasons',
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -21,20 +36,69 @@ export async function generateMetadata({
   const { slug } = await params
   const { data } = await adminClient()
     .from('books')
-    .select('title, description, description_book, cover_url, book_authors(authors(display_name)), bans(id)')
+    .select(`
+      title, cover_url,
+      book_authors(authors(display_name)),
+      bans(country_code, countries(name_en), ban_reason_links(reasons(slug)))
+    `)
     .eq('slug', slug)
     .single()
 
   if (!data) return {}
 
+  type MetaBan = {
+    country_code: string
+    countries: { name_en: string } | null
+    ban_reason_links: { reasons: { slug: string } | null }[]
+  }
+  const bans = (data.bans as unknown as MetaBan[]) ?? []
   const author = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
     .map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
+  const baseTitle = `${data.title}${author ? ` by ${author}` : ''}`
 
-  const N = (data.bans as unknown as { id: number }[]).length
-  const rawTitle = `${data.title}${author ? ` by ${author}` : ''} — Banned in ${N} ${N === 1 ? 'country' : 'countries'} | Banned Books`
-  const title = rawTitle.length > 155 ? rawTitle.slice(0, 152) + '…' : rawTitle
-  const rawDesc = `${data.title} has been banned or challenged in ${N} ${N === 1 ? 'country' : 'countries'}. Learn where, when, and why this book was censored.`
-  const description = rawDesc.length > 155 ? rawDesc.slice(0, 152) + '…' : rawDesc
+  const countryByCode = new Map<string, string>()
+  for (const b of bans) {
+    if (!countryByCode.has(b.country_code)) {
+      countryByCode.set(b.country_code, b.countries?.name_en ?? b.country_code)
+    }
+  }
+  const uniqueCountries = [...countryByCode.values()]
+
+  const reasonCounts = new Map<string, number>()
+  for (const b of bans) {
+    for (const l of b.ban_reason_links) {
+      const s = l.reasons?.slug
+      if (s) reasonCounts.set(s, (reasonCounts.get(s) ?? 0) + 1)
+    }
+  }
+  const topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+  const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
+
+  const candidateA = uniqueCountries.length === 1 && topReasonPhrase
+    ? `${baseTitle} – Banned in ${uniqueCountries[0]} for ${topReasonPhrase}`
+    : null
+  const candidateB = `${baseTitle} – Why it was banned`
+  const candidateC = `${baseTitle} – Banned Books`
+
+  let title: string
+  if (candidateA && candidateA.length <= 60) title = candidateA
+  else if (candidateB.length <= 60) title = candidateB
+  else title = candidateC
+  if (title.length > 70) title = title.slice(0, 67) + '…'
+
+  let description: string
+  if (bans.length === 0) {
+    description = `${baseTitle} on Banned Books — censorship history, country-by-country entries, and source citations on this page.`
+  } else if (uniqueCountries.length === 1 && topReasonPhrase) {
+    description = `${baseTitle} was banned in ${uniqueCountries[0]} for ${topReasonPhrase}. See the year, the scope, and the full source citations on this page.`
+  } else if (uniqueCountries.length === 1) {
+    description = `${baseTitle} was banned in ${uniqueCountries[0]}. See the year, the scope, and the full source citations behind every entry on this page.`
+  } else if (topReasonPhrase) {
+    description = `${baseTitle} has been banned in ${uniqueCountries.length} countries, often for ${topReasonPhrase}. See where, when, why — and the full source citations on this page.`
+  } else {
+    description = `${baseTitle} has been banned or challenged in ${uniqueCountries.length} countries. See where, when, why — and the full source citations behind every entry.`
+  }
+  if (description.length > 160) description = description.slice(0, 157) + '…'
 
   return {
     title,

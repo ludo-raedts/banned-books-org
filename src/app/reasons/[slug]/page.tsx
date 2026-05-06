@@ -47,12 +47,62 @@ function countryFlag(code: string): string {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const label = reasonLabel(slug)
-  const icon = reasonIcon(slug)
-  return {
-    title: `${icon} ${label} — Books Banned for ${label} Content`,
-    description: `Browse books banned or challenged for ${label.toLowerCase()} content. ${REASON_INTROS[slug]?.slice(0, 120) ?? ''}`,
-    alternates: { canonical: `/reasons/${slug}` },
+  if (!label || label === slug) return {}
+
+  const supabase = adminClient()
+  const { data: reason } = await supabase.from('reasons').select('id').eq('slug', slug).single()
+
+  let bookCount = 0
+  let topCountryNames: string[] = []
+  if (reason) {
+    const { data: links } = await supabase
+      .from('ban_reason_links')
+      .select('bans(country_code, book_id)')
+      .eq('reason_id', reason.id)
+      .limit(2000)
+
+    const bookIds = new Set<number>()
+    const countryCounts = new Map<string, number>()
+    for (const l of (links ?? []) as unknown as { bans: { country_code: string; book_id: number } | null }[]) {
+      const ban = l.bans
+      if (!ban) continue
+      bookIds.add(ban.book_id)
+      countryCounts.set(ban.country_code, (countryCounts.get(ban.country_code) ?? 0) + 1)
+    }
+    bookCount = bookIds.size
+
+    const topCodes = [...countryCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([c]) => c)
+    if (topCodes.length > 0) {
+      const { data: names } = await supabase.from('countries').select('code, name_en').in('code', topCodes)
+      const nameMap = new Map((names ?? []).map((c) => [c.code, c.name_en]))
+      topCountryNames = topCodes.map((c) => nameMap.get(c) ?? c)
+    }
   }
+
+  const title = `Books banned for ${label} – examples and censorship patterns`
+
+  const labelLower = label === 'LGBTQ+' ? 'LGBTQ+' : label.toLowerCase()
+  const countryList =
+    topCountryNames.length >= 3
+      ? `${topCountryNames[0]}, ${topCountryNames[1]}, and ${topCountryNames[2]}`
+      : topCountryNames.length === 2
+        ? `${topCountryNames[0]} and ${topCountryNames[1]}`
+        : topCountryNames[0] ?? ''
+
+  let description: string
+  if (bookCount === 0) {
+    description = `Books banned for ${labelLower} content — examples, dates, scope, and source citations for every documented censorship entry.`
+  } else if (countryList) {
+    description = `${bookCount} ${bookCount === 1 ? 'book' : 'books'} banned for ${labelLower} content, recorded in countries including ${countryList}. Examples, dates, and source citations.`
+  } else {
+    description = `${bookCount} ${bookCount === 1 ? 'book' : 'books'} banned for ${labelLower} content. Examples, dates, scope, and source citations for every documented entry.`
+  }
+  if (description.length > 160) description = description.slice(0, 157) + '…'
+
+  return { title, description, alternates: { canonical: `/reasons/${slug}` } }
 }
 
 export default async function ReasonPage({
