@@ -37,6 +37,24 @@ export default async function AdminPage() {
   const dataLastChanged  = logMap.get('data_last_changed') ?? null
   const viewsLastRefreshed = logMap.get('last_refreshed') ?? null
 
+  // ── DB size (Supabase plan-limit watch) ──────────────────────────────────────
+  // Limit defaults to 8 GB (Pro tier). Override with SUPABASE_DB_LIMIT_GB.
+  let dbSizeBytes: number | null = null
+  let pageviewsSizeBytes: number | null = null
+  let pageviewsRows: number | null = null
+  try {
+    const { data: stats } = await supabase.rpc('admin_db_stats')
+    if (stats && typeof stats === 'object') {
+      dbSizeBytes = Number((stats as Record<string, unknown>).db_size_bytes ?? 0) || null
+      pageviewsSizeBytes = Number((stats as Record<string, unknown>).pageviews_size_bytes ?? 0)
+      pageviewsRows = Number((stats as Record<string, unknown>).pageviews_rows ?? 0)
+    }
+  } catch {
+    // RPC not yet deployed — card hides the size row gracefully
+  }
+  const dbLimitGb = Number(process.env.SUPABASE_DB_LIMIT_GB ?? '8')
+  const dbLimitBytes = dbLimitGb * 1024 * 1024 * 1024
+
   // ── Trending / pageview data ──────────────────────────────────────────────────
   let trendingBooks: TrendingBookRow[] = []
   let trendingAuthors: TrendingAuthorRow[] = []
@@ -147,6 +165,10 @@ export default async function AdminPage() {
       newsCount={newsCount ?? 0}
       banCount={banCount ?? 0}
       countryCount={countryCount}
+      dbSizeBytes={dbSizeBytes}
+      dbLimitBytes={dbLimitBytes}
+      pageviewsSizeBytes={pageviewsSizeBytes}
+      pageviewsRows={pageviewsRows}
       trendingBooks={trendingBooks}
       trendingAuthors={trendingAuthors}
       viewsThisWeek={viewsThisWeek}

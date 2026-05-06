@@ -235,6 +235,10 @@ interface Props {
   newsCount: number
   banCount: number
   countryCount: number
+  dbSizeBytes: number | null
+  dbLimitBytes: number
+  pageviewsSizeBytes: number | null
+  pageviewsRows: number | null
   trendingBooks: TrendingBookRow[]
   trendingAuthors: TrendingAuthorRow[]
   viewsThisWeek: number
@@ -310,8 +314,18 @@ function TrendingSection({
   )
 }
 
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`
+  const units = ['KB', 'MB', 'GB', 'TB']
+  let v = n / 1024
+  let i = 0
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++ }
+  return `${v < 10 ? v.toFixed(1) : Math.round(v)} ${units[i]}`
+}
+
 export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount,
+  dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   trendingBooks, trendingAuthors, viewsThisWeek, viewsLastWeek, firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
   dataLastChanged, viewsLastRefreshed, sitemapCounts,
@@ -419,7 +433,7 @@ export default function AdminDashboardClient({
           <BarChart2 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           <div>
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Database</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Current catalogue size.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Catalogue size and storage usage.</p>
           </div>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm mt-1">
             <dt className="text-gray-500 dark:text-gray-400">Books</dt>
@@ -429,6 +443,35 @@ export default function AdminDashboardClient({
             <dt className="text-gray-500 dark:text-gray-400">Countries</dt>
             <dd className="tabular-nums font-medium">{countryCount}</dd>
           </dl>
+
+          {dbSizeBytes !== null && (() => {
+            const pct = Math.min(100, (dbSizeBytes / dbLimitBytes) * 100)
+            const warn = pct >= 80
+            const near = pct >= 60
+            const fill = warn ? 'bg-red-500' : near ? 'bg-amber-500' : 'bg-brand'
+            const txt  = warn ? 'text-red-600 dark:text-red-400'
+                       : near ? 'text-amber-600 dark:text-amber-400'
+                       : 'text-gray-700 dark:text-gray-300'
+            return (
+              <div className="mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-baseline justify-between text-xs">
+                  <span className="text-gray-500 dark:text-gray-400">DB size</span>
+                  <span className={`tabular-nums font-medium ${txt}`}>
+                    {formatBytes(dbSizeBytes)} / {formatBytes(dbLimitBytes)}
+                    <span className="text-gray-400 dark:text-gray-500 font-normal ml-1">({pct.toFixed(1)}%)</span>
+                  </span>
+                </div>
+                <div className="mt-1 h-1 rounded-full bg-gray-100 dark:bg-gray-800">
+                  <div className={`h-full rounded-full ${fill}`} style={{ width: `${pct}%` }} />
+                </div>
+                {pageviewsSizeBytes !== null && pageviewsRows !== null && (
+                  <p className="mt-1.5 text-[11px] text-gray-400 dark:text-gray-500 tabular-nums">
+                    Pageviews · {formatBytes(pageviewsSizeBytes)} · {pageviewsRows.toLocaleString()} rows
+                  </p>
+                )}
+              </div>
+            )
+          })()}
         </div>
 
         {/* Row 2 — Trending — spans 2 cols on lg */}
