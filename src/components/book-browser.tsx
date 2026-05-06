@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
-import { BookOpen, Globe, Search as SearchIcon } from 'lucide-react'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
 import { normalizeNewsDisplay } from '@/lib/news-display'
@@ -148,6 +147,8 @@ export default function BookBrowser({
   latestNews = [],
   featuredBook = null,
   countries = [],
+  highlightsSlot,
+  catalogueNavSlot,
   trendingSlot,
 }: {
   initialBooks: Book[]
@@ -155,6 +156,8 @@ export default function BookBrowser({
   latestNews?: NewsPreview[]
   featuredBook?: Book | null
   countries?: CountryOption[]
+  highlightsSlot?: React.ReactNode
+  catalogueNavSlot?: React.ReactNode
   trendingSlot?: React.ReactNode
 }) {
   const router = useRouter()
@@ -442,28 +445,8 @@ export default function BookBrowser({
             </div>
           )}
 
-          {/* Explore cards — inside left column so both columns balance */}
-          {!isSearching && (
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Explore the catalogue</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Start with a book, a country, or a reason.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {[
-                  { Icon: BookOpen, title: 'Books', text: 'Browse the full database of banned and challenged books.', cta: 'View all books', href: '#book-grid' },
-                  { Icon: Globe, title: 'Countries', text: 'See where books have been banned, restricted, or removed.', cta: 'Explore countries', href: '/countries' },
-                  { Icon: SearchIcon, title: 'Reasons', text: 'Understand the patterns behind censorship: political, religious, social, and more.', cta: 'Explore reasons', href: '/reasons' },
-                ].map(({ Icon, title, text, cta, href }) => (
-                  <Link key={title} href={href} className="flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-sm transition-shadow">
-                    <Icon className="w-6 h-6 text-brand mb-3" />
-                    <span className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
-                    <div className="flex-1" />
-                    <span className="text-sm text-brand font-medium mt-3">{cta} →</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Highlights — Most banned / Trending / All-time most read */}
+          {!isSearching && highlightsSlot}
         </div>
 
         {/* News + Trending sidebar — desktop only */}
@@ -519,11 +502,14 @@ export default function BookBrowser({
         </div>
       )}
 
+      {/* ── Catalogue nav — full width, desktop & tablet only ── */}
+      {!isSearching && catalogueNavSlot}
+
       {/* ── Filters ── */}
       <div>
         <div className="mb-3">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Filter the database</h2>
-          <p className="text-sm text-gray-500">Explore how and why books are restricted — by institution, country, or reason.</p>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Search the database</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Refine by institution, country, or reason.</p>
         </div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>

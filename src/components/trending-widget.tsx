@@ -9,6 +9,8 @@ type TrendingEntry = {
   slug: string
 }
 
+type Mode = 'this-week' | 'all-time'
+
 function RankChange({ thisWeek, lastWeek, compact }: { thisWeek: number; lastWeek: number | null; compact: boolean }) {
   const cls = compact ? 'text-[10px] shrink-0 leading-none' : 'text-[11px] shrink-0 leading-none'
   if (lastWeek === null) {
@@ -24,10 +26,12 @@ function TrendingListCompact({
   label,
   items,
   pathPrefix,
+  showRankChange = true,
 }: {
   label: string
   items: TrendingEntry[]
   pathPrefix: string
+  showRankChange?: boolean
 }) {
   return (
     <div>
@@ -46,7 +50,7 @@ function TrendingListCompact({
             >
               {item.label}
             </Link>
-            <RankChange thisWeek={item.rank} lastWeek={item.lastWeekRank} compact />
+            {showRankChange && <RankChange thisWeek={item.rank} lastWeek={item.lastWeekRank} compact />}
           </li>
         ))}
       </ol>
@@ -59,11 +63,13 @@ function TrendingListFull({
   label,
   items,
   pathPrefix,
+  showRankChange = true,
 }: {
   icon: string
   label: string
   items: TrendingEntry[]
   pathPrefix: string
+  showRankChange?: boolean
 }) {
   return (
     <div>
@@ -85,7 +91,7 @@ function TrendingListFull({
               >
                 {item.label}
               </Link>
-              <RankChange thisWeek={item.rank} lastWeek={item.lastWeekRank} compact={false} />
+              {showRankChange && <RankChange thisWeek={item.rank} lastWeek={item.lastWeekRank} compact={false} />}
             </li>
           ))}
         </ol>
@@ -95,39 +101,51 @@ function TrendingListFull({
 }
 
 /**
- * Self-contained server component — fetches trending data and renders the widget.
- * Silently renders nothing if the pageviews table doesn't exist yet.
+ * Self-contained server component — fetches top books/authors and renders the widget.
+ * Silently renders nothing if the pageviews table or relevant view doesn't exist.
  *
  * @param compact      Sidebar-friendly: no circles, tiny caps labels, flat rank numbers.
- * @param showHeader   Show the "Trending this week" heading (stats page uses this; sidebar manages its own).
+ * @param showHeader   Show the heading (stats page uses this; sidebar manages its own).
+ * @param mode         'this-week' uses v_top_*_this_week with rank-change vs last week;
+ *                     'all-time' uses v_top_*_all_time and hides rank-change.
  */
 export default async function TrendingWidget({
   compact = false,
   showHeader = true,
+  mode = 'this-week',
 }: {
   compact?: boolean
   showHeader?: boolean
+  mode?: Mode
 }) {
   const supabase = adminClient()
+  const isAllTime = mode === 'all-time'
+
+  const booksView   = isAllTime ? 'v_top_books_all_time'   : 'v_top_books_this_week'
+  const authorsView = isAllTime ? 'v_top_authors_all_time' : 'v_top_authors_this_week'
 
   let books: TrendingEntry[] = []
   let authors: TrendingEntry[] = []
 
   try {
     const [
-      { data: booksThisWeek },
+      { data: topBooks },
       { data: booksLastWeek },
-      { data: authorsThisWeek },
+      { data: topAuthors },
       { data: authorsLastWeek },
     ] = await Promise.all([
-      supabase.from('v_top_books_this_week').select('entity_id, views'),
-      supabase.from('v_top_books_last_week').select('entity_id, views'),
-      supabase.from('v_top_authors_this_week').select('entity_id, views'),
-      supabase.from('v_top_authors_last_week').select('entity_id, views'),
+      supabase.from(booksView).select('entity_id, views'),
+      isAllTime
+        ? Promise.resolve({ data: [] as { entity_id: number; views: number }[] })
+        : supabase.from('v_top_books_last_week').select('entity_id, views'),
+      supabase.from(authorsView).select('entity_id, views'),
+      isAllTime
+        ? Promise.resolve({ data: [] as { entity_id: number; views: number }[] })
+        : supabase.from('v_top_authors_last_week').select('entity_id, views'),
     ])
 
     // ── Books ──────────────────────────────────────────────────────────────────
-    const topBookEntries = (booksThisWeek ?? []).slice(0, 5)
+    const topBookEntries = (topBooks ?? []).slice(0, 5)
     const topBookIds = topBookEntries.map(r => Number(r.entity_id))
     if (topBookIds.length > 0) {
       const { data: bookDetails } = await supabase
@@ -154,7 +172,7 @@ export default async function TrendingWidget({
     }
 
     // ── Authors ────────────────────────────────────────────────────────────────
-    const topAuthorEntries = (authorsThisWeek ?? []).slice(0, 5)
+    const topAuthorEntries = (topAuthors ?? []).slice(0, 5)
     const topAuthorIds = topAuthorEntries.map(r => Number(r.entity_id))
     if (topAuthorIds.length > 0) {
       const { data: authorDetails } = await supabase
@@ -185,14 +203,16 @@ export default async function TrendingWidget({
 
   if (books.length === 0 && authors.length === 0) return null
 
+  const showRankChange = !isAllTime
+
   if (compact) {
     return (
       <div className="space-y-3">
         {books.length > 0 && (
-          <TrendingListCompact label="Books" items={books} pathPrefix="books" />
+          <TrendingListCompact label="Books" items={books} pathPrefix="books" showRankChange={showRankChange} />
         )}
         {authors.length > 0 && (
-          <TrendingListCompact label="Authors" items={authors} pathPrefix="authors" />
+          <TrendingListCompact label="Authors" items={authors} pathPrefix="authors" showRankChange={showRankChange} />
         )}
       </div>
     )
@@ -202,16 +222,20 @@ export default async function TrendingWidget({
     <div>
       {showHeader && (
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Trending this week</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Most visited in the last 7 days.</p>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            {isAllTime ? 'All-time most read' : 'Trending this week'}
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            {isAllTime ? 'Most visited since the catalogue launched.' : 'Most visited in the last 7 days.'}
+          </p>
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {books.length > 0 && (
-          <TrendingListFull icon="📚" label="Books" items={books} pathPrefix="books" />
+          <TrendingListFull icon="📚" label="Books" items={books} pathPrefix="books" showRankChange={showRankChange} />
         )}
         {authors.length > 0 && (
-          <TrendingListFull icon="✍️" label="Authors" items={authors} pathPrefix="authors" />
+          <TrendingListFull icon="✍️" label="Authors" items={authors} pathPrefix="authors" showRankChange={showRankChange} />
         )}
       </div>
     </div>
