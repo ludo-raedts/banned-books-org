@@ -122,6 +122,7 @@ export default function ScriptsPage() {
           <dl className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-6 gap-y-3 text-sm">
             {[
               ['Fill everything in one go (new books)', 'enrich-all.ts --apply'],
+              ['Fill everything except Gutenberg (skips slow step)', 'enrich-all.ts --apply --no-gutenberg'],
               ['Fill everything, skip OpenAI cost', 'enrich-all.ts --apply --free-only'],
               ['Add missing ISBNs', 'enrich-isbn.ts --apply'],
               ['Add missing cover images', 'enrich-covers-v2.ts --apply'],
@@ -150,7 +151,7 @@ export default function ScriptsPage() {
           </p>
           <Script
             name="enrich-all.ts"
-            what="Fills ISBN, covers, Gutenberg IDs, descriptions, ban descriptions, censorship context, and ban reason classifications in one pass."
+            what="Fills ISBN, covers (first-pass + v2 retries with pHash placeholder rejection), Gutenberg IDs, descriptions, ban descriptions, censorship context, and ban reason classifications in one pass."
             tags={['free', 'gpt']}
             command={`# Dry-run — shows eligible counts, no writes
 npx tsx --env-file=.env.local scripts/enrich-all.ts
@@ -158,17 +159,24 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts
 # Run all steps
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply
 
+# Update everything EXCEPT Gutenberg (Gutenberg is very slow)
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+
 # Skip OpenAI (no cost)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only
+
+# Free + skip Gutenberg — fastest "fill the gaps" run
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg
 
 # Cap GPT steps at 50 books each (incremental)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
             flags={[
               { flag: '--apply', desc: 'Write to database (omit for dry-run)' },
               { flag: '--free-only', desc: 'Skip all GPT steps, only run free API steps' },
+              { flag: '--no-gutenberg', desc: 'Skip the Gutenberg ID lookup step (it is slow; safe to skip on day-to-day runs)' },
               { flag: '--gpt-limit=N', desc: 'Cap each GPT step at N books (default 150)' },
             ]}
-            note="Run this after any bulk book import. Use --free-only first to fill what's available for free, then run without it to fill the rest with GPT."
+            note="Run this after any bulk book import. Use --free-only first to fill what's available for free, then run without it to fill the rest with GPT. Cover step uses the v2 placeholder-rejecting flow on retries — Google Books 'image not available' placeholders are pHash-checked and discarded."
           />
         </div>
 
@@ -217,6 +225,22 @@ npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug> --appl
               { flag: '--apply', desc: 'Write the change. Without it, prints what would change.' },
             ]}
             note="Use this when you've manually deleted a bad cover and want it gone forever."
+          />
+
+          <Script
+            name="audit-covers-for-placeholders.ts"
+            what="Retroactive sweep over existing Google Books cover URLs. Downloads each image, perceptual-hash-checks against the placeholder, and on match clears cover_url + sets cover_status='rejected_placeholder'. Skips manual_override. Non-Google URLs are not scanned (the pHash is the Google placeholder)."
+            tags={['free', 'destructive']}
+            command={`npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts
+npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply
+npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply --limit=500
+npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply --concurrency=8`}
+            flags={[
+              { flag: '--apply', desc: 'Write the changes. Without it, only reports what would change.' },
+              { flag: '--limit=N', desc: 'Cap at N books per run.' },
+              { flag: '--concurrency=N', desc: 'Parallel HTTP fetches (default 4).' },
+            ]}
+            note="Run a dry-run first to see the placeholder count before applying."
           />
 
           <Script

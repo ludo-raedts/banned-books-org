@@ -8,16 +8,17 @@
  * Steps
  * ─────
  *  Free (no API cost, always run):
- *   1. ISBN-13        — Open Library + Google Books
- *   2. Cover images   — Open Library + Google Books
- *   3. Gutenberg IDs  — Gutendex API
- *   4. Descriptions   — Open Library + Google Books (GPT fallback built-in)
+ *   1. ISBN-13              — Open Library + Google Books
+ *   2. Cover images         — Open Library + Google Books (first-pass)
+ *   3. Cover images (v2)    — title-only / Wikipedia retries with pHash placeholder rejection
+ *   4. Gutenberg IDs        — Gutendex API  (slow; skip with --no-gutenberg)
+ *   5. Descriptions         — Open Library + Google Books
  *
  *  GPT (skipped with --free-only, costs API credits):
- *   5. Descriptions (GPT fallback for books OL/GB couldn't find)
- *   6. Ban descriptions
- *   7. Censorship context
- *   8. Ban reason classification
+ *   6. Descriptions (GPT fallback for books OL/GB couldn't find)
+ *   7. Ban descriptions
+ *   8. Censorship context
+ *   9. Ban reason classification
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts
@@ -26,6 +27,8 @@
  *     → run all steps including GPT
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only
  *     → run only free steps (no OpenAI cost)
+ *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+ *     → skip the slow Gutenberg lookup step
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50
  *     → cap each GPT step at 50 books (useful for incremental runs)
  */
@@ -36,9 +39,10 @@ import { fileURLToPath } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const APPLY      = process.argv.includes('--apply')
-const FREE_ONLY  = process.argv.includes('--free-only')
-const GPT_LIMIT  = (() => {
+const APPLY        = process.argv.includes('--apply')
+const FREE_ONLY    = process.argv.includes('--free-only')
+const NO_GUTENBERG = process.argv.includes('--no-gutenberg')
+const GPT_LIMIT    = (() => {
   const a = process.argv.find(x => x.startsWith('--gpt-limit='))
   return a ? parseInt(a.split('=')[1], 10) : 150
 })()
@@ -55,6 +59,7 @@ type Step = {
   args: string[]
   gpt: boolean
   alwaysWrites?: boolean  // scripts with no dry-run mode
+  gutenberg?: boolean     // skipped with --no-gutenberg
 }
 
 const steps: Step[] = [
@@ -65,7 +70,7 @@ const steps: Step[] = [
     gpt: false,
   },
   {
-    name: 'Cover images',
+    name: 'Cover images (first-pass)',
     script: 'enrich-covers-continuous.ts',
     // --once = single pass (don't loop); also uses ISBN-13 which we enrich in step 1
     args: APPLY ? ['--once'] : ['--once'],
@@ -73,11 +78,18 @@ const steps: Step[] = [
     alwaysWrites: true,
   },
   {
+    name: 'Cover images (v2 retries + placeholder rejection)',
+    script: 'enrich-covers-v2.ts',
+    args: APPLY ? ['--apply'] : [],
+    gpt: false,
+  },
+  {
     name: 'Gutenberg IDs',
     script: 'enrich-gutenberg.ts',
     args: [],
     gpt: false,
     alwaysWrites: true,
+    gutenberg: true,
   },
   {
     name: 'Book descriptions (OL / Google Books)',
@@ -125,6 +137,10 @@ function run(step: Step, index: number, total: number): boolean {
     console.log(`  ⟶  skipped (--free-only)\n`)
     return true
   }
+  if (step.gutenberg && NO_GUTENBERG) {
+    console.log(`  ⟶  skipped (--no-gutenberg)\n`)
+    return true
+  }
   if (step.alwaysWrites && !APPLY) {
     console.log(`  ⟶  skipped in dry-run (this script always writes)\n`)
     return true
@@ -144,9 +160,10 @@ function run(step: Step, index: number, total: number): boolean {
 }
 
 async function main() {
-  const mode = APPLY
+  const modeBase = APPLY
     ? (FREE_ONLY ? 'APPLY — free steps only' : `APPLY — all steps (GPT limit: ${GPT_LIMIT}/step)`)
     : 'DRY-RUN'
+  const mode = NO_GUTENBERG ? `${modeBase} — no Gutenberg` : modeBase
 
   console.log(`\n${'═'.repeat(60)}`)
   console.log(`  enrich-all  [${mode}]`)
@@ -166,9 +183,13 @@ async function main() {
     const step = steps[i]
     const num = `[${i + 1}/${steps.length}]`
     const tag = step.gpt ? ' (GPT)' : ''
-    const skip = step.gpt && FREE_ONLY
+    const skipGpt = step.gpt && FREE_ONLY
+    const skipGut = step.gutenberg && NO_GUTENBERG
+    const skipMsg = skipGpt ? '  — skipped (--free-only)'
+                  : skipGut ? '  — skipped (--no-gutenberg)'
+                  : ''
 
-    banner(`${num} ${step.name}${tag}${skip ? '  — skipped' : ''}`)
+    banner(`${num} ${step.name}${tag}${skipMsg}`)
 
     const ok = run(step, i, steps.length)
     if (!ok) failed++
