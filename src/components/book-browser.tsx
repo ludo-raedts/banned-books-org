@@ -321,7 +321,7 @@ export default function BookBrowser({
       {/* ── TOP: Hero + Search + Featured / News sidebar ── */}
       <div className={!isSearching && hasNews ? 'lg:grid lg:grid-cols-3 lg:gap-5' : undefined}>
 
-        <div className={`flex flex-col gap-3${hasNews ? ' lg:col-span-2' : ''}`}>
+        <div className={`flex flex-col gap-5${hasNews ? ' lg:col-span-2' : ''}`}>
 
           {/* Search */}
           <div ref={searchWrapperRef}>
@@ -341,7 +341,7 @@ export default function BookBrowser({
                 onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
                 onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
                 onKeyDown={handleSearchKeyDown}
-                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand transition-colors min-h-[60px] shadow-md hover:shadow-lg ${q ? 'pr-11' : 'pr-4'}`}
+                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
               />
               {q && (
                 <button
