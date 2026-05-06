@@ -301,7 +301,7 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --l
 
           <Script
             name="enrich-author-bios.ts"
-            what="Fills missing author bios, birth year, death year, birth country, and photos using Wikipedia as primary source. Only touches authors with no bio — safe to re-run. Does not hallucinate — only writes when Wikipedia returns a relevant article."
+            what="Fills missing author bios, birth year, death year, birth country, and photos using Wikipedia as primary source. Only touches authors with no bio — safe to re-run. Does not hallucinate — only writes when Wikipedia returns a relevant article. Use --photos-only to backfill pictures for authors who already have a bio (e.g. when their Wikipedia page now has an infobox image, or when the bio was filled manually)."
             tags={['free']}
             command={`# Dry-run — shows what would be filled, no writes
 npx tsx --env-file=.env.local scripts/enrich-author-bios.ts
@@ -310,10 +310,14 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts
 npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply
 
 # Fill up to 200 authors
-npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply --limit=200`}
+npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply --limit=200
+
+# Backfill missing photos for authors who already have a bio
+npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --apply --limit=500`}
             flags={[
               { flag: '--apply', desc: 'Write bio, birth_year, death_year, birth_country, photo_url to DB' },
               { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
+              { flag: '--photos-only', desc: 'Only target authors with bio but no photo; write only photo_url, leave bio/birth/death untouched' },
             ]}
             note="Wikipedia intro extract is used as-is (HTML stripped). Censorship mentions in the full article are appended if not already in the intro. Birth/death years are extracted from Wikipedia categories."
           />

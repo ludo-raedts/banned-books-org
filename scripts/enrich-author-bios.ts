@@ -1,20 +1,28 @@
 /**
  * Enrich author records in Supabase using Wikipedia as the primary source.
  *
- * For each author without a bio (bio IS NULL) and with a non-null slug:
+ * Default mode — for each author without a bio (bio IS NULL):
  *   1. Search Wikipedia for the author's name
  *   2. Fetch intro extract, birth year, death year, nationality/country, photo
  *   3. Write bio, birth_year, death_year, birth_country, photo_url to DB
  *
+ * --photos-only mode — for each author with a bio but no photo
+ * (bio IS NOT NULL AND photo_url IS NULL): fetch and write only photo_url,
+ * leaving the existing bio and dates untouched. Use this to backfill
+ * pictures for authors who were enriched before they had a Wikipedia infobox
+ * thumbnail, or whose bio was filled manually.
+ *
  * Usage:
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts              # dry-run, up to 50
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply      # write to DB
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --limit=10   # cap at 10
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts                  # dry-run, up to 50
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply          # write to DB
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --limit=10       # cap at 10
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --apply
  */
 
 import { adminClient } from '../src/lib/supabase'
 
 const APPLY = process.argv.includes('--apply')
+const PHOTOS_ONLY = process.argv.includes('--photos-only')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
 const DELAY_MS = 200
@@ -261,29 +269,34 @@ function buildBio(params: {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log(`\n── enrich-author-bios (${APPLY ? 'APPLY' : 'DRY-RUN'}, limit=${LIMIT}) ──\n`)
+  const mode = PHOTOS_ONLY ? 'photos-only' : 'bios'
+  console.log(`\n── enrich-author-bios (${APPLY ? 'APPLY' : 'DRY-RUN'}, mode=${mode}, limit=${LIMIT}) ──\n`)
 
   const supabase = adminClient()
 
-  const { data, error } = await supabase
+  const baseQuery = supabase
     .from('authors')
     .select('id, display_name, slug')
-    .is('bio', null)
     .not('slug', 'is', null)
     .order('display_name')
     .limit(LIMIT)
+
+  const { data, error } = PHOTOS_ONLY
+    ? await baseQuery.not('bio', 'is', null).is('photo_url', null)
+    : await baseQuery.is('bio', null)
 
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
   type AuthorRow = { id: number; display_name: string; slug: string }
   const authors = (data ?? []) as AuthorRow[]
 
+  const target = PHOTOS_ONLY ? 'with bio but no photo' : 'without bio'
   if (authors.length === 0) {
-    console.log('No authors without bio found.')
+    console.log(`No authors ${target} found.`)
     return
   }
 
-  console.log(`Found ${authors.length} author(s) without bio.\n`)
+  console.log(`Found ${authors.length} author(s) ${target}.\n`)
 
   let enriched = 0
   let skipped = 0
@@ -303,6 +316,25 @@ async function main() {
       // 2. Fetch page details (extract + photo + categories)
       const { extract, photo, categories } = await fetchPageDetails(pageId)
       await sleep(DELAY_MS)
+
+      // ── Photos-only branch: only the thumbnail matters ────────────────
+      if (PHOTOS_ONLY) {
+        if (!photo) {
+          console.log(`✗ ${author.display_name} — no Wikipedia thumbnail`)
+          skipped++
+          continue
+        }
+        console.log(`✓ ${author.display_name} — photo: ${photo}`)
+        if (APPLY) {
+          const { error: ue } = await supabase
+            .from('authors')
+            .update({ photo_url: photo })
+            .eq('id', author.id)
+          if (ue) { console.error(`  DB error: ${ue.message}`); skipped++; continue }
+        }
+        enriched++
+        continue
+      }
 
       if (!extract) {
         console.log(`✗ ${author.display_name} — no extract from Wikipedia`)
