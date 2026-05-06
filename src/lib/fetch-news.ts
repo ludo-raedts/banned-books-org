@@ -7,6 +7,7 @@ export const FEEDS = [
   { name: 'Index on Censorship',    url: 'https://www.indexoncensorship.org/feed/' },
   { name: 'Publishers Weekly',      url: 'https://www.publishersweekly.com/pw/feeds/news.xml' },
   { name: 'Freedom to Read Canada', url: 'https://www.freedomtoread.ca/feed/' },
+  { name: 'Google News — banned books', url: 'https://news.google.com/rss/search?q=banned+books&hl=en-US&gl=US&ceid=US:en' },
 ]
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000

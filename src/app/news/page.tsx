@@ -115,10 +115,19 @@ export default async function NewsPage() {
     <main className="max-w-4xl mx-auto px-6 py-8">
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Latest</p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">News</h1>
+        <div className="flex items-baseline justify-between gap-4 mb-2">
+          <h1 className="text-3xl font-bold tracking-tight">News</h1>
+          <a
+            href="/feed.xml"
+            type="application/rss+xml"
+            className="text-xs text-brand/80 hover:text-brand underline underline-offset-2 shrink-0"
+          >
+            RSS feed
+          </a>
+        </div>
         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           News about book bans, censorship, and literary freedom worldwide.
-          Sourced from PEN America, Index on Censorship, Publishers Weekly, and Freedom to Read Canada.
+          Sourced from PEN America, Index on Censorship, Publishers Weekly, Freedom to Read Canada, and Google News.
         </p>
       </div>
 

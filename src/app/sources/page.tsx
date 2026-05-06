@@ -41,6 +41,12 @@ const SOURCES = [
     description:
       'Index on Censorship is a UK-based organisation that publishes reports and case studies on censorship globally, including book bans and literary suppression across different political systems.',
   },
+  {
+    name: 'Google News — "banned books"',
+    url: 'https://news.google.com/rss/search?q=banned+books&hl=en-US&gl=US&ceid=US:en',
+    description:
+      'Aggregated news search for "banned books" from Google News, ingested as an RSS feed. Casts a wider net than dedicated press-freedom outlets and surfaces local US reporting on school and library challenges as it emerges.',
+  },
 ]
 
 export default function SourcesPage() {

@@ -77,10 +77,8 @@ export default function RootLayout({
         </header>
         <div className="flex-1">{children}</div>
         <footer className="border-t border-gray-200 dark:border-gray-800 mt-10">
-          <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-3 text-xs text-gray-400 dark:text-gray-500">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0">
-            <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>
-            <nav className="flex flex-wrap gap-x-5 gap-y-1">
+          <div className="max-w-5xl mx-auto px-4 py-6 text-xs text-gray-400 dark:text-gray-500">
+            <nav className="flex flex-wrap gap-x-5 gap-y-2">
               <Link href="/countries" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Countries</Link>
               <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Stats</Link>
               <Link href="/reasons" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reasons</Link>
@@ -93,12 +91,15 @@ export default function RootLayout({
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
               <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>
               <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Classics</Link>
+              <a href="/feed.xml" type="application/rss+xml" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">RSS feed</a>
             </nav>
-            <Link href="/admin/login" className="text-xs text-gray-300 dark:text-gray-700 hover:text-gray-500 dark:hover:text-gray-500 transition-colors mt-1 sm:mt-0 sm:ml-5">Admin</Link>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed border-t border-gray-100 dark:border-gray-900 pt-3">
-            Some outbound book links may be affiliate links. They help support this project at no extra cost to you.
-          </p>
+            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-900 flex flex-wrap items-center justify-between gap-3">
+              <span>Banned Books — an open catalogue of censored literature</span>
+              <Link href="/admin/login" className="text-gray-300 dark:text-gray-700 hover:text-gray-500 dark:hover:text-gray-500 transition-colors">Admin</Link>
+            </div>
+            <p className="mt-2 leading-relaxed">
+              Some outbound book links may be affiliate links. They help support this project at no extra cost to you.
+            </p>
           </div>
         </footer>
         <AnalyticsWrapper />
