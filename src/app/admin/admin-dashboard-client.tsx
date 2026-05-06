@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
 
@@ -566,52 +566,51 @@ export default function AdminDashboardClient({
           </p>
         </div>
 
-        {/* Materialized views card */}
-        <div className={`${cardCls} col-span-full`}>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                Pre-aggregated data used by the countries and stats pages. Refresh after bulk imports.
-              </p>
-            </div>
-            <button
-              onClick={handleRefreshViews}
-              disabled={refreshState === 'loading'}
-              className="shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
-            >
-              {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
-            </button>
+        {/* Materialized views — slim card */}
+        <div className={cardCls}>
+          <RefreshCw className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Pre-aggregated data for countries and stats pages.
+            </p>
           </div>
-          <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm mt-1">
-            <dt className="text-gray-500 dark:text-gray-400">Data last changed</dt>
-            <dd className="tabular-nums">
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
+            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
               {dataLastChanged
                 ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
                 : <span className="text-gray-400">—</span>}
             </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Views last refreshed</dt>
-            <dd className="tabular-nums">
+            <dt className="text-gray-500 dark:text-gray-400">Last refresh</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
               {lastRefreshed
                 ? new Date(lastRefreshed).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
                 : <span className="text-gray-400">—</span>}
             </dd>
           </dl>
+          <button
+            onClick={handleRefreshViews}
+            disabled={refreshState === 'loading'}
+            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          >
+            {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
+          </button>
           {refreshMsg && (
-            <p className={`text-xs mt-1 ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+            <p className={`text-xs ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
               {refreshMsg}
             </p>
           )}
         </div>
 
-        {/* Row 4 — Quick actions (full width) */}
-        <div className={`${cardCls} col-span-full`}>
+        {/* Quick actions — slim card */}
+        <div className={cardCls}>
           <Zap className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           <div>
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Quick actions</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Common tasks.</p>
           </div>
-          <div className="flex flex-col gap-2 text-sm mt-1">
+          <div className="flex flex-col gap-1.5 text-sm mt-1">
             <a
               href="/admin/scripts"
               className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
