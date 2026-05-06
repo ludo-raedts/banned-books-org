@@ -11,6 +11,12 @@
  *   3. OL stripped-subtitle search (e.g. "1984: The Graphic Novel" → "1984")
  *   4. Wikipedia page thumbnail (covers notable/well-known books)
  *
+ * Google Books URLs are perceptual-hash-checked against the official
+ * "image not available" placeholder; matches are discarded and the book
+ * is marked cover_status='rejected_placeholder' so future runs skip it.
+ * Books with cover_status in (rejected_placeholder, manual_override) are
+ * skipped unless --force is passed.
+ *
  * By default, processes all books in the skip list that have NOT yet had
  * the new strategies tried. Use --reset to re-run on all skip list books.
  *
@@ -19,12 +25,15 @@
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --limit=100
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --reset
+ *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { checkImageUrl, getPlaceholderHash, PLACEHOLDER_HAMMING_THRESHOLD } from './lib/placeholder'
 
 const APPLY    = process.argv.includes('--apply')
 const RESET    = process.argv.includes('--reset')
+const FORCE    = process.argv.includes('--force')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1]) : Infinity
 
@@ -153,26 +162,36 @@ type BookRow = {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log(`\n── enrich-covers-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
-  console.log(`Strategies: GB title-only → OL title-only → OL stripped subtitle → Wikipedia\n`)
+  console.log(`\n── enrich-covers-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}${FORCE ? ', FORCE' : ''}) ──`)
+  console.log(`Strategies: GB title-only → OL title-only → OL stripped subtitle → Wikipedia`)
+
+  const placeholderHash = await getPlaceholderHash()
+  console.log(`Placeholder hash: ${placeholderHash}  (Hamming threshold: ${PLACEHOLDER_HAMMING_THRESHOLD})\n`)
 
   const supabase = adminClient()
 
-  const { data: eligible, error } = await supabase
+  let query = supabase
     .from('books')
     .select(`
-      id, slug, title, openlibrary_work_id,
+      id, slug, title, openlibrary_work_id, cover_status,
       cover_search_attempts!inner(sources_tried),
       book_authors!left(authors!left(display_name))
     `)
     .is('cover_url', null)
     .order('title')
 
+  if (!FORCE) {
+    query = query.or('cover_status.is.null,cover_status.eq.valid')
+  }
+
+  const { data: eligible, error } = await query
+
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
   type RawRow = {
     id: number; slug: string; title: string
     openlibrary_work_id: string | null
+    cover_status: string | null
     cover_search_attempts: Array<{ sources_tried: string[] }>
     book_authors: Array<{ authors: { display_name: string } | null }> | null
   }
@@ -206,7 +225,21 @@ async function main() {
 
   const dryRunLimit = APPLY ? batch.length : Math.min(10, batch.length)
 
-  let found = 0, stillFailed = 0
+  // Verified GB search: discards URLs whose perceptual hash matches the
+  // Google Books placeholder. Mutates `tracker.sawPlaceholder` so the caller
+  // can mark the book rejected_placeholder if no other source finds a cover.
+  async function gbSearchVerified(q: string, tracker: { sawPlaceholder: boolean }): Promise<string | null> {
+    const url = await gbSearch(q)
+    if (!url) return null
+    const check = await checkImageUrl(url)
+    if (check.ok === false && check.reason === 'placeholder') {
+      tracker.sawPlaceholder = true
+      return null
+    }
+    return url
+  }
+
+  let found = 0, stillFailed = 0, rejectedPlaceholder = 0
   const foundBySource: Record<string, number> = {}
   const errors: string[] = []
   const start = Date.now()
@@ -220,13 +253,14 @@ async function main() {
     let coverUrl: string | null = null
     let source = ''
     const newSources: string[] = []
+    const placeholderTracker = { sawPlaceholder: false }
 
     try {
       // 1. Google Books title-only — intitle: operator, then plain query fallback for special chars
       if (!coverUrl) {
         newSources.push('gb_title_only')
-        coverUrl = await gbSearch(`intitle:${book.title}`)
-          ?? await gbSearch(book.title)
+        coverUrl = await gbSearchVerified(`intitle:${book.title}`, placeholderTracker)
+          ?? await gbSearchVerified(book.title, placeholderTracker)
         if (coverUrl) source = 'GB-title-only'
       }
 
@@ -262,13 +296,18 @@ async function main() {
       continue
     }
 
+    const nowIso = new Date().toISOString()
+
     if (coverUrl) {
       if (!APPLY) {
         console.log(`✓ ${source}: ${coverUrl.slice(0, 55)}`)
         foundBySource[source] = (foundBySource[source] ?? 0) + 1
         found++
       } else {
-        const { error: ue } = await supabase.from('books').update({ cover_url: coverUrl }).eq('id', book.id)
+        const { error: ue } = await supabase
+          .from('books')
+          .update({ cover_url: coverUrl, cover_status: 'valid', cover_checked_at: nowIso })
+          .eq('id', book.id)
         if (ue) {
           console.log(`DB error: ${ue.message}`)
           errors.push(`${book.title}: DB error ${ue.message}`)
@@ -280,12 +319,35 @@ async function main() {
           foundBySource[source] = (foundBySource[source] ?? 0) + 1
         }
       }
+    } else if (placeholderTracker.sawPlaceholder) {
+      if (!APPLY) {
+        console.log(`✗ placeholder (would mark rejected_placeholder)`)
+        rejectedPlaceholder++
+      } else {
+        const { error: ue } = await supabase
+          .from('books')
+          .update({ cover_status: 'rejected_placeholder', cover_checked_at: nowIso })
+          .eq('id', book.id)
+        if (ue) {
+          console.log(`DB error: ${ue.message}`)
+          errors.push(`${book.title}: DB error ${ue.message}`)
+          stillFailed++
+        } else {
+          const allSources = [...new Set([...book.prevSources, ...newSources])]
+          await supabase.from('cover_search_attempts').upsert(
+            { book_id: book.id, last_searched_at: nowIso, sources_tried: allSources },
+            { onConflict: 'book_id' },
+          )
+          console.log(`✗ placeholder → rejected_placeholder`)
+          rejectedPlaceholder++
+        }
+      }
     } else {
       console.log(`— not found`)
       if (APPLY) {
         const allSources = [...new Set([...book.prevSources, ...newSources])]
         await supabase.from('cover_search_attempts').upsert(
-          { book_id: book.id, last_searched_at: new Date().toISOString(), sources_tried: allSources },
+          { book_id: book.id, last_searched_at: nowIso, sources_tried: allSources },
           { onConflict: 'book_id' },
         )
         stillFailed++
@@ -298,12 +360,13 @@ async function main() {
   const elapsed = ((Date.now() - start) / 1000).toFixed(1)
   console.log(`\n── Summary ──`)
   if (APPLY) {
-    console.log(`Found:           ${found}`)
+    console.log(`Found:                 ${found}`)
     Object.entries(foundBySource).forEach(([s, n]) => console.log(`  via ${s}: ${n}`))
-    console.log(`Still not found: ${stillFailed}`)
+    console.log(`Rejected (placeholder): ${rejectedPlaceholder}`)
+    console.log(`Still not found:       ${stillFailed}`)
     if (errors.length) { console.log(`Errors: ${errors.length}`); errors.forEach(e => console.log(`  ✗ ${e}`)) }
   } else {
-    console.log(`Dry-run: ${found}/${dryRunLimit} found. Re-run with --apply to write.`)
+    console.log(`Dry-run: ${found}/${dryRunLimit} would-be-found, ${rejectedPlaceholder} placeholder. Re-run with --apply to write.`)
     Object.entries(foundBySource).forEach(([s, n]) => console.log(`  via ${s}: ${n}`))
   }
   console.log(`Time: ${elapsed}s\n`)

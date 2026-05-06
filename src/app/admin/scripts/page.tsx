@@ -191,16 +191,32 @@ npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
 
           <Script
             name="enrich-covers-v2.ts"
-            what="Fetches missing cover images using 4 strategies: Google Books (title-only), Open Library (title-only, stripped subtitle), Wikipedia thumbnail."
+            what="Fetches missing cover images using 4 strategies: Google Books (title-only), Open Library (title-only, stripped subtitle), Wikipedia thumbnail. Google Books URLs are perceptual-hash-checked against the official 'image not available' placeholder; matches are rejected and the book is marked cover_status='rejected_placeholder' so future runs skip it."
             tags={['free']}
             command={`npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply
 npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --limit=100
-npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --reset`}
+npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --reset
+npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force`}
             flags={[
-              { flag: '--apply', desc: 'Write cover_url to database' },
+              { flag: '--apply', desc: 'Write cover_url / cover_status to database' },
               { flag: '--limit=N', desc: 'Cap at N books per run' },
               { flag: '--reset', desc: 'Re-try all previously failed books (not just new ones)' },
+              { flag: '--force', desc: 'Bypass cover_status skip (re-check rejected_placeholder & manual_override)' },
             ]}
+            note="Reference image lives at assets/google-books-placeholder.png. Hamming threshold = 5."
+          />
+
+          <Script
+            name="mark-cover-override.ts"
+            what="Permanently mark a book's cover as a manual override: clears cover_url, sets cover_status='manual_override', cover_checked_at=now(). enrich-covers-v2 will skip the book on every run unless --force."
+            tags={['safe']}
+            command={`npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug>
+npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug> --apply`}
+            flags={[
+              { flag: '<id-or-slug>', desc: 'Numeric book id or slug. Required.' },
+              { flag: '--apply', desc: 'Write the change. Without it, prints what would change.' },
+            ]}
+            note="Use this when you've manually deleted a bad cover and want it gone forever."
           />
 
           <Script
