@@ -1,6 +1,7 @@
 import { adminClient } from '@/lib/supabase'
 import AdminDashboardClient from './admin-dashboard-client'
 import type { TrendingBookRow, TrendingAuthorRow } from './admin-dashboard-client'
+import { SITEMAP_STATIC_ENTRIES } from '@/lib/sitemap-static-entries'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +16,9 @@ export default async function AdminPage() {
     { count: noDescCount },
     { data: countryRows },
     { data: refreshLog },
+    { count: sitemapBookCount },
+    { count: sitemapAuthorCount },
+    { count: sitemapReasonCount },
   ] = await Promise.all([
     // rows: 0 (count only) × 5 | reason: dashboard stat cards
     supabase.from('books').select('*', { count: 'exact', head: true }),
@@ -26,6 +30,10 @@ export default async function AdminPage() {
     supabase.from('bans').select('country_code').range(0, 9999),
     // rows: 2 | reason: materialized view freshness card
     supabase.from('mv_refresh_log').select('key, updated_at'),
+    // rows: 0 (count only) × 3 | reason: sitemap card — match sub-sitemap WHERE clauses
+    supabase.from('books').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
+    supabase.from('authors').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
+    supabase.from('reasons').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
   ])
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
@@ -156,6 +164,13 @@ export default async function AdminPage() {
       referrersLastWeek={referrersLastWeek}
       dataLastChanged={dataLastChanged}
       viewsLastRefreshed={viewsLastRefreshed}
+      sitemapCounts={{
+        static: SITEMAP_STATIC_ENTRIES.length,
+        books: sitemapBookCount ?? 0,
+        authors: sitemapAuthorCount ?? 0,
+        countries: countryCount,
+        reasons: sitemapReasonCount ?? 0,
+      }}
     />
   )
 }

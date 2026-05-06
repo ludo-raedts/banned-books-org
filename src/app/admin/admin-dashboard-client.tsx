@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
 
@@ -222,6 +222,13 @@ interface Props {
   referrersLastWeek: ReferrerViewRow[]
   dataLastChanged: string | null
   viewsLastRefreshed: string | null
+  sitemapCounts: {
+    static: number
+    books: number
+    authors: number
+    countries: number
+    reasons: number
+  }
 }
 
 function RankChange({ thisWeekRank, lastWeekRank }: { thisWeekRank: number; lastWeekRank: number | null }) {
@@ -283,7 +290,7 @@ export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount, noCoverCount, noDescCount,
   trendingBooks, trendingAuthors, viewsThisWeek, viewsLastWeek, firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
-  dataLastChanged, viewsLastRefreshed,
+  dataLastChanged, viewsLastRefreshed, sitemapCounts,
 }: Props) {
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [fetchMsg, setFetchMsg] = useState('')
@@ -480,6 +487,68 @@ export default function AdminDashboardClient({
 
         {/* Row 4 — Data quality (full width) */}
         <DataQualityCard />
+
+        {/* Sitemap card */}
+        <div className={`${cardCls} col-span-full`}>
+          <MapIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Sitemap</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Sitemap index split per content type so Google can crawl efficiently.
+            </p>
+          </div>
+          <div className="mt-1 text-sm">
+            <a
+              href="/sitemap.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors font-mono"
+            >
+              /sitemap.xml
+            </a>
+            <span className="text-gray-400 dark:text-gray-500"> — sitemap index</span>
+          </div>
+          <dl className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1.5 text-sm mt-1 items-baseline">
+            {([
+              ['/sitemap-static.xml', sitemapCounts.static, 'homepage, nav, year roll-ups, scope'],
+              ['/sitemap-books.xml', sitemapCounts.books, 'books with a slug'],
+              ['/sitemap-authors.xml', sitemapCounts.authors, 'authors with a slug'],
+              ['/sitemap-countries.xml', sitemapCounts.countries, 'countries with at least one ban'],
+              ['/sitemap-reasons.xml', sitemapCounts.reasons, 'reason taxonomy pages'],
+            ] as const).map(([path, count, note]) => (
+              <div key={path} className="contents">
+                <dt>
+                  <a
+                    href={path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors font-mono"
+                  >
+                    {path}
+                  </a>
+                </dt>
+                <dd className="tabular-nums font-medium text-gray-900 dark:text-gray-100">
+                  {count.toLocaleString()}
+                </dd>
+                <dd className="text-xs text-gray-500 dark:text-gray-400">{note}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            Total:{' '}
+            <span className="tabular-nums">
+              {(
+                sitemapCounts.static +
+                sitemapCounts.books +
+                sitemapCounts.authors +
+                sitemapCounts.countries +
+                sitemapCounts.reasons
+              ).toLocaleString()}
+            </span>{' '}
+            URLs. Excluded: search, filter/query-string variants, pagination,{' '}
+            <code>/admin</code>, <code>/api</code>.
+          </p>
+        </div>
 
         {/* Materialized views card */}
         <div className={`${cardCls} col-span-full`}>
