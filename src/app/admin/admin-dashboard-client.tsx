@@ -63,7 +63,7 @@ function MiniBar({ value, max, color }: { value: number; max: number; color: 're
   )
 }
 
-function VisitorsCard({
+function TrafficCard({
   countriesThisWeek, countriesLastWeek,
   referrersThisWeek, referrersLastWeek,
   viewsThisWeek, viewsLastWeek,
@@ -82,6 +82,7 @@ function VisitorsCard({
   const countries = week === 'this' ? countriesThisWeek : countriesLastWeek
   const referrers = week === 'this' ? referrersThisWeek : referrersLastWeek
   const totalViews = week === 'this' ? viewsThisWeek : viewsLastWeek
+  const compareViews = week === 'this' ? viewsLastWeek : viewsThisWeek
 
   const countryLastWeekMap = new Map(countriesLastWeek.map(r => [r.country, r.views]))
   const referrerLastWeekMap = new Map(referrersLastWeek.map(r => [r.referrer_host, r.views]))
@@ -94,14 +95,19 @@ function VisitorsCard({
   const knownReferrerViews = referrers.reduce((sum, r) => sum + r.views, 0)
   const directViews = Math.max(0, totalViews - knownReferrerViews)
 
+  const totalDelta = totalViews - compareViews
+  const totalPct = compareViews > 0 ? Math.round((totalDelta / compareViews) * 100) : null
+
   const isEmpty = countries.length === 0 && referrers.length === 0
 
   return (
     <div className={`${cardCls} col-span-full`}>
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Visitors</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Where visitors come from and how they find the site.</p>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Traffic</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            Page views by country and referrer.
+          </p>
         </div>
         <div className="flex gap-1 shrink-0">
           {(['this', 'last'] as const).map(w => (
@@ -120,9 +126,29 @@ function VisitorsCard({
         </div>
       </div>
 
+      {/* Headline stat — page views for the selected week */}
+      <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 dark:border-gray-800 py-4 -mx-2 px-2">
+        <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-none">
+          {totalViews.toLocaleString()}
+        </span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">page views</span>
+        {totalPct !== null && (
+          <span className={`text-xs font-medium tabular-nums ${
+            totalPct > 0 ? 'text-emerald-600 dark:text-emerald-400' :
+            totalPct < 0 ? 'text-red-500' :
+            'text-gray-400'
+          }`}>
+            {totalPct > 0 ? `↑ ${totalPct}%` : totalPct < 0 ? `↓ ${Math.abs(totalPct)}%` : '→ 0%'}
+            <span className="text-gray-400 dark:text-gray-500 font-normal ml-1">
+              vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString()})
+            </span>
+          </span>
+        )}
+      </div>
+
       {isEmpty ? (
         <p className="text-sm text-gray-400 dark:text-gray-500 italic text-center py-8">
-          No visitor data yet for this period.
+          No traffic data yet for this period.
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-2">
@@ -209,8 +235,6 @@ interface Props {
   newsCount: number
   banCount: number
   countryCount: number
-  noCoverCount: number
-  noDescCount: number
   trendingBooks: TrendingBookRow[]
   trendingAuthors: TrendingAuthorRow[]
   viewsThisWeek: number
@@ -254,31 +278,49 @@ function TrendingSection({
   linkPrefix: string
   nameKey: 'title' | 'name'
 }) {
+  const [first, ...rest] = items
   return (
     <div>
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-        {icon} {label}
+      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1.5">
+        <span aria-hidden>{icon}</span>
+        <span>{label}</span>
       </p>
       {items.length === 0 ? (
         <p className="text-sm text-gray-400 dark:text-gray-500 italic">No data yet.</p>
       ) : (
-        <div className="flex flex-col gap-1.5">
-          {items.map(item => (
-            <div key={item.entityId} className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-800 text-xs flex items-center justify-center text-gray-500 dark:text-gray-400 shrink-0 tabular-nums">
-                {item.rank}
-              </span>
-              <Link
-                href={`/${linkPrefix}/${item.slug}`}
-                className="text-sm text-gray-900 dark:text-gray-100 truncate max-w-[160px] hover:text-red-700 dark:hover:text-red-400"
-              >
+        <div className="flex flex-col">
+          {/* #1 — promoted */}
+          <Link
+            href={`/${linkPrefix}/${first.slug}`}
+            className="group flex items-baseline gap-3 py-2 px-2 -mx-2 rounded-md hover:bg-brand-light/40 dark:hover:bg-brand/10 transition-colors"
+          >
+            <span className="text-base font-bold text-brand tabular-nums shrink-0 w-5 text-center leading-none">1</span>
+            <span className="flex-1 min-w-0 text-[0.95rem] font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-brand dark:group-hover:text-red-400">
+              {(first as any)[nameKey]}
+            </span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums shrink-0">
+              {first.views.toLocaleString()}
+            </span>
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 shrink-0 -ml-1">views</span>
+            <RankChange thisWeekRank={first.rank} lastWeekRank={first.lastWeekRank} />
+          </Link>
+
+          {/* #2-5 — slim rows */}
+          {rest.map(item => (
+            <Link
+              key={item.entityId}
+              href={`/${linkPrefix}/${item.slug}`}
+              className="group flex items-baseline gap-3 py-1 px-2 -mx-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
+            >
+              <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums shrink-0 w-5 text-center leading-none">{item.rank}</span>
+              <span className="flex-1 min-w-0 text-sm text-gray-700 dark:text-gray-300 truncate group-hover:text-brand dark:group-hover:text-red-400">
                 {(item as any)[nameKey]}
-              </Link>
-              <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto shrink-0 tabular-nums">
-                {item.views.toLocaleString()} views
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
+                {item.views.toLocaleString()}
               </span>
               <RankChange thisWeekRank={item.rank} lastWeekRank={item.lastWeekRank} />
-            </div>
+            </Link>
           ))}
         </div>
       )}
@@ -287,7 +329,7 @@ function TrendingSection({
 }
 
 export default function AdminDashboardClient({
-  bookCount, newsCount, banCount, countryCount, noCoverCount, noDescCount,
+  bookCount, newsCount, banCount, countryCount,
   trendingBooks, trendingAuthors, viewsThisWeek, viewsLastWeek, firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
   dataLastChanged, viewsLastRefreshed, sitemapCounts,
@@ -329,20 +371,16 @@ export default function AdminDashboardClient({
     }
   }
 
-  // ── Weekly views delta ────────────────────────────────────────────────────────
-  const viewsDelta = viewsThisWeek - viewsLastWeek
-  const viewsPct = viewsLastWeek > 0 ? Math.round((viewsDelta / viewsLastWeek) * 100) : null
-
   const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <main className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-8">
         <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">banned-books.org</p>
         <h1 className="text-2xl font-bold">Admin</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Row 1 — Books */}
         <a href="/admin/books" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
@@ -408,33 +446,11 @@ export default function AdminDashboardClient({
             <dd className="tabular-nums font-medium">{banCount.toLocaleString()}</dd>
             <dt className="text-gray-500 dark:text-gray-400">Countries</dt>
             <dd className="tabular-nums font-medium">{countryCount}</dd>
-            <dt className="text-gray-500 dark:text-gray-400">No cover</dt>
-            <dd className="tabular-nums font-medium">{noCoverCount.toLocaleString()}</dd>
-            <dt className="text-gray-500 dark:text-gray-400">No description</dt>
-            <dd className="tabular-nums font-medium">{noDescCount.toLocaleString()}</dd>
-          </dl>
-          <hr className="my-0 border-gray-100 dark:border-gray-800" />
-          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-            <dt className="text-gray-500 dark:text-gray-400">Views this week</dt>
-            <dd className="tabular-nums font-medium flex items-center gap-0">
-              {viewsThisWeek.toLocaleString()}
-              {viewsPct !== null && (
-                <span className={`text-xs ml-2 ${
-                  viewsPct > 0 ? 'text-green-600' :
-                  viewsPct < 0 ? 'text-red-500' :
-                  'text-gray-400'
-                }`}>
-                  {viewsPct > 0 ? `↑ ${viewsPct}%` : viewsPct < 0 ? `↓ ${Math.abs(viewsPct)}%` : '→ 0%'}
-                </span>
-              )}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Views last week</dt>
-            <dd className="tabular-nums font-medium">{viewsLastWeek.toLocaleString()}</dd>
           </dl>
         </div>
 
-        {/* Row 2 — Trending */}
-        <div className={cardCls}>
+        {/* Row 2 — Trending — spans 2 cols on lg */}
+        <div className={`${cardCls} lg:col-span-2`}>
           <TrendingUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           <div>
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Trending this week</h2>
@@ -446,7 +462,7 @@ export default function AdminDashboardClient({
               No data yet. Views appear once the site receives production traffic.
             </p>
           ) : (
-            <div className="flex flex-col gap-5 mt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 mt-1">
               <TrendingSection
                 icon="📚"
                 label="Books"
@@ -474,8 +490,8 @@ export default function AdminDashboardClient({
           )}
         </div>
 
-        {/* Row 3 — Visitors (full width) */}
-        <VisitorsCard
+        {/* Row 3 — Traffic (full width) */}
+        <TrafficCard
           countriesThisWeek={countriesThisWeek}
           countriesLastWeek={countriesLastWeek}
           referrersThisWeek={referrersThisWeek}
