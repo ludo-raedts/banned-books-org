@@ -229,7 +229,12 @@ export default async function AboutPage() {
             <p>
               We link to legal purchase options for every book (Bookshop.org, Kobo). We deliberately do not link to Amazon,
               which has itself been involved in book removal decisions. We link to free Project Gutenberg texts where available.
-              We do not profit from these links — this is not an affiliate site.
+            </p>
+            <p>
+              Some outbound book links are Bookshop.org affiliate links. They help support
+              independent bookstores and this project at no extra cost to you. We do not run
+              tracking pixels, third-party scripts, or sponsored content alongside the catalogue,
+              and the affiliate links never determine which books we include.
             </p>
             <p>
               Banned Books is editorially independent. It receives no funding from publishers, governments, political

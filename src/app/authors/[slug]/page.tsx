@@ -10,6 +10,7 @@ import { headers } from 'next/headers'
 import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 
 type Author = {
   id: number
@@ -223,12 +224,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href={`https://bookshop.org/search?keywords=${authorQuery}`}
+                  href={getBookshopAuthorUrl(a.display_name)}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel={BOOKSHOP_REL}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
                 >
-                  Bookshop.org
+                  Support independent bookstores
                 </a>
                 <a
                   href={`https://www.kobo.com/search?query=${authorQuery}`}
@@ -239,7 +240,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                   Kobo
                 </a>
               </div>
-              <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
+              <p className="text-xs text-gray-400 dark:text-gray-500 text-center leading-relaxed">
+                Bookshop.org link is an affiliate link — it supports independent bookstores and this project at no extra cost to you.{' '}
                 <Link href="/why-not-amazon" className="hover:underline">
                   Why we don&apos;t link to Amazon
                 </Link>

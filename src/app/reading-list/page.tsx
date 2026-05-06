@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BOOKS, CATEGORIES } from './books-data'
 import ReadingListCover from './reading-list-cover'
+import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 
 export const metadata: Metadata = {
   title: 'Reading List — Books About Censorship | Banned Books',
@@ -85,9 +86,15 @@ export default function ReadingListPage() {
 
         {/* Disclaimer */}
         <div className="mb-10 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-          Inclusion on this list does not mean every book has been officially banned. Some are
-          included because they illuminate the political, cultural, and historical forces behind
-          censorship.
+          <p>
+            Inclusion on this list does not mean every book has been officially banned. Some are
+            included because they illuminate the political, cultural, and historical forces behind
+            censorship.
+          </p>
+          <p className="mt-2">
+            Outbound &ldquo;Find on Bookshop.org&rdquo; links are affiliate links. They help support
+            independent bookstores and this project at no extra cost to you.
+          </p>
         </div>
 
         {/* Categories */}
@@ -175,6 +182,16 @@ export default function ReadingListPage() {
                               </p>
                             </div>
                           </details>
+
+                          {/* Buy link */}
+                          <a
+                            href={getBookshopUrl({ title: book.title, author: book.author })}
+                            target="_blank"
+                            rel={BOOKSHOP_REL}
+                            className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                          >
+                            Find on Bookshop.org →
+                          </a>
                         </div>
                       </div>
                     </article>

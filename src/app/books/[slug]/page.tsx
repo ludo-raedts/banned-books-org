@@ -12,6 +12,7 @@ import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
+import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 
 const BOOK_REASON_PHRASE: Record<string, string> = {
   lgbtq: 'LGBTQ+ content',
@@ -546,6 +547,55 @@ export default async function BookPage({
         </section>
       )}
 
+      {/* Find this book */}
+      <section className="mb-10">
+        <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600 dark:text-amber-400">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          Find this book
+        </h2>
+        <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 p-5 flex flex-col gap-3">
+          {book.gutenberg_id && (
+            <a
+              href={`https://www.gutenberg.org/ebooks/${book.gutenberg_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-200 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              Read free on Project Gutenberg
+            </a>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a
+              href={getBookshopUrl({ title: book.title, author })}
+              target="_blank"
+              rel={BOOKSHOP_REL}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
+            >
+              Find on Bookshop.org
+            </a>
+            <a
+              href={`https://www.kobo.com/search?query=${titleQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+            >
+              Find on Kobo
+            </a>
+          </div>
+          <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
+            Bookshop.org link is an affiliate link — it supports independent bookstores and this project at no extra cost to you.{' '}
+            <Link href="/why-not-amazon" className="underline hover:no-underline">
+              Why we don&apos;t link to Amazon
+            </Link>
+          </p>
+        </div>
+      </section>
+
       {/* Related */}
       {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0 || booksInCountry.length > 0 || booksForReason.length > 0) && (
         <section className="mb-10">
@@ -765,49 +815,6 @@ export default async function BookPage({
           </div>
         </section>
       )}
-
-      {/* Find this book */}
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Find this book</h2>
-        <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-3">
-          {book.gutenberg_id && (
-            <a
-              href={`https://www.gutenberg.org/ebooks/${book.gutenberg_id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-              </svg>
-              Read free on Project Gutenberg
-            </a>
-          )}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href={`https://bookshop.org/search?keywords=${titleQuery}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
-            >
-              Bookshop.org
-            </a>
-            <a
-              href={`https://www.kobo.com/search?query=${titleQuery}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
-            >
-              Kobo
-            </a>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
-            <Link href="/why-not-amazon" className="hover:underline">
-              Why we don&apos;t link to Amazon
-            </Link>
-          </p>
-        </div>
-      </section>
 
       <script
         type="application/ld+json"
