@@ -125,20 +125,25 @@ export default async function ReasonPage({
   if (!reason) notFound()
 
   // Paginate ban_reason_links — popular reasons (lgbtq, political) can exceed 1000 rows
-  // rows: all links for this reason | fields: [book_id via bans] | reason: collect full book ID set
+  // rows: all links for this reason | fields: [book_id, country_code via bans] | reason: collect book ID set + country frequency
   const bookIdSet = new Set<number>()
+  const countryBanCounts = new Map<string, number>()
   {
     let offset = 0
     while (true) {
       const { data } = await supabase
         .from('ban_reason_links')
-        .select('bans(book_id)')
+        .select('bans(book_id, country_code)')
         .eq('reason_id', reason.id)
         .range(offset, offset + 999)
       if (!data || data.length === 0) break
       for (const bl of data) {
-        const id = (bl.bans as any)?.book_id
-        if (id) bookIdSet.add(id)
+        const ban = (bl.bans as any)
+        if (!ban) continue
+        if (ban.book_id) bookIdSet.add(ban.book_id)
+        if (ban.country_code) {
+          countryBanCounts.set(ban.country_code, (countryBanCounts.get(ban.country_code) ?? 0) + 1)
+        }
       }
       if (data.length < 1000) break
       offset += 1000
@@ -146,6 +151,22 @@ export default async function ReasonPage({
   }
 
   const bookIds = [...bookIdSet]
+
+  // Top 5 countries where this reason appears most (by ban count)
+  const top5CountryCounts = [...countryBanCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+  let topCountries: { code: string; name_en: string; count: number }[] = []
+  if (top5CountryCounts.length > 0) {
+    const { data: names } = await supabase
+      .from('countries')
+      .select('code, name_en')
+      .in('code', top5CountryCounts.map(([code]) => code))
+    const nameMap = new Map((names ?? []).map(c => [c.code, c.name_en]))
+    topCountries = top5CountryCounts.map(([code, count]) => ({
+      code, name_en: nameMap.get(code) ?? code, count,
+    }))
+  }
 
   // Paginate books — .in() with 1000+ IDs needs range pagination
   // rows: all books for this reason | fields: card + ban data | reason: reason detail grid
@@ -243,6 +264,27 @@ export default async function ReasonPage({
           filteredBooks={sorted.length}
         />
       </Suspense>
+
+      {topCountries.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+            Countries where this reason appears most
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {topCountries.map(c => (
+              <Link
+                key={c.code}
+                href={`/countries/${c.code.toLowerCase()}`}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span aria-hidden="true">{countryFlag(c.code)}</span>
+                <span>{c.name_en}</span>
+                <span className="text-gray-400 dark:text-gray-500 tabular-nums">{c.count}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {sorted.length === 0 ? (
         <p className="text-gray-500">No books match the current filters.</p>

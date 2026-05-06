@@ -187,57 +187,171 @@ export default async function BookPage({
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
   )
 
-  // ── Similar books ────────────────────────────────────────────────────────────
-  const bookReasonIds = [...new Set(
-    book.bans.flatMap(b =>
-      b.ban_reason_links.map(l => l.reasons?.id).filter((id): id is number => id != null)
-    )
-  )]
+  // ── Pick primary country & reason for contextual link sections ───────────────
+  const countryFreqInBook = new Map<string, { count: number; name: string }>()
+  for (const b of book.bans) {
+    const existing = countryFreqInBook.get(b.country_code)
+    countryFreqInBook.set(b.country_code, {
+      count: (existing?.count ?? 0) + 1,
+      name: b.countries?.name_en ?? b.country_code,
+    })
+  }
+  const primaryCountry = [...countryFreqInBook.entries()]
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([code, v]) => ({ code, name: v.name }))[0] ?? null
 
-  let similarBooks: { slug: string; title: string; cover_url: string | null }[] = []
+  const reasonFreqInBook = new Map<number, { count: number; slug: string }>()
+  for (const b of book.bans) {
+    for (const link of b.ban_reason_links) {
+      const r = link.reasons
+      if (!r) continue
+      const existing = reasonFreqInBook.get(r.id)
+      reasonFreqInBook.set(r.id, { count: (existing?.count ?? 0) + 1, slug: r.slug })
+    }
+  }
+  const primaryReason = [...reasonFreqInBook.entries()]
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([id, v]) => ({ id, slug: v.slug }))[0] ?? null
 
-  if (bookReasonIds.length >= 1) {
-    const { data: matches } = await supabase
-      .from('ban_reason_links')
-      .select('reason_id, bans!inner(book_id)')
-      .in('reason_id', bookReasonIds)
+  const bookReasonIds = [...reasonFreqInBook.keys()]
+  const safeTitle = book.title.replace(/'/g, "''")
 
+  // ── Run all relation lookups in parallel ─────────────────────────────────────
+  const [similarMatchesRes, newsRes, countryBansRes, reasonLinksRes] = await Promise.all([
+    bookReasonIds.length >= 1
+      ? supabase
+          .from('ban_reason_links')
+          .select('reason_id, bans!inner(book_id)')
+          .in('reason_id', bookReasonIds)
+      : Promise.resolve({ data: null }),
+    book.title.length >= 4
+      ? supabase
+          .from('news_items')
+          .select('id, title, source_url, source_name, published_at, summary')
+          .eq('status', 'published')
+          .or(`title.ilike.%${safeTitle}%,summary.ilike.%${safeTitle}%`)
+          .order('published_at', { ascending: false })
+          .limit(3)
+      : Promise.resolve({ data: null }),
+    primaryCountry
+      ? supabase
+          .from('bans')
+          .select('book_id, year_started, ban_reason_links(reasons(slug))')
+          .eq('country_code', primaryCountry.code)
+          .neq('book_id', book.id)
+          .limit(50)
+      : Promise.resolve({ data: null }),
+    primaryReason
+      ? supabase
+          .from('ban_reason_links')
+          .select('bans!inner(book_id, year_started, country_code, countries(name_en))')
+          .eq('reason_id', primaryReason.id)
+          .limit(100)
+      : Promise.resolve({ data: null }),
+  ])
+
+  // ── Process similar books (≥2 reason overlap) ────────────────────────────────
+  let similarTopIds: number[] = []
+  if (similarMatchesRes.data) {
     const bookReasonCounts = new Map<number, Set<number>>()
-    for (const m of (matches ?? []) as unknown as { reason_id: number; bans: { book_id: number } }[]) {
+    for (const m of similarMatchesRes.data as unknown as { reason_id: number; bans: { book_id: number } }[]) {
       const bookId = m.bans.book_id
       if (bookId === book.id) continue
       if (!bookReasonCounts.has(bookId)) bookReasonCounts.set(bookId, new Set())
       bookReasonCounts.get(bookId)!.add(m.reason_id)
     }
-
-    const topIds = [...bookReasonCounts.entries()]
+    similarTopIds = [...bookReasonCounts.entries()]
       .filter(([, reasons]) => reasons.size >= 2)
       .sort((a, b) => b[1].size - a[1].size)
       .slice(0, 4)
       .map(([id]) => id)
+  }
 
-    if (topIds.length > 0) {
-      const { data: simBooks } = await supabase
-        .from('books')
-        .select('slug, title, cover_url')
-        .in('id', topIds)
-      similarBooks = (simBooks ?? []) as typeof similarBooks
+  // ── Process country related books ────────────────────────────────────────────
+  const countryBookInfo = new Map<number, { year: number | null; reasons: string[] }>()
+  for (const r of (countryBansRes.data ?? []) as unknown as {
+    book_id: number; year_started: number | null
+    ban_reason_links: { reasons: { slug: string } | null }[]
+  }[]) {
+    const reasons = r.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s)
+    const existing = countryBookInfo.get(r.book_id)
+    if (!existing) {
+      countryBookInfo.set(r.book_id, { year: r.year_started, reasons: [...new Set(reasons)] })
+    } else {
+      const merged = [...new Set([...existing.reasons, ...reasons])]
+      const earliest = (r.year_started != null && (existing.year == null || r.year_started < existing.year))
+        ? r.year_started : existing.year
+      countryBookInfo.set(r.book_id, { year: earliest, reasons: merged })
+    }
+  }
+  const countryRelatedIds = [...countryBookInfo.keys()].slice(0, 5)
+
+  // ── Process reason related books ─────────────────────────────────────────────
+  const reasonBookInfo = new Map<number, { year: number | null; countryCode: string; countryName: string }>()
+  for (const r of (reasonLinksRes.data ?? []) as unknown as {
+    bans: { book_id: number; year_started: number | null; country_code: string; countries: { name_en: string } | null } | null
+  }[]) {
+    const ban = r.bans
+    if (!ban) continue
+    const bookId = ban.book_id
+    if (bookId === book.id) continue
+    const existing = reasonBookInfo.get(bookId)
+    if (!existing || (ban.year_started != null && (existing.year == null || ban.year_started < existing.year))) {
+      reasonBookInfo.set(bookId, {
+        year: ban.year_started,
+        countryCode: ban.country_code,
+        countryName: ban.countries?.name_en ?? ban.country_code,
+      })
+    }
+  }
+  const reasonRelatedIds = [...reasonBookInfo.keys()].slice(0, 5)
+
+  // ── Single consolidated fetch for all related book details ───────────────────
+  const allRelatedIds = [...new Set([...similarTopIds, ...countryRelatedIds, ...reasonRelatedIds])]
+  type RelatedBookDetail = { id: number; slug: string; title: string; cover_url: string | null; authorName: string }
+  const bookDetailMap = new Map<number, RelatedBookDetail>()
+  if (allRelatedIds.length > 0) {
+    const { data: details } = await supabase
+      .from('books')
+      .select('id, slug, title, cover_url, book_authors(authors(display_name))')
+      .in('id', allRelatedIds)
+    for (const d of (details ?? []) as unknown as {
+      id: number; slug: string; title: string; cover_url: string | null
+      book_authors: { authors: { display_name: string } | null }[]
+    }[]) {
+      bookDetailMap.set(d.id, {
+        id: d.id, slug: d.slug, title: d.title, cover_url: d.cover_url,
+        authorName: d.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
+      })
     }
   }
 
-  // ── Recent news mentioning this book ────────────────────────────────────────
-  let recentNews: { id: number; title: string; source_name: string; source_url: string; published_at: string | null; summary: string }[] = []
-  if (book.title.length >= 4) {
-    const safeTitle = book.title.replace(/'/g, "''")
-    const { data: newsData } = await supabase
-      .from('news_items')
-      .select('id, title, source_url, source_name, published_at, summary')
-      .eq('status', 'published')
-      .or(`title.ilike.%${safeTitle}%,summary.ilike.%${safeTitle}%`)
-      .order('published_at', { ascending: false })
-      .limit(3)
-    recentNews = (newsData ?? []) as typeof recentNews
-  }
+  const similarBooks = similarTopIds
+    .map(id => bookDetailMap.get(id))
+    .filter((b): b is RelatedBookDetail => !!b)
+
+  const booksInCountry = countryRelatedIds
+    .map(id => {
+      const detail = bookDetailMap.get(id)
+      if (!detail) return null
+      const meta = countryBookInfo.get(id)!
+      return { ...detail, year: meta.year, reasons: meta.reasons }
+    })
+    .filter((b): b is RelatedBookDetail & { year: number | null; reasons: string[] } => !!b)
+
+  const booksForReason = reasonRelatedIds
+    .map(id => {
+      const detail = bookDetailMap.get(id)
+      if (!detail) return null
+      const meta = reasonBookInfo.get(id)!
+      return { ...detail, year: meta.year, countryCode: meta.countryCode, countryName: meta.countryName }
+    })
+    .filter((b): b is RelatedBookDetail & { year: number | null; countryCode: string; countryName: string } => !!b)
+
+  const recentNews = (newsRes.data ?? []) as {
+    id: number; title: string; source_name: string; source_url: string
+    published_at: string | null; summary: string
+  }[]
 
   // ── Deduplicated metadata for Related section ────────────────────────────────
   const uniqueCountries = [...new Map(
@@ -433,7 +547,7 @@ export default async function BookPage({
       )}
 
       {/* Related */}
-      {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0) && (
+      {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0 || booksInCountry.length > 0 || booksForReason.length > 0) && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-4">Related</h2>
           <div className="flex flex-col gap-5">
@@ -500,6 +614,116 @@ export default async function BookPage({
                     </Link>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Two-up: more books banned in [Country] / for [Reason] */}
+            {((primaryCountry && booksInCountry.length > 0) || (primaryReason && booksForReason.length > 0)) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
+                {primaryCountry && booksInCountry.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
+                      More books banned in{' '}
+                      <Link
+                        href={`/countries/${primaryCountry.code.toLowerCase()}`}
+                        className="text-red-600 dark:text-red-400 hover:underline"
+                      >
+                        {primaryCountry.name}
+                      </Link>
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      {booksInCountry.map(b => (
+                        <Link
+                          key={b.id}
+                          href={`/books/${b.slug}`}
+                          className="group flex gap-3 items-start"
+                        >
+                          <div className="shrink-0 w-12 h-[72px] relative overflow-hidden rounded shadow-sm">
+                            {b.cover_url ? (
+                              <Image
+                                src={b.cover_url}
+                                alt={`Cover of ${b.title}`}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                              />
+                            ) : (
+                              <BookCoverPlaceholder title={b.title} author={b.authorName} slug={b.slug} className="absolute inset-0 w-full h-full" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug group-hover:underline line-clamp-2">
+                              {b.title}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+                              {b.authorName}
+                              {b.year != null && (
+                                <span className="text-gray-400 dark:text-gray-500"> · banned {b.year}</span>
+                              )}
+                            </p>
+                            {b.reasons.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1.5">
+                                {b.reasons.slice(0, 3).map(r => <ReasonBadge key={r} slug={r} />)}
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {primaryReason && booksForReason.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
+                      More books banned for{' '}
+                      <Link
+                        href={`/reasons/${primaryReason.slug}`}
+                        className="text-red-600 dark:text-red-400 hover:underline"
+                      >
+                        {reasonLabel(primaryReason.slug)}
+                      </Link>{' '}
+                      content
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      {booksForReason.map(b => (
+                        <Link
+                          key={b.id}
+                          href={`/books/${b.slug}`}
+                          className="group flex gap-3 items-start"
+                        >
+                          <div className="shrink-0 w-12 h-[72px] relative overflow-hidden rounded shadow-sm">
+                            {b.cover_url ? (
+                              <Image
+                                src={b.cover_url}
+                                alt={`Cover of ${b.title}`}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                              />
+                            ) : (
+                              <BookCoverPlaceholder title={b.title} author={b.authorName} slug={b.slug} className="absolute inset-0 w-full h-full" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug group-hover:underline line-clamp-2">
+                              {b.title}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+                              {b.authorName}
+                              {b.year != null && (
+                                <span className="text-gray-400 dark:text-gray-500"> · banned {b.year}</span>
+                              )}
+                            </p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                              Banned in {b.countryName}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

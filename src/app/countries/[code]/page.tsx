@@ -140,18 +140,43 @@ export default async function CountryPage({
   const totalBanCount = banCount ?? 0
 
   // ── Related countries: find countries with most book overlap ──────────────────
-  // Step 1: collect all book_ids banned in this country (paginated, lightweight)
+  // Step 1: collect all book_ids banned in this country + reason frequencies (one paginated loop)
   let allBookIds: number[] = []
+  const reasonIdCounts = new Map<number, number>()
   {
     let offset = 0
     while (true) {
       const { data: idRows } = await supabase
-        .from('bans').select('book_id').eq('country_code', upperCode).range(offset, offset + 999)
+        .from('bans')
+        .select('book_id, ban_reason_links(reason_id)')
+        .eq('country_code', upperCode)
+        .range(offset, offset + 999)
       if (!idRows || idRows.length === 0) break
-      allBookIds = allBookIds.concat(idRows.map(r => r.book_id as number))
+      for (const row of idRows as unknown as { book_id: number; ban_reason_links: { reason_id: number }[] }[]) {
+        allBookIds.push(row.book_id)
+        for (const link of row.ban_reason_links ?? []) {
+          reasonIdCounts.set(link.reason_id, (reasonIdCounts.get(link.reason_id) ?? 0) + 1)
+        }
+      }
       if (idRows.length < 1000) break
       offset += 1000
     }
+  }
+
+  // Top 5 reasons in this country (by ban count)
+  const top5ReasonIds = [...reasonIdCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+  let topReasons: { slug: string; count: number }[] = []
+  if (top5ReasonIds.length > 0) {
+    const { data: reasonRows } = await supabase
+      .from('reasons')
+      .select('id, slug')
+      .in('id', top5ReasonIds.map(([id]) => id))
+    const slugMap = new Map((reasonRows ?? []).map(r => [r.id, r.slug]))
+    topReasons = top5ReasonIds
+      .map(([id, count]) => ({ slug: slugMap.get(id) ?? '', count }))
+      .filter(r => r.slug !== '')
   }
 
   // Step 2: for those book_ids, find bans in other countries (batched parallel)
@@ -230,6 +255,27 @@ export default async function CountryPage({
       {/* Description */}
       {country.description && (
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-10 max-w-2xl">{country.description}</p>
+      )}
+
+      {/* Most common reasons */}
+      {topReasons.length > 0 && (
+        <div className="mb-10">
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+            Most common reasons in {country.name_en}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {topReasons.map(r => (
+              <Link
+                key={r.slug}
+                href={`/reasons/${r.slug}`}
+                className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+              >
+                <ReasonBadge slug={r.slug} />
+                <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{r.count}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Timeline */}
