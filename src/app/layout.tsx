@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
-import BottomNav from "@/components/bottom-nav";
+import MobileNav from "@/components/mobile-nav";
 import NavLink from "@/components/nav-link";
 import AnalyticsWrapper from "@/components/AnalyticsWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -62,7 +62,7 @@ export default function RootLayout({
             <Link href="/" className="font-semibold text-sm tracking-tight text-brand hover:opacity-80 transition-opacity">
               📕 Banned Books
             </Link>
-            <nav className="hidden sm:flex items-center gap-1 flex-1">
+            <nav className="hidden md:flex items-center gap-1 flex-1">
               <NavLink href="/countries">Countries</NavLink>
               <NavLink href="/stats">Stats</NavLink>
               <NavLink href="/reasons">Reasons</NavLink>
@@ -72,10 +72,11 @@ export default function RootLayout({
               <NavLink href="/about">About</NavLink>
               <NavLink href="/reading-list">Reading list</NavLink>
             </nav>
+            <MobileNav />
           </div>
         </header>
-        <div className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] sm:pb-0">{children}</div>
-        <footer className="border-t border-gray-200 dark:border-gray-800 mt-10 mb-16 sm:mb-0">
+        <div className="flex-1">{children}</div>
+        <footer className="border-t border-gray-200 dark:border-gray-800 mt-10">
           <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 text-xs text-gray-400 dark:text-gray-500">
             <span className="sm:flex-1">Banned Books — an open catalogue of censored literature</span>
             <nav className="flex flex-wrap gap-x-5 gap-y-1">
@@ -95,7 +96,6 @@ export default function RootLayout({
             <Link href="/admin/login" className="text-xs text-gray-300 dark:text-gray-700 hover:text-gray-500 dark:hover:text-gray-500 transition-colors mt-1 sm:mt-0 sm:ml-5">Admin</Link>
           </div>
         </footer>
-        <BottomNav />
         <AnalyticsWrapper />
         <SpeedInsights />
       </body>

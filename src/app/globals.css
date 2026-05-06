@@ -17,10 +17,6 @@
   --animate-fade-in: fade-in 0.15s ease-out;
 }
 
-@utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
