@@ -148,7 +148,6 @@ export default function BookBrowser({
   featuredBook = null,
   countries = [],
   highlightsSlot,
-  catalogueNavSlot,
   trendingSlot,
 }: {
   initialBooks: Book[]
@@ -157,7 +156,6 @@ export default function BookBrowser({
   featuredBook?: Book | null
   countries?: CountryOption[]
   highlightsSlot?: React.ReactNode
-  catalogueNavSlot?: React.ReactNode
   trendingSlot?: React.ReactNode
 }) {
   const router = useRouter()
@@ -338,7 +336,7 @@ export default function BookBrowser({
                 role="combobox"
                 aria-expanded={showSuggestions}
                 aria-autocomplete="list"
-                placeholder={`Search ${totalCount > 0 ? totalCount.toLocaleString() + ' ' : ''}banned books…`}
+                placeholder={`Search ${totalCount > 0 ? totalCount.toLocaleString('en') + ' ' : ''}banned books…`}
                 value={q}
                 onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
                 onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
@@ -394,7 +392,7 @@ export default function BookBrowser({
                 {loadingFilter
                   ? <span className="text-gray-400">Searching…</span>
                   : total > 0
-                    ? <>Showing results for <span className="font-medium">&ldquo;{q}&rdquo;</span> — {total.toLocaleString()} {total === 1 ? 'book' : 'books'} found</>
+                    ? <>Showing results for <span className="font-medium">&ldquo;{q}&rdquo;</span> — {total.toLocaleString('en')} {total === 1 ? 'book' : 'books'} found</>
                     : <>No books found for <span className="font-medium">&ldquo;{q}&rdquo;</span></>
                 }
               </p>
@@ -502,9 +500,6 @@ export default function BookBrowser({
         </div>
       )}
 
-      {/* ── Catalogue nav — full width, desktop & tablet only ── */}
-      {!isSearching && catalogueNavSlot}
-
       {/* ── Filters ── */}
       <div>
         <div className="mb-3">
@@ -552,8 +547,8 @@ export default function BookBrowser({
           {loadingFilter
             ? <span className="text-gray-400">Searching…</span>
             : anyFilter
-              ? <><span className="font-medium text-gray-700 dark:text-gray-200">{total.toLocaleString()}</span> of {totalCount.toLocaleString()} books</>
-              : <><span className="font-medium text-gray-700 dark:text-gray-200">{totalCount.toLocaleString()}</span> books</>
+              ? <><span className="font-medium text-gray-700 dark:text-gray-200">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books</>
+              : <><span className="font-medium text-gray-700 dark:text-gray-200">{totalCount.toLocaleString('en')}</span> books</>
           }
         </p>
       </div>

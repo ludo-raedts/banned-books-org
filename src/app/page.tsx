@@ -231,6 +231,9 @@ export default async function HomePage() {
           </Link>
         </p>
       </div>
+      <div className="mb-5">
+        <CatalogueNav />
+      </div>
       {fetchError && (
         <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-5">
           Could not load books: {fetchError}
@@ -244,7 +247,6 @@ export default async function HomePage() {
           featuredBook={featuredBook}
           countries={countries}
           highlightsSlot={<HighlightsStrip items={highlights} authorItems={authorHighlights} />}
-          catalogueNavSlot={<CatalogueNav />}
           trendingSlot={
             <TrendingTabs
               key="trending-tabs"
