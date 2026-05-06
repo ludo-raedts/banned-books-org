@@ -1,6 +1,7 @@
 const INDEXNOW_ENDPOINT = 'https://api.indexnow.org/indexnow'
 const SITE_URL = (process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.banned-books.org').replace(/\/$/, '')
 const HOST = new URL(SITE_URL).host
+const INDEXNOW_BATCH_SIZE = 10_000
 
 export type IndexNowResult =
   | { ok: true; status: number; submitted: string[] }
@@ -61,4 +62,17 @@ export function notifyIndexNow(urls: string[]): void {
       console.warn('[indexnow] submission failed', result.status, result.error)
     }
   })
+}
+
+export async function submitInBatches(urls: string[]): Promise<{
+  total: number
+  batches: number
+  results: IndexNowResult[]
+}> {
+  const results: IndexNowResult[] = []
+  for (let i = 0; i < urls.length; i += INDEXNOW_BATCH_SIZE) {
+    const slice = urls.slice(i, i + INDEXNOW_BATCH_SIZE)
+    results.push(await submitToIndexNow(slice))
+  }
+  return { total: urls.length, batches: results.length, results }
 }

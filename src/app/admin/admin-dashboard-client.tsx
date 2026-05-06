@@ -335,6 +335,36 @@ export default function AdminDashboardClient({
   const [refreshState, setRefreshState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [refreshMsg, setRefreshMsg] = useState('')
   const [lastRefreshed, setLastRefreshed] = useState(viewsLastRefreshed)
+  const [indexNowState, setIndexNowState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [indexNowMsg, setIndexNowMsg] = useState('')
+
+  const sitemapTotal =
+    sitemapCounts.static +
+    sitemapCounts.books +
+    sitemapCounts.authors +
+    sitemapCounts.countries +
+    sitemapCounts.reasons
+
+  async function handleIndexNowBulk() {
+    if (!confirm(`Submit ~${sitemapTotal.toLocaleString()} URLs to IndexNow (Bing)?`)) return
+    setIndexNowState('loading')
+    setIndexNowMsg('')
+    try {
+      const res = await fetch('/api/admin/indexnow-bulk', { method: 'POST', credentials: 'include' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok && res.status !== 207) throw new Error(data.error ?? `HTTP ${res.status}`)
+      const failed = (data.results ?? []).filter((r: { ok: boolean }) => !r.ok).length
+      setIndexNowMsg(
+        failed > 0
+          ? `Submitted ${data.total} URLs in ${data.batches} batches — ${failed} batch(es) failed.`
+          : `Submitted ${data.total} URLs in ${data.batches} batch${data.batches === 1 ? '' : 'es'}.`,
+      )
+      setIndexNowState(failed > 0 ? 'error' : 'done')
+    } catch (err) {
+      setIndexNowMsg(err instanceof Error ? err.message : 'Failed')
+      setIndexNowState('error')
+    }
+  }
 
   async function handleRefreshViews() {
     setRefreshState('loading')
@@ -578,17 +608,28 @@ export default function AdminDashboardClient({
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
             Total:{' '}
             <span className="tabular-nums">
-              {(
-                sitemapCounts.static +
-                sitemapCounts.books +
-                sitemapCounts.authors +
-                sitemapCounts.countries +
-                sitemapCounts.reasons
-              ).toLocaleString()}
+              {sitemapTotal.toLocaleString()}
             </span>{' '}
             URLs. Excluded: search, filter/query-string variants, pagination,{' '}
             <code>/admin</code>, <code>/api</code>.
           </p>
+          <div className="mt-2 flex items-center gap-3 flex-wrap">
+            <button
+              onClick={handleIndexNowBulk}
+              disabled={indexNowState === 'loading'}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+            >
+              {indexNowState === 'loading' ? 'Submitting…' : 'Submit all to IndexNow'}
+            </button>
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              Pings Bing/IndexNow with every canonical URL. Use sparingly (rate-limited).
+            </p>
+          </div>
+          {indexNowMsg && (
+            <p className={`text-xs ${indexNowState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {indexNowMsg}
+            </p>
+          )}
         </div>
 
         {/* Materialized views — slim card */}
