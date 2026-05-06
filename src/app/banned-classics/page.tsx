@@ -98,15 +98,32 @@ export default async function BannedClassicsPage() {
         </p>
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         {books.length} works · sorted by ban count within each era
       </p>
+
+      <nav aria-label="Jump to era" className="mb-8 flex flex-wrap gap-2">
+        {(['pre1900', '1900to1945', '1945to1970'] as const).map(eraKey => {
+          const group = grouped[eraKey]
+          if (group.length === 0) return null
+          return (
+            <a
+              key={eraKey}
+              href={`#${eraKey}`}
+              className="text-xs px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              {ERA_LABELS[eraKey]}
+              <span className="ml-1.5 text-gray-400 dark:text-gray-500 tabular-nums">{group.length}</span>
+            </a>
+          )
+        })}
+      </nav>
 
       {(['pre1900', '1900to1945', '1945to1970'] as const).map(eraKey => {
         const group = grouped[eraKey]
         if (group.length === 0) return null
         return (
-          <section key={eraKey} className="mb-12">
+          <section key={eraKey} id={eraKey} className="mb-12 scroll-mt-20">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 pb-2 border-b border-gray-200 dark:border-gray-700">
               {ERA_LABELS[eraKey]}
             </h2>
