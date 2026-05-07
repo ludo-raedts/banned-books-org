@@ -131,6 +131,8 @@ export default function ScriptsPage() {
               ['Add censorship context per country/book', 'enrich-censorship-context-gpt.ts --apply'],
               ['Classify ban reasons (political, religious…)', 'enrich-reasons.ts --apply'],
               ['Fill author bios from Wikipedia', 'enrich-author-bios.ts --apply'],
+              ['Apply the 40-book editorial startset', 'apply-editorial-classification.ts --write'],
+              ['Suggest classifications for the rest (GPT)', 'suggest-editorial-classification-gpt.ts --apply'],
               ['Check for duplicate books', 'check-dupes.ts'],
               ['Audit overall data quality', 'audit-db.ts'],
               ['Refresh materialized views after import', 'refresh-mv.ts'],
@@ -320,6 +322,92 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
               { flag: '--photos-only', desc: 'Only target authors with bio but no photo; write only photo_url, leave bio/birth/death untouched' },
             ]}
             note="Wikipedia intro extract is used as-is (HTML stripped). Censorship mentions in the full article are appended if not already in the intro. Birth/death years are extracted from Wikipedia categories."
+          />
+        </div>
+
+        {/* Editorial classification */}
+        <div className={cardCls}>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Editorial classification</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            These scripts populate the three editorial-classification fields on books. The framework is
+            described in the two essays{' '}
+            <a href="/essays/what-we-document" className="text-brand hover:underline">What we document</a>{' '}
+            and{' '}
+            <a href="/essays/forbidden-knowledge-iceberg" className="text-brand hover:underline">Forbidden knowledge iceberg</a>.
+          </p>
+
+          <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-lg p-3 leading-relaxed">
+            <p className="font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Fields written</p>
+            <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
+              <dt className="font-mono">warning_level</dt>
+              <dd>
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">none</code> /{' '}
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">context</code> /{' '}
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code>.
+                Default <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">none</code>.
+                Only <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">context</code> and{' '}
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code> render the public &ldquo;Editorial note&rdquo; on{' '}
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">/books/&lt;slug&gt;</code>.
+              </dd>
+              <dt className="font-mono">inclusion_rationale</dt>
+              <dd>
+                1–2 sentences explaining why the book fits our criteria. <strong>Internal</strong> by default
+                (only visible in admin). Becomes part of the public editorial note when{' '}
+                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">warning_level !== &lsquo;none&rsquo;</code>.
+              </dd>
+              <dt className="font-mono">extended_context</dt>
+              <dd>
+                Markdown, only used for <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code> tier.
+                Rendered on the public book page above the bookshop callout. Filled by hand in admin —
+                never auto-generated.
+              </dd>
+            </dl>
+            <p className="mt-2 text-gray-500 dark:text-gray-500">
+              Classification does <strong>not</strong> count towards the data-quality score. An unclassified book is not &ldquo;wrong&rdquo;.
+            </p>
+          </div>
+
+          <Script
+            name="apply-editorial-classification.ts"
+            what="One-shot seeder for the 40-book editorial startset. Patches 32 existing books (sets warning_level + inclusion_rationale) and creates 5 new ones with associated authors, bans, reasons and sources: Quotations from Chairman Mao, Why I Am Not a Christian, Submission (Hirsi Ali / Van Gogh), Heather Has Two Mommies, Our Bodies Ourselves. Idempotent: skips books that already have warning_level !== 'none' or an inclusion_rationale, so it never overwrites edits made via the admin."
+            tags={['safe']}
+            command={`# Dry-run — shows the 32 patches + 5 inserts, no writes
+npx tsx --env-file=.env.local scripts/apply-editorial-classification.ts
+
+# Apply
+npx tsx --env-file=.env.local scripts/apply-editorial-classification.ts --write`}
+            flags={[
+              { flag: '--write', desc: 'Apply changes (this script uses --write, NOT --apply, matching the existing batch-* import scripts)' },
+            ]}
+            note="Already run on the catalogue on 2026-05-07. Re-running is safe — it only patches books that haven't been classified yet. The 4 extended-tier books (Mein Kampf, Turner Diaries, Anarchist Cookbook, Hit Man) get warning_level=extended + rationale; their extended_context is left NULL with a TODO for you to fill manually via admin. Three collection placeholders (Russian LGBTQ, Black Books, DPRK dissident lit) are intentionally left as TODO comments — better split per work later."
+          />
+
+          <Script
+            name="suggest-editorial-classification-gpt.ts"
+            what="GPT-powered classifier for the ~4.4k books that aren't yet classified. Sends each book's metadata + ban context to gpt-4o-mini with the editorial framework as the system prompt; gets back warning_level + inclusion_rationale + confidence + reasoning_summary as structured JSON."
+            tags={['gpt']}
+            command={`# Dry-run — 3 sample books
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts
+
+# Test on one specific book
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --slug=lolita
+
+# Apply: small batch first to inspect output quality and cost
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
+
+# Apply at scale
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000
+
+# Override model (default gpt-4o-mini)
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --model=gpt-5`}
+            flags={[
+              { flag: '--apply', desc: 'Auto-apply low-risk results to DB; write a review file for high-risk ones' },
+              { flag: '--limit=N', desc: 'Cap at N books per run (default 100 in apply mode, 3 in dry-run)' },
+              { flag: '--slug=X', desc: 'Test on a single book — bypasses the "already-classified" filter' },
+              { flag: '--model=X', desc: 'Override the model (default gpt-4o-mini, also via OPENAI_MODEL env)' },
+              { flag: '--delay=N', desc: 'Delay between API calls in ms (default 400)' },
+            ]}
+            note="Routing is conservative by design. Suggestions of warning_level='none' with confidence ≥ medium auto-apply (the rationale is internal-only — no public change). Suggestions of warning_level='context' or 'extended', exclude=true, or low-confidence anything are written to data/editorial-review-<timestamp>.json for human review and never auto-applied. This protects against unexpected public editorial-note banners. Estimated cost: ~€2–€5 to classify the entire ~4.4k catalogue with gpt-4o-mini."
           />
         </div>
 
