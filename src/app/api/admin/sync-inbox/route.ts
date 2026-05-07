@@ -1,12 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { syncInboxPreview } from '@/lib/inbox-sync'
 
 export const maxDuration = 30
 
-export async function GET(req: NextRequest) {
-  const secret = process.env.CRON_SECRET
-  const auth = req.headers.get('authorization')
-  if (!secret || auth !== `Bearer ${secret}`) {
+export async function POST() {
+  const cookieStore = await cookies()
+  const session = cookieStore.get('admin_session')?.value
+  const secret = process.env.ADMIN_SECRET
+  if (!secret || session !== secret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

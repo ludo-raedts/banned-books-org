@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
 
@@ -361,7 +362,26 @@ function formatRelativeTime(iso: string | null): string {
 }
 
 function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: string | null; cardCls: string }) {
+  const router = useRouter()
   const unreadCount = rows.filter(r => r.isUnread).length
+  const [syncState, setSyncState] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [syncError, setSyncError] = useState('')
+
+  async function handleSync() {
+    setSyncState('loading')
+    setSyncError('')
+    try {
+      const res = await fetch('/api/admin/sync-inbox', { method: 'POST', credentials: 'include' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setSyncState('idle')
+      router.refresh()
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : 'Sync failed')
+      setSyncState('error')
+    }
+  }
+
   return (
     <div className={`${cardCls} relative`}>
       {unreadCount > 0 && (
@@ -418,18 +438,33 @@ function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: 
         </ul>
       )}
 
-      <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
+      {syncState === 'error' && (
+        <p className="text-xs text-red-600 dark:text-red-400 -mt-1 break-words">{syncError}</p>
+      )}
+
+      <div className="mt-auto flex items-center justify-between gap-3 pt-2 border-t border-gray-100 dark:border-gray-800 flex-wrap">
         <span className="text-[11px] text-gray-400 dark:text-gray-500">
           {fetchedAt ? `Synced ${formatRelativeTime(fetchedAt)}` : 'Not synced yet'}
         </span>
-        <a
-          href="https://mail.zoho.eu/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-brand font-medium hover:underline"
-        >
-          Open in Zoho →
-        </a>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleSync}
+            disabled={syncState === 'loading'}
+            className="inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${syncState === 'loading' ? 'animate-spin' : ''}`} aria-hidden />
+            {syncState === 'loading' ? 'Syncing…' : 'Sync now'}
+          </button>
+          <a
+            href="https://mail.zoho.eu/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-brand font-medium hover:underline"
+          >
+            Open in Zoho →
+          </a>
+        </div>
       </div>
     </div>
   )
