@@ -67,23 +67,27 @@ function MiniBar({ value, max, color }: { value: number; max: number; color: 're
 function TrafficCard({
   countriesThisWeek, countriesLastWeek,
   referrersThisWeek, referrersLastWeek,
-  viewsThisWeek, viewsLastWeek,
+  visitorsThisWeek, visitorsLastWeek,
+  pageviewsThisWeek, pageviewsLastWeek,
   cardCls,
 }: {
   countriesThisWeek: CountryViewRow[]
   countriesLastWeek: CountryViewRow[]
   referrersThisWeek: ReferrerViewRow[]
   referrersLastWeek: ReferrerViewRow[]
-  viewsThisWeek: number
-  viewsLastWeek: number
+  visitorsThisWeek: number
+  visitorsLastWeek: number
+  pageviewsThisWeek: number
+  pageviewsLastWeek: number
   cardCls: string
 }) {
   const [week, setWeek] = useState<'this' | 'last'>('this')
 
   const countries = week === 'this' ? countriesThisWeek : countriesLastWeek
   const referrers = week === 'this' ? referrersThisWeek : referrersLastWeek
-  const totalViews = week === 'this' ? viewsThisWeek : viewsLastWeek
-  const compareViews = week === 'this' ? viewsLastWeek : viewsThisWeek
+  const totalViews = week === 'this' ? visitorsThisWeek : visitorsLastWeek
+  const compareViews = week === 'this' ? visitorsLastWeek : visitorsThisWeek
+  const totalPageviews = week === 'this' ? pageviewsThisWeek : pageviewsLastWeek
 
   const countryLastWeekMap = new Map(countriesLastWeek.map(r => [r.country, r.views]))
   const referrerLastWeekMap = new Map(referrersLastWeek.map(r => [r.referrer_host, r.views]))
@@ -107,7 +111,7 @@ function TrafficCard({
         <div>
           <h2 className="font-semibold text-gray-900 dark:text-gray-100">Traffic</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-            Page views by country and referrer.
+            Unique visitors per day by country and referrer.
           </p>
         </div>
         <div className="flex gap-1 shrink-0">
@@ -127,12 +131,15 @@ function TrafficCard({
         </div>
       </div>
 
-      {/* Headline stat — page views for the selected week */}
+      {/* Headline stat — unique visitors for the selected week */}
       <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 dark:border-gray-800 py-4 -mx-2 px-2">
         <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-none">
           {totalViews.toLocaleString('en')}
         </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">page views</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">visitors</span>
+        <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums">
+          · {totalPageviews.toLocaleString('en')} pageviews
+        </span>
         {totalPct !== null && (
           <span className={`text-xs font-medium tabular-nums ${
             totalPct > 0 ? 'text-emerald-600 dark:text-emerald-400' :
@@ -242,8 +249,10 @@ interface Props {
   pageviewsRows: number | null
   trendingBooks: TrendingBookRow[]
   trendingAuthors: TrendingAuthorRow[]
-  viewsThisWeek: number
-  viewsLastWeek: number
+  visitorsThisWeek: number
+  visitorsLastWeek: number
+  pageviewsThisWeek: number
+  pageviewsLastWeek: number
   firstViewDate: string | null
   countriesThisWeek: CountryViewRow[]
   countriesLastWeek: CountryViewRow[]
@@ -327,7 +336,9 @@ function formatBytes(n: number): string {
 export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
-  trendingBooks, trendingAuthors, viewsThisWeek, viewsLastWeek, firstViewDate,
+  trendingBooks, trendingAuthors,
+  visitorsThisWeek, visitorsLastWeek, pageviewsThisWeek, pageviewsLastWeek,
+  firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
   dataLastChanged, viewsLastRefreshed, sitemapCounts,
 }: Props) {
@@ -559,8 +570,10 @@ export default function AdminDashboardClient({
           countriesLastWeek={countriesLastWeek}
           referrersThisWeek={referrersThisWeek}
           referrersLastWeek={referrersLastWeek}
-          viewsThisWeek={viewsThisWeek}
-          viewsLastWeek={viewsLastWeek}
+          visitorsThisWeek={visitorsThisWeek}
+          visitorsLastWeek={visitorsLastWeek}
+          pageviewsThisWeek={pageviewsThisWeek}
+          pageviewsLastWeek={pageviewsLastWeek}
           cardCls={cardCls}
         />
 

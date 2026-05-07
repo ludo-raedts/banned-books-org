@@ -61,12 +61,12 @@ async function fetchRisingCandidates(
   sevenDaysAgo: string,
   fourteenDaysAgo: string,
 ): Promise<Candidate[]> {
-  let rows: { entity_id: number; viewed_at: string }[] = []
+  let rows: { entity_id: number; viewed_at: string; visitor_hash: string | null }[] = []
   let offset = 0
   while (true) {
     const { data, error } = await supabase
       .from('pageviews')
-      .select('entity_id, viewed_at')
+      .select('entity_id, viewed_at, visitor_hash')
       .eq('entity_type', entityType)
       .gte('viewed_at', fourteenDaysAgo)
       .range(offset, offset + 999)
@@ -76,16 +76,27 @@ async function fetchRisingCandidates(
     offset += 1000
   }
 
-  const thisWeekCounts = new Map<number, number>()
-  const prevWeekCounts = new Map<number, number>()
+  // Dedupe by visitor_hash so a single bot scraping 1000 pages counts once.
+  // Rows without visitor_hash (legacy pre-013) are excluded.
+  const thisWeekVisitors = new Map<number, Set<string>>()
+  const prevWeekVisitors = new Map<number, Set<string>>()
   for (const row of rows) {
+    if (!row.visitor_hash) continue
     const id = Number(row.entity_id)
-    if (row.viewed_at >= sevenDaysAgo) {
-      thisWeekCounts.set(id, (thisWeekCounts.get(id) ?? 0) + 1)
-    } else {
-      prevWeekCounts.set(id, (prevWeekCounts.get(id) ?? 0) + 1)
+    const map = row.viewed_at >= sevenDaysAgo ? thisWeekVisitors : prevWeekVisitors
+    let set = map.get(id)
+    if (!set) {
+      set = new Set()
+      map.set(id, set)
     }
+    set.add(row.visitor_hash)
   }
+  const thisWeekCounts = new Map<number, number>(
+    [...thisWeekVisitors].map(([id, set]) => [id, set.size]),
+  )
+  const prevWeekCounts = new Map<number, number>(
+    [...prevWeekVisitors].map(([id, set]) => [id, set.size]),
+  )
 
   const candidates: Candidate[] = []
   for (const [id, thisWeek] of thisWeekCounts.entries()) {

@@ -58,8 +58,10 @@ export default async function AdminPage() {
   // ── Trending / pageview data ──────────────────────────────────────────────────
   let trendingBooks: TrendingBookRow[] = []
   let trendingAuthors: TrendingAuthorRow[] = []
-  let viewsThisWeek = 0
-  let viewsLastWeek = 0
+  let visitorsThisWeek = 0
+  let visitorsLastWeek = 0
+  let pageviewsThisWeek = 0
+  let pageviewsLastWeek = 0
   let firstViewDate: string | null = null
   let countriesThisWeek: { country: string | null; views: number }[] = []
   let countriesLastWeek: { country: string | null; views: number }[] = []
@@ -83,7 +85,10 @@ export default async function AdminPage() {
       supabase.from('v_top_books_last_week').select('entity_id, views'),
       supabase.from('v_top_authors_this_week').select('entity_id, views'),
       supabase.from('v_top_authors_last_week').select('entity_id, views'),
-      supabase.from('v_weekly_totals').select('views_this_week, views_last_week').single(),
+      supabase
+        .from('v_weekly_totals')
+        .select('views_this_week, views_last_week, pageviews_this_week, pageviews_last_week')
+        .single(),
       supabase.from('pageviews').select('viewed_at').order('viewed_at', { ascending: true }).limit(1).single(),
       supabase.from('v_top_countries_this_week').select('country, views'),
       supabase.from('v_top_countries_last_week').select('country, views'),
@@ -96,8 +101,10 @@ export default async function AdminPage() {
     referrersThisWeek = (referrersThisWeekRaw ?? []).map(r => ({ referrer_host: r.referrer_host, views: Number(r.views) }))
     referrersLastWeek = (referrersLastWeekRaw ?? []).map(r => ({ referrer_host: r.referrer_host, views: Number(r.views) }))
 
-    viewsThisWeek = Number(weeklyTotals?.views_this_week ?? 0)
-    viewsLastWeek = Number(weeklyTotals?.views_last_week ?? 0)
+    visitorsThisWeek = Number(weeklyTotals?.views_this_week ?? 0)
+    visitorsLastWeek = Number(weeklyTotals?.views_last_week ?? 0)
+    pageviewsThisWeek = Number(weeklyTotals?.pageviews_this_week ?? 0)
+    pageviewsLastWeek = Number(weeklyTotals?.pageviews_last_week ?? 0)
     firstViewDate = firstView?.viewed_at ?? null
 
     // ── Books ──────────────────────────────────────────────────────────────────
@@ -171,8 +178,10 @@ export default async function AdminPage() {
       pageviewsRows={pageviewsRows}
       trendingBooks={trendingBooks}
       trendingAuthors={trendingAuthors}
-      viewsThisWeek={viewsThisWeek}
-      viewsLastWeek={viewsLastWeek}
+      visitorsThisWeek={visitorsThisWeek}
+      visitorsLastWeek={visitorsLastWeek}
+      pageviewsThisWeek={pageviewsThisWeek}
+      pageviewsLastWeek={pageviewsLastWeek}
       firstViewDate={firstViewDate}
       countriesThisWeek={countriesThisWeek}
       countriesLastWeek={countriesLastWeek}
