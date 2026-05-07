@@ -64,6 +64,7 @@ export default function RootLayout({
             </Link>
             <nav className="hidden md:flex items-center gap-1 flex-1">
               <NavLink href="/search">Search</NavLink>
+              <NavLink href="/dataset">Dataset</NavLink>
               <NavLink href="/countries">Countries</NavLink>
               <NavLink href="/stats">Stats</NavLink>
               <NavLink href="/reasons">Reasons</NavLink>
@@ -90,6 +91,7 @@ export default function RootLayout({
               <Link href="/history" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">History</Link>
               <Link href="/essays" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Essays</Link>
               <Link href="/sources" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Sources</Link>
+              <Link href="/dataset" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Download dataset</Link>
               <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
               <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>

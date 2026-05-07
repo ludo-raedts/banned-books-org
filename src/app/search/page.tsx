@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks } from '@/lib/book-search'
 import SearchClient from '@/components/search-client'
@@ -77,6 +78,19 @@ export default async function SearchPage({
           sourced from public records.
         </p>
       </header>
+
+      <aside className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        <p className="text-sm text-gray-700 dark:text-gray-300 flex-1 leading-snug">
+          <span className="font-semibold text-gray-900 dark:text-gray-100">Need every book in one file?</span>
+          {' '}Download the complete catalogue as CSV, JSON, or SQLite.
+        </p>
+        <Link
+          href="/dataset"
+          className="shrink-0 text-sm font-semibold text-brand hover:underline self-start sm:self-auto"
+        >
+          See the dataset →
+        </Link>
+      </aside>
 
       <SearchClient
         initialBooks={initialBooks}

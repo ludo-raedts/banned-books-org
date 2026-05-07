@@ -139,7 +139,11 @@ export default function MethodologyPage() {
             <Link href="/about" className="text-red-700 dark:text-red-400 underline hover:text-red-900">
               About page
             </Link>
-            .
+            . The complete catalogue is also available as a{' '}
+            <Link href="/dataset" className="text-red-700 dark:text-red-400 underline hover:text-red-900">
+              downloadable dataset
+            </Link>
+            {' '}for research and analysis.
           </p>
         </div>
 

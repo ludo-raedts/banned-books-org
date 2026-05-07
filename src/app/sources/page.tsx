@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export const metadata = {
   title: 'Sources — Banned Books',
   description: 'Sources and methodology behind the Banned Books catalogue. Data drawn from PEN America, ALA, Wikipedia, and government records.',
@@ -102,6 +104,17 @@ export default function SourcesPage() {
             .
           </p>
         </div>
+      </div>
+
+      <div className="mt-10 border-l-4 border-brand pl-5 py-2">
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          Want to work with this data yourself? The full catalogue — every book, every ban, every
+          source citation — is available as a{' '}
+          <Link href="/dataset" className="underline font-medium hover:text-gray-900 dark:hover:text-gray-100">
+            downloadable dataset
+          </Link>
+          {' '}in CSV, JSON, and SQLite.
+        </p>
       </div>
 
       <p className="mt-10 text-xs text-gray-400 leading-relaxed">

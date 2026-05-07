@@ -256,6 +256,13 @@ export default async function AboutPage() {
               The catalogue is a work in progress. Coverage is strongest for the United States, Western Europe, and
               prominent historical cases. We say so explicitly wherever it matters.
             </p>
+            <p>
+              For systematic analysis, the entire catalogue is available as a{' '}
+              <Link href="/dataset" className="underline font-medium hover:text-gray-900 dark:hover:text-gray-100">
+                downloadable dataset
+              </Link>
+              {' '}— CSV, JSON, and SQLite — under a personal/research-use license.
+            </p>
           </div>
         </section>
 
