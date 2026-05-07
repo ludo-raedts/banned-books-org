@@ -70,7 +70,6 @@ export default function RootLayout({
               <NavLink href="/reasons">Reasons</NavLink>
               <NavLink href="/history">History</NavLink>
               <NavLink href="/essays">Essays</NavLink>
-              <NavLink href="/sources">Sources</NavLink>
               <NavLink href="/news">News</NavLink>
               <NavLink href="/about">About</NavLink>
               <NavLink href="/reading-list">Reading list</NavLink>

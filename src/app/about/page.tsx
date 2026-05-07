@@ -156,7 +156,11 @@ export default async function AboutPage() {
               The database is updated continuously. This page was last rendered on <strong>{stats.updatedAt}</strong>.
               There are currently <strong>{stats.sources.toLocaleString('en')} source citations</strong> attached to bans
               in the catalogue, drawn primarily from PEN America, the American Library Association, Index on Censorship,
-              Freedom to Read Canada, and Wikipedia&apos;s lists of banned books.
+              Freedom to Read Canada, and Wikipedia&apos;s lists of banned books. See the{' '}
+              <Link href="/sources" className="underline font-medium hover:text-gray-900 dark:hover:text-gray-100">
+                full list of sources
+              </Link>
+              {' '}for details.
             </p>
             <p>
               <strong>Coverage gaps we acknowledge openly:</strong> The data is heavily skewed toward the United States,
