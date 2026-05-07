@@ -9,6 +9,7 @@ const LINKS = [
   { href: '/stats', label: 'Stats' },
   { href: '/reasons', label: 'Reasons' },
   { href: '/history', label: 'History' },
+  { href: '/essays', label: 'Essays' },
   { href: '/sources', label: 'Sources' },
   { href: '/news', label: 'News' },
   { href: '/about', label: 'About' },

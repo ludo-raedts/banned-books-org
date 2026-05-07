@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import MoreEssays from '@/components/more-essays'
 
 export const metadata: Metadata = {
   title: 'Why We Don\'t Link to Amazon — Banned Books',
@@ -153,6 +154,8 @@ export default function WhyNotAmazonPage() {
         </p>
 
       </article>
+
+      <MoreEssays currentSlug="why-not-amazon" />
     </main>
   )
 }

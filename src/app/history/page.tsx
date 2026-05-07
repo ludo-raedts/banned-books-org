@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import MoreEssays from '@/components/more-essays'
 
 export const metadata: Metadata = {
   title: 'History of Book Banning — From Ancient Rome to Today',
@@ -445,6 +446,8 @@ export default function HistoryPage() {
             </Link>
           </div>
         </section>
+
+        <MoreEssays currentSlug="history" />
       </main>
     </>
   )

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
+import EssayPromptCard from './essay-prompt-card'
 
 export type TrendingBookRow = {
   rank: number
@@ -728,6 +729,8 @@ export default function AdminDashboardClient({
             </a>
           </div>
         </div>
+
+        <EssayPromptCard cardCls={cardCls} />
 
       </div>
     </main>

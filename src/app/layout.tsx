@@ -67,6 +67,7 @@ export default function RootLayout({
               <NavLink href="/stats">Stats</NavLink>
               <NavLink href="/reasons">Reasons</NavLink>
               <NavLink href="/history">History</NavLink>
+              <NavLink href="/essays">Essays</NavLink>
               <NavLink href="/sources">Sources</NavLink>
               <NavLink href="/news">News</NavLink>
               <NavLink href="/about">About</NavLink>
@@ -86,6 +87,7 @@ export default function RootLayout({
               <Link href="/scope/school" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">School bans</Link>
               <Link href="/scope/government" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Government bans</Link>
               <Link href="/history" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">History</Link>
+              <Link href="/essays" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Essays</Link>
               <Link href="/sources" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Sources</Link>
               <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
