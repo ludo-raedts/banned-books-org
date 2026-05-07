@@ -63,6 +63,7 @@ export default function RootLayout({
               📕 Banned Books
             </Link>
             <nav className="hidden md:flex items-center gap-1 flex-1">
+              <NavLink href="/search">Search</NavLink>
               <NavLink href="/countries">Countries</NavLink>
               <NavLink href="/stats">Stats</NavLink>
               <NavLink href="/reasons">Reasons</NavLink>
