@@ -260,7 +260,7 @@ export default async function AboutPage() {
         </section>
 
         {/* 8. Contact */}
-        <section>
+        <section id="get-in-touch" className="scroll-mt-20">
           <h2 className="text-xl font-semibold mb-1">Get in touch</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">For press inquiries, data requests, corrections, or missing books.</p>
           <ContactForm />

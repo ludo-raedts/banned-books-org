@@ -36,6 +36,28 @@ export default async function AdminPage() {
   const logMap = new Map((refreshLog ?? []).map(r => [r.key, r.updated_at as string]))
   const dataLastChanged  = logMap.get('data_last_changed') ?? null
   const viewsLastRefreshed = logMap.get('last_refreshed') ?? null
+  const datasetBuiltAt = logMap.get('dataset_built_at') ?? null
+
+  // ── Dataset orders & download stats ──────────────────────────────────────────
+  // Suspicious threshold: a single order should not need to download more than
+  // ~5–10 times in 30 days. >10 plausibly means the link was shared.
+  const SUSPICIOUS_DOWNLOADS_THRESHOLD = 10
+  const { data: datasetOrders } = await supabase
+    .from('dataset_orders')
+    .select('amount_cents, currency, paid_at, downloads_count')
+  const datasetOrderRows = datasetOrders ?? []
+  const paidDatasetOrders = datasetOrderRows.filter(o => o.paid_at != null)
+  const datasetStats = {
+    totalOrders: datasetOrderRows.length,
+    paidOrders: paidDatasetOrders.length,
+    totalRevenueCents: paidDatasetOrders.reduce((sum, o) => sum + (o.amount_cents ?? 0), 0),
+    currency: paidDatasetOrders[0]?.currency ?? 'usd',
+    totalDownloads: datasetOrderRows.reduce((sum, o) => sum + (o.downloads_count ?? 0), 0),
+    maxDownloadsOnSingleOrder: datasetOrderRows.reduce((max, o) => Math.max(max, o.downloads_count ?? 0), 0),
+    suspiciousOrderCount: datasetOrderRows.filter(o => (o.downloads_count ?? 0) > SUSPICIOUS_DOWNLOADS_THRESHOLD).length,
+    datasetBuiltAt,
+    suspiciousThreshold: SUSPICIOUS_DOWNLOADS_THRESHOLD,
+  }
 
   // ── DB size (Supabase plan-limit watch) ──────────────────────────────────────
   // Limit defaults to 8 GB (Pro tier). Override with SUPABASE_DB_LIMIT_GB.
@@ -196,6 +218,7 @@ export default async function AdminPage() {
         countries: countryCount,
         reasons: sitemapReasonCount ?? 0,
       }}
+      datasetStats={datasetStats}
     />
   )
 }

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx scripts/build-dataset.ts && next build",
+    "build:dataset": "tsx scripts/build-dataset.ts",
     "start": "next start"
   },
   "dependencies": {
@@ -21,20 +22,27 @@
     "openai": "^6.35.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "resend": "^6.12.3",
     "rss-parser": "^3.13.0",
     "sharp": "^0.34.5",
-    "sharp-phash": "^2.2.0"
+    "sharp-phash": "^2.2.0",
+    "stripe": "^22.1.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "better-sqlite3"
     ]
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/archiver": "^7.0.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "archiver": "^7.0.1",
+    "better-sqlite3": "^12.9.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"

@@ -94,6 +94,7 @@ export default function RootLayout({
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
               <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>
               <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Classics</Link>
+              <Link href="/privacy" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Privacy</Link>
               <a href="/feed.xml" type="application/rss+xml" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">RSS feed</a>
             </nav>
             <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-900 flex flex-wrap items-center justify-between gap-3">

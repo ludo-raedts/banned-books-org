@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw, Download, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
@@ -267,6 +267,17 @@ interface Props {
     countries: number
     reasons: number
   }
+  datasetStats: {
+    totalOrders: number
+    paidOrders: number
+    totalRevenueCents: number
+    currency: string
+    totalDownloads: number
+    maxDownloadsOnSingleOrder: number
+    suspiciousOrderCount: number
+    datasetBuiltAt: string | null
+    suspiciousThreshold: number
+  }
 }
 
 function RankChange({ thisWeekRank, lastWeekRank }: { thisWeekRank: number; lastWeekRank: number | null }) {
@@ -340,7 +351,7 @@ export default function AdminDashboardClient({
   visitorsThisWeek, visitorsLastWeek, pageviewsThisWeek, pageviewsLastWeek,
   firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
-  dataLastChanged, viewsLastRefreshed, sitemapCounts,
+  dataLastChanged, viewsLastRefreshed, sitemapCounts, datasetStats,
 }: Props) {
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [fetchMsg, setFetchMsg] = useState('')
@@ -349,6 +360,9 @@ export default function AdminDashboardClient({
   const [lastRefreshed, setLastRefreshed] = useState(viewsLastRefreshed)
   const [indexNowState, setIndexNowState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [indexNowMsg, setIndexNowMsg] = useState('')
+  const [buildDatasetState, setBuildDatasetState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [buildDatasetMsg, setBuildDatasetMsg] = useState('')
+  const [datasetBuiltAt, setDatasetBuiltAt] = useState(datasetStats.datasetBuiltAt)
 
   const sitemapTotal =
     sitemapCounts.static +
@@ -398,6 +412,23 @@ export default function AdminDashboardClient({
     } catch (err) {
       setRefreshMsg(err instanceof Error ? err.message : 'Failed')
       setRefreshState('error')
+    }
+  }
+
+  async function handleBuildDataset() {
+    if (!confirm('Rebuild the downloadable dataset ZIP from current data? This takes ~5 seconds.')) return
+    setBuildDatasetState('loading')
+    setBuildDatasetMsg('')
+    try {
+      const res = await fetch('/api/admin/build-dataset', { method: 'POST', credentials: 'include' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setDatasetBuiltAt(new Date().toISOString())
+      setBuildDatasetMsg(data.message ?? 'Dataset rebuilt.')
+      setBuildDatasetState('done')
+    } catch (err) {
+      setBuildDatasetMsg(err instanceof Error ? err.message : 'Failed')
+      setBuildDatasetState('error')
     }
   }
 
@@ -686,6 +717,81 @@ export default function AdminDashboardClient({
           {refreshMsg && (
             <p className={`text-xs ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
               {refreshMsg}
+            </p>
+          )}
+        </div>
+
+        {/* Dataset (paid download) — slim card */}
+        <div className={cardCls}>
+          <Download className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Dataset</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Paid downloads · regenerated when DB changes.
+            </p>
+          </div>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
+            <dt className="text-gray-500 dark:text-gray-400">Paid orders</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetStats.paidOrders.toLocaleString('en')}
+              {datasetStats.totalOrders > datasetStats.paidOrders && (
+                <span className="text-gray-400"> ({datasetStats.totalOrders - datasetStats.paidOrders} pending)</span>
+              )}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Revenue</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {(datasetStats.totalRevenueCents / 100).toLocaleString('en', {
+                style: 'currency',
+                currency: datasetStats.currency.toUpperCase(),
+              })}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Downloads</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetStats.totalDownloads.toLocaleString('en')}
+              {datasetStats.paidOrders > 0 && (
+                <span className="text-gray-400">
+                  {' '}(avg {(datasetStats.totalDownloads / datasetStats.paidOrders).toFixed(1)}/order)
+                </span>
+              )}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {dataLastChanged
+                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Last build</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetBuiltAt
+                ? new Date(datasetBuiltAt).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">never</span>}
+            </dd>
+          </dl>
+          {datasetStats.suspiciousOrderCount > 0 && (
+            <div className="flex items-start gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-md px-3 py-2 -mx-1">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+              <span>
+                {datasetStats.suspiciousOrderCount} order{datasetStats.suspiciousOrderCount === 1 ? '' : 's'} with
+                more than {datasetStats.suspiciousThreshold} downloads — link may be shared.
+                Highest: {datasetStats.maxDownloadsOnSingleOrder}.
+              </span>
+            </div>
+          )}
+          {dataLastChanged && datasetBuiltAt && new Date(dataLastChanged) > new Date(datasetBuiltAt) && (
+            <p className="text-xs text-amber-700 dark:text-amber-400">
+              ⚠ Data has changed since last build — buyers will get the previous snapshot until you rebuild.
+            </p>
+          )}
+          <button
+            onClick={handleBuildDataset}
+            disabled={buildDatasetState === 'loading'}
+            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          >
+            {buildDatasetState === 'loading' ? 'Building…' : 'Rebuild now'}
+          </button>
+          {buildDatasetMsg && (
+            <p className={`text-xs ${buildDatasetState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {buildDatasetMsg}
             </p>
           )}
         </div>
