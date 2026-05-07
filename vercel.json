@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/cleanup-pageviews",
       "schedule": "0 3 * * 1"
+    },
+    {
+      "path": "/api/cron/fetch-mail",
+      "schedule": "0 * * * *"
     }
   ]
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw, Download, AlertTriangle } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, TrendingUp, Users, Map as MapIcon, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import Link from 'next/link'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
@@ -22,6 +22,16 @@ export type TrendingAuthorRow = {
   lastWeekRank: number | null
   name: string
   slug: string
+}
+
+export type InboxRow = {
+  uid: number
+  fromName: string | null
+  fromAddress: string | null
+  subject: string | null
+  snippet: string
+  receivedAt: string | null
+  isUnread: boolean
 }
 
 type CountryViewRow = { country: string | null; views: number }
@@ -278,6 +288,8 @@ interface Props {
     datasetBuiltAt: string | null
     suspiciousThreshold: number
   }
+  inboxRows: InboxRow[]
+  inboxFetchedAt: string | null
 }
 
 function RankChange({ thisWeekRank, lastWeekRank }: { thisWeekRank: number; lastWeekRank: number | null }) {
@@ -335,6 +347,94 @@ function TrendingSection({
   )
 }
 
+function formatRelativeTime(iso: string | null): string {
+  if (!iso) return ''
+  const ms = Date.now() - Date.parse(iso)
+  if (Number.isNaN(ms)) return ''
+  const min = Math.round(ms / 60_000)
+  if (min < 1) return 'just now'
+  if (min < 60) return `${min}m ago`
+  const hr = Math.round(min / 60)
+  if (hr < 24) return `${hr}h ago`
+  const d = Math.round(hr / 24)
+  return `${d}d ago`
+}
+
+function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: string | null; cardCls: string }) {
+  const unreadCount = rows.filter(r => r.isUnread).length
+  return (
+    <div className={`${cardCls} relative`}>
+      {unreadCount > 0 && (
+        <span className="absolute top-4 right-4 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center tabular-nums">
+          {unreadCount}
+        </span>
+      )}
+      <Mail className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+      <div>
+        <h2 className="font-semibold text-gray-900 dark:text-gray-100">Inbox</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          Last 5 messages from Zoho Mail. Refreshed hourly.
+        </p>
+      </div>
+
+      {rows.length === 0 ? (
+        <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">
+          No messages yet — waiting for the first sync.
+        </p>
+      ) : (
+        <ul className="flex flex-col -mx-2">
+          {rows.map(r => (
+            <li
+              key={r.uid}
+              className="flex items-baseline gap-2 py-1.5 px-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
+            >
+              <span
+                className={`shrink-0 w-1.5 h-1.5 rounded-full mt-1.5 ${r.isUnread ? 'bg-blue-500' : 'bg-transparent'}`}
+                aria-label={r.isUnread ? 'Unread' : 'Read'}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span
+                    className={`text-sm truncate ${r.isUnread ? 'font-semibold text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}
+                    title={r.fromAddress ?? undefined}
+                  >
+                    {r.fromName ?? r.fromAddress ?? 'Unknown sender'}
+                  </span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500 tabular-nums shrink-0">
+                    {formatRelativeTime(r.receivedAt)}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                  {r.subject ?? '(no subject)'}
+                </p>
+                {r.snippet && (
+                  <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                    {r.snippet}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
+        <span className="text-[11px] text-gray-400 dark:text-gray-500">
+          {fetchedAt ? `Synced ${formatRelativeTime(fetchedAt)}` : 'Not synced yet'}
+        </span>
+        <a
+          href="https://mail.zoho.eu/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-brand font-medium hover:underline"
+        >
+          Open in Zoho →
+        </a>
+      </div>
+    </div>
+  )
+}
+
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`
   const units = ['KB', 'MB', 'GB', 'TB']
@@ -352,6 +452,7 @@ export default function AdminDashboardClient({
   firstViewDate,
   countriesThisWeek, countriesLastWeek, referrersThisWeek, referrersLastWeek,
   dataLastChanged, viewsLastRefreshed, sitemapCounts, datasetStats,
+  inboxRows, inboxFetchedAt,
 }: Props) {
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [fetchMsg, setFetchMsg] = useState('')
@@ -507,6 +608,9 @@ export default function AdminDashboardClient({
           <p className="text-xs text-gray-400 dark:text-gray-500">{newsCount} draft{newsCount !== 1 ? 's' : ''} awaiting review</p>
           <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review drafts →</span>
         </a>
+
+        {/* Row 1 — Inbox */}
+        <InboxCard rows={inboxRows} fetchedAt={inboxFetchedAt} cardCls={cardCls} />
 
         {/* Row 2 — Database */}
         <div className={cardCls}>

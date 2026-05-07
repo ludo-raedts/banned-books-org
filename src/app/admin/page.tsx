@@ -77,6 +77,31 @@ export default async function AdminPage() {
   const dbLimitGb = Number(process.env.SUPABASE_DB_LIMIT_GB ?? '8')
   const dbLimitBytes = dbLimitGb * 1024 * 1024 * 1024
 
+  // ── Inbox preview (last 5 mails, refreshed hourly by cron) ───────────────────
+  let inboxRows: import('./admin-dashboard-client').InboxRow[] = []
+  let inboxFetchedAt: string | null = null
+  try {
+    const { data: inbox } = await supabase
+      .from('inbox_preview')
+      .select('uid, from_name, from_address, subject, snippet, received_at, is_unread, fetched_at')
+      .order('received_at', { ascending: false })
+      .limit(5)
+    if (inbox && inbox.length > 0) {
+      inboxRows = inbox.map(r => ({
+        uid: Number(r.uid),
+        fromName: r.from_name ?? null,
+        fromAddress: r.from_address ?? null,
+        subject: r.subject ?? null,
+        snippet: r.snippet ?? '',
+        receivedAt: r.received_at ?? null,
+        isUnread: Boolean(r.is_unread),
+      }))
+      inboxFetchedAt = inbox[0].fetched_at ?? null
+    }
+  } catch {
+    // table not yet migrated — card hides gracefully
+  }
+
   // ── Trending / pageview data ──────────────────────────────────────────────────
   let trendingBooks: TrendingBookRow[] = []
   let trendingAuthors: TrendingAuthorRow[] = []
@@ -219,6 +244,8 @@ export default async function AdminPage() {
         reasons: sitemapReasonCount ?? 0,
       }}
       datasetStats={datasetStats}
+      inboxRows={inboxRows}
+      inboxFetchedAt={inboxFetchedAt}
     />
   )
 }
