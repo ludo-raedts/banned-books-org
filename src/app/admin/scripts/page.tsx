@@ -406,7 +406,7 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
               { flag: '--model=X', desc: 'Override the model (default gpt-4o-mini, also via OPENAI_MODEL env)' },
               { flag: '--delay=N', desc: 'Delay between API calls in ms (default 400)' },
             ]}
-            note="Routing is conservative by design. Suggestions of warning_level='none' with confidence ≥ medium auto-apply (the rationale is internal-only — no public change). Suggestions of warning_level='context' or 'extended', exclude=true, or low-confidence anything are written to data/editorial-review-<timestamp>.json for human review and never auto-applied. This protects against unexpected public editorial-note banners. Estimated cost: ~€2–€5 to classify the entire ~4.4k catalogue with gpt-4o-mini."
+            note="Routing — three outcomes: (1) AUTO-APPLY when GPT suggests warning_level='none' at confidence ≥ medium → rationale written to DB, no public change. (2) WRITE + FLAG when GPT suggests 'context'/'extended' at confidence ≥ medium → rationale written at none tier (so the book is classified and won't recur), AND logged to data/editorial-review-<ts>.json for you to decide whether to upgrade tier via admin. (3) REVIEW-ONLY when exclude=true or confidence='low' → no DB write, book stays in the candidate pool for re-evaluation or manual classification. The script never auto-promotes tier — that decision is always yours. Estimated cost: ~€2–€5 to classify the entire ~4.4k catalogue with gpt-4o-mini."
           />
         </div>
 

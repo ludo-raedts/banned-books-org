@@ -5,16 +5,27 @@
  * (/essays/what-we-document and /essays/forbidden-knowledge-iceberg) to every
  * book in the database that has at least one ban and is not yet classified.
  *
- * Routing rules — important:
- *   • warning_level === 'none' AND confidence !== 'low'
- *       → AUTO-APPLY: writes inclusion_rationale. The rationale is always
- *         internal — never publicly rendered. Auto-apply is safe because
- *         a 'none' classification produces no public-facing change.
- *   • warning_level === 'context' or 'extended', or exclude===true,
- *     or confidence === 'low'
- *       → REVIEW: writes a JSON record to data/editorial-review-<ts>.json
- *         for human review. Nothing touches the DB. This protects against
- *         unexpected public editorial-note frames appearing on book pages.
+ * Routing — three outcomes per book:
+ *   1. AUTO-APPLY (rationale written, tier=none)
+ *      Result: warning_level='none' suggestion at confidence high/medium.
+ *      The rationale is internal-only, so writing it to DB has no public effect.
+ *      Book is fully classified — won't be re-evaluated on re-runs.
+ *
+ *   2. WRITE + FLAG (rationale written at tier=none, also logged for review)
+ *      Result: 'context' or 'extended' suggestion at confidence high/medium.
+ *      We always write the rationale (mark book as classified internally) but
+ *      we never auto-promote the tier — tier upgrades are a human decision.
+ *      Book won't be re-evaluated on re-runs; user reviews JSON file to decide
+ *      whether to upgrade the tier via admin.
+ *
+ *   3. REVIEW-ONLY (no DB write)
+ *      Result: exclude=true OR confidence='low'.
+ *      Genuinely uncertain — leaves book in candidate pool so a future run with
+ *      a smarter prompt or different model can try again, or so a human can
+ *      classify manually via admin.
+ *
+ * This script NEVER sets warning_level to anything other than 'none'. The two
+ * non-none tiers are deliberately reserved for human editorial decision.
  *
  * Idempotent: skips books that already have warning_level !== 'none' or
  * inclusion_rationale set, so manual edits via the admin survive re-runs.
@@ -242,19 +253,19 @@ type ReviewItem = {
   result: ClassResult
 }
 
-function shouldAutoApply(r: ClassResult): boolean {
-  return !r.exclude
-    && r.warning_level === 'none'
-    && r.confidence !== 'low'
-    && r.inclusion_rationale.trim().length > 30
-}
+type Routing =
+  | { action: 'auto_apply' }                            // none + ≥medium confidence — write rationale, no review entry
+  | { action: 'write_and_flag'; reason: 'context' | 'extended' }  // tier suggestion at ≥medium confidence — write rationale at none AND log for review
+  | { action: 'review_only'; reason: 'exclude' | 'low_confidence' } // genuinely uncertain — leave book in candidate pool
+  | { action: 'skip' }                                  // rationale too short / unusable
 
-function reviewReason(r: ClassResult): ReviewItem['reason'] | null {
-  if (r.exclude) return 'exclude'
-  if (r.warning_level === 'extended') return 'extended'
-  if (r.warning_level === 'context')  return 'context'
-  if (r.confidence === 'low')         return 'low_confidence'
-  return null
+function decideRouting(r: ClassResult): Routing {
+  if (r.exclude)                return { action: 'review_only', reason: 'exclude' }
+  if (r.confidence === 'low')   return { action: 'review_only', reason: 'low_confidence' }
+  if (r.inclusion_rationale.trim().length <= 30) return { action: 'skip' }
+  if (r.warning_level === 'extended') return { action: 'write_and_flag', reason: 'extended' }
+  if (r.warning_level === 'context')  return { action: 'write_and_flag', reason: 'context' }
+  return { action: 'auto_apply' }
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
@@ -314,10 +325,25 @@ async function main() {
 
   // ── Process ────────────────────────────────────────────────────────────────
   const reviewItems: ReviewItem[] = []
-  let autoApplied = 0
-  let skipped = 0
+  let autoApplied = 0      // pure none-tier auto-classified
+  let writeAndFlag = 0     // rationale written, tier upgrade suggested for review
+  let reviewOnly = 0       // no DB write — genuinely uncertain or excluded
+  let skipped = 0          // rationale too short / unusable
   let errors = 0
-  let toReview = 0
+
+  async function writeRationaleAtNone(bookId: number, rationale: string): Promise<boolean> {
+    if (!APPLY) return true
+    const { error: upErr } = await supabase
+      .from('books')
+      .update({ warning_level: 'none', inclusion_rationale: rationale })
+      .eq('id', bookId)
+    if (upErr) {
+      console.log(`    ✗ DB error: ${upErr.message}`)
+      errors++
+      return false
+    }
+    return true
+  }
 
   for (const book of batch) {
     const author = book.book_authors[0]?.authors?.display_name ?? '(unknown)'
@@ -336,33 +362,34 @@ async function main() {
       console.log(`    reasoning: ${result.reasoning_summary.slice(0, 180)}`)
     }
 
-    const reason = reviewReason(result)
-    if (reason) {
-      reviewItems.push({ book_id: book.id, slug: book.slug, title: book.title, reason, result })
-      console.log(`    → REVIEW (${reason})`)
-      toReview++
-    } else if (shouldAutoApply(result)) {
-      if (APPLY) {
-        const { error: upErr } = await supabase
-          .from('books')
-          .update({
-            warning_level: 'none',
-            inclusion_rationale: result.inclusion_rationale.trim(),
-          })
-          .eq('id', book.id)
-        if (upErr) {
-          console.log(`    ✗ DB error: ${upErr.message}`)
-          errors++
-        } else {
-          console.log(`    ✓ auto-applied`)
-          autoApplied++
-        }
-      } else {
-        console.log(`    [dry] would auto-apply rationale`)
+    const routing = decideRouting(result)
+    const rationale = result.inclusion_rationale.trim()
+
+    if (routing.action === 'auto_apply') {
+      const ok = await writeRationaleAtNone(book.id, rationale)
+      if (ok) {
+        console.log(APPLY ? `    ✓ auto-applied` : `    [dry] would auto-apply rationale`)
         autoApplied++
       }
+    } else if (routing.action === 'write_and_flag') {
+      // Write rationale at none tier (so book is marked classified and won't
+      // recur on next run) AND log to review file (so user can decide whether
+      // to upgrade tier via admin).
+      const ok = await writeRationaleAtNone(book.id, rationale)
+      if (ok) {
+        reviewItems.push({ book_id: book.id, slug: book.slug, title: book.title, reason: routing.reason, result })
+        console.log(APPLY
+          ? `    ✓ rationale written; tier left at none — flagged for review (${routing.reason})`
+          : `    [dry] would write rationale and flag for review (${routing.reason})`)
+        writeAndFlag++
+      }
+    } else if (routing.action === 'review_only') {
+      // No DB write — book stays in candidate pool. Logged for human action.
+      reviewItems.push({ book_id: book.id, slug: book.slug, title: book.title, reason: routing.reason, result })
+      console.log(`    → REVIEW only (${routing.reason}) — no DB write, will recur on next run unless you act`)
+      reviewOnly++
     } else {
-      console.log(`    skip (rationale too short or other guard)`)
+      console.log(`    skip (rationale too short)`)
       skipped++
     }
 
@@ -375,15 +402,22 @@ async function main() {
     const reviewPath = join(process.cwd(), 'data', `editorial-review-${ts}.json`)
     writeFileSync(reviewPath, JSON.stringify(reviewItems, null, 2))
     console.log(`\nReview file written: ${reviewPath}`)
-    console.log(`  → open it, review each entry, then apply via admin UI or a follow-up script.`)
+    console.log(`  → open it, review each entry, then act via admin UI.`)
   }
 
   // ── Summary ────────────────────────────────────────────────────────────────
+  const prefix = APPLY ? '' : '(dry-run) '
   console.log(`\nDone.`)
-  console.log(`  ${APPLY ? 'auto-applied' : 'would auto-apply'}: ${autoApplied}`)
-  console.log(`  flagged for review     : ${toReview}`)
-  console.log(`  skipped (guard)        : ${skipped}`)
-  console.log(`  errors                 : ${errors}`)
+  console.log(`  ${prefix}auto-applied (none, classified)   : ${autoApplied}`)
+  console.log(`  ${prefix}written + flagged for tier review : ${writeAndFlag}`)
+  console.log(`  review-only (uncertain — DB untouched)       : ${reviewOnly}`)
+  console.log(`  skipped (rationale too short)                : ${skipped}`)
+  console.log(`  errors                                       : ${errors}`)
+  if (writeAndFlag + reviewOnly > 0) {
+    console.log(`\nReview file contains ${writeAndFlag + reviewOnly} entries:`)
+    console.log(`  - ${writeAndFlag} with rationale already written (only tier decision needed)`)
+    console.log(`  - ${reviewOnly} with no DB write (will be re-evaluated next run)`)
+  }
   if (!APPLY) console.log(`\nDRY-RUN — add --apply to write to DB and to a review file.`)
 }
 
