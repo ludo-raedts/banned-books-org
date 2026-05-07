@@ -39,8 +39,7 @@ export const ESSAYS: Essay[] = [
     dek: 'Every catalogue draws a line. What counts as a ban, what doesn’t, and the editorial choices baked into this project.',
     publishedAt: '2026-05-07',
     readingTimeMin: 8,
-    relatedBookSlugs: [],
-    draft: true,
+    relatedBookSlugs: ['the-satanic-verses', 'mein-kampf', 'lolita', 'the-turner-diaries', 'the-anarchist-cookbook'],
   },
   {
     slug: 'forbidden-knowledge-iceberg',
@@ -48,9 +47,8 @@ export const ESSAYS: Essay[] = [
     title: 'Why “forbidden knowledge” iceberg lists collapse important distinctions',
     dek: 'Banned, suppressed, esoteric, and dangerous get bundled into one viral pyramid. The categories matter — here’s why.',
     publishedAt: '2026-05-07',
-    readingTimeMin: 9,
-    relatedBookSlugs: [],
-    draft: true,
+    readingTimeMin: 8,
+    relatedBookSlugs: ['the-gulag-archipelago', 'the-satanic-verses', 'the-diary-of-a-young-girl', 'mein-kampf', 'the-turner-diaries', 'the-anarchist-cookbook'],
   },
 ]
 
