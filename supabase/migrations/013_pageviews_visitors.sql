@@ -15,11 +15,10 @@
 -- Old rows (pre-013) have NULL visitor_hash and are excluded from DISTINCT
 -- counts. After ~7 days of new traffic, weekly metrics stabilise.
 --
--- Views are dropped and recreated (rather than CREATE OR REPLACE) because
--- CREATE OR REPLACE VIEW only succeeds when the new query produces the same
--- columns in the same order and types as the existing view; we change the
--- shape of v_weekly_totals (extra columns) and have seen Postgres reject
--- replacements on the others, so a clean rebuild is simpler and safer.
+-- All view bodies are wrapped in a subquery and use table aliases / fully
+-- qualified column references to avoid any ambiguity with same-named functions
+-- or extension columns. Earlier attempts with bare column names hit a
+-- spurious "must appear in GROUP BY" error in Supabase's editor.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 ALTER TABLE pageviews
@@ -45,133 +44,162 @@ DROP VIEW IF EXISTS v_top_referrers_last_week   CASCADE;
 
 
 -- ── v_weekly_totals ───────────────────────────────────────────────────────────
--- Headline visitor count + raw pageview count for sub-display.
 CREATE VIEW v_weekly_totals AS
-SELECT
-  COUNT(DISTINCT visitor_hash) FILTER (
-    WHERE viewed_at >= now() - INTERVAL '7 days'
-  )::bigint AS views_this_week,
-  COUNT(DISTINCT visitor_hash) FILTER (
-    WHERE viewed_at >= now() - INTERVAL '14 days'
-      AND viewed_at <  now() - INTERVAL '7 days'
-  )::bigint AS views_last_week,
-  COUNT(*) FILTER (
-    WHERE viewed_at >= now() - INTERVAL '7 days'
-  )::bigint AS pageviews_this_week,
-  COUNT(*) FILTER (
-    WHERE viewed_at >= now() - INTERVAL '14 days'
-      AND viewed_at <  now() - INTERVAL '7 days'
-  )::bigint AS pageviews_last_week
-FROM pageviews;
+SELECT * FROM (
+  SELECT
+    COUNT(DISTINCT pv.visitor_hash) FILTER (
+      WHERE pv.viewed_at >= now() - INTERVAL '7 days'
+    )::bigint AS views_this_week,
+    COUNT(DISTINCT pv.visitor_hash) FILTER (
+      WHERE pv.viewed_at >= now() - INTERVAL '14 days'
+        AND pv.viewed_at <  now() - INTERVAL '7 days'
+    )::bigint AS views_last_week,
+    COUNT(*) FILTER (
+      WHERE pv.viewed_at >= now() - INTERVAL '7 days'
+    )::bigint AS pageviews_this_week,
+    COUNT(*) FILTER (
+      WHERE pv.viewed_at >= now() - INTERVAL '14 days'
+        AND pv.viewed_at <  now() - INTERVAL '7 days'
+    )::bigint AS pageviews_last_week
+  FROM pageviews pv
+) totals;
 
 
 -- ── v_top_books_this_week / last_week ─────────────────────────────────────────
 CREATE VIEW v_top_books_this_week AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'book'
-  AND viewed_at  >= now() - INTERVAL '7 days'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'book'
+    AND pv.viewed_at  >= now() - INTERVAL '7 days'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 CREATE VIEW v_top_books_last_week AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'book'
-  AND viewed_at  >= now() - INTERVAL '14 days'
-  AND viewed_at  <  now() - INTERVAL '7 days'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'book'
+    AND pv.viewed_at  >= now() - INTERVAL '14 days'
+    AND pv.viewed_at  <  now() - INTERVAL '7 days'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 
 -- ── v_top_authors_this_week / last_week ───────────────────────────────────────
 CREATE VIEW v_top_authors_this_week AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'author'
-  AND viewed_at  >= now() - INTERVAL '7 days'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'author'
+    AND pv.viewed_at  >= now() - INTERVAL '7 days'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 CREATE VIEW v_top_authors_last_week AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'author'
-  AND viewed_at  >= now() - INTERVAL '14 days'
-  AND viewed_at  <  now() - INTERVAL '7 days'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'author'
+    AND pv.viewed_at  >= now() - INTERVAL '14 days'
+    AND pv.viewed_at  <  now() - INTERVAL '7 days'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 
 -- ── v_top_books_all_time / v_top_authors_all_time ─────────────────────────────
--- Note: with daily-rotating salt, "all-time" is sum of daily-unique visits.
--- Still suppresses single-day scrapers vs raw COUNT(*).
 CREATE VIEW v_top_books_all_time AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'book'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'book'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 CREATE VIEW v_top_authors_all_time AS
-SELECT entity_id, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE entity_type = 'author'
-GROUP BY entity_id
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.entity_id, t.views FROM (
+  SELECT pv.entity_id AS entity_id,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.entity_type = 'author'
+  GROUP BY pv.entity_id
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 100;
 
 
 -- ── v_top_countries_this_week / last_week ─────────────────────────────────────
 CREATE VIEW v_top_countries_this_week AS
-SELECT country, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE viewed_at >= now() - INTERVAL '7 days'
-GROUP BY country
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC NULLS LAST
+SELECT t.country, t.views FROM (
+  SELECT pv.country AS country,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.viewed_at >= now() - INTERVAL '7 days'
+  GROUP BY pv.country
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC NULLS LAST
 LIMIT 50;
 
 CREATE VIEW v_top_countries_last_week AS
-SELECT country, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE viewed_at >= now() - INTERVAL '14 days'
-  AND viewed_at <  now() - INTERVAL '7 days'
-GROUP BY country
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC NULLS LAST
+SELECT t.country, t.views FROM (
+  SELECT pv.country AS country,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.viewed_at >= now() - INTERVAL '14 days'
+    AND pv.viewed_at <  now() - INTERVAL '7 days'
+  GROUP BY pv.country
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC NULLS LAST
 LIMIT 50;
 
 
 -- ── v_top_referrers_this_week / last_week ─────────────────────────────────────
 CREATE VIEW v_top_referrers_this_week AS
-SELECT referrer_host, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE viewed_at    >= now() - INTERVAL '7 days'
-  AND referrer_host IS NOT NULL
-GROUP BY referrer_host
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.referrer_host, t.views FROM (
+  SELECT pv.referrer_host AS referrer_host,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.viewed_at    >= now() - INTERVAL '7 days'
+    AND pv.referrer_host IS NOT NULL
+  GROUP BY pv.referrer_host
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 50;
 
 CREATE VIEW v_top_referrers_last_week AS
-SELECT referrer_host, COUNT(DISTINCT visitor_hash)::bigint AS views
-FROM pageviews
-WHERE viewed_at    >= now() - INTERVAL '14 days'
-  AND viewed_at    <  now() - INTERVAL '7 days'
-  AND referrer_host IS NOT NULL
-GROUP BY referrer_host
-HAVING COUNT(DISTINCT visitor_hash) > 0
-ORDER BY views DESC
+SELECT t.referrer_host, t.views FROM (
+  SELECT pv.referrer_host AS referrer_host,
+         COUNT(DISTINCT pv.visitor_hash)::bigint AS views
+  FROM pageviews pv
+  WHERE pv.viewed_at    >= now() - INTERVAL '14 days'
+    AND pv.viewed_at    <  now() - INTERVAL '7 days'
+    AND pv.referrer_host IS NOT NULL
+  GROUP BY pv.referrer_host
+) t
+WHERE t.views > 0
+ORDER BY t.views DESC
 LIMIT 50;
