@@ -3,6 +3,8 @@ import BooksListClient from './books-list-client'
 
 export const dynamic = 'force-dynamic'
 
+export type WarningLevel = 'none' | 'context' | 'extended'
+
 export type BookListItem = {
   id: number
   slug: string
@@ -10,6 +12,8 @@ export type BookListItem = {
   cover_url: string | null
   first_published_year: number | null
   ai_drafted: boolean | null
+  warning_level: WarningLevel
+  has_rationale: boolean
   author: string | null
 }
 
@@ -22,13 +26,15 @@ export default async function AdminBooksPage() {
   while (true) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, slug, title, cover_url, first_published_year, ai_drafted, book_authors(authors(display_name))')
+      .select('id, slug, title, cover_url, first_published_year, ai_drafted, warning_level, inclusion_rationale, book_authors(authors(display_name))')
       .order('title', { ascending: true })
       .range(offset, offset + 999)
     if (error || !data || data.length === 0) break
     const page = (data as unknown as Array<{
       id: number; slug: string; title: string; cover_url: string | null
       first_published_year: number | null; ai_drafted: boolean | null
+      warning_level: WarningLevel | null
+      inclusion_rationale: string | null
       book_authors: Array<{ authors: { display_name: string } | null }>
     }>).map(b => ({
       id: b.id,
@@ -37,6 +43,8 @@ export default async function AdminBooksPage() {
       cover_url: b.cover_url,
       first_published_year: b.first_published_year,
       ai_drafted: b.ai_drafted,
+      warning_level: (b.warning_level ?? 'none') as WarningLevel,
+      has_rationale: !!b.inclusion_rationale,
       author: b.book_authors?.[0]?.authors?.display_name ?? null,
     }))
     all = all.concat(page)

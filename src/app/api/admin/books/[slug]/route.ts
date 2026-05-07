@@ -6,7 +6,10 @@ import { notifyIndexNow } from '@/lib/indexnow'
 const ALLOWED_FIELDS = new Set([
   'title', 'first_published_year', 'genres', 'cover_url',
   'description_book', 'description_ban', 'censorship_context', 'ai_drafted',
+  'warning_level', 'inclusion_rationale', 'extended_context',
 ])
+
+const VALID_WARNING_LEVELS = new Set(['none', 'context', 'extended'])
 
 export async function PATCH(
   request: NextRequest,
@@ -35,6 +38,16 @@ export async function PATCH(
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 })
+  }
+
+  if ('warning_level' in updates) {
+    const lvl = updates.warning_level
+    if (typeof lvl !== 'string' || !VALID_WARNING_LEVELS.has(lvl)) {
+      return NextResponse.json(
+        { error: 'warning_level must be one of: none, context, extended' },
+        { status: 400 },
+      )
+    }
   }
 
   const { error } = await adminClient()

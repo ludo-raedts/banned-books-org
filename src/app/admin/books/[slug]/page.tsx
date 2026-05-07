@@ -4,6 +4,8 @@ import BookEditClient from './book-edit-client'
 
 export const dynamic = 'force-dynamic'
 
+export type WarningLevel = 'none' | 'context' | 'extended'
+
 export type BookEditData = {
   id: number
   slug: string
@@ -15,6 +17,9 @@ export type BookEditData = {
   description_ban: string | null
   censorship_context: string | null
   ai_drafted: boolean | null
+  warning_level: WarningLevel
+  inclusion_rationale: string | null
+  extended_context: string | null
   isbn13: string | null
   openlibrary_work_id: string | null
   ban_count: number
@@ -30,7 +35,8 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
     .select(`
       id, slug, title, cover_url, first_published_year, genres,
       description_book, description_ban, censorship_context,
-      ai_drafted, isbn13, openlibrary_work_id,
+      ai_drafted, warning_level, inclusion_rationale, extended_context,
+      isbn13, openlibrary_work_id,
       bans(id, country_code)
     `)
     .eq('slug', slug)
@@ -43,6 +49,9 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
     first_published_year: number | null; genres: string[]
     description_book: string | null; description_ban: string | null
     censorship_context: string | null; ai_drafted: boolean | null
+    warning_level: WarningLevel | null
+    inclusion_rationale: string | null
+    extended_context: string | null
     isbn13: string | null; openlibrary_work_id: string | null
     bans: Array<{ id: number; country_code: string }>
   }
@@ -60,6 +69,9 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
     description_ban: raw.description_ban,
     censorship_context: raw.censorship_context,
     ai_drafted: raw.ai_drafted,
+    warning_level: (raw.warning_level ?? 'none') as WarningLevel,
+    inclusion_rationale: raw.inclusion_rationale,
+    extended_context: raw.extended_context,
     isbn13: raw.isbn13,
     openlibrary_work_id: raw.openlibrary_work_id,
     ban_count: raw.bans.length,

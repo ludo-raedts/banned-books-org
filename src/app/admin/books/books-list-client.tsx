@@ -7,21 +7,58 @@ import type { BookListItem } from './page'
 
 const PAGE_SIZE = 50
 
+type ClassificationFilter =
+  | 'all'
+  | 'unclassified'
+  | 'classified'
+  | 'context'
+  | 'extended'
+  | 'extended_no_essay'
+
 export default function BooksListClient({ books }: { books: BookListItem[] }) {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
+  const [classFilter, setClassFilter] = useState<ClassificationFilter>('all')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return books
-    return books.filter(b => b.title.toLowerCase().includes(q) || b.author?.toLowerCase().includes(q))
-  }, [books, query])
+    return books.filter(b => {
+      if (q && !b.title.toLowerCase().includes(q) && !b.author?.toLowerCase().includes(q)) return false
+      switch (classFilter) {
+        case 'all':              return true
+        case 'unclassified':     return b.warning_level === 'none' && !b.has_rationale
+        case 'classified':       return b.warning_level !== 'none' || b.has_rationale
+        case 'context':          return b.warning_level === 'context'
+        case 'extended':         return b.warning_level === 'extended'
+        // extended_no_essay is a server-side-known property; in the list we
+        // approximate "extended without essay" via the dedicated /admin/books
+        // detail view. Until the list query joins extended_context, treat this
+        // as a synonym for 'extended'.
+        case 'extended_no_essay': return b.warning_level === 'extended'
+      }
+    })
+  }, [books, query, classFilter])
+
+  const counts = useMemo(() => {
+    let unclassified = 0, context = 0, extended = 0
+    for (const b of books) {
+      if (b.warning_level === 'context') context++
+      else if (b.warning_level === 'extended') extended++
+      if (b.warning_level === 'none' && !b.has_rationale) unclassified++
+    }
+    return { unclassified, context, extended }
+  }, [books])
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const visible = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
 
   function handleSearch(val: string) {
     setQuery(val)
+    setPage(0)
+  }
+
+  function handleFilter(val: ClassificationFilter) {
+    setClassFilter(val)
     setPage(0)
   }
 
@@ -32,8 +69,35 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
         placeholder="Search by title or author…"
         value={query}
         onChange={e => handleSearch(e.target.value)}
-        className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-4"
+        className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-3"
       />
+
+      <div className="flex flex-wrap gap-1.5 mb-4 text-xs">
+        {(
+          [
+            ['all',          `All (${books.length})`],
+            ['unclassified', `Unclassified (${counts.unclassified})`],
+            ['classified',   `Classified (${books.length - counts.unclassified})`],
+            ['context',      `Context (${counts.context})`],
+            ['extended',     `Extended (${counts.extended})`],
+          ] as Array<[ClassificationFilter, string]>
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => handleFilter(key)}
+            className={`px-2.5 py-1 rounded-full border transition-colors ${
+              classFilter === key
+                ? 'border-gray-900 dark:border-gray-100 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
+                : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 text-gray-600 dark:text-gray-400'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+        <span className="ml-auto text-gray-400 dark:text-gray-500 self-center">
+          Classification is editorial — not part of data quality.
+        </span>
+      </div>
 
       {filtered.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-400">No books match your search.</p>
@@ -52,6 +116,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                   <th className="px-3 py-2">Title</th>
                   <th className="px-3 py-2 hidden sm:table-cell">Author</th>
                   <th className="px-3 py-2 hidden sm:table-cell w-16 text-right">Year</th>
+                  <th className="px-3 py-2 hidden md:table-cell w-24">Class.</th>
                   <th className="px-3 py-2 w-16 text-right">AI</th>
                 </tr>
               </thead>
@@ -90,6 +155,17 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                     </td>
                     <td className="px-3 py-2 hidden sm:table-cell text-gray-500 dark:text-gray-400 text-right tabular-nums">
                       {book.first_published_year ?? '—'}
+                    </td>
+                    <td className="px-3 py-2 hidden md:table-cell">
+                      {book.warning_level === 'extended' ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400">extended</span>
+                      ) : book.warning_level === 'context' ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400">context</span>
+                      ) : book.has_rationale ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400">none</span>
+                      ) : (
+                        <span className="text-gray-300 dark:text-gray-600">—</span>
+                      )}
                     </td>
                     <td className="px-3 py-2 text-right">
                       {book.ai_drafted && (

@@ -128,6 +128,8 @@ type Ban = {
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
 }
 
+type WarningLevel = 'none' | 'context' | 'extended'
+
 type BookDetail = {
   id: number
   title: string
@@ -141,6 +143,9 @@ type BookDetail = {
   genres: string[]
   gutenberg_id: number | null
   isbn13: string | null
+  warning_level: WarningLevel | null
+  inclusion_rationale: string | null
+  extended_context: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -165,6 +170,7 @@ export default async function BookPage({
     .select(`
       id, title, slug, cover_url, description, description_book, description_ban,
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
+      warning_level, inclusion_rationale, extended_context,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, status, country_code, description,
@@ -544,6 +550,37 @@ export default async function BookPage({
               </table>
             </div>
           </div>
+        </section>
+      )}
+
+      {/* Editorial note — context/extended tier only; placed after bans so the
+          factual record comes first and editorial framing follows. */}
+      {book.warning_level && book.warning_level !== 'none' && (
+        <section className="mb-10 border-t border-gray-200 dark:border-gray-800 pt-5">
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+            Editorial note
+          </h2>
+          {book.inclusion_rationale && (
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+              {book.inclusion_rationale}
+            </p>
+          )}
+          {book.warning_level === 'extended' && book.extended_context && (
+            <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-2 whitespace-pre-line">
+              {book.extended_context}
+            </div>
+          )}
+          <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed">
+            On why we include works like this — see{' '}
+            <Link href="/essays/what-we-document" className="underline hover:no-underline">
+              What we document — and why that is a choice
+            </Link>{' '}
+            and{' '}
+            <Link href="/essays/forbidden-knowledge-iceberg" className="underline hover:no-underline">
+              Why &ldquo;forbidden knowledge&rdquo; iceberg lists collapse important distinctions
+            </Link>
+            .
+          </p>
         </section>
       )}
 
