@@ -33,6 +33,11 @@ type Metric = {
   type: 'ban' | 'book'
   count: number
   total: number
+  // When true, this metric is shown in the list for visibility but is excluded
+  // from the overall data-health score. Use for fields where "missing" is not
+  // an error (e.g. editorial classification — most books legitimately stay
+  // unclassified).
+  informational?: boolean
 }
 
 async function fetchCounts(sb: ReturnType<typeof adminClient>) {
@@ -59,6 +64,14 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     sb.from('authors').select('*', { count: 'exact', head: true }).is('bio', null),
     sb.from('authors').select('*', { count: 'exact', head: true }).is('photo_url', null),
   ])
+
+  // Editorial classification — purely informational, NOT counted in health score.
+  // "Unclassified" = warning_level still on default 'none' AND no inclusion_rationale yet.
+  const { count: unclassifiedBooks } = await sb
+    .from('books')
+    .select('*', { count: 'exact', head: true })
+    .eq('warning_level', 'none')
+    .is('inclusion_rationale', null)
 
   // No genre: genres defaults to '{}' (NOT NULL), check empty array
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,6 +129,14 @@ async function fetchCounts(sb: ReturnType<typeof adminClient>) {
     { key: 'no_isbn', label: 'No ISBN-13', type: 'book', count: noIsbnBooks ?? 0, total: tbooks },
     { key: 'author_no_bio', label: 'Authors without bio', type: 'book', count: noBioAuthors ?? 0, total: tauthors },
     { key: 'author_no_photo', label: 'Authors without photo', type: 'book', count: noPhotoAuthors ?? 0, total: tauthors },
+    {
+      key: 'unclassified',
+      label: 'Editorially unclassified',
+      type: 'book',
+      count: unclassifiedBooks ?? 0,
+      total: tbooks,
+      informational: true,
+    },
   ]
 
   return { totalBans: tb, totalBooks: tbooks, metrics }
@@ -326,6 +347,29 @@ async function fetchDetail(sb: ReturnType<typeof adminClient>, metric: string, l
     rows.sort((a, b) => b.count - a.count)
 
     return { rows: rows.slice(0, limit), total: rows.length, type: 'duplicates' }
+  }
+
+  // Editorially unclassified — books on default warning_level='none' with no rationale yet
+  if (metric === 'unclassified') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, count } = await (sb.from('books') as any)
+      .select('id, title, slug, created_at, book_authors(authors(display_name)), bans(id)', { count: 'exact' })
+      .eq('warning_level', 'none')
+      .is('inclusion_rationale', null)
+      .order('title')
+      .range(0, limit - 1)
+
+    const rows: BookDetailRow[] = (data ?? []).map((b: any) => ({
+      book_id: b.id,
+      title: b.title,
+      slug: b.slug,
+      author: (b.book_authors ?? [])
+        .map((ba: any) => ba.authors?.display_name)
+        .filter(Boolean).join(', '),
+      ban_count: (b.bans ?? []).length,
+      created_at: b.created_at,
+    }))
+    return { rows, total: count ?? rows.length, type: 'book' }
   }
 
   // Author bio/photo metrics — reuse BookDetailRow shape (book_id = author_id)

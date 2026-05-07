@@ -7,13 +7,14 @@
  *
  * Routing rules — important:
  *   • warning_level === 'none' AND confidence !== 'low'
- *       → AUTO-APPLY: writes inclusion_rationale (rationale is internal,
- *         never publicly visible).
+ *       → AUTO-APPLY: writes inclusion_rationale. The rationale is always
+ *         internal — never publicly rendered. Auto-apply is safe because
+ *         a 'none' classification produces no public-facing change.
  *   • warning_level === 'context' or 'extended', or exclude===true,
  *     or confidence === 'low'
  *       → REVIEW: writes a JSON record to data/editorial-review-<ts>.json
  *         for human review. Nothing touches the DB. This protects against
- *         unexpected public editorial-note banners.
+ *         unexpected public editorial-note frames appearing on book pages.
  *
  * Idempotent: skips books that already have warning_level !== 'none' or
  * inclusion_rationale set, so manual edits via the admin survive re-runs.
@@ -78,34 +79,45 @@ EXCLUDE FROM THE ARCHIVE
   extended context.
 
 WARNING-LEVEL TIERS
-none      — Default. Most books. Rationale stored internally; no public note.
+
+The inclusion_rationale you write is ALWAYS INTERNAL — it is never shown on
+the public website. The only public effect of warning_level is whether an
+"Editorial note" frame renders on the book page.
+
+none      — Default. Use for the vast majority of books. No public editorial
+            note; rationale is stored internally for our records.
             Use for politically suppressed literature, school-bans, religious
-            censorship, LGBTQ removals, obscenity cases, prison bans, etc.
-context   — Reserved for books where a brief contextual paragraph is needed
-            to prevent persistent misreading or to flag unusual circumstances.
-            Examples: works whose suppression is tied to violence against the
-            creators, or works whose subject matter is routinely misunderstood
-            in public discourse. Use sparingly.
+            censorship, LGBTQ removals, obscenity cases, prison bans,
+            cross-border bans, retail removals, etc. — anything that fits the
+            standard archive without needing extra editorial framing.
+context   — Reserved for books where the framework merits explicit
+            acknowledgment to readers. The public effect is a small "Editorial
+            note" frame with links to the two policy essays — no rationale or
+            essay is shown. Use only when readers genuinely benefit from being
+            pointed at the essays (works whose suppression is tied to violence
+            against the creators, or works persistently misunderstood in
+            public discourse). Use VERY sparingly — most books should be 'none'.
 extended  — Reserved for works at the contested edge of the archive whose
-            inclusion warrants a full editorial essay. Examples include works
-            cited as inspiration for mass violence, instructional works whose
-            suppression is itself a major legal/jurisprudential case, and
-            foundational extremist ideology. We have only four extended-tier
-            books in the catalogue right now (Mein Kampf, The Turner Diaries,
-            The Anarchist Cookbook, Hit Man). Use this tier extremely
-            sparingly — almost no book needs it.
+            inclusion warrants a full editorial essay. Public effect: an
+            "Editorial note" frame containing extended_context (a markdown
+            essay, written by hand by the editorial team — NOT by this script)
+            plus the policy-essay links. We have only four extended-tier books
+            in the catalogue (Mein Kampf, The Turner Diaries, The Anarchist
+            Cookbook, Hit Man). Use extremely sparingly — almost no book needs
+            this tier.
 
 CONFIDENCE
 high   — Clear-cut case fitting the framework
 medium — Needs nuance but you have a reasoned position
 low    — Genuinely unclear; would benefit from human review
 
-INCLUSION RATIONALE
+INCLUSION RATIONALE (always internal — never publicly rendered)
 1–2 sentences explaining concretely why the book belongs in this archive
 under our criteria. Reference what kind of suppression occurred. No
 boilerplate. No "this is an important book". State the specific basis
 ("Banned in Soviet bloc for political content", "Subject of UK obscenity
-trial 1960", "Most-challenged in US schools 2021–2024", etc.).
+trial 1960", "Most-challenged in US schools 2021–2024", etc.). This is
+internal-management language for our records, not public copy.
 
 EXCLUDE
 Set exclude=true ONLY if the book genuinely fails the inclusion criteria

@@ -9,6 +9,7 @@ type Metric = {
   type: 'ban' | 'book'
   count: number
   total: number
+  informational?: boolean
 }
 
 type CountsData = {
@@ -260,13 +261,94 @@ export default function DataQualityCard() {
     )
   }
 
-  // Sort metrics by pct descending
-  const sorted = [...data.metrics].sort((a, b) => pct(b.count, b.total) - pct(a.count, a.total))
+  // Split scoring metrics from informational ones — informational metrics are
+  // shown for visibility but excluded from the data-health calculation.
+  const scoringMetrics = data.metrics.filter(m => !m.informational)
+  const informationalMetrics = data.metrics.filter(m => m.informational)
+  const sortedScoring = [...scoringMetrics].sort((a, b) => pct(b.count, b.total) - pct(a.count, a.total))
 
-  // Health score = average of all (100 - pct)
-  const healthScore = sorted.length === 0 ? 100
-    : Math.round(sorted.reduce((sum, m) => sum + (100 - pct(m.count, m.total)), 0) / sorted.length)
+  // Health score = average of all scoring metrics (100 - pct)
+  const healthScore = sortedScoring.length === 0 ? 100
+    : Math.round(sortedScoring.reduce((sum, m) => sum + (100 - pct(m.count, m.total)), 0) / sortedScoring.length)
   const health = healthLabel(healthScore)
+
+  function renderMetricRow(m: Metric, info: boolean) {
+    const p = pct(m.count, m.total)
+    const isActive = activeMetric === m.key
+    const priority = priorityFor(p)
+    const border = info
+      ? 'border-l-4 border-gray-300 dark:border-gray-600'
+      : priority.border
+    const badgeCls = info
+      ? 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+      : priority.badge
+    const badgeLabel = info ? 'Informational' : priority.label
+
+    return (
+      <div key={m.key}>
+        <button
+          onClick={() => handleMetricClick(m.key)}
+          className={`w-full text-left pl-3 pr-4 py-2.5 rounded-lg ${border}
+            bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800
+            transition-colors flex items-center justify-between gap-4
+            ${isActive ? 'ring-1 ring-inset ring-gray-300 dark:ring-gray-600' : ''}`}
+        >
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-200 min-w-0 truncate">{m.label}</span>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm tabular-nums text-gray-600 dark:text-gray-300">
+              {m.count.toLocaleString('en')}
+              <span className="text-gray-400 dark:text-gray-500 ml-1">({p}%)</span>
+            </span>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeCls}`}>
+              {badgeLabel}
+            </span>
+            <span className="text-gray-400 dark:text-gray-500 text-xs">{isActive ? '▲' : '▼'}</span>
+          </div>
+        </button>
+
+        {/* Inline detail panel */}
+        {isActive && (
+          <div className="mt-1 mb-1 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                {detailLoading ? 'Loading…' : detail ? `Showing ${(detail.rows as unknown[]).length} of ${detail.total}` : ''}
+              </span>
+              {detail && (detail.rows as unknown[]).length > 0 && (
+                <button
+                  onClick={() => downloadCsv(detail.rows, m.key, detail.type)}
+                  className="text-xs text-brand hover:underline"
+                >
+                  Download CSV
+                </button>
+              )}
+            </div>
+
+            <div className="p-2">
+              {detailLoading && (
+                <p className="text-xs text-gray-400 dark:text-gray-500 p-3 animate-pulse">Loading detail…</p>
+              )}
+              {!detailLoading && detail && (detail.rows as unknown[]).length === 0 && (
+                <p className="text-xs text-gray-400 dark:text-gray-500 p-3">No records found.</p>
+              )}
+              {!detailLoading && detail && (detail.rows as unknown[]).length > 0 && (
+                <>
+                  {detail.type === 'ban' && (
+                    <BanDetailTable rows={detail.rows as BanDetailRow[]} metric={m.key} />
+                  )}
+                  {detail.type === 'book' && (
+                    <BookDetailTable rows={detail.rows as BookDetailRow[]} />
+                  )}
+                  {detail.type === 'duplicates' && (
+                    <DupDetailTable rows={detail.rows as DupDetailRow[]} />
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className={`${cardCls} col-span-full`}>
@@ -294,76 +376,16 @@ export default function DataQualityCard() {
 
       {/* Metric rows */}
       <div className="flex flex-col gap-1 mt-1">
-        {sorted.map(m => {
-          const p = pct(m.count, m.total)
-          const priority = priorityFor(p)
-          const isActive = activeMetric === m.key
+        {sortedScoring.map(m => renderMetricRow(m, false))}
 
-          return (
-            <div key={m.key}>
-              <button
-                onClick={() => handleMetricClick(m.key)}
-                className={`w-full text-left pl-3 pr-4 py-2.5 rounded-lg ${priority.border}
-                  bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800
-                  transition-colors flex items-center justify-between gap-4
-                  ${isActive ? 'ring-1 ring-inset ring-gray-300 dark:ring-gray-600' : ''}`}
-              >
-                <span className="text-sm font-medium text-gray-800 dark:text-gray-200 min-w-0 truncate">{m.label}</span>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm tabular-nums text-gray-600 dark:text-gray-300">
-                    {m.count.toLocaleString('en')}
-                    <span className="text-gray-400 dark:text-gray-500 ml-1">({p}%)</span>
-                  </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priority.badge}`}>
-                    {priority.label}
-                  </span>
-                  <span className="text-gray-400 dark:text-gray-500 text-xs">{isActive ? '▲' : '▼'}</span>
-                </div>
-              </button>
-
-              {/* Inline detail panel */}
-              {isActive && (
-                <div className="mt-1 mb-1 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                      {detailLoading ? 'Loading…' : detail ? `Showing ${(detail.rows as any[]).length} of ${detail.total}` : ''}
-                    </span>
-                    {detail && (detail.rows as any[]).length > 0 && (
-                      <button
-                        onClick={() => downloadCsv(detail.rows as any, m.key, detail.type)}
-                        className="text-xs text-brand hover:underline"
-                      >
-                        Download CSV
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="p-2">
-                    {detailLoading && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500 p-3 animate-pulse">Loading detail…</p>
-                    )}
-                    {!detailLoading && detail && (detail.rows as any[]).length === 0 && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500 p-3">No records found.</p>
-                    )}
-                    {!detailLoading && detail && (detail.rows as any[]).length > 0 && (
-                      <>
-                        {detail.type === 'ban' && (
-                          <BanDetailTable rows={detail.rows as BanDetailRow[]} metric={m.key} />
-                        )}
-                        {detail.type === 'book' && (
-                          <BookDetailTable rows={detail.rows as BookDetailRow[]} />
-                        )}
-                        {detail.type === 'duplicates' && (
-                          <DupDetailTable rows={detail.rows as DupDetailRow[]} />
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
+        {informationalMetrics.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-2 px-1">
+              Informational — not counted in data health score
+            </p>
+            {informationalMetrics.map(m => renderMetricRow(m, true))}
+          </div>
+        )}
       </div>
     </div>
   )

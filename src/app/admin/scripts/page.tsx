@@ -351,15 +351,14 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
               </dd>
               <dt className="font-mono">inclusion_rationale</dt>
               <dd>
-                1–2 sentences explaining why the book fits our criteria. <strong>Internal</strong> by default
-                (only visible in admin). Becomes part of the public editorial note when{' '}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">warning_level !== &lsquo;none&rsquo;</code>.
+                1–2 sentences explaining why the book fits our criteria. <strong>Always internal</strong> —
+                only visible in admin, never rendered on the public site. Marks a book as classified.
               </dd>
               <dt className="font-mono">extended_context</dt>
               <dd>
                 Markdown, only used for <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code> tier.
-                Rendered on the public book page above the bookshop callout. Filled by hand in admin —
-                never auto-generated.
+                <strong> The only field on a book page that gets a public editorial-essay treatment.</strong>{' '}
+                Filled by hand in admin — never auto-generated.
               </dd>
             </dl>
             <p className="mt-2 text-gray-500 dark:text-gray-500">

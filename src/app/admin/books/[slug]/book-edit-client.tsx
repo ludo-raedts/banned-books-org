@@ -7,7 +7,7 @@ import type { BookEditData } from './page'
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 type ImgStatus = 'idle' | 'loading' | 'loaded' | 'error'
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({ label, hint, children }: { label: React.ReactNode; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
@@ -190,7 +190,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
             )}
           </div>
 
-          <Field label="Warning level" hint="none = no warning · context = short paragraph above the entry · extended = full contextual essay required">
+          <Field label="Warning level" hint="none = no editorial note · context = editorial note with essay links · extended = editorial note with full essay above the essay links">
             <select
               value={warningLevel}
               onChange={e => setWarningLevel(e.target.value as 'none' | 'context' | 'extended')}
@@ -202,7 +202,17 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
             </select>
           </Field>
 
-          <Field label="Inclusion rationale" hint="Why does this book meet our editorial criteria? 1–2 sentences.">
+          <Field
+            label={
+              <span className="flex items-center gap-2">
+                Inclusion rationale
+                <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                  Internal
+                </span>
+              </span>
+            }
+            hint="Internal note: why does this book meet our editorial criteria? Stored for our records — never shown publicly. Marks a book as classified."
+          >
             <textarea
               rows={3}
               value={inclusionRationale}
@@ -212,7 +222,17 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
           </Field>
 
           {warningLevel === 'extended' && (
-            <Field label="Extended context" hint="Markdown — the full contextual essay shown alongside this entry. Required for extended-tier books.">
+            <Field
+              label={
+                <span className="flex items-center gap-2">
+                  Extended context
+                  <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400">
+                    Public
+                  </span>
+                </span>
+              }
+              hint="Markdown — the full contextual essay rendered on the public book page above the essay links. Required for extended-tier books."
+            >
               <textarea
                 rows={10}
                 value={extendedContext}
@@ -226,6 +246,41 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
                 </p>
               )}
             </Field>
+          )}
+
+          {/* Public preview — what readers will see on /books/<slug> */}
+          {warningLevel !== 'none' && (
+            <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/10 p-4">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-700 dark:text-emerald-400 mb-2">
+                Public preview — readers see this on the book page
+              </p>
+              <div className="border-t border-gray-200 dark:border-gray-800 pt-3">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                  Editorial note
+                </p>
+                {warningLevel === 'extended' && extendedContext.trim() && (
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 whitespace-pre-line">
+                    {extendedContext.trim()}
+                  </p>
+                )}
+                {warningLevel === 'extended' && !extendedContext.trim() && (
+                  <p className="text-xs text-gray-400 dark:text-gray-500 italic mb-2">
+                    (no extended context yet — only the essay links below will render)
+                  </p>
+                )}
+                <p className="text-xs text-gray-500 dark:text-gray-500">
+                  On why we include works like this — see{' '}
+                  <span className="underline">What we document — and why that is a choice</span>
+                  {' '}and{' '}
+                  <span className="underline">Why &ldquo;forbidden knowledge&rdquo; iceberg lists collapse important distinctions</span>.
+                </p>
+              </div>
+            </div>
+          )}
+          {warningLevel === 'none' && (inclusionRationale.trim() || extendedContext.trim()) && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 italic">
+              At <code>none</code> tier no public editorial note renders. The internal rationale stays in our records.
+            </p>
           )}
         </div>
 

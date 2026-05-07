@@ -554,17 +554,14 @@ export default async function BookPage({
       )}
 
       {/* Editorial note — context/extended tier only; placed after bans so the
-          factual record comes first and editorial framing follows. */}
+          factual record comes first and editorial framing follows.
+          inclusion_rationale is INTERNAL (admin only) and is intentionally not
+          rendered here. extended_context is the public essay slot. */}
       {book.warning_level && book.warning_level !== 'none' && (
         <section className="mb-10 border-t border-gray-200 dark:border-gray-800 pt-5">
           <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
             Editorial note
           </h2>
-          {book.inclusion_rationale && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-              {book.inclusion_rationale}
-            </p>
-          )}
           {book.warning_level === 'extended' && book.extended_context && (
             <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-2 whitespace-pre-line">
               {book.extended_context}
