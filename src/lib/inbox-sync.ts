@@ -86,7 +86,14 @@ export async function syncInboxPreview(): Promise<SyncResult> {
       lock.release()
     }
   } catch (err) {
-    return { ok: false, status: 502, error: err instanceof Error ? err.message : 'IMAP fetch failed' }
+    const e = err as { message?: string; code?: string; responseText?: string; authenticationFailed?: boolean }
+    const parts = [
+      e?.code,
+      e?.message,
+      e?.responseText,
+    ].filter(Boolean) as string[]
+    const detail = parts.length > 0 ? parts.join(' — ') : 'IMAP fetch failed'
+    return { ok: false, status: 502, error: detail }
   } finally {
     try { await client.logout() } catch { /* already closed */ }
   }
