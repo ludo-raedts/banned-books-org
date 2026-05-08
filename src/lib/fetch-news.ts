@@ -1,6 +1,7 @@
 import Parser from 'rss-parser'
 import OpenAI from 'openai'
 import { adminClient } from './supabase'
+import { getNewsConfig } from '@/config/news'
 
 export const FEEDS = [
   { name: 'PEN America',            url: 'https://pen.org/feed/' },
@@ -32,30 +33,83 @@ function stripTrailingPublisher(title: string, publisher: string): string {
 }
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+const SUMMARY_MODEL = 'gpt-4.1-mini'
+const EMBED_MODEL = 'text-embedding-3-small'
 
 export type FetchNewsResult = {
   saved: number
   skipped: number
+  duplicates: number
   errors: string[]
 }
 
-async function summarize(openai: OpenAI, title: string, sourceName: string, description: string, url: string): Promise<string | null> {
+const SUMMARY_SYSTEM = `You write short, neutral news briefs about book bans, censorship, and literary freedom for banned-books.org.
+
+Hard rules:
+- 40–70 words. One paragraph. No copying phrases from the source.
+- Open with the most concrete fact: a number, a name, a place, or the specific action taken. Avoid generic openers like "A new…", "A recently…", "A report shows…".
+- Vary sentence structure between briefs. Do not start every brief with the same subject-verb pattern.
+- Mention the country, institution, or publisher when known.
+- Do NOT end with a generic "this matters because…" sentence. Only add an implication if it is concrete (a specific consequence, precedent, or contradiction). Otherwise stop after the facts.
+- Stay factual; no editorialising.
+- Banned phrases (do not use): "highlights", "underscores", "such efforts", "such developments", "such actions", "ongoing challenges", "this is significant for readers interested in", "raises important questions", "reflects broader concerns", "draws attention to", "sheds light on", "the importance of", "literary freedom" as filler.
+
+If the item is not about book bans, censorship, or literary freedom, respond with exactly: NOT_RELEVANT`
+
+async function summarize(openai: OpenAI, title: string, sourceName: string, description: string): Promise<string | null> {
   const res = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    max_tokens: 150,
+    model: SUMMARY_MODEL,
+    max_tokens: 180,
+    temperature: 0.8,
     messages: [
-      {
-        role: 'system',
-        content: 'You summarize news about book bans and censorship for banned-books.org. Always write in clear, neutral English. Never copy sentences from the source. Max 80 words. If the item is not about book bans, censorship, or literary freedom, respond with exactly: NOT_RELEVANT',
-      },
+      { role: 'system', content: SUMMARY_SYSTEM },
       {
         role: 'user',
-        content: `Summarize this news item:\nTitle: ${title}\nSource: ${sourceName}\nDescription: ${description}\nURL: ${url}\n\nMention the country or institution if known. End with one sentence on why this matters for readers interested in censorship or free expression.`,
+        content: `Title: ${title}\nSource: ${sourceName}\nDescription: ${description.slice(0, 1500)}\n\nWrite the brief.`,
       },
     ],
   })
   const text = res.choices[0]?.message?.content?.trim() ?? ''
   return text === 'NOT_RELEVANT' ? null : text
+}
+
+async function embed(openai: OpenAI, title: string, description: string): Promise<number[]> {
+  // Embed title + leading description so dedup matches on the actual story,
+  // not just the headline (Google News headlines can differ wildly across
+  // republishers for the same underlying event).
+  const input = `${title}\n${description.slice(0, 800)}`
+  const res = await openai.embeddings.create({ model: EMBED_MODEL, input })
+  return res.data[0].embedding
+}
+
+function parseEmbedding(val: unknown): number[] | null {
+  if (!val) return null
+  if (Array.isArray(val)) return val as number[]
+  // pgvector serialises to a JSON-array-shaped string: "[0.1,0.2,...]"
+  if (typeof val === 'string') {
+    try { return JSON.parse(val) as number[] } catch { return null }
+  }
+  return null
+}
+
+function cosine(a: number[], b: number[]): number {
+  let dot = 0, na = 0, nb = 0
+  const len = Math.min(a.length, b.length)
+  for (let i = 0; i < len; i++) {
+    dot += a[i] * b[i]
+    na += a[i] * a[i]
+    nb += b[i] * b[i]
+  }
+  if (na === 0 || nb === 0) return 0
+  return dot / (Math.sqrt(na) * Math.sqrt(nb))
+}
+
+function currentMonday(): string {
+  const d = new Date()
+  const day = d.getUTCDay()
+  const diff = (day === 0 ? -6 : 1 - day)
+  d.setUTCDate(d.getUTCDate() + diff)
+  return d.toISOString().slice(0, 10)
 }
 
 export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
@@ -65,12 +119,33 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
     customFields: { item: [['source', 'rawSource', { keepArray: true }]] },
   })
 
+  const config = await getNewsConfig()
+
+  // URL dedup: same as before, hard skip if URL already exists in any state.
   const { data: existing } = await supabase.from('news_items').select('source_url')
   const existingUrls = new Set((existing ?? []).map(r => r.source_url))
+
+  // Embedding dedup: load embeddings of items from the lookback window. Items
+  // without an embedding (legacy rows from before migration 018) are skipped
+  // here — they can't contribute to similarity comparisons.
+  const dedupCutoff = new Date(Date.now() - config.dedupWindowDays * 24 * 60 * 60 * 1000).toISOString()
+  const { data: recentRows } = await supabase
+    .from('news_items')
+    .select('embedding')
+    .gte('published_at', dedupCutoff)
+    .not('embedding', 'is', null)
+  const recentEmbeddings: number[][] = (recentRows ?? [])
+    .map(r => parseEmbedding((r as { embedding: unknown }).embedding))
+    .filter((v): v is number[] => v !== null)
+
+  // Track embeddings of items saved in *this* run so dupes within a single
+  // fetch round get caught too (e.g. PEN America posts the same story twice).
+  const justSavedEmbeddings: number[][] = []
 
   const cutoff = Date.now() - SEVEN_DAYS_MS
   let saved = 0
   let skipped = 0
+  let duplicates = 0
   const errors: string[] = []
 
   for (const feed of FEEDS) {
@@ -96,10 +171,28 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
       const publisher = feed.aggregator ? readPublisher(item) : null
       const sourceName = publisher?.name ?? feed.name
       const title = publisher ? stripTrailingPublisher(rawTitle, publisher.name) : rawTitle
+      const description = item.contentSnippet ?? item.content ?? ''
+
+      // Embed first — cheaper than the chat call and lets us bail before
+      // paying for a summary on something we'd reject as duplicate anyway.
+      let embedding: number[]
+      try {
+        embedding = await embed(openai, title, description)
+      } catch (e) {
+        errors.push(`Embedding error for "${title.slice(0, 40)}": ${e instanceof Error ? e.message : String(e)}`)
+        continue
+      }
+
+      const maxSimRecent = recentEmbeddings.reduce((max, e) => Math.max(max, cosine(embedding, e)), 0)
+      const maxSimBatch = justSavedEmbeddings.reduce((max, e) => Math.max(max, cosine(embedding, e)), 0)
+      if (Math.max(maxSimRecent, maxSimBatch) >= config.dedupThreshold) {
+        duplicates++
+        continue
+      }
 
       let summary: string | null
       try {
-        summary = await summarize(openai, title, sourceName, item.contentSnippet ?? item.content ?? '', url)
+        summary = await summarize(openai, title, sourceName, description)
       } catch (e) {
         errors.push(`OpenAI error for "${title.slice(0, 40)}": ${e instanceof Error ? e.message : String(e)}`)
         continue
@@ -108,18 +201,28 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
       if (!summary) { skipped++; continue }
       if (!apply) continue
 
-      const { error } = await supabase.from('news_items').insert({
+      const status = config.autoPublish ? 'published' : 'draft'
+      const insertRow: Record<string, unknown> = {
         title,
         source_name: sourceName,
         source_url: url,
         published_at: item.pubDate ? new Date(item.pubDate).toISOString() : null,
         summary,
-        status: 'draft',
-      })
+        status,
+        embedding,
+        auto_published: config.autoPublish,
+      }
+      if (config.autoPublish) insertRow.published_week = currentMonday()
+
+      const { error } = await supabase.from('news_items').insert(insertRow)
       if (error) errors.push(`DB: ${error.message}`)
-      else { saved++; existingUrls.add(url) }
+      else {
+        saved++
+        existingUrls.add(url)
+        justSavedEmbeddings.push(embedding)
+      }
     }
   }
 
-  return { saved, skipped, errors }
+  return { saved, skipped, duplicates, errors }
 }

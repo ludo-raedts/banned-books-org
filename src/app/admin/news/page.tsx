@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import { getNewsConfig } from '@/config/news'
 import NewsAdminClient from './news-admin-client'
 
 export const dynamic = 'force-dynamic'
@@ -11,6 +12,7 @@ export default async function AdminNewsPage() {
     .order('published_at', { ascending: false })
 
   const items = data ?? []
+  const config = await getNewsConfig()
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-8">
@@ -21,7 +23,7 @@ export default async function AdminNewsPage() {
         </div>
         <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Admin dashboard</a>
       </div>
-      <NewsAdminClient initialItems={items} />
+      <NewsAdminClient initialItems={items} initialConfig={config} />
     </main>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { normalizeNewsDisplay } from '@/lib/news-display'
+import type { NewsConfig } from '@/config/news'
 
 type NewsItem = {
   id: number
@@ -105,7 +106,13 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
   )
 }
 
-export default function NewsAdminClient({ initialItems }: { initialItems: NewsItem[] }) {
+export default function NewsAdminClient({
+  initialItems,
+  initialConfig,
+}: {
+  initialItems: NewsItem[]
+  initialConfig: NewsConfig
+}) {
   const [items, setItems] = useState<NewsItem[]>(initialItems)
   const [fetching, setFetching] = useState(false)
   const [fetchMsg, setFetchMsg] = useState<string | null>(null)
@@ -125,7 +132,8 @@ export default function NewsAdminClient({ initialItems }: { initialItems: NewsIt
       if (!res.ok) {
         setFetchMsg(`Error: ${data.error}`)
       } else {
-        setFetchMsg(`Done — ${data.saved} new draft${data.saved !== 1 ? 's' : ''} added, ${data.skipped} skipped as not relevant${data.errors?.length ? `, ${data.errors.length} error(s)` : ''}`)
+        const dupBit = typeof data.duplicates === 'number' ? `, ${data.duplicates} duplicate${data.duplicates !== 1 ? 's' : ''}` : ''
+        setFetchMsg(`Done — ${data.saved} saved, ${data.skipped} not relevant${dupBit}${data.errors?.length ? `, ${data.errors.length} error(s)` : ''}`)
         router.refresh()
       }
     } catch {
@@ -148,6 +156,8 @@ export default function NewsAdminClient({ initialItems }: { initialItems: NewsIt
 
   return (
     <div className="flex flex-col gap-4">
+      <NewsConfigCard initial={initialConfig} onSave={() => router.refresh()} />
+
       <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={fetchNow}
@@ -176,5 +186,148 @@ export default function NewsAdminClient({ initialItems }: { initialItems: NewsIt
         ))
       )}
     </div>
+  )
+}
+
+// ── News config card ────────────────────────────────────────────────────────
+//
+// Auto-publish kill switch + dedup tuning. Daily cron pulls from feeds, and
+// when auto_publish is on, items that pass relevance + similarity dedup go
+// straight to 'published' — no draft queue needed. dedupThreshold is the
+// cosine similarity above which a story counts as a duplicate of something
+// already in the lookback window.
+
+function NewsConfigCard({ initial, onSave }: { initial: NewsConfig; onSave: () => void }) {
+  const [autoPublish, setAutoPublish] = useState(initial.autoPublish)
+  const [threshold, setThreshold] = useState(initial.dedupThreshold)
+  const [windowDays, setWindowDays] = useState(initial.dedupWindowDays)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const dirty =
+    autoPublish !== initial.autoPublish ||
+    threshold !== initial.dedupThreshold ||
+    windowDays !== initial.dedupWindowDays
+
+  async function patch(body: Record<string, unknown>) {
+    setBusy(true); setMsg(null); setError(null)
+    try {
+      const res = await fetch('/api/admin/news-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      onSave()
+      return true
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed')
+      return false
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function flipAuto(next: boolean) {
+    setAutoPublish(next)
+    const ok = await patch({ autoPublish: next })
+    if (!ok) setAutoPublish(!next)
+    else setMsg(next ? 'Auto-publish on — daily cron will publish directly.' : 'Auto-publish off — items land as drafts.')
+  }
+
+  async function saveTuning() {
+    const ok = await patch({ dedupThreshold: threshold, dedupWindowDays: windowDays })
+    if (ok) setMsg('Saved.')
+  }
+
+  const inputCls = 'border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 disabled:opacity-50'
+
+  return (
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+      <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-wide text-gray-500">Auto-publish</div>
+          <div className="text-xs text-gray-500 mt-0.5">Daily cron pulls feeds at 08:00 UTC. When on, items skip the draft queue.</div>
+        </div>
+        <ToggleSwitch
+          checked={autoPublish}
+          onChange={flipAuto}
+          disabled={busy}
+          labelOn="On"
+          labelOff="Off"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">Dedup threshold (cosine, 0–1) — lower = more aggressive</span>
+          <input
+            type="number"
+            step="0.01"
+            min="0.5"
+            max="1"
+            value={threshold}
+            onChange={e => setThreshold(Number(e.target.value) || threshold)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">Dedup lookback (days)</span>
+          <input
+            type="number"
+            min="1"
+            max="60"
+            value={windowDays}
+            onChange={e => setWindowDays(Number(e.target.value) || windowDays)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+      </div>
+
+      <div className="mt-3 flex items-center gap-3 flex-wrap">
+        <button
+          onClick={saveTuning}
+          disabled={!dirty || busy}
+          className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50"
+        >
+          {busy ? 'Saving…' : 'Save dedup settings'}
+        </button>
+        {msg && <span className="text-xs text-green-700 dark:text-green-400">{msg}</span>}
+        {error && <span className="text-xs text-red-600 dark:text-red-400">{error}</span>}
+      </div>
+    </div>
+  )
+}
+
+function ToggleSwitch({
+  checked, onChange, disabled, labelOn, labelOff,
+}: {
+  checked: boolean
+  onChange: (next: boolean) => void
+  disabled?: boolean
+  labelOn: string
+  labelOff: string
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className="inline-flex items-center gap-2 group disabled:opacity-50"
+    >
+      <span className={`text-xs font-medium ${checked ? 'text-green-700 dark:text-green-400' : 'text-gray-500'}`}>
+        {checked ? labelOn : labelOff}
+      </span>
+      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-700'}`}>
+        <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : ''}`} />
+      </span>
+    </button>
   )
 }
