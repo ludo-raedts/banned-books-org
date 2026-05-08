@@ -14,6 +14,7 @@ export type CloudflareSnapshot = {
     clientIP: string
     country: string | null
     requests: number
+    home: boolean
   }>
   statusBuckets: {
     s2xx: number
@@ -96,10 +97,29 @@ type CFResponse = {
   errors?: Array<{ message: string }>
 }
 
+function parseKnownIPs(raw: string | undefined): { exact: Set<string>; prefixes: string[] } {
+  const exact = new Set<string>()
+  const prefixes: string[] = []
+  if (!raw) return { exact, prefixes }
+  for (const entry of raw.split(',').map(s => s.trim()).filter(Boolean)) {
+    if (entry.endsWith(':')) prefixes.push(entry.toLowerCase())
+    else exact.add(entry.toLowerCase())
+  }
+  return { exact, prefixes }
+}
+
+function isHomeIP(ip: string, known: { exact: Set<string>; prefixes: string[] }): boolean {
+  const lower = ip.toLowerCase()
+  if (known.exact.has(lower)) return true
+  return known.prefixes.some(p => lower.startsWith(p))
+}
+
 async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
   const token = process.env.CLOUDFLARE_API_TOKEN
   const zone = process.env.CLOUDFLARE_ZONE_ID
   if (!token || !zone) return null
+
+  const knownIPs = parseKnownIPs(process.env.ADMIN_KNOWN_IPS)
 
   // Free plan caps the window at 1 day — pull a minute under the limit so clock skew
   // can't push us into a "time range wider than 1d" error from Cloudflare.
@@ -142,6 +162,7 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
     clientIP: r.dimensions.clientIP,
     country: r.dimensions.clientCountryName,
     requests: r.count,
+    home: isHomeIP(r.dimensions.clientIP, knownIPs),
   }))
 
   const buckets = { s2xx: 0, s3xx: 0, s4xx: 0, s5xx: 0, other: 0 }
@@ -160,6 +181,6 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
 
 export const getCloudflareSnapshot = unstable_cache(
   fetchSnapshot,
-  ['cloudflare-snapshot-v4'],
+  ['cloudflare-snapshot-v5'],
   { revalidate: 300 },
 )
