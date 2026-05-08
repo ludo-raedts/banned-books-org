@@ -138,6 +138,7 @@ export default function ScriptsPage() {
               ['Add censorship context per country/book', 'enrich-censorship-context-gpt.ts --apply'],
               ['Classify ban reasons (political, religious…)', 'enrich-reasons.ts --apply'],
               ['Fill author bios from Wikipedia', 'enrich-author-bios.ts --apply'],
+              ['Backfill author photos (Wikidata + OpenLibrary, second pass)', 'enrich-author-photos-v2.ts --apply'],
               ['Apply the 40-book editorial startset', 'apply-editorial-classification.ts --write'],
               ['Suggest classifications for the rest (GPT)', 'suggest-editorial-classification-gpt.ts --apply'],
               ['Check for duplicate books', 'check-dupes.ts'],
@@ -331,6 +332,25 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
               { flag: '--photos-only', desc: 'Only target authors with bio but no photo; write only photo_url, leave bio/birth/death untouched' },
             ]}
             note="Wikipedia intro extract is used as-is (HTML stripped). Censorship mentions in the full article are appended if not already in the intro. Birth/death years are extracted from Wikipedia categories."
+          />
+
+          <Script
+            name="enrich-author-photos-v2.ts"
+            what="Second-pass photo backfill for authors that the Wikipedia search in enrich-author-bios.ts couldn't fill. Tries Wikidata (search → require P31=human + P106 with a writer-ish occupation → fetch P18 image as a 400px Commons thumbnail), then falls back to OpenLibrary (covers.openlibrary.org/a/olid/{OLID}-L.jpg?default=false, HEAD-checked so 404s skip cleanly). Writes a CSV log per run to data/photo-enrichment-{timestamp}.csv with the source, URL, and reason for every author so you can spot-check accepted matches."
+            tags={['free']}
+            command={`# Dry-run on 50 authors — writes CSV, no DB changes
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts
+
+# Apply on 250 authors (~10 min runtime)
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=250
+
+# Apply on the full backlog (default 50, set higher for full run)
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=1000`}
+            flags={[
+              { flag: '--apply', desc: 'Write photo_url to DB (omit for dry-run)' },
+              { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
+            ]}
+            note="Run AFTER enrich-author-bios.ts --photos-only — that pass uses Wikipedia article search and is the cheap easy first sweep. v2 is for what's left and yields ~5–15% (the remaining authors are genuinely missing from free photo sources, often pseudonymous, dissident, or non-Western). Both image hosts (upload.wikimedia.org, covers.openlibrary.org) are already in src/lib/allowed-image-hosts.ts. If you ever extend this script with a new image source, add the new hostname to that file too — Next.js's image optimizer refuses hosts not on the allowlist."
           />
         </div>
 
