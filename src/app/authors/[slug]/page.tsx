@@ -229,7 +229,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 p-5 flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href={getBookshopAuthorUrl(a.display_name)}
+                  href={getBookshopAuthorUrl()}
                   target="_blank"
                   rel={BOOKSHOP_REL}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"

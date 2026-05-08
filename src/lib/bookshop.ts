@@ -1,43 +1,55 @@
 // Affiliate ID for banned-books.org on Bookshop.org.
 export const BOOKSHOP_AFFILIATE_ID = '123844'
 
-// Bookshop.org's documented deep-link form is /a/{affiliateId}/{ISBN}, but
-// it 404s whenever the ISBN isn't in Bookshop's US catalogue (most of our DB
-// stores foreign-edition ISBNs). We always use search-by-keywords instead —
-// it resolves to whichever editions Bookshop carries, never 404s, and lets
-// the reader pick paperback / hardcover / ebook themselves.
-//
-// The affiliate-tracking parameter for /search isn't publicly documented;
-// keep it as a named constant so it's a one-line swap if Bookshop ever
-// publishes one. Affiliate credit is currently best-effort here.
-export const BOOKSHOP_AFFILIATE_QUERY_PARAM = 'aid'
+// The shop name registered with Bookshop.org. Storefront URL is
+// https://bookshop.org/shop/{BOOKSHOP_SHOP_NAME} — used as fallback when we
+// don't have a Bookshop-resolvable ISBN. Renaming the shop on bookshop.org
+// would break every existing affiliate link, so this is effectively permanent.
+export const BOOKSHOP_SHOP_NAME = 'Banned-books'
 
 const BASE = 'https://bookshop.org'
+const STOREFRONT_URL = `${BASE}/shop/${BOOKSHOP_SHOP_NAME}`
+
+// Whether the book's isbn13 has been verified to resolve on Bookshop's
+// affiliate path. Populated by scripts/probe-bookshop-isbn.ts. NULL means
+// "not probed yet" — treated as if it might 404, so we fall back to the
+// storefront URL until the probe confirms otherwise.
+export type BookshopStatus = 'valid' | 'not_found' | null | undefined
 
 type BookshopInput = {
-  title: string
-  author?: string | null
+  isbn13?: string | null
+  // Alternative isbn13 found via Open Library cross-reference when the
+  // canonical isbn13 didn't resolve on Bookshop. Prefer this when set.
+  bookshopIsbn13?: string | null
+  bookshopStatus?: BookshopStatus
 }
 
-// Returns an affiliate-tagged Bookshop.org search URL keyed on title +
-// author. Always resolves — Bookshop's search redirects to the catalogue
-// page even when no exact match exists.
+// Returns an affiliate-tagged Bookshop.org URL. Two documented affiliate
+// formats exist:
+//   - /a/{aid}/{ISBN13}     — deep link to a specific book (preferred)
+//   - /shop/{name}          — storefront URL (fallback)
+// Both set the 48-hour affiliate cookie, so any purchase made within that
+// window is credited even if the visitor navigates elsewhere on bookshop.org.
+//
+// Deep-link is only used when the probe has confirmed an isbn13 resolves
+// on Bookshop. Otherwise we drop the visitor on our storefront — never on
+// a 404 page.
+//
+// Search URLs (`/search?aid=...`) are NOT a documented affiliate format and
+// don't appear to credit sales — Bookshop confirmed this directly. Don't
+// reintroduce them.
 export function getBookshopUrl(book: BookshopInput): string {
-  const keywords = [book.title, book.author].filter(Boolean).join(' ')
-  const params = new URLSearchParams({
-    keywords,
-    [BOOKSHOP_AFFILIATE_QUERY_PARAM]: BOOKSHOP_AFFILIATE_ID,
-  })
-  return `${BASE}/search?${params.toString()}`
+  const linkIsbn = book.bookshopIsbn13 ?? book.isbn13
+  if (linkIsbn && book.bookshopStatus === 'valid') {
+    return `${BASE}/a/${BOOKSHOP_AFFILIATE_ID}/${linkIsbn}`
+  }
+  return STOREFRONT_URL
 }
 
-// Affiliate-tagged search by author across Bookshop.org's catalogue.
-export function getBookshopAuthorUrl(authorName: string): string {
-  const params = new URLSearchParams({
-    keywords: authorName,
-    [BOOKSHOP_AFFILIATE_QUERY_PARAM]: BOOKSHOP_AFFILIATE_ID,
-  })
-  return `${BASE}/search?${params.toString()}`
+// Author pages have no per-author affiliate format. Send visitors to the
+// storefront so the cookie is still set.
+export function getBookshopAuthorUrl(): string {
+  return STOREFRONT_URL
 }
 
 // rel value for outbound affiliate links — combines Google's "sponsored"

@@ -184,8 +184,10 @@ export default function ReadingListPage() {
                           </details>
 
                           {/* Buy link */}
+                          {/* Reading-list ISBNs are hand-picked US editions, so we treat
+                              them as Bookshop-valid without going through the probe-script. */}
                           <a
-                            href={getBookshopUrl({ title: book.title, author: book.author })}
+                            href={getBookshopUrl({ isbn13: book.isbn, bookshopStatus: 'valid' })}
                             target="_blank"
                             rel={BOOKSHOP_REL}
                             className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"

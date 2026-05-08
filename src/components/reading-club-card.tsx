@@ -8,7 +8,7 @@ import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 import type { ReadingClubCard as Card } from '@/lib/reading-club-data'
 
 export default function ReadingClubBookCard({ card, showCountries }: { card: Card; showCountries?: boolean }) {
-  const bookshopUrl = card.bookshopUrl ?? getBookshopUrl({ title: card.title, author: card.authors[0] })
+  const bookshopUrl = card.bookshopUrl ?? getBookshopUrl({ isbn13: card.isbn13, bookshopIsbn13: card.bookshopIsbn13, bookshopStatus: card.bookshopStatus })
 
   return (
     <li className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">

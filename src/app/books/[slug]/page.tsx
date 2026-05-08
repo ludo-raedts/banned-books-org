@@ -143,6 +143,8 @@ type BookDetail = {
   genres: string[]
   gutenberg_id: number | null
   isbn13: string | null
+  bookshop_status: 'valid' | 'not_found' | null
+  bookshop_isbn13: string | null
   warning_level: WarningLevel | null
   inclusion_rationale: string | null
   extended_context: string | null
@@ -170,7 +172,7 @@ export default async function BookPage({
     .select(`
       id, title, slug, cover_url, description, description_book, description_ban,
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
-      warning_level, inclusion_rationale, extended_context,
+      bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, status, country_code, description,
@@ -605,7 +607,7 @@ export default async function BookPage({
           )}
           <div className="flex flex-col sm:flex-row gap-3">
             <a
-              href={getBookshopUrl({ title: book.title, author })}
+              href={getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })}
               target="_blank"
               rel={BOOKSHOP_REL}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"

@@ -37,6 +37,9 @@ export type ReadingClubCard = {
   position: number
   title: string
   authors: string[]
+  isbn13?: string | null
+  bookshopIsbn13?: string | null
+  bookshopStatus?: 'valid' | 'not_found' | null
   customBlurb: string | null
   discussionQuestions: string[]
   bookSlug: string | null
@@ -55,7 +58,7 @@ export type ReadingClubCard = {
 // Shared join used wherever we render a track row that points at a real book.
 const BOOK_JOIN = `
   books(
-    id, title, slug, cover_url, description_book,
+    id, title, slug, cover_url, description_book, isbn13, bookshop_status, bookshop_isbn13,
     book_authors(authors(display_name)),
     bans(country_code, ban_reason_links(reasons(slug)))
   )
@@ -67,6 +70,9 @@ type JoinedBook = {
   slug: string
   cover_url: string | null
   description_book: string | null
+  isbn13: string | null
+  bookshop_status: 'valid' | 'not_found' | null
+  bookshop_isbn13: string | null
   book_authors: { authors: { display_name: string } | null }[] | null
   bans: { country_code: string; ban_reason_links: { reasons: { slug: string } | null }[] | null }[] | null
 } | null
@@ -119,6 +125,9 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
       position: r.position,
       title: b?.title ?? r.title,
       authors: b ? proj.authors : [r.author],
+      isbn13: b?.isbn13 ?? null,
+      bookshopIsbn13: b?.bookshop_isbn13 ?? null,
+      bookshopStatus: b?.bookshop_status ?? null,
       customBlurb: null,
       discussionQuestions: r.discussion_questions ?? [],
       bookSlug: b?.slug ?? null,
@@ -156,6 +165,9 @@ export async function getInternationalTrack(opts?: { admin?: boolean }): Promise
       position: r.position,
       title: r.books?.title ?? `Book ${r.book_id}`,
       authors: proj.authors,
+      isbn13: r.books?.isbn13 ?? null,
+      bookshopIsbn13: r.books?.bookshop_isbn13 ?? null,
+      bookshopStatus: r.books?.bookshop_status ?? null,
       customBlurb: r.custom_blurb,
       discussionQuestions: r.discussion_questions ?? [],
       bookSlug: r.books?.slug ?? null,
@@ -190,6 +202,9 @@ export async function getClassicsTrack(opts?: { admin?: boolean }): Promise<Read
       position: r.position,
       title: r.books?.title ?? `Book ${r.book_id}`,
       authors: proj.authors,
+      isbn13: r.books?.isbn13 ?? null,
+      bookshopIsbn13: r.books?.bookshop_isbn13 ?? null,
+      bookshopStatus: r.books?.bookshop_status ?? null,
       customBlurb: r.custom_blurb,
       discussionQuestions: r.discussion_questions ?? [],
       bookSlug: r.books?.slug ?? null,
@@ -241,6 +256,9 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
       position: r.position,
       title: r.books?.title ?? `Book ${r.book_id}`,
       authors: proj.authors,
+      isbn13: r.books?.isbn13 ?? null,
+      bookshopIsbn13: r.books?.bookshop_isbn13 ?? null,
+      bookshopStatus: r.books?.bookshop_status ?? null,
       customBlurb: r.custom_blurb,
       discussionQuestions: r.discussion_questions ?? [],
       bookSlug: r.books?.slug ?? null,
@@ -284,7 +302,7 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
 
   const { data: books } = await reasonsClient
     .from('books')
-    .select(`id, title, slug, cover_url, description_book,
+    .select(`id, title, slug, cover_url, description_book, isbn13, bookshop_status, bookshop_isbn13,
              book_authors(authors(display_name)),
              bans(country_code, ban_reason_links(reasons(slug)))`)
     .in('id', bookIds)
@@ -298,6 +316,9 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
         position: 0,
         title: b.title,
         authors: proj.authors,
+        isbn13: b.isbn13,
+        bookshopIsbn13: b.bookshop_isbn13,
+        bookshopStatus: b.bookshop_status,
         customBlurb: null,
         discussionQuestions: [],
         bookSlug: b.slug,
