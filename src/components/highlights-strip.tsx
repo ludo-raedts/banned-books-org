@@ -30,7 +30,7 @@ const AUTHOR_SLOT_META: Record<HighlightSlot, { label: string; classes: string }
 }
 
 const ROW_CLASSES = 'flex gap-3 overflow-x-auto -mx-4 px-4 pb-2 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory sm:snap-none'
-const CARD_CLASSES = 'group shrink-0 w-[78%] sm:w-auto snap-start flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-all'
+const CARD_CLASSES = 'group shrink-0 w-[78%] sm:w-auto snap-start flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors'
 
 function bookAuthorName(book: Book): string {
   return book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
@@ -109,7 +109,7 @@ export default function HighlightsStrip({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:underline">
+                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">
                       {item.book.title}
                     </h3>
                     {author && (
@@ -142,7 +142,7 @@ export default function HighlightsStrip({
                     <AuthorAvatar name={item.author.display_name} photoUrl={item.author.photo_url} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:underline">
+                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">
                       {item.author.display_name}
                     </h3>
                     {item.context && (

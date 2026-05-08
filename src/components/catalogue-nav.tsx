@@ -40,14 +40,19 @@ export default async function CatalogueNav() {
             <Link
               key={title}
               href={href}
-              className={`group flex flex-col bg-white dark:bg-gray-900 border rounded-lg p-4 hover:shadow-sm transition-all ${
+              className={`group flex flex-col bg-white dark:bg-gray-900 border rounded-lg p-4 transition-colors ${
                 isBBW
-                  ? 'border-brand/40 hover:border-brand/70'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  // Active-state styling: BBW tile is "promoted" (brand border by
+                  // default; intensifies on hover) when the configured window is
+                  // open. This is our distinct "featured" call-to-action.
+                  ? 'border-brand/40 hover:border-brand/70 hover:bg-gray-50/50 dark:hover:bg-gray-900/40'
+                  // Default tile: gray border with a subtle brand-tinted hover
+                  // (matches /essays card hover for site-wide consistency).
+                  : 'border-gray-200 dark:border-gray-700 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40'
               }`}
             >
               <Icon className="w-5 h-5 text-brand mb-2" />
-              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{title}</span>
+              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm group-hover:text-brand dark:group-hover:text-brand transition-colors">{title}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 leading-snug mt-1">{text}</span>
               {isBBW && (
                 <span className="text-[11px] text-brand mt-2 group-hover:underline">Learn more →</span>
