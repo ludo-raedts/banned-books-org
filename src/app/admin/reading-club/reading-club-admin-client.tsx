@@ -61,12 +61,15 @@ export default function ReadingClubAdminClient(props: Props) {
     <div>
       <div className="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-800 mb-6">
         {([
-          ['currently-challenged', 'Currently Challenged', props.blockStatus.currentlyChallenged],
-          ['international',        'International',        props.blockStatus.international],
-          ['classics',             'Classics',             props.blockStatus.classics],
-          ['themes',               'By Theme',             props.blockStatus.themesIntro],
-        ] as const).map(([key, label, status]) => {
+          ['currently-challenged', 'Currently Challenged', props.currentlyChallenged.length, 'pick',  props.blockStatus.currentlyChallenged],
+          ['international',        'International',        props.international.length,        'pick',  props.blockStatus.international],
+          ['classics',             'Classics',             props.classics.length,             'pick',  props.blockStatus.classics],
+          ['themes',               'By Theme',             props.themes.length,               'theme', props.blockStatus.themesIntro],
+        ] as const).map(([key, label, count, noun, status]) => {
           const active = tab === key
+          // Show the count of picks (or themes for the Themes tab) — that's
+          // what an editor cares about at a glance. Block-readiness is
+          // already surfaced near each track's Publish button when relevant.
           return (
             <button
               key={key}
@@ -76,9 +79,11 @@ export default function ReadingClubAdminClient(props: Props) {
                   ? 'border-brand text-gray-900 dark:text-gray-100'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
               }`}
+              title={status.ready ? 'Intro content block is published' : `Intro block not yet published (${status.published}/${status.total})`}
             >
               {label}
-              <span className="text-[10px] text-gray-400">({status.published}/{status.total})</span>
+              <span className="text-[10px] text-gray-400">({count} {count === 1 ? noun : `${noun}s`})</span>
+              {!status.ready && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" aria-label="Intro content block not published" />}
             </button>
           )
         })}
