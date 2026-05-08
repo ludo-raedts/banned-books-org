@@ -57,7 +57,10 @@ function dailySalt(): string {
 }
 
 function visitorHash(headers: Headers): string | null {
-  const fwd = headers.get('x-forwarded-for') ?? headers.get('x-real-ip') ?? ''
+  const fwd =
+    headers.get('cf-connecting-ip') ??
+    headers.get('x-forwarded-for') ??
+    headers.get('x-real-ip') ?? ''
   const ip = fwd.split(',')[0].trim()
   if (!ip) return null
   const ua = headers.get('user-agent') ?? ''
@@ -93,7 +96,9 @@ export async function trackPageview(
     if (BOT_PATTERNS.some(pattern => ua.includes(pattern))) return
     if (!looksLikeBrowser(request.headers, ua)) return
 
-    const country = request.headers.get('x-vercel-ip-country') ?? null
+    const country =
+      request.headers.get('cf-ipcountry') ??
+      request.headers.get('x-vercel-ip-country') ?? null
     const referrer = request.headers.get('referer') ?? null
 
     await adminClient().from('pageviews').insert({
