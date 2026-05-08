@@ -89,7 +89,7 @@ function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: 
       <div>
         <h2 className="font-semibold text-gray-900 dark:text-gray-100">Inbox</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-          Last 5 messages from Zoho Mail. Refreshed hourly.
+          Last 5 e-mail messages. Refreshed hourly.
         </p>
       </div>
 
