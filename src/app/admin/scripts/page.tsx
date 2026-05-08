@@ -10,16 +10,18 @@ function Code({ children }: { children: string }) {
   )
 }
 
-function Tag({ type }: { type: 'free' | 'gpt' | 'destructive' | 'safe' }) {
+function Tag({ type }: { type: 'free' | 'gpt' | 'claude' | 'destructive' | 'safe' }) {
   const styles = {
     free: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
     gpt: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    claude: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
     destructive: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
     safe: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
   }
   const labels = {
     free: '✓ free APIs',
     gpt: '$ OpenAI cost',
+    claude: '$ Anthropic cost',
     destructive: '⚠ destructive',
     safe: 'read-only',
   }
@@ -40,7 +42,7 @@ function Script({
 }: {
   name: string
   what: string
-  tags: ('free' | 'gpt' | 'destructive' | 'safe')[]
+  tags: ('free' | 'gpt' | 'claude' | 'destructive' | 'safe')[]
   command: string
   flags?: { flag: string; desc: string }[]
   note?: string
@@ -97,8 +99,9 @@ export default function ScriptsPage() {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Ensure <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">.env.local</code> exists
-            in the project root with <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">SUPABASE_SERVICE_ROLE_KEY</code> and
-            (for GPT scripts) <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">OPENAI_API_KEY</code>.
+            in the project root with <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">SUPABASE_SERVICE_ROLE_KEY</code>,
+            (for GPT scripts) <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">OPENAI_API_KEY</code>, and
+            (for Claude scripts) <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">ANTHROPIC_API_KEY</code>.
           </p>
           <div className="flex flex-wrap gap-4 text-xs">
             <span className="flex items-center gap-1.5">
@@ -108,6 +111,10 @@ export default function ScriptsPage() {
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-3.5 h-3.5 text-amber-500" />
               <span className="text-gray-600 dark:text-gray-400">Amber = costs OpenAI credits (GPT-4o-mini)</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <DollarSign className="w-3.5 h-3.5 text-orange-500" />
+              <span className="text-gray-600 dark:text-gray-400">Orange = costs Anthropic credits (Claude Opus)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
@@ -136,6 +143,8 @@ export default function ScriptsPage() {
               ['Check for duplicate books', 'check-dupes.ts'],
               ['Audit overall data quality', 'audit-db.ts'],
               ['Refresh materialized views after import', 'refresh-mv.ts'],
+              ['Generate Reading Club discussion questions', 'generate-discussion-questions.ts --apply'],
+              ['Seed initial BBW content blocks', 'seed-bbw-content-blocks.ts --apply'],
             ].map(([task, script]) => (
               <>
                 <dt key={`dt-${task}`} className="text-gray-700 dark:text-gray-300">{task}</dt>
@@ -407,6 +416,61 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
               { flag: '--delay=N', desc: 'Delay between API calls in ms (default 400)' },
             ]}
             note="Routing — three outcomes: (1) AUTO-APPLY when GPT suggests warning_level='none' at confidence ≥ medium → rationale written to DB, no public change. (2) WRITE + FLAG when GPT suggests 'context'/'extended' at confidence ≥ medium → rationale written at none tier (so the book is classified and won't recur), AND logged to data/editorial-review-<ts>.json for you to decide whether to upgrade tier via admin. (3) REVIEW-ONLY when exclude=true or confidence='low' → no DB write, book stays in the candidate pool for re-evaluation or manual classification. The script never auto-promotes tier — that decision is always yours. Estimated cost: ~€2–€5 to classify the entire ~4.4k catalogue with gpt-4o-mini."
+          />
+        </div>
+
+        {/* Reading Club & Banned Books Week */}
+        <div className={cardCls}>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Reading Club &amp; Banned Books Week</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Editorial scripts for the{' '}
+            <a href="/admin/reading-club" className="text-brand hover:underline">Reading Club</a>{' '}
+            and{' '}
+            <a href="/admin/banned-books-week" className="text-brand hover:underline">Banned Books Week</a>{' '}
+            admin pages. Both scripts read from / write to the new tables introduced by migration 016.
+          </p>
+
+          <Script
+            name="generate-discussion-questions.ts"
+            what="Generates 5–10 thoughtful, book-specific discussion questions for every Reading Club row that doesn't have any yet. Auto-detects the provider: prefers Claude Opus 4.7 (with adaptive thinking) when ANTHROPIC_API_KEY is set, falls back to OpenAI gpt-4o when only OPENAI_API_KEY is set. The prompt is hand-crafted to produce nuanced, varied, emotionally intelligent questions tailored to each book — not generic reading-group questions, and not censorship-obsessed. The last question is always a deeper 'big question' for long discussion. Covers all four tracks: Currently Challenged, International, Classics, and per-theme overrides."
+            tags={['claude', 'gpt']}
+            command={`# Dry-run — list eligible rows, no API calls or DB writes
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts
+
+# Generate questions for all rows that are missing them (auto-detects provider)
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply
+
+# Cap at 10 rows per run (useful for staging or trying small batches first)
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --limit=10
+
+# Force a specific provider (otherwise auto-detects from env vars)
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=claude
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=openai
+
+# Regenerate questions even when they already exist (overwrites!)
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --force`}
+            flags={[
+              { flag: '--apply', desc: 'Call the LLM and write the result to the database' },
+              { flag: '--limit=N', desc: 'Cap at N rows per run (default: process everything eligible)' },
+              { flag: '--provider=X', desc: 'Force claude or openai (default: auto-detect from available API key)' },
+              { flag: '--force', desc: 'Regenerate even when questions already exist — overwrites the existing array' },
+            ]}
+            note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI gpt-4o. Quality is highest with Claude Opus 4.7 on this nuance-heavy task; gpt-4o is acceptable. Idempotent by default — re-running without --force only fills empty rows. Single-row failures (rate limit, malformed JSON) are logged and don't abort the run; the final summary lists which rows failed so you can re-run for just those."
+          />
+
+          <Script
+            name="seed-bbw-content-blocks.ts"
+            what="One-off seed for the 20 editorial content blocks introduced by migration 016 (BBW hub sections, Reading Club intros, theme intros, etc.). Writes initial draft markdown into every block, renders it through the same marked + sanitize-html pipeline as the admin save path, and marks each block as 'published' so the public BBW + Reading Club pages go live immediately. Editorial team can then iterate via /admin/content-blocks."
+            tags={['safe']}
+            command={`# Dry-run — show word counts and rendered HTML sizes per block
+npx tsx --env-file=.env.local scripts/seed-bbw-content-blocks.ts
+
+# Apply: upsert markdown + body_html, mark each block as 'published'
+npx tsx --env-file=.env.local scripts/seed-bbw-content-blocks.ts --apply`}
+            flags={[
+              { flag: '--apply', desc: 'Write to the database. Without it, prints what would change.' },
+            ]}
+            note="Idempotent: re-running --apply will overwrite existing markdown / HTML on any block where the slug matches. Use it to reset the editorial drafts back to the seed version after experimentation. Notes column is preserved across reseeds."
           />
         </div>
 
