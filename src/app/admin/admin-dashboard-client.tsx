@@ -377,7 +377,6 @@ export default function AdminDashboardClient({
           <Zap className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           <div>
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Quick actions</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Common tasks.</p>
           </div>
           <div className="flex flex-col gap-1.5 text-sm mt-1">
             <a
@@ -431,6 +430,14 @@ export default function AdminDashboardClient({
               className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
             >
               → Resend dashboard
+            </a>
+            <a
+              href="https://formspree.io/forms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Formspree dashboard
             </a>
             <a
               href="https://dashboard.stripe.com"
