@@ -26,7 +26,7 @@ export default async function ReadingClubHubPage() {
   const why = blocks.get('reading-club-why')
   const howToStart = blocks.get('reading-club-how-to-start')
   const universal = blocks.get('reading-club-universal-questions')
-  const showBBWLink = isBannedBooksWeekPromoActive()
+  const showBBWLink = await isBannedBooksWeekPromoActive()
 
   const jsonLd = {
     '@context': 'https://schema.org',

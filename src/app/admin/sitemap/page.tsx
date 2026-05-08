@@ -1,7 +1,7 @@
 import { adminClient } from '@/lib/supabase'
 import AdminTabs from '../admin-tabs'
 import SitemapClient from './sitemap-client'
-import { SITEMAP_STATIC_ENTRIES } from '@/lib/sitemap-static-entries'
+import { getSitemapStaticEntries } from '@/lib/sitemap-static-entries'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,11 +13,13 @@ export default async function AdminSitemapPage() {
     { count: sitemapBookCount },
     { count: sitemapAuthorCount },
     { count: sitemapReasonCount },
+    staticEntries,
   ] = await Promise.all([
     supabase.from('bans').select('country_code').range(0, 9999),
     supabase.from('books').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
     supabase.from('authors').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
     supabase.from('reasons').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
+    getSitemapStaticEntries(),
   ])
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
@@ -33,7 +35,7 @@ export default async function AdminSitemapPage() {
 
       <SitemapClient
         sitemapCounts={{
-          static: SITEMAP_STATIC_ENTRIES.length,
+          static: staticEntries.length,
           books: sitemapBookCount ?? 0,
           authors: sitemapAuthorCount ?? 0,
           countries: countryCount,

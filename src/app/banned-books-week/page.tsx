@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { adminClient } from '@/lib/supabase'
-import { BANNED_BOOKS_WEEK } from '@/config/banned-books-week'
+import { getBBWConfig } from '@/config/banned-books-week'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 import {
   getPublishedFeaturedBooks,
@@ -41,7 +41,8 @@ export default async function BannedBooksWeekPage({
   const sp = await searchParams
   const isPreview = sp.preview === 'draft' && (await isAdmin())
 
-  const year = BANNED_BOOKS_WEEK.year
+  const config = await getBBWConfig()
+  const year = config.year
   const slugs = REQUIRED_BLOCKS_BY_PAGE['bbw-hub']
 
   const [blockMap, featured, stats, previewBlocks] = await Promise.all([

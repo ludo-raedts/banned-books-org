@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { BookOpen, Globe, Search as SearchIcon, BarChart3, BookMarked } from 'lucide-react'
 import {
-  BANNED_BOOKS_WEEK,
+  getBBWConfig,
   isBannedBooksWeekPromoActive,
   formatBBWDateRange,
 } from '@/config/banned-books-week'
@@ -21,20 +21,25 @@ const DEFAULT_ITEMS = [
 export default async function CatalogueNav() {
   const items = [...DEFAULT_ITEMS]
 
-  if (isBannedBooksWeekPromoActive()) {
-    const tagline = await getPublishedBlockHtml('bbw-tile-tagline')
-    if (tagline) {
-      // Strip outer <p> wrap from the rendered tagline so it sits in the tile
-      // text slot without nested block elements.
-      const text = stripOuterParagraph(tagline)
-      items[0] = {
-        Icon: BookMarked,
-        // Title carries year + date range so the tile reads as a calendar
-        // entry at a glance: "Banned Books Week 2026 · Sep 27 – Oct 3".
-        title: `Banned Books Week ${BANNED_BOOKS_WEEK.year} · ${formatBBWDateRange()}`,
-        text,
-        href: '/banned-books-week',
-      }
+  // Two parallel awaits to avoid sequential roundtrips.
+  const [promoActive, bbwConfig, dateRange, tagline] = await Promise.all([
+    isBannedBooksWeekPromoActive(),
+    getBBWConfig(),
+    formatBBWDateRange(),
+    getPublishedBlockHtml('bbw-tile-tagline'),
+  ])
+
+  if (promoActive && tagline) {
+    // Strip outer <p> wrap from the rendered tagline so it sits in the tile
+    // text slot without nested block elements.
+    const text = stripOuterParagraph(tagline)
+    items[0] = {
+      Icon: BookMarked,
+      // Title carries year + date range so the tile reads as a calendar
+      // entry at a glance: "Banned Books Week 2026 · Sep 27 – Oct 3".
+      title: `Banned Books Week ${bbwConfig.year} · ${dateRange}`,
+      text,
+      href: '/banned-books-week',
     }
   }
 

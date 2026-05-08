@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BANNED_BOOKS_WEEK } from '@/config/banned-books-week'
+import { getBBWConfig } from '@/config/banned-books-week'
 import { getPublishedFeaturedBooks } from '@/lib/bbw-data'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 
@@ -32,7 +32,8 @@ export default async function BannedBooksWeekArchivePage({
   const { year: yearStr } = await params
   const year = Number(yearStr)
   if (!Number.isInteger(year) || year < 2000 || year > 2100) notFound()
-  if (year >= BANNED_BOOKS_WEEK.year) notFound()
+  const config = await getBBWConfig()
+  if (year >= config.year) notFound()
 
   const featured = await getPublishedFeaturedBooks(year)
   if (featured.length === 0) notFound()

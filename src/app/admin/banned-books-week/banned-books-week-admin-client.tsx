@@ -252,40 +252,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         </button>
       </div>
 
-      {/* Config card — full visibility into what's set in the file. */}
-      <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
-        <div className="flex items-center justify-between mb-2">
-          <div className="text-[11px] uppercase tracking-wide text-gray-500">Config</div>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-            props.config.enabled
-              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-              : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
-          }`}>
-            {props.config.enabled ? 'enabled' : 'disabled'}
-          </span>
-        </div>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-          <dt className="text-gray-500">Year</dt>
-          <dd className="tabular-nums">{props.config.year}</dd>
-          <dt className="text-gray-500">BBW window</dt>
-          <dd className="tabular-nums">{props.config.startDate} → {props.config.endDate} <span className="text-gray-400">({props.config.dateRange})</span></dd>
-          <dt className="text-gray-500">Promo starts</dt>
-          <dd className="tabular-nums">
-            {props.config.promoStartDate ?? <span className="text-gray-400">{props.config.startDate} <em>(no lead-up)</em></span>}
-          </dd>
-          <dt className="text-gray-500">Tile right now</dt>
-          <dd>
-            {props.config.promoActive ? (
-              <span className="text-green-700 dark:text-green-300">visible on homepage</span>
-            ) : (
-              <span className="text-gray-500">hidden ({props.config.enabled ? 'outside promo window' : 'config disabled'})</span>
-            )}
-          </dd>
-        </dl>
-        <p className="mt-3 text-xs text-gray-500">
-          Edit dates / enabled / promo start in <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">src/config/banned-books-week.ts</code>. Changes take effect on the next deploy.
-        </p>
-      </div>
+      <BBWConfigCard initial={props.config} onSave={() => router.refresh()} />
 
       {/* Tile preview — shows exactly how the homepage tile will render. */}
       <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
@@ -457,5 +424,207 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         </section>
       )}
     </main>
+  )
+}
+
+// ── BBW config card (DB-backed, editable) ─────────────────────────────────
+//
+// Renders the runtime config and lets the editor flip enabled, change the
+// year, dates, and (optional) promoStartDate from the admin UI. Saves
+// through PATCH /api/admin/bbw-config which writes the singleton row in
+// bbw_config (migration 017) and invalidates the in-memory cache so the
+// homepage tile reflects the new values within ~60s.
+
+type ConfigCardInput = {
+  enabled: boolean
+  year: number
+  startDate: string
+  endDate: string
+  promoStartDate: string | null
+  dateRange: string
+  promoActive: boolean
+}
+
+function BBWConfigCard({ initial, onSave }: { initial: ConfigCardInput; onSave: () => void }) {
+  const [enabled, setEnabled] = useState(initial.enabled)
+  const [year, setYear] = useState(initial.year)
+  const [startDate, setStartDate] = useState(initial.startDate)
+  const [endDate, setEndDate] = useState(initial.endDate)
+  const [promoStart, setPromoStart] = useState(initial.promoStartDate ?? '')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const dirty =
+    enabled !== initial.enabled ||
+    year !== initial.year ||
+    startDate !== initial.startDate ||
+    endDate !== initial.endDate ||
+    (promoStart || null) !== initial.promoStartDate
+
+  async function save() {
+    setBusy(true); setMsg(null); setError(null)
+    try {
+      const res = await fetch('/api/admin/bbw-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enabled,
+          year,
+          startDate,
+          endDate,
+          promoStartDate: promoStart || null,
+        }),
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setMsg('Saved.')
+      onSave()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // Quick toggle path: flip enabled without committing the rest of the form.
+  // The button autosaves so the editor doesn't need to scroll to the bottom
+  // just to flip the kill switch.
+  async function flipEnabled(next: boolean) {
+    setEnabled(next)
+    setBusy(true); setMsg(null); setError(null)
+    try {
+      const res = await fetch('/api/admin/bbw-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: next }),
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setMsg(next ? 'BBW enabled.' : 'BBW disabled.')
+      onSave()
+    } catch (err) {
+      setEnabled(!next) // roll back optimistic flip
+      setError(err instanceof Error ? err.message : 'Failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const inputCls = 'border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 disabled:opacity-50'
+
+  return (
+    <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+      <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
+        <div className="text-[11px] uppercase tracking-wide text-gray-500">Config</div>
+        <ToggleSwitch
+          checked={enabled}
+          onChange={flipEnabled}
+          disabled={busy}
+          labelOn="Enabled"
+          labelOff="Disabled"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">Year</span>
+          <input
+            type="number"
+            value={year}
+            onChange={e => setYear(Number(e.target.value) || year)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">Promo starts (optional — lead-up)</span>
+          <input
+            type="date"
+            value={promoStart}
+            onChange={e => setPromoStart(e.target.value)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">BBW start date</span>
+          <input
+            type="date"
+            value={startDate}
+            onChange={e => setStartDate(e.target.value)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-500">BBW end date</span>
+          <input
+            type="date"
+            value={endDate}
+            onChange={e => setEndDate(e.target.value)}
+            disabled={busy}
+            className={inputCls}
+          />
+        </label>
+      </div>
+
+      <div className="mt-3 flex items-center gap-3 text-xs flex-wrap">
+        <span className="text-gray-500">Date range: <span className="text-gray-700 dark:text-gray-300">{initial.dateRange}</span></span>
+        <span className="text-gray-500">·</span>
+        <span className="text-gray-500">
+          Tile right now:{' '}
+          {initial.promoActive ? (
+            <span className="text-green-700 dark:text-green-300">visible on homepage</span>
+          ) : (
+            <span>hidden ({initial.enabled ? 'outside promo window' : 'config disabled'})</span>
+          )}
+        </span>
+      </div>
+
+      <div className="mt-3 flex items-center gap-3 flex-wrap">
+        <button
+          onClick={save}
+          disabled={!dirty || busy}
+          className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50"
+        >
+          {busy ? 'Saving…' : 'Save changes'}
+        </button>
+        {msg && <span className="text-xs text-green-700 dark:text-green-400">{msg}</span>}
+        {error && <span className="text-xs text-red-600 dark:text-red-400">{error}</span>}
+        {dirty && !busy && !msg && <span className="text-xs text-amber-600">Unsaved changes</span>}
+      </div>
+    </div>
+  )
+}
+
+// Tiny toggle switch — used for the "enabled" kill switch above.
+function ToggleSwitch({
+  checked, onChange, disabled, labelOn, labelOff,
+}: {
+  checked: boolean
+  onChange: (next: boolean) => void
+  disabled?: boolean
+  labelOn: string
+  labelOff: string
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`inline-flex items-center gap-2 group disabled:opacity-50`}
+    >
+      <span className={`text-xs font-medium ${checked ? 'text-green-700 dark:text-green-400' : 'text-gray-500'}`}>
+        {checked ? labelOn : labelOff}
+      </span>
+      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-700'}`}>
+        <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : ''}`} />
+      </span>
+    </button>
   )
 }

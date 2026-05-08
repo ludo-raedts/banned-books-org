@@ -1,5 +1,5 @@
 import { adminClient } from '@/lib/supabase'
-import { BANNED_BOOKS_WEEK, formatBBWDateRange, isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
+import { getBBWConfig, formatBBWDateRange, isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
 import { getAllFeaturedBooksForAdmin } from '@/lib/bbw-data'
 import { getBlocksForPage, REQUIRED_BLOCKS_BY_PAGE, getPublishedBlockHtml } from '@/lib/content-blocks'
 import BannedBooksWeekAdminClient from './banned-books-week-admin-client'
@@ -12,13 +12,16 @@ export default async function AdminBannedBooksWeekPage({
   searchParams: Promise<{ year?: string }>
 }) {
   const sp = await searchParams
-  const year = sp.year ? Number(sp.year) : BANNED_BOOKS_WEEK.year
+  const config = await getBBWConfig()
+  const year = sp.year ? Number(sp.year) : config.year
 
-  const [current, blocks, { count: bookCount }, tileTagline] = await Promise.all([
+  const [current, blocks, { count: bookCount }, tileTagline, dateRange, promoActive] = await Promise.all([
     getAllFeaturedBooksForAdmin(year),
     getBlocksForPage('bbw-hub'),
     adminClient().from('books').select('*', { count: 'exact', head: true }),
     getPublishedBlockHtml('bbw-tile-tagline'),
+    formatBBWDateRange(),
+    isBannedBooksWeekPromoActive(),
   ])
 
   return (
@@ -26,16 +29,16 @@ export default async function AdminBannedBooksWeekPage({
       year={year}
       currentSelection={current}
       config={{
-        enabled: BANNED_BOOKS_WEEK.enabled,
-        year: BANNED_BOOKS_WEEK.year,
-        startDate: BANNED_BOOKS_WEEK.startDate,
-        endDate: BANNED_BOOKS_WEEK.endDate,
-        promoStartDate: BANNED_BOOKS_WEEK.promoStartDate ?? null,
-        dateRange: formatBBWDateRange(),
-        promoActive: isBannedBooksWeekPromoActive(),
+        enabled: config.enabled,
+        year: config.year,
+        startDate: config.startDate,
+        endDate: config.endDate,
+        promoStartDate: config.promoStartDate,
+        dateRange,
+        promoActive,
       }}
       tilePreview={{
-        title: `Banned Books Week ${BANNED_BOOKS_WEEK.year} · ${formatBBWDateRange()}`,
+        title: `Banned Books Week ${config.year} · ${dateRange}`,
         // tagline content block is rendered HTML; strip the surrounding <p>
         // tag for inline display in the preview card.
         tagline: tileTagline ? tileTagline.replace(/^<p>|<\/p>$/g, '').trim() : null,

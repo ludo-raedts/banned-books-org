@@ -1,6 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import { SITEMAP_BASE_URL } from '@/lib/sitemap-xml'
-import { SITEMAP_STATIC_ENTRIES } from '@/lib/sitemap-static-entries'
+import { getSitemapStaticEntries } from '@/lib/sitemap-static-entries'
 
 async function fetchAllSlugs(table: 'books' | 'authors'): Promise<string[]> {
   const supabase = adminClient()
@@ -25,12 +25,13 @@ async function fetchAllSlugs(table: 'books' | 'authors'): Promise<string[]> {
 export async function getAllCanonicalUrls(): Promise<string[]> {
   const supabase = adminClient()
 
-  const [bookSlugs, authorSlugs, countriesRes, bansRes, reasonsRes] = await Promise.all([
+  const [bookSlugs, authorSlugs, countriesRes, bansRes, reasonsRes, staticEntries] = await Promise.all([
     fetchAllSlugs('books'),
     fetchAllSlugs('authors'),
     supabase.from('countries').select('code'),
     supabase.from('bans').select('country_code'),
     supabase.from('reasons').select('slug'),
+    getSitemapStaticEntries(),
   ])
 
   const countriesWithBans = new Set((bansRes.data ?? []).map((b) => b.country_code))
@@ -43,7 +44,7 @@ export async function getAllCanonicalUrls(): Promise<string[]> {
     .map((r) => `${SITEMAP_BASE_URL}/reasons/${r.slug}`)
 
   return [
-    ...SITEMAP_STATIC_ENTRIES.map((e) => e.loc),
+    ...staticEntries.map((e) => e.loc),
     ...bookSlugs.map((slug) => `${SITEMAP_BASE_URL}/books/${slug}`),
     ...authorSlugs.map((slug) => `${SITEMAP_BASE_URL}/authors/${slug}`),
     ...countryUrls,
