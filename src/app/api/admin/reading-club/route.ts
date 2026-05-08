@@ -87,6 +87,53 @@ export async function POST(req: NextRequest) {
     })
   }
 
+  if (action === 'save_currently_challenged_bulk') {
+    // Bulk replace: same delete-then-insert pattern as the other tracks, so
+    // the in-memory picks list in the admin UI is the single source of truth.
+    // Differs from save_currently_challenged_entry (single-row upsert), which
+    // is preserved below for backward compat.
+    const year = Number(body.year)
+    const entries = body.entries as Array<{
+      position: number
+      title: string
+      author: string
+      book_id?: number | null
+      challenge_count?: number | null
+      bookshop_url?: string | null
+      source_url?: string | null
+      discussion_questions?: string[] | null
+    }> | undefined
+    if (!Number.isInteger(year) || !Array.isArray(entries)) {
+      return NextResponse.json({ error: 'Bad input' }, { status: 400 })
+    }
+    const { error: delErr } = await supabase
+      .from('reading_club_currently_challenged')
+      .delete()
+      .eq('year', year)
+    if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 })
+
+    if (entries.length > 0) {
+      const rows = entries.map(e => ({
+        year,
+        position: e.position,
+        title: e.title,
+        author: e.author,
+        book_id: e.book_id ?? null,
+        challenge_count: e.challenge_count ?? null,
+        bookshop_url: e.bookshop_url ?? null,
+        source_url: e.source_url ?? null,
+        discussion_questions: e.discussion_questions ?? null,
+        published_at: null,
+        updated_at: new Date().toISOString(),
+      }))
+      const { error } = await supabase
+        .from('reading_club_currently_challenged')
+        .insert(rows)
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json({ ok: true })
+  }
+
   if (action === 'save_currently_challenged_entry') {
     const year = Number(body.year)
     const e = body.entry as {

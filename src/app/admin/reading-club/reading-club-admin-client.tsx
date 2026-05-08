@@ -152,6 +152,16 @@ export default function ReadingClubAdminClient(props: Props) {
 
 // ── Currently Challenged tab ───────────────────────────────────────────────
 
+// Same visual pattern as BookTrackTab (typeahead + uniform book cards) but
+// with three Currently-Challenged-specific concerns:
+//   1) Year is part of the PK — every entry belongs to a specific ALA year.
+//   2) Manual entries supported — ALA's list sometimes contains books that
+//      aren't in our books table. Handled via a small "Add manually" form.
+//   3) Three extra ALA fields per row (challenge_count, bookshop_url,
+//      source_url) tucked behind a per-card "ALA metadata" disclosure.
+
+const ALA_DEFAULT_SOURCE_URL = 'https://www.ala.org/bbooks/frequentlychallengedbooks/top10'
+
 function CurrentlyChallengedTab({
   year, rows, ready, call, onChange,
 }: {
@@ -161,111 +171,212 @@ function CurrentlyChallengedTab({
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
 }) {
-  const [position, setPosition] = useState(rows.length + 1)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [bookId, setBookId] = useState<number | null>(null)
-  const [count, setCount] = useState<string>('')
-  const [questions, setQuestions] = useState<string>('')
-  const [bookshopUrl, setBookshopUrl] = useState('')
-  const [sourceUrl, setSourceUrl] = useState('https://www.ala.org/bbooks/frequentlychallengedbooks/top10')
+  const [picks, setPicks] = useState<ReadingClubCard[]>(rows)
+  const [manualTitle, setManualTitle] = useState('')
+  const [manualAuthor, setManualAuthor] = useState('')
 
-  async function add() {
-    if (!title || !author) return
-    await call({
-      action: 'save_currently_challenged_entry',
-      year,
-      entry: {
-        position,
-        title, author,
-        book_id: bookId,
-        challenge_count: count ? Number(count) : null,
-        bookshop_url: bookshopUrl || null,
-        source_url: sourceUrl || null,
-        discussion_questions: questions ? questions.split('\n').filter(Boolean) : null,
-      },
-    })
-    setTitle(''); setAuthor(''); setCount(''); setQuestions(''); setBookshopUrl(''); setBookId(null)
-    setPosition(p => p + 1)
-    onChange()
+  function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {
+    if (picks.some(p => p.bookId === book.id)) return
+    setPicks([...picks, {
+      bookId: book.id,
+      position: picks.length + 1,
+      title: book.title,
+      authors: book.authors,
+      customBlurb: null,
+      discussionQuestions: [],
+      bookSlug: book.slug,
+      coverUrl: null,
+      description: null,
+      countries: [],
+      reasons: [],
+      banCount: book.banCount,
+      challengeCount: null,
+      bookshopUrl: null,
+      sourceUrl: ALA_DEFAULT_SOURCE_URL,
+      publishedAt: null,
+    }])
   }
 
-  async function remove(p: number) {
-    await call({ action: 'delete_currently_challenged_entry', year, position: p })
+  function addManual() {
+    const t = manualTitle.trim()
+    const a = manualAuthor.trim()
+    if (!t || !a) return
+    setPicks([...picks, {
+      bookId: null,
+      position: picks.length + 1,
+      title: t,
+      authors: [a],
+      customBlurb: null,
+      discussionQuestions: [],
+      bookSlug: null,
+      coverUrl: null,
+      description: null,
+      countries: [],
+      reasons: [],
+      banCount: 0,
+      challengeCount: null,
+      bookshopUrl: null,
+      sourceUrl: ALA_DEFAULT_SOURCE_URL,
+      publishedAt: null,
+    }])
+    setManualTitle('')
+    setManualAuthor('')
+  }
+
+  function move(idx: number, dir: -1 | 1) {
+    const target = idx + dir
+    if (target < 0 || target >= picks.length) return
+    const next = [...picks]
+    ;[next[idx], next[target]] = [next[target], next[idx]]
+    next.forEach((p, i) => { p.position = i + 1 })
+    setPicks(next)
+  }
+
+  async function saveDraft() {
+    await call({
+      action: 'save_currently_challenged_bulk',
+      year,
+      entries: picks.map(p => ({
+        position: p.position,
+        title: p.title,
+        author: p.authors.join(', ') || 'Unknown',
+        book_id: p.bookId,
+        challenge_count: p.challengeCount ?? null,
+        bookshop_url: p.bookshopUrl ?? null,
+        source_url: p.sourceUrl ?? null,
+        discussion_questions: p.discussionQuestions.length > 0 ? p.discussionQuestions : null,
+      })),
+    })
     onChange()
   }
 
   async function publish() {
+    await saveDraft()
     await call({ action: 'publish_track', track: 'currently-challenged', year })
     onChange()
   }
 
+  // Used by the typeahead to filter out books the editor already added.
+  const excludeIds = picks.map(p => p.bookId).filter((x): x is number => x != null)
+
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-3">Currently Challenged — {year}</h2>
+      <h2 className="text-lg font-semibold mb-1">Currently Challenged — {year}</h2>
       <p className="text-xs text-gray-500 mb-4">Manual entry from the ALA OIF annual list. Up to 12 entries to handle ties.</p>
 
-      <ol className="flex flex-col gap-2 mb-6">
-        {rows.length === 0 ? (
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50">
+          Save draft
+        </button>
+        <button
+          onClick={publish}
+          disabled={!ready || picks.length === 0}
+          title={!ready ? 'Required content blocks not all published' : undefined}
+          className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-sm font-medium disabled:opacity-50 hover:bg-green-700"
+        >
+          Publish
+        </button>
+        {!ready && <span className="text-xs text-amber-600 self-center">Intro block not yet published — see <Link href="/admin/content-blocks" className="underline">Content blocks</Link></span>}
+      </div>
+
+      <BookSearchAdd onAdd={addBook} excludeIds={excludeIds} />
+
+      <details className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/50">
+        <summary className="text-xs font-medium cursor-pointer text-gray-600 dark:text-gray-400">
+          Add manually (book not in our database)
+        </summary>
+        <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input value={manualTitle} onChange={e => setManualTitle(e.target.value)} placeholder="Title" className={inputCls} />
+          <input value={manualAuthor} onChange={e => setManualAuthor(e.target.value)} placeholder="Author" className={inputCls} />
+        </div>
+        <button
+          onClick={addManual}
+          disabled={!manualTitle.trim() || !manualAuthor.trim()}
+          className="mt-2 px-3 py-1 rounded text-xs border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+        >
+          Add manual entry
+        </button>
+      </details>
+
+      <ol className="flex flex-col gap-2">
+        {picks.length === 0 ? (
           <li className="text-sm text-gray-500">No entries yet for {year}.</li>
-        ) : rows.map(r => (
-          <li key={r.position} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
-            <span className="text-xs font-mono text-gray-500 pt-1">#{r.position}</span>
-            <div className="flex-1">
-              <div className="font-medium text-sm">{r.title}</div>
-              <div className="text-xs text-gray-500">{r.authors.join(', ')}{r.challengeCount != null ? ` · ${r.challengeCount} challenges` : ''}</div>
-              {(r.discussionQuestions ?? []).length > 0 && (
-                <details className="mt-1.5">
-                  <summary className="text-xs text-gray-500 cursor-pointer">{r.discussionQuestions.length} discussion question{r.discussionQuestions.length !== 1 ? 's' : ''}</summary>
-                  <ul className="mt-1 text-xs space-y-0.5 list-disc pl-5">
-                    {r.discussionQuestions.map((q, i) => <li key={i}>{q}</li>)}
-                  </ul>
-                </details>
-              )}
-              <div className="text-[11px] text-gray-400 mt-1">
-                {r.publishedAt ? `Published ${new Date(r.publishedAt).toLocaleDateString('en-GB')}` : 'Draft'}
-              </div>
+        ) : picks.map((p, i) => (
+          <li key={p.bookId ?? `manual-${i}`} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
+            <div className="flex flex-col gap-0.5">
+              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↑</button>
+              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↓</button>
             </div>
-            <button onClick={() => remove(r.position)} className="text-xs text-red-600 hover:underline">Remove</button>
+            <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm">{p.title}{p.bookId == null && <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-700 dark:text-amber-400">manual</span>}</div>
+              <div className="text-xs text-gray-500">
+                {p.authors.join(', ')}
+                {p.challengeCount != null && ` · ${p.challengeCount} ALA challenges`}
+                {p.banCount > 0 && ` · ${p.banCount} bans`}
+              </div>
+              <textarea
+                value={(p.discussionQuestions ?? []).join('\n')}
+                placeholder="Discussion questions (optional, one per line)"
+                onChange={e => {
+                  const next = [...picks]
+                  const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean)
+                  next[i] = { ...next[i], discussionQuestions: lines }
+                  setPicks(next)
+                }}
+                rows={3}
+                className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+              />
+              <details className="mt-2">
+                <summary className="text-xs text-gray-500 cursor-pointer">ALA metadata (challenge count, bookshop URL, source URL)</summary>
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <input
+                    type="number"
+                    value={p.challengeCount ?? ''}
+                    placeholder="Challenge count"
+                    onChange={e => {
+                      const next = [...picks]
+                      const v = e.target.value
+                      next[i] = { ...next[i], challengeCount: v ? Number(v) : null }
+                      setPicks(next)
+                    }}
+                    className={inputCls}
+                  />
+                  <input
+                    value={p.bookshopUrl ?? ''}
+                    placeholder="Bookshop URL (optional)"
+                    onChange={e => {
+                      const next = [...picks]
+                      next[i] = { ...next[i], bookshopUrl: e.target.value || null }
+                      setPicks(next)
+                    }}
+                    className={inputCls}
+                  />
+                  <input
+                    value={p.sourceUrl ?? ''}
+                    placeholder="Source URL"
+                    onChange={e => {
+                      const next = [...picks]
+                      next[i] = { ...next[i], sourceUrl: e.target.value || null }
+                      setPicks(next)
+                    }}
+                    className={inputCls}
+                  />
+                </div>
+              </details>
+              {p.publishedAt && (
+                <div className="text-[11px] text-gray-400 mt-1">Published {new Date(p.publishedAt).toLocaleDateString('en-GB')}</div>
+              )}
+            </div>
+            <button
+              onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))}
+              className="text-xs text-red-600 hover:underline"
+            >
+              Remove
+            </button>
           </li>
         ))}
       </ol>
-
-      <details className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 mb-5">
-        <summary className="text-sm font-medium cursor-pointer">Add entry</summary>
-        <div className="grid grid-cols-2 gap-3 mt-3">
-          <Field label="Position"><input type="number" value={position} onChange={e => setPosition(Number(e.target.value))} className={inputCls} /></Field>
-          <Field label="Challenge count"><input value={count} onChange={e => setCount(e.target.value)} className={inputCls} /></Field>
-          <Field label="Title (type to match an existing book)" wide>
-            <BookTitleTypeahead
-              title={title}
-              onTitleChange={setTitle}
-              onMatch={book => {
-                setTitle(book.title)
-                setAuthor(book.authors[0] ?? author)
-                setBookId(book.id)
-              }}
-              onClear={() => setBookId(null)}
-              matchedBookId={bookId}
-            />
-          </Field>
-          <Field label="Author" wide><input value={author} onChange={e => setAuthor(e.target.value)} className={inputCls} /></Field>
-          <Field label="Bookshop URL" wide><input value={bookshopUrl} onChange={e => setBookshopUrl(e.target.value)} className={inputCls} placeholder="https://bookshop.org/..." /></Field>
-          <Field label="Source URL" wide><input value={sourceUrl} onChange={e => setSourceUrl(e.target.value)} className={inputCls} /></Field>
-          <Field label="Discussion questions (one per line)" wide><textarea rows={3} value={questions} onChange={e => setQuestions(e.target.value)} className={inputCls} /></Field>
-        </div>
-        <button onClick={add} disabled={!title || !author} className="mt-3 px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900">Save entry</button>
-      </details>
-
-      <button
-        onClick={publish}
-        disabled={!ready || rows.length === 0}
-        title={!ready ? 'Required content blocks not all published' : undefined}
-        className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium disabled:opacity-50 hover:bg-green-700"
-      >
-        Publish track
-      </button>
-      {!ready && <span className="ml-3 text-xs text-amber-600">Content blocks not all published — see <Link href="/admin/content-blocks" className="underline">Content blocks</Link></span>}
     </div>
   )
 }
@@ -674,80 +785,6 @@ function BookSearchAdd({
   )
 }
 
-// ── Title typeahead (Currently Challenged form) ─────────────────────────────
-//
-// Differs from BookSearchAdd: instead of "click → add to list", here clicking
-// a result *fills the current form* (title + author + matchedBookId), so the
-// editor can keep typing extra fields. If no result matches, the form still
-// works manually — book_id stays null.
-
-function BookTitleTypeahead({
-  title, onTitleChange, onMatch, onClear, matchedBookId,
-}: {
-  title: string
-  onTitleChange: (v: string) => void
-  onMatch: (book: BookSearchHit) => void
-  onClear: () => void
-  matchedBookId: number | null
-}) {
-  const [results, setResults] = useState<BookSearchHit[]>([])
-  const [loading, setLoading] = useState(false)
-  const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    // Skip search when the title was just confirmed via a click — the matched
-    // book id signals "this is exactly that DB book, no further search needed".
-    if (matchedBookId != null) return
-    if (title.trim().length < 2) { setResults([]); return }
-    let cancelled = false
-    setLoading(true)
-    const t = setTimeout(() => {
-      fetch(`/api/admin/books/search?q=${encodeURIComponent(title)}`, { credentials: 'include' })
-        .then(r => r.json())
-        .then(d => { if (!cancelled) setResults((d.results ?? []) as BookSearchHit[]) })
-        .catch(() => { if (!cancelled) setResults([]) })
-        .finally(() => { if (!cancelled) setLoading(false) })
-    }, 200)
-    return () => { cancelled = true; clearTimeout(t) }
-  }, [title, matchedBookId])
-
-  return (
-    <div className="relative">
-      <input
-        value={title}
-        onChange={e => { onTitleChange(e.target.value); onClear(); setOpen(true) }}
-        onFocus={() => setOpen(true)}
-        className={inputCls}
-      />
-      {matchedBookId != null && (
-        <p className="mt-1 text-[11px] text-green-700 dark:text-green-400">
-          ✓ Matched to existing book #{matchedBookId} — link will be created.{' '}
-          <button type="button" onClick={onClear} className="underline">unlink</button>
-        </p>
-      )}
-      {open && matchedBookId == null && title.trim().length >= 2 && results.length > 0 && (
-        <div className="absolute left-0 right-0 mt-1 z-20 max-h-72 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-lg">
-          {loading && <div className="px-3 py-2 text-xs text-gray-500">Searching…</div>}
-          {results.map(r => (
-            <button
-              key={r.id}
-              type="button"
-              onClick={() => { onMatch(r); setOpen(false) }}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 border-b last:border-b-0 border-gray-100 dark:border-gray-800"
-            >
-              <div className="font-medium">{r.title}</div>
-              <div className="text-xs text-gray-500">
-                {r.authors.length > 0 ? r.authors.join(', ') : '—'}
-                {r.banCount > 0 ? ` · ${r.banCount} bans` : ''}
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ── Generate-questions banner ───────────────────────────────────────────────
 //
 // Sits at the top of /admin/reading-club. Shows a count of rows missing
@@ -836,15 +873,6 @@ function GenerateQuestionsBanner({
   )
 }
 
-// ── Tiny inputs ─────────────────────────────────────────────────────────────
+// ── Shared input className ──────────────────────────────────────────────────
 
 const inputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800'
-
-function Field({ label, wide, children }: { label: string; wide?: boolean; children: React.ReactNode }) {
-  return (
-    <label className={`flex flex-col gap-1 ${wide ? 'col-span-2' : ''}`}>
-      <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
-      {children}
-    </label>
-  )
-}
