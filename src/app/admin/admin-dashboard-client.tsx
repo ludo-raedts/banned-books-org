@@ -489,8 +489,6 @@ export default function AdminDashboardClient({
   dataLastChanged, viewsLastRefreshed, sitemapCounts, datasetStats,
   inboxRows, inboxFetchedAt,
 }: Props) {
-  const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
-  const [fetchMsg, setFetchMsg] = useState('')
   const [refreshState, setRefreshState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [refreshMsg, setRefreshMsg] = useState('')
   const [lastRefreshed, setLastRefreshed] = useState(viewsLastRefreshed)
@@ -565,21 +563,6 @@ export default function AdminDashboardClient({
     } catch (err) {
       setBuildDatasetMsg(err instanceof Error ? err.message : 'Failed')
       setBuildDatasetState('error')
-    }
-  }
-
-  async function handleFetchNews() {
-    setFetchState('loading')
-    setFetchMsg('')
-    try {
-      const res = await fetch('/api/admin/fetch-news', { method: 'POST', credentials: 'include' })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
-      setFetchMsg(data.message ?? `Fetched ${data.added ?? 0} new item${data.added !== 1 ? 's' : ''}`)
-      setFetchState('done')
-    } catch (err) {
-      setFetchMsg(err instanceof Error ? err.message : 'Failed')
-      setFetchState('error')
     }
   }
 
@@ -949,18 +932,6 @@ export default function AdminDashboardClient({
             >
               → Scripts reference
             </a>
-            <button
-              onClick={handleFetchNews}
-              disabled={fetchState === 'loading'}
-              className="text-left text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors disabled:opacity-50"
-            >
-              {fetchState === 'loading' ? 'Fetching…' : '→ Fetch news now'}
-            </button>
-            {fetchMsg && (
-              <p className={`text-xs ${fetchState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
-                {fetchMsg}
-              </p>
-            )}
             <a
               href="https://www.banned-books.org"
               target="_blank"
@@ -984,6 +955,30 @@ export default function AdminDashboardClient({
               className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
             >
               → Vercel dashboard
+            </a>
+            <a
+              href="https://dash.cloudflare.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Cloudflare dashboard
+            </a>
+            <a
+              href="https://resend.com/overview"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Resend dashboard
+            </a>
+            <a
+              href="https://dashboard.stripe.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Stripe dashboard
             </a>
           </div>
         </div>
