@@ -1,4 +1,4 @@
-import { Cloud, ShieldAlert, Network, BarChart3 } from 'lucide-react'
+import { Cloud, Network, BarChart3 } from 'lucide-react'
 import { getCloudflareSnapshot } from '@/lib/cloudflare-analytics'
 
 const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
@@ -23,6 +23,63 @@ function compactNumber(n: number): string {
   return `${(n / 1_000_000).toFixed(n < 10_000_000 ? 1 : 0)}M`
 }
 
+type Verdict = { tone: 'good' | 'info' | 'warn' | 'alert'; message: string }
+
+const TONE_CLS: Record<Verdict['tone'], { text: string; dot: string }> = {
+  good:  { text: 'text-emerald-700 dark:text-emerald-400', dot: 'bg-emerald-500' },
+  info:  { text: 'text-gray-500 dark:text-gray-400',       dot: 'bg-gray-400' },
+  warn:  { text: 'text-amber-700 dark:text-amber-400',     dot: 'bg-amber-500' },
+  alert: { text: 'text-red-600 dark:text-red-400',         dot: 'bg-red-500' },
+}
+
+function VerdictLine({ verdict }: { verdict: Verdict }) {
+  const cls = TONE_CLS[verdict.tone]
+  return (
+    <p className={`text-xs flex items-center gap-1.5 mt-auto ${cls.text}`}>
+      <span className={`w-2 h-2 rounded-full shrink-0 ${cls.dot}`} aria-hidden />
+      <span>{verdict.message}</span>
+    </p>
+  )
+}
+
+function healthVerdict(threats: number, cacheHitPct: number, requests: number): Verdict {
+  if (requests === 0) return { tone: 'info', message: 'No traffic in the last 24h.' }
+  if (threats >= 100) return { tone: 'warn', message: `${threats} threats blocked — high. Check the CF firewall events.` }
+  if (cacheHitPct < 20) return { tone: 'info', message: 'Low cache hit — expected, the site is mostly dynamic.' }
+  return { tone: 'good', message: 'Healthy. CF is doing its job.' }
+}
+
+function statusVerdict(buckets: { s2xx: number; s4xx: number; s5xx: number; other: number }, total: number): Verdict {
+  if (total === 0) return { tone: 'info', message: 'No requests in the last 24h.' }
+  const pct5xx = (buckets.s5xx / total) * 100
+  const pct4xx = (buckets.s4xx / total) * 100
+  if (pct5xx > 1) return { tone: 'alert', message: `${pct5xx.toFixed(1)}% server errors — investigate.` }
+  if (pct5xx > 0.1) return { tone: 'warn', message: `${buckets.s5xx} server errors — keep an eye on it.` }
+  if (pct4xx > 15) return { tone: 'warn', message: `${pct4xx.toFixed(1)}% client errors — broken links worth checking.` }
+  return { tone: 'good', message: 'No server errors. 4xx is normal background.' }
+}
+
+function Metric({ label, tooltip, value, valueClassName }: {
+  label: string
+  tooltip: string
+  value: string
+  valueClassName?: string
+}) {
+  return (
+    <div>
+      <dt
+        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-help"
+        title={tooltip}
+      >
+        {label}
+      </dt>
+      <dd className={`text-2xl font-bold tabular-nums leading-tight ${valueClassName ?? 'text-gray-900 dark:text-gray-100'}`}>
+        {value}
+      </dd>
+    </div>
+  )
+}
+
 export default async function CloudflareCards() {
   const snapshot = await getCloudflareSnapshot()
 
@@ -45,15 +102,18 @@ export default async function CloudflareCards() {
 
   const statusTotal = statusBuckets.s2xx + statusBuckets.s3xx + statusBuckets.s4xx + statusBuckets.s5xx + statusBuckets.other
   const pct = (n: number) => statusTotal > 0 ? (n / statusTotal) * 100 : 0
-  const statusRows: Array<{ label: string; value: number; color: string; pct: number }> = [
-    { label: '2xx OK', value: statusBuckets.s2xx, color: 'bg-emerald-500', pct: pct(statusBuckets.s2xx) },
-    { label: '3xx Redirect', value: statusBuckets.s3xx, color: 'bg-blue-500', pct: pct(statusBuckets.s3xx) },
-    { label: '4xx Client', value: statusBuckets.s4xx, color: 'bg-amber-500', pct: pct(statusBuckets.s4xx) },
-    { label: '5xx Server', value: statusBuckets.s5xx, color: 'bg-red-500', pct: pct(statusBuckets.s5xx) },
+  const statusRows: Array<{ label: string; tooltip: string; value: number; color: string; pct: number }> = [
+    { label: '2xx OK',       tooltip: 'Successful responses. Higher is better.',                        value: statusBuckets.s2xx, color: 'bg-emerald-500', pct: pct(statusBuckets.s2xx) },
+    { label: '3xx Redirect', tooltip: 'Redirects (e.g. http→https or canonical URLs). Normal traffic.', value: statusBuckets.s3xx, color: 'bg-blue-500',    pct: pct(statusBuckets.s3xx) },
+    { label: '4xx Client',   tooltip: 'Client errors — usually 404s for dead URLs. <5% is fine.',       value: statusBuckets.s4xx, color: 'bg-amber-500',   pct: pct(statusBuckets.s4xx) },
+    { label: '5xx Server',   tooltip: 'Server errors — your code or upstream broke. Should be ~0%.',    value: statusBuckets.s5xx, color: 'bg-red-500',     pct: pct(statusBuckets.s5xx) },
   ]
   if (statusBuckets.other > 0) {
-    statusRows.push({ label: 'Other', value: statusBuckets.other, color: 'bg-gray-400', pct: pct(statusBuckets.other) })
+    statusRows.push({ label: 'Other', tooltip: 'Non-standard codes (1xx informational, etc.).', value: statusBuckets.other, color: 'bg-gray-400', pct: pct(statusBuckets.other) })
   }
+
+  const cardOneVerdict = healthVerdict(totals.threats, cacheHitPct, totals.requests)
+  const cardThreeVerdict = statusVerdict(statusBuckets, statusTotal)
 
   return (
     <>
@@ -62,36 +122,32 @@ export default async function CloudflareCards() {
         <Cloud className="w-5 h-5 text-gray-400 dark:text-gray-500" />
         <div>
           <h2 className="font-semibold text-gray-900 dark:text-gray-100">Cloudflare — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Edge requests, cache, and threats.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Edge requests, cache, and threats. Hover labels for explanations.</p>
         </div>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm mt-1">
-          <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Requests</dt>
-            <dd className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-tight">
-              {compactNumber(totals.requests)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cache hit</dt>
-            <dd className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-tight">
-              {cacheHitPct}%
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bandwidth</dt>
-            <dd className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-tight">
-              {formatBytes(totals.bytes)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Threats</dt>
-            <dd className={`text-2xl font-bold tabular-nums leading-tight ${
-              totals.threats > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-gray-100'
-            }`}>
-              {compactNumber(totals.threats)}
-            </dd>
-          </div>
+          <Metric
+            label="Requests"
+            tooltip="Total HTTP requests Cloudflare's edge handled in the last 24 hours — including cache hits, dynamic SSR, and bot traffic."
+            value={compactNumber(totals.requests)}
+          />
+          <Metric
+            label="Cache hit"
+            tooltip="% of requests served from CF's edge cache. Static-heavy sites hit 70–90%. Banned-books is mostly dynamic SSR, so anything from 5–30% is normal."
+            value={`${cacheHitPct}%`}
+          />
+          <Metric
+            label="Bandwidth"
+            tooltip="Total bytes Cloudflare served from the edge in the last 24h."
+            value={formatBytes(totals.bytes)}
+          />
+          <Metric
+            label="Threats"
+            tooltip="Requests CF auto-blocked (bots, exploits, WAF rules). <100/day is background noise. >1000/day suggests an active attack."
+            value={compactNumber(totals.threats)}
+            valueClassName={totals.threats > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
+          />
         </dl>
+        <VerdictLine verdict={cardOneVerdict} />
       </div>
 
       {/* Card 2 — Top IPs */}
@@ -99,7 +155,7 @@ export default async function CloudflareCards() {
         <Network className="w-5 h-5 text-gray-400 dark:text-gray-500" />
         <div>
           <h2 className="font-semibold text-gray-900 dark:text-gray-100">Top IPs — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">High‑volume sources — scraper indicators.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">High‑volume sources. 🏠 = home, 🏢 = work — ignore those.</p>
         </div>
         {topIPs.length === 0 ? (
           <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">No traffic in the last 24h.</p>
@@ -131,7 +187,7 @@ export default async function CloudflareCards() {
         <BarChart3 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
         <div>
           <h2 className="font-semibold text-gray-900 dark:text-gray-100">Status codes — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">5xx spike = something broke.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">5xx = server broke · 4xx = client errors / 404s.</p>
         </div>
         {statusTotal === 0 ? (
           <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">No requests in the last 24h.</p>
@@ -145,7 +201,7 @@ export default async function CloudflareCards() {
             <dl className="grid grid-cols-[auto_1fr_auto] gap-x-3 gap-y-1 text-xs mt-1">
               {statusRows.map(r => (
                 <div key={r.label} className="contents">
-                  <dt className="flex items-center gap-1.5">
+                  <dt className="flex items-center gap-1.5 cursor-help" title={r.tooltip}>
                     <span className={`w-2 h-2 rounded-sm ${r.color}`} />
                     <span className="text-gray-600 dark:text-gray-400">{r.label}</span>
                   </dt>
@@ -160,12 +216,7 @@ export default async function CloudflareCards() {
             </dl>
           </div>
         )}
-        {totals.threats > 0 && (
-          <p className="text-xs text-amber-700 dark:text-amber-400 flex items-center gap-1.5 mt-auto">
-            <ShieldAlert className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            {totals.threats.toLocaleString('en')} threat{totals.threats === 1 ? '' : 's'} blocked
-          </p>
-        )}
+        <VerdictLine verdict={cardThreeVerdict} />
       </div>
     </>
   )
