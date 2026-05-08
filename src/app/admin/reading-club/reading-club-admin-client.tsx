@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { ReadingClubCard } from '@/lib/reading-club-data'
@@ -313,6 +313,25 @@ function BookTrackTab({
     setPicks(next)
   }
 
+  function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {
+    if (picks.some(p => p.bookId === book.id)) return // already in list
+    setPicks([...picks, {
+      bookId: book.id,
+      position: picks.length + 1,
+      title: book.title,
+      authors: book.authors,
+      customBlurb: null,
+      discussionQuestions: [],
+      bookSlug: book.slug,
+      coverUrl: null,
+      description: null,
+      countries: [],
+      reasons: [],
+      banCount: book.banCount,
+      publishedAt: null,
+    }])
+  }
+
   return (
     <div>
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
@@ -334,6 +353,8 @@ function BookTrackTab({
           Publish
         </button>
       </div>
+
+      <BookSearchAdd onAdd={addBook} excludeIds={picks.map(p => p.bookId).filter((x): x is number => x != null)} />
 
       <ol className="flex flex-col gap-2 mb-6">
         {picks.length === 0 ? (
@@ -463,16 +484,120 @@ function ThemePanel({
             </li>
           ))}
         </ol>
+
+        <BookSearchAdd
+          onAdd={book => {
+            if (picks.some(p => p.bookId === book.id)) return
+            setPicks([...picks, {
+              bookId: book.id,
+              position: picks.length + 1,
+              title: book.title,
+              authors: book.authors,
+              customBlurb: null,
+              discussionQuestions: [],
+              bookSlug: book.slug,
+              coverUrl: null,
+              description: null,
+              countries: [],
+              reasons: [],
+              banCount: book.banCount,
+              publishedAt: null,
+            }])
+          }}
+          excludeIds={picks.map(p => p.bookId).filter((x): x is number => x != null)}
+        />
+
         <button
           onClick={publish}
           disabled={!blockReady || picks.length === 0}
           title={!blockReady ? 'Theme intro block not yet published' : undefined}
-          className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium disabled:opacity-50 hover:bg-green-700"
+          className="mt-3 px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium disabled:opacity-50 hover:bg-green-700"
         >
           Save & publish theme
         </button>
       </div>
     </details>
+  )
+}
+
+// ── Book search & add ───────────────────────────────────────────────────────
+//
+// Type-to-search input that hits /api/admin/books/search and lets the editor
+// click a result to add it to the current track's picks. Used by Classics
+// (the only manual-curation track), International (to add specific picks the
+// engine didn't surface), and per-theme override panels.
+
+type BookSearchHit = {
+  id: number
+  title: string
+  slug: string
+  authors: string[]
+  banCount: number
+  countryCount: number
+}
+
+function BookSearchAdd({
+  onAdd, excludeIds,
+}: {
+  onAdd: (book: BookSearchHit) => void
+  excludeIds: number[]
+}) {
+  const [q, setQ] = useState('')
+  const [results, setResults] = useState<BookSearchHit[]>([])
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  // Debounced search — wait for the user to stop typing for 200ms before
+  // hitting the API. Empty/short queries clear results without a fetch.
+  useEffect(() => {
+    if (q.trim().length < 2) { setResults([]); return }
+    let cancelled = false
+    setLoading(true)
+    const t = setTimeout(() => {
+      fetch(`/api/admin/books/search?q=${encodeURIComponent(q)}`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(d => { if (!cancelled) setResults((d.results ?? []) as BookSearchHit[]) })
+        .catch(() => { if (!cancelled) setResults([]) })
+        .finally(() => { if (!cancelled) setLoading(false) })
+    }, 200)
+    return () => { cancelled = true; clearTimeout(t) }
+  }, [q])
+
+  const filtered = results.filter(r => !excludeIds.includes(r.id))
+
+  return (
+    <div className="relative mb-3">
+      <input
+        type="text"
+        value={q}
+        onChange={e => { setQ(e.target.value); setOpen(true) }}
+        onFocus={() => setOpen(true)}
+        placeholder="Add a book — type at least 2 characters of the title…"
+        className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400"
+      />
+      {open && q.trim().length >= 2 && (
+        <div className="absolute left-0 right-0 mt-1 z-20 max-h-72 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-lg">
+          {loading && <div className="px-3 py-2 text-xs text-gray-500">Searching…</div>}
+          {!loading && filtered.length === 0 && (
+            <div className="px-3 py-2 text-xs text-gray-500">No matches{results.length > 0 ? ' (already added)' : ''}.</div>
+          )}
+          {filtered.map(r => (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => { onAdd(r); setQ(''); setResults([]); setOpen(false) }}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 border-b last:border-b-0 border-gray-100 dark:border-gray-800"
+            >
+              <div className="font-medium">{r.title}</div>
+              <div className="text-xs text-gray-500">
+                {r.authors.length > 0 ? r.authors.join(', ') : '—'}
+                {r.banCount > 0 ? ` · ${r.banCount} bans · ${r.countryCount} ${r.countryCount === 1 ? 'country' : 'countries'}` : ' · no bans recorded'}
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
