@@ -42,8 +42,17 @@ export async function POST(req: NextRequest) {
     if (!Number.isInteger(year) || !Array.isArray(picks)) {
       return NextResponse.json({ error: 'Bad input' }, { status: 400 })
     }
-    // Replace the draft set: delete unpublished rows for this year, insert new.
-    await supabase.from('bbw_featured_selections').delete().eq('year', year).is('published_at', null)
+    // Replace the entire set for this year: delete any row whose book_id is
+    // NOT in the new picks list (handles "removed from list"), then upsert
+    // the picks. The in-memory state in the admin UI is the source of truth.
+    const newBookIds = picks.map(p => p.book_id).filter(id => Number.isInteger(id))
+    let del = supabase.from('bbw_featured_selections').delete().eq('year', year)
+    if (newBookIds.length > 0) {
+      del = del.not('book_id', 'in', `(${newBookIds.join(',')})`)
+    }
+    const { error: delErr } = await del
+    if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 })
+
     if (picks.length > 0) {
       const rows = picks.map(p => ({
         year,

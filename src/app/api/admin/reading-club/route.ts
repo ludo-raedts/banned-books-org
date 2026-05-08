@@ -121,9 +121,25 @@ export async function POST(req: NextRequest) {
     const { table, themeSlug } = resolveTrackTable(track)
     if (!table) return NextResponse.json({ error: 'Unknown track' }, { status: 400 })
 
-    // Replace the draft set: delete unpublished rows and insert.
-    let del = supabase.from(table).delete().is('published_at', null)
+    // Replace the entire set in scope. Two-step: (1) delete rows whose
+    // book_id is NOT in the new picks list (handles "removed from list"),
+    // (2) upsert the remaining picks. This makes save semantics simple and
+    // intuitive — the in-memory state in the admin UI becomes the truth.
+    //
+    // Rows whose book_id WAS already in the new picks survive step 1 (they
+    // are merely UPDATEd in step 2 with the latest custom_blurb / position).
+    // Rows that were dropped from the list get DELETEd in step 1.
+    const newBookIds = picks.map(p => p.book_id).filter(id => Number.isInteger(id))
+
+    let del = supabase.from(table).delete()
     if (themeSlug) del = del.eq('theme_slug', themeSlug)
+    if (newBookIds.length > 0) {
+      del = del.not('book_id', 'in', `(${newBookIds.join(',')})`)
+    } else {
+      // Empty list — wipe everything in scope. We still need a WHERE clause
+      // to satisfy Supabase's "no unfiltered DELETE" rule.
+      del = del.gt('book_id', 0)
+    }
     const { error: delErr } = await del
     if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 })
 
@@ -166,8 +182,14 @@ export async function POST(req: NextRequest) {
       const year = Number(body.year)
       if (!Number.isInteger(year)) return NextResponse.json({ error: 'Bad year' }, { status: 400 })
       q = q.eq('year', year)
+    } else if (themeSlug) {
+      q = q.eq('theme_slug', themeSlug)
+    } else {
+      // International / Classics — single global set, no scoping column. We
+      // still need a WHERE clause so Supabase doesn't reject the UPDATE; use
+      // the always-true filter book_id > 0 (book_id is bigint NOT NULL).
+      q = q.gt('book_id', 0)
     }
-    if (themeSlug) q = q.eq('theme_slug', themeSlug)
     const { error } = await q
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
