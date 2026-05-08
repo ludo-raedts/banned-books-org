@@ -333,122 +333,7 @@ export default function AdminDashboardClient({
           })()}
         </div>
 
-        {/* Row 2 — Data quality (full width) */}
-        <DataQualityCard />
-
-        {/* Materialized views — slim card */}
-        <div className={cardCls}>
-          <RefreshCw className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Pre-aggregated data for countries and stats pages.
-            </p>
-          </div>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
-            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {dataLastChanged
-                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
-                : <span className="text-gray-400">—</span>}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Last refresh</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {lastRefreshed
-                ? new Date(lastRefreshed).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
-                : <span className="text-gray-400">—</span>}
-            </dd>
-          </dl>
-          <button
-            onClick={handleRefreshViews}
-            disabled={refreshState === 'loading'}
-            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
-          >
-            {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
-          </button>
-          {refreshMsg && (
-            <p className={`text-xs ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
-              {refreshMsg}
-            </p>
-          )}
-        </div>
-
-        {/* Dataset (paid download) — slim card */}
-        <div className={cardCls}>
-          <Download className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Dataset</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Paid downloads · regenerated when DB changes.
-            </p>
-          </div>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
-            <dt className="text-gray-500 dark:text-gray-400">Paid orders</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {datasetStats.paidOrders.toLocaleString('en')}
-              {datasetStats.totalOrders > datasetStats.paidOrders && (
-                <span className="text-gray-400"> ({datasetStats.totalOrders - datasetStats.paidOrders} pending)</span>
-              )}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Revenue</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {(datasetStats.totalRevenueCents / 100).toLocaleString('en', {
-                style: 'currency',
-                currency: datasetStats.currency.toUpperCase(),
-              })}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Downloads</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {datasetStats.totalDownloads.toLocaleString('en')}
-              {datasetStats.paidOrders > 0 && (
-                <span className="text-gray-400">
-                  {' '}(avg {(datasetStats.totalDownloads / datasetStats.paidOrders).toFixed(1)}/order)
-                </span>
-              )}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {dataLastChanged
-                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
-                : <span className="text-gray-400">—</span>}
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Last build</dt>
-            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
-              {datasetBuiltAt
-                ? new Date(datasetBuiltAt).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
-                : <span className="text-gray-400">never</span>}
-            </dd>
-          </dl>
-          {datasetStats.suspiciousOrderCount > 0 && (
-            <div className="flex items-start gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-md px-3 py-2 -mx-1">
-              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
-              <span>
-                {datasetStats.suspiciousOrderCount} order{datasetStats.suspiciousOrderCount === 1 ? '' : 's'} with
-                more than {datasetStats.suspiciousThreshold} downloads — link may be shared.
-                Highest: {datasetStats.maxDownloadsOnSingleOrder}.
-              </span>
-            </div>
-          )}
-          {dataLastChanged && datasetBuiltAt && new Date(dataLastChanged) > new Date(datasetBuiltAt) && (
-            <p className="text-xs text-amber-700 dark:text-amber-400">
-              ⚠ Data has changed since last build — buyers will get the previous snapshot until you rebuild.
-            </p>
-          )}
-          <button
-            onClick={handleBuildDataset}
-            disabled={buildDatasetState === 'loading'}
-            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
-          >
-            {buildDatasetState === 'loading' ? 'Building…' : 'Rebuild now'}
-          </button>
-          {buildDatasetMsg && (
-            <p className={`text-xs ${buildDatasetState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
-              {buildDatasetMsg}
-            </p>
-          )}
-        </div>
-
-        {/* Quick actions — slim card */}
+        {/* Row 2 — Quick actions (next to Database) */}
         <div className={cardCls}>
           <Zap className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           <div>
@@ -517,6 +402,121 @@ export default function AdminDashboardClient({
               → Stripe dashboard
             </a>
           </div>
+        </div>
+
+        {/* Row 3 — Data quality (full width) */}
+        <DataQualityCard />
+
+        {/* Materialized views — slim card */}
+        <div className={cardCls}>
+          <RefreshCw className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Pre-aggregated data for countries and stats pages.
+            </p>
+          </div>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
+            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {dataLastChanged
+                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Last refresh</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {lastRefreshed
+                ? new Date(lastRefreshed).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+          </dl>
+          <button
+            onClick={handleRefreshViews}
+            disabled={refreshState === 'loading'}
+            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          >
+            {refreshState === 'loading' ? 'Refreshing…' : 'Refresh now'}
+          </button>
+          {refreshMsg && (
+            <p className={`text-xs ${refreshState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {refreshMsg}
+            </p>
+          )}
+        </div>
+
+        {/* Dataset (paid download) — slim card */}
+        <div className={cardCls}>
+          <Download className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Dataset Sales</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Paid downloads · regenerated when DB changes.
+            </p>
+          </div>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs mt-1">
+            <dt className="text-gray-500 dark:text-gray-400">Paid orders</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetStats.paidOrders.toLocaleString('en')}
+              {datasetStats.totalOrders > datasetStats.paidOrders && (
+                <span className="text-gray-400"> ({datasetStats.totalOrders - datasetStats.paidOrders} pending)</span>
+              )}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Revenue</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {(datasetStats.totalRevenueCents / 100).toLocaleString('en', {
+                style: 'currency',
+                currency: datasetStats.currency.toUpperCase(),
+              })}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Downloads</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetStats.totalDownloads.toLocaleString('en')}
+              {datasetStats.paidOrders > 0 && (
+                <span className="text-gray-400">
+                  {' '}(avg {(datasetStats.totalDownloads / datasetStats.paidOrders).toFixed(1)}/order)
+                </span>
+              )}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Data changed</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {dataLastChanged
+                ? new Date(dataLastChanged).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">—</span>}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">Last build</dt>
+            <dd className="tabular-nums text-gray-700 dark:text-gray-300">
+              {datasetBuiltAt
+                ? new Date(datasetBuiltAt).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' })
+                : <span className="text-gray-400">never</span>}
+            </dd>
+          </dl>
+          {datasetStats.suspiciousOrderCount > 0 && (
+            <div className="flex items-start gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-md px-3 py-2 -mx-1">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+              <span>
+                {datasetStats.suspiciousOrderCount} order{datasetStats.suspiciousOrderCount === 1 ? '' : 's'} with
+                more than {datasetStats.suspiciousThreshold} downloads — link may be shared.
+                Highest: {datasetStats.maxDownloadsOnSingleOrder}.
+              </span>
+            </div>
+          )}
+          {dataLastChanged && datasetBuiltAt && new Date(dataLastChanged) > new Date(datasetBuiltAt) && (
+            <p className="text-xs text-amber-700 dark:text-amber-400">
+              ⚠ Data has changed since last build — buyers will get the previous snapshot until you rebuild.
+            </p>
+          )}
+          <button
+            onClick={handleBuildDataset}
+            disabled={buildDatasetState === 'loading'}
+            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          >
+            {buildDatasetState === 'loading' ? 'Building…' : 'Rebuild now'}
+          </button>
+          {buildDatasetMsg && (
+            <p className={`text-xs ${buildDatasetState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {buildDatasetMsg}
+            </p>
+          )}
         </div>
 
         <EssayPromptCard cardCls={cardCls} />
