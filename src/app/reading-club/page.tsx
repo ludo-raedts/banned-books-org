@@ -79,21 +79,19 @@ export default async function ReadingClubHubPage() {
         </section>
       )}
 
-      {why && (
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Why read banned books together</h2>
-          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: why }} />
-        </section>
-      )}
-
       <section className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">Pick a track</h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/*
+          items-stretch on the grid keeps every cell the same height; h-full on
+          each Link fills the cell so cards are visually equal regardless of
+          how long the description copy is.
+        */}
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
           {TRACKS.map(t => (
-            <li key={t.href}>
+            <li key={t.href} className="flex">
               <Link
                 href={t.href}
-                className="block border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm transition-all"
+                className="flex flex-col h-full w-full border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm transition-all"
               >
                 <div className="font-semibold text-sm">{t.label}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t.text}</div>
@@ -102,6 +100,13 @@ export default async function ReadingClubHubPage() {
           ))}
         </ul>
       </section>
+
+      {why && (
+        <section className="mb-10">
+          <h2 className="text-2xl font-semibold mb-4">Why read banned books together</h2>
+          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: why }} />
+        </section>
+      )}
 
       {howToStart && (
         <section className="mb-10">
