@@ -7,6 +7,7 @@ import {
   getThemeBooks,
 } from '@/lib/reading-club-data'
 import { getBlocksForPage, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
+import { countReadingClubRowsMissingQuestions } from '@/lib/reading-club-questions'
 import ReadingClubAdminClient from './reading-club-admin-client'
 
 export const dynamic = 'force-dynamic'
@@ -14,7 +15,7 @@ export const dynamic = 'force-dynamic'
 export default async function AdminReadingClubPage() {
   const currentYear = new Date().getFullYear()
 
-  const [currentlyChallenged, international, classics, themes, ccBlocks, intlBlocks, clBlocks, themesBlocks] = await Promise.all([
+  const [currentlyChallenged, international, classics, themes, ccBlocks, intlBlocks, clBlocks, themesBlocks, missingQuestionCount] = await Promise.all([
     getCurrentlyChallenged(currentYear, { admin: true }),
     getInternationalTrack({ admin: true }),
     getClassicsTrack({ admin: true }),
@@ -23,6 +24,7 @@ export default async function AdminReadingClubPage() {
     getBlocksForPage('reading-club-international'),
     getBlocksForPage('reading-club-classics'),
     getBlocksForPage('reading-club-themes'),
+    countReadingClubRowsMissingQuestions(),
   ])
 
   // Per-theme books and per-theme block status, fetched in parallel.
@@ -46,6 +48,7 @@ export default async function AdminReadingClubPage() {
 
       <ReadingClubAdminClient
         currentYear={currentYear}
+        missingQuestionCount={missingQuestionCount}
         currentlyChallenged={currentlyChallenged}
         international={international}
         classics={classics}

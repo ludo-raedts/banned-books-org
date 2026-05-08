@@ -15,6 +15,8 @@ type ThemeSummary = {
 
 interface Props {
   currentYear: number
+  /** Number of rows across all four tracks where discussion_questions is empty. */
+  missingQuestionCount: number
   currentlyChallenged: ReadingClubCard[]
   international: ReadingClubCard[]
   classics: ReadingClubCard[]
@@ -59,6 +61,11 @@ export default function ReadingClubAdminClient(props: Props) {
 
   return (
     <div>
+      <GenerateQuestionsBanner
+        initialCount={props.missingQuestionCount}
+        onDone={() => router.refresh()}
+      />
+
       <div className="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-800 mb-6">
         {([
           ['currently-challenged', 'Currently Challenged', props.currentlyChallenged.length, 'pick',  props.blockStatus.currentlyChallenged],
@@ -727,6 +734,94 @@ function BookTitleTypeahead({
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+// ── Generate-questions banner ───────────────────────────────────────────────
+//
+// Sits at the top of /admin/reading-club. Shows a count of rows missing
+// discussion_questions across all four tracks. On click, hits the
+// /api/admin/generate-discussion-questions endpoint which calls Claude or
+// OpenAI (auto-detected from env) for each row sequentially, then refreshes
+// the page. ~5 sec per book; the API has maxDuration=300s, so batches of
+// up to ~50 books fit in one click. For larger batches, fall back to the CLI.
+
+function GenerateQuestionsBanner({
+  initialCount, onDone,
+}: {
+  initialCount: number
+  onDone: () => void
+}) {
+  const [count, setCount] = useState(initialCount)
+  const [state, setState] = useState<'idle' | 'running' | 'done' | 'error'>('idle')
+  const [result, setResult] = useState<{ success: number; failed: number; provider: string } | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  if (count === 0 && state === 'idle') return null
+
+  async function run() {
+    if (count === 0) return
+    const ok = window.confirm(
+      `Generate discussion questions for ${count} book${count === 1 ? '' : 's'}?\n\n` +
+      `Each book makes one LLM call (~5 seconds). Approximate cost: ` +
+      `${count <= 25 ? '$0.05–$0.10 with gpt-4o' : `$${(count * 0.002).toFixed(2)} with gpt-4o`}.\n\n` +
+      `Existing questions are preserved.`,
+    )
+    if (!ok) return
+    setState('running')
+    setError(null)
+    setResult(null)
+    try {
+      const res = await fetch('/api/admin/generate-discussion-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'generate' }),
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      setResult({ success: data.success ?? 0, failed: data.failed ?? 0, provider: data.provider ?? '?' })
+      setCount(0)
+      setState('done')
+      onDone()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed')
+      setState('error')
+    }
+  }
+
+  const cls = 'mb-5 rounded-lg border px-4 py-3 flex flex-wrap items-center gap-3 text-sm'
+  if (state === 'done' && result) {
+    return (
+      <div className={`${cls} border-green-200 dark:border-green-900/50 bg-green-50 dark:bg-green-950/30`}>
+        <span className="text-green-800 dark:text-green-200">
+          ✓ Generated questions for {result.success} book{result.success === 1 ? '' : 's'} via {result.provider}.
+          {result.failed > 0 && ` (${result.failed} failed — see admin logs.)`}
+        </span>
+      </div>
+    )
+  }
+  if (state === 'error') {
+    return (
+      <div className={`${cls} border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30`}>
+        <span className="text-red-800 dark:text-red-200 flex-1">Failed: {error}</span>
+        <button onClick={() => setState('idle')} className="text-xs underline">Dismiss</button>
+      </div>
+    )
+  }
+  return (
+    <div className={`${cls} border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30`}>
+      <span className="text-amber-900 dark:text-amber-200 flex-1">
+        {count} book{count === 1 ? '' : 's'} across all tracks {count === 1 ? 'is' : 'are'} missing discussion questions.
+      </span>
+      <button
+        onClick={run}
+        disabled={state === 'running'}
+        className="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-white text-xs font-medium disabled:opacity-50"
+      >
+        {state === 'running' ? `Generating ${count}…` : `Generate questions for ${count}`}
+      </button>
     </div>
   )
 }

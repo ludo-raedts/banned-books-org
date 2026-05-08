@@ -49,6 +49,10 @@ import {
   type Provider,
 } from '../src/lib/discussion-questions'
 import { THEME_REASON_MAP } from '../src/lib/reading-club-data'
+import {
+  findReadingClubRowsMissingQuestions,
+  saveDiscussionQuestionsToRow,
+} from '../src/lib/reading-club-questions'
 
 const APPLY = process.argv.includes('--apply')
 const FORCE = process.argv.includes('--force')
@@ -68,37 +72,9 @@ const PROVIDER_OVERRIDE: Provider | undefined = (() => {
   return value
 })()
 
-type Source = 'rc_cc' | 'rc_intl' | 'rc_classics' | 'rc_theme'
-
-type RowToProcess = {
-  source: Source
-  scope: Record<string, string | number>  // unique-key fields for the UPDATE
-  title: string
-  author: string
-  hasQuestions: boolean  // true if we'd be overwriting (only with --force)
-}
-
-const TABLE_BY_SOURCE: Record<Source, string> = {
-  rc_cc:       'reading_club_currently_challenged',
-  rc_intl:     'reading_club_international',
-  rc_classics: 'reading_club_classics',
-  rc_theme:    'reading_club_theme_books',
-}
-
-function isEmpty(value: unknown): boolean {
-  if (value == null) return true
-  if (Array.isArray(value)) return value.length === 0
-  return false
-}
-
-function pickAuthor(book: {
-  book_authors?: { authors: { display_name: string } | null }[] | null
-}): string {
-  const list = (book.book_authors ?? [])
-    .map(ba => ba.authors?.display_name)
-    .filter((s): s is string => !!s)
-  return list[0] ?? ''
-}
+// Row-finding and DB-write logic now lives in src/lib/reading-club-questions.ts
+// so the admin button (POST /api/admin/generate-discussion-questions) and the
+// CLI use the exact same eligibility rules and scope keys.
 
 // Materializes the auto-pull list for any theme that has zero rows yet:
 // pulls the top 12 books matching the theme's reasons, ranks by ban count,
@@ -183,103 +159,6 @@ async function materializeAutoPullThemes(): Promise<{ themeSlug: string; inserte
   return summary
 }
 
-async function findRows(): Promise<RowToProcess[]> {
-  const supabase = adminClient()
-  const out: RowToProcess[] = []
-
-  // ── Currently Challenged ────────────────────────────────────────────────
-  const { data: cc } = await supabase
-    .from('reading_club_currently_challenged')
-    .select('year, position, title, author, discussion_questions')
-  for (const r of cc ?? []) {
-    const has = !isEmpty(r.discussion_questions)
-    if (has && !FORCE) continue
-    out.push({
-      source: 'rc_cc',
-      scope: { year: r.year, position: r.position },
-      title: r.title,
-      author: r.author,
-      hasQuestions: has,
-    })
-  }
-
-  // ── International ───────────────────────────────────────────────────────
-  const { data: intl } = await supabase
-    .from('reading_club_international')
-    .select(`book_id, discussion_questions,
-             books(title, book_authors(authors(display_name)))`)
-  type IntlRow = {
-    book_id: number
-    discussion_questions: unknown
-    books: { title: string; book_authors: { authors: { display_name: string } | null }[] | null } | null
-  }
-  for (const r of (intl ?? []) as unknown as IntlRow[]) {
-    const has = !isEmpty(r.discussion_questions)
-    if (has && !FORCE) continue
-    if (!r.books) continue
-    out.push({
-      source: 'rc_intl',
-      scope: { book_id: r.book_id },
-      title: r.books.title,
-      author: pickAuthor(r.books),
-      hasQuestions: has,
-    })
-  }
-
-  // ── Classics ────────────────────────────────────────────────────────────
-  const { data: classics } = await supabase
-    .from('reading_club_classics')
-    .select(`book_id, discussion_questions,
-             books(title, book_authors(authors(display_name)))`)
-  for (const r of (classics ?? []) as unknown as IntlRow[]) {
-    const has = !isEmpty(r.discussion_questions)
-    if (has && !FORCE) continue
-    if (!r.books) continue
-    out.push({
-      source: 'rc_classics',
-      scope: { book_id: r.book_id },
-      title: r.books.title,
-      author: pickAuthor(r.books),
-      hasQuestions: has,
-    })
-  }
-
-  // ── Theme books ─────────────────────────────────────────────────────────
-  const { data: themes } = await supabase
-    .from('reading_club_theme_books')
-    .select(`theme_slug, book_id, discussion_questions,
-             books(title, book_authors(authors(display_name)))`)
-  type ThemeRow = IntlRow & { theme_slug: string }
-  for (const r of (themes ?? []) as unknown as ThemeRow[]) {
-    const has = !isEmpty(r.discussion_questions)
-    if (has && !FORCE) continue
-    if (!r.books) continue
-    out.push({
-      source: 'rc_theme',
-      scope: { theme_slug: r.theme_slug, book_id: r.book_id },
-      title: r.books.title,
-      author: pickAuthor(r.books),
-      hasQuestions: has,
-    })
-  }
-
-  return out
-}
-
-async function saveQuestions(row: RowToProcess, questions: string[]): Promise<void> {
-  const supabase = adminClient()
-  const table = TABLE_BY_SOURCE[row.source]
-  let q = supabase.from(table).update({
-    discussion_questions: questions,
-    updated_at: new Date().toISOString(),
-  })
-  for (const [k, v] of Object.entries(row.scope)) {
-    q = q.eq(k, v)
-  }
-  const { error } = await q
-  if (error) throw new Error(`DB update failed: ${error.message}`)
-}
-
 async function main() {
   if (APPLY) {
     try {
@@ -322,7 +201,7 @@ async function main() {
     }
   }
 
-  const rows = await findRows()
+  const rows = await findReadingClubRowsMissingQuestions({ force: FORCE })
   const eligible = rows.slice(0, Number.isFinite(LIMIT) ? LIMIT : rows.length)
 
   console.log(`\nFound ${rows.length} eligible row(s). Processing ${eligible.length}.`)
@@ -331,7 +210,7 @@ async function main() {
 
   if (!APPLY) {
     for (const r of eligible) {
-      const flag = r.hasQuestions ? ' (already has questions)' : ''
+      const flag = r.hasExisting ? ' (already has questions)' : ''
       console.log(`  [${r.source}] "${r.title}" — ${r.author || 'unknown author'}${flag}`)
     }
     console.log('\nDry run — pass --apply to call the LLM and write to the database.')
@@ -351,7 +230,7 @@ async function main() {
         { title: row.title, author: row.author },
         PROVIDER_OVERRIDE ? { provider: PROVIDER_OVERRIDE } : undefined,
       )
-      await saveQuestions(row, questions)
+      await saveDiscussionQuestionsToRow(row, questions)
       console.log(`✓ ${questions.length} questions`)
       success++
     } catch (err) {
