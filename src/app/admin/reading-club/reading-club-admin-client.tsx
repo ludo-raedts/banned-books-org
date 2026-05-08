@@ -152,6 +152,7 @@ function CurrentlyChallengedTab({
   const [position, setPosition] = useState(rows.length + 1)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
+  const [bookId, setBookId] = useState<number | null>(null)
   const [count, setCount] = useState<string>('')
   const [questions, setQuestions] = useState<string>('')
   const [bookshopUrl, setBookshopUrl] = useState('')
@@ -165,13 +166,14 @@ function CurrentlyChallengedTab({
       entry: {
         position,
         title, author,
+        book_id: bookId,
         challenge_count: count ? Number(count) : null,
         bookshop_url: bookshopUrl || null,
         source_url: sourceUrl || null,
         discussion_questions: questions ? questions.split('\n').filter(Boolean) : null,
       },
     })
-    setTitle(''); setAuthor(''); setCount(''); setQuestions(''); setBookshopUrl('')
+    setTitle(''); setAuthor(''); setCount(''); setQuestions(''); setBookshopUrl(''); setBookId(null)
     setPosition(p => p + 1)
     onChange()
   }
@@ -222,7 +224,19 @@ function CurrentlyChallengedTab({
         <div className="grid grid-cols-2 gap-3 mt-3">
           <Field label="Position"><input type="number" value={position} onChange={e => setPosition(Number(e.target.value))} className={inputCls} /></Field>
           <Field label="Challenge count"><input value={count} onChange={e => setCount(e.target.value)} className={inputCls} /></Field>
-          <Field label="Title" wide><input value={title} onChange={e => setTitle(e.target.value)} className={inputCls} /></Field>
+          <Field label="Title (type to match an existing book)" wide>
+            <BookTitleTypeahead
+              title={title}
+              onTitleChange={setTitle}
+              onMatch={book => {
+                setTitle(book.title)
+                setAuthor(book.authors[0] ?? author)
+                setBookId(book.id)
+              }}
+              onClear={() => setBookId(null)}
+              matchedBookId={bookId}
+            />
+          </Field>
           <Field label="Author" wide><input value={author} onChange={e => setAuthor(e.target.value)} className={inputCls} /></Field>
           <Field label="Bookshop URL" wide><input value={bookshopUrl} onChange={e => setBookshopUrl(e.target.value)} className={inputCls} placeholder="https://bookshop.org/..." /></Field>
           <Field label="Source URL" wide><input value={sourceUrl} onChange={e => setSourceUrl(e.target.value)} className={inputCls} /></Field>
@@ -592,6 +606,80 @@ function BookSearchAdd({
               <div className="text-xs text-gray-500">
                 {r.authors.length > 0 ? r.authors.join(', ') : '—'}
                 {r.banCount > 0 ? ` · ${r.banCount} bans · ${r.countryCount} ${r.countryCount === 1 ? 'country' : 'countries'}` : ' · no bans recorded'}
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Title typeahead (Currently Challenged form) ─────────────────────────────
+//
+// Differs from BookSearchAdd: instead of "click → add to list", here clicking
+// a result *fills the current form* (title + author + matchedBookId), so the
+// editor can keep typing extra fields. If no result matches, the form still
+// works manually — book_id stays null.
+
+function BookTitleTypeahead({
+  title, onTitleChange, onMatch, onClear, matchedBookId,
+}: {
+  title: string
+  onTitleChange: (v: string) => void
+  onMatch: (book: BookSearchHit) => void
+  onClear: () => void
+  matchedBookId: number | null
+}) {
+  const [results, setResults] = useState<BookSearchHit[]>([])
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    // Skip search when the title was just confirmed via a click — the matched
+    // book id signals "this is exactly that DB book, no further search needed".
+    if (matchedBookId != null) return
+    if (title.trim().length < 2) { setResults([]); return }
+    let cancelled = false
+    setLoading(true)
+    const t = setTimeout(() => {
+      fetch(`/api/admin/books/search?q=${encodeURIComponent(title)}`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(d => { if (!cancelled) setResults((d.results ?? []) as BookSearchHit[]) })
+        .catch(() => { if (!cancelled) setResults([]) })
+        .finally(() => { if (!cancelled) setLoading(false) })
+    }, 200)
+    return () => { cancelled = true; clearTimeout(t) }
+  }, [title, matchedBookId])
+
+  return (
+    <div className="relative">
+      <input
+        value={title}
+        onChange={e => { onTitleChange(e.target.value); onClear(); setOpen(true) }}
+        onFocus={() => setOpen(true)}
+        className={inputCls}
+      />
+      {matchedBookId != null && (
+        <p className="mt-1 text-[11px] text-green-700 dark:text-green-400">
+          ✓ Matched to existing book #{matchedBookId} — link will be created.{' '}
+          <button type="button" onClick={onClear} className="underline">unlink</button>
+        </p>
+      )}
+      {open && matchedBookId == null && title.trim().length >= 2 && results.length > 0 && (
+        <div className="absolute left-0 right-0 mt-1 z-20 max-h-72 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-lg">
+          {loading && <div className="px-3 py-2 text-xs text-gray-500">Searching…</div>}
+          {results.map(r => (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => { onMatch(r); setOpen(false) }}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 border-b last:border-b-0 border-gray-100 dark:border-gray-800"
+            >
+              <div className="font-medium">{r.title}</div>
+              <div className="text-xs text-gray-500">
+                {r.authors.length > 0 ? r.authors.join(', ') : '—'}
+                {r.banCount > 0 ? ` · ${r.banCount} bans` : ''}
               </div>
             </button>
           ))}
