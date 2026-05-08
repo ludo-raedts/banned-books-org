@@ -30,9 +30,43 @@ export async function POST(req: NextRequest) {
     if (!Number.isInteger(year)) return NextResponse.json({ error: 'Bad year' }, { status: 400 })
     const corpus = await buildSuggesterCorpus(year)
     const result = suggestBBWFeatured(corpus)
+
+    // Fetch titles + authors for the suggestion set so the admin UI can
+    // render real book names instead of "Book {id}". Single round-trip for
+    // both top10 and alternates.
+    const allIds = [
+      ...result.top10.map(b => b.id),
+      ...result.alternates.map(b => b.id),
+    ]
+    const { data: bookRows } = await supabase
+      .from('books')
+      .select('id, title, slug, book_authors(authors(display_name))')
+      .in('id', allIds)
+    type BookRow = {
+      id: number
+      title: string
+      slug: string
+      book_authors: { authors: { display_name: string } | null }[] | null
+    }
+    const byId = new Map<number, BookRow>(
+      ((bookRows ?? []) as unknown as BookRow[]).map(b => [b.id, b]),
+    )
+    const enrich = (b: ReturnType<typeof suggestBBWFeatured>['top10'][number]) => {
+      const row = byId.get(b.id)
+      const authors = (row?.book_authors ?? [])
+        .map(ba => ba.authors?.display_name)
+        .filter((s): s is string => !!s)
+      return {
+        ...serializeScored(b),
+        title: row?.title ?? `Book ${b.id}`,
+        slug: row?.slug ?? null,
+        authors,
+      }
+    }
+
     return NextResponse.json({
-      top10: result.top10.map(serializeScored),
-      alternates: result.alternates.map(serializeScored),
+      top10: result.top10.map(enrich),
+      alternates: result.alternates.map(enrich),
     })
   }
 

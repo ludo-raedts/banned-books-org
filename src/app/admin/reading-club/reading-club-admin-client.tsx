@@ -274,6 +274,12 @@ function CurrentlyChallengedTab({
 
 type ScoredAlt = {
   book_id: number
+  // Hydrated by /api/admin/reading-club so the UI can show real titles +
+  // authors instead of "Book {id}". Falls back to `Book {id}` only when the
+  // join misses (shouldn't happen unless a book was deleted mid-suggest).
+  title: string
+  slug: string | null
+  authors: string[]
   finalScore: number
   components: { recencyOfBans: number; totalBanCount: number; geographicSpread: number; topListPresence: number; diversityBonus: number }
   countries: string[]
@@ -303,8 +309,8 @@ function BookTrackTab({
     const data = await call({ action: 'suggest_international' }) as { top10: ScoredAlt[]; alternates: ScoredAlt[] } | null
     if (!data) return
     setPicks(data.top10.map((c, i) => ({
-      bookId: c.book_id, position: i + 1, title: `Book ${c.book_id}`, authors: [],
-      customBlurb: null, discussionQuestions: [], bookSlug: null, coverUrl: null, description: null,
+      bookId: c.book_id, position: i + 1, title: c.title, authors: c.authors,
+      customBlurb: null, discussionQuestions: [], bookSlug: c.slug, coverUrl: null, description: null,
       countries: c.countries, reasons: c.reasons, banCount: c.banCount, publishedAt: null,
     })))
     setAlternates(data.alternates)
@@ -429,13 +435,17 @@ function BookTrackTab({
           <summary className="text-sm font-medium cursor-pointer">Alternates ({alternates.length})</summary>
           <ul className="mt-2 flex flex-col gap-1.5">
             {alternates.map(a => (
-              <li key={a.book_id} className="text-xs flex items-center justify-between">
-                <span>Book {a.book_id} · {a.banCount} bans · {a.countryCount} countries · {a.finalScore.toFixed(3)}</span>
+              <li key={a.book_id} className="text-xs flex items-center justify-between gap-2">
+                <span className="flex-1 min-w-0">
+                  <span className="font-medium">{a.title}</span>
+                  {a.authors.length > 0 && <span className="text-gray-500"> — {a.authors.join(', ')}</span>}
+                  <span className="text-gray-500"> · {a.banCount} bans · {a.countryCount} countries · score {a.finalScore.toFixed(3)}</span>
+                </span>
                 <button
                   onClick={() => {
                     setPicks([...picks, {
-                      bookId: a.book_id, position: picks.length + 1, title: `Book ${a.book_id}`, authors: [],
-                      customBlurb: null, discussionQuestions: [], bookSlug: null, coverUrl: null, description: null,
+                      bookId: a.book_id, position: picks.length + 1, title: a.title, authors: a.authors,
+                      customBlurb: null, discussionQuestions: [], bookSlug: a.slug, coverUrl: null, description: null,
                       countries: a.countries, reasons: a.reasons, banCount: a.banCount, publishedAt: null,
                     }])
                     setAlternates(alternates.filter(x => x.book_id !== a.book_id))

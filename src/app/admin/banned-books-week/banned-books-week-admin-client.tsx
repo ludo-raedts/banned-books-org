@@ -9,6 +9,12 @@ type RequiredBlockSummary = { slug: string; title: string; status: 'placeholder'
 
 type ScoredCandidate = {
   book_id: number
+  // Fetched alongside the score so the UI can show real titles + authors
+  // instead of "Book {id}". Falls back to the id-string only when the join
+  // misses (shouldn't happen unless a book was deleted mid-suggest).
+  title: string
+  slug: string | null
+  authors: string[]
   finalScore: number
   rawScore: number
   components: {
@@ -113,6 +119,8 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       custom_blurb: '',
       pinned: false,
       meta: {
+        title: c.title,
+        authors: c.authors,
         countries: c.countries,
         reasons: c.reasons,
         banCount: c.banCount,
@@ -187,6 +195,8 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       custom_blurb: '',
       pinned: false,
       meta: {
+        title: alt.title,
+        authors: alt.authors,
         countries: alt.countries,
         reasons: alt.reasons,
         banCount: alt.banCount,
@@ -365,8 +375,9 @@ export default function BannedBooksWeekAdminClient(props: Props) {
             {alternates.map(a => (
               <li key={a.book_id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/50 flex items-start justify-between gap-3">
                 <div className="flex-1">
-                  <div className="text-sm font-medium">Book {a.book_id}</div>
+                  <div className="text-sm font-medium">{a.title}</div>
                   <div className="text-xs text-gray-500 mt-0.5">
+                    {a.authors.length > 0 && `${a.authors.join(', ')} · `}
                     {a.banCount} bans · {new Set(a.countries).size} countries · score {a.finalScore.toFixed(3)}
                     {a.inPreviousYears ? ' · prev. year' : ''}
                   </div>

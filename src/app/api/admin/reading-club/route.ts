@@ -42,25 +42,48 @@ export async function POST(req: NextRequest) {
   if (action === 'suggest_international') {
     const corpus = await buildIntlCorpus()
     const result = suggestInternational(corpus)
+
+    // Hydrate with titles + authors so the admin UI shows real names rather
+    // than "Book {id}". Single round-trip for top10 + alternates.
+    const allIds = [
+      ...result.top10.map(b => b.id),
+      ...result.alternates.map(b => b.id),
+    ]
+    const { data: bookRows } = await supabase
+      .from('books')
+      .select('id, title, slug, book_authors(authors(display_name))')
+      .in('id', allIds)
+    type BookRow = {
+      id: number
+      title: string
+      slug: string
+      book_authors: { authors: { display_name: string } | null }[] | null
+    }
+    const byId = new Map<number, BookRow>(
+      ((bookRows ?? []) as unknown as BookRow[]).map(b => [b.id, b]),
+    )
+    const enrich = (b: ReturnType<typeof suggestInternational>['top10'][number]) => {
+      const row = byId.get(b.id)
+      const authors = (row?.book_authors ?? [])
+        .map(ba => ba.authors?.display_name)
+        .filter((s): s is string => !!s)
+      return {
+        book_id: b.id,
+        title: row?.title ?? `Book ${b.id}`,
+        slug: row?.slug ?? null,
+        authors,
+        finalScore: b.finalScore,
+        components: b.components,
+        countries: b.countries,
+        reasons: b.reasons,
+        countryCount: b.countryCount,
+        banCount: b.banCount,
+      }
+    }
+
     return NextResponse.json({
-      top10: result.top10.map(b => ({
-        book_id: b.id,
-        finalScore: b.finalScore,
-        components: b.components,
-        countries: b.countries,
-        reasons: b.reasons,
-        countryCount: b.countryCount,
-        banCount: b.banCount,
-      })),
-      alternates: result.alternates.map(b => ({
-        book_id: b.id,
-        finalScore: b.finalScore,
-        components: b.components,
-        countries: b.countries,
-        reasons: b.reasons,
-        countryCount: b.countryCount,
-        banCount: b.banCount,
-      })),
+      top10: result.top10.map(enrich),
+      alternates: result.alternates.map(enrich),
     })
   }
 
