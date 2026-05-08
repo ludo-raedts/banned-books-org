@@ -34,9 +34,20 @@ type ScoredCandidate = {
 
 interface Props {
   year: number
-  configuredYear: number
-  configuredEnabled: boolean
   currentSelection: FeaturedBookRow[]
+  config: {
+    enabled: boolean
+    year: number
+    startDate: string
+    endDate: string
+    promoStartDate: string | null
+    dateRange: string
+    promoActive: boolean
+  }
+  tilePreview: {
+    title: string
+    tagline: string | null
+  }
   requiredBlocks: RequiredBlockSummary[]
   requiredBlockCount: number
   totalBooksInDataset: number
@@ -216,7 +227,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         <div>
           <h1 className="text-2xl font-bold">Banned Books Week — featured picks</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Year {year}{year === props.configuredYear && ' · matches config'}
+            Year {year}{year === props.config.year && ' · matches config'}
           </p>
         </div>
         <Link href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
@@ -241,17 +252,69 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         </button>
       </div>
 
-      {/* Status cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900">
+      {/* Config card — full visibility into what's set in the file. */}
+      <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+        <div className="flex items-center justify-between mb-2">
           <div className="text-[11px] uppercase tracking-wide text-gray-500">Config</div>
-          <div className="text-sm font-medium mt-0.5">
-            {props.configuredEnabled ? `Enabled — year ${props.configuredYear}` : `Disabled (year ${props.configuredYear})`}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">Edit <code>config/banned-books-week.ts</code></div>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+            props.config.enabled
+              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+              : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+          }`}>
+            {props.config.enabled ? 'enabled' : 'disabled'}
+          </span>
         </div>
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+          <dt className="text-gray-500">Year</dt>
+          <dd className="tabular-nums">{props.config.year}</dd>
+          <dt className="text-gray-500">BBW window</dt>
+          <dd className="tabular-nums">{props.config.startDate} → {props.config.endDate} <span className="text-gray-400">({props.config.dateRange})</span></dd>
+          <dt className="text-gray-500">Promo starts</dt>
+          <dd className="tabular-nums">
+            {props.config.promoStartDate ?? <span className="text-gray-400">{props.config.startDate} <em>(no lead-up)</em></span>}
+          </dd>
+          <dt className="text-gray-500">Tile right now</dt>
+          <dd>
+            {props.config.promoActive ? (
+              <span className="text-green-700 dark:text-green-300">visible on homepage</span>
+            ) : (
+              <span className="text-gray-500">hidden ({props.config.enabled ? 'outside promo window' : 'config disabled'})</span>
+            )}
+          </dd>
+        </dl>
+        <p className="mt-3 text-xs text-gray-500">
+          Edit dates / enabled / promo start in <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">src/config/banned-books-week.ts</code>. Changes take effect on the next deploy.
+        </p>
+      </div>
+
+      {/* Tile preview — shows exactly how the homepage tile will render. */}
+      <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+        <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">Tile preview <span className="text-gray-400 font-normal">(what visitors see on the homepage)</span></div>
+        <div className="border border-brand/40 rounded-lg p-4 bg-white dark:bg-gray-900 max-w-sm">
+          <svg className="w-5 h-5 text-brand mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <div className="font-semibold text-sm">{props.tilePreview.title}</div>
+          {props.tilePreview.tagline ? (
+            <div
+              className="text-xs text-gray-600 dark:text-gray-400 leading-snug mt-1"
+              dangerouslySetInnerHTML={{ __html: props.tilePreview.tagline }}
+            />
+          ) : (
+            <div className="text-xs text-amber-700 dark:text-amber-400 mt-1 italic">
+              bbw-tile-tagline content block not yet published — tile will be hidden until it is.
+            </div>
+          )}
+          <div className="text-[11px] text-brand mt-2">Learn more →</div>
+        </div>
+        <p className="mt-2 text-xs text-gray-500">
+          Title is auto-generated from year + dates. Body text comes from{' '}
+          <Link href="/admin/content-blocks/bbw-tile-tagline" className="text-brand hover:underline">bbw-tile-tagline</Link>.
+        </p>
+      </div>
+
+      {/* Status cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900">
-          <div className="text-[11px] uppercase tracking-wide text-gray-500">Content blocks</div>
+          <div className="text-[11px] uppercase tracking-wide text-gray-500">Hub content blocks</div>
           <div className="text-sm font-medium mt-0.5">
             {props.requiredBlocks.filter(b => b.status === 'published').length} / {props.requiredBlockCount} published
           </div>
