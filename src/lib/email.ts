@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 
 const FROM = process.env.EMAIL_FROM ?? 'Banned Books <onboarding@resend.dev>'
+const REPLY_TO = process.env.EMAIL_REPLY_TO
 
 let client: Resend | null = null
 function getClient() {
@@ -92,7 +93,14 @@ export async function sendDownloadEmail(params: DownloadEmailParams) {
 </body></html>`
 
   try {
-    const result = await resend.emails.send({ from: FROM, to, subject, text, html })
+    const result = await resend.emails.send({
+      from: FROM,
+      to,
+      subject,
+      text,
+      html,
+      ...(REPLY_TO ? { replyTo: REPLY_TO } : {}),
+    })
     if (result.error) {
       console.error('[email] resend returned error', result.error)
       return { skipped: false as const, error: result.error.message }
