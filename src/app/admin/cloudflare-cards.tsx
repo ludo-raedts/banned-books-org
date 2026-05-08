@@ -111,8 +111,11 @@ export default async function CloudflareCards() {
                 <span className="font-mono text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0" title={row.clientIP}>
                   {row.clientIP}
                 </span>
-                {row.home && (
-                  <span className="text-xs shrink-0" title="Known admin IP">🏠</span>
+                {row.tag === 'home' && (
+                  <span className="text-xs shrink-0" title="Home IP">🏠</span>
+                )}
+                {row.tag === 'work' && (
+                  <span className="text-xs shrink-0" title="Work IP">🏢</span>
                 )}
                 <span className="text-xs text-gray-700 dark:text-gray-300 tabular-nums shrink-0">
                   {compactNumber(row.requests)}
