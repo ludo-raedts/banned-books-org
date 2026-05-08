@@ -201,6 +201,13 @@ export default async function StatsPage({
           <span className="font-semibold text-gray-900 dark:text-gray-100">{countryCounts.size} countries</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-xs mt-3">
+          Want to run your own analysis? The full catalogue is available as a{' '}
+          <Link href="/dataset" className="underline font-medium hover:text-gray-800 dark:hover:text-gray-200">
+            downloadable dataset
+          </Link>
+          {' '}(CSV, JSON, SQLite).
+        </p>
       </div>
 
       {/* ── 2. Stat cards ── */}
@@ -395,7 +402,29 @@ export default async function StatsPage({
         </div>
       </section>
 
-      {/* ── 9. Closing disclaimer ── */}
+      {/* ── 9. Dataset CTA ── */}
+      <section className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-6 sm:p-8">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Full dataset</p>
+        <h2 className="text-xl font-semibold tracking-tight mb-2">Run your own analysis</h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-5 max-w-3xl">
+          These charts only scratch the surface. The complete catalogue — every banned, challenged, and
+          restricted book, with country, year, reason, and source citation — is available as a structured
+          dataset in CSV, JSON, and SQLite. Use it to answer questions this page does not.
+        </p>
+        <ul className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-2 mb-5">
+          <li>📊 <strong>Research &amp; journalism</strong> — quantify trends, find under-reported regions, write data-driven stories.</li>
+          <li>🎓 <strong>Academic work</strong> — cite stable, dated snapshots in papers on intellectual freedom or media studies.</li>
+          <li>🛠️ <strong>Building tools</strong> — power dashboards, classroom resources, or comparison sites.</li>
+        </ul>
+        <Link
+          href="/dataset"
+          className="inline-block bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-5 py-2.5 text-sm transition-colors"
+        >
+          See what&rsquo;s in the dataset →
+        </Link>
+      </section>
+
+      {/* ── 10. Closing disclaimer ── */}
       <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
         <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
           These statistics represent only what has been documented. The true scale of literary censorship —
