@@ -443,6 +443,11 @@ npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply
 # Cap at 10 rows per run (useful for staging or trying small batches first)
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --limit=10
 
+# Include auto-pull theme books — materialize the top 12 books per theme
+# (when the theme has no curated books yet) so questions can be attached.
+# Without this flag, themes that rely on auto-pull are skipped.
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --include-auto-themes
+
 # Force a specific provider (otherwise auto-detects from env vars)
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=claude
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=openai
@@ -452,10 +457,11 @@ npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply -
             flags={[
               { flag: '--apply', desc: 'Call the LLM and write the result to the database' },
               { flag: '--limit=N', desc: 'Cap at N rows per run (default: process everything eligible)' },
+              { flag: '--include-auto-themes', desc: 'Materialize auto-pull books for themes that have no manually-curated set yet, then generate questions for them. Idempotent — only acts on empty themes.' },
               { flag: '--provider=X', desc: 'Force claude or openai (default: auto-detect from available API key)' },
               { flag: '--force', desc: 'Regenerate even when questions already exist — overwrites the existing array' },
             ]}
-            note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI gpt-4o. Quality is highest with Claude Opus 4.7 on this nuance-heavy task; gpt-4o is acceptable. Idempotent by default — re-running without --force only fills empty rows. Single-row failures (rate limit, malformed JSON) are logged and don't abort the run; the final summary lists which rows failed so you can re-run for just those."
+            note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI gpt-4o. Quality is highest with Claude Opus 4.7 on this nuance-heavy task; gpt-4o is acceptable. Idempotent by default — re-running without --force only fills empty rows. Single-row failures (rate limit, malformed JSON) are logged and don't abort the run; the final summary lists which rows failed so you can re-run for just those. The default behavior covers Currently Challenged, International, Classics, and per-theme overrides — if a theme has no curated books, pass --include-auto-themes to materialize the auto-pull set so it can be processed too."
           />
 
           <Script
