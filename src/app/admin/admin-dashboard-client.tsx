@@ -401,6 +401,14 @@ export default function AdminDashboardClient({
             >
               → Stripe dashboard
             </a>
+            <a
+              href="https://bookshop.org/affiliates/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Bookshop.org affiliate dashboard
+            </a>
           </div>
         </div>
 
