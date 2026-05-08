@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "@/components/mobile-nav";
 import NavLink from "@/components/nav-link";
@@ -59,8 +60,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 h-12 flex items-center gap-6">
-            <Link href="/" className="font-semibold text-sm tracking-tight text-brand hover:opacity-80 transition-opacity">
-              📕 Banned Books
+            <Link href="/" className="flex items-center gap-2 font-semibold text-sm tracking-tight text-brand hover:opacity-80 transition-opacity">
+              <Image src="/brand/compact-bb.svg" alt="" width={24} height={24} priority className="rounded-[5px]" />
+              <span>Banned Books</span>
             </Link>
             <nav className="hidden md:flex items-center gap-1 flex-1">
               <NavLink href="/search">Search</NavLink>
