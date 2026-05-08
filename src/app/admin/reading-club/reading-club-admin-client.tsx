@@ -385,13 +385,25 @@ function BookTrackTab({
               <div className="text-xs text-gray-500">{p.authors.join(', ')}{p.banCount ? ` · ${p.banCount} bans` : ''}{p.countries.length > 0 ? ` · ${new Set(p.countries).size} countries` : ''}</div>
               <textarea
                 value={p.customBlurb ?? ''}
-                placeholder="Custom blurb (optional)"
+                placeholder="Custom blurb (optional) — track-specific framing that overrides the book's standard description"
                 onChange={e => {
                   const next = [...picks]
                   next[i] = { ...next[i], customBlurb: e.target.value || null }
                   setPicks(next)
                 }}
                 rows={2}
+                className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+              />
+              <textarea
+                value={(p.discussionQuestions ?? []).join('\n')}
+                placeholder="Discussion questions (optional, one per line)"
+                onChange={e => {
+                  const next = [...picks]
+                  const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean)
+                  next[i] = { ...next[i], discussionQuestions: lines }
+                  setPicks(next)
+                }}
+                rows={3}
                 className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
               />
             </div>
@@ -487,14 +499,39 @@ function ThemePanel({
         <span className="text-xs text-gray-500">{picks.length} books{blockReady ? ' · intro published' : ' · intro pending'}</span>
       </summary>
       <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-        <ol className="flex flex-col gap-1.5 mb-3">
+        <ol className="flex flex-col gap-2 mb-3">
           {picks.length === 0 ? (
             <li className="text-xs text-gray-500">No books for this theme yet.</li>
           ) : picks.slice(0, 12).map((p, i) => (
-            <li key={p.bookId ?? i} className="text-xs flex items-center gap-2">
-              <span className="font-mono text-gray-500">#{p.position}</span>
-              <span className="flex-1">{p.title} — {p.authors.join(', ')} ({p.banCount} bans)</span>
-              <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-red-600 hover:underline">remove</button>
+            <li key={p.bookId ?? i} className="border border-gray-100 dark:border-gray-800 rounded p-2">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xs font-mono text-gray-500">#{p.position}</span>
+                <span className="text-xs flex-1">{p.title} — {p.authors.join(', ')} {p.banCount > 0 && `(${p.banCount} bans)`}</span>
+                <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-xs text-red-600 hover:underline">remove</button>
+              </div>
+              <textarea
+                value={p.customBlurb ?? ''}
+                placeholder="Custom blurb (optional)"
+                onChange={e => {
+                  const next = [...picks]
+                  next[i] = { ...next[i], customBlurb: e.target.value || null }
+                  setPicks(next)
+                }}
+                rows={2}
+                className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y mb-1.5"
+              />
+              <textarea
+                value={(p.discussionQuestions ?? []).join('\n')}
+                placeholder="Discussion questions (optional, one per line)"
+                onChange={e => {
+                  const next = [...picks]
+                  const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean)
+                  next[i] = { ...next[i], discussionQuestions: lines }
+                  setPicks(next)
+                }}
+                rows={3}
+                className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+              />
             </li>
           ))}
         </ol>
