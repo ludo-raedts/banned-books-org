@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail, BookMarked, FileText } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import AdminTabs from './admin-tabs'
 import DataQualityCard from './data-quality-card'
@@ -287,44 +287,9 @@ export default function AdminDashboardClient({
         {/* Row 1 — Inbox */}
         <InboxCard rows={inboxRows} fetchedAt={inboxFetchedAt} cardCls={cardCls} />
 
-        {/* Row 2 — Banned Books Week */}
-        <a href="/admin/banned-books-week" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
-          <BookMarked className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Banned Books Week</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Yearly featured-books picker. Engine + manual override + draft/publish.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500">Activate via <code className="text-[10px]">config/banned-books-week.ts</code></p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage BBW →</span>
-        </a>
-
-        {/* Row 2 — Reading Club */}
-        <a href="/admin/reading-club" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
-          <BookOpen className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Reading Club</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Four tracks: Currently Challenged, International, Classics, By Theme.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500">Manual + suggester + theme tag-matching</p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage Reading Club →</span>
-        </a>
-
-        {/* Row 2 — Content blocks */}
-        <a href="/admin/content-blocks" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
-          <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Content blocks</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Editorial markdown for BBW &amp; Reading Club pages. Pages can&apos;t go live until blocks are published.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500">Markdown editor + sanitized HTML preview</p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Edit blocks →</span>
-        </a>
+        {/* BBW / Reading Club / Content blocks cards intentionally removed —
+            those sections are reachable via the AdminTabs nav above this grid,
+            and duplicating the entry points clutters the overview. */}
 
         {/* Row 2 — Database */}
         <div className={cardCls}>
