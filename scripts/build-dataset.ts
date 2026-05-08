@@ -63,16 +63,16 @@ async function main() {
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
     countries, reasons, scopes, sources,
   ] = await Promise.all([
-    fetchAll(supabase, 'books',            BOOK_COLUMNS.join(',')),
-    fetchAll(supabase, 'authors',          AUTHOR_COLUMNS.join(',')),
-    fetchAll(supabase, 'book_authors',     'book_id, author_id, role'),
-    fetchAll(supabase, 'bans',             BAN_COLUMNS.join(',')),
-    fetchAll(supabase, 'ban_reason_links', 'ban_id, reason_id'),
-    fetchAll(supabase, 'ban_source_links', 'ban_id, source_id, locator'),
-    fetchAll(supabase, 'countries',        COUNTRY_COLUMNS.join(',')),
-    fetchAll(supabase, 'reasons',          REASON_COLUMNS.join(',')),
-    fetchAll(supabase, 'scopes',           SCOPE_COLUMNS.join(',')),
-    fetchAll(supabase, 'ban_sources',      SOURCE_COLUMNS.join(',')),
+    fetchAll(supabase, 'books',            BOOK_COLUMNS.join(','),         'id'),
+    fetchAll(supabase, 'authors',          AUTHOR_COLUMNS.join(','),       'id'),
+    fetchAll(supabase, 'book_authors',     'book_id, author_id, role',     'book_id,author_id'),
+    fetchAll(supabase, 'bans',             BAN_COLUMNS.join(','),          'id'),
+    fetchAll(supabase, 'ban_reason_links', 'ban_id, reason_id',            'ban_id,reason_id'),
+    fetchAll(supabase, 'ban_source_links', 'ban_id, source_id, locator',   'ban_id,source_id'),
+    fetchAll(supabase, 'countries',        COUNTRY_COLUMNS.join(','),      'code'),
+    fetchAll(supabase, 'reasons',          REASON_COLUMNS.join(','),       'id'),
+    fetchAll(supabase, 'scopes',           SCOPE_COLUMNS.join(','),        'id'),
+    fetchAll(supabase, 'ban_sources',      SOURCE_COLUMNS.join(','),       'id'),
   ])
 
   console.log(`    books=${books.length} authors=${authors.length} bans=${bans.length} sources=${sources.length}`)
@@ -140,14 +140,19 @@ async function fetchAll(
   supabase: ReturnType<typeof createClient>,
   table: string,
   columns: string,
+  orderBy: string,
 ): Promise<Record<string, unknown>[]> {
   const PAGE = 1000
   const rows: Record<string, unknown>[] = []
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
-      .from(table)
-      .select(columns)
-      .range(from, from + PAGE - 1)
+    let q = supabase.from(table).select(columns)
+    // Stable ordering is required for paginated reads — without it, Supabase
+    // can return the same row in two consecutive pages once the table grows
+    // past PAGE rows, breaking the SQLite primary-key insert downstream.
+    for (const col of orderBy.split(',').map((c) => c.trim()).filter(Boolean)) {
+      q = q.order(col, { ascending: true })
+    }
+    const { data, error } = await q.range(from, from + PAGE - 1)
     if (error) throw new Error(`fetch ${table}: ${error.message}`)
     if (!data || data.length === 0) break
     rows.push(...(data as Record<string, unknown>[]))
