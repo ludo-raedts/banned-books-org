@@ -1,5 +1,7 @@
 import { SITEMAP_BASE_URL, type SitemapEntry } from './sitemap-xml'
 import { publishedEssays } from './essays-data'
+import { THEME_REASON_MAP } from './reading-club-data'
+import { isBannedBooksWeekActive } from '@/config/banned-books-week'
 
 const base = SITEMAP_BASE_URL
 
@@ -26,6 +28,24 @@ const STATIC_ENTRIES: SitemapEntry[] = [
   { loc: `${base}/challenged-books`, changefreq: 'weekly', priority: 0.9 },
   { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },
   { loc: `${base}/scope/government`, changefreq: 'weekly', priority: 0.8 },
+  // Reading Club — evergreen, hub + 4 tracks + 5 theme subpages.
+  { loc: `${base}/reading-club`, changefreq: 'weekly', priority: 0.8 },
+  { loc: `${base}/reading-club/currently-challenged`, changefreq: 'weekly', priority: 0.8 },
+  { loc: `${base}/reading-club/international`, changefreq: 'weekly', priority: 0.8 },
+  { loc: `${base}/reading-club/classics`, changefreq: 'monthly', priority: 0.7 },
+  { loc: `${base}/reading-club/by-theme`, changefreq: 'monthly', priority: 0.7 },
+  ...Object.keys(THEME_REASON_MAP).map<SitemapEntry>(slug => ({
+    loc: `${base}/reading-club/by-theme/${slug}`,
+    changefreq: 'monthly',
+    priority: 0.6,
+  })),
+  // Banned Books Week hub — included year-round so search engines know the
+  // page exists; gets a higher changefreq when the configured window is live.
+  {
+    loc: `${base}/banned-books-week`,
+    changefreq: isBannedBooksWeekActive() ? 'daily' : 'monthly',
+    priority: isBannedBooksWeekActive() ? 0.9 : 0.6,
+  },
 ]
 
 // Essay routes are derived from the registry so /essays index, sitemap, and

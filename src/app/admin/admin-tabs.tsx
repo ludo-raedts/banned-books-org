@@ -2,11 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutGrid, BarChart3 } from 'lucide-react'
+import { LayoutGrid, BarChart3, BookMarked, BookOpen, FileText } from 'lucide-react'
 
 const TABS = [
-  { href: '/admin', label: 'Overview', Icon: LayoutGrid },
-  { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
+  { href: '/admin',                    label: 'Overview',       Icon: LayoutGrid },
+  { href: '/admin/stats',              label: 'Stats',          Icon: BarChart3 },
+  { href: '/admin/banned-books-week',  label: 'BBW',            Icon: BookMarked },
+  { href: '/admin/reading-club',       label: 'Reading Club',   Icon: BookOpen },
+  { href: '/admin/content-blocks',     label: 'Content blocks', Icon: FileText },
 ] as const
 
 export default function AdminTabs() {

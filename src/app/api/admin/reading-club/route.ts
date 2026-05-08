@@ -1,0 +1,202 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { adminClient } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/admin-auth'
+import { buildIntlCorpus } from '@/lib/reading-club-data'
+import { suggestInternational } from '@/lib/reading-club-international-suggester'
+import { isPageReadyToPublish } from '@/lib/content-blocks'
+
+// POST /api/admin/reading-club
+//
+// Single endpoint with a tagged action and a track field. Tracks supported:
+//   currently-challenged | international | classics | theme:<slug>
+//
+// Actions:
+//   suggest_international — runs the engine, returns top10 + alternates
+//   save_currently_challenged_entry — upsert one row in the manual table
+//   save_track_books      — replace draft rows (international/classics/theme)
+//   publish_track         — flip every row in a track to published (gated by
+//                           the track's required content blocks)
+//
+// We keep one route handler so the admin client doesn't have to know which
+// table backs which track.
+
+type Track = 'currently-challenged' | 'international' | 'classics' | `theme:${string}`
+
+const TRACK_TO_PAGE_KEY: Record<string, string> = {
+  'currently-challenged': 'reading-club-currently-challenged',
+  'international':        'reading-club-international',
+  'classics':             'reading-club-classics',
+}
+
+export async function POST(req: NextRequest) {
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
+
+  const body = await req.json().catch(() => ({}))
+  const action = body.action as string | undefined
+  const track = body.track as Track | undefined
+  if (!action) return NextResponse.json({ error: 'Missing action' }, { status: 400 })
+
+  const supabase = adminClient()
+
+  if (action === 'suggest_international') {
+    const corpus = await buildIntlCorpus()
+    const result = suggestInternational(corpus)
+    return NextResponse.json({
+      top10: result.top10.map(b => ({
+        book_id: b.id,
+        finalScore: b.finalScore,
+        components: b.components,
+        countries: b.countries,
+        reasons: b.reasons,
+        countryCount: b.countryCount,
+        banCount: b.banCount,
+      })),
+      alternates: result.alternates.map(b => ({
+        book_id: b.id,
+        finalScore: b.finalScore,
+        components: b.components,
+        countries: b.countries,
+        reasons: b.reasons,
+        countryCount: b.countryCount,
+        banCount: b.banCount,
+      })),
+    })
+  }
+
+  if (action === 'save_currently_challenged_entry') {
+    const year = Number(body.year)
+    const e = body.entry as {
+      position: number
+      title: string
+      author: string
+      challenge_count?: number | null
+      book_id?: number | null
+      bookshop_url?: string | null
+      discussion_questions?: string[] | null
+      source_url?: string | null
+    } | undefined
+    if (!Number.isInteger(year) || !e) return NextResponse.json({ error: 'Bad input' }, { status: 400 })
+    const { error } = await supabase
+      .from('reading_club_currently_challenged')
+      .upsert({
+        year,
+        position: e.position,
+        title: e.title,
+        author: e.author,
+        challenge_count: e.challenge_count ?? null,
+        book_id: e.book_id ?? null,
+        bookshop_url: e.bookshop_url ?? null,
+        discussion_questions: e.discussion_questions ?? null,
+        source_url: e.source_url ?? null,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'year,position' })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
+
+  if (action === 'delete_currently_challenged_entry') {
+    const year = Number(body.year)
+    const position = Number(body.position)
+    if (!Number.isInteger(year) || !Number.isInteger(position)) {
+      return NextResponse.json({ error: 'Bad input' }, { status: 400 })
+    }
+    const { error } = await supabase
+      .from('reading_club_currently_challenged')
+      .delete()
+      .eq('year', year)
+      .eq('position', position)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
+
+  if (action === 'save_track_books') {
+    if (!track) return NextResponse.json({ error: 'Missing track' }, { status: 400 })
+    const picks = body.picks as Array<{
+      book_id: number; position: number; custom_blurb?: string | null;
+      discussion_questions?: string[] | null; pinned?: boolean
+    }> | undefined
+    if (!Array.isArray(picks)) return NextResponse.json({ error: 'Bad picks' }, { status: 400 })
+
+    const { table, themeSlug } = resolveTrackTable(track)
+    if (!table) return NextResponse.json({ error: 'Unknown track' }, { status: 400 })
+
+    // Replace the draft set: delete unpublished rows and insert.
+    let del = supabase.from(table).delete().is('published_at', null)
+    if (themeSlug) del = del.eq('theme_slug', themeSlug)
+    const { error: delErr } = await del
+    if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 })
+
+    if (picks.length > 0) {
+      const rows = picks.map(p => ({
+        ...(themeSlug ? { theme_slug: themeSlug } : {}),
+        book_id: p.book_id,
+        position: p.position,
+        custom_blurb: p.custom_blurb ?? null,
+        discussion_questions: p.discussion_questions ?? null,
+        ...(table === 'reading_club_international' ? { pinned: !!p.pinned } : {}),
+        published_at: null,
+        updated_at: new Date().toISOString(),
+      }))
+      const conflictKey = themeSlug ? 'theme_slug,book_id' : 'book_id'
+      const { error } = await supabase.from(table).upsert(rows, { onConflict: conflictKey })
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json({ ok: true })
+  }
+
+  if (action === 'publish_track') {
+    if (!track) return NextResponse.json({ error: 'Missing track' }, { status: 400 })
+    const pageKey = trackToPageKey(track)
+    if (pageKey) {
+      const ready = await isPageReadyToPublish(pageKey)
+      if (!ready.ready) {
+        return NextResponse.json({
+          error: 'Cannot publish: content blocks still in placeholder',
+          missing: ready.missing,
+        }, { status: 409 })
+      }
+    }
+    const { table, themeSlug } = resolveTrackTable(track)
+    if (!table) return NextResponse.json({ error: 'Unknown track' }, { status: 400 })
+
+    const now = new Date().toISOString()
+    let q = supabase.from(table).update({ published_at: now })
+    if (track === 'currently-challenged') {
+      const year = Number(body.year)
+      if (!Number.isInteger(year)) return NextResponse.json({ error: 'Bad year' }, { status: 400 })
+      q = q.eq('year', year)
+    }
+    if (themeSlug) q = q.eq('theme_slug', themeSlug)
+    const { error } = await q
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    await supabase.from('editorial_publish_log').insert({
+      content_type: track.startsWith('theme:') ? 'rc_theme'
+        : track === 'currently-challenged' ? 'rc_currently_challenged'
+        : track === 'international' ? 'rc_international'
+        : 'rc_classics',
+      content_key: track,
+      action: 'publish',
+    })
+    return NextResponse.json({ ok: true })
+  }
+
+  return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
+}
+
+function resolveTrackTable(track: Track): { table: string | null; themeSlug: string | null } {
+  if (track === 'international') return { table: 'reading_club_international', themeSlug: null }
+  if (track === 'classics')      return { table: 'reading_club_classics',      themeSlug: null }
+  if (track === 'currently-challenged') return { table: 'reading_club_currently_challenged', themeSlug: null }
+  if (track.startsWith('theme:')) return { table: 'reading_club_theme_books', themeSlug: track.slice('theme:'.length) }
+  return { table: null, themeSlug: null }
+}
+
+function trackToPageKey(track: Track): string | null {
+  if (track.startsWith('theme:')) {
+    const slug = track.slice('theme:'.length)
+    return `theme-${slug}`
+  }
+  return TRACK_TO_PAGE_KEY[track] ?? null
+}
