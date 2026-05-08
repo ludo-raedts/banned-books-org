@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
-import { isBannedBooksWeekActive } from '@/config/banned-books-week'
+import { isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,7 +26,7 @@ export default async function ReadingClubHubPage() {
   const why = blocks.get('reading-club-why')
   const howToStart = blocks.get('reading-club-how-to-start')
   const universal = blocks.get('reading-club-universal-questions')
-  const showBBWLink = isBannedBooksWeekActive()
+  const showBBWLink = isBannedBooksWeekPromoActive()
 
   const jsonLd = {
     '@context': 'https://schema.org',

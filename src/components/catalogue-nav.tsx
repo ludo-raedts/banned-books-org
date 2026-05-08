@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { BookOpen, Globe, Search as SearchIcon, BarChart3, BookMarked } from 'lucide-react'
-import { BANNED_BOOKS_WEEK, isBannedBooksWeekActive } from '@/config/banned-books-week'
+import {
+  BANNED_BOOKS_WEEK,
+  isBannedBooksWeekPromoActive,
+  formatBBWDateRange,
+} from '@/config/banned-books-week'
 import { getPublishedBlockHtml } from '@/lib/content-blocks'
 
 const DEFAULT_ITEMS = [
@@ -11,12 +15,13 @@ const DEFAULT_ITEMS = [
 ]
 
 // Server component — runs once per homepage render. Swaps the Top-100 tile for
-// a Banned Books Week tile when the config window is active AND the tile
-// tagline content block is published.
+// a Banned Books Week tile during the configured promo window (which can
+// extend a few weeks BEFORE the actual BBW week, see config promoStartDate),
+// AND only when the tile tagline content block is published.
 export default async function CatalogueNav() {
   const items = [...DEFAULT_ITEMS]
 
-  if (isBannedBooksWeekActive()) {
+  if (isBannedBooksWeekPromoActive()) {
     const tagline = await getPublishedBlockHtml('bbw-tile-tagline')
     if (tagline) {
       // Strip outer <p> wrap from the rendered tagline so it sits in the tile
@@ -24,7 +29,9 @@ export default async function CatalogueNav() {
       const text = stripOuterParagraph(tagline)
       items[0] = {
         Icon: BookMarked,
-        title: `Banned Books Week ${BANNED_BOOKS_WEEK.year}`,
+        // Title carries year + date range so the tile reads as a calendar
+        // entry at a glance: "Banned Books Week 2026 · Sep 27 – Oct 3".
+        title: `Banned Books Week ${BANNED_BOOKS_WEEK.year} · ${formatBBWDateRange()}`,
         text,
         href: '/banned-books-week',
       }
