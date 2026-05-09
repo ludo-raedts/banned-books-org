@@ -136,6 +136,10 @@ export default function ScriptsPage() {
               ['Add missing book descriptions', 'enrich-descriptions.ts --apply'],
               ['Add ban reason descriptions (why banned)', 'enrich-ban-descriptions-gpt.ts --apply'],
               ['Add censorship context per country/book', 'enrich-censorship-context-gpt.ts --apply'],
+              ['Audit description quality (concreteness 0–3)', 'score-descriptions.ts --apply'],
+              ['Rewrite weak descriptions with web search', 'rewrite-descriptions-grounded.ts --audit=<csv> --apply'],
+              ['Find books still containing filler phrases', 'flag-filler-rewrites.ts'],
+              ['Strip filler sentences (free, no LLM)', 'strip-filler-sentences.ts --apply'],
               ['Classify ban reasons (political, religious…)', 'enrich-reasons.ts --apply'],
               ['Fill author bios from Wikipedia', 'enrich-author-bios.ts --apply'],
               ['Backfill author photos (Wikidata + OpenLibrary, second pass)', 'enrich-author-photos-v2.ts --apply'],
@@ -299,6 +303,81 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --l
               { flag: '--apply', desc: 'Write censorship context' },
               { flag: '--limit=N', desc: 'Cap at N records (default 150)' },
             ]}
+          />
+
+          <Script
+            name="score-descriptions.ts"
+            what="Audits description_ban and censorship_context across the whole catalog. Scores each field 0–3 on concreteness (3 = named case/court/district + year+place; 1 = generic filler; 0 = empty). Writes a CSV to data/description-audit-<timestamp>.csv. Cheap (gpt-4o-mini, ~$1–2 for the full library)."
+            tags={['gpt']}
+            command={`# Dry-run on 10 books
+npx tsx --env-file=.env.local scripts/score-descriptions.ts
+
+# Score the entire catalog and write the CSV
+npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply
+
+# Cap at N books
+npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply --limit=500`}
+            flags={[
+              { flag: '--apply', desc: 'Score all books and write the audit CSV' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--concurrency=N', desc: 'Parallel API calls (default 5)' },
+            ]}
+            note="Filler-detection regex auto-caps any field at score 1 if it contains phrases like 'frequently banned', 'reflects ongoing tensions', etc. Feed the resulting CSV into rewrite-descriptions-grounded.ts."
+          />
+
+          <Script
+            name="rewrite-descriptions-grounded.ts"
+            what="Reads an audit CSV and rewrites only the weak fields (score ≤1) using OpenAI's Responses API with the built-in web_search tool. Prefers Wikipedia, ALA, NCAC, PEN America, Marshall Libraries as sources. Backs up the old description_ban / censorship_context to a CSV before any DB write — fully reversible."
+            tags={['gpt']}
+            command={`# Dry-run on 5 weak books
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv
+
+# Rewrite all weak books for real
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply
+
+# Test on a single book
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply --slug=the-bluest-eye
+
+# Also rewrite score-2 fields (more aggressive)
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply --include-2`}
+            flags={[
+              { flag: '--audit=<csv>', desc: 'Required. Path to a CSV produced by score-descriptions.ts' },
+              { flag: '--apply', desc: 'Write to DB; without it just prints proposed rewrites' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--slug=<slug>', desc: 'Only process one book' },
+              { flag: '--include-2', desc: 'Also rewrite fields scored 2 (default: only 0–1)' },
+              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4o)' },
+              { flag: '--concurrency=N', desc: 'Parallel calls (default 3)' },
+              { flag: '--skip-log=<csv>', desc: 'Resume from prior run — skip slugs already in this rewrite log CSV' },
+            ]}
+            note="Backups land in data/description-backup-<timestamp>.csv (slug + old values). Source URLs from web search are logged in data/description-rewrite-<timestamp>.csv per book. Inline Markdown citations are auto-stripped from output."
+          />
+
+          <Script
+            name="flag-filler-rewrites.ts"
+            what="Free, no-LLM regex scan over all books. Finds description_ban / censorship_context that still match known filler phrases ('this case illustrates how censorship authorities…', 'reflecting an ongoing trend…', 'no documented lawsuits', etc.) and writes a fake-audit CSV that rewrite-descriptions-grounded.ts can target."
+            tags={['safe']}
+            command={`npx tsx --env-file=.env.local scripts/flag-filler-rewrites.ts`}
+            note="Pairs with rewrite-descriptions-grounded.ts: feed the produced CSV via --audit=<flagged.csv> to do a targeted re-rewrite of just the books still containing filler."
+          />
+
+          <Script
+            name="strip-filler-sentences.ts"
+            what="Free, no-LLM. Removes whole filler sentences and trailing filler clauses ('reflecting a growing trend of…', 'There are no documented lawsuits…', 'This case illustrates…') from existing description_ban / censorship_context, preserving the named-case content typically in the first sentence(s). Backs up old values to a CSV and writes a separate CSV listing books whose stripped result is too short to keep — feed those into rewrite-descriptions-grounded.ts for a fresh attempt."
+            tags={['safe']}
+            command={`# Dry-run on all books — shows samples, no DB write
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts
+
+# Apply across the whole catalog
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --apply
+
+# Test on a single book
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --slug=princess-lessons`}
+            flags={[
+              { flag: '--apply', desc: 'Write to DB; without it just prints proposed strips' },
+              { flag: '--slug=<slug>', desc: 'Only process one book' },
+            ]}
+            note="Output CSVs: data/filler-strip-backup-<ts>.csv (rollback), data/filler-strip-log-<ts>.csv (new values), data/filler-strip-needs-rewrite-<ts>.csv (slugs left too short — feed into rewrite-descriptions-grounded.ts)."
           />
 
           <Script
