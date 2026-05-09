@@ -183,7 +183,7 @@ export default function TrafficCard({
                       alt=""
                       onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                     />
-                    <span className="text-xs text-gray-700 dark:text-gray-300 max-w-[140px] truncate shrink-0">
+                    <span className="text-xs text-gray-700 dark:text-gray-300 w-[140px] truncate shrink-0">
                       {label}
                     </span>
                     <MiniBar value={row.views} max={maxReferrerViews} color="blue" />
