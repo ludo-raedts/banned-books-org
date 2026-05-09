@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import DatasetCheckoutButton from '@/components/dataset-checkout-button'
+
+const DATASET_PRICE_USD = 19.99
 
 export const dynamic = 'force-dynamic'
 
@@ -99,16 +102,16 @@ export default async function DatasetPage() {
       {/* CTA */}
       <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-6 sm:p-8 flex flex-col gap-5 items-start">
         <div>
-          <p className="text-3xl font-bold tracking-tight">$19.99</p>
+          <p className="text-3xl font-bold tracking-tight">${DATASET_PRICE_USD.toFixed(2)}</p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">One-time payment · instant download · taxes calculated at checkout</p>
         </div>
         <form action="/api/dataset/checkout" method="POST">
-          <button
-            type="submit"
+          <DatasetCheckoutButton
+            priceUsd={DATASET_PRICE_USD}
             className="bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg px-6 py-3 text-sm transition-colors"
           >
             Buy and download →
-          </button>
+          </DatasetCheckoutButton>
         </form>
         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
           Payment is handled by Stripe. After checkout you&rsquo;ll receive a download link by email

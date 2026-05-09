@@ -55,3 +55,11 @@ export function getBookshopAuthorUrl(): string {
 // rel value for outbound affiliate links — combines Google's "sponsored"
 // hint with the standard security flags for target="_blank".
 export const BOOKSHOP_REL = 'sponsored noopener noreferrer'
+
+// Classify a Bookshop URL so analytics can split deep-link clicks (per-book
+// affiliate path) from storefront fallback clicks. Storefront URLs all live
+// under /shop/{name}; everything else is the per-book /a/{aid}/{isbn} format.
+export type BookshopLinkType = 'deep' | 'storefront'
+export function getBookshopLinkType(url: string): BookshopLinkType {
+  return url.includes('/shop/') ? 'storefront' : 'deep'
+}

@@ -4,7 +4,8 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
+import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import type { ReadingClubCard as Card } from '@/lib/reading-club-data'
 
 export default function ReadingClubBookCard({ card, showCountries }: { card: Card; showCountries?: boolean }) {
@@ -60,9 +61,16 @@ export default function ReadingClubBookCard({ card, showCountries }: { card: Car
             View in our database →
           </Link>
         )}
-        <a href={bookshopUrl} target="_blank" rel={BOOKSHOP_REL} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-200">
+        <TrackedOutboundLink
+          eventName="Bookshop Click"
+          eventProperties={{ source: 'reading-club', bookSlug: card.bookSlug ?? null, isbn13: card.isbn13 ?? null, linkType: getBookshopLinkType(bookshopUrl) }}
+          href={bookshopUrl}
+          target="_blank"
+          rel={BOOKSHOP_REL}
+          className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
+        >
           Buy on Bookshop.org
-        </a>
+        </TrackedOutboundLink>
         {card.sourceUrl && (
           <a href={card.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600">
             Source

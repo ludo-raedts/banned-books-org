@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { stripe } from '@/lib/stripe'
 import { adminClient } from '@/lib/supabase'
+import TrackDatasetPurchase from '@/components/track-dataset-purchase'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,6 +54,14 @@ export default async function DatasetSuccessPage({
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-16 flex flex-col gap-8">
+
+      {paid && session_id ? (
+        <TrackDatasetPurchase
+          sessionId={session_id}
+          amountTotal={session?.amount_total ?? null}
+          currency={session?.currency ?? null}
+        />
+      ) : null}
 
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Order confirmed</p>

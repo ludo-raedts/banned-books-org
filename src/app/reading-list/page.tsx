@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BOOKS, CATEGORIES } from './books-data'
 import ReadingListCover from './reading-list-cover'
-import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
+import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
 
 export const metadata: Metadata = {
   title: 'Reading List — Books About Censorship | Banned Books',
@@ -186,14 +187,16 @@ export default function ReadingListPage() {
                           {/* Buy link */}
                           {/* Reading-list ISBNs are hand-picked US editions, so we treat
                               them as Bookshop-valid without going through the probe-script. */}
-                          <a
+                          <TrackedOutboundLink
+                            eventName="Bookshop Click"
+                            eventProperties={{ source: 'reading-list', bookSlug: book.internalSlug ?? null, isbn13: book.isbn ?? null, linkType: getBookshopLinkType(getBookshopUrl({ isbn13: book.isbn, bookshopStatus: 'valid' })) }}
                             href={getBookshopUrl({ isbn13: book.isbn, bookshopStatus: 'valid' })}
                             target="_blank"
                             rel={BOOKSHOP_REL}
                             className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
                           >
                             Find on Bookshop.org →
-                          </a>
+                          </TrackedOutboundLink>
                         </div>
                       </div>
                     </article>

@@ -12,7 +12,8 @@ import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
-import { getBookshopUrl, BOOKSHOP_REL } from '@/lib/bookshop'
+import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
 
 const BOOK_REASON_PHRASE: Record<string, string> = {
   lgbtq: 'LGBTQ+ content',
@@ -376,6 +377,7 @@ export default async function BookPage({
   const primaryAuthor = book.book_authors[0]?.authors
 
   const titleQuery = encodeURIComponent(book.title)
+  const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
@@ -606,22 +608,26 @@ export default async function BookPage({
             </a>
           )}
           <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href={getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })}
+            <TrackedOutboundLink
+              eventName="Bookshop Click"
+              eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null, linkType: getBookshopLinkType(bookshopHref) }}
+              href={bookshopHref}
               target="_blank"
               rel={BOOKSHOP_REL}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
             >
               Find on Bookshop.org
-            </a>
-            <a
+            </TrackedOutboundLink>
+            <TrackedOutboundLink
+              eventName="Kobo Click"
+              eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null }}
               href={`https://www.kobo.com/search?query=${titleQuery}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
             >
               Find on Kobo
-            </a>
+            </TrackedOutboundLink>
           </div>
           <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
             Bookshop.org link is an affiliate link — it supports independent bookstores and this project at no extra cost to you.{' '}

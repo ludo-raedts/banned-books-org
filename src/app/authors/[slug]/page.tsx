@@ -11,6 +11,7 @@ import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
 
 type Author = {
   id: number
@@ -228,22 +229,26 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             </h2>
             <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 p-5 flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
-                <a
+                <TrackedOutboundLink
+                  eventName="Bookshop Click"
+                  eventProperties={{ source: 'author', authorSlug: a.slug, linkType: 'storefront' }}
                   href={getBookshopAuthorUrl()}
                   target="_blank"
                   rel={BOOKSHOP_REL}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
                 >
                   Find on Bookshop.org
-                </a>
-                <a
+                </TrackedOutboundLink>
+                <TrackedOutboundLink
+                  eventName="Kobo Click"
+                  eventProperties={{ source: 'author', authorSlug: a.slug }}
                   href={`https://www.kobo.com/search?query=${authorQuery}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
                 >
                   Find on Kobo
-                </a>
+                </TrackedOutboundLink>
               </div>
               <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
                 Bookshop.org link is an affiliate link — it supports independent bookstores and this project at no extra cost to you.{' '}
