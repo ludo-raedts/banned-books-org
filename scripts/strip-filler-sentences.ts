@@ -47,6 +47,10 @@ const WHOLE_SENTENCE_FILLERS = [
   /^the (?:specific )?details regarding the challengers/i,
   /^the (?:ban|bans) (?:was|were) initiated following complaints from parents/i,
   /^the (?:ban|bans) (?:was|were) primarily driven by/i,
+  // Boilerplate templates from the original gpt-4o-mini fallback — pure placeholder, no real info beyond the bans table.
+  /^.+ was banned or restricted in [\w\s,]+ (?:in 1?\d{3} )?for reasons documented in the ban records below/i,
+  /^.+ was banned or restricted in [\w\s,]+ in 1?\d{3} for [^.]+ \/ [^.]+\.?\s*$/i,
+  /^.+ (?:has been |was )?banned or (?:restricted|challenged) (?:in [\w\s,]+ )?in (?:multiple|many|several|various) countries (?:primarily )?for/i,
   /^this decision sparked formal complaints/i,
   /^the decision sparked (?:formal )?complaints/i,
   /^(?:in )?(?:these|those|the affected) districts,? the ban remains/i,
@@ -195,11 +199,11 @@ async function main() {
     if (APPLY) {
       // Backup
       fs.appendFileSync(backupPath, [b.slug, b.description_ban ?? '', b.censorship_context ?? ''].map(csvEscape).join(',') + '\n')
-      // Update DB
+      // Update DB — when stripped result is too short, NULL the field so the
+      // book page hides that section entirely. Better than leaving boilerplate filler in place.
       const update: Record<string, string | null> = {}
-      if (banChanged) update.description_ban = banTooShort ? (b.description_ban ?? null) : newBan
-      if (ctxChanged) update.censorship_context = ctxTooShort ? (b.censorship_context ?? null) : newCtx
-      // Only write if at least one passes the length check
+      if (banChanged) update.description_ban = banTooShort ? null : newBan
+      if (ctxChanged) update.censorship_context = ctxTooShort ? null : newCtx
       if (Object.keys(update).length) {
         const { error } = await supabase.from('books').update(update).eq('id', b.id)
         if (error) console.error('  ✗ DB error:', error.message)
