@@ -1,4 +1,4 @@
-import { Terminal, DollarSign, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Terminal, DollarSign, AlertTriangle, CheckCircle, Plus, Wrench, Sparkles, ShieldCheck, RefreshCw, ImageIcon } from 'lucide-react'
 
 const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-4 bg-white dark:bg-gray-900'
 
@@ -38,6 +38,7 @@ function Script({
   tags,
   command,
   flags,
+  writes,
   note,
 }: {
   name: string
@@ -45,7 +46,8 @@ function Script({
   tags: ('free' | 'gpt' | 'claude' | 'destructive' | 'safe')[]
   command: string
   flags?: { flag: string; desc: string }[]
-  note?: string
+  writes?: React.ReactNode
+  note?: React.ReactNode
 }) {
   return (
     <div className="flex flex-col gap-3 pt-4 first:pt-0 border-t first:border-0 border-gray-100 dark:border-gray-800">
@@ -60,16 +62,33 @@ function Script({
       {flags && flags.length > 0 && (
         <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs mt-0.5">
           {flags.map(f => (
-            <>
-              <dt key={`dt-${f.flag}`} className="font-mono text-gray-500 dark:text-gray-400 shrink-0">{f.flag}</dt>
-              <dd key={`dd-${f.flag}`} className="text-gray-600 dark:text-gray-400">{f.desc}</dd>
-            </>
+            <div key={f.flag} className="contents">
+              <dt className="font-mono text-gray-500 dark:text-gray-400 shrink-0">{f.flag}</dt>
+              <dd className="text-gray-600 dark:text-gray-400">{f.desc}</dd>
+            </div>
           ))}
         </dl>
+      )}
+      {writes && (
+        <p className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2">
+          <span className="font-semibold text-gray-800 dark:text-gray-200">Writes:</span> {writes}
+        </p>
       )}
       {note && (
         <p className="text-xs text-gray-400 dark:text-gray-500 italic">{note}</p>
       )}
+    </div>
+  )
+}
+
+function Row({ field, script, tag }: { field: string; script: string; tag?: 'free' | 'gpt' | 'claude' }) {
+  return (
+    <div className="contents">
+      <dt className="text-sm text-gray-700 dark:text-gray-300 self-center">{field}</dt>
+      <dd className="font-mono text-xs text-gray-600 dark:text-gray-400 self-center flex items-center gap-2">
+        <span>{script}</span>
+        {tag && <Tag type={tag} />}
+      </dd>
     </div>
   )
 }
@@ -106,104 +125,188 @@ export default function ScriptsPage() {
           <div className="flex flex-wrap gap-4 text-xs">
             <span className="flex items-center gap-1.5">
               <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-              <span className="text-gray-600 dark:text-gray-400">Green = free (Open Library, Google Books)</span>
+              <span className="text-gray-600 dark:text-gray-400">Green = free (Open Library, Google Books, Wikipedia)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-3.5 h-3.5 text-amber-500" />
-              <span className="text-gray-600 dark:text-gray-400">Amber = costs OpenAI credits (GPT-4o-mini)</span>
+              <span className="text-gray-600 dark:text-gray-400">Amber = OpenAI (GPT-4o / 4o-mini)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-3.5 h-3.5 text-orange-500" />
-              <span className="text-gray-600 dark:text-gray-400">Orange = costs Anthropic credits (Claude Opus)</span>
+              <span className="text-gray-600 dark:text-gray-400">Orange = Anthropic (Claude Opus)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
-              <span className="text-gray-600 dark:text-gray-400">Red = destructive / modifies existing data</span>
+              <span className="text-gray-600 dark:text-gray-400">Red = destructive / overwrites existing data</span>
             </span>
           </div>
         </div>
 
-        {/* Common task quick-reference */}
+        {/* Daily quick reference */}
         <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Quick reference — what do you want to do?</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">What do you want to do?</h2>
           <dl className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-6 gap-y-3 text-sm">
             {[
-              ['Fill everything in one go (new books)', 'enrich-all.ts --apply'],
-              ['Fill everything except Gutenberg (skips slow step)', 'enrich-all.ts --apply --no-gutenberg'],
-              ['Fill everything, skip OpenAI cost', 'enrich-all.ts --apply --free-only'],
-              ['Add missing ISBNs', 'enrich-isbn.ts --apply'],
-              ['Add missing cover images', 'enrich-covers-v2.ts --apply'],
-              ['Add missing book descriptions', 'enrich-descriptions.ts --apply'],
-              ['Add ban reason descriptions (why banned)', 'enrich-ban-descriptions-gpt.ts --apply'],
-              ['Add censorship context per country/book', 'enrich-censorship-context-gpt.ts --apply'],
-              ['Audit description quality (concreteness 0–3)', 'score-descriptions.ts --apply'],
-              ['Rewrite weak descriptions with web search', 'rewrite-descriptions-grounded.ts --audit=<csv> --apply'],
-              ['Find books still containing filler phrases', 'flag-filler-rewrites.ts'],
-              ['Strip filler sentences (free, no LLM)', 'strip-filler-sentences.ts --apply'],
-              ['Classify ban reasons (political, religious…)', 'enrich-reasons.ts --apply'],
-              ['Fill author bios from Wikipedia', 'enrich-author-bios.ts --apply'],
-              ['Backfill author photos (Wikidata + OpenLibrary, second pass)', 'enrich-author-photos-v2.ts --apply'],
-              ['Apply the 40-book editorial startset', 'apply-editorial-classification.ts --write'],
-              ['Suggest classifications for the rest (GPT)', 'suggest-editorial-classification-gpt.ts --apply'],
-              ['Check for duplicate books', 'check-dupes.ts'],
+              ['Add a new source (PEN list, court ruling, etc.)', 'see "Adding a new source" below'],
+              ['Fill all open fields after an import', 'enrich-all.ts --apply'],
+              ['Same, fastest cheap pass first', 'enrich-all.ts --apply --free-only --no-gutenberg'],
+              ['Refresh public stats / countries', 'refresh-mv.ts'],
+              ['Improve weak ban descriptions', 'see "Description quality" below'],
+              ['Fix a bad cover permanently', 'mark-cover-override.ts <slug>'],
+              ['Backfill author photos', 'enrich-author-bios.ts --photos-only --apply'],
               ['Audit overall data quality', 'audit-db.ts'],
-              ['Refresh materialized views after import', 'refresh-mv.ts'],
               ['Generate Reading Club discussion questions', 'generate-discussion-questions.ts --apply'],
-              ['Seed initial BBW content blocks', 'seed-bbw-content-blocks.ts --apply'],
             ].map(([task, script]) => (
-              <>
-                <dt key={`dt-${task}`} className="text-gray-700 dark:text-gray-300">{task}</dt>
-                <dd key={`dd-${task}`} className="font-mono text-xs text-gray-500 dark:text-gray-400 self-center">{script}</dd>
-              </>
+              <div key={task} className="contents">
+                <dt className="text-gray-700 dark:text-gray-300">{task}</dt>
+                <dd className="font-mono text-xs text-gray-500 dark:text-gray-400 self-center">{script}</dd>
+              </div>
             ))}
           </dl>
         </div>
 
-        {/* Master enrichment */}
+        {/* Workflow A — adding a new source */}
         <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Master enrichment pipeline</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Runs all steps below in order. Only touches records with empty fields — safe to re-run.
+          <div className="flex items-center gap-2">
+            <Plus className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Adding a new source</h2>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Workflow for ingesting a new ban list, court ruling, or curated source. Each step is idempotent,
+            so re-runs only touch records that still need work.
           </p>
-          <Script
-            name="enrich-all.ts"
-            what="Fills ISBN, covers (first-pass + v2 retries with pHash placeholder rejection), Gutenberg IDs, descriptions, ban descriptions, censorship context, and ban reason classifications in one pass."
-            tags={['free', 'gpt']}
-            command={`# Dry-run — shows eligible counts, no writes
-npx tsx --env-file=.env.local scripts/enrich-all.ts
 
-# Run all steps
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply
+          <ol className="flex flex-col gap-4 text-sm text-gray-700 dark:text-gray-300 list-decimal list-outside ml-5">
+            <li>
+              <p className="mb-2">
+                <strong>Import the books.</strong> Copy a working template and adapt it — each source has its own
+                quirks (which countries to attach, which reasons map cleanly, source URLs).
+              </p>
+              <Code>{`# Templates that match the source shape
+scripts/add-pen-america-books.ts    # large US challenge list
+scripts/add-cdhe-colorado.ts        # state-level US bans
+scripts/add-ala-2025.ts             # ALA top-10 list
+scripts/add-bulk-books.ts           # generic catch-all
 
-# Update everything EXCEPT Gutenberg (Gutenberg is very slow)
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+# Run after editing
+npx tsx --env-file=.env.local scripts/add-<your-source>.ts --write`}</Code>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Add scripts use <code className="font-mono">--write</code>, not <code className="font-mono">--apply</code>.
+                They create books, authors, bans, ban-reason links, and source rows in one pass.
+              </p>
+            </li>
 
-# Skip OpenAI (no cost)
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only
-
-# Free + skip Gutenberg — fastest "fill the gaps" run
+            <li>
+              <p className="mb-2">
+                <strong>Fill open fields.</strong> The master pipeline runs every per-field step in order,
+                only touching records the new books left empty.
+              </p>
+              <Code>{`# Cheap pass — free APIs only, skips slow Gutenberg lookup
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg
 
-# Cap GPT steps at 50 books each (incremental)
+# Then GPT pass for what's still missing (descriptions, ban context, reasons)
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+
+# Or run everything in one go (slower because of Gutenberg)
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply`}</Code>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                See <code className="font-mono">enrich-all.ts</code> reference below for all flags.
+              </p>
+            </li>
+
+            <li>
+              <p className="mb-2">
+                <strong>Refresh materialized views</strong> so countries / stats / trending pages reflect the new data.
+              </p>
+              <Code>{`npx tsx --env-file=.env.local scripts/refresh-mv.ts`}</Code>
+            </li>
+
+            <li>
+              <p className="mb-2">
+                <strong>(Optional) Editorial classification.</strong> Suggests warning_level and inclusion_rationale
+                for newly-added books that don&apos;t have them yet.
+              </p>
+              <Code>{`# Small batch first to inspect output
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50`}</Code>
+            </li>
+          </ol>
+        </div>
+
+        {/* Master pipeline reference */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Master pipeline — enrich-all.ts</h2>
+          </div>
+          <Script
+            name="enrich-all.ts"
+            what="Runs ISBN, covers (first-pass + v2 with placeholder rejection), Gutenberg, descriptions (with GPT fallback for what OL/Google Books missed), ban descriptions, censorship context, and ban reason classifications — in that order. Every step is idempotent. This is what to run after an import."
+            tags={['free', 'gpt']}
+            command={`# Dry-run — shows eligible counts per step
+npx tsx --env-file=.env.local scripts/enrich-all.ts
+
+# Full run (free + GPT)
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply
+
+# Cheapest-first — free APIs, no Gutenberg
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg
+
+# Everything except slow Gutenberg lookup
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+
+# Cap GPT steps (incremental run)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
             flags={[
               { flag: '--apply', desc: 'Write to database (omit for dry-run)' },
-              { flag: '--free-only', desc: 'Skip all GPT steps, only run free API steps' },
-              { flag: '--no-gutenberg', desc: 'Skip the Gutenberg ID lookup step (it is slow; safe to skip on day-to-day runs)' },
+              { flag: '--free-only', desc: 'Skip all GPT steps' },
+              { flag: '--no-gutenberg', desc: 'Skip Gutenberg ID lookup (slow; safe to skip day-to-day)' },
               { flag: '--gpt-limit=N', desc: 'Cap each GPT step at N books (default 150)' },
             ]}
-            note="Run this after any bulk book import. Use --free-only first to fill what's available for free, then run without it to fill the rest with GPT. Cover step uses the v2 placeholder-rejecting flow on retries — Google Books 'image not available' placeholders are pHash-checked and discarded."
+            writes={
+              <>
+                Each step is <strong>fill-only on its own field</strong> — existing values are never overwritten.{' '}
+                <strong>Exception:</strong> the reason-classification step (<code className="font-mono">enrich-reasons.ts</code>)
+                replaces <code className="font-mono">ban_reason_links</code> for bans whose reasons are <em>exclusively</em>{' '}
+                <code className="font-mono">&apos;other&apos;</code> (DELETE + INSERT). Bans with any specific reason already
+                set are never touched.
+              </>
+            }
+            note="Cover step uses pHash to detect Google Books 'image not available' placeholders and rejects them. Books that fail get cover_status='rejected_placeholder' so they're skipped on future runs — pass --force on the cover step to re-check them."
           />
         </div>
 
-        {/* Individual enrichment */}
+        {/* Per-component enrichment */}
         <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Individual enrichment scripts</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Run these individually when you only need to update one field type.</p>
+          <div className="flex items-center gap-2">
+            <Wrench className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Enrich a single field</h2>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Use these when only one field type needs filling — otherwise prefer <code className="font-mono">enrich-all.ts</code>{' '}
+            which sequences them correctly. All accept <code className="font-mono">--apply</code> and most accept{' '}
+            <code className="font-mono">--limit=N</code>.
+          </p>
+
+          <dl className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-6 gap-y-2.5 mt-2">
+            <Row field="ISBN-13" script="enrich-isbn.ts" tag="free" />
+            <Row field="Cover images" script="enrich-covers-v2.ts" tag="free" />
+            <Row field="Book descriptions (with GPT fallback)" script="enrich-descriptions.ts" tag="gpt" />
+            <Row field="Ban descriptions (why this book in this country)" script="enrich-ban-descriptions-gpt.ts" tag="gpt" />
+            <Row field="Censorship context (broader political background)" script="enrich-censorship-context-gpt.ts" tag="gpt" />
+            <Row field="Ban reason classification" script="enrich-reasons.ts" tag="gpt" />
+            <Row field="Author bios (Wikipedia)" script="enrich-author-bios.ts" tag="free" />
+            <Row field="Author photos — second pass (Wikidata + OpenLibrary)" script="enrich-author-photos-v2.ts" tag="free" />
+            <Row field="Editorial classification suggestions" script="suggest-editorial-classification-gpt.ts" tag="gpt" />
+            <Row field="Reading Club discussion questions" script="generate-discussion-questions.ts" tag="claude" />
+          </dl>
+
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Detailed reference for each script below.
+          </p>
 
           <Script
             name="enrich-isbn.ts"
-            what="Finds missing ISBN-13 values by querying Open Library (title+author, then title-only) and Google Books."
+            what="Finds missing ISBN-13 values via Open Library (title+author, then title-only) and Google Books."
             tags={['free']}
             command={`npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply
 npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
@@ -211,420 +314,377 @@ npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
               { flag: '--apply', desc: 'Write isbn13 to database' },
               { flag: '--limit=N', desc: 'Cap at N books per run' },
             ]}
+            writes={<>Only fills empty <code className="font-mono">isbn13</code>.</>}
           />
 
           <Script
             name="enrich-covers-v2.ts"
-            what="Fetches missing cover images using 4 strategies: Google Books (title-only), Open Library (title-only, stripped subtitle), Wikipedia thumbnail. Google Books URLs are perceptual-hash-checked against the official 'image not available' placeholder; matches are rejected and the book is marked cover_status='rejected_placeholder' so future runs skip it."
+            what="Fetches missing cover images via Google Books (title-only), Open Library (subtitle stripped), Wikipedia thumbnail. Google Books URLs are pHash-checked against the official 'image not available' placeholder; matches are rejected and the book gets cover_status='rejected_placeholder' so future runs skip it."
             tags={['free']}
             command={`npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply
-npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --limit=100
 npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --reset
 npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force`}
             flags={[
-              { flag: '--apply', desc: 'Write cover_url / cover_status to database' },
+              { flag: '--apply', desc: 'Write cover_url / cover_status' },
               { flag: '--limit=N', desc: 'Cap at N books per run' },
-              { flag: '--reset', desc: 'Re-try all previously failed books (not just new ones)' },
+              { flag: '--reset', desc: 'Re-try previously failed books' },
               { flag: '--force', desc: 'Bypass cover_status skip (re-check rejected_placeholder & manual_override)' },
             ]}
+            writes={
+              <>
+                Only fills empty <code className="font-mono">cover_url</code> (and only on books with{' '}
+                <code className="font-mono">cover_status</code> NULL or <code className="font-mono">&apos;valid&apos;</code>).
+                With <code className="font-mono">--force</code>, also overwrites books with{' '}
+                <code className="font-mono">&apos;rejected_placeholder&apos;</code> or <code className="font-mono">&apos;manual_override&apos;</code>;
+                with <code className="font-mono">--reset</code>, retries books that previously failed.
+              </>
+            }
             note="Reference image lives at assets/google-books-placeholder.png. Hamming threshold = 5."
           />
 
           <Script
-            name="mark-cover-override.ts"
-            what="Permanently mark a book's cover as a manual override: clears cover_url, sets cover_status='manual_override', cover_checked_at=now(). enrich-covers-v2 will skip the book on every run unless --force."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug>
-npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug> --apply`}
-            flags={[
-              { flag: '<id-or-slug>', desc: 'Numeric book id or slug. Required.' },
-              { flag: '--apply', desc: 'Write the change. Without it, prints what would change.' },
-            ]}
-            note="Use this when you've manually deleted a bad cover and want it gone forever."
-          />
-
-          <Script
-            name="audit-covers-for-placeholders.ts"
-            what="Retroactive sweep over existing Google Books cover URLs. Downloads each image, perceptual-hash-checks against the placeholder, and on match clears cover_url + sets cover_status='rejected_placeholder'. Skips manual_override. Non-Google URLs are not scanned (the pHash is the Google placeholder)."
-            tags={['free', 'destructive']}
-            command={`npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts
-npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply
-npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply --limit=500
-npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply --concurrency=8`}
-            flags={[
-              { flag: '--apply', desc: 'Write the changes. Without it, only reports what would change.' },
-              { flag: '--limit=N', desc: 'Cap at N books per run.' },
-              { flag: '--concurrency=N', desc: 'Parallel HTTP fetches (default 4).' },
-            ]}
-            note="Run a dry-run first to see the placeholder count before applying."
-          />
-
-          <Script
             name="enrich-descriptions.ts"
-            what="Fills missing book descriptions. Tries Open Library then Google Books; falls back to GPT-4o-mini for books not found in either."
+            what="Fills missing book descriptions. Tries Open Library, then Google Books, then GPT-4o-mini for books neither found. Also fixes truncated descriptions (no sentence-final punctuation)."
             tags={['free', 'gpt']}
             command={`npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply`}
             flags={[
-              { flag: '--apply', desc: 'Write description_book; sets ai_drafted=true for GPT-generated ones' },
+              { flag: '--apply', desc: 'Write description_book; sets ai_drafted=true for GPT-generated rows' },
             ]}
-            note="Also fixes truncated descriptions (ones that don't end with sentence-final punctuation)."
-          />
-
-          <Script
-            name="enrich-descriptions-gpt.ts"
-            what="GPT-only fallback for books that Open Library and Google Books couldn't find. Use after enrich-descriptions.ts."
-            tags={['gpt']}
-            command={`npx tsx --env-file=.env.local scripts/enrich-descriptions-gpt.ts --apply
-npx tsx --env-file=.env.local scripts/enrich-descriptions-gpt.ts --apply --limit=50`}
-            flags={[
-              { flag: '--apply', desc: 'Write GPT-generated descriptions' },
-              { flag: '--limit=N', desc: 'Cap at N books (default 150)' },
-            ]}
+            writes={
+              <>
+                Only fills empty <code className="font-mono">description_book</code>. Repairs truncated{' '}
+                <code className="font-mono">description</code> strings by writing the repaired version into{' '}
+                <code className="font-mono">description_book</code> — the original <code className="font-mono">description</code> field is never modified.
+              </>
+            }
           />
 
           <Script
             name="enrich-ban-descriptions-gpt.ts"
-            what="Generates descriptions for individual bans — explains why this specific book was banned in this specific country."
+            what="Generates per-ban descriptions — explains why this specific book was banned in this specific country."
             tags={['gpt']}
-            command={`npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply
-npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --limit=100`}
+            command={`npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --limit=100`}
             flags={[
               { flag: '--apply', desc: 'Write ban descriptions' },
               { flag: '--limit=N', desc: 'Cap at N bans (default 150)' },
             ]}
+            writes={<>Only fills empty <code className="font-mono">description_ban</code>.</>}
           />
 
           <Script
             name="enrich-censorship-context-gpt.ts"
-            what="Generates broader censorship context — the political/historical background for a country's censorship of a book."
+            what="Generates broader censorship context — political/historical background for a country's censorship of a book."
             tags={['gpt']}
             command={`npx tsx --env-file=.env.local scripts/enrich-censorship-context-gpt.ts --apply --limit=50`}
             flags={[
               { flag: '--apply', desc: 'Write censorship context' },
               { flag: '--limit=N', desc: 'Cap at N records (default 150)' },
             ]}
-          />
-
-          <Script
-            name="score-descriptions.ts"
-            what="Audits description_ban and censorship_context across the whole catalog. Scores each field 0–3 on concreteness (3 = named case/court/district + year+place; 1 = generic filler; 0 = empty). Writes a CSV to data/description-audit-<timestamp>.csv. Cheap (gpt-4o-mini, ~$1–2 for the full library)."
-            tags={['gpt']}
-            command={`# Dry-run on 10 books
-npx tsx --env-file=.env.local scripts/score-descriptions.ts
-
-# Score the entire catalog and write the CSV
-npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply
-
-# Cap at N books
-npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply --limit=500`}
-            flags={[
-              { flag: '--apply', desc: 'Score all books and write the audit CSV' },
-              { flag: '--limit=N', desc: 'Cap at N books per run' },
-              { flag: '--concurrency=N', desc: 'Parallel API calls (default 5)' },
-            ]}
-            note="Filler-detection regex auto-caps any field at score 1 if it contains phrases like 'frequently banned', 'reflects ongoing tensions', etc. Feed the resulting CSV into rewrite-descriptions-grounded.ts."
-          />
-
-          <Script
-            name="rewrite-descriptions-grounded.ts"
-            what="Reads an audit CSV and rewrites only the weak fields (score ≤1) using OpenAI's Responses API with the built-in web_search tool. Prefers Wikipedia, ALA, NCAC, PEN America, Marshall Libraries as sources. Backs up the old description_ban / censorship_context to a CSV before any DB write — fully reversible."
-            tags={['gpt']}
-            command={`# Dry-run on 5 weak books
-npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv
-
-# Rewrite all weak books for real
-npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply
-
-# Test on a single book
-npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply --slug=the-bluest-eye
-
-# Also rewrite score-2 fields (more aggressive)
-npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<timestamp>.csv --apply --include-2`}
-            flags={[
-              { flag: '--audit=<csv>', desc: 'Required. Path to a CSV produced by score-descriptions.ts' },
-              { flag: '--apply', desc: 'Write to DB; without it just prints proposed rewrites' },
-              { flag: '--limit=N', desc: 'Cap at N books per run' },
-              { flag: '--slug=<slug>', desc: 'Only process one book' },
-              { flag: '--include-2', desc: 'Also rewrite fields scored 2 (default: only 0–1)' },
-              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4o)' },
-              { flag: '--concurrency=N', desc: 'Parallel calls (default 3)' },
-              { flag: '--skip-log=<csv>', desc: 'Resume from prior run — skip slugs already in this rewrite log CSV' },
-            ]}
-            note="Backups land in data/description-backup-<timestamp>.csv (slug + old values). Source URLs from web search are logged in data/description-rewrite-<timestamp>.csv per book. Inline Markdown citations are auto-stripped from output."
-          />
-
-          <Script
-            name="flag-filler-rewrites.ts"
-            what="Free, no-LLM regex scan over all books. Finds description_ban / censorship_context that still match known filler phrases ('this case illustrates how censorship authorities…', 'reflecting an ongoing trend…', 'no documented lawsuits', etc.) and writes a fake-audit CSV that rewrite-descriptions-grounded.ts can target."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/flag-filler-rewrites.ts`}
-            note="Pairs with rewrite-descriptions-grounded.ts: feed the produced CSV via --audit=<flagged.csv> to do a targeted re-rewrite of just the books still containing filler."
-          />
-
-          <Script
-            name="strip-filler-sentences.ts"
-            what="Free, no-LLM. Removes whole filler sentences and trailing filler clauses ('reflecting a growing trend of…', 'There are no documented lawsuits…', 'This case illustrates…') from existing description_ban / censorship_context, preserving the named-case content typically in the first sentence(s). Backs up old values to a CSV and writes a separate CSV listing books whose stripped result is too short to keep — feed those into rewrite-descriptions-grounded.ts for a fresh attempt."
-            tags={['safe']}
-            command={`# Dry-run on all books — shows samples, no DB write
-npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts
-
-# Apply across the whole catalog
-npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --apply
-
-# Test on a single book
-npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --slug=princess-lessons`}
-            flags={[
-              { flag: '--apply', desc: 'Write to DB; without it just prints proposed strips' },
-              { flag: '--slug=<slug>', desc: 'Only process one book' },
-            ]}
-            note="Output CSVs: data/filler-strip-backup-<ts>.csv (rollback), data/filler-strip-log-<ts>.csv (new values), data/filler-strip-needs-rewrite-<ts>.csv (slugs left too short — feed into rewrite-descriptions-grounded.ts)."
+            writes={
+              <>
+                Only fills empty <code className="font-mono">censorship_context</code>, and only on books that already have a{' '}
+                <code className="font-mono">description_book</code>.
+              </>
+            }
           />
 
           <Script
             name="enrich-reasons.ts"
-            what="Auto-classifies ban reasons (political, religious, sexual content, etc.) using GPT for bans currently tagged as 'other'."
+            what="Auto-classifies ban reasons (political, religious, sexual content…) via GPT for bans currently tagged as 'other'."
             tags={['gpt']}
             command={`npx tsx --env-file=.env.local scripts/enrich-reasons.ts --apply`}
             flags={[
               { flag: '--apply', desc: 'Update ban reason classifications' },
             ]}
+            writes={
+              <>
+                <strong>Replaces</strong> <code className="font-mono">ban_reason_links</code> for bans whose reasons are{' '}
+                <em>exclusively</em> <code className="font-mono">&apos;other&apos;</code> (DELETE + INSERT). Bans with any specific
+                reason already attached are never touched.
+              </>
+            }
           />
 
           <Script
             name="enrich-author-bios.ts"
-            what="Fills missing author bios, birth year, death year, birth country, and photos using Wikipedia as primary source. Only touches authors with no bio — safe to re-run. Does not hallucinate — only writes when Wikipedia returns a relevant article. Use --photos-only to backfill pictures for authors who already have a bio (e.g. when their Wikipedia page now has an infobox image, or when the bio was filled manually)."
+            what="Fills missing author bios, birth/death year, birth country, and photos from Wikipedia. Only touches authors with no bio. Use --photos-only to backfill pictures for authors who already have a bio (e.g. when their Wikipedia page now has an infobox image)."
             tags={['free']}
-            command={`# Dry-run — shows what would be filled, no writes
-npx tsx --env-file=.env.local scripts/enrich-author-bios.ts
-
-# Fill up to 50 authors (default batch)
+            command={`# Fill bios for up to 50 authors
 npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply
 
-# Fill up to 200 authors
+# Larger batch
 npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply --limit=200
 
-# Backfill missing photos for authors who already have a bio
+# Photo-only backfill for already-bio'd authors
 npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --apply --limit=500`}
             flags={[
-              { flag: '--apply', desc: 'Write bio, birth_year, death_year, birth_country, photo_url to DB' },
+              { flag: '--apply', desc: 'Write bio, birth_year, death_year, birth_country, photo_url' },
               { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
-              { flag: '--photos-only', desc: 'Only target authors with bio but no photo; write only photo_url, leave bio/birth/death untouched' },
+              { flag: '--photos-only', desc: 'Only target authors with bio but no photo' },
             ]}
-            note="Wikipedia intro extract is used as-is (HTML stripped). Censorship mentions in the full article are appended if not already in the intro. Birth/death years are extracted from Wikipedia categories."
+            writes={
+              <>
+                Default mode: only targets authors with empty <code className="font-mono">bio</code>. For those authors writes{' '}
+                <code className="font-mono">bio</code> + (when Wikipedia returns a value){' '}
+                <code className="font-mono">birth_year</code> / <code className="font-mono">death_year</code> /{' '}
+                <code className="font-mono">birth_country</code> / <code className="font-mono">photo_url</code> —
+                so any manual values on those four fields can get overwritten if the author had no bio yet.
+                With <code className="font-mono">--photos-only</code>: only fills empty <code className="font-mono">photo_url</code> on
+                authors who already have a bio; nothing else is touched.
+              </>
+            }
           />
 
           <Script
             name="enrich-author-photos-v2.ts"
-            what="Second-pass photo backfill for authors that the Wikipedia search in enrich-author-bios.ts couldn't fill. Tries Wikidata (search → require P31=human + P106 with a writer-ish occupation → fetch P18 image as a 400px Commons thumbnail), then falls back to OpenLibrary (covers.openlibrary.org/a/olid/{OLID}-L.jpg?default=false, HEAD-checked so 404s skip cleanly). Writes a CSV log per run to data/photo-enrichment-{timestamp}.csv with the source, URL, and reason for every author so you can spot-check accepted matches."
+            what="Second-pass photo backfill — what enrich-author-bios.ts couldn't find via Wikipedia article search. Tries Wikidata (P31=human + writer-ish P106 → P18) then OpenLibrary cover endpoint. Logs every attempt to data/photo-enrichment-{ts}.csv for spot-checking."
             tags={['free']}
-            command={`# Dry-run on 50 authors — writes CSV, no DB changes
-npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts
-
-# Apply on 250 authors (~10 min runtime)
-npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=250
-
-# Apply on the full backlog (default 50, set higher for full run)
-npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=1000`}
+            command={`# Apply on 250 authors (~10 min runtime)
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=250`}
             flags={[
               { flag: '--apply', desc: 'Write photo_url to DB (omit for dry-run)' },
               { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
             ]}
-            note="Run AFTER enrich-author-bios.ts --photos-only — that pass uses Wikipedia article search and is the cheap easy first sweep. v2 is for what's left and yields ~5–15% (the remaining authors are genuinely missing from free photo sources, often pseudonymous, dissident, or non-Western). Both image hosts (upload.wikimedia.org, covers.openlibrary.org) are already in src/lib/allowed-image-hosts.ts. If you ever extend this script with a new image source, add the new hostname to that file too — Next.js's image optimizer refuses hosts not on the allowlist."
-          />
-        </div>
-
-        {/* Editorial classification */}
-        <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Editorial classification</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            These scripts populate the three editorial-classification fields on books. The framework is
-            described in the two essays{' '}
-            <a href="/essays/what-we-document" className="text-brand hover:underline">What we document</a>{' '}
-            and{' '}
-            <a href="/essays/forbidden-knowledge-iceberg" className="text-brand hover:underline">Forbidden knowledge iceberg</a>.
-          </p>
-
-          <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-lg p-3 leading-relaxed">
-            <p className="font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Fields written</p>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
-              <dt className="font-mono">warning_level</dt>
-              <dd>
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">none</code> /{' '}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">context</code> /{' '}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code>.
-                Default <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">none</code>.
-                Only <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">context</code> and{' '}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code> render the public &ldquo;Editorial note&rdquo; on{' '}
-                <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">/books/&lt;slug&gt;</code>.
-              </dd>
-              <dt className="font-mono">inclusion_rationale</dt>
-              <dd>
-                1–2 sentences explaining why the book fits our criteria. <strong>Always internal</strong> —
-                only visible in admin, never rendered on the public site. Marks a book as classified.
-              </dd>
-              <dt className="font-mono">extended_context</dt>
-              <dd>
-                Markdown, only used for <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">extended</code> tier.
-                <strong> The only field on a book page that gets a public editorial-essay treatment.</strong>{' '}
-                Filled by hand in admin — never auto-generated.
-              </dd>
-            </dl>
-            <p className="mt-2 text-gray-500 dark:text-gray-500">
-              Classification does <strong>not</strong> count towards the data-quality score. An unclassified book is not &ldquo;wrong&rdquo;.
-            </p>
-          </div>
-
-          <Script
-            name="apply-editorial-classification.ts"
-            what="One-shot seeder for the 40-book editorial startset. Patches 32 existing books (sets warning_level + inclusion_rationale) and creates 5 new ones with associated authors, bans, reasons and sources: Quotations from Chairman Mao, Why I Am Not a Christian, Submission (Hirsi Ali / Van Gogh), Heather Has Two Mommies, Our Bodies Ourselves. Idempotent: skips books that already have warning_level !== 'none' or an inclusion_rationale, so it never overwrites edits made via the admin."
-            tags={['safe']}
-            command={`# Dry-run — shows the 32 patches + 5 inserts, no writes
-npx tsx --env-file=.env.local scripts/apply-editorial-classification.ts
-
-# Apply
-npx tsx --env-file=.env.local scripts/apply-editorial-classification.ts --write`}
-            flags={[
-              { flag: '--write', desc: 'Apply changes (this script uses --write, NOT --apply, matching the existing batch-* import scripts)' },
-            ]}
-            note="Already run on the catalogue on 2026-05-07. Re-running is safe — it only patches books that haven't been classified yet. The 4 extended-tier books (Mein Kampf, Turner Diaries, Anarchist Cookbook, Hit Man) get warning_level=extended + rationale; their extended_context is left NULL with a TODO for you to fill manually via admin. Three collection placeholders (Russian LGBTQ, Black Books, DPRK dissident lit) are intentionally left as TODO comments — better split per work later."
+            writes={<>Only fills empty <code className="font-mono">photo_url</code>.</>}
+            note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields ~5–15% on what's left. If you ever extend with a new image source, add the host to src/lib/allowed-image-hosts.ts."
           />
 
           <Script
             name="suggest-editorial-classification-gpt.ts"
-            what="GPT-powered classifier for the ~4.4k books that aren't yet classified. Sends each book's metadata + ban context to gpt-4o-mini with the editorial framework as the system prompt; gets back warning_level + inclusion_rationale + confidence + reasoning_summary as structured JSON."
+            what="GPT-powered classifier for unclassified books. Sends metadata + ban context to gpt-4o-mini with the editorial framework as system prompt; gets back warning_level + inclusion_rationale + confidence as structured JSON. Auto-applies low-risk results, flags high-risk for review."
             tags={['gpt']}
-            command={`# Dry-run — 3 sample books
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts
-
-# Test on one specific book
+            command={`# Test on one book
 npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --slug=lolita
 
-# Apply: small batch first to inspect output quality and cost
+# Small batch first
 npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
 
-# Apply at scale
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000
-
-# Override model (default gpt-4o-mini)
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --model=gpt-5`}
+# Full catalogue
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000`}
             flags={[
-              { flag: '--apply', desc: 'Auto-apply low-risk results to DB; write a review file for high-risk ones' },
-              { flag: '--limit=N', desc: 'Cap at N books per run (default 100 in apply mode, 3 in dry-run)' },
-              { flag: '--slug=X', desc: 'Test on a single book — bypasses the "already-classified" filter' },
-              { flag: '--model=X', desc: 'Override the model (default gpt-4o-mini, also via OPENAI_MODEL env)' },
-              { flag: '--delay=N', desc: 'Delay between API calls in ms (default 400)' },
+              { flag: '--apply', desc: 'Auto-apply low-risk; write review file for high-risk' },
+              { flag: '--limit=N', desc: 'Cap at N books (default 100 in apply mode, 3 in dry-run)' },
+              { flag: '--slug=X', desc: 'Test on a single book' },
+              { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
             ]}
-            note="Routing — three outcomes: (1) AUTO-APPLY when GPT suggests warning_level='none' at confidence ≥ medium → rationale written to DB, no public change. (2) WRITE + FLAG when GPT suggests 'context'/'extended' at confidence ≥ medium → rationale written at none tier (so the book is classified and won't recur), AND logged to data/editorial-review-<ts>.json for you to decide whether to upgrade tier via admin. (3) REVIEW-ONLY when exclude=true or confidence='low' → no DB write, book stays in the candidate pool for re-evaluation or manual classification. The script never auto-promotes tier — that decision is always yours. Estimated cost: ~€2–€5 to classify the entire ~4.4k catalogue with gpt-4o-mini."
+            writes={
+              <>
+                Only targets books where <code className="font-mono">warning_level=&apos;none&apos;</code> AND{' '}
+                <code className="font-mono">inclusion_rationale IS NULL</code>. Writes <code className="font-mono">warning_level</code>{' '}
+                (always <code className="font-mono">&apos;none&apos;</code>; tier upgrades are always manual via admin) +{' '}
+                <code className="font-mono">inclusion_rationale</code>. Manual edits via admin survive re-runs.
+              </>
+            }
+            note="Three outcomes: (1) AUTO-APPLY when warning_level='none' at confidence ≥ medium → rationale written. (2) WRITE + FLAG when 'context'/'extended' at confidence ≥ medium → rationale written at none tier AND logged to data/editorial-review-<ts>.json. (3) REVIEW-ONLY when exclude=true or low confidence → no DB write. Tier upgrades are always manual via admin. Estimated cost: ~€2–€5 for the full ~4.4k catalogue."
           />
-        </div>
-
-        {/* Reading Club & Banned Books Week */}
-        <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Reading Club &amp; Banned Books Week</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Editorial scripts for the{' '}
-            <a href="/admin/reading-club" className="text-brand hover:underline">Reading Club</a>{' '}
-            and{' '}
-            <a href="/admin/banned-books-week" className="text-brand hover:underline">Banned Books Week</a>{' '}
-            admin pages. Both scripts read from / write to the new tables introduced by migration 016.
-          </p>
 
           <Script
             name="generate-discussion-questions.ts"
-            what="Generates 5–10 thoughtful, book-specific discussion questions for every Reading Club row that doesn't have any yet. Auto-detects the provider: prefers Claude Opus 4.7 (with adaptive thinking) when ANTHROPIC_API_KEY is set, falls back to OpenAI gpt-4o when only OPENAI_API_KEY is set. The prompt is hand-crafted to produce nuanced, varied, emotionally intelligent questions tailored to each book — not generic reading-group questions, and not censorship-obsessed. The last question is always a deeper 'big question' for long discussion. Covers all four tracks: Currently Challenged, International, Classics, and per-theme overrides."
+            what="Generates 5–10 book-specific discussion questions for every Reading Club row missing them. Auto-detects provider — prefers Claude Opus 4.7 with adaptive thinking when ANTHROPIC_API_KEY is set, falls back to OpenAI gpt-4o."
             tags={['claude', 'gpt']}
-            command={`# Dry-run — list eligible rows, no API calls or DB writes
-npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts
-
-# Generate questions for all rows that are missing them (auto-detects provider)
+            command={`# Generate for all eligible rows
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply
 
-# Cap at 10 rows per run (useful for staging or trying small batches first)
+# Small batch first
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --limit=10
 
-# Include auto-pull theme books — materialize the top 12 books per theme
-# (when the theme has no curated books yet) so questions can be attached.
-# Without this flag, themes that rely on auto-pull are skipped.
-npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --include-auto-themes
-
-# Force a specific provider (otherwise auto-detects from env vars)
-npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=claude
-npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --provider=openai
-
-# Regenerate questions even when they already exist (overwrites!)
-npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --force`}
+# Materialize auto-pull theme books too
+npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply --include-auto-themes`}
             flags={[
-              { flag: '--apply', desc: 'Call the LLM and write the result to the database' },
-              { flag: '--limit=N', desc: 'Cap at N rows per run (default: process everything eligible)' },
-              { flag: '--include-auto-themes', desc: 'Materialize auto-pull books for themes that have no manually-curated set yet, then generate questions for them. Idempotent — only acts on empty themes.' },
-              { flag: '--provider=X', desc: 'Force claude or openai (default: auto-detect from available API key)' },
-              { flag: '--force', desc: 'Regenerate even when questions already exist — overwrites the existing array' },
+              { flag: '--apply', desc: 'Call the LLM and write the result' },
+              { flag: '--limit=N', desc: 'Cap at N rows per run' },
+              { flag: '--include-auto-themes', desc: 'Materialize auto-pull books for empty themes, then process them' },
+              { flag: '--provider=X', desc: 'Force claude or openai (default: auto-detect)' },
+              { flag: '--force', desc: 'Regenerate even when questions already exist' },
             ]}
-            note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI gpt-4o. Quality is highest with Claude Opus 4.7 on this nuance-heavy task; gpt-4o is acceptable. Idempotent by default — re-running without --force only fills empty rows. Single-row failures (rate limit, malformed JSON) are logged and don't abort the run; the final summary lists which rows failed so you can re-run for just those. The default behavior covers Currently Challenged, International, Classics, and per-theme overrides — if a theme has no curated books, pass --include-auto-themes to materialize the auto-pull set so it can be processed too."
-          />
-
-          <Script
-            name="seed-bbw-content-blocks.ts"
-            what="One-off seed for the 20 editorial content blocks introduced by migration 016 (BBW hub sections, Reading Club intros, theme intros, etc.). Writes initial draft markdown into every block, renders it through the same marked + sanitize-html pipeline as the admin save path, and marks each block as 'published' so the public BBW + Reading Club pages go live immediately. Editorial team can then iterate via /admin/content-blocks."
-            tags={['safe']}
-            command={`# Dry-run — show word counts and rendered HTML sizes per block
-npx tsx --env-file=.env.local scripts/seed-bbw-content-blocks.ts
-
-# Apply: upsert markdown + body_html, mark each block as 'published'
-npx tsx --env-file=.env.local scripts/seed-bbw-content-blocks.ts --apply`}
-            flags={[
-              { flag: '--apply', desc: 'Write to the database. Without it, prints what would change.' },
-            ]}
-            note="Idempotent: re-running --apply will overwrite existing markdown / HTML on any block where the slug matches. Use it to reset the editorial drafts back to the seed version after experimentation. Notes column is preserved across reseeds."
+            writes={
+              <>
+                Default: only fills Reading Club rows with empty <code className="font-mono">discussion_questions</code>.
+                With <code className="font-mono">--force</code>, <strong>overwrites</strong> existing question arrays.
+              </>
+            }
+            note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with gpt-4o. Idempotent by default — only fills empty rows."
           />
         </div>
 
-        {/* Data quality & auditing */}
+        {/* Description quality pipeline */}
         <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Data quality &amp; auditing</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">All read-only — safe to run any time.</p>
-
-          <Script
-            name="audit-db.ts"
-            what="Full database audit: counts per table, missing fields, referential integrity checks."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/audit-db.ts`}
-          />
-
-          <Script
-            name="check-dupes.ts"
-            what="Finds duplicate book entries (same title + author appearing more than once)."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/check-dupes.ts`}
-          />
-
-          <Script
-            name="check-no-desc.ts"
-            what="Lists all books still missing a description, with their ban counts."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/check-no-desc.ts`}
-          />
-
-          <Script
-            name="check-coverage.ts"
-            what="Shows coverage percentages for ISBN, cover, description, and ban description fields."
-            tags={['safe']}
-            command={`npx tsx --env-file=.env.local scripts/check-coverage.ts`}
-          />
-        </div>
-
-        {/* Materialized views */}
-        <div className={cardCls}>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Materialized views</h2>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Description quality — three-step pipeline</h2>
+          </div>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Refresh after bulk imports or enrichment runs so the countries and stats pages reflect updated data.
-            You can also refresh from the{' '}
-            <a href="/admin" className="text-brand hover:underline">admin dashboard</a>.
+            For improving existing weak descriptions (filler-heavy, ungrounded). Run in order; each step writes
+            CSV backups to <code className="font-mono">data/</code> so the whole pipeline is reversible.
           </p>
 
           <Script
+            name="1. strip-filler-sentences.ts"
+            what="Free, regex-only. Removes whole filler sentences and trailing filler clauses ('reflecting a growing trend of…', 'There are no documented lawsuits…', 'This case illustrates…') from existing description_ban / censorship_context. Preserves named-case content. Outputs three CSVs: backup, log, needs-rewrite (slugs left too short)."
+            tags={['safe']}
+            command={`# Dry-run — shows samples
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts
+
+# Apply across the whole catalogue
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --apply
+
+# Test on one book
+npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --slug=princess-lessons`}
+            flags={[
+              { flag: '--apply', desc: 'Write to DB (without it, prints proposed strips)' },
+              { flag: '--slug=X', desc: 'Only process one book' },
+            ]}
+            writes={
+              <>
+                <strong>Overwrites</strong> <code className="font-mono">description_ban</code> and{' '}
+                <code className="font-mono">censorship_context</code> on every book where filler regex matches; backs up old
+                values to <code className="font-mono">data/filler-strip-backup-&lt;ts&gt;.csv</code> first. Sets the field to{' '}
+                <code className="font-mono">NULL</code> if the stripped result is too short — those slugs are listed in{' '}
+                <code className="font-mono">filler-strip-needs-rewrite-&lt;ts&gt;.csv</code> for step 3.
+              </>
+            }
+            note="Output CSVs: data/filler-strip-backup-<ts>.csv (rollback), data/filler-strip-log-<ts>.csv (new values), data/filler-strip-needs-rewrite-<ts>.csv (feed into step 3)."
+          />
+
+          <Script
+            name="2. score-descriptions.ts"
+            what="Scores description_ban + censorship_context across the whole catalogue 0–3 on concreteness (3 = named case/court/district + year+place; 1 = generic; 0 = empty). Writes data/description-audit-<ts>.csv. Cheap (gpt-4o-mini, ~$1–2 for the full library). Filler-detection regex auto-caps at score 1 if the field still contains generic phrases."
+            tags={['gpt']}
+            command={`# Dry-run on 10 books
+npx tsx --env-file=.env.local scripts/score-descriptions.ts
+
+# Score the entire catalogue
+npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply`}
+            flags={[
+              { flag: '--apply', desc: 'Score all and write CSV' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--concurrency=N', desc: 'Parallel API calls (default 5)' },
+            ]}
+            writes={<>No DB writes — only writes the audit CSV.</>}
+            note="Faster regex-only alternative: flag-filler-rewrites.ts (no LLM, only catches known filler patterns)."
+          />
+
+          <Script
+            name="3. rewrite-descriptions-grounded.ts"
+            what="Reads an audit CSV and rewrites only weak fields (score ≤1) using OpenAI's Responses API with the built-in web_search tool. Prefers Wikipedia, ALA, NCAC, PEN America, Marshall Libraries. Backs up old values to a CSV before any DB write."
+            tags={['gpt']}
+            command={`# Dry-run on 5 weak books
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv
+
+# Rewrite all weak books
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv --apply
+
+# Resume from a previous run
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=<csv> --apply --skip-log=data/description-rewrite-<prev-ts>.csv`}
+            flags={[
+              { flag: '--audit=<csv>', desc: 'Required. Path to CSV from score-descriptions.ts (or flag-filler-rewrites.ts)' },
+              { flag: '--apply', desc: 'Write to DB' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--slug=<slug>', desc: 'Only process one book' },
+              { flag: '--include-2', desc: 'Also rewrite fields scored 2 (default: only 0–1)' },
+              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4o)' },
+              { flag: '--concurrency=N', desc: 'Parallel calls (default 3)' },
+              { flag: '--skip-log=<csv>', desc: 'Resume — skip slugs already in this rewrite log' },
+            ]}
+            writes={
+              <>
+                <strong>Overwrites</strong> <code className="font-mono">description_ban</code> and/or{' '}
+                <code className="font-mono">censorship_context</code> for fields scored ≤1 (or ≤2 with{' '}
+                <code className="font-mono">--include-2</code>); backs up old values to{' '}
+                <code className="font-mono">data/description-backup-&lt;ts&gt;.csv</code> before any write.
+              </>
+            }
+            note="Backups: data/description-backup-<ts>.csv. Source URLs logged per book in data/description-rewrite-<ts>.csv. Inline citations are auto-stripped from output."
+          />
+
+          <Script
+            name="flag-filler-rewrites.ts"
+            what="Free regex sweep — finds books still containing known filler phrases and writes a fake-audit CSV that step 3 can target. Use this instead of step 2 when you only care about a specific filler regression and don't want to re-score everything."
+            tags={['safe']}
+            command={`npx tsx --env-file=.env.local scripts/flag-filler-rewrites.ts`}
+            writes={<>No DB writes — only writes the flagged-books CSV.</>}
+            note="Pairs with step 3: feed the produced CSV via --audit=<flagged.csv>."
+          />
+        </div>
+
+        {/* Cover maintenance */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <ImageIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Cover maintenance</h2>
+          </div>
+
+          <Script
+            name="mark-cover-override.ts"
+            what="Permanently mark a book's cover as a manual override: clears cover_url, sets cover_status='manual_override'. enrich-covers-v2 will skip the book on every run unless --force."
+            tags={['safe']}
+            command={`npx tsx --env-file=.env.local scripts/mark-cover-override.ts <id-or-slug> --apply`}
+            flags={[
+              { flag: '<id-or-slug>', desc: 'Numeric book id or slug. Required.' },
+              { flag: '--apply', desc: 'Write the change. Without it, prints what would change.' },
+            ]}
+            writes={
+              <>
+                <strong>Always overwrites</strong> for the specified book — clears <code className="font-mono">cover_url</code>{' '}
+                and sets <code className="font-mono">cover_status=&apos;manual_override&apos;</code>. Targets exactly one book.
+              </>
+            }
+            note="Use this when you've manually deleted a bad cover and want it gone forever."
+          />
+
+          <Script
+            name="audit-covers-for-placeholders.ts"
+            what="Retroactive sweep over existing Google Books cover URLs. Downloads each image, perceptual-hash-checks against the placeholder; on match clears cover_url + sets cover_status='rejected_placeholder'. Skips manual_override. Non-Google URLs are skipped."
+            tags={['free', 'destructive']}
+            command={`# Dry-run first to see how many would change
+npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts
+
+# Apply
+npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply --concurrency=8`}
+            flags={[
+              { flag: '--apply', desc: 'Write the changes' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--concurrency=N', desc: 'Parallel HTTP fetches (default 4)' },
+            ]}
+            writes={
+              <>
+                <strong>Overwrites</strong> only for books whose existing <code className="font-mono">cover_url</code> is on
+                books.google.com / googleusercontent.com AND matches the placeholder pHash: clears{' '}
+                <code className="font-mono">cover_url</code> and sets{' '}
+                <code className="font-mono">cover_status=&apos;rejected_placeholder&apos;</code>. Books with{' '}
+                <code className="font-mono">cover_status=&apos;manual_override&apos;</code> are skipped. Non-Google URLs are not scanned.
+              </>
+            }
+          />
+        </div>
+
+        {/* Audits */}
+        <div className={cardCls}>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Audits — read-only</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Safe to run any time.</p>
+
+          <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-2.5 mt-2">
+            <Row field="audit-db.ts" script="full database audit, missing fields, FK checks" />
+            <Row field="check-dupes.ts" script="duplicate books (same title + author)" />
+            <Row field="check-no-desc.ts" script="books still missing a description" />
+            <Row field="check-coverage.ts" script="ISBN / cover / description / ban-desc coverage %" />
+          </dl>
+          <Code>{`npx tsx --env-file=.env.local scripts/audit-db.ts
+npx tsx --env-file=.env.local scripts/check-dupes.ts
+npx tsx --env-file=.env.local scripts/check-no-desc.ts
+npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
+        </div>
+
+        {/* Maintenance */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <RefreshCw className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Maintenance</h2>
+          </div>
+
+          <Script
             name="refresh-mv.ts"
-            what="Refreshes all materialized views (country stats, trending, ban counts) used by the public-facing pages."
+            what="Refreshes mv_ban_counts (used by countries / stats / trending). Run after any bulk import or enrichment. Also available as a button on the admin dashboard."
             tags={['safe']}
             command={`npx tsx --env-file=.env.local scripts/refresh-mv.ts`}
           />
