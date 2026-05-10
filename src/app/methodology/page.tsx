@@ -1,10 +1,21 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import CitationBlock from '@/components/citation-block'
+import { buildCitationMeta } from '@/lib/citation-meta'
+
+const METHODOLOGY_CANONICAL = 'https://www.banned-books.org/methodology'
+const METHODOLOGY_ONLINE_DATE = '2025-08-01'
 
 export const metadata: Metadata = {
   title: 'Methodology — Why the US Dominates This Data',
   description: 'An honest explanation of why the United States accounts for most bans in this catalogue, and what that says about transparency, advocacy, and the limits of available data.',
   alternates: { canonical: '/methodology' },
+  other: buildCitationMeta({
+    entityType: 'methodology',
+    title: 'Methodology and coverage notes',
+    url: METHODOLOGY_CANONICAL,
+    onlineDate: METHODOLOGY_ONLINE_DATE,
+  }),
 }
 
 export default function MethodologyPage() {
@@ -24,6 +35,15 @@ export default function MethodologyPage() {
           American libraries burn the most books — it is because America counts them.
         </p>
       </div>
+
+      <CitationBlock
+        entityType="methodology"
+        entity={{
+          title: 'Methodology and coverage notes',
+          slug: 'methodology',
+        }}
+        url={METHODOLOGY_CANONICAL}
+      />
 
       <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-red-700 prose-a:no-underline hover:prose-a:underline">
 

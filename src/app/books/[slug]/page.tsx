@@ -16,6 +16,8 @@ import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
+import CitationBlock from '@/components/citation-block'
+import { buildCitationMeta } from '@/lib/citation-meta'
 
 const BOOK_REASON_PHRASE: Record<string, string> = {
   lgbtq: 'LGBTQ+ content',
@@ -41,7 +43,7 @@ export async function generateMetadata({
   const { data } = await adminClient()
     .from('books')
     .select(`
-      title, cover_url,
+      title, cover_url, first_published_year,
       book_authors(authors(display_name)),
       bans(country_code, countries(name_en), ban_reason_links(reasons(slug)))
     `)
@@ -56,8 +58,9 @@ export async function generateMetadata({
     ban_reason_links: { reasons: { slug: string } | null }[]
   }
   const bans = (data.bans as unknown as MetaBan[]) ?? []
-  const author = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
-    .map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
+  const authorList = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
+    .map((ba) => ba.authors?.display_name).filter((s): s is string => !!s)
+  const author = authorList.join(', ')
   const baseTitle = `${data.title}${author ? ` by ${author}` : ''}`
 
   const countryByCode = new Map<string, string>()
@@ -104,6 +107,15 @@ export async function generateMetadata({
   }
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
+  const canonicalUrl = `https://www.banned-books.org/books/${slug}`
+  const citationOther = buildCitationMeta({
+    entityType: 'book',
+    title: data.title,
+    authors: authorList,
+    url: canonicalUrl,
+    onlineDate: data.first_published_year ? String(data.first_published_year) : undefined,
+  })
+
   return {
     title,
     description,
@@ -116,6 +128,7 @@ export async function generateMetadata({
     twitter: {
       card: data.cover_url ? 'summary_large_image' : 'summary',
     },
+    other: citationOther,
   }
 }
 
@@ -677,6 +690,16 @@ export default async function BookPage({
           </p>
         </div>
       </section>
+
+      <CitationBlock
+        entityType="book"
+        entity={{
+          title: book.title,
+          authors: book.book_authors.map(ba => ba.authors?.display_name).filter((s): s is string => !!s),
+          slug: book.slug,
+        }}
+        url={`https://www.banned-books.org/books/${book.slug}`}
+      />
 
       {/* Related */}
       {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0 || booksInCountry.length > 0 || booksForReason.length > 0) && (

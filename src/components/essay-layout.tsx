@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import EssayRelatedBooks from './essay-related-books'
 import MoreEssays from './more-essays'
+import CitationBlock from './citation-block'
 import type { Essay } from '@/lib/essays-data'
 
 type Hero = {
@@ -64,6 +65,12 @@ export default function EssayLayout({ essay, hero, children }: Props) {
       )}
 
       {children}
+
+      <CitationBlock
+        entityType="essay"
+        entity={{ title: essay.title, slug: essay.slug }}
+        url={`https://www.banned-books.org${essay.href}`}
+      />
 
       {essay.relatedBookSlugs.length > 0 && (
         <EssayRelatedBooks slugs={essay.relatedBookSlugs} />

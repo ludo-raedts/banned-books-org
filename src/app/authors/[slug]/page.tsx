@@ -14,6 +14,8 @@ import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag as countryFlagShared } from '@/lib/country-flag'
+import CitationBlock from '@/components/citation-block'
+import { buildCitationMeta } from '@/lib/citation-meta'
 
 type Author = {
   id: number
@@ -79,12 +81,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const title = author.display_name
   const description = `${author.display_name}'s books have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}. See the full list.`
+  const canonicalUrl = `https://www.banned-books.org/authors/${slug}`
   return {
     title,
     description,
     alternates: { canonical: `/authors/${slug}` },
     openGraph: { title, description },
     twitter: { card: 'summary' },
+    other: buildCitationMeta({
+      entityType: 'author',
+      title: author.display_name,
+      authors: [author.display_name],
+      url: canonicalUrl,
+    }),
   }
 }
 
@@ -352,6 +361,15 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           })}
         </div>
       )}
+
+      <CitationBlock
+        entityType="author"
+        entity={{
+          title: a.display_name,
+          slug: a.slug,
+        }}
+        url={`https://www.banned-books.org/authors/${a.slug}`}
+      />
 
       {/* Other frequently banned authors */}
       {relatedAuthors.length > 0 && (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import EssayLayout from '@/components/essay-layout'
 import { essayBySlug } from '@/lib/essays-data'
+import { buildCitationMeta } from '@/lib/citation-meta'
 
 const essay = essayBySlug('the-grey-zone')!
 
@@ -14,6 +15,13 @@ export const metadata: Metadata = {
   openGraph: { title: essay.title, description: essay.dek, type: 'article' },
   alternates: { canonical: essay.href },
   robots: essay.draft ? { index: false, follow: true } : undefined,
+  other: buildCitationMeta({
+    entityType: 'essay',
+    title: essay.title,
+    url: `https://www.banned-books.org${essay.href}`,
+    publicationYear: Number(essay.publishedAt.slice(0, 4)),
+    onlineDate: essay.publishedAt,
+  }),
 }
 
 const jsonLd = {

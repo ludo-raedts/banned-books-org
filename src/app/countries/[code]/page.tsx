@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import CitationBlock from '@/components/citation-block'
+import { buildCitationMeta } from '@/lib/citation-meta'
 
 export async function generateMetadata({
   params,
@@ -57,11 +59,17 @@ export async function generateMetadata({
   }
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
+  const canonicalUrl = `https://www.banned-books.org/countries/${code.toLowerCase()}`
   return {
     title,
     description,
     alternates: { canonical: `/countries/${code.toLowerCase()}` },
     openGraph: { title, description },
+    other: buildCitationMeta({
+      entityType: 'country',
+      title: `Book censorship in ${country.name_en}`,
+      url: canonicalUrl,
+    }),
   }
 }
 
@@ -363,6 +371,16 @@ export default async function CountryPage({
           </div>
         </>
       )}
+      <CitationBlock
+        entityType="country"
+        entity={{
+          title: country.name_en,
+          slug: code.toLowerCase(),
+          code: upperCode,
+        }}
+        url={`https://www.banned-books.org/countries/${code.toLowerCase()}`}
+      />
+
       {/* Related countries */}
       {relatedCountries.length > 0 && (
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
