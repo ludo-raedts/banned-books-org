@@ -40,20 +40,20 @@ export default function CitationBlock({ entityType, entity, url }: Props) {
                 <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                   {fmt.label}
                 </span>
-                <span className="text-[11px] text-gray-400 dark:text-gray-500 group-open:hidden">
-                  Show
-                </span>
-                <span className="hidden text-[11px] text-gray-400 dark:text-gray-500 group-open:inline">
-                  Hide
+                <span className="flex items-center gap-3">
+                  <CitationCopyButton text={text} label={fmt.label} />
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500 group-open:hidden">
+                    Show
+                  </span>
+                  <span className="hidden text-[11px] text-gray-400 dark:text-gray-500 group-open:inline">
+                    Hide
+                  </span>
                 </span>
               </summary>
-              <div className="px-4 pb-4 -mt-1 flex flex-col gap-2">
+              <div className="px-4 pb-4 -mt-1">
                 <pre className="whitespace-pre-wrap break-words text-xs leading-relaxed text-gray-700 dark:text-gray-300 font-sans">
                   {text}
                 </pre>
-                <div>
-                  <CitationCopyButton text={text} label={fmt.label} />
-                </div>
               </div>
             </details>
           )

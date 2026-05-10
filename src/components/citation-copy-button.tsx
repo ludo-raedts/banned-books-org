@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 
 type Props = {
   text: string
@@ -10,7 +10,10 @@ type Props = {
 export default function CitationCopyButton({ text, label }: Props) {
   const [copied, setCopied] = useState(false)
 
-  async function onClick() {
+  async function onClick(e: MouseEvent<HTMLButtonElement>) {
+    // Button lives inside <summary>; without these the click toggles <details>.
+    e.preventDefault()
+    e.stopPropagation()
     try {
       await navigator.clipboard.writeText(text)
       setCopied(true)
