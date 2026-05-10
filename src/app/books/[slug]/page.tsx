@@ -80,7 +80,7 @@ export async function generateMetadata({
     ? `${baseTitle} – Banned in ${uniqueCountries[0]} for ${topReasonPhrase}`
     : null
   const candidateB = `${baseTitle} – Why it was banned`
-  const candidateC = `${baseTitle} – Banned Books`
+  const candidateC = baseTitle
 
   let title: string
   if (candidateA && candidateA.length <= 60) title = candidateA

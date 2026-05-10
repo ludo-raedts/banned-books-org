@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Privacy — Banned Books',
+  title: 'Privacy',
   description:
     'How Banned Books handles visitor data: minimal pageview logging, no advertising trackers, no Google Analytics, no Amazon. We document what we collect, why, and what we do not do.',
   alternates: { canonical: '/privacy' },

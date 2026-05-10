@@ -3,7 +3,7 @@ import Link from 'next/link'
 import MoreEssays from '@/components/more-essays'
 
 export const metadata: Metadata = {
-  title: 'Why We Don\'t Link to Amazon — Banned Books',
+  title: 'Why We Don\'t Link to Amazon',
   description: 'We deliberately choose not to link to Amazon. Here is why.',
   alternates: { canonical: '/why-not-amazon' },
 }

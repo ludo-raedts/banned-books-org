@@ -4,7 +4,7 @@ import EssayCard from '@/components/essay-card'
 import { publishedEssays } from '@/lib/essays-data'
 
 export const metadata: Metadata = {
-  title: 'Essays — Banned Books',
+  title: 'Essays',
   description:
     'Long-form pieces on censorship, what we document, and the editorial choices behind this catalogue.',
   alternates: { canonical: '/essays' },

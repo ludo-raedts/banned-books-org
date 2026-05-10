@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     countryCount = new Set((bans ?? []).map((b) => b.country_code)).size
   }
 
-  const title = `${author.display_name} — Banned Books | banned-books.org`
+  const title = author.display_name
   const description = `${author.display_name}'s books have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}. See the full list.`
   return {
     title,

@@ -6,7 +6,7 @@ import { adminClient } from '@/lib/supabase'
 import ContactForm from '@/components/contact-form'
 
 export const metadata: Metadata = {
-  title: 'About — Banned Books',
+  title: 'About',
   description: 'Banned Books is an independent open catalogue of books banned by governments and schools worldwide. Learn about our mission, methodology, and editorial principles.',
   alternates: { canonical: '/about' },
 }

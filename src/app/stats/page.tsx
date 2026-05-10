@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const books = (bookCount ?? 0).toLocaleString('en')
   const bans = (banCount ?? 0).toLocaleString('en')
   return {
-    title: 'Global book censorship statistics – Banned Books',
+    title: 'Global book censorship statistics',
     description: `${books} banned books and ${bans} documented bans across ${countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
     alternates: { canonical: '/stats' },
   }
