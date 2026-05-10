@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+import { identifyBot } from './known-bots'
 
 const ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql'
 
@@ -26,6 +27,7 @@ export type CloudflareSnapshot = {
     country: string | null
     requests: number
     tag: 'home' | 'work' | null
+    bot: string | null
   }>
   statusBuckets: StatusBuckets
   prevStatusBuckets: StatusBuckets
@@ -218,6 +220,7 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
     country: r.dimensions.clientCountryName,
     requests: r.count,
     tag: tagIP(r.dimensions.clientIP, homeIPs, workIPs),
+    bot: identifyBot(r.dimensions.clientIP),
   }))
 
   const statusBuckets = bucketStatusRows(zoneData.statusCodes)
@@ -228,6 +231,6 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
 
 export const getCloudflareSnapshot = unstable_cache(
   fetchSnapshot,
-  ['cloudflare-snapshot-v7'],
+  ['cloudflare-snapshot-v8'],
   { revalidate: 300 },
 )

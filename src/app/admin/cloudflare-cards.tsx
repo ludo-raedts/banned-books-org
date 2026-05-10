@@ -201,7 +201,7 @@ export default async function CloudflareCards() {
         <Network className="w-5 h-5 text-gray-400 dark:text-gray-500" />
         <div>
           <h2 className="font-semibold text-gray-900 dark:text-gray-100">Top IPs — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">High‑volume sources. 🏠 = home, 🏢 = work — ignore those.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">High‑volume sources. 🤖 = known bot · 🏠 = home · 🏢 = work.</p>
         </div>
         {topIPs.length === 0 ? (
           <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">No traffic in the last 24h.</p>
@@ -210,9 +210,19 @@ export default async function CloudflareCards() {
             {topIPs.map(row => (
               <li key={row.clientIP} className="flex items-baseline gap-2 min-w-0">
                 <span className="text-base shrink-0 leading-none">{flagEmoji(row.country)}</span>
-                <span className="font-mono text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0" title={row.clientIP}>
-                  {row.clientIP}
-                </span>
+                {row.bot ? (
+                  <span
+                    className="text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0 flex items-baseline gap-1"
+                    title={row.clientIP}
+                  >
+                    <span aria-hidden>🤖</span>
+                    <span className="truncate">{row.bot}</span>
+                  </span>
+                ) : (
+                  <span className="font-mono text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0" title={row.clientIP}>
+                    {row.clientIP}
+                  </span>
+                )}
                 {row.tag === 'home' && (
                   <span className="text-xs shrink-0" title="Home IP">🏠</span>
                 )}
