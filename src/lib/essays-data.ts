@@ -50,6 +50,15 @@ export const ESSAYS: Essay[] = [
     readingTimeMin: 8,
     relatedBookSlugs: ['the-gulag-archipelago', 'the-satanic-verses', 'the-diary-of-a-young-girl', 'mein-kampf', 'the-turner-diaries', 'the-anarchist-cookbook'],
   },
+  {
+    slug: 'the-grey-zone',
+    href: '/essays/the-grey-zone',
+    title: 'The grey zone where censorship debates actually live',
+    dek: 'A Belgian school removed a Dutch graphic novel after one parent complained — and the author of the book agrees with the decision. The case is not censorship. It is the messier conversation about institutional responsibility that sits underneath every reading list.',
+    publishedAt: '2026-05-10',
+    readingTimeMin: 5,
+    relatedBookSlugs: ['gender-queer', 'maus', 'fun-home', 'this-one-summer', 'looking-for-alaska', 'the-perks-of-being-a-wallflower'],
+  },
 ]
 
 export function publishedEssays(): Essay[] {
