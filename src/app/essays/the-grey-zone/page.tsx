@@ -53,10 +53,12 @@ export default function TheGreyZonePage() {
             fantasies. The book is <em>Iedereen op Claudia</em> by Dutch artist
             Sam Peeters, and it had been on the list — a curated selection of
             sixty graphic novels — for three years without a single complaint.
-            The list itself was assembled in 2018 by Margreet de Heer, the Dutch
-            <em> Stripmaker des Vaderlands</em>, alongside other contributors,
-            specifically to give schools an alternative to <em>Donald Duck</em>
-            {' '}and <em>Suske en Wiske</em>.
+            The list itself was assembled in 2018 by Margreet de Heer, the
+            Dutch <em>Stripmaker des Vaderlands</em> (roughly: the national
+            comics laureate), alongside other contributors, specifically to
+            give schools an alternative to <em>Donald Duck</em> and{' '}
+            <em>Suske en Wiske</em> — the long-running Belgian–Dutch
+            children&apos;s comic.
           </p>
 
           <p>
@@ -67,10 +69,10 @@ export default function TheGreyZonePage() {
 
           <p>
             At first glance, the Antwerp case looks exactly like a banned-book
-            story. A school. A book. A removal. A parent who said{' '}
-            <em>&ldquo;Ik vraag me af of deze inhoud geschikt is voor een
-            14-jarige.&rdquo;</em> From there it is tempting to slot the case
-            into the familiar narrative of institutional censorship.
+            story. A school. A book. A removal. A parent who asked, in
+            Dutch, whether the content was appropriate for a fourteen-year-old.
+            From there it is tempting to slot the case into the familiar
+            narrative of institutional censorship.
           </p>
 
           <p>But the details resist that narrative.</p>
@@ -86,7 +88,7 @@ export default function TheGreyZonePage() {
             design at ArtEZ in Zwolle, and even with his own students he
             insists on context first. The protagonist, he explains, becomes
             obsessed with a girl in his class, and his fantasies turn — in his
-            words — <em>&ldquo;gruwelijk toxisch&rdquo;</em> and violent.
+            words — &ldquo;horribly toxic&rdquo; and violent.
             Peeters rejects the idea that the drawings are pornographic. They
             are deliberately extreme: a portrait of a sick mind, not an
             invitation to arousal.
