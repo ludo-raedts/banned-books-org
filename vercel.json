@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/fetch-mail",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/refresh-views",
+      "schedule": "30 * * * *"
     }
   ]
 }

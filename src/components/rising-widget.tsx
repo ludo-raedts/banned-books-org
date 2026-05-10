@@ -54,67 +54,7 @@ function RisingListCompact({
   )
 }
 
-type Candidate = { id: number; thisWeek: number; prevWeek: number; growth: number }
-
-async function fetchRisingCandidates(
-  supabase: ReturnType<typeof adminClient>,
-  entityType: 'book' | 'author',
-  sevenDaysAgo: string,
-  fourteenDaysAgo: string,
-  timer: ReturnType<typeof newTimer>,
-): Promise<Candidate[]> {
-  let rows: { entity_id: number; viewed_at: string; visitor_hash: string | null }[] = []
-  let offset = 0
-  let pages = 0
-  await timer.wrap(`pageviews-${entityType}-paginated`, async () => {
-    while (true) {
-      const { data, error } = await supabase
-        .from('pageviews')
-        .select('entity_id, viewed_at, visitor_hash')
-        .eq('entity_type', entityType)
-        .gte('viewed_at', fourteenDaysAgo)
-        .range(offset, offset + 999)
-      pages++
-      if (error || !data || data.length === 0) break
-      rows = rows.concat(data as typeof rows)
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  })
-  timer.mark(`pageviews-${entityType}-loaded`, { pages, rows: rows.length })
-
-  // Dedupe by visitor_hash so a single bot scraping 1000 pages counts once.
-  // Rows without visitor_hash (legacy pre-013) are excluded.
-  const thisWeekVisitors = new Map<number, Set<string>>()
-  const prevWeekVisitors = new Map<number, Set<string>>()
-  for (const row of rows) {
-    if (!row.visitor_hash) continue
-    const id = Number(row.entity_id)
-    const map = row.viewed_at >= sevenDaysAgo ? thisWeekVisitors : prevWeekVisitors
-    let set = map.get(id)
-    if (!set) {
-      set = new Set()
-      map.set(id, set)
-    }
-    set.add(row.visitor_hash)
-  }
-  const thisWeekCounts = new Map<number, number>(
-    [...thisWeekVisitors].map(([id, set]) => [id, set.size]),
-  )
-  const prevWeekCounts = new Map<number, number>(
-    [...prevWeekVisitors].map(([id, set]) => [id, set.size]),
-  )
-
-  const candidates: Candidate[] = []
-  for (const [id, thisWeek] of thisWeekCounts.entries()) {
-    if (thisWeek < 2) continue
-    const prevWeek = prevWeekCounts.get(id) ?? 0
-    const growth = (thisWeek - prevWeek) / Math.max(prevWeek, 1)
-    if (growth > 0) candidates.push({ id, thisWeek, prevWeek, growth })
-  }
-  candidates.sort((a, b) => b.growth - a.growth)
-  return candidates.slice(0, 5)
-}
+type RisingRow = { entity_id: number; this_week: number; prev_week: number }
 
 export default async function RisingWidget({
   compact = false,
@@ -125,21 +65,20 @@ export default async function RisingWidget({
   const supabase = adminClient()
 
   try {
-    const now = Date.now()
-    const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString()
-    const fourteenDaysAgo = new Date(now - 14 * 24 * 60 * 60 * 1000).toISOString()
-
-    const [topBooks, topAuthors] = await timer.wrap('fetch-candidates-parallel', () => Promise.all([
-      fetchRisingCandidates(supabase, 'book', sevenDaysAgo, fourteenDaysAgo, timer),
-      fetchRisingCandidates(supabase, 'author', sevenDaysAgo, fourteenDaysAgo, timer),
+    const [topBooksRes, topAuthorsRes] = await timer.wrap('mv-rising-parallel', () => Promise.all([
+      supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(5),
+      supabase.from('mv_top_authors_rising').select('entity_id, this_week, prev_week').limit(5),
     ]))
+
+    const topBooks = (topBooksRes.data ?? []) as RisingRow[]
+    const topAuthors = (topAuthorsRes.data ?? []) as RisingRow[]
 
     const [{ data: bookDetails }, { data: authorDetails }] = await timer.wrap('details-parallel', () => Promise.all([
       topBooks.length > 0
-        ? supabase.from('books').select('id, title, slug').in('id', topBooks.map(c => c.id))
+        ? supabase.from('books').select('id, title, slug').in('id', topBooks.map(c => Number(c.entity_id)))
         : Promise.resolve({ data: [] as { id: number; title: string; slug: string }[] }),
       topAuthors.length > 0
-        ? supabase.from('authors').select('id, display_name, slug').in('id', topAuthors.map(c => c.id))
+        ? supabase.from('authors').select('id, display_name, slug').in('id', topAuthors.map(c => Number(c.entity_id)))
         : Promise.resolve({ data: [] as { id: number; display_name: string; slug: string }[] }),
     ]))
 
@@ -148,17 +87,19 @@ export default async function RisingWidget({
 
     const bookEntries: RisingEntry[] = topBooks
       .map(c => {
-        const book = bookMap.get(c.id)
+        const id = Number(c.entity_id)
+        const book = bookMap.get(id)
         if (!book?.slug) return null
-        return { entityId: c.id, slug: book.slug, label: book.title, thisWeek: c.thisWeek, prevWeek: c.prevWeek }
+        return { entityId: id, slug: book.slug, label: book.title, thisWeek: c.this_week, prevWeek: c.prev_week }
       })
       .filter((e): e is RisingEntry => e !== null)
 
     const authorEntries: RisingEntry[] = topAuthors
       .map(c => {
-        const a = authorMap.get(c.id)
+        const id = Number(c.entity_id)
+        const a = authorMap.get(id)
         if (!a?.slug) return null
-        return { entityId: c.id, slug: a.slug, label: a.display_name, thisWeek: c.thisWeek, prevWeek: c.prevWeek }
+        return { entityId: id, slug: a.slug, label: a.display_name, thisWeek: c.this_week, prevWeek: c.prev_week }
       })
       .filter((e): e is RisingEntry => e !== null)
 
