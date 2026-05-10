@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { normalizeNewsDisplay } from '@/lib/news-display'
+import { normalizeNewsDisplay, languageInfo, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 import type { NewsConfig } from '@/config/news'
 
 type NewsItem = {
@@ -12,9 +12,32 @@ type NewsItem = {
   source_url: string
   published_at: string | null
   summary: string | null
+  source_language: string | null
+  original_title: string | null
+  original_summary: string | null
 }
 
 type PublishedItem = NewsItem & { auto_published: boolean }
+
+/**
+ * Optional editor-only block: original_summary collapsed in a <details>. The
+ * original_title sits inline above (via OriginalTitleLine) per the language
+ * transparency spec, but the full source description is verbose, so we tuck
+ * it behind a click for translation auditing.
+ */
+function OriginalSummaryDetails({ item }: { item: NewsItem }) {
+  if (!item.original_summary) return null
+  if ((item.source_language ?? 'en').toLowerCase().slice(0, 2) === 'en') return null
+  const { label } = languageInfo(item.source_language)
+  return (
+    <details className="text-xs text-gray-500 dark:text-gray-400">
+      <summary className="cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200">
+        Show original summary ({label})
+      </summary>
+      <p className="mt-2 leading-relaxed whitespace-pre-wrap italic">{item.original_summary}</p>
+    </details>
+  )
+}
 
 function formatDate(iso: string | null) {
   if (!iso) return '—'
@@ -41,7 +64,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="flex-1 min-w-0">
           <a
             href={item.source_url}
             target="_blank"
@@ -50,8 +73,14 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
           >
             {title}
           </a>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            {sourceName} · {formatDate(item.published_at)}
+          <OriginalTitleLine
+            code={item.source_language}
+            originalTitle={item.original_title}
+            className="mt-0.5"
+          />
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+            <span>{sourceName} · {formatDate(item.published_at)}</span>
+            <TranslatedBadge code={item.source_language} />
           </p>
         </div>
       </div>
@@ -66,6 +95,8 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
       ) : (
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
+
+      <OriginalSummaryDetails item={item} />
 
       <div className="flex gap-2 flex-wrap">
         <button
@@ -122,7 +153,21 @@ export default function NewsAdminClient({
   const [fetching, setFetching] = useState(false)
   const [fetchMsg, setFetchMsg] = useState<string | null>(null)
   const [rejectingAll, setRejectingAll] = useState(false)
+  const [langFilter, setLangFilter] = useState<string>('all')
   const router = useRouter()
+
+  // Languages present in the current draft queue. Drives the filter dropdown
+  // — no point listing 'ru' if there are no Russian items pending.
+  const availableLangs = useMemo(() => {
+    const set = new Set<string>()
+    for (const item of items) set.add((item.source_language ?? 'en').toLowerCase().slice(0, 2))
+    return [...set].sort()
+  }, [items])
+
+  const filteredItems = useMemo(() => {
+    if (langFilter === 'all') return items
+    return items.filter(i => (i.source_language ?? 'en').toLowerCase().slice(0, 2) === langFilter)
+  }, [items, langFilter])
 
   function onDone(id: number) {
     setItems(prev => prev.filter(i => i.id !== id))
@@ -184,13 +229,31 @@ export default function NewsAdminClient({
             {rejectingAll ? 'Rejecting…' : 'Reject all'}
           </button>
         )}
+        {availableLangs.length > 1 && (
+          <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 ml-auto">
+            <span>Language</span>
+            <select
+              value={langFilter}
+              onChange={e => setLangFilter(e.target.value)}
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-xs bg-white dark:bg-gray-800"
+            >
+              <option value="all">All languages</option>
+              {availableLangs.map(code => {
+                const { label, flag } = languageInfo(code)
+                return <option key={code} value={code}>{flag} {label}</option>
+              })}
+            </select>
+          </label>
+        )}
         {fetchMsg && <span className="text-sm text-gray-600 dark:text-gray-400">{fetchMsg}</span>}
       </div>
 
-      {items.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No drafts — run the fetch-news script to populate.</p>
+      {filteredItems.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">
+          {items.length === 0 ? 'No drafts — run the fetch-news script to populate.' : 'No drafts in this language.'}
+        </p>
       ) : (
-        items.map(item => (
+        filteredItems.map(item => (
           <NewsRow key={item.id} item={item} onDone={onDone} />
         ))
       )}
@@ -254,8 +317,14 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
               </span>
             )}
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            {sourceName} · {formatDate(item.published_at)}
+          <OriginalTitleLine
+            code={item.source_language}
+            originalTitle={item.original_title}
+            className="mt-0.5"
+          />
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+            <span>{sourceName} · {formatDate(item.published_at)}</span>
+            <TranslatedBadge code={item.source_language} />
           </p>
         </div>
       </div>
@@ -270,6 +339,8 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
       ) : (
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
+
+      <OriginalSummaryDetails item={item} />
 
       <div className="flex gap-2 flex-wrap">
         <button

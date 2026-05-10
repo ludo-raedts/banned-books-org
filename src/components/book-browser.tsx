@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
-import { normalizeNewsDisplay } from '@/lib/news-display'
+import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -41,6 +41,7 @@ export type NewsPreview = {
   source_name: string
   published_at: string | null
   summary: string
+  source_language?: string | null
 }
 
 export type CountryOption = {
@@ -124,9 +125,12 @@ function NewsPanel({ items, compact }: { items: NewsPreview[]; compact?: boolean
               <p className={`text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-${compact ? 3 : 2} group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors`}>
                 {item.summary}
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                {sourceName}
-                {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                <span>
+                  {sourceName}
+                  {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                </span>
+                <TranslatedBadge code={item.source_language} size="compact" />
               </p>
             </Link>
           )
@@ -465,9 +469,12 @@ export default function BookBrowser({
                           <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
                             {item.summary}
                           </p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                            {sourceName}
-                            {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                            <span>
+                              {sourceName}
+                              {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                            </span>
+                            <TranslatedBadge code={item.source_language} size="compact" />
                           </p>
                         </Link>
                       )

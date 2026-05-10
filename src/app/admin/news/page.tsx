@@ -4,19 +4,21 @@ import NewsAdminClient from './news-admin-client'
 
 export const dynamic = 'force-dynamic'
 
+const SELECT_COLS = 'id, title, source_name, source_url, published_at, summary, source_language, original_title, original_summary'
+
 export default async function AdminNewsPage() {
   const supabase = adminClient()
   const [{ data: drafts }, { data: published }, config] = await Promise.all([
     supabase
       .from('news_items')
-      .select('id, title, source_name, source_url, published_at, summary')
+      .select(SELECT_COLS)
       .eq('status', 'draft')
       .order('published_at', { ascending: false }),
     // Recent 50 — enough to catch and undo a bad auto-publish run without
     // turning the admin page into the full archive.
     supabase
       .from('news_items')
-      .select('id, title, source_name, source_url, published_at, summary, auto_published')
+      .select(`${SELECT_COLS}, auto_published`)
       .eq('status', 'published')
       .order('published_at', { ascending: false, nullsFirst: false })
       .limit(50),

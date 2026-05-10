@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
-import { normalizeNewsDisplay } from '@/lib/news-display'
+import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,6 +26,8 @@ type NewsItem = {
   published_at: string | null
   summary: string
   published_week: string
+  source_language: string | null
+  original_title: string | null
 }
 
 type BookRef = { slug: string; title: string }
@@ -107,7 +109,7 @@ export default async function NewsPage({
     // rows: 30 per page | reason: paginated daily news feed; count drives the pager
     supabase
       .from('news_items')
-      .select('id, title, source_name, source_url, published_at, summary, published_week', { count: 'exact' })
+      .select('id, title, source_name, source_url, published_at, summary, published_week, source_language, original_title', { count: 'exact' })
       .eq('status', 'published')
       .order('published_at', { ascending: false, nullsFirst: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1),
@@ -153,7 +155,7 @@ export default async function NewsPage({
         </div>
         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           News about book bans, censorship, and literary freedom worldwide.
-          Sourced from PEN America, Index on Censorship, Publishers Weekly, Freedom to Read Canada, and Google News.
+          Sourced from PEN America, PEN International, Index on Censorship, Publishers Weekly, Freedom to Read Canada, RSF, HRW, Article 19, China Digital Times, IranWire, Meduza, and Google News.
         </p>
       </div>
 
@@ -181,10 +183,15 @@ export default async function NewsPage({
                       {title}
                     </a>
                   </h3>
+                  <OriginalTitleLine
+                    code={item.source_language}
+                    originalTitle={item.original_title}
+                    className="mb-1.5"
+                  />
                   <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                     {linkify(item.summary, bookRefs, countryRefs)}
                   </p>
-                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
                     <a
                       href={item.source_url}
                       target="_blank"
@@ -193,6 +200,7 @@ export default async function NewsPage({
                     >
                       {sourceName}
                     </a>
+                    <TranslatedBadge code={item.source_language} />
                   </p>
                 </article>
               )

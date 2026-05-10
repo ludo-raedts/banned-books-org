@@ -3,12 +3,55 @@ import OpenAI from 'openai'
 import { adminClient } from './supabase'
 import { getNewsConfig } from '@/config/news'
 
-export const FEEDS = [
+export type Feed = {
+  name: string
+  url: string
+  /** ISO-639-1; defaults to 'en' when omitted. Drives translate-and-summarise. */
+  language?: string
+  /** Google News-style aggregator: titles carry "<headline> - Publisher". */
+  aggregator?: boolean
+  /**
+   * Topic filter for broad-scope feeds (RSF, HRW, Article 19) that cover more
+   * than books. When set, only items whose title or description match the
+   * regex pass through. Books-only feeds (PEN America, Index, etc.) leave
+   * this unset and feed every item to the relevance check in the LLM prompt.
+   */
+  keywordFilter?: RegExp
+}
+
+// Topic filter for general human-rights / press-freedom feeds. Items not
+// matching are dropped before the LLM call to keep cost predictable. Tight
+// enough to skip "journalist arrested in country X" stories that aren't
+// about books or publishing, loose enough to catch the interesting cases.
+export const BOOKS_KEYWORDS = /book|author|censor|ban|publish|library|literature/i
+
+/** Returns true when an RSS item should pass the books-only topic filter. */
+export function matchesBooksFilter(title: string, description: string, filter: RegExp = BOOKS_KEYWORDS): boolean {
+  return filter.test(title) || filter.test(description)
+}
+
+export const FEEDS: Feed[] = [
   { name: 'PEN America',            url: 'https://pen.org/feed/' },
   { name: 'Index on Censorship',    url: 'https://www.indexoncensorship.org/feed/' },
   { name: 'Publishers Weekly',      url: 'https://www.publishersweekly.com/pw/feeds/news.xml' },
   { name: 'Freedom to Read Canada', url: 'https://www.freedomtoread.ca/feed/' },
   { name: 'Google News',            url: 'https://news.google.com/rss/search?q=banned+books&hl=en-US&gl=US&ceid=US:en', aggregator: true },
+
+  // International perspectives — these are publisher-translated English
+  // editions of non-English newsrooms, so language stays 'en' and the
+  // summariser doesn't translate. The keywordFilter cuts geopolitical noise
+  // before any LLM call. (RSF dropped: their site no longer exposes a working
+  // RSS feed at any of /en/rss, /rss, /en/feed, /feeds/* — confirmed 2026-05.)
+  { name: 'Meduza',              url: 'https://meduza.io/rss/en/all',                keywordFilter: BOOKS_KEYWORDS },
+  { name: 'IranWire',            url: 'https://iranwire.com/en/feed/',               keywordFilter: BOOKS_KEYWORDS },
+  { name: 'China Digital Times', url: 'https://chinadigitaltimes.net/feed/',         keywordFilter: BOOKS_KEYWORDS },
+
+  // English-language NGO/HR feeds — broad scope, filter is essential.
+  // HRW has no topic-specific free-speech RSS, so we pull /rss/news and let
+  // the keyword filter pick out books/censorship items.
+  { name: 'Article 19',          url: 'https://www.article19.org/feed/',             keywordFilter: BOOKS_KEYWORDS },
+  { name: 'HRW',                 url: 'https://www.hrw.org/rss/news',                keywordFilter: BOOKS_KEYWORDS },
+  { name: 'PEN International',   url: 'https://www.pen-international.org/news?format=rss', keywordFilter: BOOKS_KEYWORDS },
 ]
 
 // Google News wraps an item's <source url="…">Publisher</source>. Keep the array so we
@@ -47,6 +90,7 @@ const SUMMARY_SYSTEM = `You write short, neutral news briefs about book bans, ce
 
 Hard rules:
 - 40–70 words. One paragraph. No copying phrases from the source.
+- Output English only. If the source is not in English, translate the facts into English first; do not transliterate names ad-hoc — use the standard English spelling when there is one.
 - Open with the most concrete fact: a number, a name, a place, or the specific action taken. Avoid generic openers like "A new…", "A recently…", "A report shows…".
 - Vary sentence structure between briefs. Do not start every brief with the same subject-verb pattern.
 - Mention the country, institution, or publisher when known.
@@ -56,16 +100,25 @@ Hard rules:
 
 If the item is not about book bans, censorship, or literary freedom, respond with exactly: NOT_RELEVANT`
 
-async function summarize(openai: OpenAI, title: string, sourceName: string, description: string): Promise<string | null> {
+async function summarize(
+  openai: OpenAI,
+  title: string,
+  sourceName: string,
+  description: string,
+  language: string,
+): Promise<string | null> {
+  const langNote = language && language !== 'en'
+    ? `\nSource language: ${language}. Translate as needed; output English only.`
+    : ''
   const res = await openai.chat.completions.create({
     model: SUMMARY_MODEL,
-    max_tokens: 180,
+    max_tokens: 220,
     temperature: 0.8,
     messages: [
       { role: 'system', content: SUMMARY_SYSTEM },
       {
         role: 'user',
-        content: `Title: ${title}\nSource: ${sourceName}\nDescription: ${description.slice(0, 1500)}\n\nWrite the brief.`,
+        content: `Title: ${title}\nSource: ${sourceName}${langNote}\nDescription: ${description.slice(0, 1500)}\n\nWrite the brief.`,
       },
     ],
   })
@@ -173,6 +226,10 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
       const title = publisher ? stripTrailingPublisher(rawTitle, publisher.name) : rawTitle
       const description = item.contentSnippet ?? item.content ?? ''
 
+      // Cheap topic filter for broad-scope feeds — avoids paying for an
+      // embedding + summary on stories that are clearly off-topic.
+      if (feed.keywordFilter && !matchesBooksFilter(title, description, feed.keywordFilter)) continue
+
       // Embed first — cheaper than the chat call and lets us bail before
       // paying for a summary on something we'd reject as duplicate anyway.
       let embedding: number[]
@@ -190,9 +247,10 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
         continue
       }
 
+      const language = feed.language ?? 'en'
       let summary: string | null
       try {
-        summary = await summarize(openai, title, sourceName, description)
+        summary = await summarize(openai, title, sourceName, description, language)
       } catch (e) {
         errors.push(`OpenAI error for "${title.slice(0, 40)}": ${e instanceof Error ? e.message : String(e)}`)
         continue
@@ -211,6 +269,12 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
         status,
         embedding,
         auto_published: config.autoPublish,
+        source_language: language,
+        // Preserve raw RSS values so the editor can audit the translation.
+        // For en feeds these duplicate the English title/summary — small
+        // cost, and it keeps the schema regular.
+        original_title: rawTitle,
+        original_summary: description || null,
       }
       if (config.autoPublish) insertRow.published_week = currentMonday()
 

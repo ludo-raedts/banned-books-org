@@ -95,7 +95,7 @@ export default async function HomePage() {
     pickedLight
       ? supabase.from('books').select(FULL_SELECT).eq('id', pickedLight.id).single()
       : Promise.resolve({ data: null }),
-    supabase.from('news_items').select('id, title, source_name, published_at, summary')
+    supabase.from('news_items').select('id, title, source_name, published_at, summary, source_language')
       .eq('status', 'published').order('published_at', { ascending: false }).limit(3),
     supabase.from('mv_ban_counts').select('country_code, total_bans').gt('total_bans', 0),
     supabase.from('countries').select('code, name_en'),
