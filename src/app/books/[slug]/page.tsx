@@ -12,6 +12,8 @@ import { trackPageview } from '@/lib/trackPageview'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
+import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
+import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 
@@ -120,6 +122,8 @@ export async function generateMetadata({
 type Ban = {
   id: number
   year_started: number | null
+  year_ended: number | null
+  action_type: string
   status: string
   country_code: string
   description: string | null
@@ -176,7 +180,7 @@ export default async function BookPage({
       bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
       book_authors(authors(display_name, slug)),
       bans(
-        id, year_started, status, country_code, description,
+        id, year_started, year_ended, action_type, status, country_code, description,
         countries(name_en),
         scopes(label_en),
         ban_reason_links(reasons(id, slug)),
@@ -196,6 +200,36 @@ export default async function BookPage({
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
   )
+
+  // ── Timeline rows: one per country, sorted by earliest ban year ─────────────
+  const timelineRows: TimelineRow[] = (() => {
+    const byCountry = new Map<string, { name: string; bans: Ban[] }>()
+    for (const ban of book.bans) {
+      if (ban.year_started == null) continue
+      const existing = byCountry.get(ban.country_code)
+      const name = ban.countries?.name_en ?? ban.country_code
+      if (existing) existing.bans.push(ban)
+      else byCountry.set(ban.country_code, { name, bans: [ban] })
+    }
+    return [...byCountry.entries()]
+      .map(([code, { name, bans }]) => ({
+        key: code,
+        label: name,
+        sublabel: code,
+        flag: countryFlag(code),
+        href: `/countries/${code.toLowerCase()}`,
+        bans: bans.map((b) => ({
+          id: b.id,
+          year_started: b.year_started!,
+          year_ended: b.year_ended,
+          status: b.status,
+          action_type: b.action_type,
+        })),
+        earliest: Math.min(...bans.map((b) => b.year_started!)),
+      }))
+      .sort((a, b) => a.earliest - b.earliest)
+      .map(({ earliest: _, ...row }) => row)
+  })()
 
   // ── Pick primary country & reason for contextual link sections ───────────────
   const countryFreqInBook = new Map<string, { count: number; name: string }>()
@@ -479,6 +513,12 @@ export default async function BookPage({
       {sortedBans.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3">Bans</h2>
+          <BanTimeline
+            rows={timelineRows}
+            firstPublishedYear={book.first_published_year}
+            firstPublishedLabel="Published"
+            caption={`${book.title}: ${book.bans.length} bans across ${timelineRows.length} ${timelineRows.length === 1 ? 'country' : 'countries'}.`}
+          />
           <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">

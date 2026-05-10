@@ -12,6 +12,8 @@ import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
+import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
+import { countryFlag as countryFlagShared } from '@/lib/country-flag'
 
 type Author = {
   id: number
@@ -28,6 +30,9 @@ type Ban = {
   id: number
   status: string
   country_code: string
+  year_started: number | null
+  year_ended: number | null
+  action_type: string
   countries: { name_en: string } | null
   ban_reason_links: { reasons: { slug: string } | null }[]
 }
@@ -43,12 +48,7 @@ type Book = {
   bans: Ban[]
 }
 
-function countryFlag(code: string): string {
-  if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
-  return [...code.toUpperCase()].map(c =>
-    String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
-  ).join('')
-}
+const countryFlag = countryFlagShared
 
 function getReasons(bans: Ban[]): string[] {
   return [...new Set(bans.flatMap(b =>
@@ -116,7 +116,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       .from('books')
       .select(`
         id, title, slug, cover_url, description, first_published_year, genres,
-        bans(id, status, country_code, countries(name_en), ban_reason_links(reasons(slug)))
+        bans(id, status, country_code, year_started, year_ended, action_type, countries(name_en), ban_reason_links(reasons(slug)))
       `)
       .in('id', bookIds)
       .order('title')
@@ -126,6 +126,39 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)
   const countryCount = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
   const activeBanCount = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
+
+  // ── Timeline rows: one per book that has dated bans, sorted by earliest ban year ──
+  const authorTimelineRows: TimelineRow[] = books
+    .map((b) => {
+      const datedBans = b.bans.filter((ban) => ban.year_started != null)
+      if (datedBans.length === 0) return null
+      const earliest = Math.min(...datedBans.map((ban) => ban.year_started!))
+      return {
+        key: b.slug,
+        label: b.title,
+        sublabel:
+          datedBans.length === 1
+            ? `1 ban`
+            : `${datedBans.length} bans · ${[...new Set(datedBans.map((bn) => bn.country_code))].length} countries`,
+        href: `/books/${b.slug}`,
+        bans: datedBans.map((ban) => ({
+          id: ban.id,
+          year_started: ban.year_started!,
+          year_ended: ban.year_ended,
+          status: ban.status,
+          action_type: ban.action_type,
+        })),
+        earliest,
+      }
+    })
+    .filter((r): r is NonNullable<typeof r> => r !== null)
+    .sort((a, b) => a.earliest - b.earliest)
+    .map(({ earliest: _e, ...row }) => row)
+
+  const earliestBookYear = books
+    .map((b) => b.first_published_year)
+    .filter((y): y is number => y != null)
+    .reduce<number | null>((acc, y) => (acc == null || y < acc ? y : acc), null)
 
   const lifespan = a.birth_year
     ? `${a.birth_year}${a.birth_country ? `, ${a.birth_country}` : ''} — ${a.death_year ?? 'present'}`
@@ -260,6 +293,19 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           </section>
         )
       })()}
+
+      {/* Ban timeline — one row per book, only when this author's record has 3+ dated bans across multiple books */}
+      {authorTimelineRows.length >= 2 && authorTimelineRows.reduce((s, r) => s + r.bans.length, 0) >= 3 && (
+        <section className="mb-10">
+          <h2 className="text-lg font-semibold mb-3">Ban timeline</h2>
+          <BanTimeline
+            rows={authorTimelineRows}
+            firstPublishedYear={earliestBookYear}
+            firstPublishedLabel="First book published"
+            caption={`${a.display_name}'s books — ${totalBans} bans across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`}
+          />
+        </section>
+      )}
 
       {books.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No books recorded for this author yet.</p>
