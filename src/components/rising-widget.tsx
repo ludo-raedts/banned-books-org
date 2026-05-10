@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import { newTimer } from '@/lib/timing'
 import Link from 'next/link'
 
 type RisingEntry = {
@@ -60,21 +61,27 @@ async function fetchRisingCandidates(
   entityType: 'book' | 'author',
   sevenDaysAgo: string,
   fourteenDaysAgo: string,
+  timer: ReturnType<typeof newTimer>,
 ): Promise<Candidate[]> {
   let rows: { entity_id: number; viewed_at: string; visitor_hash: string | null }[] = []
   let offset = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('pageviews')
-      .select('entity_id, viewed_at, visitor_hash')
-      .eq('entity_type', entityType)
-      .gte('viewed_at', fourteenDaysAgo)
-      .range(offset, offset + 999)
-    if (error || !data || data.length === 0) break
-    rows = rows.concat(data as typeof rows)
-    if (data.length < 1000) break
-    offset += 1000
-  }
+  let pages = 0
+  await timer.wrap(`pageviews-${entityType}-paginated`, async () => {
+    while (true) {
+      const { data, error } = await supabase
+        .from('pageviews')
+        .select('entity_id, viewed_at, visitor_hash')
+        .eq('entity_type', entityType)
+        .gte('viewed_at', fourteenDaysAgo)
+        .range(offset, offset + 999)
+      pages++
+      if (error || !data || data.length === 0) break
+      rows = rows.concat(data as typeof rows)
+      if (data.length < 1000) break
+      offset += 1000
+    }
+  })
+  timer.mark(`pageviews-${entityType}-loaded`, { pages, rows: rows.length })
 
   // Dedupe by visitor_hash so a single bot scraping 1000 pages counts once.
   // Rows without visitor_hash (legacy pre-013) are excluded.
@@ -114,6 +121,7 @@ export default async function RisingWidget({
 }: {
   compact?: boolean
 }) {
+  const timer = newTimer('rising')
   const supabase = adminClient()
 
   try {
@@ -121,19 +129,19 @@ export default async function RisingWidget({
     const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString()
     const fourteenDaysAgo = new Date(now - 14 * 24 * 60 * 60 * 1000).toISOString()
 
-    const [topBooks, topAuthors] = await Promise.all([
-      fetchRisingCandidates(supabase, 'book', sevenDaysAgo, fourteenDaysAgo),
-      fetchRisingCandidates(supabase, 'author', sevenDaysAgo, fourteenDaysAgo),
-    ])
+    const [topBooks, topAuthors] = await timer.wrap('fetch-candidates-parallel', () => Promise.all([
+      fetchRisingCandidates(supabase, 'book', sevenDaysAgo, fourteenDaysAgo, timer),
+      fetchRisingCandidates(supabase, 'author', sevenDaysAgo, fourteenDaysAgo, timer),
+    ]))
 
-    const [{ data: bookDetails }, { data: authorDetails }] = await Promise.all([
+    const [{ data: bookDetails }, { data: authorDetails }] = await timer.wrap('details-parallel', () => Promise.all([
       topBooks.length > 0
         ? supabase.from('books').select('id, title, slug').in('id', topBooks.map(c => c.id))
         : Promise.resolve({ data: [] as { id: number; title: string; slug: string }[] }),
       topAuthors.length > 0
         ? supabase.from('authors').select('id, display_name, slug').in('id', topAuthors.map(c => c.id))
         : Promise.resolve({ data: [] as { id: number; display_name: string; slug: string }[] }),
-    ])
+    ]))
 
     const bookMap = new Map((bookDetails ?? []).map(b => [b.id, b]))
     const authorMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
@@ -153,6 +161,8 @@ export default async function RisingWidget({
         return { entityId: c.id, slug: a.slug, label: a.display_name, thisWeek: c.thisWeek, prevWeek: c.prevWeek }
       })
       .filter((e): e is RisingEntry => e !== null)
+
+    timer.end('widget-fn-end')
 
     if (bookEntries.length === 0 && authorEntries.length === 0) return null
 

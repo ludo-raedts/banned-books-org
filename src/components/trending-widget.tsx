@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import { newTimer } from '@/lib/timing'
 import Link from 'next/link'
 
 type TrendingEntry = {
@@ -118,6 +119,7 @@ export default async function TrendingWidget({
   showHeader?: boolean
   mode?: Mode
 }) {
+  const timer = newTimer(`trending-${mode}`)
   const supabase = adminClient()
   const isAllTime = mode === 'all-time'
 
@@ -133,7 +135,7 @@ export default async function TrendingWidget({
       { data: booksLastWeek },
       { data: topAuthors },
       { data: authorsLastWeek },
-    ] = await Promise.all([
+    ] = await timer.wrap('views-parallel-4', () => Promise.all([
       supabase.from(booksView).select('entity_id, views'),
       isAllTime
         ? Promise.resolve({ data: [] as { entity_id: number; views: number }[] })
@@ -142,16 +144,15 @@ export default async function TrendingWidget({
       isAllTime
         ? Promise.resolve({ data: [] as { entity_id: number; views: number }[] })
         : supabase.from('v_top_authors_last_week').select('entity_id, views'),
-    ])
+    ]))
 
     // ── Books ──────────────────────────────────────────────────────────────────
     const topBookEntries = (topBooks ?? []).slice(0, 5)
     const topBookIds = topBookEntries.map(r => Number(r.entity_id))
     if (topBookIds.length > 0) {
-      const { data: bookDetails } = await supabase
-        .from('books')
-        .select('id, title, slug')
-        .in('id', topBookIds)
+      const { data: bookDetails } = await timer.wrap('book-details', () =>
+        supabase.from('books').select('id, title, slug').in('id', topBookIds),
+        { ids: topBookIds.length })
       const bookMap = new Map((bookDetails ?? []).map(b => [b.id, b]))
       const lastWeekRankMap = new Map(
         (booksLastWeek ?? []).map((r, i) => [Number(r.entity_id), i + 1])
@@ -175,10 +176,9 @@ export default async function TrendingWidget({
     const topAuthorEntries = (topAuthors ?? []).slice(0, 5)
     const topAuthorIds = topAuthorEntries.map(r => Number(r.entity_id))
     if (topAuthorIds.length > 0) {
-      const { data: authorDetails } = await supabase
-        .from('authors')
-        .select('id, display_name, slug')
-        .in('id', topAuthorIds)
+      const { data: authorDetails } = await timer.wrap('author-details', () =>
+        supabase.from('authors').select('id, display_name, slug').in('id', topAuthorIds),
+        { ids: topAuthorIds.length })
       const authorMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
       const lastWeekRankMap = new Map(
         (authorsLastWeek ?? []).map((r, i) => [Number(r.entity_id), i + 1])
@@ -200,6 +200,8 @@ export default async function TrendingWidget({
   } catch {
     return null
   }
+
+  timer.end('widget-fn-end')
 
   if (books.length === 0 && authors.length === 0) return null
 
