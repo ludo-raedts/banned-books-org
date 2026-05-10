@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminClient } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/admin-auth'
 
 function currentMonday(): string {
   const d = new Date()
@@ -10,6 +11,8 @@ function currentMonday(): string {
 }
 
 export async function PATCH(req: NextRequest) {
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
   const { id, action, summary } = await req.json()
   if (!action) return NextResponse.json({ error: 'Missing action' }, { status: 400 })
 
@@ -36,6 +39,20 @@ export async function PATCH(req: NextRequest) {
 
   if (action === 'reject') {
     const { error } = await supabase.from('news_items').update({ status: 'rejected' }).eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  }
+
+  // Unpublish takes a published item back off the public site. Soft-delete:
+  // status flips to 'rejected' (so it's hidden from /news and the RSS feed),
+  // and published_week is cleared so it won't reappear in any week-grouped
+  // view. The source_url stays in the dedup table — same story shouldn't get
+  // re-pulled and re-published a day later.
+  if (action === 'unpublish') {
+    const { error } = await supabase.from('news_items').update({
+      status: 'rejected',
+      published_week: null,
+    }).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
   }
