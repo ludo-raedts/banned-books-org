@@ -169,6 +169,29 @@ missing from migrations: `description_book`, `description_ban`,
 column-set was added out-of-band. The repair migration may need to be much
 larger than just `original_language`.
 
+**The diagnostic confirmed it on 2026-05-11.** 55 columns across 10 tracked
+tables exist in production but not in migrations. 9 entire tables are
+undeclared (`affiliate_partners`, `ban_reason_links`, `ban_source_links`,
+`book_authors`, `news_items`, `pageviews`, `purchase_links`, `reasons`,
+`scopes`). The first repair migration is `020_repair_schema.sql`, written
+2026-05-11 — pure-additive (`CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF
+NOT EXISTS`, three-step NOT NULL pattern, slug backfill via the corrected
+`app_slugify()` Postgres function).
+
+**Stale relational model in `001_initial_schema.sql`.** Beyond missing
+columns, the original schema reflects an *older data model* that production
+no longer uses:
+
+- `books.author_id` (single author) → replaced by `book_authors` M:N table
+- `bans.country_id` (uuid FK) → replaced by `bans.country_code` (char(2))
+- `ban_sources.ban_id` (1:N) → replaced by `ban_source_links` M:N table
+
+These are not just dead columns — they encode an obsolete relational
+structure. Sprint A must decide whether `020_repair_schema.sql` is enough
+("legacy columns dangle, app ignores them") or whether a full baseline
+rewrite is needed. **See finding #7** for the three options; this is the
+same architectural question, viewed from a different angle.
+
 ---
 
 ## 4. FranceArchives URLs are redirect chains, not citation-grade
@@ -249,6 +272,143 @@ curation without a developer in the loop.
 genre slugs. Once Sprint A's genre vocabulary is in place, run a one-off
 backfill that maps each free-form slug to a canonical one (or adds them to
 the new table).
+
+---
+
+## 6. Required Postgres extensions are not declared in migrations
+
+**What is broken.** Production runs with at least two non-default
+extensions installed: `vector` (pgvector — used by the news embeddings
+pipeline) and `pg_trgm` (trigram similarity — used by the book-search
+and reading-club suggesters). Both expose ~70-100 SQL functions that the
+schema-drift diagnostic counts as "missing from migrations". Filtering
+those extension-functions out leaves zero genuine user-function drift, so
+this is not a user-code issue — it's a missing-declaration issue.
+
+The diagnostic on 2026-05-11 saw 148 functions in `public`; only 3 are
+user-defined (`admin_db_stats`, `fn_touch_data_changed`,
+`refresh_all_materialized_views`) and all 3 are declared. The other 145
+all originate from `vector` (`vector_*`, `halfvec_*`, `sparsevec_*`,
+`cosine_distance`, `l2_distance`, `inner_product`, `hnsw*`, `ivfflat*`,
+`array_to_vector`, etc.) or `pg_trgm` (`similarity*`, `word_similarity*`,
+`gtrgm_*`, `gin_*`, `set_limit`, `show_*`).
+
+**Why this matters.** A developer running `pnpm db:reset` against a fresh
+Postgres without these extensions will see indexes fail to create,
+matviews fail to refresh, and runtime queries on `news_items` or
+`book_search` return cryptic "function does not exist" errors. They'll
+spend hours not realising that the production DB silently relies on
+extensions that no migration installs.
+
+**Fix.** Make `CREATE EXTENSION IF NOT EXISTS ...` the very first
+statements of the repair migration:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "vector";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+CREATE EXTENSION IF NOT EXISTS "unaccent";  -- needed for slug backfill, see finding #1
+```
+
+On Supabase, all three are managed extensions and `CREATE EXTENSION IF
+NOT EXISTS` is a no-op on production while bootstrapping a fresh dev DB.
+
+**Verification.** After running 020_repair_schema.sql against a fresh
+Docker Supabase, the diagnostic should show extension-functions present
+(not "missing"). If any are still missing, find the extension that
+provides them via:
+
+```sql
+SELECT extname FROM pg_extension WHERE oid IN (
+  SELECT refobjid FROM pg_depend WHERE objid = '<function_oid>'::regproc
+);
+```
+
+---
+
+## 7. PK type drift — diagnostic blind spot, blocks fresh dev-DB
+
+**What is broken.** The schema-drift diagnostic
+(`scripts/diagnose-schema-drift.ts`) checks column *existence by name*, not
+column *types*. While running it on 2026-05-11 a deeper drift surfaced
+that the diagnostic does **not** detect:
+
+| Table          | Declared in `001`                       | Production                              |
+| -------------- | --------------------------------------- | --------------------------------------- |
+| `books.id`     | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` | `bigint GENERATED ALWAYS AS IDENTITY`   |
+| `authors.id`   | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` | `bigint GENERATED ALWAYS AS IDENTITY`   |
+| `bans.id`      | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` | `bigint GENERATED ALWAYS AS IDENTITY`   |
+| `ban_sources.id` | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` | `bigint GENERATED ALWAYS AS IDENTITY`  |
+
+Confirmed via `information_schema.columns` query: all four tables now use
+`bigint identity` PKs. The application code throughout (`add-books-*.ts`,
+the book detail page, the join queries) treats these as `number`.
+
+**The consequence.** A developer who runs `001` through `020` against a
+fresh Postgres gets a database where `books.id` is `uuid` while the app
+expects `number`. The app crashes at the first insert or join. `pnpm
+db:reset` does not produce a working dev-DB.
+
+**Why `020` does not fix this.** Per Sprint A doctrine, `020` is
+pure-additive (`ADD COLUMN IF NOT EXISTS`, no destruction). `ALTER COLUMN
+TYPE` is destructive (cast may fail, FKs cascade, sequences need
+re-creation). Putting it in `020` would violate the additive-only rule.
+
+**Sprint A must pick one of three resolutions.** They differ in cost,
+risk, and what they leave behind.
+
+**Option A — Accept, document, move on.**
+Status quo: `001 + 020` produce a dev-DB with `uuid` PKs that the app
+cannot use. Solo development continues to work because the only "dev DB"
+is the live production one accessed through Supabase Studio. `pnpm
+db:reset` remains aspirational.
+- Cost: zero.
+- Risk: the next contributor onboarding, or future-you returning after a
+  break, debugs migrations for hours before realising the baseline is
+  broken.
+- Leaves: the legacy uuid columns dangling on every fresh DB forever.
+
+**Option B — Targeted `021_pk_type_migration.sql`.**
+Destructive migration that runs `ALTER COLUMN id TYPE bigint USING
+nextval('...')` plus identity re-establishment on the four tables. Each
+step must drop and recreate dependent FKs, indexes, and any RLS policies
+referencing the column. Roughly 80-150 lines of careful SQL with `DO`
+blocks to handle production-vs-fresh-DB differences (on production the
+columns are already `bigint`; the migration is a no-op via conditional
+checks).
+- Cost: ~half a day to write, ~half a day to verify against Docker
+  Supabase.
+- Risk: medium. Production no-op is conditional on the existence checks
+  being correct. One missed detail and prod DDL fires.
+- Leaves: `001-019` intact in history, `020` additive-only, `021` does
+  the destructive type fix. Clean separation.
+
+**Option C — `001_baseline_v2.sql` snapshot.**
+Replace `001_initial_schema.sql` and most of `002-019` with a single
+hand-curated SQL file that captures the current production state
+verbatim: tables, columns, PKs, FKs, indexes, constraints, RLS policies,
+triggers, sequences, MV definitions, function definitions. Archive
+`001-019` under `supabase/migrations/_archive/` for historical
+provenance. `020` and onwards live on top of the new baseline.
+- Cost: 1-3 days. The 1-2 day estimate assumes a clean `pg_dump`
+  produces a usable starting point. The longer end accounts for: RLS
+  policy audit, trigger audit, index review, MV definition checks, and
+  testing that `001_baseline_v2 + 020` against Docker produces zero drift
+  in the diagnostic.
+- Risk: low-medium. The risk is mostly in the audit completeness:
+  anything the diagnostic doesn't yet check (indexes, RLS, triggers)
+  could go missing in the baseline. Mitigations: extend the diagnostic
+  to cover these before writing baseline_v2.
+- Leaves: a clean, working migration history. `pnpm db:reset` produces a
+  dev-DB that mirrors production. Sprint A iterates safely against fresh
+  dev DBs.
+
+**Cross-reference.** This is the same architectural question as the
+stale-relational-model paragraph at the end of finding #3. Both ask:
+"How much of the existing migration history reflects reality?" The
+answer for finding #3 alone (legacy columns dangle) is acceptable. The
+answer for finding #7 alone (PK types differ) is not — it breaks the
+app. So choosing C resolves both; A resolves neither; B resolves only
+#7 and leaves #3's columns dangling.
 
 ---
 
