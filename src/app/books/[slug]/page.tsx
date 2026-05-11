@@ -166,6 +166,7 @@ type BookDetail = {
   warning_level: WarningLevel | null
   inclusion_rationale: string | null
   extended_context: string | null
+  original_language: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -191,6 +192,7 @@ export default async function BookPage({
       id, title, slug, cover_url, description, description_book, description_ban,
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
+      original_language,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, year_ended, action_type, status, country_code, description,
@@ -455,7 +457,12 @@ export default async function BookPage({
           )}
         </div>
         <div className="flex flex-col justify-center gap-2 min-w-0">
-          <h1 className="text-2xl font-bold leading-snug">{book.title}</h1>
+          <h1
+            className="text-2xl font-bold leading-snug"
+            lang={book.original_language && book.original_language !== 'en' ? book.original_language : undefined}
+          >
+            {book.title}
+          </h1>
           <p className="text-gray-600 dark:text-gray-400">
             {book.book_authors.map((ba, i) => {
               if (!ba.authors) return null
@@ -934,6 +941,7 @@ export default async function BookPage({
             ...(book.description_book ?? book.description ? { description: book.description_book ?? book.description } : {}),
             ...(book.cover_url ? { image: book.cover_url } : {}),
             ...(book.isbn13 ? { isbn: book.isbn13 } : {}),
+            ...(book.original_language ? { inLanguage: book.original_language } : {}),
           }),
         }}
       />
