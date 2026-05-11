@@ -1,0 +1,11 @@
+id,raw_text,expected_is_book,expected_language,expected_script,notes
+TF-01,"The Anarchist Cookbook by William Powell (1971). Removed from multiple US school libraries since the 1980s.",true,en,latin,Easy English baseline
+TF-02,"Книга «Преодоление христианства», автор: Авдеев В.Б., 2007 г., изд. Самиздат — Решение Кировского районного суда г. Екатеринбурга от 25.06.2010",true,ru,cyrillic,Russian extremism list style entry
+TF-03,"L'Étranger d'Albert Camus, 1942, éditions Gallimard",true,fr,latin,French — Latin script test
+TF-04,"《六四日記：廣場上的共和國》封從德著, 2009年, 香港",true,zh,han_traditional,Chinese Traditional - HK published
+TF-05,"上海宝贝 by 卫慧 (2000)",true,zh,han_simplified,Chinese Simplified
+TF-06,"Видеозапись «Россия с ножом в спине»",false,,,Video — should NOT be book
+TF-07,"كتاب آيات شيطانية لسلمان رشدي، 1988",true,ar,arabic,Arabic — Satanic Verses
+TF-08,"Sempre en Galiza, Alfonso Daniel Rodríguez Castelao, 1944. Prohibido bajo el franquismo.",true,gl,latin,Galician — Spain
+TF-09,"Makul Şüphe (Reasonable Doubt) by Whitney Gracia Williams. Declared 'muzır' by Turkish Ministry, 2018",true,tr,latin,Turkish 'muzir' designation — banned edition is the Turkish translation
+TF-10,"Брошюра «Краткое описание»",false,,,Pamphlet — borderline; should be false
