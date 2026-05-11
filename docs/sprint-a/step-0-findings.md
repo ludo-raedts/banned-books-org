@@ -192,6 +192,23 @@ structure. Sprint A must decide whether `020_repair_schema.sql` is enough
 rewrite is needed. **See finding #7** for the three options; this is the
 same architectural question, viewed from a different angle.
 
+**RLS design — public-or-nobody, no row-level differentiation.** The
+seven-dimensions drift diagnostic on 2026-05-11 surfaced the full
+RLS shape: **14 tables have RLS enabled, 12 with "public read" policies,
+2 (`ban_reason_links`, `cover_search_attempts`) with no policy at all**.
+The 12 read-policies are all `FOR SELECT TO anon USING (true)` with the
+single exception of `news_items`, which gates on `status = 'published'`.
+The 2 policyless tables are effectively admin-only via the service-role
+key. This is a binary public-or-nobody design: every row of a table is
+either fully world-readable or fully blocked. There is no row-level
+gating on user-owned data, draft/private flags, or per-author
+visibility, because none of those features exist yet. When Sprint A or
+later sprints introduce user accounts, public-submission queues, or
+private editorial drafts, the RLS model has to grow a more nuanced shape
+(e.g. `USING (status = 'published' OR auth.uid() = submitted_by)`). Not
+blocking today, but the binary RLS will become a constraint the moment
+the first user-owned row appears.
+
 ---
 
 ## 4. FranceArchives URLs are redirect chains, not citation-grade
@@ -409,6 +426,72 @@ answer for finding #3 alone (legacy columns dangle) is acceptable. The
 answer for finding #7 alone (PK types differ) is not — it breaks the
 app. So choosing C resolves both; A resolves neither; B resolves only
 #7 and leaves #3's columns dangling.
+
+---
+
+## 8. Duplicate indexes on `pageviews(entity_type, entity_id)`
+
+**What is broken.** Production has two functionally identical btree
+indexes on the `pageviews` table covering the same two columns in the
+same order:
+
+| Index name                       | Table       | Type   | Columns                       |
+| -------------------------------- | ----------- | ------ | ----------------------------- |
+| `idx_pageviews_entity`           | `pageviews` | btree  | `(entity_type, entity_id)`    |
+| `idx_pageviews_entity_type_id`   | `pageviews` | btree  | `(entity_type, entity_id)`    |
+
+Surfaced by the seven-dimensions drift diagnostic on 2026-05-11 while
+building `baseline_v2`. Both indexes are present in the production
+`pg_indexes` view; one was created via a migration, the other via
+Supabase Studio. Postgres maintains both on every insert/update on
+`pageviews`, doubling write cost for zero read benefit — the planner
+will only ever pick one.
+
+**Step 0 disposition.** Both indexes are preserved in `baseline_v2` so
+the baseline faithfully reflects production state. `baseline_v2` is a
+snapshot, not a cleanup pass.
+
+**Sprint A or later disposition.** A separate migration drops one of
+them. Inspect query plans first (`EXPLAIN` on the hottest read queries
+against `pageviews`) to verify the planner-selected index name; drop
+the *other* one. Tentatively `idx_pageviews_entity_type_id` is the
+removal target — its name follows the auto-generated Studio convention
+and `idx_pageviews_entity` looks like the intentionally-named one — but
+verify before dropping.
+
+---
+
+## 9. Duplicate migration-number prefixes in pre-baseline history
+
+**What is broken.** Two pairs of migration files in
+`supabase/migrations/` share the same numeric prefix:
+
+| Prefix | Files |
+| ------ | ----- |
+| `006_` | `006_cover_status.sql`, `006_description_search_attempts.sql` |
+| `020_` | `020_bookshop_alt_isbn.sql`, `020_repair_schema.sql` |
+
+Supabase's migration runner sorts files alphabetically by full filename,
+so both pairs apply in deterministic order (`006_cover_status.sql`
+before `006_description_search_attempts.sql`, etc.). But the duplicate
+prefix breaks the "migration number = monotonic version" mental model
+that the rest of the history relies on, and it would have collided
+silently if any future tooling keyed on the prefix instead of the full
+name.
+
+**Step 0 disposition.** Both pairs are preserved in
+`supabase/migrations/_archive/` as part of the pre-baseline history
+(see Sprint 0.5 baseline_v2 work). They are not re-applied to fresh
+DBs — `baseline_v2` is the single starting point going forward.
+
+**Why this won't recur.** From Sprint 0.5 onwards, all new migrations
+use the Supabase `YYYYMMDDHHMMSS_<name>.sql` timestamp-prefix
+convention. Two migrations authored in the same second would collide,
+but at human-scale authoring that is not a realistic concern.
+
+**No fix needed.** The archived files keep their original names for
+provenance. No collision is possible in the timestamp-prefixed
+forward history.
 
 ---
 
