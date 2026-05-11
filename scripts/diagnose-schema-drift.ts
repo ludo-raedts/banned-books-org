@@ -27,6 +27,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { Client } from 'pg'
+import {
+  type DeclaredArtefacts,
+  createEmptyArtefacts,
+  parseSql,
+} from '../src/lib/migration-parser'
 
 const WRITE = process.argv.includes('--write')
 const MIGRATIONS_DIR = 'supabase/migrations'
@@ -44,6 +49,30 @@ interface NamedObject {
   name: string
   kind: string // 'view' | 'matview' | 'enum' | 'function'
   detail?: string
+}
+
+interface ProdIndex {
+  index_name: string
+  table_name: string
+  index_type: string  // btree | gin | gist | hash | brin
+  is_unique: boolean
+  columns: string | null  // null for expression indexes
+}
+
+interface ProdPolicy {
+  table_name: string
+  policy_name: string
+  cmd: string           // ALL | SELECT | INSERT | UPDATE | DELETE
+  qual: string | null   // USING clause
+  with_check: string | null
+}
+
+interface ProdTrigger {
+  table_name: string
+  trigger_name: string
+  timing: string        // BEFORE | AFTER | INSTEAD OF
+  events: string        // INSERT, UPDATE, DELETE (comma-joined)
+  function_name: string
 }
 
 // Tables we care about for the repair migration. Everything else
@@ -86,6 +115,9 @@ async function queryProduction(): Promise<{
   matviews: NamedObject[]
   enums: NamedObject[]
   functions: NamedObject[]
+  indexes: ProdIndex[]
+  policies: ProdPolicy[]
+  triggers: ProdTrigger[]
 }> {
   const { url, via } = getConnectionString()
   console.log(`▶ Connecting via ${via} connection...`)
@@ -145,83 +177,109 @@ async function queryProduction(): Promise<{
       ORDER BY p.proname
     `)
 
+    // Indexes — user-defined only. Excludes:
+    //   • extension-owned indexes (pg_depend.deptype = 'e'), so trigram-related
+    //     extension installs and similar bookkeeping don't show as drift
+    //   • indexes auto-created to back PRIMARY KEY / UNIQUE constraints
+    //     (pg_depend.refclassid = pg_constraint), since those are declared via
+    //     the constraint in CREATE TABLE, not via CREATE INDEX
+    const indexes = await client.query<ProdIndex>(`
+      SELECT
+        c.relname                                AS index_name,
+        t.relname                                AS table_name,
+        am.amname                                AS index_type,
+        ix.indisunique                           AS is_unique,
+        (SELECT string_agg(a.attname, ', ' ORDER BY array_position(ix.indkey::int[], a.attnum))
+           FROM pg_attribute a
+           WHERE a.attrelid = t.oid
+             AND a.attnum = ANY(ix.indkey::int[])
+             AND a.attnum > 0)                   AS columns
+      FROM pg_class c
+      JOIN pg_index ix       ON c.oid = ix.indexrelid
+      JOIN pg_class t        ON ix.indrelid = t.oid
+      JOIN pg_namespace n    ON t.relnamespace = n.oid
+      JOIN pg_am am          ON c.relam = am.oid
+      WHERE n.nspname = 'public'
+        AND c.relkind = 'i'
+        AND NOT EXISTS (
+          SELECT 1 FROM pg_depend d
+          WHERE d.classid = 'pg_class'::regclass
+            AND d.objid = c.oid
+            AND d.deptype = 'e'
+        )
+        AND NOT EXISTS (
+          SELECT 1 FROM pg_depend d
+          WHERE d.classid = 'pg_class'::regclass
+            AND d.objid = c.oid
+            AND d.refclassid = 'pg_constraint'::regclass
+        )
+      ORDER BY t.relname, c.relname
+    `)
+
+    // RLS policies — pg_policies is the standard view.
+    const policies = await client.query<ProdPolicy>(`
+      SELECT
+        tablename     AS table_name,
+        policyname    AS policy_name,
+        cmd           AS cmd,
+        qual          AS qual,
+        with_check    AS with_check
+      FROM pg_policies
+      WHERE schemaname = 'public'
+      ORDER BY tablename, policyname
+    `)
+
+    // Triggers — exclude internal triggers (FK enforcement, constraint triggers
+    // managed by the system, etc.) via tgisinternal=false.
+    const triggers = await client.query<ProdTrigger>(`
+      SELECT
+        c.relname                                                    AS table_name,
+        tg.tgname                                                    AS trigger_name,
+        CASE
+          WHEN (tg.tgtype & 64) <> 0  THEN 'INSTEAD OF'
+          WHEN (tg.tgtype & 2)  <> 0  THEN 'BEFORE'
+          ELSE                              'AFTER'
+        END                                                          AS timing,
+        concat_ws(', ',
+          CASE WHEN (tg.tgtype & 4)  <> 0 THEN 'INSERT' END,
+          CASE WHEN (tg.tgtype & 8)  <> 0 THEN 'DELETE' END,
+          CASE WHEN (tg.tgtype & 16) <> 0 THEN 'UPDATE' END,
+          CASE WHEN (tg.tgtype & 32) <> 0 THEN 'TRUNCATE' END
+        )                                                            AS events,
+        p.proname                                                    AS function_name
+      FROM pg_trigger tg
+      JOIN pg_class c     ON tg.tgrelid = c.oid
+      JOIN pg_namespace n ON c.relnamespace = n.oid
+      JOIN pg_proc p      ON tg.tgfoid = p.oid
+      WHERE n.nspname = 'public'
+        AND NOT tg.tgisinternal
+      ORDER BY c.relname, tg.tgname
+    `)
+
     return {
       columns: columns.rows,
       views: views.rows.map(r => ({ name: r.name, kind: 'view' })),
       matviews: matviews.rows.map(r => ({ name: r.name, kind: 'matview' })),
       enums: enums.rows.map(r => ({ name: r.name, kind: 'enum', detail: r.values })),
       functions: functions.rows.map(r => ({ name: r.name, kind: 'function', detail: r.sig })),
+      indexes: indexes.rows,
+      policies: policies.rows,
+      triggers: triggers.rows,
     }
   } finally {
     await client.end()
   }
 }
 
-interface DeclaredArtefacts {
-  columns: Set<string>          // "table.column"
-  tables: Set<string>           // just table names
-  views: Set<string>
-  matviews: Set<string>
-  enums: Set<string>
-  functions: Set<string>
-}
-
 function parseDeclared(): DeclaredArtefacts {
-  const out: DeclaredArtefacts = {
-    columns: new Set(),
-    tables: new Set(),
-    views: new Set(),
-    matviews: new Set(),
-    enums: new Set(),
-    functions: new Set(),
-  }
+  const out = createEmptyArtefacts()
   const files = fs
     .readdirSync(MIGRATIONS_DIR)
     .filter(f => f.endsWith('.sql'))
     .sort()
-
   for (const file of files) {
-    const sql = fs.readFileSync(path.join(MIGRATIONS_DIR, file), 'utf-8')
-
-    // CREATE TABLE <name> ( ... );
-    const createTableRegex = /create\s+table\s+(?:if\s+not\s+exists\s+)?(\w+)\s*\(([\s\S]*?)\)\s*;/gi
-    let m: RegExpExecArray | null
-    while ((m = createTableRegex.exec(sql)) !== null) {
-      const table = m[1].toLowerCase()
-      out.tables.add(table)
-      const body = m[2]
-      for (const line of body.split(/,(?![^()]*\))/)) {
-        const trimmed = line.trim()
-        if (!trimmed) continue
-        if (/^(constraint|primary\s+key|foreign\s+key|unique|check)\b/i.test(trimmed)) continue
-        const colMatch = /^["']?([a-zA-Z_]\w*)["']?\s+/.exec(trimmed)
-        if (colMatch) out.columns.add(`${table}.${colMatch[1].toLowerCase()}`)
-      }
-    }
-
-    // ALTER TABLE <name> ADD COLUMN [IF NOT EXISTS] <colname> ...;
-    const alterRegex = /alter\s+table\s+(?:if\s+exists\s+)?(\w+)\s+add\s+column\s+(?:if\s+not\s+exists\s+)?["']?([a-zA-Z_]\w*)["']?/gi
-    while ((m = alterRegex.exec(sql)) !== null) {
-      out.columns.add(`${m[1].toLowerCase()}.${m[2].toLowerCase()}`)
-    }
-
-    // CREATE [OR REPLACE] VIEW <name>
-    const viewRegex = /create\s+(?:or\s+replace\s+)?view\s+(?:if\s+not\s+exists\s+)?(\w+)/gi
-    while ((m = viewRegex.exec(sql)) !== null) out.views.add(m[1].toLowerCase())
-
-    // CREATE MATERIALIZED VIEW <name>
-    const matviewRegex = /create\s+materialized\s+view\s+(?:if\s+not\s+exists\s+)?(\w+)/gi
-    while ((m = matviewRegex.exec(sql)) !== null) out.matviews.add(m[1].toLowerCase())
-
-    // CREATE TYPE <name> AS ENUM (...)
-    const enumRegex = /create\s+type\s+(\w+)\s+as\s+enum/gi
-    while ((m = enumRegex.exec(sql)) !== null) out.enums.add(m[1].toLowerCase())
-
-    // CREATE [OR REPLACE] FUNCTION <name>(
-    const funcRegex = /create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?(\w+)\s*\(/gi
-    while ((m = funcRegex.exec(sql)) !== null) out.functions.add(m[1].toLowerCase())
+    parseSql(fs.readFileSync(path.join(MIGRATIONS_DIR, file), 'utf-8'), out)
   }
-
   return out
 }
 
@@ -263,12 +321,18 @@ function logSection(title: string) {
   console.log('═'.repeat(70))
 }
 
+function oneline(s: string): string {
+  return s.replace(/\s+/g, ' ').trim()
+}
+
 async function main() {
   const prod = await queryProduction()
   console.log(
     `  Production: ${new Set(prod.columns.map(c => c.table_name)).size} tables, ` +
       `${prod.views.length} views, ${prod.matviews.length} matviews, ` +
-      `${prod.enums.length} enums, ${prod.functions.length} functions.`,
+      `${prod.enums.length} enums, ${prod.functions.length} functions,\n` +
+      `              ${prod.indexes.length} indexes, ` +
+      `${prod.policies.length} policies, ${prod.triggers.length} triggers.`,
   )
 
   console.log('▶ Parsing supabase/migrations/*.sql ...')
@@ -276,7 +340,9 @@ async function main() {
   console.log(
     `  Declared: ${declared.tables.size} tables (${declared.columns.size} columns), ` +
       `${declared.views.size} views, ${declared.matviews.size} matviews, ` +
-      `${declared.enums.size} enums, ${declared.functions.size} functions.`,
+      `${declared.enums.size} enums, ${declared.functions.size} functions,\n` +
+      `             ${declared.indexes.size} indexes, ` +
+      `${declared.policies.size} policies, ${declared.triggers.size} triggers.`,
   )
 
   // ── Forward drift on tracked tables: in production, not in migrations ──
@@ -361,6 +427,59 @@ async function main() {
     const inDecl = declared.functions.has(f.name.toLowerCase()) ? '✓ declared' : '✗ NOT in migrations'
     console.log(`    - ${f.name}(${f.detail})  ${inDecl}`)
   }
+
+  // ── Indexes: forward + reverse drift ──
+  logSection(`INDEXES — set differences (user-defined only; extension- and constraint-backed indexes excluded)`)
+  const prodIndexNames = new Set(prod.indexes.map(i => i.index_name.toLowerCase()))
+  const idxInProdNotDeclared = prod.indexes
+    .filter(i => !declared.indexes.has(i.index_name.toLowerCase()))
+    .sort((a, b) => (a.table_name + a.index_name).localeCompare(b.table_name + b.index_name))
+  const idxDeclaredNotInProd = [...declared.indexes].filter(i => !prodIndexNames.has(i)).sort()
+
+  console.log(`\n  In production, not declared (${idxInProdNotDeclared.length}):`)
+  for (const i of idxInProdNotDeclared) {
+    const unique = i.is_unique ? ' UNIQUE' : ''
+    const cols = i.columns ? `(${i.columns})` : '(<expression>)'
+    console.log(`    - ${i.index_name.padEnd(40)} on ${i.table_name.padEnd(22)} ${i.index_type}${unique} ${cols}`)
+  }
+  console.log(`\n  Declared, not in production (${idxDeclaredNotInProd.length}):`)
+  for (const name of idxDeclaredNotInProd) console.log(`    - ${name}`)
+
+  // ── RLS policies: forward + reverse drift ──
+  logSection(`RLS POLICIES — set differences`)
+  const prodPolicyKeys = new Set(
+    prod.policies.map(p => `${p.table_name.toLowerCase()}.${p.policy_name.toLowerCase()}`),
+  )
+  const polInProdNotDeclared = prod.policies
+    .filter(p => !declared.policies.has(`${p.table_name.toLowerCase()}.${p.policy_name.toLowerCase()}`))
+    .sort((a, b) => (a.table_name + a.policy_name).localeCompare(b.table_name + b.policy_name))
+  const polDeclaredNotInProd = [...declared.policies].filter(k => !prodPolicyKeys.has(k)).sort()
+
+  console.log(`\n  In production, not declared (${polInProdNotDeclared.length}):`)
+  for (const p of polInProdNotDeclared) {
+    const where = p.qual ? `  USING (${oneline(p.qual)})` : ''
+    const check = p.with_check ? `  WITH CHECK (${oneline(p.with_check)})` : ''
+    console.log(`    - ${p.table_name}.${p.policy_name.padEnd(36)} cmd=${p.cmd}${where}${check}`)
+  }
+  console.log(`\n  Declared, not in production (${polDeclaredNotInProd.length}):`)
+  for (const k of polDeclaredNotInProd) console.log(`    - ${k}`)
+
+  // ── Triggers: forward + reverse drift ──
+  logSection(`TRIGGERS — set differences (internal triggers excluded)`)
+  const prodTriggerKeys = new Set(
+    prod.triggers.map(t => `${t.table_name.toLowerCase()}.${t.trigger_name.toLowerCase()}`),
+  )
+  const trgInProdNotDeclared = prod.triggers
+    .filter(t => !declared.triggers.has(`${t.table_name.toLowerCase()}.${t.trigger_name.toLowerCase()}`))
+    .sort((a, b) => (a.table_name + a.trigger_name).localeCompare(b.table_name + b.trigger_name))
+  const trgDeclaredNotInProd = [...declared.triggers].filter(k => !prodTriggerKeys.has(k)).sort()
+
+  console.log(`\n  In production, not declared (${trgInProdNotDeclared.length}):`)
+  for (const t of trgInProdNotDeclared) {
+    console.log(`    - ${t.table_name}.${t.trigger_name.padEnd(36)} ${t.timing} ${t.events}  →  ${t.function_name}()`)
+  }
+  console.log(`\n  Declared, not in production (${trgDeclaredNotInProd.length}):`)
+  for (const k of trgDeclaredNotInProd) console.log(`    - ${k}`)
 
   // ── Generated SQL ──
   if (forwardMissing.length > 0) {
