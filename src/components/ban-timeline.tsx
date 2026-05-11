@@ -113,8 +113,9 @@ export default function BanTimeline({
         {/* Header — axis spacer (the axis itself is drawn inside the main SVG, but we keep the column visually separated) */}
         <div className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10" style={{ height: AXIS_H }} />
 
-        {/* Labels column */}
+        {/* Labels column — leading spacer aligns label[0] with bar[0] (SVG has internal axis of AXIS_H) */}
         <div className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <div style={{ height: AXIS_H }} aria-hidden="true" />
           {rows.map((row) => {
             const inner = (
               <span className="flex items-center gap-2 truncate">
@@ -268,7 +269,7 @@ export default function BanTimeline({
                     const end = ban.year_ended ?? currentYear
                     const x1 = x(start)
                     const x2 = x(end)
-                    const w = Math.max(2, x2 - x1)
+                    const w = Math.max(6, x2 - x1)
                     const barH = 14
                     const barY = yMid - barH / 2
 

@@ -142,13 +142,16 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       const datedBans = b.bans.filter((ban) => ban.year_started != null)
       if (datedBans.length === 0) return null
       const earliest = Math.min(...datedBans.map((ban) => ban.year_started!))
+      const countries = [...new Set(datedBans.map((bn) => bn.country_code))]
+      const flag = countries.length === 1 ? countryFlag(countries[0]) : '🌍'
       return {
         key: b.slug,
         label: b.title,
+        flag,
         sublabel:
           datedBans.length === 1
             ? `1 ban`
-            : `${datedBans.length} bans · ${[...new Set(datedBans.map((bn) => bn.country_code))].length} countries`,
+            : `${datedBans.length} bans · ${countries.length} ${countries.length === 1 ? 'country' : 'countries'}`,
         href: `/books/${b.slug}`,
         bans: datedBans.map((ban) => ({
           id: ban.id,
