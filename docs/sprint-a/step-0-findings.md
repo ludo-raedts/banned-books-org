@@ -204,6 +204,54 @@ end-URL.
 
 ---
 
+## 5. Genre vocabulary lives in TypeScript, not in the DB; unknown slugs render raw
+
+**What is broken.** `src/components/genre-badge.tsx` enumerates a fixed
+`GENRES` map of seventeen slug → label/colour pairs. Any book row whose
+`genres[]` column contains a slug not in that map renders as a grey fallback
+badge with the raw kebab-case slug as the label.
+
+**Reproduced on production 2026-05-11.** The three Step 0 imports used
+genres reasonable for French ban-list literature: `essay`,
+`controversial-non-fiction`, `experimental`, `political-non-fiction`. None
+of these are in the GENRES map. Live HTML on
+`/books/suicide-mode-demploi`:
+
+```html
+<span class="… bg-gray-100 text-gray-600">essay</span>
+<span class="… bg-gray-100 text-gray-600">controversial-non-fiction</span>
+```
+
+The page does not visually break, but the badges look unfinished.
+
+**Why this is a Sprint A issue.** The `reasons` and `scopes` vocabularies
+both live in the DB and were queryable for the LLM extraction module. Genre
+is the odd one out — frozen in TypeScript, requiring a code change + deploy
+to add. As imports broaden to French / Spanish / Russian / Chinese / Arabic
+works, the genre vocabulary needs to grow rapidly (poetry, samizdat,
+political pamphlet, religious tract, war memoir, etc.) and waiting on a
+deploy per genre is friction that will lead to inconsistent slugging.
+
+**Fix.** One of:
+
+- **Promote genres to a DB table** (`genres(slug, label_en, classes)`) and
+  query at runtime, parallel to `reasons` and `scopes`. Preferred — matches
+  the existing pattern. Lets future LLM-extraction prompts validate against
+  a live vocabulary.
+- **Or** keep the TypeScript map but extend it with the missing slugs and
+  add a CI check that fails the build if any `books.genres[]` value in
+  production isn't in the map.
+
+The first option also enables author-facing admin tooling for genre
+curation without a developer in the loop.
+
+**Step 0 disposition.** The three French books stay with their non-standard
+genre slugs. Once Sprint A's genre vocabulary is in place, run a one-off
+backfill that maps each free-form slug to a canonical one (or adds them to
+the new table).
+
+---
+
 ## What is explicitly NOT in this document
 
 - **Cover-detection problems for non-English titles.** No actual breakage

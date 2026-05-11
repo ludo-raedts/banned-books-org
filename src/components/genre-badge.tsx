@@ -16,6 +16,12 @@ const GENRES: Record<string, { label: string; classes: string }> = {
   'magical-realism':   { label: 'Magical realism',    classes: 'bg-purple-100 text-purple-700' },
   'graphic-novel':     { label: 'Graphic novel',      classes: 'bg-emerald-100 text-emerald-700' },
   'horror':            { label: 'Horror',             classes: 'bg-red-100 text-red-700' },
+  // Added during Step 0 French validation 2026-05-11. Sprint A moves this
+  // vocabulary into a `genres` DB table parallel to `reasons` and `scopes`.
+  'essay':                    { label: 'Essay',                    classes: 'bg-slate-100 text-slate-700' },
+  'experimental':             { label: 'Experimental',             classes: 'bg-fuchsia-100 text-fuchsia-700' },
+  'controversial-non-fiction':{ label: 'Controversial non-fiction',classes: 'bg-orange-100 text-orange-800' },
+  'political-non-fiction':    { label: 'Political non-fiction',    classes: 'bg-sky-100 text-sky-700' },
 }
 
 export function genreLabel(slug: string) {
