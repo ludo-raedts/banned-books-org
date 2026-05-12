@@ -198,6 +198,85 @@ describe('migration-parser', () => {
     })
   })
 
+  // ── Case D: multi-column ALTER TABLE — comma-separated ADD COLUMN clauses ─
+  //
+  // Postgres allows a single ALTER TABLE to perform multiple ADD COLUMN
+  // operations separated by commas. Before this case existed, the parser
+  // only matched the first ADD COLUMN clause and silently dropped the rest,
+  // which surfaced as a false-positive forward-drift report in
+  // diagnose-schema-drift.ts after the Sprint A model3_and_import_queue
+  // migration.
+  describe('case D — multi-column ALTER TABLE ADD COLUMN', () => {
+    it('captures every clause of a multi-column ALTER TABLE', () => {
+      const sql = `
+        ALTER TABLE books
+          ADD COLUMN IF NOT EXISTS title_native             TEXT,
+          ADD COLUMN IF NOT EXISTS title_native_script      TEXT,
+          ADD COLUMN IF NOT EXISTS title_transliterated     TEXT,
+          ADD COLUMN IF NOT EXISTS title_english_meaningful TEXT;
+      `
+      const a = parse(sql)
+      expect([...a.columns].sort()).toEqual([
+        'books.title_english_meaningful',
+        'books.title_native',
+        'books.title_native_script',
+        'books.title_transliterated',
+      ])
+    })
+
+    it('handles a mix of single- and multi-column ALTERs in one file', () => {
+      const sql = `
+        ALTER TABLE ban_sources ADD COLUMN IF NOT EXISTS verification_status verification_status_enum;
+        ALTER TABLE books
+          ADD COLUMN IF NOT EXISTS a TEXT,
+          ADD COLUMN IF NOT EXISTS b TEXT;
+      `
+      const a = parse(sql)
+      expect([...a.columns].sort()).toEqual([
+        'ban_sources.verification_status',
+        'books.a',
+        'books.b',
+      ])
+    })
+
+    it('does not split on commas inside DEFAULT expressions (arrays, calls, strings)', () => {
+      const sql = `
+        ALTER TABLE books
+          ADD COLUMN IF NOT EXISTS arr  TEXT[] DEFAULT ARRAY['a', 'b'],
+          ADD COLUMN IF NOT EXISTS fn   TEXT   DEFAULT concat('x', 'y'),
+          ADD COLUMN IF NOT EXISTS lit  TEXT   DEFAULT 'has, a, comma',
+          ADD COLUMN IF NOT EXISTS tail TEXT;
+      `
+      const a = parse(sql)
+      expect([...a.columns].sort()).toEqual([
+        'books.arr',
+        'books.fn',
+        'books.lit',
+        'books.tail',
+      ])
+    })
+
+    it('ignores non-ADD-COLUMN clauses but still picks up the ADD COLUMNs', () => {
+      const sql = `
+        ALTER TABLE books
+          DROP COLUMN IF EXISTS legacy,
+          ADD COLUMN IF NOT EXISTS modern TEXT;
+      `
+      const a = parse(sql)
+      expect([...a.columns]).toEqual(['books.modern'])
+    })
+
+    it('handles quoted identifiers and the public. schema prefix in multi-column form', () => {
+      const sql = `
+        ALTER TABLE "public"."books"
+          ADD COLUMN IF NOT EXISTS "Mixed Case" TEXT,
+          ADD COLUMN IF NOT EXISTS plain TEXT;
+      `
+      const a = parse(sql)
+      expect([...a.columns].sort()).toEqual(['books.mixed case', 'books.plain'])
+    })
+  })
+
   // ── Cross-style equivalence check ─────────────────────────────────────────
   //
   // The same logical statement written in two different styles must
