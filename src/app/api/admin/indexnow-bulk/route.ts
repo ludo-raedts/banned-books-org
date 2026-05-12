@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { submitInBatches } from '@/lib/indexnow'
 import { getAllCanonicalUrls } from '@/lib/site-urls'
+import { adminClient } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -22,6 +23,17 @@ export async function POST() {
   const summary = await submitInBatches(urls)
 
   const allOk = summary.results.every((r) => r.ok)
+  const firstFailed = summary.results.find((r) => !r.ok)
+  const firstStatus = summary.results[0]?.status ?? 0
+
+  await adminClient().from('indexnow_submissions').insert({
+    kind: 'full',
+    url_count: summary.total,
+    ok: allOk,
+    status: firstStatus,
+    error: firstFailed && !firstFailed.ok ? firstFailed.error : null,
+  })
+
   return NextResponse.json(
     {
       total: summary.total,

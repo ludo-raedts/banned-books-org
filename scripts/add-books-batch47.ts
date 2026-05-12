@@ -21,6 +21,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { notifyIndexNowFromScript } from './lib/notify-indexnow'
 
 const WRITE = process.argv.includes('--write')
 const supabase = adminClient()
@@ -138,6 +139,8 @@ async function main() {
   let added = 0
   let skippedDup = 0
   let skippedMissing = 0
+  const addedBookSlugs: string[] = []
+  const addedAuthorSlugs: string[] = []
 
   // ═════════════════════════════════════════════════════════════════════════
   // SECTION A — New country-bans for existing books
@@ -312,6 +315,7 @@ async function main() {
     const { data, error } = await supabase.from('authors').insert(row).select('id').single()
     if (error || !data) { console.warn(`  [author warn] ${row.slug}: ${error?.message}`); continue }
     authorMap.set(row.slug, data.id)
+    addedAuthorSlugs.push(row.slug)
   }
 
   type BanSpec = {
@@ -644,6 +648,7 @@ async function main() {
     if (bookErr || !bookRow) { console.error(`  ✗ book: ${bookErr?.message}`); continue }
     const bookId = bookRow.id
     bookMap.set(entry.slug, bookId)
+    addedBookSlugs.push(entry.slug)
     console.log(`  ✓ book id=${bookId}`)
 
     for (const aSlug of entry.authors) {
@@ -684,6 +689,12 @@ async function main() {
   console.log(`skipped (duplicate): ${skippedDup}`)
   console.log(`skipped (missing)  : ${skippedMissing}`)
   if (!WRITE) console.log('\nDRY-RUN — re-run with --write to apply.')
+
+  await notifyIndexNowFromScript({
+    write: WRITE,
+    books: addedBookSlugs,
+    authors: addedAuthorSlugs,
+  })
 }
 
 main().catch(e => { console.error(e); process.exit(1) })

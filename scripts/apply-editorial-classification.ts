@@ -26,9 +26,13 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { notifyIndexNowFromScript } from './lib/notify-indexnow'
 
 const WRITE = process.argv.includes('--write')
 const supabase = adminClient()
+
+const addedBookSlugs: string[] = []
+const addedAuthorSlugs: string[] = []
 
 type Tier = 'none' | 'context' | 'extended'
 
@@ -444,6 +448,7 @@ async function getOrCreateAuthor(row: AuthorRow): Promise<number | null> {
   const { data, error } = await supabase
     .from('authors').insert(row).select('id').single()
   if (error || !data) { console.warn(`    [author warn] ${row.slug}: ${error?.message}`); return null }
+  addedAuthorSlugs.push(row.slug)
   return data.id as number
 }
 
@@ -611,6 +616,7 @@ async function main() {
 
     if (bookErr || !bookRow) { console.error(`  ✗ book: ${bookErr?.message}`); continue }
     const bookId = bookRow.id as number
+    addedBookSlugs.push(nb.slug)
     console.log(`  ✓ book id=${bookId}`)
 
     for (const aid of authorIds) {
@@ -652,6 +658,12 @@ async function main() {
   console.log(`new books created     : ${createdBooks}`)
   console.log(`new books pre-existed : ${createdBookSkipped}`)
   if (!WRITE) console.log('\nDRY-RUN — re-run with --write to apply.')
+
+  await notifyIndexNowFromScript({
+    write: WRITE,
+    books: addedBookSlugs,
+    authors: addedAuthorSlugs,
+  })
 }
 
 main().catch(e => { console.error(e); process.exit(1) })
