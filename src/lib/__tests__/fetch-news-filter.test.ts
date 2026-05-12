@@ -2,13 +2,13 @@ import { describe, it, expect } from 'vitest'
 import { matchesBooksFilter, BOOKS_KEYWORDS } from '@/lib/fetch-news'
 
 describe('matchesBooksFilter', () => {
-  it('matches when title mentions a book/banning keyword', () => {
-    expect(matchesBooksFilter('Florida district bans novel from school libraries', '')).toBe(true)
+  it('matches when title mentions a strong term', () => {
+    expect(matchesBooksFilter('Florida district pulls novel from school libraries', '')).toBe(true)
     expect(matchesBooksFilter('Author detained at border', 'irrelevant body')).toBe(true)
     expect(matchesBooksFilter('Library shuts down after pressure', '')).toBe(true)
   })
 
-  it('matches when only the description mentions a keyword', () => {
+  it('matches when only the description mentions a strong term', () => {
     expect(matchesBooksFilter('Court ruling in Tehran', 'A publisher was ordered to halt distribution of a book.')).toBe(true)
   })
 
@@ -18,13 +18,32 @@ describe('matchesBooksFilter', () => {
   })
 
   it('is case-insensitive', () => {
-    expect(matchesBooksFilter('CENSORSHIP ROW IN BEIJING', '')).toBe(true)
+    expect(matchesBooksFilter('BANNED BOOKS LIST RELEASED', '')).toBe(true)
     expect(matchesBooksFilter('headline', 'AUTHOR speaks at conference')).toBe(true)
   })
 
-  it('catches inflected forms like "banned" and "publishing"', () => {
-    expect(matchesBooksFilter('Memoir banned from public schools', '')).toBe(true)
-    expect(matchesBooksFilter('Independent publishing house raided', '')).toBe(true)
+  // The previous regex matched "ban", "censor", and "publish" on their own,
+  // which let in press-credential bans, asset bans, censored websites,
+  // published regulations — none of them about books. The strong terms
+  // (book/author/library/literature) must be present.
+  it('rejects weak terms when no strong term co-occurs', () => {
+    expect(matchesBooksFilter('Russia revokes press credentials for Victory Day parade', '')).toBe(false)
+    expect(matchesBooksFilter('Moscow court bans entertainment website', '')).toBe(false)
+    expect(matchesBooksFilter('Independent publishing house raided', '')).toBe(false)
+    expect(matchesBooksFilter('Censorship row in Beijing', '')).toBe(false)
+    expect(matchesBooksFilter('Memoir banned from public schools', '')).toBe(false)
+  })
+
+  it('passes when a weak term co-occurs with a strong term', () => {
+    expect(matchesBooksFilter('Memoir banned: school library removes book', '')).toBe(true)
+    expect(matchesBooksFilter('Author censored', '')).toBe(true)
+    expect(matchesBooksFilter('Censorship of literature in schools', '')).toBe(true)
+  })
+
+  it('uses word boundaries to avoid sub-word false positives', () => {
+    expect(matchesBooksFilter('Facebook removes posts', '')).toBe(false)
+    expect(matchesBooksFilter('Authoritarian regime tightens grip', '')).toBe(false)
+    expect(matchesBooksFilter('Authority issues new guidelines', '')).toBe(false)
   })
 
   it('accepts a custom regex', () => {
@@ -36,5 +55,7 @@ describe('matchesBooksFilter', () => {
     expect(BOOKS_KEYWORDS.flags).toContain('i')
     expect(BOOKS_KEYWORDS.test('book')).toBe(true)
     expect(BOOKS_KEYWORDS.test('weather')).toBe(false)
+    expect(BOOKS_KEYWORDS.test('ban')).toBe(false)
+    expect(BOOKS_KEYWORDS.test('publish')).toBe(false)
   })
 })

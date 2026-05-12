@@ -20,10 +20,13 @@ export type Feed = {
 }
 
 // Topic filter for general human-rights / press-freedom feeds. Items not
-// matching are dropped before the LLM call to keep cost predictable. Tight
-// enough to skip "journalist arrested in country X" stories that aren't
-// about books or publishing, loose enough to catch the interesting cases.
-export const BOOKS_KEYWORDS = /book|author|censor|ban|publish|library|literature/i
+// matching are dropped before the embedding + LLM calls, saving both API
+// cost and admin-queue noise. Only the strong terms count: weak terms like
+// "ban", "censor", and "publish" trigger on too many off-topic geopolitics
+// stories (asset bans, press-credential bans, regulation-publishing) when
+// the broad-scope feeds (HRW, Meduza, Article 19, etc.) get pulled in. \b
+// boundaries prevent "Facebook"/"authoritarian" false positives.
+export const BOOKS_KEYWORDS = /\b(?:books?|authors?|librar(?:y|ies)|literature|literary)\b/i
 
 /** Returns true when an RSS item should pass the books-only topic filter. */
 export function matchesBooksFilter(title: string, description: string, filter: RegExp = BOOKS_KEYWORDS): boolean {
