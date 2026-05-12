@@ -12,6 +12,7 @@
  *   npx tsx --env-file=.env.local scripts/import-wikipedia-countries.ts --apply
  */
 
+import { slugify } from '../src/lib/imports/slugify'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 
@@ -191,12 +192,7 @@ interface NewBook {
   bans:         Omit<NewBan, 'bookSlug'>[]
 }
 
-function toSlug(s: string): string {
-  return s.toLowerCase()
-    .replace(/['''`]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+const toSlug = slugify
 
 const NEW_BOOKS: NewBook[] = [
   {

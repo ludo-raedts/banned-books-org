@@ -12,6 +12,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { slugify } from '../src/lib/imports/slugify'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -71,12 +72,7 @@ function formatAuthor(raw: string): string {
   return `${raw.slice(idx + 1).trim()} ${raw.slice(0, idx).trim()}`
 }
 
-function toSlug(s: string): string {
-  return s.toLowerCase()
-    .replace(/['''`]/g, '')   // strip curly + ASCII apostrophes
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+const toSlug = slugify
 
 // Extract earliest year from "August 2024" or "January 2025 - June 2025"
 function extractYear(dateStr: string): number | null {

@@ -20,6 +20,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { slugify } from '../src/lib/imports/slugify'
 
 const APPLY   = process.argv.includes('--apply')
 const countryArg = process.argv.find(a => a.startsWith('--country='))?.split('=')[1]?.toUpperCase()
@@ -30,12 +31,7 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
 // ── Slug helper ───────────────────────────────────────────────────────────────
 
-function toSlug(s: string): string {
-  return s.toLowerCase()
-    .replace(/['''`]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+const toSlug = slugify
 
 // ── Seed data ─────────────────────────────────────────────────────────────────
 
