@@ -11,6 +11,7 @@ async function fetchAllSlugs(table: 'books' | 'authors'): Promise<string[]> {
       .from(table)
       .select('slug')
       .not('slug', 'is', null)
+      .order('id', { ascending: true })
       .range(offset, offset + 999)
     if (!data || data.length === 0) break
     for (const row of data) {
