@@ -9,6 +9,8 @@ const HIGH_VOLUME_FR: SourceConfig = {
   fuzzy_thresholds: { book_title: 0.85, author_name: 0.75 },
   default_country_code: 'FR',
   archive_strategy: ['wayback', 'archive_today'],
+  default_scope: 'school',
+  default_action_type: 'challenged',
 }
 
 const HIGH_STAKES_RU: SourceConfig = {
@@ -16,6 +18,8 @@ const HIGH_STAKES_RU: SourceConfig = {
   fuzzy_thresholds: { book_title: 0.85, author_name: 0.75 },
   default_country_code: 'RU',
   archive_strategy: ['archive_today', 'wayback'],
+  default_scope: 'government',
+  default_action_type: 'banned',
 }
 
 function ext(over: Partial<Extraction>): Extraction {

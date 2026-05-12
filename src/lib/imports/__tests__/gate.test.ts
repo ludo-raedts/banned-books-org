@@ -9,6 +9,8 @@ const HIGH_VOLUME: SourceConfig = {
   fuzzy_thresholds: { book_title: 0.85, author_name: 0.75 },
   default_country_code: 'US',
   archive_strategy: ['wayback', 'archive_today'],
+  default_scope: 'school',
+  default_action_type: 'challenged',
 }
 
 const HIGH_STAKES: SourceConfig = { ...HIGH_VOLUME, tier: 'high-stakes' }
