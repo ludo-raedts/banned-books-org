@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { ALLOWED_IMAGE_HOSTS } from "./src/lib/allowed-image-hosts";
+import { NFD_REDIRECTS } from "./src/lib/redirects/nfd-bulk";
 
 const nextConfig: NextConfig = {
   // Include the generated dataset zip in the dataset download route's bundle.
@@ -14,6 +15,11 @@ const nextConfig: NextConfig = {
     imageSizes: [160, 240, 360],
     formats: ['image/webp'],
     minimumCacheTTL: 31536000,
+  },
+  async redirects() {
+    return [
+      ...NFD_REDIRECTS,
+    ]
   },
   async headers() {
     return [
