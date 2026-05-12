@@ -59,6 +59,51 @@ function pickName(g1: string | undefined, g2: string | undefined): string {
   return (g1 ?? g2 ?? '').toLowerCase()
 }
 
+// Split a string on commas that are NOT inside a string literal or a balanced
+// (), [] group. Postgres-style '' inside a single-quoted string is treated
+// as an escaped single quote and does not close the string.
+function splitTopLevelCommas(body: string): string[] {
+  const parts: string[] = []
+  let current = ''
+  let paren = 0
+  let bracket = 0
+  let inSingle = false
+  let inDouble = false
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i]
+    if (inSingle) {
+      current += c
+      if (c === "'") {
+        if (body[i + 1] === "'") {
+          current += body[++i]
+        } else {
+          inSingle = false
+        }
+      }
+      continue
+    }
+    if (inDouble) {
+      current += c
+      if (c === '"') inDouble = false
+      continue
+    }
+    if (c === "'") { inSingle = true; current += c; continue }
+    if (c === '"') { inDouble = true; current += c; continue }
+    if (c === '(') { paren++; current += c; continue }
+    if (c === ')') { paren--; current += c; continue }
+    if (c === '[') { bracket++; current += c; continue }
+    if (c === ']') { bracket--; current += c; continue }
+    if (c === ',' && paren === 0 && bracket === 0) {
+      parts.push(current)
+      current = ''
+      continue
+    }
+    current += c
+  }
+  if (current.trim()) parts.push(current)
+  return parts
+}
+
 /**
  * Parse one SQL string and accumulate discovered artefacts into `out`.
  * Pass the same `out` to multiple calls to merge across files.
@@ -91,15 +136,26 @@ export function parseSql(sql: string, out: DeclaredArtefacts): void {
     }
   }
 
-  // ALTER TABLE [IF EXISTS|ONLY] <id> ADD COLUMN [IF NOT EXISTS] <col>
-  const alterAddColumnRegex = new RegExp(
-    `alter\\s+table\\s+(?:if\\s+exists\\s+|only\\s+)?${ID}\\s+add\\s+column\\s+(?:if\\s+not\\s+exists\\s+)?(?:"([^"]+)"|(\\w+))`,
+  // ALTER TABLE [IF EXISTS|ONLY] <id> <body>;
+  // Body may contain one or more comma-separated clauses (ADD/DROP/ALTER
+  // COLUMN, etc.). We pick out each ADD COLUMN clause. splitTopLevelCommas
+  // respects string literals and balanced parens/brackets so commas inside
+  // DEFAULT expressions like ARRAY['a', 'b'] do not split clauses.
+  const alterTableRegex = new RegExp(
+    `alter\\s+table\\s+(?:if\\s+exists\\s+|only\\s+)?${ID}\\s+([\\s\\S]*?);`,
     'gi',
   )
-  while ((m = alterAddColumnRegex.exec(sql)) !== null) {
+  const addColumnClauseRegex = /^\s*add\s+column\s+(?:if\s+not\s+exists\s+)?(?:"([^"]+)"|(\w+))/i
+  while ((m = alterTableRegex.exec(sql)) !== null) {
     const table = pickName(m[1], m[2])
-    const col = pickName(m[3], m[4])
-    if (table && col) out.columns.add(`${table}.${col}`)
+    if (!table) continue
+    for (const clause of splitTopLevelCommas(m[3])) {
+      const colMatch = addColumnClauseRegex.exec(clause)
+      if (colMatch) {
+        const col = pickName(colMatch[1], colMatch[2])
+        if (col) out.columns.add(`${table}.${col}`)
+      }
+    }
   }
 
   // CREATE [OR REPLACE] VIEW [IF NOT EXISTS] <id>
