@@ -59,6 +59,17 @@ function ticksForRange(min: number, max: number): number[] {
   return out
 }
 
+function edgeAnchor(
+  xPos: number,
+  viewW: number,
+  approxTextW: number,
+): { textAnchor: 'start' | 'middle' | 'end'; xOffset: number } {
+  const halfW = approxTextW / 2
+  if (xPos - halfW < 0) return { textAnchor: 'start', xOffset: 4 }
+  if (xPos + halfW > viewW) return { textAnchor: 'end', xOffset: -4 }
+  return { textAnchor: 'middle', xOffset: 0 }
+}
+
 export default function BanTimeline({
   rows,
   firstPublishedYear,
@@ -155,9 +166,9 @@ export default function BanTimeline({
             role="img"
             aria-labelledby={`${titleId} ${descId}`}
             viewBox={`0 0 ${VIEW_W} ${totalH}`}
-            preserveAspectRatio="xMinYMin meet"
+            preserveAspectRatio="none"
             className="block w-full"
-            style={{ minWidth: 600, height: totalH }}
+            style={{ minWidth: VIEW_W, height: totalH }}
           >
             <desc id={descId}>{summary}</desc>
 
@@ -199,52 +210,63 @@ export default function BanTimeline({
             </g>
 
             {/* First-published reference line */}
-            {firstPublishedYear != null && firstPublishedYear >= yearMin && firstPublishedYear <= yearMax && (
-              <g className="text-amber-600 dark:text-amber-400">
-                <line
-                  x1={x(firstPublishedYear)}
-                  x2={x(firstPublishedYear)}
-                  y1={AXIS_H - 4}
-                  y2={totalH - FOOTER_H}
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeDasharray="3 3"
-                  opacity="0.85"
-                />
-                <text
-                  x={x(firstPublishedYear)}
-                  y={totalH - 8}
-                  textAnchor="middle"
-                  fontSize="10"
-                  fill="currentColor"
-                >
-                  {firstPublishedLabel} ({firstPublishedYear})
-                </text>
-              </g>
-            )}
+            {firstPublishedYear != null && firstPublishedYear >= yearMin && firstPublishedYear <= yearMax && (() => {
+              const fpText = `${firstPublishedLabel} (${firstPublishedYear})`
+              const fpXPos = x(firstPublishedYear)
+              const { textAnchor, xOffset } = edgeAnchor(fpXPos, VIEW_W, fpText.length * 5.5)
+              return (
+                <g className="text-amber-600 dark:text-amber-400">
+                  <line
+                    x1={fpXPos}
+                    x2={fpXPos}
+                    y1={AXIS_H - 4}
+                    y2={totalH - FOOTER_H}
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeDasharray="3 3"
+                    opacity="0.85"
+                  />
+                  <text
+                    x={fpXPos + xOffset}
+                    y={totalH - 8}
+                    textAnchor={textAnchor}
+                    fontSize="10"
+                    fill="currentColor"
+                  >
+                    {fpText}
+                  </text>
+                </g>
+              )
+            })()}
 
             {/* Today reference line */}
-            <g className="text-gray-400 dark:text-gray-500">
-              <line
-                x1={x(currentYear)}
-                x2={x(currentYear)}
-                y1={AXIS_H - 4}
-                y2={totalH - FOOTER_H}
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeDasharray="3 3"
-                opacity="0.7"
-              />
-              <text
-                x={x(currentYear)}
-                y={totalH - 8}
-                textAnchor="middle"
-                fontSize="10"
-                fill="currentColor"
-              >
-                Today
-              </text>
-            </g>
+            {(() => {
+              const todayXPos = x(currentYear)
+              const { textAnchor, xOffset } = edgeAnchor(todayXPos, VIEW_W, 'Today'.length * 5.5)
+              return (
+                <g className="text-gray-400 dark:text-gray-500">
+                  <line
+                    x1={todayXPos}
+                    x2={todayXPos}
+                    y1={AXIS_H - 4}
+                    y2={totalH - FOOTER_H}
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeDasharray="3 3"
+                    opacity="0.7"
+                  />
+                  <text
+                    x={todayXPos + xOffset}
+                    y={totalH - 8}
+                    textAnchor={textAnchor}
+                    fontSize="10"
+                    fill="currentColor"
+                  >
+                    Today
+                  </text>
+                </g>
+              )
+            })()}
 
             {/* Bars per row */}
             {rows.map((row, rowIdx) => {
