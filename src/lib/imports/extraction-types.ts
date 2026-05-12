@@ -46,3 +46,60 @@ export const AgreementResult = z.object({
   conflict_fields: z.array(z.string()),
 })
 export type AgreementResult = z.infer<typeof AgreementResult>
+
+// ----------------------------------------------------------------------------
+// ExtractionResult: normalized output of the "extracted" pipeline phase.
+//
+// Bridges the LLM `Extraction` (which has 4 title variants, freeform reason
+// hint, no country code) and the downstream verifier/gate/committer (which
+// need a canonical title, an author list with canonical names, a country
+// code, and a list of reason slugs).
+//
+// Produced by src/lib/imports/normalize-extraction.ts as a pure function of
+// (BothPassesResult, SourceConfig). Consumed by verifier, gate, and committer.
+//
+// Title-canonical rules (per design discussion):
+//   Latin script     -> title_native ?? title_transliterated
+//   Non-Latin script -> title_transliterated (must be non-null per script-convention)
+//
+// Author-canonical rules (mirror title):
+//   Latin script     -> name_native ?? name_english
+//   Non-Latin script -> name_transliterated
+//
+// reasons: always ['other'] for Sprint A — the LLM only emits a freeform
+// theme_or_reason_hint and no slug-mapper exists yet. The slug 'other' is
+// verified to exist in production (label_en='Other').
+//
+// non_latin_disagreement: encodes the Sprint-0.5 doctrine that non-Latin
+// title-translation partials NEVER auto-accept. True iff:
+//   - is_book AND
+//   - script is set AND not 'latin' AND
+//   - agreement_classification is not 'full'
+// Cold-start gate (first import per source) is a separate concern handled
+// by the verifier (which has DB access) — not encoded here.
+// ----------------------------------------------------------------------------
+
+export type AuthorRef = {
+  name: string                            // canonical name per author rules above
+  name_native: string | null              // raw, for review queue display
+  name_transliterated: string | null      // raw, for review queue display
+  name_english: string                    // raw, always present
+  birth_year: number | null
+}
+
+export type ExtractionResult = {
+  agreement_classification: AgreementResult['agreement']
+  is_book: boolean
+  title: string                           // canonical for slug-lookup
+  title_native: string | null             // raw, for committer (books.title_native)
+  title_native_script: ScriptType | null  // raw, for committer (books.title_native_script)
+  title_transliterated: string | null     // raw, for committer (books.title_transliterated)
+  title_english_meaningful: string | null // raw, for committer (books.title_english_meaningful)
+  script: ScriptType | null               // = title_native_script, surfaced for gate
+  original_language: string | null
+  year_published: number | null
+  authors: AuthorRef[]
+  country_code: string | null             // from SOURCE_REGISTRY[sourceType].default_country_code
+  reasons: string[]                       // reason slugs; always ['other'] for Sprint A
+  non_latin_disagreement: boolean         // Sprint-0.5 doctrine flag; gate uses conjunctively
+}
