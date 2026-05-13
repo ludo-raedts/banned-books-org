@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail, ClipboardList } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import AdminTabs from './admin-tabs'
 import DataQualityCard from './data-quality-card'
@@ -23,6 +23,7 @@ interface Props {
   newsCount: number
   banCount: number
   countryCount: number
+  reviewQueuePending: number
   dbSizeBytes: number | null
   dbLimitBytes: number
   pageviewsSizeBytes: number | null
@@ -176,7 +177,7 @@ function formatBytes(n: number): string {
 }
 
 export default function AdminDashboardClient({
-  bookCount, newsCount, banCount, countryCount,
+  bookCount, newsCount, banCount, countryCount, reviewQueuePending,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
   inboxRows, inboxFetchedAt,
@@ -282,6 +283,28 @@ export default function AdminDashboardClient({
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500">{newsCount} draft{newsCount !== 1 ? 's' : ''} awaiting review</p>
           <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review drafts →</span>
+        </a>
+
+        {/* Row 1 — Review queue */}
+        <a href="/admin/import-review" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group relative`}>
+          {reviewQueuePending > 0 && (
+            <span className="absolute top-4 right-4 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center tabular-nums">
+              {reviewQueuePending}
+            </span>
+          )}
+          <div className="flex items-center justify-between">
+            <ClipboardList className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Review queue</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Approve, reject, or defer bulk-imported ban entries.
+            </p>
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            {reviewQueuePending.toLocaleString('en')} pending review
+          </p>
+          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review queue →</span>
         </a>
 
         {/* Row 1 — Inbox */}

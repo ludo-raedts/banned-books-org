@@ -10,15 +10,20 @@ export default async function AdminPage() {
     { count: bookCount },
     { count: newsCount },
     { count: banCount },
+    reviewQueueRes,
     { data: countryRows },
     { data: refreshLog },
   ] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('news_items').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
+    supabase.from('import_review_queue').select('*', { count: 'exact', head: true }).eq('status', 'pending_review'),
     supabase.from('bans').select('country_code').range(0, 9999),
     supabase.from('mv_refresh_log').select('key, updated_at'),
   ])
+  // `import_review_queue` is new (Sprint A Task 2A); fail soft so the page
+  // still renders if the migration hasn't run on a given env.
+  const reviewQueuePending = reviewQueueRes.error ? 0 : (reviewQueueRes.count ?? 0)
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
   const logMap = new Map((refreshLog ?? []).map(r => [r.key, r.updated_at as string]))
@@ -96,6 +101,7 @@ export default async function AdminPage() {
       newsCount={newsCount ?? 0}
       banCount={banCount ?? 0}
       countryCount={countryCount}
+      reviewQueuePending={reviewQueuePending}
       dbSizeBytes={dbSizeBytes}
       dbLimitBytes={dbLimitBytes}
       pageviewsSizeBytes={pageviewsSizeBytes}
