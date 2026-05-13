@@ -253,9 +253,60 @@ export function stripWikitext(input: string): string {
   // Italic / bold wiki markers.
   s = s.replace(/'''/g, '')
   s = s.replace(/''/g, '')
+  // HTML entities (last semantic step, before whitespace collapse). Must
+  // run after wikitext-strip so we don't decode entities living inside
+  // removed <ref>/template blocks; must run before whitespace collapse so a
+  // decoded &nbsp; → ' ' gets normalized away if it sits next to other
+  // spaces. Trigger case: India's Sahara row had "Rs.&nbsp;2&nbsp;billion"
+  // landing verbatim in bans.description.
+  s = decodeHtmlEntities(s)
   // Collapse whitespace.
   s = s.replace(/\s+/g, ' ').trim()
   return s
+}
+
+const HTML_ENTITIES: Record<string, string> = {
+  '&nbsp;': ' ',
+  '&amp;': '&',
+  '&quot;': '"',
+  '&apos;': "'",
+  '&lt;': '<',
+  '&gt;': '>',
+  '&ndash;': '–',
+  '&mdash;': '—',
+  '&hellip;': '…',
+  '&copy;': '©',
+  '&reg;': '®',
+  '&trade;': '™',
+  '&laquo;': '«',
+  '&raquo;': '»',
+  '&lsquo;': '‘',
+  '&rsquo;': '’',
+  '&ldquo;': '“',
+  '&rdquo;': '”',
+}
+
+// Decode the HTML entities Wikipedia mixes into table cells. The named map
+// above covers the entities observed in the India corpus and the common
+// punctuation set; numeric (&#160;) and hex (&#xA0;) entities are decoded
+// generically so a new source can throw whatever HTML it likes at us without
+// requiring a code change. No external dependency: `he` / `html-entities`
+// would carry hundreds of obscure entities (&zwnj; etc.) we don't need.
+function decodeHtmlEntities(text: string): string {
+  if (!text) return text
+  let result = text
+  for (const [entity, char] of Object.entries(HTML_ENTITIES)) {
+    if (result.includes(entity)) {
+      result = result.split(entity).join(char)
+    }
+  }
+  result = result.replace(/&#(\d+);/g, (_, code) =>
+    String.fromCodePoint(parseInt(code, 10)),
+  )
+  result = result.replace(/&#x([0-9a-fA-F]+);/g, (_, code) =>
+    String.fromCodePoint(parseInt(code, 16)),
+  )
+  return result
 }
 
 // Word-isolated " or " between two author candidates. Word boundaries
