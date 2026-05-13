@@ -1,4 +1,5 @@
-import { Terminal, DollarSign, AlertTriangle, CheckCircle, Plus, Wrench, Sparkles, ShieldCheck, RefreshCw, ImageIcon } from 'lucide-react'
+import { Terminal, DollarSign, AlertTriangle, CheckCircle, Plus, Wrench, Sparkles, ShieldCheck, RefreshCw, ImageIcon, GitBranch } from 'lucide-react'
+import EnrichRunner from './enrich-runner'
 
 const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-4 bg-white dark:bg-gray-900'
 
@@ -98,17 +99,52 @@ export default function ScriptsPage() {
     <main className="max-w-3xl mx-auto px-4 py-10">
       <div className="mb-8">
         <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-          <a href="/admin" className="hover:text-gray-600 dark:hover:text-gray-300">Admin</a> / Scripts
+          <a href="/admin" className="hover:text-gray-600 dark:hover:text-gray-300">Admin</a> / Enrichment &amp; sources
         </p>
-        <h1 className="text-2xl font-bold">Scripts reference</h1>
+        <h1 className="text-2xl font-bold">Enrichment &amp; sources</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          Run from the project root. All scripts are dry-run by default — add{' '}
+          Steps 1 and 4 of the import pipeline — ingest a new source, then enrich approved books.
+          All commands run from the project root; dry-run by default, add{' '}
           <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--apply</code>{' '}
-          to write to the database.
+          (or <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--write</code> for add-scripts)
+          to commit.
         </p>
       </div>
 
+      {/* Where am I in the pipeline? */}
+      <div className="mb-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40 px-4 py-3">
+        <div className="flex items-center gap-2 mb-2">
+          <GitBranch className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Where this page fits</h2>
+        </div>
+        <ol className="text-xs text-gray-600 dark:text-gray-400 space-y-1 leading-relaxed">
+          <li>
+            <strong className="text-gray-800 dark:text-gray-200">1. Ingest</strong> — write or adapt a{' '}
+            <code className="font-mono text-[11px]">scripts/add-&lt;source&gt;.ts</code> (direct write) or register the
+            source in <code className="font-mono text-[11px]">source-registry.ts</code> (review-queue path).{' '}
+            <a href="#new-source" className="text-brand hover:underline">Onboarding guide ↓</a>
+          </li>
+          <li>
+            <strong className="text-gray-800 dark:text-gray-200">2. Review</strong> — for queue-path sources, items
+            land at <a href="/admin/import-review" className="text-brand hover:underline">/admin/import-review</a>.
+          </li>
+          <li>
+            <strong className="text-gray-800 dark:text-gray-200">3. Approve</strong> — creates bare{' '}
+            <code className="font-mono text-[11px]">books</code> + <code className="font-mono text-[11px]">bans</code>{' '}
+            rows. No covers, descriptions, or reason classifications yet.
+          </li>
+          <li>
+            <strong className="text-gray-800 dark:text-gray-200">4. Enrich</strong> — run{' '}
+            <code className="font-mono text-[11px]">enrich-all.ts</code> to fill the open fields.{' '}
+            <a href="#after-approval" className="text-brand hover:underline">Enrichment guide ↓</a>
+          </li>
+        </ol>
+      </div>
+
       <div className="flex flex-col gap-6">
+
+        {/* Live runner — triggers enrichment from the browser */}
+        <EnrichRunner />
 
         {/* Prerequisites */}
         <div className={cardCls}>
@@ -166,10 +202,18 @@ export default function ScriptsPage() {
         </div>
 
         {/* Workflow A — adding a new source */}
-        <div className={cardCls}>
+        <div id="new-source" className={`${cardCls} scroll-mt-4`}>
           <div className="flex items-center gap-2">
             <Plus className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Adding a new source</h2>
+          </div>
+          <div className="rounded-md border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+            <strong>Two paths exist.</strong> Use <em>add-scripts</em> (below) for trusted Latin-script lists
+            that should go straight into <code className="font-mono text-[11px]">books</code> (PEN, ALA, US state lists).
+            For non-Latin scripts, court rulings, or government sources, register the source in{' '}
+            <code className="font-mono text-[11px]">src/lib/imports/source-registry.ts</code> and use the Wikipedia/
+            <code className="font-mono text-[11px]">run-import-job</code> pipeline so items pass through{' '}
+            <a href="/admin/import-review" className="underline hover:no-underline">/admin/import-review</a> first.
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Workflow for ingesting a new ban list, court ruling, or curated source. Each step is idempotent,
@@ -233,11 +277,16 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
         </div>
 
         {/* Master pipeline reference */}
-        <div className={cardCls}>
+        <div id="after-approval" className={`${cardCls} scroll-mt-4`}>
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Master pipeline — enrich-all.ts</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">After approval — enrich-all.ts</h2>
           </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
+            Run this after approving items in the{' '}
+            <a href="/admin/import-review" className="text-brand hover:underline">review queue</a> (or after a direct-write
+            add-script) to fill covers, descriptions, ban context, and reason classifications on the new books.
+          </p>
           <Script
             name="enrich-all.ts"
             what="Runs ISBN, covers (first-pass + v2 with placeholder rejection), Gutenberg, descriptions (with GPT fallback for what OL/Google Books missed), ban descriptions, censorship context, and ban reason classifications — in that order. Every step is idempotent. This is what to run after an import."

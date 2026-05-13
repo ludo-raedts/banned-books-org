@@ -193,7 +193,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
 
   return (
     <div>
-      <header className="flex flex-wrap items-baseline gap-3 mb-6">
+      <header className="flex flex-wrap items-baseline gap-3 mb-2">
         <h1 className="text-2xl font-bold leading-tight">
           {data.parsed.title || <em className="text-gray-400">(no title)</em>}
         </h1>
@@ -204,6 +204,16 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           {data.status.replace('_', ' ')}
         </span>
       </header>
+
+      {isPending && (
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+          <span className="uppercase tracking-widest text-gray-400 dark:text-gray-500 mr-2">Step 2 of 4</span>
+          The fields below are what two LLMs extracted from the source — not enriched content. Confirm the metadata
+          and approve to commit; covers, descriptions and reason classifications are filled by{' '}
+          <a href="/admin/scripts#after-approval" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>{' '}
+          afterward.
+        </p>
+      )}
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Left: parsed data (read-only) */}
@@ -518,17 +528,27 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           )}
 
           {!isPending && data.approved_book_id && (
-            <p className="text-sm text-emerald-700 dark:text-emerald-400">
-              Approved to{' '}
-              <a
-                href={`/admin/books/${data.approved_book_id}`}
-                className="underline"
-              >
-                book #{data.approved_book_id}
-              </a>
-              {data.reviewed_at && ` on ${formatDate(data.reviewed_at)}`}
-              {data.reviewed_by && ` by ${data.reviewed_by}`}.
-            </p>
+            <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-950/30 px-4 py-3 space-y-2">
+              <p className="text-sm text-emerald-800 dark:text-emerald-300">
+                Approved to{' '}
+                <a
+                  href={`/admin/books/${data.approved_book_id}`}
+                  className="font-medium underline"
+                >
+                  book #{data.approved_book_id}
+                </a>
+                {data.reviewed_at && ` on ${formatDate(data.reviewed_at)}`}
+                {data.reviewed_by && ` by ${data.reviewed_by}`}.
+              </p>
+              <p className="text-xs text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
+                <strong>Next step:</strong> the book has no cover, description, ban context, or reason classification
+                yet. Run{' '}
+                <a href="/admin/scripts#after-approval" className="font-mono underline hover:no-underline">
+                  enrich-all.ts
+                </a>{' '}
+                to fill those fields.
+              </p>
+            </div>
           )}
         </section>
       </div>

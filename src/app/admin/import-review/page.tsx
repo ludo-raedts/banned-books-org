@@ -110,6 +110,9 @@ export default async function ImportReviewPage() {
     <main className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
         <div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
+            Step 2 of 4 · Import pipeline
+          </p>
           <h1 className="text-2xl font-bold">Review queue</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {counts.pending_review.toLocaleString('en')} pending,{' '}
@@ -125,6 +128,19 @@ export default async function ImportReviewPage() {
           ← Admin dashboard
         </a>
       </div>
+
+      {/* Pipeline-context banner — answers "has this been through GPT yet?" */}
+      <div className="mb-6 rounded-lg border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-950/30 px-4 py-3 text-sm text-blue-900 dark:text-blue-100">
+        <p className="font-medium mb-1">These items have been verified by two LLMs, not enriched.</p>
+        <p className="text-xs leading-relaxed text-blue-800/90 dark:text-blue-100/80">
+          Gemini-2.5-pro (Pass A) and GPT-4o (Pass B) ran on each row to check field agreement and gate decisions —
+          the LLM outputs only drive routing. <strong>Approval creates bare <code className="font-mono text-[11px]">books</code> and{' '}
+          <code className="font-mono text-[11px]">bans</code> rows</strong> with the metadata you confirm in the form.
+          Covers, descriptions, ban context, and reason classifications are filled afterward by running{' '}
+          <a href="/admin/scripts#after-approval" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>.
+        </p>
+      </div>
+
       <ImportReviewListClient
         items={items}
         sourceSlugs={sourceSlugs}

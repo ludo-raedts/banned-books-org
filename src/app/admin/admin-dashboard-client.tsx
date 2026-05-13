@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail, ClipboardList } from 'lucide-react'
+import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import AdminTabs from './admin-tabs'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
+import PipelineCard from './pipeline-card'
 
 export type InboxRow = {
   uid: number
@@ -24,6 +25,8 @@ interface Props {
   banCount: number
   countryCount: number
   reviewQueuePending: number
+  approvedLast7Days: number
+  needsEnrichment: number
   dbSizeBytes: number | null
   dbLimitBytes: number
   pageviewsSizeBytes: number | null
@@ -178,6 +181,7 @@ function formatBytes(n: number): string {
 
 export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount, reviewQueuePending,
+  approvedLast7Days, needsEnrichment,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
   inboxRows, inboxFetchedAt,
@@ -235,6 +239,14 @@ export default function AdminDashboardClient({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+        {/* Row 0 — Import pipeline overview (full width) */}
+        <PipelineCard
+          pendingReview={reviewQueuePending}
+          approvedLast7Days={approvedLast7Days}
+          needsEnrichment={needsEnrichment}
+          cardCls={cardCls}
+        />
+
         {/* Row 1 — Books */}
         <a href="/admin/books" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group`}>
           <div className="flex items-center justify-between">
@@ -283,28 +295,6 @@ export default function AdminDashboardClient({
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500">{newsCount} draft{newsCount !== 1 ? 's' : ''} awaiting review</p>
           <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review drafts →</span>
-        </a>
-
-        {/* Row 1 — Review queue */}
-        <a href="/admin/import-review" className={`${cardCls} hover:border-gray-400 dark:hover:border-gray-500 transition-colors group relative`}>
-          {reviewQueuePending > 0 && (
-            <span className="absolute top-4 right-4 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center tabular-nums">
-              {reviewQueuePending}
-            </span>
-          )}
-          <div className="flex items-center justify-between">
-            <ClipboardList className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Review queue</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Approve, reject, or defer bulk-imported ban entries.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500">
-            {reviewQueuePending.toLocaleString('en')} pending review
-          </p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review queue →</span>
         </a>
 
         {/* Row 1 — Inbox */}
@@ -371,7 +361,7 @@ export default function AdminDashboardClient({
               href="/admin/scripts"
               className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
             >
-              → Scripts reference
+              → Enrichment &amp; sources
             </a>
             <a
               href="/admin/sitemap"

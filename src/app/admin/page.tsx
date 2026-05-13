@@ -6,11 +6,16 @@ export const dynamic = 'force-dynamic'
 export default async function AdminPage() {
   const supabase = adminClient()
 
+  // `approvedLast7Days` window — anchors the "Approve" pipeline phase count.
+  const sevenDaysAgoIso = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+
   const [
     { count: bookCount },
     { count: newsCount },
     { count: banCount },
     reviewQueueRes,
+    approvedRecentRes,
+    needsEnrichmentRes,
     { data: countryRows },
     { data: refreshLog },
   ] = await Promise.all([
@@ -18,12 +23,21 @@ export default async function AdminPage() {
     supabase.from('news_items').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('import_review_queue').select('*', { count: 'exact', head: true }).eq('status', 'pending_review'),
+    supabase.from('import_review_queue').select('*', { count: 'exact', head: true })
+      .eq('status', 'approved')
+      .gte('reviewed_at', sevenDaysAgoIso),
+    // Books missing at least one enrichable field — approximates "pending enrichment"
+    // without a dedicated flag column. ISBN deliberately excluded: it's nice-to-have, not editorial.
+    supabase.from('books').select('*', { count: 'exact', head: true })
+      .or('description_book.is.null,cover_url.is.null,description_ban.is.null'),
     supabase.from('bans').select('country_code').range(0, 9999),
     supabase.from('mv_refresh_log').select('key, updated_at'),
   ])
   // `import_review_queue` is new (Sprint A Task 2A); fail soft so the page
   // still renders if the migration hasn't run on a given env.
   const reviewQueuePending = reviewQueueRes.error ? 0 : (reviewQueueRes.count ?? 0)
+  const approvedLast7Days = approvedRecentRes.error ? 0 : (approvedRecentRes.count ?? 0)
+  const needsEnrichment = needsEnrichmentRes.error ? 0 : (needsEnrichmentRes.count ?? 0)
 
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
   const logMap = new Map((refreshLog ?? []).map(r => [r.key, r.updated_at as string]))
@@ -102,6 +116,8 @@ export default async function AdminPage() {
       banCount={banCount ?? 0}
       countryCount={countryCount}
       reviewQueuePending={reviewQueuePending}
+      approvedLast7Days={approvedLast7Days}
+      needsEnrichment={needsEnrichment}
       dbSizeBytes={dbSizeBytes}
       dbLimitBytes={dbLimitBytes}
       pageviewsSizeBytes={pageviewsSizeBytes}
