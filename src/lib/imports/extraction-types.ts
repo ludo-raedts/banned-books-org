@@ -87,6 +87,26 @@ export type AuthorRef = {
   birth_year: number | null
 }
 
+// Audit trail of the two parallel LLM passes that produced the canonical
+// extraction. Carried on ExtractionResult so it persists into
+// `import_jobs.extraction` (jsonb) and survives a crash/resume; also forwarded
+// explicitly via CommitContext so the committer can write each side's raw
+// output into `import_review_queue.pass_{a,b}_{provider,output}`.
+//
+// `output` is null when that pass failed; `error` carries the reason in that
+// case. Provider strings are the resolved model identifiers (e.g.
+// 'gemini-2.5-pro', 'gpt-4o-mini') from MODELS[tier] in llm-extraction.ts.
+export type PassAudit = {
+  provider: string
+  output: Extraction | null
+  error: string | null
+}
+
+export type PassesAudit = {
+  pass_a: PassAudit   // Gemini
+  pass_b: PassAudit   // OpenAI
+}
+
 export type ExtractionResult = {
   agreement_classification: AgreementResult['agreement']
   is_book: boolean
@@ -102,4 +122,5 @@ export type ExtractionResult = {
   country_code: string | null             // from SOURCE_REGISTRY[sourceType].default_country_code
   reasons: string[]                       // reason slugs; always ['other'] for Sprint A
   non_latin_disagreement: boolean         // Sprint-0.5 doctrine flag; gate uses conjunctively
+  passes_audit: PassesAudit               // raw two-pass audit; surfaced in review queue
 }

@@ -40,6 +40,10 @@ function passingExtraction(over: Partial<ExtractionResult> = {}): ExtractionResu
     country_code: 'US',
     reasons: ['other'],
     non_latin_disagreement: false,
+    passes_audit: {
+      pass_a: { provider: 'gemini-2.5-flash', output: null, error: null },
+      pass_b: { provider: 'gpt-4o-mini', output: null, error: null },
+    },
     ...over,
   }
 }

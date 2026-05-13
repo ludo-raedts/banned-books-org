@@ -44,39 +44,64 @@ async function main() {
   console.log(`[setup] url=${url}`)
   console.log(`[setup] source_type=${sourceType} (tier=${sourceConfig.tier})`)
 
-  // Idempotent insert: re-using an existing source_url returns the existing
-  // job id so re-running the script resumes from current_phase.
+  // Always start from a clean slate: source_url is UNIQUE on import_jobs, and
+  // a stale review_queue row from a prior run would silently shadow new
+  // pass_a/pass_b/agreement_class values via the ON CONFLICT upsert. Delete
+  // both before inserting fresh. For crash-resume debugging, invoke
+  // runImportJob() directly with the job id instead of using this script.
   const { data: existing } = await sb
     .from('import_jobs')
-    .select('id, current_phase, status')
+    .select('id, review_row_id')
     .eq('source_url', url)
     .maybeSingle()
-
-  let jobId: number
   if (existing) {
-    jobId = existing.id as number
-    console.log(`[setup] reusing existing job id=${jobId} (status=${existing.status} current_phase=${existing.current_phase ?? 'null'})`)
-  } else {
-    const { data, error } = await sb
-      .from('import_jobs')
-      .insert({
-        source_url: url,
-        source_type: sourceType,
-        tier: sourceConfig.tier,
-      })
-      .select('id')
-      .single()
-    if (error) throw new Error(`failed to create job: ${error.message}`)
-    jobId = data.id as number
-    console.log(`[setup] created job id=${jobId}`)
+    console.log(`[setup] purging stale job id=${existing.id} (review_row_id=${existing.review_row_id ?? 'null'})`)
+    if (existing.review_row_id) {
+      await sb.from('import_review_queue').delete().eq('id', existing.review_row_id)
+    }
+    await sb.from('import_jobs').delete().eq('id', existing.id)
   }
+
+  const { data, error } = await sb
+    .from('import_jobs')
+    .insert({
+      source_url: url,
+      source_type: sourceType,
+      tier: sourceConfig.tier,
+    })
+    .select('id')
+    .single()
+  if (error) throw new Error(`failed to create job: ${error.message}`)
+  const jobId = data.id as number
+  console.log(`[setup] created job id=${jobId}`)
 
   console.log(`\n[run] invoking runImportJob(${jobId})...`)
   try {
     await runImportJob(jobId)
     console.log(`[run] completed without throwing`)
   } catch (err) {
-    console.error(`[run] threw: ${(err as Error).message}`)
+    const msg = (err as Error).message
+    // Manual source has default_country_code=null. The verifier refuses to
+    // run on a null country (see verifier.ts). Inject a country into the
+    // already-persisted extraction and resume from the verified phase so
+    // the rest of the pipeline (gate → committer) can be exercised.
+    if (sourceType === 'manual' && msg.includes('country_code is null')) {
+      const injectedCountry = 'FR'
+      console.log(`[fix] manual source — injecting country_code='${injectedCountry}' into extraction; resuming`)
+      const { data: row } = await sb
+        .from('import_jobs')
+        .select('extraction')
+        .eq('id', jobId)
+        .single()
+      const ext = row?.extraction as Record<string, unknown> | null
+      if (!ext) throw new Error(`expected extraction on job ${jobId} after failed verify`)
+      ext.country_code = injectedCountry
+      await sb.from('import_jobs').update({ extraction: ext }).eq('id', jobId)
+      await runImportJob(jobId)
+      console.log(`[run] resumed and completed`)
+    } else {
+      console.error(`[run] threw: ${msg}`)
+    }
   }
 
   // Final state
@@ -95,7 +120,11 @@ async function main() {
   if (finalJob?.review_row_id) {
     const { data: reviewRow } = await sb
       .from('import_review_queue')
-      .select('id, source_slug, source_url, agreement_class, status, created_at')
+      .select(
+        'id, source_slug, source_url, pass_a_provider, pass_b_provider, ' +
+          'pass_a_output, pass_b_output, agreement_class, agreement_details, ' +
+          'status, created_at',
+      )
       .eq('id', finalJob.review_row_id)
       .single()
     console.log('\n[final] import_review_queue row:')

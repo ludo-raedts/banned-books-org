@@ -194,6 +194,7 @@ export async function runImportJob(jobId: number): Promise<void> {
         sourceUrl: job.source_url,
         sourceConfig,
         extraction,
+        passesAudit: extraction.passes_audit,
         verification,
         archiveResult,
         decision,

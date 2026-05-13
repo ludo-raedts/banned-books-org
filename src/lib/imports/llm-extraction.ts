@@ -109,6 +109,10 @@ export async function extractWithOpenAI(
 export interface BothPassesResult {
   gemini: Extraction | null
   openai: Extraction | null
+  // Resolved model identifiers from MODELS[tier]. Surfaced so downstream
+  // (normalize → committer → import_review_queue.pass_*_provider) can record
+  // *which* model produced each pass instead of a placeholder.
+  providers: { gemini: string; openai: string }
   usage: { gemini: TokenUsage | null; openai: TokenUsage | null }
   errors: { gemini?: string; openai?: string }
 }
@@ -128,6 +132,10 @@ export async function extractBothPasses(
   return {
     gemini: gem.status === 'fulfilled' ? gem.value.extraction : null,
     openai: oai.status === 'fulfilled' ? oai.value.extraction : null,
+    providers: {
+      gemini: MODELS[tier].gemini,
+      openai: MODELS[tier].openai,
+    },
     usage: {
       gemini: gem.status === 'fulfilled' ? gem.value.usage : null,
       openai: oai.status === 'fulfilled' ? oai.value.usage : null,

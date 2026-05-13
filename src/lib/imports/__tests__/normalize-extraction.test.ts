@@ -43,6 +43,7 @@ function bp(over: Partial<BothPassesResult>): BothPassesResult {
   return {
     gemini: null,
     openai: null,
+    providers: { gemini: 'gemini-2.5-flash', openai: 'gpt-4o-mini' },
     usage: { gemini: null, openai: null },
     errors: {},
     ...over,

@@ -29,7 +29,7 @@
 
 import { Client } from 'pg'
 import { slugify } from './slugify'
-import type { ExtractionResult } from './extraction-types'
+import type { ExtractionResult, PassesAudit } from './extraction-types'
 import type { VerificationResult } from './verifier'
 import type { GateDecision } from './gate'
 import type { SourceConfig } from './source-registry'
@@ -50,6 +50,7 @@ export type CommitContext = {
   sourceUrl: string
   sourceConfig: SourceConfig
   extraction: ExtractionResult
+  passesAudit: PassesAudit
   verification: VerificationResult
   archiveResult: ArchiveResult
   decision: GateDecision
@@ -240,6 +241,7 @@ function humanizeSourceType(sourceType: string): string {
 async function commitQueued(ctx: CommitContext): Promise<CommitResult> {
   const {
     extraction,
+    passesAudit,
     verification,
     decision,
     sourceType,
@@ -267,7 +269,9 @@ async function commitQueued(ctx: CommitContext): Promise<CommitResult> {
        values ($1, $2, $3, $4, $5, $6::jsonb, $7, $8::jsonb, $9, $10::jsonb, 'pending_review')
        on conflict (source_slug, source_row_id) do update
          set raw_input = excluded.raw_input,
+             pass_a_provider = excluded.pass_a_provider,
              pass_a_output = excluded.pass_a_output,
+             pass_b_provider = excluded.pass_b_provider,
              pass_b_output = excluded.pass_b_output,
              agreement_class = excluded.agreement_class,
              agreement_details = excluded.agreement_details,
@@ -278,12 +282,20 @@ async function commitQueued(ctx: CommitContext): Promise<CommitResult> {
         sourceUrl,
         sourceUrl,
         rawInput == null ? '{}' : JSON.stringify({ raw: rawInput }),
-        'pipeline',
-        JSON.stringify(extraction),
-        'pipeline',
-        JSON.stringify({ verification, archive: archiveResult }),
+        passesAudit.pass_a.provider,
+        JSON.stringify(passesAudit.pass_a.output),
+        passesAudit.pass_b.provider,
+        JSON.stringify(passesAudit.pass_b.output),
         agreementClass,
-        JSON.stringify({ gate: decision }),
+        JSON.stringify({
+          gate: decision,
+          verification,
+          archive: archiveResult,
+          pass_errors: {
+            pass_a: passesAudit.pass_a.error,
+            pass_b: passesAudit.pass_b.error,
+          },
+        }),
       ],
     )
     const reviewId = queueRes.rows[0].id as number

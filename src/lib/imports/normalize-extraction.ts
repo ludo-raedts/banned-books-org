@@ -19,6 +19,7 @@ import type {
   AuthorRef,
   Extraction,
   ExtractionResult,
+  PassesAudit,
   ScriptType,
 } from './extraction-types'
 import type { SourceConfig } from './source-registry'
@@ -36,6 +37,7 @@ export function normalizeExtraction(
 ): ExtractionResult {
   const canonical = pickCanonical(bothPasses)
   const agreement = compareExtractions(bothPasses.gemini, bothPasses.openai)
+  const passes_audit = buildPassesAudit(bothPasses)
 
   if (!canonical.is_book) {
     return {
@@ -53,6 +55,7 @@ export function normalizeExtraction(
       country_code: sourceConfig.default_country_code,
       reasons: ['other'],
       non_latin_disagreement: false,
+      passes_audit,
     }
   }
 
@@ -75,6 +78,22 @@ export function normalizeExtraction(
     country_code: sourceConfig.default_country_code,
     reasons: ['other'],
     non_latin_disagreement: computeNonLatinDisagreement(script, agreement.agreement),
+    passes_audit,
+  }
+}
+
+function buildPassesAudit(bp: BothPassesResult): PassesAudit {
+  return {
+    pass_a: {
+      provider: bp.providers.gemini,
+      output: bp.gemini,
+      error: bp.errors.gemini ?? null,
+    },
+    pass_b: {
+      provider: bp.providers.openai,
+      output: bp.openai,
+      error: bp.errors.openai ?? null,
+    },
   }
 }
 
