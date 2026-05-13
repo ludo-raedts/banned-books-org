@@ -30,7 +30,9 @@ import type { SourceConfig } from './source-registry'
 
 export type DimensionMatch = {
   status: 'exact' | 'fuzzy' | 'no_match'
-  existing_id: number | null
+  // Numeric for books / authors / reasons (bigint PKs); string for countries
+  // (PK is `code` char(2), no surrogate id column).
+  existing_id: number | string | null
   confidence: number | null
   candidates?: Array<{ id: number; name: string; score: number }>
 }
@@ -109,7 +111,7 @@ export async function verifyExtraction(
       sourceConfig.fuzzy_thresholds.author_name,
     )
     authorMatches.push(match)
-    if (match.existing_id !== null) {
+    if (typeof match.existing_id === 'number') {
       // Track slug for collision detection. We need slugs of the matched rows,
       // not the input slug — fuzzy match could land us on a different slug.
       const matchedSlug = await fetchAuthorSlug(sb, match.existing_id)
@@ -238,15 +240,16 @@ async function fetchAuthorSlug(sb: Sb, id: number): Promise<string | null> {
 }
 
 async function matchCountry(sb: Sb, code: string): Promise<DimensionMatch> {
+  // countries has no surrogate id — primary key is `code` (char(2)).
   const { data, error } = await sb
     .from('countries')
-    .select('id')
+    .select('code')
     .eq('code', code)
     .maybeSingle()
   if (error) {
     throw new Error(`verifier: country lookup failed: ${error.message}`)
   }
-  if (data) return { status: 'exact', existing_id: data.id, confidence: 1 }
+  if (data) return { status: 'exact', existing_id: data.code, confidence: 1 }
   return noMatch()
 }
 

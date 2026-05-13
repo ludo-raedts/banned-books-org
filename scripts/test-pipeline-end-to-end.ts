@@ -2,29 +2,28 @@
 /**
  * End-to-end smoke test for the Sprint A import pipeline.
  *
- * Creates one manual import_jobs row, invokes runImportJob, and prints the
- * final job state plus the matching import_review_queue row (if any).
+ * Creates one import_jobs row, invokes runImportJob, and prints the final
+ * job state plus the matching import_review_queue row (if any).
  *
- * Default URL is a placeholder — replace with a real Legifrance ruling URL
- * about a 1980s French book ban before expecting a useful run. Once the
- * default 404s, the orchestrator marks the job 'failed' at the fetch phase,
- * which is itself useful evidence the error-handling path works.
+ * Pass --url=<url> and --source-type=<type> to drive a real run. Default
+ * source_type is 'manual' so the script works against any URL without
+ * implicitly opting into a high-stakes tier.
  *
  * Usage:
- *   pnpm tsx --env-file=.env.local scripts/test-pipeline-end-to-end.ts
+ *   pnpm tsx --env-file=.env.local scripts/test-pipeline-end-to-end.ts \
+ *     --url=https://fr.wikipedia.org/wiki/Suicide,_mode_d%27emploi
  *   pnpm tsx --env-file=.env.local scripts/test-pipeline-end-to-end.ts \
  *     --url=https://pen.org/some-page --source-type=pen_america
  *
  * Acceptance per Taak 3 spec: one URL goes through every phase and ends in
- * 'committed' OR 'queued' without error. (Legifrance is high-stakes -> gate
- * always blocks auto_approve -> outcome will be 'queued', not 'committed'.)
+ * 'committed' OR 'queued' without error.
  */
 import { adminClient } from '../src/lib/supabase'
 import { runImportJob } from '../src/lib/imports/run-import-job'
 import { getSourceConfig } from '../src/lib/imports/source-registry'
 
 const DEFAULT_URL = 'https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000123456'
-const DEFAULT_SOURCE_TYPE = 'legifrance'
+const DEFAULT_SOURCE_TYPE = 'manual'
 
 function parseArgs(): { url: string; sourceType: string } {
   const argv = process.argv.slice(2)
