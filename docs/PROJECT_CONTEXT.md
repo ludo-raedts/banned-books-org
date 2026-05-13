@@ -9,7 +9,7 @@
 > Live site: <https://www.banned-books.org>
 > Owner: Ludo Raedts (Groningen, NL) — solo project, started April 2026.
 >
-> **Last updated: 2026-05-12** — after Sprint A taken 1, 1.5, 2A, 2B + IndexNow delta-feature.
+> **Last updated: 2026-05-13** — after Sprint A Taak 3 (pipeline plumbing operationeel).
 
 ---
 
@@ -132,7 +132,8 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 
 | Table | Purpose |
 |---|---|
-| `import_review_queue` | Schema gelegd in Taak 2A: 18 kolommen, 3 partial indexes, RLS enabled zonder public policies. Bijbehorende enum `import_review_status` met waarden `pending_review` / `approved` / `rejected` / `deferred`. Tabel is leeg; vulling volgt in Taak 3 (pipeline plumbing). |
+| `import_jobs` | Lifecycle-tracking voor één URL door de pipeline. 19 kolommen: `source_url` (UNIQUE), `source_type`, `tier`, `status` (enum `import_job_status`: `pending` / `fetching` / `extracting` / `verifying` / `gated` / `queued` / `committed` / `failed`), `current_phase`, plus per-fase payloads `raw_html`, `archive_url`, `archive_service`, `extraction` (jsonb), `verification` (jsonb), `gate_decision` (jsonb), terminal velden `committed_at`, `error`, `attempts`, en `review_row_id` FK naar `import_review_queue` met `on delete set null`. Twee indexes (`idx_import_jobs_status`, partial `idx_import_jobs_batch`). RLS enabled, geen public policies. Migratie `20260512173457`. |
+| `import_review_queue` | Schema gelegd in Taak 2A: 18 kolommen, 3 partial indexes, RLS enabled zonder public policies. Bijbehorende enum `import_review_status` met waarden `pending_review` / `approved` / `rejected` / `deferred`. Wordt gevuld door de pipeline (Taak 3) wanneer de gate auto-approve weigert: `pass_a_output` en `pass_b_output` bevatten de twee LLM-extracties apart, `agreement_details` bevat gate-decision + verification + archive-resultaat. |
 
 ### Operational tables
 
@@ -155,6 +156,7 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 - Composite `(entity_type, entity_id)` and `(entity_type, viewed_at)` on `pageviews` for the rising/trending widgets.
 - Partial indexes for `cover_url IS NULL`, `description_book IS NULL` (admin enrichment queues).
 - **Known issue**: `idx_pageviews_entity` and `idx_pageviews_entity_type_id` are functionally identical duplicates; one should be dropped in Sprint A. See findings #8.
+- **Fuzzy-match RPCs voor de import-pipeline** (migratie `20260512175331`): `find_book_candidates_by_title(q text, threshold real)` doet `pg_trgm`-similarity tegen `books.title` en returnt de top-10 kandidaten. `find_author_candidates_by_name(q text, threshold real)` doet hetzelfde voor `authors.display_name`. Beide worden aangeroepen door `src/lib/imports/verifier.ts` als de exact slug-lookup mist.
 
 ### RLS posture
 
@@ -241,10 +243,22 @@ src/
 │   ├── banned-books-week.ts          # DB-backed runtime config (60s in-memory cache)
 │   └── news.ts                       # DB-backed news pipeline config
 ├── lib/                              # Pure logic — see §5
-│   ├── imports/                      # Two-pass LLM extraction pipeline (Sprint 0.5)
+│   ├── imports/                      # Two-pass LLM extraction + pipeline orchestration
 │   │   ├── llm-extraction.ts         # extractBothPasses + compareExtractions
 │   │   ├── extraction-prompt.ts      # Shared system prompt for Gemini + OpenAI
-│   │   └── extraction-types.ts       # Zod schemas
+│   │   ├── extraction-types.ts       # Zod schemas + ExtractionResult / PassesAudit
+│   │   ├── slugify.ts                # Canonical slug helper (consolidated in Taak 1)
+│   │   ├── source-registry.ts        # Per-source config: tier, default_country_code,
+│   │   │                             # archive_strategy, default_scope, default_action_type
+│   │   ├── fetcher.ts                # HTTP GET with redirect-chain logging
+│   │   ├── archiver.ts               # Wayback + archive.today fallback chain
+│   │   ├── normalize-extraction.ts   # Consolidates two-pass output → ExtractionResult,
+│   │   │                             # preserves passes_audit for the review queue
+│   │   ├── verifier.ts               # Fuzzy matching against books / authors / countries /
+│   │   │                             # reasons via RPCs + exact slug-lookups
+│   │   ├── gate.ts                   # Auto-approve conjunction (pure function)
+│   │   ├── committer.ts              # DB transaction for direct-write or queued branch
+│   │   └── run-import-job.ts         # Orchestrator: seven phases with retry-safe phase gates
 │   └── migration-parser.ts           # Parser for both pg_dump and hand-written migration SQL
 └── middleware.ts                     # Gate /admin/* on `admin_session` cookie
 
@@ -259,6 +273,8 @@ scripts/                              # ~180+ maintenance scripts (TSX). See /ad
 ├── diagnose-schema-drift.ts          # Seven-dimensions production vs migrations comparator
 ├── seed-local-from-prod.ts           # Seedt lokale Supabase Docker-container met productie-data via docker exec. Vereist voor data-touching migraties; zie §13 doctrines.
 ├── test-llm-extraction.ts            # CLI test for the two-pass extraction module
+├── test-pipeline-end-to-end.ts       # Eindvalidatie pipeline: één URL door alle fases (fetched → committed/queued); purgt eerst stale state per source_url
+├── test-pipeline-fetcher.ts          # Smoke-test voor de fetcher-module alleen (geen LLM-calls)
 ├── add-books-french-validation.ts    # Step-0 Model 3 validation script
 └── _check_*.ts                       # Convention: exploratory verification scripts
 
@@ -571,7 +587,7 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 
 ---
 
-## 12. Achievements to date (snapshot 2026-05-12)
+## 12. Achievements to date (snapshot 2026-05-13)
 
 - **A working catalogue** with thousands of books and bans across many countries (live counts on `/about` and the homepage).
 - **Database baseline established (Sprint 0.5)** — schema-history consolidated into a single baseline migration generated from production via `supabase db dump`; legacy 001-023 migrations archived; Supabase CLI integrated as the canonical migration tooling; `supabase_migrations.schema_migrations` registered in production for the first time.
@@ -594,6 +610,8 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **Taak 2B** — data backfill: 2 + 252 `ban_sources` rijen, 4099 en-books `title_native`, 49 fr-books `title_native`. 334 rijen non-en/non-fr verschoven naar Taak 4. Commits `9a52282..eb711cc` (3 commits).
 - **IndexNow delta-feature** — `indexnow_submissions` tracking-tabel, `/api/admin/indexnow-delta` endpoint, admin UI "Submit new pages"-knop, `fetchAllSlugs` paginated-read bugfix.
 - **Migratie-tooling** — `migration-parser.ts` ondersteunt nu multi-column `ALTER TABLE`; `scripts/seed-local-from-prod.ts` gebouwd als doctrine-tool voor data-migratie workflow.
+
+**Sprint A Taak 3 afgerond (2026-05-13)** — pipeline plumbing operationeel. Negen modules onder `src/lib/imports/` implementeren een zeven-fasen-pipeline (fetched → archived → extracted → verified → gated → committed) die LLM-extractie van Gemini 2.5 Pro en GPT-4o parallel draait en consolideert tot één `ExtractionResult` met audit-trail van beide passes intact. Twee migraties toegevoegd: de `import_jobs` tabel voor lifecycle-tracking, plus twee fuzzy-match RPCs (`find_book_candidates_by_title`, `find_author_candidates_by_name`). Eindtest geslaagd met de Wikipedia-pagina over *Suicide, mode d'emploi* als manual-source bron: verifier matched bestaande auteurs (Claude Guillon, Yves Le Bonniec) exact, country zacht `no_match` (manual-source heeft geen `default_country_code`), gate weigerde auto-approve wegens conflict + high-stakes tier, review-queue rij correct gevuld met beide model-outputs apart bewaard. Commits `9843075..74e8c66`.
 
 ---
 
@@ -619,6 +637,8 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **Pre-flight surveys draaien tegen productie, niet tegen spec.** Als Claude Code andere getallen vindt dan de spec aangeeft, corrigeert Claude Code de spec — niet andersom.
 - **Drift-diagnostic acceptance blijft "zero drift".** Als tooling drift rapporteert die geen echte drift is, fix je de tooling, niet het criterium.
 - **301/308 redirects via `next.config.ts redirects()`**, niet via middleware.
+- **Manual-source `country_code` = zacht falen.** De verifier returnt `no_match` in plaats van een exception wanneer een bron geen `default_country_code` heeft. De editor lost dit op in de review queue; geen pipeline-blocker.
+- **Pipeline audit-trail blijft intact.** De twee LLM-outputs worden apart bewaard in `import_review_queue` (`pass_a_output`, `pass_b_output`, `pass_a_provider`, `pass_b_provider`). Verification + archive + gate-decision verhuizen naar `agreement_details`. De geconsolideerde `ExtractionResult` draagt een `passes_audit`-veld zodat de audit-trail ook persisteert op `import_jobs.extraction`.
 
 ---
 
@@ -639,8 +659,7 @@ Tracked in `docs/sprint-a/step-0-findings.md`:
 
 ## 15. Next sprint — Sprint A (planning)
 
-**Sprint A status na 2026-05-12.** Taken 1, 1.5, 2A, 2B en de IndexNow delta-feature zijn afgerond. Resterend:
+**Sprint A status na 2026-05-13.** Taken 1, 1.5, 2A, 2B, 3 en de IndexNow delta-feature zijn afgerond. Resterend:
 
-- **Taak 3 — Pipeline plumbing in `src/lib/imports/`.** Start met paper-design: abstractielagen (extractor → two-pass LLM → tiebreaker → review queue), auto-approve-pad voor full-agreement Latin-script, source-registry shape. Daarna implementatie via Claude Code.
-- **Taak 4 — Language admin-filter + backfill.** 334 NULL `title_native` rijen verwerken; 67 fout-geklasseerde `original_language` corrigeren; admin-UI om bulk-corrigeren mogelijk te maken.
-- **Taak 5 — Eerste echte source: Frankrijk.** Legifrance + Joubert-bibliografie. Vereist eerst de Wayback/archive-fallback chain (finding #1 in hernummerde §14) en redirect-chain-detectie (finding #3).
+- **Taak 4 — Language admin-filter + backfill.** 334 NULL `title_native` rijen verwerken; 67 fout-geklasseerde `original_language` corrigeren.
+- **Taak 5 — Eerste echte source: Frankrijk.** Legifrance + Joubert-bibliografie. Legifrance is Cloudflare-geblokt voor directe fetches (403 op de pipeline-fetcher tijdens de Taak 3 eindtest); bron-specifieke fetch-strategie nodig — browser-headers, headless browser, of proxy. Plus de eerder gedocumenteerde Wayback-fallback chain (finding #1) en redirect-chain-detectie (finding #3).
