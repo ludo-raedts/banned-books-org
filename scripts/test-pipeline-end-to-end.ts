@@ -44,21 +44,20 @@ async function main() {
   console.log(`[setup] url=${url}`)
   console.log(`[setup] source_type=${sourceType} (tier=${sourceConfig.tier})`)
 
-  // Always start from a clean slate: source_url is UNIQUE on import_jobs, and
-  // a stale review_queue row from a prior run would silently shadow new
-  // pass_a/pass_b/agreement_class values via the ON CONFLICT upsert. Delete
-  // both before inserting fresh. For crash-resume debugging, invoke
-  // runImportJob() directly with the job id instead of using this script.
+  // Always start from a clean slate. Three things to purge:
+  //   1. import_jobs row for this source_url (UNIQUE constraint blocks insert).
+  //   2. its referenced import_review_queue row (FK is on delete set null,
+  //      but we want it gone so we read fresh data at the end).
+  //   3. any orphan import_review_queue rows for this source_url (older runs
+  //      may have left rows whose originating jobs are already deleted).
+  await sb.from('import_review_queue').delete().eq('source_url', url)
   const { data: existing } = await sb
     .from('import_jobs')
-    .select('id, review_row_id')
+    .select('id')
     .eq('source_url', url)
     .maybeSingle()
   if (existing) {
-    console.log(`[setup] purging stale job id=${existing.id} (review_row_id=${existing.review_row_id ?? 'null'})`)
-    if (existing.review_row_id) {
-      await sb.from('import_review_queue').delete().eq('id', existing.review_row_id)
-    }
+    console.log(`[setup] purging stale job id=${existing.id}`)
     await sb.from('import_jobs').delete().eq('id', existing.id)
   }
 
@@ -80,28 +79,7 @@ async function main() {
     await runImportJob(jobId)
     console.log(`[run] completed without throwing`)
   } catch (err) {
-    const msg = (err as Error).message
-    // Manual source has default_country_code=null. The verifier refuses to
-    // run on a null country (see verifier.ts). Inject a country into the
-    // already-persisted extraction and resume from the verified phase so
-    // the rest of the pipeline (gate → committer) can be exercised.
-    if (sourceType === 'manual' && msg.includes('country_code is null')) {
-      const injectedCountry = 'FR'
-      console.log(`[fix] manual source — injecting country_code='${injectedCountry}' into extraction; resuming`)
-      const { data: row } = await sb
-        .from('import_jobs')
-        .select('extraction')
-        .eq('id', jobId)
-        .single()
-      const ext = row?.extraction as Record<string, unknown> | null
-      if (!ext) throw new Error(`expected extraction on job ${jobId} after failed verify`)
-      ext.country_code = injectedCountry
-      await sb.from('import_jobs').update({ extraction: ext }).eq('id', jobId)
-      await runImportJob(jobId)
-      console.log(`[run] resumed and completed`)
-    } else {
-      console.error(`[run] threw: ${msg}`)
-    }
+    console.error(`[run] threw: ${(err as Error).message}`)
   }
 
   // Final state

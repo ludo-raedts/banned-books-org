@@ -13,15 +13,17 @@
 // Fuzzy is per-row via RPC because the candidate space is small after slug
 // pre-filter (only when exact misses).
 //
-// Hard errors (the orchestrator catches and marks the job as 'failed'):
-//   - country_code is null
-//       Only the 'manual' source has a null default_country_code; if a manual
-//       job reaches the verifier without an explicit country, the caller must
-//       inject one before running. We refuse to silently pass null through.
-//   - 4 known-duplicate author pairs (Saenz, García Márquez, Saramago,
-//       Aguilar Zeleny) — the verifier picks the lower id deterministically
-//       and flags `duplicate_author_collision: true` so the audit trail
-//       captures it.
+// country_code semantics:
+//   Only the 'manual' source has a null default_country_code. The verifier
+//   reports country as status='no_match' in that case (no exception). The
+//   high-stakes tier + no_match country will reliably push the job into the
+//   review queue, which is the correct destination — an editor supplies the
+//   country at review time. The committer's direct-write branch still refuses
+//   to write a ban with null country_code (it never gets auto-approved here).
+//
+// 4 known-duplicate author pairs (Saenz, García Márquez, Saramago, Aguilar
+// Zeleny) — the verifier picks the lower id deterministically and flags
+// `duplicate_author_collision: true` so the audit trail captures it.
 
 import { adminClient } from '../supabase'
 import { slugify } from './slugify'
@@ -82,12 +84,6 @@ export async function verifyExtraction(
     return emptyVerificationFor(extraction, redirectCount)
   }
 
-  if (extraction.country_code === null) {
-    throw new Error(
-      'verifier: country_code is null. Manual sources must inject an explicit country_code before verification.',
-    )
-  }
-
   const sb = adminClient()
 
   // ----- Book dimension -----------------------------------------------------
@@ -121,7 +117,12 @@ export async function verifyExtraction(
   const duplicate_author_collision = detectDuplicateCollision(matchedAuthorSlugs)
 
   // ----- Country dimension --------------------------------------------------
-  const country = await matchCountry(sb, extraction.country_code)
+  // null country_code is a soft no_match — manual sources will queue for
+  // editor input rather than hard-fail here.
+  const country =
+    extraction.country_code === null
+      ? noMatch()
+      : await matchCountry(sb, extraction.country_code)
 
   // ----- Reason dimensions --------------------------------------------------
   const reasons: DimensionMatch[] = []
