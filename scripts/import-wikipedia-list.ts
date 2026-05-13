@@ -155,9 +155,15 @@ async function main(): Promise<void> {
     reason_mapping: c.reason.mapping,
     reason_flags: c.reason.extra_flags,
     dedup: c.dedup,
-    decision_mode: c.decision.mode,
+    // Reflect the apply-time outcome rather than decide()'s internal mode:
+    // duplicates are skipped by commitDecision and never reach the review
+    // queue, even though decide() returns mode='review' for them.
+    decision_mode:
+      c.dedup.kind === 'duplicate' ? 'skip_duplicate' : c.decision.mode,
     review_quality_flags:
-      c.decision.mode === 'review' ? c.decision.quality_flags : null,
+      c.decision.mode === 'review' && c.dedup.kind !== 'duplicate'
+        ? c.decision.quality_flags
+        : null,
   }))
   await fs.writeFile(
     dumpPath,

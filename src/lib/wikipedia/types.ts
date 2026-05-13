@@ -17,6 +17,7 @@ export type QualityFlag =
   | 'defamation_suit_civil'        // notes describe a civil defamation suit, not a state-imposed ban
   | 'civil_action_private_party'   // private party obtained an injunction / sued for damages / filed a lawsuit
   | 'civil_court_stay_order'       // civil court issued a stay-order pending verdict (procedural, not final)
+  | 'author_disjunction'           // author cell had "X or Y" — ambiguous attribution, kept first only
 
 export type ParsedRow = {
   year: number | null
@@ -40,10 +41,25 @@ export type ReasonMapping = {
   confidence: 'high' | 'low'
 }
 
+export type DedupMatchType =
+  | 'slug_collision'        // books.slug equality (fast first-pass)
+  | 'fuzzy_title_author'    // fuzzy title + author-intersection passed the duplicate cutoff
+  | 'fuzzy_possible'        // fuzzy match below the duplicate cutoff — review needed
+
 export type DedupResult =
   | { kind: 'none' }
-  | { kind: 'duplicate'; book_id: number; similarity: number }
-  | { kind: 'possible_duplicate'; book_id: number; similarity: number }
+  | {
+      kind: 'duplicate'
+      book_id: number
+      similarity: number
+      match_type: Extract<DedupMatchType, 'slug_collision' | 'fuzzy_title_author'>
+    }
+  | {
+      kind: 'possible_duplicate'
+      book_id: number
+      similarity: number
+      match_type: Extract<DedupMatchType, 'fuzzy_possible'>
+    }
 
 export type ImportDecision =
   | { mode: 'auto_approve'; row: ParsedRow; reason: ReasonMapping }

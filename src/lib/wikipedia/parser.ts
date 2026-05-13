@@ -148,7 +148,7 @@ function parseRowCells(
   }
   const { title, title_native, title_english_meaningful, needs_model_3_review } =
     splitModel3Title(rawTitle)
-  const authors = parseAuthors(authorCell)
+  const { authors, parser_flags: authorFlags } = parseAuthors(authorCell)
   const year = parseYear(dateCell)
   const notesStripped = stripWikitext(notesCell)
   const stateStripped = stateCell !== null ? stripWikitext(stateCell) : null
@@ -162,6 +162,7 @@ function parseRowCells(
     quality_flags.push('citation_needed')
   }
   if (needs_model_3_review) quality_flags.push('model_3_review_needed')
+  for (const f of authorFlags) quality_flags.push(f)
 
   return {
     year,
@@ -257,21 +258,46 @@ export function stripWikitext(input: string): string {
   return s
 }
 
-function parseAuthors(cell: string): string[] {
+// Word-isolated " or " between two author candidates. Word boundaries
+// protect against false positives in author names that happen to contain
+// the letters "or" (e.g. "Theodor Adorno", "Doctor Strange") — those have
+// no standalone "or" token surrounded by whitespace.
+const AUTHOR_DISJUNCTION = /\s+\bor\b\s+/i
+
+export type ParseAuthorsResult = {
+  authors: string[]
+  parser_flags: QualityFlag[]
+}
+
+function parseAuthors(cell: string): ParseAuthorsResult {
   const stripped = stripWikitext(cell)
-  if (!stripped) return []
+  if (!stripped) return { authors: [], parser_flags: [] }
   // Reject non-author placeholders that appear in the India page.
   if (/^(various|religious text|followers of\b|anonymous)\b/i.test(stripped)) {
-    return []
+    return { authors: [], parser_flags: [] }
   }
-  // Split on commas and " and ". Intentionally do NOT split on " or " — that
-  // is sometimes used between alternative attributions of one author (e.g.
-  // "Pandit M. A. Chamupati or Krishan Prashaad Prataab") which we cannot
-  // disambiguate without external lookup.
-  return stripped
+
+  // "X or Y" disjunction: alternative attribution that we cannot disambiguate
+  // without external lookup. Keep only the first candidate and flag the row
+  // for editorial review. This was the failure mode that produced
+  // "Pandit M. A. Chamupati or Krishan Prashaad Prataab" as a single
+  // author string in the first India --apply run.
+  if (AUTHOR_DISJUNCTION.test(stripped)) {
+    const first = stripped.split(AUTHOR_DISJUNCTION)[0]
+    const cleaned = stripAuthorPrefixes(first.trim())
+    return {
+      authors: cleaned.length > 0 ? [cleaned] : [],
+      parser_flags: ['author_disjunction'],
+    }
+  }
+
+  // Standard path: split on commas and " and ". Intentionally do NOT split
+  // on " or " — that was already handled above.
+  const authors = stripped
     .split(/\s*,\s*|\s+and\s+/i)
     .map(s => stripAuthorPrefixes(s.trim()))
     .filter(s => s.length > 0)
+  return { authors, parser_flags: [] }
 }
 
 // Strips editorial-role prefixes ("Edited by", "Editor:", "Ed.", "Eds.") so
@@ -281,12 +307,16 @@ function parseAuthors(cell: string): string[] {
 // must be clean.
 const EDITOR_PREFIX = /^(edited by|editor:|edited:\s*|eds\.|ed\.)\s*/i
 
-// Strips honorific / academic prefixes ("Dr.", "Prof.", "Mr.", "Mrs.", "Ms.",
-// "Sir", "Lord"). The display_name convention in the existing `authors`
-// table is title-less; leaving "Dr." in causes dedup misses when the same
-// author appears elsewhere without the honorific. Trailing period is
-// optional ("Dr" without dot is also stripped).
+// Strips honorific / academic / religious prefixes so that the display_name
+// in the `authors` table matches the existing title-less convention. Leaving
+// a prefix in causes dedup misses when the same author appears elsewhere
+// without the honorific — the trigger case for commit 8 was
+// "Pandit M. A. Chamupati" (Wikipedia) vs "M.A. Chamupati" (DB) on the
+// Rangila Rasul row. Trailing period is optional on the academic ones
+// (Dr / Dr.). Religious / Indic honorifics added in commit 8 mostly need a
+// bare-word match (Pandit, Sri, Shri, Swami, Maulana, Maulvi, Imam).
 const ACADEMIC_PREFIXES: ReadonlyArray<RegExp> = [
+  // commit 7 — academic / Western honorifics
   /^Dr\.?\s+/i,
   /^Prof\.?\s+/i,
   /^Mr\.?\s+/i,
@@ -294,6 +324,15 @@ const ACADEMIC_PREFIXES: ReadonlyArray<RegExp> = [
   /^Ms\.?\s+/i,
   /^Sir\s+/i,
   /^Lord\s+/i,
+  // commit 8 — religious / Indic / Islamic honorifics
+  /^Pandit\s+/i,
+  /^Pt\.?\s+/i,
+  /^Sri\s+/i,
+  /^Shri\s+/i,
+  /^Swami\s+/i,
+  /^Maulana\s+/i,
+  /^Maulvi\s+/i,
+  /^Imam\s+/i,
 ]
 
 function stripAuthorPrefixes(name: string): string {

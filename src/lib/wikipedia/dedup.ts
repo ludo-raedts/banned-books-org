@@ -1,20 +1,28 @@
 // Pre-flight dedup against the `books` table.
 //
-// Reuses the Taak 3 fuzzy-match RPCs so the trigram thresholds and ranking
-// stay consistent with the LLM-pipeline path:
-//   - find_book_candidates_by_title(q, threshold) → top-10 by similarity
-//   - find_author_candidates_by_name(q, threshold) → top-10 by similarity
+// Two-stage check:
+//   1. Slug-collision first pass — fast indexed equality on books.slug
+//      using the same `slugify` helper the importer uses for INSERT. This
+//      catches the most common duplicate shape (identical canonical title)
+//      without paying for two fuzzy RPCs. Added in commit 8 after Rangila
+//      Rasul collided at apply-time despite fuzzy returning no candidate
+//      (author-name variation broke the intersection).
+//   2. Fuzzy similarity second pass — reuses the Taak 3 RPCs so trigram
+//      thresholds and ranking stay consistent with the LLM-pipeline path:
+//        - find_book_candidates_by_title(q, threshold) → top-10 by similarity
+//        - find_author_candidates_by_name(q, threshold) → top-10 by similarity
+//      A book is considered the same when BOTH the title fuzzy-matches AND
+//      any of the parsed-row authors fuzzy-matches an author already linked
+//      to that book. Author co-attribution prevents false positives on
+//      common-title collisions (e.g. multiple distinct books titled "Shame").
 //
-// A book is considered the same when BOTH the title fuzzy-matches AND any of
-// the parsed-row authors fuzzy-matches an author already linked to that book.
-// Author co-attribution prevents false positives on common-title collisions
-// (e.g. multiple distinct books titled "Shame").
-//
-// Decision boundaries (per spec):
-//   similarity > 0.85  → duplicate (skip the row entirely)
-//   0.5 < sim ≤ 0.85   → possible_duplicate (route to review; book_id logged)
-//   no overlap          → none (new row)
+// Decision boundaries:
+//   slug equality      → duplicate (match_type: 'slug_collision', sim=1.0)
+//   fuzzy sim > 0.85   → duplicate (match_type: 'fuzzy_title_author')
+//   0.5 < sim ≤ 0.85   → possible_duplicate (match_type: 'fuzzy_possible')
+//   no overlap         → none
 
+import { slugify } from '../imports/slugify'
 import type { adminClient } from '../supabase'
 import type { DedupResult, ParsedRow } from './types'
 
@@ -36,9 +44,36 @@ export async function dedupAgainstBooks(
   sb: Sb,
   row: ParsedRow,
 ): Promise<DedupResult> {
-  // Without a title or any authors, we cannot stage an author-intersection
-  // safely. Caller should already have routed these rows to review on
-  // quality flags; returning 'none' here is the safe choice.
+  // 1. Slug-collision first pass. The importer slugifies the title before
+  //    INSERT; running the same helper here catches exact-canonical-title
+  //    duplicates that fuzzy may miss when author names differ between the
+  //    Wikipedia row and the prod row (commit-8 trigger case: Rangila Rasul).
+  if (row.title) {
+    const candidateSlug = slugify(row.title)
+    if (candidateSlug) {
+      const { data: slugMatch, error: slugErr } = await sb
+        .from('books')
+        .select('id')
+        .eq('slug', candidateSlug)
+        .maybeSingle()
+      if (slugErr) {
+        throw new Error(`dedup: slug lookup failed: ${slugErr.message}`)
+      }
+      if (slugMatch) {
+        return {
+          kind: 'duplicate',
+          book_id: slugMatch.id as number,
+          similarity: 1,
+          match_type: 'slug_collision',
+        }
+      }
+    }
+  }
+
+  // 2. Fuzzy second pass. Without a title or any authors, we cannot stage
+  //    an author-intersection safely. Caller should already have routed
+  //    these rows to review on quality flags; returning 'none' here is the
+  //    safe choice.
   if (!row.title || row.authors.length === 0) {
     return { kind: 'none' }
   }
@@ -87,7 +122,17 @@ export async function dedupAgainstBooks(
 
   const best = titleAndAuthor[0] // RPC returns rows sorted by score desc
   if (best.score > DUPLICATE_CUTOFF) {
-    return { kind: 'duplicate', book_id: best.id, similarity: best.score }
+    return {
+      kind: 'duplicate',
+      book_id: best.id,
+      similarity: best.score,
+      match_type: 'fuzzy_title_author',
+    }
   }
-  return { kind: 'possible_duplicate', book_id: best.id, similarity: best.score }
+  return {
+    kind: 'possible_duplicate',
+    book_id: best.id,
+    similarity: best.score,
+    match_type: 'fuzzy_possible',
+  }
 }
