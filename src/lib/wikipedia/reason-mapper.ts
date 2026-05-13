@@ -104,7 +104,14 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
   [/\b(graphic violence|gore|grisly|gratuitous violence)\b/i, 'violence'],
 
   // ── Racial / caste / Indigenous ─────────────────────────────────────────
-  [/\b(racial|racism|caste|dalit|adivasi|santhal|tribal portrayal)\b/i, 'racial'],
+  // Caste is context-gated: bare "caste" appears in descriptive notes about
+  // book content (e.g. "the book is about Hinduism, caste and phallicism")
+  // without indicating a caste-related ban reason. Require an explicit
+  // discrimination/hatred/violence qualifier.
+  [
+    /\b(racial|racism|caste discrimination|caste hatred|caste violence|caste-based discrimination|anti-caste|dalit|adivasi|santhal|tribal portrayal)\b/i,
+    'racial',
+  ],
 
   // ── Moral / family-values ───────────────────────────────────────────────
   [/\b(immoral(?:ity)?|good taste|family value|moral decay)\b/i, 'moral'],
@@ -118,12 +125,31 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
 const IMPORT_BAN_HINT =
   /\b(import(?:ed)? (?:into|in)|cannot be brought|cannot be imported|prohibit.*import|customs)\b/i
 
+// Civil-defamation patterns. Defamation suits/cases by private parties (or
+// individual politicians acting privately) are civil actions, not state-
+// imposed bans on political grounds. Even when a court issues a temporary
+// stay, editorial review is required to decide whether the row meets the
+// project's inclusion criteria. Checked BEFORE the main pattern loop so
+// these never get auto-mapped to 'political' via the "defamato" stem.
+const DEFAMATION_SUIT_PATTERNS: ReadonlyArray<RegExp> = [
+  /\bdefamation\s+suit/i,
+  /\bdefamation\s+case/i,
+  /\bdefamatory/i,
+  /\blibel\s+suit/i,
+]
+
 export type ReasonMapResult = {
   mapping: ReasonMapping
   extra_flags: QualityFlag[]
 }
 
 export function mapReason(notes: string): ReasonMapResult {
+  if (DEFAMATION_SUIT_PATTERNS.some(p => p.test(notes))) {
+    return {
+      mapping: { slug: 'other', confidence: 'low' },
+      extra_flags: ['defamation_suit_civil'],
+    }
+  }
   for (const [re, slug] of PATTERNS) {
     if (re.test(notes)) {
       return { mapping: { slug, confidence: 'high' }, extra_flags: [] }

@@ -13,10 +13,19 @@ export type QualityFlag =
   | 'unmapped_reason'              // notes did not match any reason pattern
   | 'import_ban_no_explicit_reason'// notes only describe an import-ban mechanism, no underlying reason
   | 'possible_duplicate'           // dedup found a 0.5 < sim ≤ 0.85 match
+  | 'model_3_review_needed'        // title contained native-script or meaning annotation; editor decides script + language
+  | 'defamation_suit_civil'        // notes describe a civil defamation suit, not a state-imposed ban
 
 export type ParsedRow = {
   year: number | null
   title: string                    // canonical book title, wikitext-stripped
+  // Model 3 splits captured by the parser when present. The parser only
+  // extracts the text — it never assigns title_native_script or
+  // original_language; those are editor decisions in review. Auto-approve
+  // is blocked whenever either of these is set, via the
+  // 'model_3_review_needed' quality flag.
+  title_native?: string | null
+  title_english_meaningful?: string | null
   authors: string[]                // 0+ display names, wikitext-stripped
   state: string | null             // only set for sections with has_state_column
   notes_raw: string                // wikitext-stripped notes text (used by reason-mapper)

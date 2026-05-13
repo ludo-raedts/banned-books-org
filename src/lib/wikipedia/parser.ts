@@ -141,11 +141,13 @@ function parseRowCells(
     notesCell = cells.slice(3).join(' ')
   }
 
-  const title = stripWikitext(workCell)
-  if (!title) {
+  const rawTitle = stripWikitext(workCell)
+  if (!rawTitle) {
     // No title → skip silently (per spec). Caller logs the count of skipped.
     return null
   }
+  const { title, title_native, title_english_meaningful, needs_model_3_review } =
+    splitModel3Title(rawTitle)
   const authors = parseAuthors(authorCell)
   const year = parseYear(dateCell)
   const notesStripped = stripWikitext(notesCell)
@@ -159,15 +161,67 @@ function parseRowCells(
   if (/\{\{\s*(cn|citation needed)\b|\[citation needed\]/i.test(notesCell)) {
     quality_flags.push('citation_needed')
   }
+  if (needs_model_3_review) quality_flags.push('model_3_review_needed')
 
   return {
     year,
     title,
+    title_native,
+    title_english_meaningful,
     authors,
     state: stateStripped && stateStripped.length > 0 ? stateStripped : null,
     notes_raw: notesStripped,
     source_anchor: anchor,
     quality_flags,
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Model 3 title splitter
+// ----------------------------------------------------------------------------
+//
+// Some Wikipedia entries pack multiple title forms into one cell, e.g.:
+//   "Meendezhum Pandiyar Varalaru (மீண்டெழும் பாண்டியர் வரலாறு) (meaning: Resurgence of Pandiyan History)"
+//
+// The parser splits these into `title` / `title_native` / `title_english_meaningful`
+// and flags the row for review. It deliberately does NOT assign
+// title_native_script or original_language — those are editor decisions that
+// land in the review queue.
+
+// Native-script content between parens. Unicode ranges cover the scripts
+// we expect in the India page (Devanagari + Indic family) plus the common
+// non-Latin scripts that may appear in other Wikipedia sources later.
+const NATIVE_SCRIPT_PAREN =
+  /\s*\(([^)]*[ऀ-෿一-鿿぀-ヿ؀-ۿ֐-׿Ѐ-ӿ][^)]*)\)/
+
+const MEANING_PAREN = /\s*\(meaning:\s*([^)]+)\)/i
+
+type Model3Split = {
+  title: string
+  title_native: string | null
+  title_english_meaningful: string | null
+  needs_model_3_review: boolean
+}
+
+function splitModel3Title(rawTitle: string): Model3Split {
+  const nativeMatch = rawTitle.match(NATIVE_SCRIPT_PAREN)
+  const meaningMatch = rawTitle.match(MEANING_PAREN)
+  if (!nativeMatch && !meaningMatch) {
+    return {
+      title: rawTitle,
+      title_native: null,
+      title_english_meaningful: null,
+      needs_model_3_review: false,
+    }
+  }
+  let stripped = rawTitle
+  if (nativeMatch) stripped = stripped.replace(NATIVE_SCRIPT_PAREN, '')
+  if (meaningMatch) stripped = stripped.replace(MEANING_PAREN, '')
+  return {
+    title: stripped.replace(/\s+/g, ' ').trim(),
+    title_native: nativeMatch ? nativeMatch[1].trim() : null,
+    title_english_meaningful: meaningMatch ? meaningMatch[1].trim() : null,
+    needs_model_3_review: true,
   }
 }
 
@@ -216,8 +270,19 @@ function parseAuthors(cell: string): string[] {
   // disambiguate without external lookup.
   return stripped
     .split(/\s*,\s*|\s+and\s+/i)
-    .map(s => s.trim())
+    .map(s => stripEditorPrefix(s.trim()))
     .filter(s => s.length > 0)
+}
+
+// Strips editorial-role prefixes ("Edited by", "Editor:", "Ed.", "Eds.") so
+// that "Edited by Maroof Raza" becomes "Maroof Raza". The editor of a volume
+// is not the author of its banned content; we route these to the author
+// field for now (no separate editor column exists), so at minimum the name
+// must be clean.
+const EDITOR_PREFIX = /^(edited by|editor:|edited:\s*|eds\.|ed\.)\s*/i
+
+function stripEditorPrefix(name: string): string {
+  return name.replace(EDITOR_PREFIX, '').trim()
 }
 
 function parseYear(cell: string): number | null {
