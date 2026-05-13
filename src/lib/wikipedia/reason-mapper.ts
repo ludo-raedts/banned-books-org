@@ -138,6 +138,34 @@ const DEFAMATION_SUIT_PATTERNS: ReadonlyArray<RegExp> = [
   /\blibel\s+suit/i,
 ]
 
+// Private-party civil action without the defamation keyword. The
+// underlying ban exists because a private plaintiff won an injunction or
+// damages claim — not because a state organ banned the work on its own
+// initiative. Sample-9 (Hersh — Price of Power) is the canonical case:
+// "Desai obtained an injunction from the Bombay High Court... and sued
+// for damages".
+const PRIVATE_PARTY_PATTERNS: ReadonlyArray<RegExp> = [
+  /\bobtained an injunction\b/i,
+  /\bsued for damages\b/i,
+  /\bfiled a lawsuit\b/i,
+  /\blawsuit filed by\b/i,
+  /\bout-of-court settlement\b/i,
+]
+
+// Civil-court procedural stay orders (interim restraints pending verdict).
+// Distinct from a final ban. Requires "civil court" or explicit "civil
+// suit/case" wording — a bare "stay order" is intentionally NOT matched,
+// because state-issued stays exist on the page and should still route to
+// the normal reason-mapping (e.g. "Other challenged books" entries that
+// represent legitimate state action). Sample-10 (Jha — Myth of the Holy
+// Cow) is the canonical case: "A civil court in Andhra Pradesh put a
+// temporary stay order on the book until verdict."
+const CIVIL_COURT_PATTERNS: ReadonlyArray<RegExp> = [
+  /\bcivil court\b[^.]*\bstay order\b/i,
+  /\bstay order\b[^.]*\bcivil court\b/i,
+  /\bcivil (?:suit|case)\b/i,
+]
+
 export type ReasonMapResult = {
   mapping: ReasonMapping
   extra_flags: QualityFlag[]
@@ -148,6 +176,18 @@ export function mapReason(notes: string): ReasonMapResult {
     return {
       mapping: { slug: 'other', confidence: 'low' },
       extra_flags: ['defamation_suit_civil'],
+    }
+  }
+  if (PRIVATE_PARTY_PATTERNS.some(p => p.test(notes))) {
+    return {
+      mapping: { slug: 'other', confidence: 'low' },
+      extra_flags: ['civil_action_private_party'],
+    }
+  }
+  if (CIVIL_COURT_PATTERNS.some(p => p.test(notes))) {
+    return {
+      mapping: { slug: 'other', confidence: 'low' },
+      extra_flags: ['civil_court_stay_order'],
     }
   }
   for (const [re, slug] of PATTERNS) {

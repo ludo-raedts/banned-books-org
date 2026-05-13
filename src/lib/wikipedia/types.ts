@@ -15,6 +15,8 @@ export type QualityFlag =
   | 'possible_duplicate'           // dedup found a 0.5 < sim ≤ 0.85 match
   | 'model_3_review_needed'        // title contained native-script or meaning annotation; editor decides script + language
   | 'defamation_suit_civil'        // notes describe a civil defamation suit, not a state-imposed ban
+  | 'civil_action_private_party'   // private party obtained an injunction / sued for damages / filed a lawsuit
+  | 'civil_court_stay_order'       // civil court issued a stay-order pending verdict (procedural, not final)
 
 export type ParsedRow = {
   year: number | null

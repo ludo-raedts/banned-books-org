@@ -270,7 +270,7 @@ function parseAuthors(cell: string): string[] {
   // disambiguate without external lookup.
   return stripped
     .split(/\s*,\s*|\s+and\s+/i)
-    .map(s => stripEditorPrefix(s.trim()))
+    .map(s => stripAuthorPrefixes(s.trim()))
     .filter(s => s.length > 0)
 }
 
@@ -281,8 +281,27 @@ function parseAuthors(cell: string): string[] {
 // must be clean.
 const EDITOR_PREFIX = /^(edited by|editor:|edited:\s*|eds\.|ed\.)\s*/i
 
-function stripEditorPrefix(name: string): string {
-  return name.replace(EDITOR_PREFIX, '').trim()
+// Strips honorific / academic prefixes ("Dr.", "Prof.", "Mr.", "Mrs.", "Ms.",
+// "Sir", "Lord"). The display_name convention in the existing `authors`
+// table is title-less; leaving "Dr." in causes dedup misses when the same
+// author appears elsewhere without the honorific. Trailing period is
+// optional ("Dr" without dot is also stripped).
+const ACADEMIC_PREFIXES: ReadonlyArray<RegExp> = [
+  /^Dr\.?\s+/i,
+  /^Prof\.?\s+/i,
+  /^Mr\.?\s+/i,
+  /^Mrs\.?\s+/i,
+  /^Ms\.?\s+/i,
+  /^Sir\s+/i,
+  /^Lord\s+/i,
+]
+
+function stripAuthorPrefixes(name: string): string {
+  let s = name.replace(EDITOR_PREFIX, '').trim()
+  for (const prefix of ACADEMIC_PREFIXES) {
+    s = s.replace(prefix, '')
+  }
+  return s.trim()
 }
 
 function parseYear(cell: string): number | null {
