@@ -1,0 +1,160 @@
+name: Enrichment
+
+# Manual trigger from /admin/scripts UI (via repository_dispatch) or directly
+# from the GitHub Actions tab via workflow_dispatch.
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: 'Comma-separated steps. Available: isbn, covers, descriptions, ban_descriptions, censorship_context, reasons, author_bios, author_photos, classification. "all" runs the full enrich-all.ts pipeline.'
+        required: true
+        default: 'all'
+      free_only:
+        description: 'Skip all GPT/Anthropic steps (€0 cost).'
+        type: boolean
+        required: false
+        default: false
+      gpt_limit:
+        description: 'Cap each GPT step at N books.'
+        type: number
+        required: false
+        default: 150
+      dry_run:
+        description: 'Show what would change without writing to the database.'
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Write .env.local
+        run: |
+          cat > .env.local <<EOF
+          NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_AI_API_KEY=${{ secrets.GOOGLE_AI_API_KEY }}
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          EOF
+
+      - name: Run enrichment
+        env:
+          STEPS: ${{ inputs.steps }}
+          FREE_ONLY: ${{ inputs.free_only }}
+          GPT_LIMIT: ${{ inputs.gpt_limit }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -e
+
+          # Flags shared by per-step scripts:
+          #   --apply   → write to DB (omit for dry-run)
+          #   --limit=N → cap GPT scripts; some free scripts also accept it
+          APPLY_FLAG=""
+          if [ "$DRY_RUN" != "true" ]; then APPLY_FLAG="--apply"; fi
+
+          echo "── Configuration ──"
+          echo "  steps      : $STEPS"
+          echo "  free_only  : $FREE_ONLY"
+          echo "  gpt_limit  : $GPT_LIMIT"
+          echo "  dry_run    : $DRY_RUN"
+          echo "  apply flag : '$APPLY_FLAG'"
+          echo ""
+
+          run_step() {
+            local name="$1"
+            local script="$2"
+            local extra="$3"
+            echo ""
+            echo "════ $name ════"
+            npx tsx --env-file=.env.local "scripts/$script" $APPLY_FLAG $extra
+          }
+
+          # 'all' uses the orchestrator with free-only / gpt-limit forwarded
+          if [ "$STEPS" = "all" ]; then
+            EXTRA=""
+            if [ "$FREE_ONLY" = "true" ]; then EXTRA="$EXTRA --free-only"; fi
+            if [ -n "$GPT_LIMIT" ]; then EXTRA="$EXTRA --gpt-limit=$GPT_LIMIT"; fi
+            EXTRA="$EXTRA --no-gutenberg"
+            echo "Running master pipeline: enrich-all.ts $APPLY_FLAG $EXTRA"
+            npx tsx --env-file=.env.local scripts/enrich-all.ts $APPLY_FLAG $EXTRA
+            exit 0
+          fi
+
+          IFS=',' read -ra STEP_LIST <<< "$STEPS"
+          for step in "${STEP_LIST[@]}"; do
+            step=$(echo "$step" | xargs)  # trim
+            case "$step" in
+              isbn)
+                run_step "ISBN-13"            "enrich-isbn.ts" ""
+                ;;
+              covers)
+                run_step "Cover images (v2)"  "enrich-covers-v2.ts" ""
+                ;;
+              descriptions)
+                # Has built-in GPT fallback; skip if free_only
+                if [ "$FREE_ONLY" = "true" ]; then
+                  echo "» Skipping descriptions (free_only=true, this step uses GPT fallback)"
+                else
+                  run_step "Book descriptions" "enrich-descriptions.ts" ""
+                fi
+                ;;
+              ban_descriptions)
+                if [ "$FREE_ONLY" = "true" ]; then
+                  echo "» Skipping ban_descriptions (free_only)"
+                else
+                  run_step "Ban descriptions"  "enrich-ban-descriptions-gpt.ts" "--limit=$GPT_LIMIT"
+                fi
+                ;;
+              censorship_context)
+                if [ "$FREE_ONLY" = "true" ]; then
+                  echo "» Skipping censorship_context (free_only)"
+                else
+                  run_step "Censorship context" "enrich-censorship-context-gpt.ts" "--limit=$GPT_LIMIT"
+                fi
+                ;;
+              reasons)
+                if [ "$FREE_ONLY" = "true" ]; then
+                  echo "» Skipping reasons (free_only)"
+                else
+                  run_step "Ban reason classification" "enrich-reasons.ts" ""
+                fi
+                ;;
+              author_bios)
+                run_step "Author bios" "enrich-author-bios.ts" ""
+                ;;
+              author_photos)
+                run_step "Author photos (v2)" "enrich-author-photos-v2.ts" ""
+                ;;
+              classification)
+                if [ "$FREE_ONLY" = "true" ]; then
+                  echo "» Skipping classification (free_only)"
+                else
+                  run_step "Editorial classification" "suggest-editorial-classification-gpt.ts" "--limit=$GPT_LIMIT"
+                fi
+                ;;
+              *)
+                echo "» Unknown step: $step (skipped)"
+                ;;
+            esac
+          done
+
+          echo ""
+          echo "── Done ──"
+
+      - name: Refresh materialized views
+        if: inputs.dry_run != true
+        run: npx tsx --env-file=.env.local scripts/refresh-mv.ts
