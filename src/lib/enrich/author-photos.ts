@@ -171,7 +171,7 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
   const authors = (data ?? []) as AuthorRow[]
   log(`Authors without photo: ${authors.length}`)
   if (authors.length === 0) {
-    return { totalCandidates: 0, processed: 0, accepted: 0, skipped: 0, bySource: { wikidata: 0, openlibrary: 0 }, errors: 0, samples: [] }
+    return { totalCandidates: 0, processed: 0, accepted: 0, skipped: 0, bySource: { wikidata: 0, openlibrary: 0 }, errors: 0, results: [] }
   }
 
   let accepted = 0, skipped = 0, errCount = 0

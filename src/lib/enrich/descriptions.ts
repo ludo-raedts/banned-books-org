@@ -25,12 +25,14 @@ function isTruncated(desc: string): boolean {
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
 function stripMarkdown(text: string): string {
+  // [\s\S]+? in place of the dotAll s-flag (.+? with /s) because tsconfig
+  // target=ES2017 doesn't support the s flag; same matching behavior.
   return text
     .replace(/#{1,6}\s+/g, '')
-    .replace(/\*\*(.+?)\*\*/gs, '$1')
-    .replace(/\*(.+?)\*/gs, '$1')
-    .replace(/__(.+?)__/gs, '$1')
-    .replace(/_(.+?)_/gs, '$1')
+    .replace(/\*\*([\s\S]+?)\*\*/g, '$1')
+    .replace(/\*([\s\S]+?)\*/g, '$1')
+    .replace(/__([\s\S]+?)__/g, '$1')
+    .replace(/_([\s\S]+?)_/g, '$1')
     .replace(/\[(.+?)\]\(.+?\)/g, '$1')
     .replace(/`(.+?)`/g, '$1')
     .replace(/\r\n/g, '\n')
