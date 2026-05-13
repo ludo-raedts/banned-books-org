@@ -157,13 +157,31 @@ async function main() {
   const supabase = adminClient()
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  const { data, error } = await supabase
-    .from('books')
-    .select('id, slug, title, description, description_book, openlibrary_work_id, book_authors(authors(display_name))')
-    .order('title')
-  if (error) { console.error('DB error:', error.message); process.exit(1) }
-
-  const all = (data ?? []) as unknown as BookRow[]
+  // Both Part A (truncated repair) and Part B (missing fill) need
+  // description_book IS NULL, so the server-side filter is safe to apply to
+  // the whole select — and it keeps the result set under Supabase's 1000-row
+  // default cap that used to silently truncate this script once the
+  // catalogue grew past 1000 books. .order('id') + .range() pagination is
+  // the same defensive pattern the admin /import-review and /admin/books
+  // pages use; see feedback_supabase_pagination.
+  let all: BookRow[] = []
+  let offset = 0
+  while (true) {
+    const { data, error } = await supabase
+      .from('books')
+      .select('id, slug, title, description, description_book, openlibrary_work_id, book_authors(authors(display_name))')
+      .is('description_book', null)
+      .order('id', { ascending: true })
+      .range(offset, offset + 999)
+    if (error) { console.error('DB error:', error.message); process.exit(1) }
+    if (!data || data.length === 0) break
+    all = all.concat(data as unknown as BookRow[])
+    if (data.length < 1000) break
+    offset += 1000
+  }
+  // Title sort is the operator-facing presentation order; safe to do once
+  // after the full set is loaded.
+  all.sort((a, b) => a.title.localeCompare(b.title))
 
   // Only repair truncated descriptions that don't already have description_book set
   const truncated = all.filter(b => b.description && isTruncated(b.description) && !b.description_book)
