@@ -74,8 +74,14 @@ export async function POST(
     )
   }
 
-  const pg = newPgClient()
+  // newPgClient() throws if DATABASE_URL isn't set (e.g. on Vercel without
+  // a Supabase pooler URL configured). Pulling it inside the try block means
+  // that error surfaces as a JSON 500 the UI can render — without the wrap,
+  // the throw escapes the route handler entirely and Vercel returns its own
+  // bare 500 page, so the UI just sees "HTTP 500" with no detail.
+  let pg: Awaited<ReturnType<typeof newPgClient>> | null = null
   try {
+    pg = newPgClient()
     await pg.connect()
     const result = await approveQueueRow(id, overlay, ctx, pg, sb, 'manual')
     return NextResponse.json({
@@ -90,7 +96,9 @@ export async function POST(
       { status: 500 },
     )
   } finally {
-    try { await pg.end() } catch { /* ignore */ }
+    if (pg) {
+      try { await pg.end() } catch { /* ignore */ }
+    }
   }
 }
 

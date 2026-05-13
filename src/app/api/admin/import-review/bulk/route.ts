@@ -94,8 +94,12 @@ async function bulkApprove(ids: number[], overlay: BulkApproveOverlay) {
   const errors: PerRowError[] = []
   let succeeded = 0
 
-  const pg = newPgClient()
+  // newPgClient() throws if DATABASE_URL is unset; pulling it inside the try
+  // block means that surfaces as a 500 with the real message instead of an
+  // uncaught route-handler throw that the platform renders as a bare 500.
+  let pg: Awaited<ReturnType<typeof newPgClient>> | null = null
   try {
+    pg = newPgClient()
     await pg.connect()
     for (const id of ids) {
       const row = rowsById.get(id)
@@ -113,8 +117,20 @@ async function bulkApprove(ids: number[], overlay: BulkApproveOverlay) {
         })
       }
     }
+  } catch (err) {
+    // Connection-level failure (DATABASE_URL missing, network unreachable,
+    // pool exhausted): no rows could be attempted. Return everything as
+    // failed so the operator gets a clear signal.
+    const message = err instanceof Error ? err.message : String(err)
+    for (const id of ids) {
+      if (!errors.find(e => e.id === id)) {
+        errors.push({ id, message })
+      }
+    }
   } finally {
-    try { await pg.end() } catch { /* ignore */ }
+    if (pg) {
+      try { await pg.end() } catch { /* ignore */ }
+    }
   }
 
   return NextResponse.json({
