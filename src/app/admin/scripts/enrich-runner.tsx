@@ -15,6 +15,10 @@ type StepDef = {
   label: string
   paid: boolean
   description: string
+  // Step has a free path that runs first; the paid (GPT) part is just a fallback
+  // that auto-skips when OPENAI_API_KEY isn't set. With free-only the script
+  // still runs and produces useful results.
+  hasFreeFallback?: boolean
   // True if there's an in-process /api/admin/enrich/run handler. Otherwise the
   // step is GitHub-Actions-only.
   inProcess: boolean
@@ -22,13 +26,13 @@ type StepDef = {
 
 const STEPS: StepDef[] = [
   { key: 'isbn',                label: 'ISBN-13 lookup',              paid: false, description: 'Open Library + Google Books. Free, fast.', inProcess: true },
-  { key: 'covers',              label: 'Cover images',                paid: false, description: 'Google Books, Open Library, Wikipedia + placeholder rejection.', inProcess: false },
-  { key: 'descriptions',        label: 'Book descriptions',           paid: true,  description: 'OL/Google Books first; GPT-4o-mini fallback.', inProcess: false },
+  { key: 'covers',              label: 'Cover images',                paid: false, description: 'Google Books, Open Library, Wikipedia + placeholder rejection.', inProcess: true },
+  { key: 'descriptions',        label: 'Book descriptions',           paid: true,  hasFreeFallback: true, description: 'OL/Google Books first; GPT-4o-mini fallback (auto-skipped in free-only mode).', inProcess: true },
   { key: 'ban_descriptions',    label: 'Ban descriptions',            paid: true,  description: 'GPT — why this book was banned in this country.', inProcess: false },
   { key: 'censorship_context',  label: 'Censorship context',          paid: true,  description: 'GPT — political/historical background.', inProcess: false },
   { key: 'reasons',             label: 'Ban reason classification',   paid: true,  description: 'GPT — re-classifies bans currently tagged "other".', inProcess: false },
   { key: 'author_bios',         label: 'Author bios (Wikipedia)',     paid: false, description: 'Wikipedia article + infobox.', inProcess: false },
-  { key: 'author_photos',       label: 'Author photos (v2)',          paid: false, description: 'Wikidata + OpenLibrary photo backfill.', inProcess: false },
+  { key: 'author_photos',       label: 'Author photos (v2)',          paid: false, description: 'Wikidata + OpenLibrary photo backfill.', inProcess: true },
   { key: 'classification',      label: 'Editorial classification',    paid: true,  description: 'GPT-4o-mini suggests warning_level + inclusion_rationale.', inProcess: false },
 ]
 
@@ -43,7 +47,7 @@ type RunResponse = {
   apply: boolean
   durationMs: number
   summary: Record<string, number>
-  samples: Array<{ title: string; isbn: string | null; source: string }>
+  samples: Array<Record<string, unknown>>
   log: string[]
 }
 
@@ -74,7 +78,6 @@ export default function EnrichRunner() {
   )
 
   const onlyOneInProcessStep = inProcessReady.length === 1 && selectedSteps.size === 1
-  const hasPaidStep = STEPS.some(s => selectedSteps.has(s.key) && s.paid)
 
   async function handleDispatchToGitHub() {
     setBusy('github'); setError(null); setDispatchResult(null); setRunResult(null)
@@ -178,7 +181,7 @@ export default function EnrichRunner() {
         </legend>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1.5">
           {STEPS.map(s => {
-            const disabledByFree = freeOnly && s.paid
+            const disabledByFree = freeOnly && s.paid && !s.hasFreeFallback
             return (
               <label
                 key={s.key}
@@ -241,7 +244,7 @@ export default function EnrichRunner() {
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">
-            GPT limit ({gptLimit})
+            Batch limit ({gptLimit})
           </span>
           <input
             type="range"
@@ -249,12 +252,11 @@ export default function EnrichRunner() {
             max={500}
             step={10}
             value={gptLimit}
-            disabled={freeOnly && !hasPaidStep}
             onChange={e => setGptLimit(parseInt(e.target.value, 10))}
             className="accent-brand"
           />
           <span className="text-[11px] text-gray-400 dark:text-gray-500">
-            Caps each GPT-using step at N books.
+            Caps each step at N books. Applies to in-browser runs and GPT-using GitHub steps.
           </span>
         </label>
       </fieldset>
