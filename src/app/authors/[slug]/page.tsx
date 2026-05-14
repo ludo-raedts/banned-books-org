@@ -26,6 +26,10 @@ type Author = {
   death_year: number | null
   birth_country: string | null
   photo_url: string | null
+  name_native: string | null
+  name_transliterated: string | null
+  name_english: string | null
+  original_language: string | null
 }
 
 type Ban = {
@@ -103,7 +107,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language')
     .eq('slug', slug)
     .single()
 
@@ -245,6 +249,47 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         )}
         <div className="flex flex-col justify-center gap-2 min-w-0">
           <h1 className="text-3xl font-bold tracking-tight">{a.display_name}</h1>
+          {/* Secondary name: native-script form (for authors whose original
+              writing language is non-English) OR a known English pen name
+              when it differs from the canonical display_name. Suppressed
+              when the alt-name equals display_name to avoid duplicating
+              the H1. */}
+          {(() => {
+            const norm = (s: string) => s.trim().toLowerCase()
+            const canonical = norm(a.display_name)
+            const native =
+              a.name_native && norm(a.name_native) !== canonical
+                ? a.name_native
+                : null
+            const english =
+              !native && a.name_english && norm(a.name_english) !== canonical
+                ? a.name_english
+                : null
+            const subtitle = native ?? english
+            if (!subtitle) return null
+            return (
+              <h2
+                className="text-xl font-medium text-gray-700 dark:text-gray-300 leading-snug"
+                lang={native ? a.original_language ?? undefined : 'en'}
+              >
+                {subtitle}
+              </h2>
+            )
+          })()}
+          {/* Transliteration annotation — small italic line, only when it
+              adds information (distinct from both H1 and the H2 subtitle
+              above). Pronunciation aid for non-Latin authors where the
+              canonical display_name is one transliteration scheme and we
+              have a more standard BGN/PCGN form. */}
+          {a.name_transliterated &&
+            a.name_transliterated.trim().toLowerCase() !== a.display_name.trim().toLowerCase() &&
+            (!a.name_native ||
+              a.name_transliterated.trim().toLowerCase() !==
+                a.name_native.trim().toLowerCase()) && (
+              <p className="text-sm italic text-gray-500 dark:text-gray-400">
+                {a.name_transliterated}
+              </p>
+            )}
           {lifespan && (
             <p className="text-sm text-gray-500 dark:text-gray-400">{lifespan}</p>
           )}
