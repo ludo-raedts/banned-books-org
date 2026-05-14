@@ -203,6 +203,15 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
         <span className={`text-sm px-2 py-0.5 rounded-full ${STATUS_BADGE_CLASS[data.status]}`}>
           {data.status.replace('_', ' ')}
         </span>
+        <a
+          href={googleSearchUrl(data.parsed.title, data.parsed.authors)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Search Google for this title and author (opens new tab)"
+          className="text-sm px-2 py-0.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          Google ↗
+        </a>
       </header>
 
       {isPending && (
@@ -564,6 +573,18 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
       )}
     </div>
   )
+}
+
+function googleSearchUrl(title: string, authors: string[]): string {
+  const parts: string[] = []
+  const trimmedTitle = title?.trim() ?? ''
+  if (trimmedTitle) parts.push(`"${trimmedTitle}"`)
+  for (const a of authors) {
+    const t = a?.trim()
+    if (t) parts.push(t)
+  }
+  const query = parts.join(' ').trim() || 'banned book'
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`
 }
 
 function buildDefaultBanDescription(parsed: DetailViewData['parsed']): string {

@@ -312,12 +312,24 @@ export default function ImportReviewListClient({
                       </span>
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <a
-                        href={`/admin/import-review/${it.id}`}
-                        className="inline-block px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        Open →
-                      </a>
+                      <div className="inline-flex gap-1">
+                        <a
+                          href={googleSearchUrl(it.title, it.authors)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          title="Search Google for this title and author (opens new tab)"
+                          className="inline-block px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        >
+                          Google ↗
+                        </a>
+                        <a
+                          href={`/admin/import-review/${it.id}`}
+                          className="inline-block px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        >
+                          Open →
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -398,6 +410,18 @@ function FilterPill({
       {children}
     </button>
   )
+}
+
+function googleSearchUrl(title: string, authors: string[]): string {
+  const parts: string[] = []
+  const trimmedTitle = title?.trim() ?? ''
+  if (trimmedTitle) parts.push(`"${trimmedTitle}"`)
+  for (const a of authors) {
+    const t = a?.trim()
+    if (t) parts.push(t)
+  }
+  const query = parts.join(' ').trim() || 'banned book'
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`
 }
 
 function FlagBadges({ flags }: { flags: string[] }) {
