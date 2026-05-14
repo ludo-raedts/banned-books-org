@@ -8,6 +8,39 @@ type QueueStatus = 'pending_review' | 'approved' | 'rejected' | 'deferred'
 type ActionType = 'banned' | 'restricted' | 'challenged'
 type BanStatus = 'active' | 'historical'
 
+export type DuplicateBookFull = {
+  id: number
+  slug: string
+  title: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
+  first_published_year: number | null
+  isbn13: string | null
+  cover_url: string | null
+  description: string | null
+  description_book: string | null
+  ai_drafted: boolean | null
+  genres: string[]
+  authors: Array<{ display_name: string; slug: string }>
+  existing_bans: Array<{
+    id: number
+    country_code: string
+    year_started: number | null
+    year_ended: number | null
+    action_type: string
+    status: string
+    region: string | null
+    institution: string | null
+    description: string | null
+    scope_slug: string | null
+    scope_label: string | null
+    sources: Array<{ name: string; url: string }>
+  }>
+  slug_aliases: Array<{ slug: string; source: string; created_at: string }>
+}
+
 export type DetailViewData = {
   id: number
   source_slug: string
@@ -31,6 +64,7 @@ export type DetailViewData = {
   quality_flags: string[]
   dedup: { kind: string; book_id: number | null; similarity: number | null } | null
   duplicate_book: { slug: string; title: string; first_published_year: number | null } | null
+  duplicate_book_full: DuplicateBookFull | null
   reason_suggestion: { slug: string | null; confidence: string } | null
   section_defaults: {
     action_type: ActionType
@@ -224,6 +258,15 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
         </p>
       )}
 
+      {data.duplicate_book_full && (
+        <ExistingBookPanel
+          book={data.duplicate_book_full}
+          dedupKind={data.dedup?.kind ?? null}
+          similarity={data.dedup?.similarity ?? null}
+          parsed={data.parsed}
+        />
+      )}
+
       <div className="grid md:grid-cols-2 gap-6">
         {/* Left: parsed data (read-only) */}
         <section className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/30">
@@ -285,13 +328,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                 </a>
               </p>
             )}
-            {data.dedup && data.duplicate_book && (
-              <DupCallout
-                kind={data.dedup.kind}
-                similarity={data.dedup.similarity}
-                book={data.duplicate_book}
-              />
-            )}
+            {/* Detailed candidate-book panel renders above the two-column grid
+                via ExistingBookPanel; no duplicate callout needed here. */}
           </div>
         </section>
 
@@ -637,36 +675,295 @@ function FormField({
   )
 }
 
-function DupCallout({
-  kind,
-  similarity,
+function ExistingBookPanel({
   book,
+  dedupKind,
+  similarity,
+  parsed,
 }: {
-  kind: string
+  book: DuplicateBookFull
+  dedupKind: string | null
   similarity: number | null
-  book: { slug: string; title: string; first_published_year: number | null }
+  parsed: DetailViewData['parsed']
 }) {
-  const label = kind === 'possible_duplicate' ? 'Possible duplicate' : 'Duplicate'
+  const kindLabel =
+    dedupKind === 'duplicate'
+      ? 'Confirmed duplicate'
+      : dedupKind === 'possible_duplicate'
+        ? 'Possible duplicate'
+        : 'Existing match'
+  const tone =
+    dedupKind === 'duplicate'
+      ? 'border-emerald-300 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20'
+      : 'border-amber-300 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20'
+
+  // Banner-level summary of what's already in the DB for this book, so the
+  // editor can see at a glance whether THIS row would create a new ban
+  // (different country/year/scope) or be a true no-op duplicate.
+  const banCountriesSummary =
+    book.existing_bans.length === 0
+      ? 'no bans yet'
+      : `${book.existing_bans.length} ban${book.existing_bans.length === 1 ? '' : 's'} in ` +
+        [...new Set(book.existing_bans.map(b => b.country_code))].join(', ')
+
+  // Year-suffix-aware title comparison: highlight whether the parsed title
+  // would auto-add-ban via slug-collision (titles look identical modulo
+  // common Wikipedia disambiguator suffixes) or whether it's a softer match.
+  const parsedTitleNorm = normalizeTitleClientSide(parsed.title)
+  const existingTitleNorm = normalizeTitleClientSide(book.title)
+  const titlesIdentical =
+    parsedTitleNorm.toLowerCase() === existingTitleNorm.toLowerCase()
+
   return (
-    <div className="mt-2 p-3 rounded-lg border border-amber-300 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-900/10 text-xs">
-      <p className="font-medium text-amber-800 dark:text-amber-300">
-        {label}
-        {similarity !== null && ` (sim ${similarity.toFixed(2)})`}
-      </p>
-      <p className="mt-1 text-amber-800 dark:text-amber-300">
-        Matches existing book:{' '}
-        <a
-          href={`/admin/books/${book.slug}`}
-          className="underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {book.title}
-        </a>
-        {book.first_published_year !== null && ` (${book.first_published_year})`}
-      </p>
-    </div>
+    <section
+      className={`mb-6 border rounded-xl ${tone} overflow-hidden`}
+      aria-label="Existing book candidate"
+    >
+      <header className="flex flex-wrap items-baseline gap-3 px-5 py-3 border-b border-current/10">
+        <span className="text-xs font-semibold uppercase tracking-widest">
+          {kindLabel}
+        </span>
+        {similarity !== null && (
+          <span className="text-xs text-gray-600 dark:text-gray-300">
+            similarity {similarity.toFixed(2)}
+          </span>
+        )}
+        <span className="text-xs text-gray-500 dark:text-gray-400">·</span>
+        <span className="text-xs text-gray-600 dark:text-gray-300">
+          {banCountriesSummary}
+        </span>
+        {titlesIdentical && (
+          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
+            Titles match after normalization
+          </span>
+        )}
+      </header>
+
+      <div className="grid md:grid-cols-[140px_minmax(0,1fr)_minmax(0,1.2fr)] gap-5 p-5">
+        {/* Cover */}
+        <div className="flex flex-col items-start gap-2">
+          {book.cover_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={book.cover_url}
+              alt={`Cover of ${book.title}`}
+              className="w-[140px] h-[210px] object-cover rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
+            />
+          ) : (
+            <div className="w-[140px] h-[210px] flex items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-xs text-gray-400">
+              no cover
+            </div>
+          )}
+          <a
+            href={`/books/${book.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs underline text-gray-600 dark:text-gray-400 hover:no-underline"
+          >
+            View public page ↗
+          </a>
+          <a
+            href={`/admin/books/${book.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs underline text-gray-600 dark:text-gray-400 hover:no-underline"
+          >
+            Edit in admin ↗
+          </a>
+        </div>
+
+        {/* Book facts */}
+        <div className="flex flex-col gap-3 min-w-0">
+          <div>
+            <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-0.5">
+              Title
+            </div>
+            <div className="text-base font-semibold leading-tight break-words">
+              {book.title}
+            </div>
+            {book.title_native && (
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <span className="text-[10px] uppercase tracking-wide mr-1">native</span>
+                {book.title_native}
+              </div>
+            )}
+            {book.title_transliterated && (
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-[10px] uppercase tracking-wide mr-1">translit</span>
+                {book.title_transliterated}
+              </div>
+            )}
+            {book.title_english_meaningful && (
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-[10px] uppercase tracking-wide mr-1">english</span>
+                {book.title_english_meaningful}
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                Authors
+              </div>
+              <div>
+                {book.authors.length === 0
+                  ? <em className="text-gray-400">—</em>
+                  : book.authors.map(a => a.display_name).join(', ')}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                First published
+              </div>
+              <div>{book.first_published_year ?? <em className="text-gray-400">—</em>}</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                Language
+              </div>
+              <div>{book.original_language ?? <em className="text-gray-400">—</em>}</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                ISBN-13
+              </div>
+              <div className="font-mono text-xs">
+                {book.isbn13 ?? <em className="text-gray-400">—</em>}
+              </div>
+            </div>
+          </div>
+
+          {book.genres.length > 0 && (
+            <div>
+              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+                Genres
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {book.genres.map(g => (
+                  <span
+                    key={g}
+                    className="text-xs px-1.5 py-0.5 rounded bg-white/60 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700"
+                  >
+                    {g}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(book.description_book ?? book.description) && (
+            <details className="text-xs">
+              <summary className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                Description {book.ai_drafted ? <em>(AI-drafted)</em> : null}
+              </summary>
+              <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-700 dark:text-gray-300">
+                {book.description_book ?? book.description}
+              </p>
+            </details>
+          )}
+
+          {book.slug_aliases.length > 0 && (
+            <details className="text-xs">
+              <summary className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                {book.slug_aliases.length} slug alias{book.slug_aliases.length === 1 ? '' : 'es'}
+              </summary>
+              <ul className="mt-1 space-y-0.5">
+                {book.slug_aliases.map(a => (
+                  <li key={a.slug} className="font-mono text-[11px] text-gray-600 dark:text-gray-400">
+                    /books/{a.slug}{' '}
+                    <span className="text-gray-400 dark:text-gray-500">[{a.source}]</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+
+        {/* Existing bans */}
+        <div className="flex flex-col gap-2 min-w-0">
+          <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            Existing bans on this book
+          </div>
+          {book.existing_bans.length === 0 ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+              No bans recorded yet.
+            </p>
+          ) : (
+            <ul className="space-y-1.5">
+              {book.existing_bans.map(b => (
+                <li
+                  key={b.id}
+                  className="text-xs rounded border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 px-2 py-1.5"
+                >
+                  <div className="flex flex-wrap items-baseline gap-1.5">
+                    <span className="font-semibold">{b.country_code}</span>
+                    <span className="text-gray-500 dark:text-gray-400">·</span>
+                    <span>
+                      {b.year_started ?? '?'}
+                      {b.year_ended ? `–${b.year_ended}` : ''}
+                    </span>
+                    <span className="text-gray-500 dark:text-gray-400">·</span>
+                    <span>{b.action_type}</span>
+                    {b.scope_slug && (
+                      <>
+                        <span className="text-gray-500 dark:text-gray-400">·</span>
+                        <span>{b.scope_label ?? b.scope_slug}</span>
+                      </>
+                    )}
+                    <span
+                      className={`ml-auto text-[10px] px-1.5 py-0.5 rounded ${
+                        b.status === 'active'
+                          ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                      }`}
+                    >
+                      {b.status}
+                    </span>
+                  </div>
+                  {(b.region || b.institution) && (
+                    <div className="mt-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+                      {[b.region, b.institution].filter(Boolean).join(' · ')}
+                    </div>
+                  )}
+                  {b.sources.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
+                      {b.sources.map((s, i) => (
+                        <a
+                          key={i}
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline text-blue-600 dark:text-blue-400 truncate max-w-[200px]"
+                          title={s.name}
+                        >
+                          {s.name}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </section>
   )
+}
+
+// Mirror of the server's normalizeTitleForDedup, kept inline so the panel
+// can flag "titles match after normalization" without an extra round-trip.
+// If the regex / suffix list diverges, the badge is purely informational so
+// drift is non-fatal — the actual dedup decision lives on the queue row.
+function normalizeTitleClientSide(title: string): string {
+  const KNOWN_SUFFIXES = new Set(['series', 'novel', 'book', 'novella'])
+  const m = title.match(/^(.*?)\s*\(([^)]+)\)\s*$/)
+  if (!m) return title.trim()
+  const head = m[1].trim()
+  const inside = m[2].trim().toLowerCase()
+  if (/^\d{4}$/.test(inside) || KNOWN_SUFFIXES.has(inside)) return head
+  return title.trim()
 }
 
 function RejectModal({

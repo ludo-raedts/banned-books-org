@@ -47,6 +47,99 @@ type RawQueueRow = {
   approved_bans: unknown
 }
 
+type RawBookRow = {
+  id: number
+  slug: string
+  title: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
+  first_published_year: number | null
+  isbn13: string | null
+  cover_url: string | null
+  description: string | null
+  description_book: string | null
+  ai_drafted: boolean | null
+  genres: string[] | null
+  book_authors: Array<{ authors: { display_name: string; slug: string } | null }> | null
+}
+
+type RawBanRow = {
+  id: number
+  country_code: string
+  year_started: number | null
+  year_ended: number | null
+  action_type: string
+  status: string
+  region: string | null
+  institution: string | null
+  description: string | null
+  scopes: { slug: string; label_en: string } | null
+  ban_source_links: Array<{
+    ban_sources: { source_name: string; source_url: string } | null
+  }> | null
+}
+
+export type DuplicateBookSummary = {
+  id: number
+  slug: string
+  title: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
+  first_published_year: number | null
+  isbn13: string | null
+  cover_url: string | null
+  description: string | null
+  description_book: string | null
+  ai_drafted: boolean | null
+  genres: string[]
+  authors: Array<{ display_name: string; slug: string }>
+}
+
+export type ExistingBanSummary = {
+  id: number
+  country_code: string
+  year_started: number | null
+  year_ended: number | null
+  action_type: string
+  status: string
+  region: string | null
+  institution: string | null
+  description: string | null
+  scope_slug: string | null
+  scope_label: string | null
+  sources: Array<{ name: string; url: string }>
+}
+
+export type SlugAlias = {
+  slug: string
+  source: string
+  created_at: string
+}
+
+function toBanSummary(b: RawBanRow): ExistingBanSummary {
+  return {
+    id: b.id,
+    country_code: b.country_code,
+    year_started: b.year_started,
+    year_ended: b.year_ended,
+    action_type: b.action_type,
+    status: b.status,
+    region: b.region,
+    institution: b.institution,
+    description: b.description,
+    scope_slug: b.scopes?.slug ?? null,
+    scope_label: b.scopes?.label_en ?? null,
+    sources: (b.ban_source_links ?? [])
+      .map(l => l.ban_sources)
+      .filter((s): s is { source_name: string; source_url: string } => s !== null)
+      .map(s => ({ name: s.source_name, url: s.source_url })),
+  }
+}
+
 export default async function ImportReviewDetailPage({
   params,
 }: {
@@ -72,16 +165,67 @@ export default async function ImportReviewDetailPage({
   const dedup = queueRow.agreement_details?.dedup_check ?? null
   const reasonSuggestion = queueRow.agreement_details?.reason_mapping ?? null
 
-  // Resolve possible duplicate's existing book for the editor.
-  let duplicateBook: { slug: string; title: string; first_published_year: number | null } | null = null
+  // Resolve possible duplicate's existing book for the editor — full shape
+  // for the merge-decision panel: book fields, existing bans, slug aliases.
+  // All three queries are independent; run them in parallel when a candidate
+  // book_id is present.
+  let duplicateBook:
+    | (DuplicateBookSummary & {
+        existing_bans: ExistingBanSummary[]
+        slug_aliases: SlugAlias[]
+      })
+    | null = null
   if (dedup?.book_id) {
-    const dupRes = await sb
-      .from('books')
-      .select('slug, title, first_published_year')
-      .eq('id', dedup.book_id)
-      .maybeSingle()
-    if (!dupRes.error && dupRes.data) {
-      duplicateBook = dupRes.data as unknown as typeof duplicateBook
+    const [bookRes, bansRes, aliasRes] = await Promise.all([
+      sb.from('books')
+        .select(
+          'id, slug, title, title_native, title_transliterated, title_english_meaningful, ' +
+          'original_language, first_published_year, isbn13, cover_url, ' +
+          'description, description_book, ai_drafted, genres, ' +
+          'book_authors(authors(display_name, slug))',
+        )
+        .eq('id', dedup.book_id)
+        .maybeSingle(),
+      sb.from('bans')
+        .select(
+          'id, country_code, year_started, year_ended, action_type, status, ' +
+          'region, institution, description, scopes(slug, label_en), ' +
+          'ban_source_links(ban_sources(source_name, source_url))',
+        )
+        .eq('book_id', dedup.book_id)
+        .order('year_started', { ascending: true, nullsFirst: false }),
+      sb.from('book_slug_aliases')
+        .select('slug, source, created_at')
+        .eq('book_id', dedup.book_id)
+        .order('created_at', { ascending: true }),
+    ])
+    if (!bookRes.error && bookRes.data) {
+      const b = bookRes.data as unknown as RawBookRow
+      duplicateBook = {
+        id: b.id,
+        slug: b.slug,
+        title: b.title,
+        title_native: b.title_native,
+        title_transliterated: b.title_transliterated,
+        title_english_meaningful: b.title_english_meaningful,
+        original_language: b.original_language,
+        first_published_year: b.first_published_year,
+        isbn13: b.isbn13,
+        cover_url: b.cover_url,
+        description: b.description,
+        description_book: b.description_book,
+        ai_drafted: b.ai_drafted,
+        genres: b.genres ?? [],
+        authors: (b.book_authors ?? [])
+          .map(ba => ba.authors)
+          .filter((a): a is { display_name: string; slug: string } => a !== null),
+        existing_bans: bansRes.error
+          ? []
+          : ((bansRes.data ?? []) as unknown as RawBanRow[]).map(toBanSummary),
+        slug_aliases: aliasRes.error
+          ? []
+          : ((aliasRes.data ?? []) as unknown as SlugAlias[]),
+      }
     }
   }
 
@@ -128,7 +272,14 @@ export default async function ImportReviewDetailPage({
       book_id: dedup.book_id ?? null,
       similarity: dedup.similarity ?? null,
     } : null,
-    duplicate_book: duplicateBook,
+    duplicate_book: duplicateBook
+      ? {
+          slug: duplicateBook.slug,
+          title: duplicateBook.title,
+          first_published_year: duplicateBook.first_published_year,
+        }
+      : null,
+    duplicate_book_full: duplicateBook,
     reason_suggestion: reasonSuggestion,
     section_defaults: sectionDefaults,
     approved_book_id: queueRow.approved_book_id,
