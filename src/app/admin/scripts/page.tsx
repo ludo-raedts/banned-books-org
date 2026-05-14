@@ -111,7 +111,8 @@ export default function ScriptsPage() {
         </p>
         <h1 className="text-2xl font-bold">Enrichment &amp; sources</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          Steps 1 and 4 of the import pipeline — ingest a new source, then enrich approved books.
+          Steps 1, 2, and 4 of the import pipeline — ingest a new source, sweep the review queue,
+          then enrich approved books.
           All commands run from the project root; dry-run by default, add{' '}
           <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--apply</code>{' '}
           (or <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--write</code> for add-scripts)
@@ -134,7 +135,10 @@ export default function ScriptsPage() {
           </li>
           <li>
             <strong className="text-gray-800 dark:text-gray-200">2. Review</strong> — for queue-path sources, items
-            land at <a href="/admin/import-review" className="text-brand hover:underline">/admin/import-review</a>.
+            land at <a href="/admin/import-review" className="text-brand hover:underline">/admin/import-review</a>.{' '}
+            Triage helpers (e.g. re-map <code className="font-mono text-[11px]">unmapped_reason</code> flags after a
+            mapper update) live under{' '}
+            <a href="#review-queue-helpers" className="text-brand hover:underline">Queue helpers ↓</a>.
           </li>
           <li>
             <strong className="text-gray-800 dark:text-gray-200">3. Approve</strong> — creates bare{' '}
@@ -192,6 +196,7 @@ export default function ScriptsPage() {
           <dl className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-6 gap-y-3 text-sm">
             {[
               ['Add a new source (PEN list, court ruling, etc.)', 'see "Adding a new source" below'],
+              ['Re-map unmapped_reason flags in the review queue', 'remap-unmapped-queue.ts --write'],
               ['Fill all open fields after an import', 'enrich-all.ts --apply'],
               ['Same, fastest cheap pass first', 'enrich-all.ts --apply --free-only --no-gutenberg'],
               ['Refresh public stats / countries', 'refresh-mv.ts'],
@@ -282,6 +287,50 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply`}</Code>
 npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50`}</Code>
             </li>
           </ol>
+        </div>
+
+        {/* Step 2 — review-queue helpers */}
+        <div id="review-queue-helpers" className={`${cardCls} scroll-mt-4`}>
+          <div className="flex items-center gap-2">
+            <Wrench className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">
+              Step 2 — Review-queue helpers
+            </h2>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
+            Run these against items in{' '}
+            <a href="/admin/import-review" className="text-brand hover:underline">/admin/import-review</a>{' '}
+            <em>before</em> you approve — they patch queue rows in place so the operator sees
+            a better starting point.
+          </p>
+
+          <Script
+            name="remap-unmapped-queue.ts"
+            what={`Re-runs reason mapping over pending queue rows that still carry the unmapped_reason flag. Two passes: (1) the current strict mapReason() — useful after the wikipedia reason-mapper patterns have been extended; pass-1 hits drop the unmapped_reason flag entirely. (2) Broader keyword heuristic ported from reclassify-other-reasons.ts; pass-2 hits set a low-confidence slug but keep the unmapped_reason flag so the operator recognises the suggestion as a guess.`}
+            tags={['safe']}
+            command={`# Dry-run — prints every row it would touch
+npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts
+
+# Apply
+npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts --write`}
+            flags={[
+              { flag: '--write', desc: 'Persist changes to agreement_details (default: dry-run)' },
+            ]}
+            writes={
+              <>
+                Updates <code className="font-mono">import_review_queue.agreement_details</code>{' '}
+                on rows where <code className="font-mono">status=&apos;pending_review&apos;</code> AND{' '}
+                <code className="font-mono">quality_flags</code> contains{' '}
+                <code className="font-mono">&apos;unmapped_reason&apos;</code>. Pass-1 hits overwrite{' '}
+                <code className="font-mono">reason_mapping</code> with the strict-mapper result and remove{' '}
+                <code className="font-mono">unmapped_reason</code> from <code className="font-mono">quality_flags</code>.
+                Pass-2 hits write a <code className="font-mono">{`{ slug, confidence: 'low' }`}</code> mapping
+                but leave the flag in place. Rows with empty <code className="font-mono">notes_raw</code> or no
+                keyword signal are skipped.
+              </>
+            }
+            note="Idempotent. Re-run any time you extend reason-mapper.ts patterns to backfill earlier imports."
+          />
         </div>
 
         {/* Master pipeline reference */}

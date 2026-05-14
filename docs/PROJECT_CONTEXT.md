@@ -9,7 +9,7 @@
 > Live site: <https://www.banned-books.org>
 > Owner: Ludo Raedts (Groningen, NL) — solo project, started April 2026.
 >
-> **Last updated: 2026-05-13** — after Sprint A Taak 3 (pipeline plumbing operationeel).
+> **Last updated: 2026-05-14** — review-queue triage helper toegevoegd + lèse-majesté word-boundary fix in `reason-mapper.ts`.
 
 ---
 
@@ -610,6 +610,8 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **Taak 2B** — data backfill: 2 + 252 `ban_sources` rijen, 4099 en-books `title_native`, 49 fr-books `title_native`. 334 rijen non-en/non-fr verschoven naar Taak 4. Commits `9a52282..eb711cc` (3 commits).
 - **IndexNow delta-feature** — `indexnow_submissions` tracking-tabel, `/api/admin/indexnow-delta` endpoint, admin UI "Submit new pages"-knop, `fetchAllSlugs` paginated-read bugfix.
 - **Migratie-tooling** — `migration-parser.ts` ondersteunt nu multi-column `ALTER TABLE`; `scripts/seed-local-from-prod.ts` gebouwd als doctrine-tool voor data-migratie workflow.
+
+**Review-queue triage helper (2026-05-14)** — `scripts/remap-unmapped-queue.ts` haalt de huidige `mapReason()` opnieuw over `import_review_queue`-rijen die nog de `unmapped_reason` quality-flag dragen. Strict-mapper hits (pass-1) verwijderen de flag en updaten `agreement_details.reason_mapping`; brede heuristiek (pass-2, geport vanuit `scripts/reclassify-other-reasons.ts`) vult een low-confidence slug in maar behoudt de flag zodat de editor de gok herkent. Eerste run patchte 19 van 181 unmapped rijen (1 strict + 18 broad). Tegelijk: word-boundary bug in `reason-mapper.ts` lèse-majesté-patroon gefixt — JS `\b` werkt niet op de trailing `é` (non-`\w`), waardoor "lese-majesté rules" niet matchte. Gedocumenteerd op `/admin/scripts#review-queue-helpers` en gelinkt vanaf de import-review banner.
 
 **Sprint A Taak 3 afgerond (2026-05-13)** — pipeline plumbing operationeel. Negen modules onder `src/lib/imports/` implementeren een zeven-fasen-pipeline (fetched → archived → extracted → verified → gated → committed) die LLM-extractie van Gemini 2.5 Pro en GPT-4o parallel draait en consolideert tot één `ExtractionResult` met audit-trail van beide passes intact. Twee migraties toegevoegd: de `import_jobs` tabel voor lifecycle-tracking, plus twee fuzzy-match RPCs (`find_book_candidates_by_title`, `find_author_candidates_by_name`). Eindtest geslaagd met de Wikipedia-pagina over *Suicide, mode d'emploi* als manual-source bron: verifier matched bestaande auteurs (Claude Guillon, Yves Le Bonniec) exact, country zacht `no_match` (manual-source heeft geen `default_country_code`), gate weigerde auto-approve wegens conflict + high-stakes tier, review-queue rij correct gevuld met beide model-outputs apart bewaard. Commits `9843075..74e8c66`.
 

@@ -58,6 +58,17 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'religious',
   ],
 
+  // ── Religious — international corpus (added 2026-05-14 from master aggregator) ──
+  // heresy: Spanish-Inquisition era bans; inquisition: any inquisition-era
+  // condemnation; contradicting the teaching: e.g. Toland's Christianity not
+  // Mysterious vs Anglican Church; criticizing christianity: Francoist-Spain
+  // ban of Wells. "Promoting hanukkah/christmas/..." matches the Lebanese
+  // Sesame Street ban + analogous holiday-promotion bans.
+  [
+    /\b(heres(?:y|ies|ical)|inquisition|contradicting the teaching|criticizing (?:christianity|islam|hinduism|judaism|buddhism|sikhism|the church|catholicism|protestantism)|promoting (?:hanukkah|christmas|easter|ramadan|eid))\b/i,
+    'religious',
+  ],
+
   // ── Political — sedition, separatism, terrorism, extremism ──────────────
   // Trailing \b dropped for the same reason: stems must match inflected
   // forms ("secessionism", "terrorism", "extremist", etc.).
@@ -97,6 +108,44 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'political',
   ],
 
+  // ── Political — international corpus (added 2026-05-14 from master aggregator) ──
+  // "political sensitivity" covers ~9 Vietnam rows in one shot. lèse-majesté
+  // covers Thai king-related bans. "criticism of [civil liberties|the king|...
+  // |president NAME]" covers Eritrea/Thailand/etc. Named-regime patterns
+  // ("banned by Soviet Union", "Francoist Spain", "German occupation", etc.)
+  // cover historical-dictatorship bans where the cell merely names the
+  // regime without spelling out the reason — these are political almost by
+  // definition. Verbotsgesetz + Nazi-propaganda phrases handle the small set
+  // of post-1945 anti-Nazi-propaganda statute bans (Austria, Guatemala).
+  [
+    /\b(?:political|politically) sensitivit(?:y|ies)\b/i,
+    'political',
+  ],
+  // Trailing \b deliberately omitted on the accented variant: JS `\b` is
+  // defined over ASCII `\w`, so the boundary between a trailing `é` and a
+  // following space registers as non-word→non-word — i.e. no boundary —
+  // and the match fails on real text like "lese-majesté rules".
+  [
+    /\bl[èe]se[- ]?majest[ée]|\blese majesty\b/i,
+    'political',
+  ],
+  [
+    /\bcriticism of (?:civil liberties|the (?:regime|government|state|king|president|monarchy)|king [A-Z]\w+|president [A-Z]\w+|[A-Z]\w+ regime)|\bcriticizing (?:the )?(?:regime|government|state|king|president|monarchy)\b/i,
+    'political',
+  ],
+  [
+    /\b(?:tsarist|francoist|nationalist) (?:censor|monarch|government|regime|spain)\b|\bfranco(?:'s)? (?:regime|government)\b/i,
+    'political',
+  ],
+  [
+    /\bbanned (?:by|during) (?:the )?(?:tsarist|francoist|nazi|fascist|german occupation|imperial|soviet|stalin|apartheid)/i,
+    'political',
+  ],
+  [
+    /\b(?:verbotsgesetz|nazi propaganda|advocating the nazi party|high-level corruption)\b/i,
+    'political',
+  ],
+
   // ── Drugs ───────────────────────────────────────────────────────────────
   [/\b(drug abuse|narcot|cannabis|marijuana|opium|heroin)\b/i, 'drugs'],
 
@@ -113,8 +162,28 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'racial',
   ],
 
+  // ── Racial — international corpus (added 2026-05-14) ────────────────────
+  // "hate literature/speech" covers Canadian holocaust-denial bans.
+  // antisemit/anti-Jewish/Jewish characters cover Nazi-era and modern
+  // antisemitic-ban contexts. white supremacy is unambiguous. NOTE: bare
+  // "apartheid" is intentionally NOT here — too many cells mention "during
+  // apartheid" as period context without that being the ban reason.
+  [
+    /\b(?:hate (?:literature|speech)|antisemit|anti-?jewish|jewish characters?|white supremacy)\b/i,
+    'racial',
+  ],
+
   // ── Moral / family-values ───────────────────────────────────────────────
   [/\b(immoral(?:ity)?|good taste|family value|moral decay)\b/i, 'moral'],
+
+  // ── Moral — international corpus (added 2026-05-14) ─────────────────────
+  // "for moral reasons" is the explicit ban-reason phrasing on Wikipedia.
+  // "threat to morality" picks up Malaysia's Fifty Shades ban. The Korean
+  // ministry-of-culture youth restriction is a moral-protection mechanism.
+  [
+    /\b(?:for moral reasons|threat to morality|distribution to readers below the age of 19)\b/i,
+    'moral',
+  ],
 
   // ── Language / profanity ────────────────────────────────────────────────
   [/\b(inappropriate language|profan|swear word|vulgar language)\b/i, 'language'],
