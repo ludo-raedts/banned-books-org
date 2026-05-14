@@ -11,6 +11,7 @@
 // the result instead. The script remains the source of truth for CSV logging.
 
 import { adminClient } from '../supabase'
+import { authorLadder } from './_author-ladder'
 
 const DELAY_MS = 200
 const UA = 'banned-books.org/1.0 (contact@banned-books.org)'
@@ -159,7 +160,7 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
 
   const { data, error } = await supabase
     .from('authors')
-    .select('id, display_name, slug')
+    .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
     .is('photo_url', null)
     .not('slug', 'is', null)
     .order('display_name')
@@ -167,7 +168,15 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
 
   if (error) throw new Error(`DB read: ${error.message}`)
 
-  type AuthorRow = { id: string; display_name: string; slug: string }
+  type AuthorRow = {
+    id: string
+    display_name: string
+    slug: string
+    name_native: string | null
+    name_transliterated: string | null
+    name_english: string | null
+    original_language: string | null
+  }
   const authors = (data ?? []) as AuthorRow[]
   log(`Authors without photo: ${authors.length}`)
   if (authors.length === 0) {
@@ -180,14 +189,32 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
 
   for (let i = 0; i < authors.length; i++) {
     const author = authors[i]
-    const wdResult = await tryWikidata(author.display_name)
-    let result = wdResult
-    if (!result.url) {
+    // Walk the name ladder: for non-English authors the English pen name
+    // (if known) or canonical anglicised display_name is tried first
+    // against Wikidata + Open Library — Anglo-indexed photo sources have
+    // far higher hit rates on Latin names. Transliterations and native
+    // script are last-resort fallbacks. First successful URL wins.
+    const ladder = authorLadder(author)
+    let result: PhotoResult = { source: null, url: null, meta: 'no variants to try' }
+    const metaParts: string[] = []
+    for (const variant of ladder) {
+      const wdResult = await tryWikidata(variant.name)
+      if (wdResult.url) {
+        result = { ...wdResult, meta: `${wdResult.meta} [via ${variant.source}]` }
+        break
+      }
+      metaParts.push(`wd[${variant.source}]: ${wdResult.meta}`)
       await sleep(DELAY_MS)
-      const olResult = await tryOpenLibrary(author.display_name)
-      result = olResult.url
-        ? olResult
-        : { source: null, url: null, meta: `wd: ${wdResult.meta} | ol: ${olResult.meta}` }
+      const olResult = await tryOpenLibrary(variant.name)
+      if (olResult.url) {
+        result = { ...olResult, meta: `${olResult.meta} [via ${variant.source}]` }
+        break
+      }
+      metaParts.push(`ol[${variant.source}]: ${olResult.meta}`)
+      await sleep(DELAY_MS)
+    }
+    if (!result.url) {
+      result = { source: null, url: null, meta: metaParts.slice(0, 3).join(' | ') }
     }
 
     const symbol = result.url ? '✓' : '✗'
@@ -203,6 +230,7 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
           .from('authors')
           .update({ photo_url: result.url })
           .eq('id', author.id)
+          .is('photo_url', null)
         if (ue) { log(`    ✗ DB write failed: ${ue.message}`); errCount++; skipped++; continue }
       }
       accepted++

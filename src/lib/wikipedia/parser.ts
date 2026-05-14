@@ -187,7 +187,7 @@ function parseRowCells(
   }
 
   // ── Common fields (shared across all titles for multi-title rows) ─────
-  const { authors, parser_flags: authorFlags } = parseAuthors(authorCell)
+  const { authors, author_meta, parser_flags: authorFlags } = parseAuthors(authorCell)
   const yearFromColumn = dateCell !== null ? parseYear(dateCell) : null
   const notesStripped = stripWikitext(notesCell)
   const stateStripped = stateCell !== null ? stripWikitext(stateCell) : null
@@ -243,6 +243,7 @@ function parseRowCells(
       title_transliterated,
       title_english_meaningful,
       authors,
+      author_meta: author_meta.length > 0 ? author_meta : undefined,
       state: stateStripped && stateStripped.length > 0 ? stateStripped : null,
       notes_raw: notesStripped,
       source_anchor: anchor,
@@ -565,29 +566,42 @@ const BILINGUAL_AUTHOR_SEPARATOR = /\s+\/\s+/
 const NON_LATIN_SCRIPT_AUTHOR =
   /[\p{Script=Han}\p{Script=Arabic}\p{Script=Cyrillic}\p{Script=Devanagari}\p{Script=Tamil}\p{Script=Hangul}\p{Script=Hebrew}\p{Script=Thai}]/u
 
-function maybeUnwrapBilingualAuthor(s: string): string {
+// Returns the Latin form plus the captured native form when the input was a
+// bilingual `Native / Latin` cell. When no bilingual pattern matches, returns
+// the input unchanged and native=null. The Latin form has trailing periods
+// stripped (HK convention adds them after surnames).
+function maybeUnwrapBilingualAuthor(
+  s: string,
+): { display: string; name_native: string | null } {
   const parts = s.split(BILINGUAL_AUTHOR_SEPARATOR)
-  if (parts.length !== 2) return s
+  if (parts.length !== 2) return { display: s, name_native: null }
   const [left, right] = parts.map(p => p.trim())
-  if (!left || !right) return s
+  if (!left || !right) return { display: s, name_native: null }
   if (NON_LATIN_SCRIPT_AUTHOR.test(left) && /^[A-Z]/.test(right)) {
-    // Strip a trailing period the HK page often adds after the surname.
-    return right.replace(/\.+\s*$/, '')
+    return {
+      display: right.replace(/\.+\s*$/, ''),
+      name_native: left,
+    }
   }
-  return s
+  return { display: s, name_native: null }
 }
 
 export type ParseAuthorsResult = {
   authors: string[]
+  // Per-author multilingual metadata, parallel-indexed to `authors`. Set
+  // only when the source cell carried a native-script form alongside the
+  // Latin display name. NULL otherwise. Surfaces as ParsedRow.author_meta
+  // for downstream consumers (importer → authors.name_native).
+  author_meta: Array<{ name_native: string | null } | null>
   parser_flags: QualityFlag[]
 }
 
 function parseAuthors(cell: string): ParseAuthorsResult {
   const stripped0 = stripWikitext(cell)
-  if (!stripped0) return { authors: [], parser_flags: [] }
+  if (!stripped0) return { authors: [], author_meta: [], parser_flags: [] }
   // Reject non-author placeholders that appear in the India page.
   if (/^(various|religious text|followers of\b|anonymous)\b/i.test(stripped0)) {
-    return { authors: [], parser_flags: [] }
+    return { authors: [], author_meta: [], parser_flags: [] }
   }
   // 1. Unwrap bilingual `Native / Latin` author cells (Hong Kong format).
   //    Must run BEFORE the sorted-name unflip because the right-hand-side
@@ -597,9 +611,8 @@ function parseAuthors(cell: string): ParseAuthorsResult {
   //    Used by the Index Librorum Prohibitorum page where author cells are
   //    displayed in sorted form (e.g. "Machiavelli, Niccolo"). Without this,
   //    parseAuthors would emit two authors per cell.
-  const stripped = maybeUnflipSortedName(
-    maybeUnwrapBilingualAuthor(stripped0),
-  )
+  const { display, name_native } = maybeUnwrapBilingualAuthor(stripped0)
+  const stripped = maybeUnflipSortedName(display)
 
   // "X or Y" disjunction: alternative attribution that we cannot disambiguate
   // without external lookup. Keep only the first candidate and flag the row
@@ -611,17 +624,25 @@ function parseAuthors(cell: string): ParseAuthorsResult {
     const cleaned = stripAuthorPrefixes(first.trim())
     return {
       authors: cleaned.length > 0 ? [cleaned] : [],
+      author_meta: cleaned.length > 0 ? [{ name_native }] : [],
       parser_flags: ['author_disjunction'],
     }
   }
 
   // Standard path: split on commas and " and ". Intentionally do NOT split
-  // on " or " — that was already handled above.
+  // on " or " — that was already handled above. The native form (if any
+  // was captured by the bilingual unwrap above) attaches to the FIRST
+  // author only — the native cell is per-row, not per-author, on the HK
+  // page; if a row had multiple authors with bilingual forms the source
+  // would format them differently.
   const authors = stripped
     .split(/\s*,\s*|\s+and\s+/i)
     .map(s => stripAuthorPrefixes(s.trim()))
     .filter(s => s.length > 0)
-  return { authors, parser_flags: [] }
+  const author_meta = authors.map((_, i) =>
+    i === 0 && name_native ? { name_native } : null,
+  )
+  return { authors, author_meta, parser_flags: [] }
 }
 
 // Strips editorial-role prefixes ("Edited by", "Editor:", "Ed.", "Eds.") so

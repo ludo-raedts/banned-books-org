@@ -30,7 +30,14 @@ export type ParsedRow = {
   title_native?: string | null
   title_transliterated?: string | null
   title_english_meaningful?: string | null
-  authors: string[]                // 0+ display names, wikitext-stripped
+  authors: string[]                // 0+ display names, wikitext-stripped (Anglo-canonical form)
+  // Per-author multilingual metadata, parallel-indexed to `authors`. Set
+  // when the source cell carried a native-script form alongside the Latin
+  // display name (Hong Kong's "陳雲 / Chen, Yun." pattern). NULL when no
+  // native form was detectable for that author. Used by the importer to
+  // populate authors.name_native at commit time without re-running the
+  // split logic.
+  author_meta?: Array<{ name_native: string | null } | null>
   state: string | null             // only set when section's column-map has a state index
   notes_raw: string                // wikitext-stripped notes text (used by reason-mapper)
   source_anchor: string            // section-anchor for source_url fragment
@@ -112,6 +119,12 @@ export type SectionConfig = {
   // like List_of_books_banned_by_governments where each `== Country ==`
   // section maps to a different country. Falls back to SourceConfig.country_code.
   country_code?: string
+  // ISO 639-1 language code for books in this section. Drives both
+  // `books.original_language` at commit and `authors.original_language`
+  // for new authors. Optional — leave unset when the section spans
+  // multiple languages (e.g. master-aggregator country sections where
+  // banned books are in many languages).
+  original_language?: string
   // When set, the title cell may list multiple works separated by this
   // pattern (e.g. "Title A; Title B; Title C"). The parser then emits ONE
   // ParsedRow per work, all sharing the same year/author/notes. Used by

@@ -13,6 +13,25 @@
 import { Client } from 'pg'
 import { slugify } from './slugify'
 
+// Author shape exposed to importer callers. `display_name` is the
+// slug-canonical Anglo-friendly form (e.g. "Yun Chen", "Sadeq Hedayat") and
+// drives both `authors.slug` and the `display_name` column. The remaining
+// fields mirror `authors.name_native/transliterated/english/original_language`
+// in the schema — only set them when the caller has a genuine non-Latin
+// variant to capture, otherwise leave null/undefined to avoid clobbering
+// other sources' richer data on the same author.
+export type AuthorInput = {
+  display_name: string
+  name_native?: string | null
+  name_transliterated?: string | null
+  name_english?: string | null
+  original_language?: string | null
+  // Author's birth year if known. LLM extraction supplies this; the
+  // Wikipedia bulk-parser path leaves it null. Written on INSERT only;
+  // never overwritten on conflict (COALESCE pattern).
+  birth_year?: number | null
+}
+
 export type CommitInput = {
   title: string
   title_native?: string | null
@@ -20,7 +39,11 @@ export type CommitInput = {
   title_english_meaningful?: string | null
   // ISO 639-1 two-letter code. books.original_language is `character(2)`.
   original_language?: string | null
-  authors: string[]
+  // Authors. Accepts the legacy `string[]` form (display_name only) for
+  // backward compatibility, OR the multilingual AuthorInput form when the
+  // caller has native/transliterated/english variants to persist. Strings
+  // are promoted to `{ display_name: s }` at commit time.
+  authors: Array<string | AuthorInput>
   // Year the ban started (maps to bans.year_started). The Wikipedia "Year"
   // column always refers to the ban year, not the publication year.
   year: number | null
@@ -58,10 +81,12 @@ export async function commitParsedRow(input: CommitInput, pg: Client): Promise<C
 
   await pg.query('BEGIN')
   try {
-    // 1. Authors
+    // 1. Authors — accept legacy `string[]` form and the multilingual
+    //    AuthorInput form transparently; the normaliser promotes strings
+    //    to `{ display_name: s }` so upsertAuthor sees a uniform shape.
     const authorIds: number[] = []
-    for (const name of input.authors) {
-      authorIds.push(await upsertAuthor(pg, name))
+    for (const a of input.authors) {
+      authorIds.push(await upsertAuthor(pg, normaliseAuthor(a)))
     }
 
     // 2. Scope
@@ -328,21 +353,52 @@ export async function commitNewBanForBook(
   }
 }
 
-async function upsertAuthor(pg: Client, displayName: string): Promise<number> {
-  const slug = slugify(displayName)
+// Normalises a string-or-AuthorInput entry to the AuthorInput shape so the
+// downstream upsert can run uniformly. Used by commitParsedRow before its
+// per-author loop.
+function normaliseAuthor(a: string | AuthorInput): AuthorInput {
+  if (typeof a === 'string') return { display_name: a }
+  return a
+}
+
+async function upsertAuthor(pg: Client, input: AuthorInput): Promise<number> {
+  const slug = slugify(input.display_name)
   if (!slug) {
-    throw new Error(`upsertAuthor: slugify produced empty slug for '${displayName}'`)
+    throw new Error(`upsertAuthor: slugify produced empty slug for '${input.display_name}'`)
   }
+  // INSERT writes all multilingual fields when the caller has them. On slug
+  // conflict (author already exists) we COALESCE-update — fill any null
+  // column with the new value, but never overwrite an existing non-null
+  // value. This means re-imports from a richer source (e.g. HK with native
+  // script) enrich the row, while a later sparser-source import doesn't
+  // wipe out hard-won data.
   const ins = await pg.query(
-    `insert into authors (display_name, slug) values ($1, $2)
-     on conflict (slug) do nothing
+    `insert into authors (
+       display_name, slug, birth_year,
+       name_native, name_transliterated, name_english, original_language
+     )
+     values ($1, $2, $3, $4, $5, $6, $7)
+     on conflict (slug) do update set
+       birth_year          = coalesce(authors.birth_year,          excluded.birth_year),
+       name_native         = coalesce(authors.name_native,         excluded.name_native),
+       name_transliterated = coalesce(authors.name_transliterated, excluded.name_transliterated),
+       name_english        = coalesce(authors.name_english,        excluded.name_english),
+       original_language   = coalesce(authors.original_language,   excluded.original_language)
      returning id`,
-    [displayName, slug],
+    [
+      input.display_name,
+      slug,
+      input.birth_year ?? null,
+      input.name_native ?? null,
+      input.name_transliterated ?? null,
+      input.name_english ?? null,
+      input.original_language ?? null,
+    ],
   )
   if (ins.rows.length > 0) return ins.rows[0].id as number
   const sel = await pg.query('select id from authors where slug = $1', [slug])
   if (sel.rows.length === 0) {
-    throw new Error(`upsertAuthor: insert+select for '${displayName}' (${slug}) produced no row`)
+    throw new Error(`upsertAuthor: insert+select for '${input.display_name}' (${slug}) produced no row`)
   }
   return sel.rows[0].id as number
 }

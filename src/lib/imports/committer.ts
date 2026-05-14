@@ -83,10 +83,23 @@ async function commitDirectWrite(ctx: CommitContext): Promise<CommitResult> {
     // Resolve scope slug -> id (FK in bans is bigint)
     const scopeId = await resolveScope(client, sourceConfig.default_scope)
 
-    // 1. Authors — insert-then-conflict on slug, return id
+    // 1. Authors — insert-then-conflict on slug, return id. We now also
+    //    forward the multilingual fields produced by normalize-extraction
+    //    (name_native / name_transliterated / name_english) so the
+    //    authors row gets the native script form for non-Latin authors
+    //    in addition to the slug-canonical display name.
     const authorIds: number[] = []
     for (const a of extraction.authors) {
-      authorIds.push(await upsertAuthor(client, a.name, a.birth_year))
+      authorIds.push(
+        await upsertAuthor(client, {
+          display_name: a.name,
+          birth_year: a.birth_year,
+          name_native: a.name_native,
+          name_transliterated: a.name_transliterated,
+          name_english: a.name_english,
+          original_language: extraction.original_language ?? null,
+        }),
+      )
     }
 
     // 2. Book row (Model 3 fields filled where present)
@@ -201,25 +214,52 @@ async function resolveScope(client: Client, slug: string): Promise<number> {
   return res.rows[0].id as number
 }
 
+type UpsertAuthorInput = {
+  display_name: string
+  birth_year: number | null
+  name_native: string | null
+  name_transliterated: string | null
+  name_english: string | null
+  original_language: string | null
+}
+
 async function upsertAuthor(
   client: Client,
-  displayName: string,
-  birthYear: number | null,
+  input: UpsertAuthorInput,
 ): Promise<number> {
-  const slug = slugify(displayName)
-  // Two-step insert-then-fallback-select: ON CONFLICT (slug) DO NOTHING with
-  // a separate SELECT, because RETURNING is not emitted on the conflict path.
+  const slug = slugify(input.display_name)
+  // INSERT writes everything we know. On slug-conflict (author already
+  // exists) we COALESCE-update so a richer import (e.g. one that has a
+  // native-script name) fills in nulls without overwriting non-null values
+  // a previous source already established. Mirrors the upsert in
+  // src/lib/imports/review-commit.ts.
   const ins = await client.query(
-    `insert into authors (display_name, slug, birth_year)
-     values ($1, $2, $3)
-     on conflict (slug) do nothing
+    `insert into authors (
+       display_name, slug, birth_year,
+       name_native, name_transliterated, name_english, original_language
+     )
+     values ($1, $2, $3, $4, $5, $6, $7)
+     on conflict (slug) do update set
+       birth_year          = coalesce(authors.birth_year,          excluded.birth_year),
+       name_native         = coalesce(authors.name_native,         excluded.name_native),
+       name_transliterated = coalesce(authors.name_transliterated, excluded.name_transliterated),
+       name_english        = coalesce(authors.name_english,        excluded.name_english),
+       original_language   = coalesce(authors.original_language,   excluded.original_language)
      returning id`,
-    [displayName, slug, birthYear],
+    [
+      input.display_name,
+      slug,
+      input.birth_year,
+      input.name_native,
+      input.name_transliterated,
+      input.name_english,
+      input.original_language,
+    ],
   )
   if (ins.rows.length > 0) return ins.rows[0].id as number
   const sel = await client.query('select id from authors where slug = $1', [slug])
   if (sel.rows.length === 0) {
-    throw new Error(`committer: author upsert for '${displayName}' (slug ${slug}) produced no row`)
+    throw new Error(`committer: author upsert for '${input.display_name}' (slug ${slug}) produced no row`)
   }
   return sel.rows[0].id as number
 }

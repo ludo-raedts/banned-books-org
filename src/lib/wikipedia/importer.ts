@@ -136,7 +136,8 @@ async function commitAutoApprove(
     title_native: row.title_native ?? null,
     title_transliterated: row.title_transliterated ?? null,
     title_english_meaningful: row.title_english_meaningful ?? null,
-    authors: row.authors,
+    original_language: section.original_language ?? null,
+    authors: buildAuthorInputs(row, section),
     year: row.year,
     country_code: countryCode,
     scope_slug: section.scope_default,
@@ -187,6 +188,26 @@ export function formatBanDescription(row: ParsedRow): string {
 
 export function wikipediaSourceUrl(page: string, anchor: string): string {
   return `https://en.wikipedia.org/wiki/${page}#${anchor}`
+}
+
+// Combine a ParsedRow's `authors` array (Latin display names) with the
+// parallel-indexed `author_meta` (per-author native form, set by the
+// bilingual splitter in src/lib/wikipedia/parser.ts) into the multilingual
+// AuthorInput shape that commitParsedRow understands. The section's
+// `original_language` (when set) is stamped on EVERY author so subsequent
+// enrichment can pick the right name variant from the ladder.
+function buildAuthorInputs(
+  row: ParsedRow,
+  section: SectionConfig,
+): import('../imports/review-commit').AuthorInput[] {
+  return row.authors.map((display_name, i) => {
+    const meta = row.author_meta?.[i] ?? null
+    return {
+      display_name,
+      name_native: meta?.name_native ?? null,
+      original_language: section.original_language ?? null,
+    }
+  })
 }
 
 // ----------------------------------------------------------------------------
@@ -288,6 +309,10 @@ async function commitReview(
       year: row.year,
       title: row.title,
       authors: row.authors,
+      // Preserve per-author native script form so the admin /import-review
+      // approve flow can offer it back to editors instead of asking them to
+      // re-type or look up the native cell from the source URL.
+      author_meta: row.author_meta ?? null,
       state: row.state,
       notes: row.notes_raw,
     },

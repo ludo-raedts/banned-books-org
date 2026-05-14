@@ -20,6 +20,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { authorLadder } from '../src/lib/enrich/_author-ladder'
 
 const APPLY = process.argv.includes('--apply')
 const PHOTOS_ONLY = process.argv.includes('--photos-only')
@@ -276,7 +277,7 @@ async function main() {
 
   const baseQuery = supabase
     .from('authors')
-    .select('id, display_name, slug')
+    .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
     .not('slug', 'is', null)
     .order('display_name')
     .limit(LIMIT)
@@ -287,7 +288,15 @@ async function main() {
 
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
-  type AuthorRow = { id: number; display_name: string; slug: string }
+  type AuthorRow = {
+    id: number
+    display_name: string
+    slug: string
+    name_native: string | null
+    name_transliterated: string | null
+    name_english: string | null
+    original_language: string | null
+  }
   const authors = (data ?? []) as AuthorRow[]
 
   const target = PHOTOS_ONLY ? 'with bio but no photo' : 'without bio'
@@ -303,10 +312,22 @@ async function main() {
 
   for (const author of authors) {
     try {
-      // 1. Search Wikipedia
-      const pageId = await searchWikipedia(author.display_name)
-      await sleep(DELAY_MS)
-
+      // 1. Search Wikipedia using the name ladder. For non-English authors
+      //    the English pen name (when known) or canonical anglicised
+      //    display_name hit-rate Wikipedia better than transliterations
+      //    or native-script forms. First variant that returns a page wins;
+      //    subsequent ones aren't tried so we don't waste API quota.
+      const ladder = authorLadder(author)
+      let pageId: number | null = null
+      let usedVariant = ''
+      for (const variant of ladder) {
+        pageId = await searchWikipedia(variant.name)
+        await sleep(DELAY_MS)
+        if (pageId !== null) {
+          usedVariant = variant.source === 'canonical' ? '' : ` [via ${variant.source}]`
+          break
+        }
+      }
       if (!pageId) {
         console.log(`✗ ${author.display_name} — not found on Wikipedia`)
         skipped++
@@ -324,7 +345,7 @@ async function main() {
           skipped++
           continue
         }
-        console.log(`✓ ${author.display_name} — photo: ${photo}`)
+        console.log(`✓ ${author.display_name}${usedVariant} — photo: ${photo}`)
         if (APPLY) {
           const { error: ue } = await supabase
             .from('authors')
@@ -365,7 +386,7 @@ async function main() {
       // 6. Output
       const photoLabel = photo ? 'yes' : 'no'
       console.log(
-        `✓ ${author.display_name} — bio: ${bio.length} chars | ` +
+        `✓ ${author.display_name}${usedVariant} — bio: ${bio.length} chars | ` +
         `birth: ${birthYear ?? '?'} | death: ${deathYear ?? '—'} | ` +
         `country: ${birthCountry ?? '?'} | photo: ${photoLabel}`
       )
