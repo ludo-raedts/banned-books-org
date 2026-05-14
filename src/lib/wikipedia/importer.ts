@@ -90,7 +90,7 @@ export async function commitDecision(
     return { mode: 'skip_duplicate', existing_book_id: dedup.book_id }
   }
   if (decision.mode === 'auto_approve') {
-    return commitAutoApprove(pg, ctx, section, decision)
+    return commitAutoApprove(sb, pg, ctx, section, decision)
   }
   return commitReview(sb, ctx, section, decision)
 }
@@ -100,6 +100,7 @@ export async function commitDecision(
 // ----------------------------------------------------------------------------
 
 async function commitAutoApprove(
+  sb: Sb,
   pg: Client,
   ctx: ImporterContext,
   section: SectionConfig,
@@ -113,11 +114,19 @@ async function commitAutoApprove(
     throw new Error('commitAutoApprove: row.year is null (gate logic should have prevented this)')
   }
 
+  const countryCode = section.country_code ?? ctx.sourceConfig.country_code
+  if (!countryCode) {
+    throw new Error(
+      `commitAutoApprove: no country_code resolved for section ${section.heading} ` +
+        `(neither section.country_code nor sourceConfig.country_code is set)`,
+    )
+  }
+
   const input: CommitInput = {
     title: row.title,
     authors: row.authors,
     year: row.year,
-    country_code: ctx.sourceConfig.country_code,
+    country_code: countryCode,
     scope_slug: section.scope_default,
     action_type: section.action_type_default,
     ban_status: section.status_default,
@@ -130,6 +139,32 @@ async function commitAutoApprove(
   }
 
   const result = await commitParsedRow(input, pg)
+
+  // Idempotency: if a previous run of this source left a `pending_review` row
+  // in the queue for this same source_row_id (e.g. because the reason was
+  // unmapped at the time), mark it approved with the resulting book/ban IDs
+  // instead of leaving an orphan. Failure is non-fatal — the book/bans are
+  // real, only the queue marker stays stale.
+  const titleSlug = slugify(row.title || 'untitled')
+  const sourceRowId = `${row.source_anchor}#${titleSlug}`
+  const { error: queueUpdateErr } = await sb
+    .from('import_review_queue')
+    .update({
+      status: 'approved',
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: 'wikipedia-auto-approve',
+      approved_book_id: result.book_id,
+      approved_bans: result.ban_ids,
+    })
+    .eq('source_slug', ctx.sourceConfig.source_slug)
+    .eq('source_row_id', sourceRowId)
+    .eq('status', 'pending_review')
+  if (queueUpdateErr) {
+    console.error(
+      `  [warn] queue cleanup failed for ${sourceRowId}: ${queueUpdateErr.message}`,
+    )
+  }
+
   return { mode: 'auto_approve', book_id: result.book_id, ban_id: result.ban_ids[0] }
 }
 

@@ -55,8 +55,22 @@ export function getQueueSourceContext(
     queueSourceUrl ?? `https://en.wikipedia.org/wiki/${page}#${sectionAnchor}`
   const sourceName = `Wikipedia: ${page.replace(/_/g, ' ')}`
 
+  // Per-section country_code overrides source-level. Used by multi-country
+  // sources like List_of_books_banned_by_governments where each `== Country ==`
+  // section sets its own ISO code on the SectionConfig.
+  const matchingSection = wikiCfg.sections.find(
+    s => s.heading.replace(/ /g, '_') === sectionAnchor,
+  )
+  const country_code = matchingSection?.country_code ?? wikiCfg.country_code
+  if (!country_code) {
+    throw new Error(
+      `getQueueSourceContext: no country_code for source '${sourceSlug}' ` +
+        `section '${sectionAnchor}' (neither section nor source defines one)`,
+    )
+  }
+
   return {
-    country_code: wikiCfg.country_code,
+    country_code,
     source_url: sourceUrl,
     source_name: sourceName,
     source_type: wikiCfg.source_type,

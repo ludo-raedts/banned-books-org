@@ -30,7 +30,7 @@ export type ParsedRow = {
   title_native?: string | null
   title_english_meaningful?: string | null
   authors: string[]                // 0+ display names, wikitext-stripped
-  state: string | null             // only set for sections with has_state_column
+  state: string | null             // only set when section's column-map has a state index
   notes_raw: string                // wikitext-stripped notes text (used by reason-mapper)
   source_anchor: string            // section-anchor for source_url fragment
   quality_flags: QualityFlag[]     // detected during parsing
@@ -71,17 +71,39 @@ export type ImportDecision =
       quality_flags: QualityFlag[]
     }
 
+// Per-section column mapping. Indices are 0-based cell positions within a
+// wikitable row. `notes` is the index where the notes/description blob starts;
+// the parser joins everything from that index to the end of the row. Sources
+// without a year or state column set those to null. The "type of literature"
+// column on the Iran page is intentionally not modeled — it gets absorbed
+// into the notes blob via a `notes` index that points past it, or the column
+// is included by setting `notes` to overlap it (caller's choice).
+export type ColumnMap = {
+  title: number
+  authors: number
+  year: number | null
+  state: number | null
+  notes: number
+}
+
 export type SectionConfig = {
   heading: string                  // exact wikitext heading (between == ... ==)
   action_type_default: 'banned' | 'restricted' | 'challenged'
   scope_default: string            // scopes.slug
   status_default: 'active' | 'historical'
-  has_state_column: boolean        // true when an extra State(s) column sits between Author and Notes
+  columns: ColumnMap
+  // Per-section ISO 3166-1 alpha-2 override. Used by multi-country sources
+  // like List_of_books_banned_by_governments where each `== Country ==`
+  // section maps to a different country. Falls back to SourceConfig.country_code.
+  country_code?: string
 }
 
 export type SourceConfig = {
   page: string                     // Wikipedia page slug (URL path component)
-  country_code: string             // ISO 3166-1 alpha-2; all bans created from this source land in this country
+  // ISO 3166-1 alpha-2; fallback when SectionConfig.country_code is unset.
+  // Optional so multi-country sources (e.g. List_of_books_banned_by_governments)
+  // can require per-section codes instead of one source-level constant.
+  country_code: string | null
   source_slug: string              // import_review_queue.source_slug
   source_type: string              // ban_sources.source_type (free text in prod)
   sections: SectionConfig[]

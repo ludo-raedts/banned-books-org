@@ -10,7 +10,7 @@
 // few targeted patterns get us correct output on the India page; pulling in
 // a full wikitext parser library is not justified for one source.
 
-import type { ParsedRow, QualityFlag, SectionConfig } from './types'
+import type { ColumnMap, ParsedRow, QualityFlag, SectionConfig } from './types'
 
 export type SectionParseResult = {
   section: SectionConfig
@@ -29,13 +29,24 @@ export function parseWikipediaPage(
       out.push({ section: sec, rows: [] })
       continue
     }
+    // Section ends at the next heading whose level is the same OR shallower
+    // (i.e. smaller `===` count). A level-2 `== Germany ==` extends past its
+    // own level-3 sub-sections (`=== Weimar Republic ===` etc.) and only
+    // ends at the next level-2 heading. Without this, multi-country pages
+    // like List_of_books_banned_by_governments cut Germany off at its first
+    // sub-heading, missing all tables inside.
+    const targetLevel = headings[found].level
     const start = headings[found].endIndex
-    const next = headings[found + 1]
-    const end = next ? next.startIndex : wikitext.length
+    const nextSameOrShallower = headings
+      .slice(found + 1)
+      .find(h => h.level <= targetLevel)
+    const end = nextSameOrShallower
+      ? nextSameOrShallower.startIndex
+      : wikitext.length
     const slice = wikitext.slice(start, end)
     out.push({
       section: sec,
-      rows: parseWikitable(slice, sec.heading, sec.has_state_column),
+      rows: parseWikitable(slice, sec.heading, sec.columns),
     })
   }
   return out
@@ -61,7 +72,7 @@ function collectHeadings(wikitext: string): HeadingMatch[] {
 function parseWikitable(
   slice: string,
   heading: string,
-  hasStateColumn: boolean,
+  columns: ColumnMap,
 ): ParsedRow[] {
   const tableStart = slice.search(/\{\|\s*class="[^"]*wikitable/)
   if (tableStart < 0) return []
@@ -84,7 +95,7 @@ function parseWikitable(
   const out: ParsedRow[] = []
   for (const chunk of rawChunks) {
     if (isHeaderChunk(chunk)) continue
-    const row = parseRowCells(chunk, anchor, hasStateColumn)
+    const row = parseRowCells(chunk, anchor, columns)
     if (row !== null) out.push(row)
   }
   return out
@@ -103,7 +114,7 @@ function sectionAnchor(heading: string): string {
 function parseRowCells(
   chunk: string,
   anchor: string,
-  hasStateColumn: boolean,
+  columns: ColumnMap,
 ): ParsedRow | null {
   const lines = chunk.split('\n')
   const cells: string[] = []
@@ -126,20 +137,21 @@ function parseRowCells(
   }
   if (buf.length > 0) cells.push(buf.join(' '))
 
-  const expected = hasStateColumn ? 5 : 4
+  const expected =
+    Math.max(
+      columns.title,
+      columns.authors,
+      columns.year ?? -1,
+      columns.state ?? -1,
+      columns.notes,
+    ) + 1
   if (cells.length < expected) return null
 
-  const dateCell = cells[0]
-  const workCell = cells[1]
-  const authorCell = cells[2]
-  let stateCell: string | null = null
-  let notesCell: string
-  if (hasStateColumn) {
-    stateCell = cells[3]
-    notesCell = cells.slice(4).join(' ')
-  } else {
-    notesCell = cells.slice(3).join(' ')
-  }
+  const workCell = cells[columns.title]
+  const authorCell = cells[columns.authors]
+  const dateCell = columns.year !== null ? cells[columns.year] : null
+  const stateCell = columns.state !== null ? cells[columns.state] : null
+  const notesCell = cells.slice(columns.notes).join(' ')
 
   const rawTitle = stripWikitext(workCell)
   if (!rawTitle) {
@@ -149,7 +161,7 @@ function parseRowCells(
   const { title, title_native, title_english_meaningful, needs_model_3_review } =
     splitModel3Title(rawTitle)
   const { authors, parser_flags: authorFlags } = parseAuthors(authorCell)
-  const year = parseYear(dateCell)
+  const year = dateCell !== null ? parseYear(dateCell) : null
   const notesStripped = stripWikitext(notesCell)
   const stateStripped = stateCell !== null ? stripWikitext(stateCell) : null
 
@@ -236,8 +248,26 @@ export function stripWikitext(input: string): string {
   // self-closing variants).
   s = s.replace(/<ref\b[^>]*\/>/gi, ' ')
   s = s.replace(/<ref\b[^>]*>[\s\S]*?<\/ref>/gi, ' ')
+  // Drop HTML comments before stripping templates so `{{nowrap|X<!-- y -->}}`
+  // doesn't leave dangling `-->` after template strip.
+  s = s.replace(/<!--[\s\S]*?-->/g, ' ')
   // Drop other inline HTML tags (<br>, <small>, <i>, etc.).
   s = s.replace(/<\/?[a-z][a-z0-9]*\b[^>]*>/gi, ' ')
+  // Content-preserving template expansions (must run BEFORE the strip-all
+  // template pass below). Wikipedia commonly wraps cells in these without
+  // changing semantics; if we just drop the whole `{{...}}` we lose the cell
+  // (e.g. `{{nowrap|''[[Title]]''}}` → empty title).
+  //   {{nowrap|X}} → X
+  //   {{nobr|X}}   → X (alias)
+  //   {{lang|en|X}} → X (drop language tag, keep text)
+  //   {{nbsp}}     → ' '
+  //   {{nbh}}      → '‑' (non-breaking hyphen → regular hyphen for our purposes)
+  //   {{spaces|N}} → ' '
+  s = s.replace(/\{\{\s*(?:nowrap|nobr)\s*\|([^{}]+)\}\}/gi, '$1')
+  s = s.replace(/\{\{\s*lang\s*\|[^|{}]+\|([^{}]+)\}\}/gi, '$1')
+  s = s.replace(/\{\{\s*nbsp\s*\}\}/gi, ' ')
+  s = s.replace(/\{\{\s*nbh\s*\}\}/gi, '-')
+  s = s.replace(/\{\{\s*spaces\s*\|[^{}]*\}\}/gi, ' ')
   // Templates: {{cn}}, {{cite ...}}, etc. Two passes to handle nested
   // single-level braces; deeper nesting is rare in this content.
   s = s.replace(/\{\{[^{}]*\}\}/g, ' ')
