@@ -72,9 +72,10 @@ export type DetailViewData = {
     ban_status: BanStatus
   } | null
   // Auto-suggested via Unicode-block detection on parsed.title_native + the
-  // source country. Editor can overwrite; null when no native title or no
-  // resolvable source context.
-  language_suggestion: { language: string; script: string | null } | null
+  // source country. Optional so the server loader can add this field in a
+  // separate change without breaking this type contract (it lands together
+  // with the inferScriptAndLanguage helper in page.tsx).
+  language_suggestion?: { language: string; script: string | null } | null
   approved_book_id: number | null
 }
 
@@ -123,8 +124,15 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   const [descriptionBan, setDescriptionBan] = useState(buildDefaultBanDescription(data.parsed))
   const [inclusionRationale, setInclusionRationale] = useState(buildDefaultRationale(data))
 
-  const [busy, setBusy] = useState<null | 'approve' | 'reject' | 'defer'>(null)
+  const [busy, setBusy] = useState<null | 'approve' | 'reject' | 'defer' | 'merge'>(null)
   const [error, setError] = useState<string | null>(null)
+  const [mergeResult, setMergeResult] = useState<null | {
+    book_id: number
+    ban_id: number
+    ban_created: boolean
+    enriched_fields: string[]
+    aliases_added: string[]
+  }>(null)
   const [rejectModal, setRejectModal] = useState(false)
   const [rejectReason, setRejectReason] = useState('')
 
@@ -133,7 +141,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
     !!data.parsed.title_native ||
     !!data.parsed.title_english_meaningful
 
-  const isPossibleDuplicate = data.dedup?.kind === 'possible_duplicate'
+  const canMerge = !!data.duplicate_book_full
+  const mergeTarget = data.duplicate_book_full
 
   function setAuthorAt(idx: number, value: string) {
     setAuthors(prev => prev.map((a, i) => (i === idx ? value : a)))
@@ -229,6 +238,79 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   async function handleDefer() {
     const ok = await callAction('defer', {})
     if (ok) router.push('/admin/import-review')
+  }
+
+  async function handleMerge() {
+    if (!mergeTarget) {
+      setError('No existing book to merge into.')
+      return
+    }
+    const yearNum = year.trim() ? parseInt(year.trim(), 10) : null
+    if (yearNum === null || !Number.isFinite(yearNum)) {
+      setError('Year is required.')
+      return
+    }
+    const cleanAuthors = authors.map(a => a.trim()).filter(Boolean)
+    if (cleanAuthors.length === 0) {
+      setError('At least one author is required (form validation only — existing book authors are kept).')
+      return
+    }
+    if (!reasonSlug) {
+      setError('Reason is required.')
+      return
+    }
+    if (!scopeSlug) {
+      setError('Scope is required.')
+      return
+    }
+    if (!inclusionRationale.trim()) {
+      setError('Inclusion rationale is required.')
+      return
+    }
+    const fpy = firstPublishedYear.trim()
+      ? parseInt(firstPublishedYear.trim(), 10)
+      : null
+
+    setBusy('merge')
+    setError(null)
+    try {
+      const res = await fetch(`/api/admin/import-review/${data.id}/merge`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          target_book_id: mergeTarget.id,
+          title: title.trim(),
+          title_native: titleNative.trim() || null,
+          title_english_meaningful: titleEnglish.trim() || null,
+          original_language: originalLanguage.trim() || null,
+          authors: cleanAuthors,
+          year: yearNum,
+          first_published_year: fpy,
+          reason_slug: reasonSlug,
+          action_type: actionType,
+          scope_slug: scopeSlug,
+          ban_status: banStatus,
+          description_book: descriptionBook.trim() || null,
+          description_ban: descriptionBan.trim() || null,
+          inclusion_rationale: inclusionRationale.trim(),
+        }),
+      })
+      const j = (await res.json().catch(() => ({}))) as Record<string, unknown>
+      if (!res.ok) {
+        throw new Error((j.error as string) ?? `HTTP ${res.status}`)
+      }
+      setMergeResult({
+        book_id: j.book_id as number,
+        ban_id: j.ban_id as number,
+        ban_created: j.ban_created as boolean,
+        enriched_fields: (j.enriched_fields as string[]) ?? [],
+        aliases_added: (j.aliases_added as string[]) ?? [],
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setBusy(null)
+    }
   }
 
   return (
@@ -574,13 +656,14 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
               >
                 {busy === 'defer' ? 'Deferring…' : 'Defer for later'}
               </button>
-              {isPossibleDuplicate && (
+              {canMerge && mergeTarget && (
                 <button
-                  disabled
-                  title="Merging into an existing book is not yet implemented. Use the form above to commit as a new book, or Reject to skip."
-                  className="px-3 py-2 rounded-lg border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400 text-sm font-medium opacity-50 cursor-not-allowed"
+                  onClick={handleMerge}
+                  disabled={!!busy}
+                  title={`Enrich existing book #${mergeTarget.id} ("${mergeTarget.title}") with any empty fields, add this row's data as a new ban, and mark this queue row approved. Existing fields are NEVER overwritten.`}
+                  className="px-3 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
                 >
-                  Merge into existing (not yet)
+                  {busy === 'merge' ? 'Merging…' : `Merge into #${mergeTarget.id}`}
                 </button>
               )}
             </div>
@@ -606,6 +689,48 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                   enrich-all.ts
                 </a>{' '}
                 to fill those fields.
+              </p>
+            </div>
+          )}
+
+          {mergeResult && (
+            <div className="rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-4 py-3 space-y-2">
+              <p className="text-sm text-amber-900 dark:text-amber-200">
+                Merged into{' '}
+                <a
+                  href={`/admin/books/${mergeResult.book_id}`}
+                  className="font-medium underline"
+                >
+                  book #{mergeResult.book_id}
+                </a>
+                {' · '}
+                {mergeResult.ban_created
+                  ? <>new ban <code className="font-mono text-xs">#{mergeResult.ban_id}</code> added</>
+                  : <>existing ban <code className="font-mono text-xs">#{mergeResult.ban_id}</code> reused (idempotent)</>}.
+              </p>
+              {mergeResult.enriched_fields.length > 0 && (
+                <p className="text-xs text-amber-900/80 dark:text-amber-200/80">
+                  Enriched empty fields: {mergeResult.enriched_fields.join(', ')}.
+                </p>
+              )}
+              {mergeResult.aliases_added.length > 0 && (
+                <p className="text-xs text-amber-900/80 dark:text-amber-200/80">
+                  Added slug aliases:{' '}
+                  {mergeResult.aliases_added.map((s, i) => (
+                    <span key={s}>
+                      <code className="font-mono text-[11px]">/books/{s}</code>
+                      {i < mergeResult.aliases_added.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </p>
+              )}
+              <p className="text-xs">
+                <button
+                  onClick={() => router.push('/admin/import-review')}
+                  className="underline text-amber-900 dark:text-amber-200 hover:no-underline"
+                >
+                  ← Back to review queue
+                </button>
               </p>
             </div>
           )}

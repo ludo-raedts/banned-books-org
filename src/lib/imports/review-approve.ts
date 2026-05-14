@@ -17,6 +17,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { WIKIPEDIA_SOURCES } from '../wikipedia/config'
 import type { SourceConfig } from '../wikipedia/types'
 import { commitParsedRow, type CommitInput, type CommitResult } from './review-commit'
+import { slugify } from './slugify'
 
 export type QueueSourceContext = {
   country_code: string
@@ -249,4 +250,257 @@ export async function approveQueueRow(
     return { ...result, queue_update_error: updateErr.message }
   }
   return result
+}
+
+// ----------------------------------------------------------------------------
+// Merge flow — enrich an existing book and add a new ban for it.
+//
+// Semantics:
+//   - The CANONICAL book row is NEVER overwritten on fields that already have
+//     a value. The overlay only fills empty/NULL scalar fields (enrichment).
+//   - Non-canonical title variants (title, title_native, title_english_meaningful
+//     from the form) are added to `book_slug_aliases` so old URLs keep working
+//     and any of those titles can be searched against.
+//   - A new ban is created for (target_book_id, country_code, year, scope_id),
+//     idempotently — if a ban already exists for that scope tuple, that ban_id
+//     is reused and only its source/reason links are extended.
+//   - Author rows on the existing book are NOT modified. (Editor uses
+//     /admin/books/{id} if author changes are needed.)
+//   - The queue row is marked 'approved' with a `merge_decisions` audit trail
+//     describing which fields were enriched and which aliases were added.
+// ----------------------------------------------------------------------------
+
+export type MergeOverlay = ApproveOverlay & {
+  /** ID of the existing `books` row to enrich + attach the new ban to. */
+  target_book_id: number
+}
+
+export type MergeResult = {
+  book_id: number
+  ban_id: number
+  ban_created: boolean
+  enriched_fields: string[]
+  aliases_added: string[]
+  queue_update_error?: string
+}
+
+type ExistingBookRow = {
+  id: number
+  slug: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
+  first_published_year: number | null
+  description_book: string | null
+}
+
+function capDescription(text: string | null | undefined): string | null {
+  if (!text) return null
+  return text.length > 2000 ? text.slice(0, 1997) + '…' : text
+}
+
+export async function mergeQueueRowIntoBook(
+  queueId: number,
+  overlay: MergeOverlay,
+  ctx: QueueSourceContext,
+  pg: Client,
+  sb: AdminSb,
+  reviewedBy: string,
+): Promise<MergeResult> {
+  if (overlay.original_language && overlay.original_language.length !== 2) {
+    throw new Error(
+      `mergeQueueRowIntoBook: original_language must be a 2-letter ISO-639-1 code, got '${overlay.original_language}'`,
+    )
+  }
+
+  let bookId = -1
+  let banId = -1
+  let banCreated = false
+  const enrichedFields: string[] = []
+  const aliasesAdded: string[] = []
+
+  await pg.query('BEGIN')
+  try {
+    // 1. Lock the target book.
+    const bookRes = await pg.query(
+      `select id, slug, title_native, title_transliterated, title_english_meaningful,
+              original_language, first_published_year, description_book
+       from books where id = $1 for update`,
+      [overlay.target_book_id],
+    )
+    if (bookRes.rows.length === 0) {
+      throw new Error(`Book ${overlay.target_book_id} not found`)
+    }
+    const existing = bookRes.rows[0] as ExistingBookRow
+    bookId = existing.id
+
+    // 2. Enrichment: only fill scalar fields where the existing value is empty.
+    type Fillable = { col: keyof ExistingBookRow; value: string | number | null }
+    const candidates: Fillable[] = [
+      { col: 'title_native', value: overlay.title_native ?? null },
+      { col: 'title_english_meaningful', value: overlay.title_english_meaningful ?? null },
+      { col: 'original_language', value: overlay.original_language ?? null },
+      { col: 'first_published_year', value: overlay.first_published_year ?? null },
+      { col: 'description_book', value: overlay.description_book ?? null },
+    ]
+    const patchEntries: Array<[string, string | number]> = []
+    for (const { col, value } of candidates) {
+      if (value === null || value === '') continue
+      if (existing[col] !== null && existing[col] !== '') continue
+      patchEntries.push([col as string, value])
+      enrichedFields.push(col as string)
+    }
+    if (patchEntries.length > 0) {
+      const setSql = patchEntries.map(([c], i) => `${c} = $${i + 2}`).join(', ')
+      const values = patchEntries.map(([, v]) => v)
+      await pg.query(`update books set ${setSql} where id = $1`, [bookId, ...values])
+    }
+
+    // 3. Slug aliases for any title variant from the overlay that isn't already
+    //    the canonical slug AND doesn't collide with another book's canonical.
+    const aliasCandidates: Array<{ slug: string; source: string }> = []
+    const pushAlias = (text: string | null | undefined, source: string) => {
+      if (!text) return
+      const aliasSlug = slugify(text)
+      if (!aliasSlug || aliasSlug === existing.slug) return
+      aliasCandidates.push({ slug: aliasSlug, source })
+    }
+    pushAlias(overlay.title, 'merge_canonical_form')
+    pushAlias(overlay.title_native, 'title_native')
+    pushAlias(overlay.title_english_meaningful, 'title_english_meaningful')
+    for (const c of aliasCandidates) {
+      const collision = await pg.query(
+        'select 1 from books where slug = $1 and id <> $2 limit 1',
+        [c.slug, bookId],
+      )
+      if (collision.rowCount && collision.rowCount > 0) continue
+      const insRes = await pg.query(
+        `insert into book_slug_aliases (slug, book_id, source)
+         values ($1, $2, $3)
+         on conflict (slug) do nothing
+         returning slug`,
+        [c.slug, bookId, c.source],
+      )
+      if (insRes.rows.length > 0) {
+        aliasesAdded.push(c.slug)
+      }
+    }
+
+    // 4. Scope slug → id.
+    const scopeRes = await pg.query(
+      'select id from scopes where slug = $1',
+      [overlay.scope_slug],
+    )
+    if (scopeRes.rows.length === 0) {
+      throw new Error(`Unknown scope slug '${overlay.scope_slug}'`)
+    }
+    const scopeId = scopeRes.rows[0].id as number
+
+    // 5. Ban: SELECT-then-INSERT for idempotency on (book, country, year, scope).
+    const existingBan = await pg.query(
+      `select id from bans
+       where book_id = $1 and country_code = $2
+         and year_started = $3 and scope_id = $4
+       limit 1`,
+      [bookId, ctx.country_code, overlay.year, scopeId],
+    )
+    if (existingBan.rows.length > 0) {
+      banId = existingBan.rows[0].id as number
+      banCreated = false
+    } else {
+      const description = capDescription(overlay.description_ban)
+      const ins = await pg.query(
+        `insert into bans (book_id, country_code, scope_id, action_type, status,
+                           year_started, year_ended, description)
+         values ($1, $2, $3, $4, $5, $6, null, $7)
+         returning id`,
+        [
+          bookId,
+          ctx.country_code,
+          scopeId,
+          overlay.action_type,
+          overlay.ban_status,
+          overlay.year,
+          description,
+        ],
+      )
+      banId = ins.rows[0].id as number
+      banCreated = true
+    }
+
+    // 6. Reason slug → id.
+    const reasonRes = await pg.query(
+      'select id from reasons where slug = $1',
+      [overlay.reason_slug],
+    )
+    if (reasonRes.rows.length === 0) {
+      throw new Error(`Unknown reason slug '${overlay.reason_slug}'`)
+    }
+    const reasonId = reasonRes.rows[0].id as number
+
+    // 7. Source + links (always extend, even on existing ban — same source can
+    //    be cited by multiple bans on the same book).
+    const sourceRes = await pg.query(
+      `insert into ban_sources (source_name, source_url, source_type,
+                                verification_status, accessed_at)
+       values ($1, $2, $3, 'unverified', now())
+       on conflict (source_url) do update
+         set source_name = excluded.source_name,
+             source_type = excluded.source_type,
+             accessed_at = now()
+       returning id`,
+      [ctx.source_name, ctx.source_url, ctx.source_type],
+    )
+    const sourceId = sourceRes.rows[0].id as number
+    await pg.query(
+      `insert into ban_source_links (ban_id, source_id) values ($1, $2)
+       on conflict do nothing`,
+      [banId, sourceId],
+    )
+    await pg.query(
+      `insert into ban_reason_links (ban_id, reason_id) values ($1, $2)
+       on conflict do nothing`,
+      [banId, reasonId],
+    )
+
+    await pg.query('COMMIT')
+  } catch (err) {
+    await pg.query('ROLLBACK')
+    throw err
+  }
+
+  // 8. Outside the transaction: mark queue row approved with audit trail.
+  //    Failure here is non-fatal — the book/ban are real, only the queue
+  //    marker stays stale.
+  const mergeDecisions = {
+    target_book_id: bookId,
+    enriched_fields: enrichedFields,
+    aliases_added: aliasesAdded,
+    ban_action: {
+      kind: banCreated ? 'create' : 'enrich_existing',
+      ban_id: banId,
+    },
+    reviewed_by: reviewedBy,
+  }
+  const { error: updateErr } = await sb
+    .from('import_review_queue')
+    .update({
+      status: 'approved',
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: reviewedBy,
+      approved_book_id: bookId,
+      approved_bans: [banId],
+      merge_decisions: mergeDecisions,
+    })
+    .eq('id', queueId)
+
+  return {
+    book_id: bookId,
+    ban_id: banId,
+    ban_created: banCreated,
+    enriched_fields: enrichedFields,
+    aliases_added: aliasesAdded,
+    queue_update_error: updateErr?.message,
+  }
 }
