@@ -312,6 +312,46 @@ const INDEX_LIBRORUM: SourceConfig = {
   ],
 }
 
+// Hong Kong: Book_censorship_in_Hong_Kong#List_of_banned_books.
+// Single wikitable with 9 inline-`||`-separated columns per row:
+//   0 Disclosure date     (e.g. "2020-07-4" — not zero-padded)
+//   1 Title               (bilingual: "Han / Latin transliteration")
+//   2 Author              (bilingual: "陳雲 / Chen, Yun.")
+//   3 Banned by Public Libraries     ({{tick}} → ✓)
+//   4 Banned by school libraries
+//   5 Banned in ebook or e-databases
+//   6 Banned by CSD
+//   7 Complained
+//   8 Ref.                (citation refs, mostly empty post-strip)
+//
+// The parser pre-processes `||` → newline-`|` (see parseRowCells) so the
+// inline format becomes per-line cells, and {{tick}} → ✓ so the checkbox
+// columns retain meaning after wikitext strip. Bilingual titles/authors
+// are split via the parser's bilingual-pattern helpers — the Latin form
+// becomes canonical, the native form fills title_native / (eventually,
+// once author-multilingualism lands) author native fields.
+//
+// notes = idx 3..7 (the 5 ban-locus columns joined). The resulting
+// description shows which library/system flagged the book, even though
+// there's no explicit reason text on the HK page. Editors decide the
+// final scope + reason during review.
+const HONG_KONG: SourceConfig = {
+  page: 'Book_censorship_in_Hong_Kong',
+  country_code: 'HK',
+  source_slug: 'wikipedia-hong-kong',
+  source_type: 'wikipedia',
+  sections: [
+    {
+      heading: 'List of banned books',
+      action_type_default: 'banned',
+      scope_default: 'government',
+      // Post-2020 NSL-era bans; most are still in force.
+      status_default: 'active',
+      columns: { title: 1, authors: 2, year: 0, state: null, notes: 3, notes_end: 7 },
+    },
+  ],
+}
+
 export const WIKIPEDIA_SOURCES: Record<string, SourceConfig> = {
   india: INDIA,
   iran: IRAN,
@@ -320,4 +360,5 @@ export const WIKIPEDIA_SOURCES: Record<string, SourceConfig> = {
   ala: ALA,
   nz: NEW_ZEALAND,
   'index-librorum': INDEX_LIBRORUM,
+  'hong-kong': HONG_KONG,
 }
