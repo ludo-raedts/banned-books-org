@@ -26,7 +26,12 @@
 // candidate book_id surfaced so an editor can merge or reject.
 
 import { Client } from 'pg'
-import { commitParsedRow, type CommitInput } from '../imports/review-commit'
+import {
+  commitNewBanForBook,
+  commitParsedRow,
+  type AddBanInput,
+  type CommitInput,
+} from '../imports/review-commit'
 import { slugify } from '../imports/slugify'
 import type { adminClient } from '../supabase'
 import type {
@@ -59,16 +64,21 @@ export function decide(input: DecideInput): ImportDecision {
   const flags: QualityFlag[] = [...row.quality_flags, ...reasonFlags]
   if (dedup.kind === 'possible_duplicate') flags.push('possible_duplicate')
 
-  const eligible =
+  // Baseline quality gates that both auto-paths share. The only difference
+  // between auto_approve and auto_add_ban is whether dedup found an existing
+  // book to attach the new ban to.
+  const baselineEligible =
     flags.length === 0 &&
     reason.slug !== null &&
     reason.confidence === 'high' &&
     row.year !== null &&
-    row.authors.length >= 1 &&
-    dedup.kind === 'none'
+    row.authors.length >= 1
 
-  if (eligible) {
+  if (baselineEligible && dedup.kind === 'none') {
     return { mode: 'auto_approve', row, reason }
+  }
+  if (baselineEligible && dedup.kind === 'duplicate') {
+    return { mode: 'auto_add_ban', row, reason, dedup }
   }
   return { mode: 'review', row, reason, dedup, quality_flags: flags }
 }
@@ -76,7 +86,7 @@ export function decide(input: DecideInput): ImportDecision {
 export type CommitResult =
   | { mode: 'auto_approve'; book_id: number; ban_id: number }
   | { mode: 'review'; review_queue_id: number }
-  | { mode: 'skip_duplicate'; existing_book_id: number }
+  | { mode: 'auto_add_ban'; book_id: number; ban_id: number; created: boolean }
 
 export async function commitDecision(
   sb: Sb,
@@ -84,13 +94,12 @@ export async function commitDecision(
   ctx: ImporterContext,
   section: SectionConfig,
   decision: ImportDecision,
-  dedup: DedupResult,
 ): Promise<CommitResult> {
-  if (dedup.kind === 'duplicate') {
-    return { mode: 'skip_duplicate', existing_book_id: dedup.book_id }
-  }
   if (decision.mode === 'auto_approve') {
     return commitAutoApprove(sb, pg, ctx, section, decision)
+  }
+  if (decision.mode === 'auto_add_ban') {
+    return commitAutoAddBan(sb, pg, ctx, section, decision)
   }
   return commitReview(sb, ctx, section, decision)
 }
@@ -124,6 +133,9 @@ async function commitAutoApprove(
 
   const input: CommitInput = {
     title: row.title,
+    title_native: row.title_native ?? null,
+    title_transliterated: row.title_transliterated ?? null,
+    title_english_meaningful: row.title_english_meaningful ?? null,
     authors: row.authors,
     year: row.year,
     country_code: countryCode,
@@ -178,6 +190,79 @@ export function wikipediaSourceUrl(page: string, anchor: string): string {
 }
 
 // ----------------------------------------------------------------------------
+// Auto-add-ban path: dedup found an existing book, add a new ban to it
+// ----------------------------------------------------------------------------
+
+async function commitAutoAddBan(
+  sb: Sb,
+  pg: Client,
+  ctx: ImporterContext,
+  section: SectionConfig,
+  decision: Extract<ImportDecision, { mode: 'auto_add_ban' }>,
+): Promise<CommitResult> {
+  const { row, reason, dedup } = decision
+  if (reason.slug === null) {
+    throw new Error('commitAutoAddBan: reason.slug is null (gate logic should have prevented this)')
+  }
+  if (row.year === null) {
+    throw new Error('commitAutoAddBan: row.year is null (gate logic should have prevented this)')
+  }
+
+  const countryCode = section.country_code ?? ctx.sourceConfig.country_code
+  if (!countryCode) {
+    throw new Error(
+      `commitAutoAddBan: no country_code resolved for section ${section.heading}`,
+    )
+  }
+
+  const input: AddBanInput = {
+    book_id: dedup.book_id,
+    country_code: countryCode,
+    scope_slug: section.scope_default,
+    action_type: section.action_type_default,
+    ban_status: section.status_default,
+    year: row.year,
+    reason_slug: reason.slug,
+    description_ban: formatBanDescription(row),
+    source_url: wikipediaSourceUrl(ctx.page, row.source_anchor),
+    source_name: `Wikipedia: ${ctx.page.replace(/_/g, ' ')}`,
+    source_type: ctx.sourceConfig.source_type,
+  }
+
+  const result = await commitNewBanForBook(input, pg)
+
+  // Mirror commitAutoApprove's queue cleanup: if a prior run left a pending
+  // review row for this same source_row_id, mark it approved with the
+  // resolved book/ban IDs. Non-fatal on failure.
+  const titleSlug = slugify(row.title || 'untitled')
+  const sourceRowId = `${row.source_anchor}#${titleSlug}`
+  const { error: queueUpdateErr } = await sb
+    .from('import_review_queue')
+    .update({
+      status: 'approved',
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: 'wikipedia-auto-add-ban',
+      approved_book_id: dedup.book_id,
+      approved_bans: [result.ban_id],
+    })
+    .eq('source_slug', ctx.sourceConfig.source_slug)
+    .eq('source_row_id', sourceRowId)
+    .eq('status', 'pending_review')
+  if (queueUpdateErr) {
+    console.error(
+      `  [warn] queue cleanup failed for ${sourceRowId}: ${queueUpdateErr.message}`,
+    )
+  }
+
+  return {
+    mode: 'auto_add_ban',
+    book_id: dedup.book_id,
+    ban_id: result.ban_id,
+    created: result.created,
+  }
+}
+
+// ----------------------------------------------------------------------------
 // Review path
 // ----------------------------------------------------------------------------
 
@@ -214,6 +299,26 @@ async function commitReview(
   // (vereist DDL).
   const agreementClass = 'single-pass-only'
 
+  // source_context: resolved per-section configuration captured at insert
+  // time so the admin /import-review approve flow can reconstruct
+  // country_code / source_url / source_name / scope / action / status even
+  // if the WIKIPEDIA_SOURCES registry is later renamed, removed, or — most
+  // commonly — not yet deployed to production when an older queue row is
+  // reviewed. getQueueSourceContext falls back to these values when its
+  // primary `findWikipediaSourceConfig` lookup misses.
+  const resolvedCountryCode =
+    section.country_code ?? ctx.sourceConfig.country_code ?? null
+  const sourceContext = {
+    country_code: resolvedCountryCode,
+    source_url: sourceUrl,
+    source_name: `Wikipedia: ${ctx.page.replace(/_/g, ' ')}`,
+    source_type: ctx.sourceConfig.source_type,
+    section_heading: section.heading,
+    scope_default: section.scope_default,
+    action_type_default: section.action_type_default,
+    status_default: section.status_default,
+  }
+
   const agreementDetails = {
     source: 'wikipedia',
     page: ctx.page,
@@ -223,6 +328,7 @@ async function commitReview(
     quality_flags,
     reason_mapping: reason,
     dedup_check: dedup.kind === 'none' ? null : dedup,
+    source_context: sourceContext,
   }
 
   const { data, error } = await sb

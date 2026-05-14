@@ -21,10 +21,38 @@
 //   fuzzy sim > 0.85   → duplicate (match_type: 'fuzzy_title_author')
 //   0.5 < sim ≤ 0.85   → possible_duplicate (match_type: 'fuzzy_possible')
 //   no overlap         → none
+//
+// Pre-normalization: Wikipedia titles are commonly disambiguated with a
+// trailing `(YYYY)` year-in-parens or `(series)`/`(novel)`/`(book)`. Those
+// suffixes drag trigram similarity down by 0.10–0.15 vs the canonical title
+// already in books, producing sub-0.85 scores for what are obviously the
+// same work. We strip these suffixes before both the slug-collision and
+// fuzzy passes so that true duplicates land in the 'duplicate' bucket
+// (which auto-add-bans against the existing book), not the review queue.
 
 import { slugify } from '../imports/slugify'
 import type { adminClient } from '../supabase'
 import type { DedupResult, ParsedRow } from './types'
+
+// Strip Wikipedia-style disambiguator suffixes that don't carry identity:
+//   "Title (1789)"      → "Title"
+//   "Title (series)"    → "Title"
+//   "Title (novel)"     → "Title"
+//   "Title (book)"      → "Title"
+// Preserves multi-word parentheticals that ARE part of the title
+// (e.g. "1984 (Nineteen Eighty-Four)"). Conservative match: only a single
+// trailing parenthetical whose content is a 4-digit year OR a known suffix.
+const DISAMBIGUATOR_SUFFIXES = new Set(['series', 'novel', 'book', 'novella'])
+export function normalizeTitleForDedup(title: string): string {
+  const m = title.match(/^(.*?)\s*\(([^)]+)\)\s*$/)
+  if (!m) return title.trim()
+  const head = m[1].trim()
+  const inside = m[2].trim().toLowerCase()
+  if (/^\d{4}$/.test(inside) || DISAMBIGUATOR_SUFFIXES.has(inside)) {
+    return head
+  }
+  return title.trim()
+}
 
 type Sb = ReturnType<typeof adminClient>
 
@@ -48,21 +76,29 @@ export async function dedupAgainstBooks(
   //    INSERT; running the same helper here catches exact-canonical-title
   //    duplicates that fuzzy may miss when author names differ between the
   //    Wikipedia row and the prod row (commit-8 trigger case: Rangila Rasul).
+  //    We slugify BOTH the raw and the normalized title and check both, since
+  //    the importer hasn't yet been updated to strip disambiguators at write-
+  //    time — existing books may have slugs with or without the suffix.
+  const normalizedTitle = row.title ? normalizeTitleForDedup(row.title) : ''
   if (row.title) {
-    const candidateSlug = slugify(row.title)
-    if (candidateSlug) {
-      const { data: slugMatch, error: slugErr } = await sb
+    const slugCandidates = new Set<string>()
+    const rawSlug = slugify(row.title)
+    if (rawSlug) slugCandidates.add(rawSlug)
+    const normSlug = slugify(normalizedTitle)
+    if (normSlug) slugCandidates.add(normSlug)
+    if (slugCandidates.size > 0) {
+      const { data: slugMatches, error: slugErr } = await sb
         .from('books')
         .select('id')
-        .eq('slug', candidateSlug)
-        .maybeSingle()
+        .in('slug', [...slugCandidates])
+        .limit(1)
       if (slugErr) {
         throw new Error(`dedup: slug lookup failed: ${slugErr.message}`)
       }
-      if (slugMatch) {
+      if (slugMatches && slugMatches.length > 0) {
         return {
           kind: 'duplicate',
-          book_id: slugMatch.id as number,
+          book_id: slugMatches[0].id as number,
           similarity: 1,
           match_type: 'slug_collision',
         }
@@ -78,9 +114,11 @@ export async function dedupAgainstBooks(
     return { kind: 'none' }
   }
 
+  // Use the normalized title for the fuzzy RPC so trigram similarity is
+  // computed without the `(YYYY)` / `(series)` noise dragging the score down.
   const { data: bookRpc, error: bookErr } = await sb.rpc(
     'find_book_candidates_by_title',
-    { q: row.title, threshold: BOOK_THRESHOLD },
+    { q: normalizedTitle || row.title, threshold: BOOK_THRESHOLD },
   )
   if (bookErr) {
     throw new Error(`dedup: find_book_candidates_by_title failed: ${bookErr.message}`)

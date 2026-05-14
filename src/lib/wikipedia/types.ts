@@ -28,6 +28,7 @@ export type ParsedRow = {
   // is blocked whenever either of these is set, via the
   // 'model_3_review_needed' quality flag.
   title_native?: string | null
+  title_transliterated?: string | null
   title_english_meaningful?: string | null
   authors: string[]                // 0+ display names, wikitext-stripped
   state: string | null             // only set when section's column-map has a state index
@@ -63,6 +64,17 @@ export type DedupResult =
 
 export type ImportDecision =
   | { mode: 'auto_approve'; row: ParsedRow; reason: ReasonMapping }
+  // Same baseline-quality gates as auto_approve, but dedup found an existing
+  // book that matches. The pipeline creates a NEW ban on the existing book
+  // (different country / scope / year than what's already on it) instead of
+  // a new books row. Idempotent against repeat runs via a SELECT-first guard
+  // on (book_id, country_code, year_started, scope_id).
+  | {
+      mode: 'auto_add_ban'
+      row: ParsedRow
+      reason: ReasonMapping
+      dedup: Extract<DedupResult, { kind: 'duplicate' }>
+    }
   | {
       mode: 'review'
       row: ParsedRow
@@ -73,17 +85,21 @@ export type ImportDecision =
 
 // Per-section column mapping. Indices are 0-based cell positions within a
 // wikitable row. `notes` is the index where the notes/description blob starts;
-// the parser joins everything from that index to the end of the row. Sources
-// without a year or state column set those to null. The "type of literature"
-// column on the Iran page is intentionally not modeled — it gets absorbed
-// into the notes blob via a `notes` index that points past it, or the column
-// is included by setting `notes` to overlap it (caller's choice).
+// by default the parser joins everything from that index to the end of the row.
+// Set `notes_end` (inclusive) to cap the slice — needed for tables where
+// columns AFTER the notes/reason text exist but aren't useful as description
+// (e.g. ALA's rank-by-decade columns sit after the reason column).
+// Sources without a year or state column set those to null. The "type of
+// literature" column on the Iran page is intentionally not modeled — it gets
+// absorbed into the notes blob via a `notes` index that points past it, or
+// the column is included by setting `notes` to overlap it (caller's choice).
 export type ColumnMap = {
   title: number
   authors: number
   year: number | null
   state: number | null
   notes: number
+  notes_end?: number
 }
 
 export type SectionConfig = {
@@ -96,6 +112,12 @@ export type SectionConfig = {
   // like List_of_books_banned_by_governments where each `== Country ==`
   // section maps to a different country. Falls back to SourceConfig.country_code.
   country_code?: string
+  // When set, the title cell may list multiple works separated by this
+  // pattern (e.g. "Title A; Title B; Title C"). The parser then emits ONE
+  // ParsedRow per work, all sharing the same year/author/notes. Used by
+  // the Index Librorum Prohibitorum source where each row is an AUTHOR
+  // with one or more banned works.
+  multi_title_separator?: RegExp
 }
 
 export type SourceConfig = {

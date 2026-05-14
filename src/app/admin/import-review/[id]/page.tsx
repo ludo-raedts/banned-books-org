@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
-import { WIKIPEDIA_SOURCES } from '@/lib/wikipedia/config'
+import { getQueueSectionDefaults } from '@/lib/imports/review-approve'
 import DetailClient, { type DetailViewData } from './detail-client'
 
 export const dynamic = 'force-dynamic'
@@ -93,13 +93,14 @@ export default async function ImportReviewDetailPage({
   if (scopesRes.error) throw new Error(`scopes fetch: ${scopesRes.error.message}`)
 
   // Pick a default scope for the form prefill. Wikipedia config's section
-  // defaults are the most accurate seed; falling back to 'government' covers
-  // historical / non-wiki sources.
-  const wikiCfg = findWikipediaConfig(queueRow.source_slug)
-  const sectionDefault = wikiCfg?.sections.find(
-    s => s.heading.toLowerCase().replace(/\s+/g, '_') === parsed.source_anchor ||
-         (parsed.source_anchor && parsed.source_anchor.toLowerCase().includes(s.heading.toLowerCase().replace(/\s+/g, '_'))),
-  ) ?? wikiCfg?.sections[0] ?? null
+  // defaults are the most accurate seed; falling back to stored
+  // agreement_details.source_context (written at queue-insert time) covers
+  // the case where the slug isn't in this deployed bundle's WIKIPEDIA_SOURCES
+  // (e.g. queue row was inserted by a newer import build).
+  const sectionDefaults = getQueueSectionDefaults(
+    queueRow.source_slug,
+    queueRow.agreement_details,
+  )
 
   const detail: DetailViewData = {
     id: queueRow.id,
@@ -129,11 +130,7 @@ export default async function ImportReviewDetailPage({
     } : null,
     duplicate_book: duplicateBook,
     reason_suggestion: reasonSuggestion,
-    section_defaults: sectionDefault ? {
-      action_type: sectionDefault.action_type_default,
-      scope_slug: sectionDefault.scope_default,
-      ban_status: sectionDefault.status_default,
-    } : null,
+    section_defaults: sectionDefaults,
     approved_book_id: queueRow.approved_book_id,
   }
 
@@ -156,9 +153,3 @@ export default async function ImportReviewDetailPage({
   )
 }
 
-function findWikipediaConfig(sourceSlug: string) {
-  for (const cfg of Object.values(WIKIPEDIA_SOURCES)) {
-    if (cfg.source_slug === sourceSlug) return cfg
-  }
-  return null
-}

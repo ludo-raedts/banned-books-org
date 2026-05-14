@@ -207,9 +207,117 @@ const BANNED_BY_GOVERNMENTS: SourceConfig = {
   ),
 }
 
+// ALA most-challenged books in the United States.
+// Layout (after rowspan/colspan headers are skipped by the parser):
+//   0 Title (wrapped in {{Sort|key|display}})
+//   1 Author (wrapped in {{Sortname|First|Last}})
+//   2 Reason(s) for Challenge   ← canonical reason text; notes_end=2
+//   3 Year(s) published         ← first 4-digit run wins ("1885; 2018" → 1885)
+//   4 ALA rank 2010–2019
+//   5 ALA rank 2000–2009
+//   6 ALA rank 1990–1999
+// Rank columns are dropped (not in notes, not surfaced anywhere yet). Each
+// row → one ban, action_type='challenged' (ALA tracks challenges, not formal
+// bans) with scope='school' to match the PEN America convention for the
+// US school-district challenge pattern.
+const ALA: SourceConfig = {
+  page: 'List_of_most_commonly_challenged_books_in_the_United_States',
+  country_code: 'US',
+  source_slug: 'wikipedia-ala-most-challenged',
+  source_type: 'wikipedia',
+  sections: [
+    {
+      heading: 'List',
+      action_type_default: 'challenged',
+      scope_default: 'school',
+      status_default: 'historical',
+      columns: { title: 0, authors: 1, year: 3, state: null, notes: 2, notes_end: 2 },
+    },
+  ],
+}
+
+// New Zealand: 5 wikitables across 3 level-2 sections (with 2 level-3 sub-
+// sections under the pre-1963 era). All 5 tables share the same 8-column
+// layout: Published | Title | Author | Type | Banned by | Banned | Current
+// status | Notes. We register each table's heading as a separate section so
+// the parser walks all 5 (the parser extracts only the FIRST wikitable per
+// section, so level-3 sub-sections need their own entries).
+//
+// scope_default='government' covers the era-specific reality: pre-1963 bans
+// were customs/wartime decrees; the 1963-1994 Tribunal and 1994-present OFLC
+// are both statutory national bodies. All are national-scope.
+// status_default='historical' is a simplification — many 1994-present OFLC
+// classifications are still active. Editors flip those during review.
+const NZ_SECTION_BASE = {
+  action_type_default: 'banned' as const,
+  scope_default: 'government',
+  status_default: 'historical' as const,
+  columns: { title: 1, authors: 2, year: 0, state: null, notes: 7 },
+}
+
+const NEW_ZEALAND: SourceConfig = {
+  page: 'List_of_books_banned_in_New_Zealand',
+  country_code: 'NZ',
+  source_slug: 'wikipedia-nz',
+  source_type: 'wikipedia',
+  sections: [
+    { heading: 'Before the Indecent Publications Tribunal (1841–1963)', ...NZ_SECTION_BASE },
+    { heading: 'World War I period (1914–1920)', ...NZ_SECTION_BASE },
+    { heading: 'World War II (1939–1945)', ...NZ_SECTION_BASE },
+    { heading: 'Indecent Publications Tribunal (1963–1994)', ...NZ_SECTION_BASE },
+    { heading: 'Office of Film and Literature Classification (1994–present)', ...NZ_SECTION_BASE },
+  ],
+}
+
+// Index Librorum Prohibitorum (Catholic Church's list of prohibited books,
+// 1559–1966). Two wikitables: the main "List of authors and works in the
+// final edition" (12 rows) and "Reversals and non-inclusions" (6 rows).
+// Each row represents one AUTHOR with one or more works in the Works cell,
+// separated by `;` after wikitext-strip. Authors are shown in sorted form
+// ("Machiavelli, Niccolo") which the author parser unflips to "Niccolo
+// Machiavelli".
+//
+// country_code: 'VA' (Vatican City) — the Index was a Holy See instrument.
+// Not perfectly accurate for the early modern period when the Papal States
+// preceded the modern Vatican, but VA is the only available ISO code that
+// maps to the Catholic Church as banning authority.
+//
+// scope_default: 'government' — closest match for a centralized formal
+// authority's enumerated list. (No 'religious' scope exists in this DB.)
+const INDEX_LIBRORUM_BASE = {
+  action_type_default: 'banned' as const,
+  scope_default: 'government',
+  status_default: 'historical' as const,
+  columns: { title: 2, authors: 1, year: 0, state: null, notes: 3 },
+  // Split Works cell on `;<br>` (pre-strip, so we don't mis-fire on titles
+  // that contain an internal `;` like "Religio Medici; the religion of a
+  // physician"). Each segment becomes one ParsedRow.
+  multi_title_separator: /\s*;\s*<br\s*\/?>\s*/i,
+}
+
+const INDEX_LIBRORUM: SourceConfig = {
+  page: 'List_of_authors_and_works_on_the_Index_Librorum_Prohibitorum',
+  country_code: 'VA',
+  source_slug: 'wikipedia-index-librorum',
+  source_type: 'wikipedia',
+  sections: [
+    {
+      heading: 'List of authors and works in the final edition, with later additions',
+      ...INDEX_LIBRORUM_BASE,
+    },
+    {
+      heading: 'Reversals and non-inclusions',
+      ...INDEX_LIBRORUM_BASE,
+    },
+  ],
+}
+
 export const WIKIPEDIA_SOURCES: Record<string, SourceConfig> = {
   india: INDIA,
   iran: IRAN,
   china: CHINA,
   'banned-by-governments': BANNED_BY_GOVERNMENTS,
+  ala: ALA,
+  nz: NEW_ZEALAND,
+  'index-librorum': INDEX_LIBRORUM,
 }

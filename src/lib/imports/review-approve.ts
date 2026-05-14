@@ -32,49 +32,139 @@ export function findWikipediaSourceConfig(sourceSlug: string): SourceConfig | nu
   return null
 }
 
+// Subset of agreement_details.source_context — see `commitReview` in
+// src/lib/wikipedia/importer.ts. Captured at queue-insert time so the
+// approve flow has self-contained context even if WIKIPEDIA_SOURCES later
+// renames/removes the slug, or if the deployed bundle simply doesn't yet
+// know about a slug used by a queue row written from a newer import job.
+type StoredSourceContext = {
+  country_code?: string | null
+  source_url?: string | null
+  source_name?: string | null
+  source_type?: string | null
+  section_heading?: string | null
+  scope_default?: string | null
+  action_type_default?: 'banned' | 'restricted' | 'challenged' | null
+  status_default?: 'active' | 'historical' | null
+}
+
 export function getQueueSourceContext(
   sourceSlug: string,
   agreementDetails: unknown,
   queueSourceUrl: string | null,
 ): QueueSourceContext {
-  const wikiCfg = findWikipediaSourceConfig(sourceSlug)
-  if (!wikiCfg) {
-    throw new Error(
-      `No source-config found for slug '${sourceSlug}'. Add it to src/lib/wikipedia/config.ts (or extend review-approve.ts for non-wikipedia sources).`,
-    )
-  }
   const agreement = (agreementDetails ?? {}) as {
     page?: string
     section_anchor?: string
     parsed_row?: { source_anchor?: string }
+    source_context?: StoredSourceContext
   }
-  const page = agreement.page ?? wikiCfg.page
+  const stored = agreement.source_context ?? {}
+  const wikiCfg = findWikipediaSourceConfig(sourceSlug)
+
+  // Configured path: WIKIPEDIA_SOURCES has this slug. Re-derive context from
+  // the live config so a slug rename / country-code fix in config.ts takes
+  // effect immediately without backfill.
+  if (wikiCfg) {
+    const page = agreement.page ?? wikiCfg.page
+    const sectionAnchor =
+      agreement.parsed_row?.source_anchor ?? agreement.section_anchor ?? ''
+    const sourceUrl =
+      queueSourceUrl ?? `https://en.wikipedia.org/wiki/${page}#${sectionAnchor}`
+    const sourceName = `Wikipedia: ${page.replace(/_/g, ' ')}`
+    const matchingSection = wikiCfg.sections.find(
+      s => s.heading.replace(/ /g, '_') === sectionAnchor,
+    )
+    const country_code = matchingSection?.country_code ?? wikiCfg.country_code
+    if (!country_code) {
+      // Live config exists but the section's country_code isn't resolvable.
+      // Fall through to stored context if it has one; otherwise error.
+      if (stored.country_code) {
+        return {
+          country_code: stored.country_code,
+          source_url: stored.source_url ?? sourceUrl,
+          source_name: stored.source_name ?? sourceName,
+          source_type: stored.source_type ?? wikiCfg.source_type,
+        }
+      }
+      throw new Error(
+        `getQueueSourceContext: no country_code for source '${sourceSlug}' ` +
+          `section '${sectionAnchor}' (neither section nor source defines one, and no stored context)`,
+      )
+    }
+    return {
+      country_code,
+      source_url: sourceUrl,
+      source_name: sourceName,
+      source_type: wikiCfg.source_type,
+    }
+  }
+
+  // Fallback path: WIKIPEDIA_SOURCES doesn't know about this slug (most
+  // commonly: a queue row inserted by a newer import-pipeline build whose
+  // config.ts is not yet deployed in this bundle). Use the source_context
+  // that the importer stored on the queue row.
+  if (stored.country_code && stored.source_url && stored.source_name) {
+    return {
+      country_code: stored.country_code,
+      source_url: queueSourceUrl ?? stored.source_url,
+      source_name: stored.source_name,
+      source_type: stored.source_type ?? 'wikipedia',
+    }
+  }
+
+  throw new Error(
+    `No source-config found for slug '${sourceSlug}' AND no source_context ` +
+      `in agreement_details. Add the slug to src/lib/wikipedia/config.ts and ` +
+      `redeploy, or backfill agreement_details.source_context for this row.`,
+  )
+}
+
+// Helper for /admin/import-review form prefilling: derive
+// (action_type, scope_slug, ban_status) for a queue row, preferring live
+// SectionConfig defaults and falling back to the stored snapshot in
+// agreement_details.source_context if the slug or section is unknown.
+export function getQueueSectionDefaults(
+  sourceSlug: string,
+  agreementDetails: unknown,
+): {
+  action_type: 'banned' | 'restricted' | 'challenged'
+  scope_slug: string
+  ban_status: 'active' | 'historical'
+} | null {
+  const agreement = (agreementDetails ?? {}) as {
+    section_anchor?: string
+    parsed_row?: { source_anchor?: string }
+    source_context?: StoredSourceContext
+  }
+  const stored = agreement.source_context ?? {}
   const sectionAnchor =
     agreement.parsed_row?.source_anchor ?? agreement.section_anchor ?? ''
-  const sourceUrl =
-    queueSourceUrl ?? `https://en.wikipedia.org/wiki/${page}#${sectionAnchor}`
-  const sourceName = `Wikipedia: ${page.replace(/_/g, ' ')}`
-
-  // Per-section country_code overrides source-level. Used by multi-country
-  // sources like List_of_books_banned_by_governments where each `== Country ==`
-  // section sets its own ISO code on the SectionConfig.
-  const matchingSection = wikiCfg.sections.find(
-    s => s.heading.replace(/ /g, '_') === sectionAnchor,
-  )
-  const country_code = matchingSection?.country_code ?? wikiCfg.country_code
-  if (!country_code) {
-    throw new Error(
-      `getQueueSourceContext: no country_code for source '${sourceSlug}' ` +
-        `section '${sectionAnchor}' (neither section nor source defines one)`,
-    )
+  const wikiCfg = findWikipediaSourceConfig(sourceSlug)
+  if (wikiCfg) {
+    const sec =
+      wikiCfg.sections.find(s => s.heading.replace(/ /g, '_') === sectionAnchor)
+      ?? wikiCfg.sections[0]
+    if (sec) {
+      return {
+        action_type: sec.action_type_default,
+        scope_slug: sec.scope_default,
+        ban_status: sec.status_default,
+      }
+    }
   }
-
-  return {
-    country_code,
-    source_url: sourceUrl,
-    source_name: sourceName,
-    source_type: wikiCfg.source_type,
+  if (
+    stored.action_type_default
+    && stored.scope_default
+    && stored.status_default
+  ) {
+    return {
+      action_type: stored.action_type_default,
+      scope_slug: stored.scope_default,
+      ban_status: stored.status_default,
+    }
   }
+  return null
 }
 
 export type ApproveOverlay = {

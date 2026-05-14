@@ -114,16 +114,13 @@ async function main(): Promise<void> {
   // ── Summary ────────────────────────────────────────────────────────────
   const dupCount = classified.filter(c => c.dedup.kind === 'duplicate').length
   const newCount = classified.length - dupCount
-  const autoCount = classified.filter(
-    c => c.decision.mode === 'auto_approve' && c.dedup.kind !== 'duplicate',
-  ).length
-  const reviewCount = classified.filter(
-    c => c.decision.mode === 'review' && c.dedup.kind !== 'duplicate',
-  ).length
+  const autoCount = classified.filter(c => c.decision.mode === 'auto_approve').length
+  const addBanCount = classified.filter(c => c.decision.mode === 'auto_add_ban').length
+  const reviewCount = classified.filter(c => c.decision.mode === 'review').length
 
   const flagCounts = new Map<string, number>()
   for (const c of classified) {
-    if (c.decision.mode !== 'review' || c.dedup.kind === 'duplicate') continue
+    if (c.decision.mode !== 'review') continue
     for (const f of c.decision.quality_flags) {
       flagCounts.set(f, (flagCounts.get(f) ?? 0) + 1)
     }
@@ -134,8 +131,9 @@ async function main(): Promise<void> {
   console.log(`Wikipedia source: ${args.source} (revid ${fetched.revid})`)
   console.log(`Parsed: ${allRows.length} rows (${sectionFmt})`)
   console.log(`After dedup: ${newCount} new, ${dupCount} already in DB`)
-  console.log(`Auto-approve: ${autoCount}`)
-  console.log(`Review queue: ${reviewCount}`)
+  console.log(`Auto-approve (new book + ban): ${autoCount}`)
+  console.log(`Auto-add-ban  (existing book): ${addBanCount}`)
+  console.log(`Review queue:                  ${reviewCount}`)
   for (const [flag, count] of flagBreakdown) {
     console.log(`  - ${count} ${flag}`)
   }
@@ -155,15 +153,9 @@ async function main(): Promise<void> {
     reason_mapping: c.reason.mapping,
     reason_flags: c.reason.extra_flags,
     dedup: c.dedup,
-    // Reflect the apply-time outcome rather than decide()'s internal mode:
-    // duplicates are skipped by commitDecision and never reach the review
-    // queue, even though decide() returns mode='review' for them.
-    decision_mode:
-      c.dedup.kind === 'duplicate' ? 'skip_duplicate' : c.decision.mode,
+    decision_mode: c.decision.mode,
     review_quality_flags:
-      c.decision.mode === 'review' && c.dedup.kind !== 'duplicate'
-        ? c.decision.quality_flags
-        : null,
+      c.decision.mode === 'review' ? c.decision.quality_flags : null,
   }))
   await fs.writeFile(
     dumpPath,
@@ -174,7 +166,13 @@ async function main(): Promise<void> {
         revid: fetched.revid,
         fetched_at: fetched.fetched_at,
         per_section_counts: perSection,
-        summary: { parsed: allRows.length, dup: dupCount, auto: autoCount, review: reviewCount },
+        summary: {
+          parsed: allRows.length,
+          dup: dupCount,
+          auto: autoCount,
+          auto_add_ban: addBanCount,
+          review: reviewCount,
+        },
         flag_breakdown: flagBreakdown,
         rows: dumpRows,
       },
@@ -196,7 +194,8 @@ async function main(): Promise<void> {
 
   let applied = 0
   let queued = 0
-  let skippedDup = 0
+  let bansAdded = 0       // new bans created on existing books
+  let bansIdempotent = 0  // ban already existed (no-op write)
   let errors = 0
   try {
     const ctx: ImporterContext = {
@@ -206,10 +205,13 @@ async function main(): Promise<void> {
     }
     for (const c of classified) {
       try {
-        const r = await commitDecision(sb, pg, ctx, c.section, c.decision, c.dedup)
+        const r = await commitDecision(sb, pg, ctx, c.section, c.decision)
         if (r.mode === 'auto_approve') applied++
         else if (r.mode === 'review') queued++
-        else skippedDup++
+        else if (r.mode === 'auto_add_ban') {
+          if (r.created) bansAdded++
+          else bansIdempotent++
+        }
       } catch (err) {
         errors++
         console.error(`  [error] ${c.row.title}: ${(err as Error).message}`)
@@ -220,7 +222,8 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    `\n[apply] applied=${applied}, queued=${queued}, skipped_duplicates=${skippedDup}, errors=${errors}`,
+    `\n[apply] applied=${applied}, queued=${queued}, ` +
+      `bans_added=${bansAdded}, bans_idempotent=${bansIdempotent}, errors=${errors}`,
   )
 }
 
