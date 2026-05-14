@@ -9,7 +9,7 @@
 > Live site: <https://www.banned-books.org>
 > Owner: Ludo Raedts (Groningen, NL) — solo project, started April 2026.
 >
-> **Last updated: 2026-05-14** — review-queue triage helper toegevoegd + lèse-majesté word-boundary fix in `reason-mapper.ts`.
+> **Last updated: 2026-05-14** — review-queue triage helper toegevoegd + lèse-majesté word-boundary fix in `reason-mapper.ts`; "Google ↗"-knop op review-queue rijen en detail-header voor snelle background-research.
 
 ---
 
@@ -612,6 +612,8 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **Migratie-tooling** — `migration-parser.ts` ondersteunt nu multi-column `ALTER TABLE`; `scripts/seed-local-from-prod.ts` gebouwd als doctrine-tool voor data-migratie workflow.
 
 **Review-queue triage helper (2026-05-14)** — `scripts/remap-unmapped-queue.ts` haalt de huidige `mapReason()` opnieuw over `import_review_queue`-rijen die nog de `unmapped_reason` quality-flag dragen. Strict-mapper hits (pass-1) verwijderen de flag en updaten `agreement_details.reason_mapping`; brede heuristiek (pass-2, geport vanuit `scripts/reclassify-other-reasons.ts`) vult een low-confidence slug in maar behoudt de flag zodat de editor de gok herkent. Eerste run patchte 19 van 181 unmapped rijen (1 strict + 18 broad). Tegelijk: word-boundary bug in `reason-mapper.ts` lèse-majesté-patroon gefixt — JS `\b` werkt niet op de trailing `é` (non-`\w`), waardoor "lese-majesté rules" niet matchte. Gedocumenteerd op `/admin/scripts#review-queue-helpers` en gelinkt vanaf de import-review banner.
+
+**Review-queue Google-search knop (2026-05-14)** — kleine UX-toevoeging voor boeken die vast zitten in review. Elke rij in `/admin/import-review` toont nu een "Google ↗"-knop naast "Open →"; de detailpagina-header heeft dezelfde knop naast de status-badge. Klik opent `google.com/search?q=` met `"titel" auteur1 auteur2` in een nieuw tabblad (`target="_blank"` + `rel="noopener noreferrer"`) zodat de editor snel achtergrond-info kan opzoeken zonder handmatig te kopiëren. Implementatie: helper `googleSearchUrl()` lokaal in `src/app/admin/import-review/list-client.tsx` en `[id]/detail-client.tsx`. Commit `c73ce28`.
 
 **Sprint A Taak 3 afgerond (2026-05-13)** — pipeline plumbing operationeel. Negen modules onder `src/lib/imports/` implementeren een zeven-fasen-pipeline (fetched → archived → extracted → verified → gated → committed) die LLM-extractie van Gemini 2.5 Pro en GPT-4o parallel draait en consolideert tot één `ExtractionResult` met audit-trail van beide passes intact. Twee migraties toegevoegd: de `import_jobs` tabel voor lifecycle-tracking, plus twee fuzzy-match RPCs (`find_book_candidates_by_title`, `find_author_candidates_by_name`). Eindtest geslaagd met de Wikipedia-pagina over *Suicide, mode d'emploi* als manual-source bron: verifier matched bestaande auteurs (Claude Guillon, Yves Le Bonniec) exact, country zacht `no_match` (manual-source heeft geen `default_country_code`), gate weigerde auto-approve wegens conflict + high-stakes tier, review-queue rij correct gevuld met beide model-outputs apart bewaard. Commits `9843075..74e8c66`.
 
