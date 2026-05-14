@@ -71,6 +71,10 @@ export type DetailViewData = {
     scope_slug: string
     ban_status: BanStatus
   } | null
+  // Auto-suggested via Unicode-block detection on parsed.title_native + the
+  // source country. Editor can overwrite; null when no native title or no
+  // resolvable source context.
+  language_suggestion: { language: string; script: string | null } | null
   approved_book_id: number | null
 }
 
@@ -95,7 +99,9 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   const [title, setTitle] = useState(data.parsed.title)
   const [titleNative, setTitleNative] = useState(data.parsed.title_native ?? '')
   const [titleEnglish, setTitleEnglish] = useState(data.parsed.title_english_meaningful ?? '')
-  const [originalLanguage, setOriginalLanguage] = useState('')
+  const [originalLanguage, setOriginalLanguage] = useState(
+    data.language_suggestion?.language ?? '',
+  )
   const [authors, setAuthors] = useState<string[]>(
     data.parsed.authors.length > 0 ? data.parsed.authors : [''],
   )
@@ -379,7 +385,13 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
 
               <FormField
                 label="Original language"
-                hint="ISO 639-1 two-letter code (en, fr, ru, zh…)"
+                hint={
+                  data.language_suggestion
+                    ? `ISO 639-1 two-letter code. Auto-filled from ${
+                        data.language_suggestion.script ?? 'script'
+                      } + source country — overwrite if wrong.`
+                    : 'ISO 639-1 two-letter code (en, fr, ru, zh…)'
+                }
               >
                 <input
                   type="text"

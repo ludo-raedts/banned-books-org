@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
-import { getQueueSectionDefaults } from '@/lib/imports/review-approve'
+import { getQueueSectionDefaults, getQueueSourceContext } from '@/lib/imports/review-approve'
+import { inferScriptAndLanguage } from '@/lib/imports/language-inference'
 import DetailClient, { type DetailViewData } from './detail-client'
 
 export const dynamic = 'force-dynamic'
@@ -246,6 +247,30 @@ export default async function ImportReviewDetailPage({
     queueRow.agreement_details,
   )
 
+  // Pre-fill the original_language input based on the script of title_native
+  // plus the source country (from WIKIPEDIA_SOURCES or the stored snapshot).
+  // Wrapped in try/catch because getQueueSourceContext throws when neither
+  // live config nor stored source_context has a country_code — in that case
+  // we just skip the suggestion and the form starts empty (same as today).
+  let inferredLanguage: string | null = null
+  let inferredScript: string | null = null
+  try {
+    const ctx = getQueueSourceContext(
+      queueRow.source_slug,
+      queueRow.agreement_details,
+      queueRow.source_url,
+    )
+    const inferred = inferScriptAndLanguage(
+      parsed.title_native ?? null,
+      ctx.country_code,
+      parsed.state ?? null,
+    )
+    inferredLanguage = inferred.language
+    inferredScript = inferred.script
+  } catch {
+    // No source context available — leave suggestions null.
+  }
+
   const detail: DetailViewData = {
     id: queueRow.id,
     source_slug: queueRow.source_slug,
@@ -282,6 +307,9 @@ export default async function ImportReviewDetailPage({
     duplicate_book_full: duplicateBook,
     reason_suggestion: reasonSuggestion,
     section_defaults: sectionDefaults,
+    language_suggestion: inferredLanguage
+      ? { language: inferredLanguage, script: inferredScript }
+      : null,
     approved_book_id: queueRow.approved_book_id,
   }
 
