@@ -260,12 +260,20 @@ const NEW_ZEALAND: SourceConfig = {
   country_code: 'NZ',
   source_slug: 'wikipedia-nz',
   source_type: 'wikipedia',
+  // Per-section fallbacks capture the era-specific reason context:
+  //   - Indecent Publications Tribunal eras (1841–1994) and OFLC (1994–present)
+  //     are statutory obscenity/indecency regimes — every ban on those lists
+  //     traces back to morality/sexual-content concerns. fallback='obscenity'.
+  //   - WW1/WW2 sections were wartime customs/sedition decrees — political
+  //     censorship of seditious or anti-government material. fallback='political'.
+  // Applied only when the notes cell has no signal; rows with "restricted N in YYYY"
+  // or richer text still go through the strict pattern mapper first.
   sections: [
-    { heading: 'Before the Indecent Publications Tribunal (1841–1963)', ...NZ_SECTION_BASE },
-    { heading: 'World War I period (1914–1920)', ...NZ_SECTION_BASE },
-    { heading: 'World War II (1939–1945)', ...NZ_SECTION_BASE },
-    { heading: 'Indecent Publications Tribunal (1963–1994)', ...NZ_SECTION_BASE },
-    { heading: 'Office of Film and Literature Classification (1994–present)', ...NZ_SECTION_BASE },
+    { heading: 'Before the Indecent Publications Tribunal (1841–1963)', ...NZ_SECTION_BASE, fallback_reason_slug: 'obscenity' },
+    { heading: 'World War I period (1914–1920)', ...NZ_SECTION_BASE, fallback_reason_slug: 'political' },
+    { heading: 'World War II (1939–1945)', ...NZ_SECTION_BASE, fallback_reason_slug: 'political' },
+    { heading: 'Indecent Publications Tribunal (1963–1994)', ...NZ_SECTION_BASE, fallback_reason_slug: 'obscenity' },
+    { heading: 'Office of Film and Literature Classification (1994–present)', ...NZ_SECTION_BASE, fallback_reason_slug: 'obscenity' },
   ],
 }
 
@@ -293,6 +301,12 @@ const INDEX_LIBRORUM_BASE = {
   // that contain an internal `;` like "Religio Medici; the religion of a
   // physician"). Each segment becomes one ParsedRow.
   multi_title_separator: /\s*;\s*<br\s*\/?>\s*/i,
+  // The Index is, by definition, the Catholic Church's catalogue of works
+  // condemned on doctrinal/religious grounds — every entry on the list is
+  // banned for religious reasons. The Wikipedia table has no per-row "reason"
+  // column (notes cells are citation refs that strip to empty), so without
+  // this fallback every row routes to review as 'unmapped_reason'.
+  fallback_reason_slug: 'religious',
 }
 
 const INDEX_LIBRORUM: SourceConfig = {
@@ -348,6 +362,17 @@ const HONG_KONG: SourceConfig = {
       // Post-2020 NSL-era bans; most are still in force.
       status_default: 'active',
       columns: { title: 1, authors: 2, year: 0, state: null, notes: 3, notes_end: 7 },
+      // The HK page is a matrix of which retailer/library banned each book;
+      // notes cells are just "✓" tick markers, not reason text. The bans
+      // themselves are NSL-era political censorship — every entry on this
+      // table was removed under the 2020 National Security Law framework.
+      // Without this fallback every row routes to review as 'unmapped_reason'.
+      fallback_reason_slug: 'political',
+      // Titles on this page are bilingual ("Han / Latin transliteration");
+      // post-handover HK uses traditional Chinese characters. Setting this
+      // here means the review form auto-fills `original_language='zh'`
+      // without relying on country-code inference for new imports.
+      original_language: 'zh',
     },
   ],
 }

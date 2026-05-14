@@ -143,7 +143,7 @@ async function main() {
         }
 
         const dedup = await dedupAgainstBooks(sb, parsedRow)
-        const reasonResult = mapReason(parsedRow.notes_raw)
+        const reasonResult = mapReason(parsedRow.notes_raw, section.fallback_reason_slug)
 
         const decision = decide({
           row: parsedRow,

@@ -37,7 +37,7 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
   // ── LGBTQ ────────────────────────────────────────────────────────────────
   // Strict: identity-themed phrases only. Bare "gay" / "lesbian" / "bisexual"
   // excluded because they appear in unrelated defamation contexts.
-  [/\b(lgbt|homosexual|same-sex|sexual orientation|transgender|gay rights|lesbian rights|gay (community|relationship)|lesbian (community|relationship))\b/i, 'lgbtq'],
+  [/\b(lgbt|homosexual|same-sex|sexual orientation|transgender|gay rights|lesbian rights|gay (community|relationship)|lesbian (community|relationship)|gay marriage|gender identity)\b/i, 'lgbtq'],
 
   // ── Blasphemy ────────────────────────────────────────────────────────────
   [/\bblasph/i, 'blasphemy'],
@@ -47,6 +47,18 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
 
   // ── Sexual / erotic ──────────────────────────────────────────────────────
   [/\b(sexual content|erotic|incest)\b/i, 'sexual'],
+
+  // ── Sexual — ALA corpus (added 2026-05-14) ──────────────────────────────
+  // ALA challenge cells phrase sex-themed reasons as "sexual references",
+  // "sex education", "teenage sexuality", "references to masturbation",
+  // "ritualistic sex", "sexual abuse", "physical and sexual abuse". The
+  // existing 'sexual content|erotic|incest' is too narrow for these.
+  // "rape" gates on a state/perpetrator context to avoid matching academic
+  // discussions of rape law or rape-history non-fiction unrelated to bans.
+  [
+    /\b(sexual (?:references?|abuse|explicitness|imagery|content)|sex(?:ual)? education|teenage sexual(?:ity)?|discussions? of (?:puberty|sexualit)|references? to (?:masturbation|rape|sexual abuse)|ritualistic sex|nudity)\b/i,
+    'sexual',
+  ],
 
   // ── Religious offence ────────────────────────────────────────────────────
   // Trailing \b deliberately omitted: the alternation contains stems like
@@ -66,6 +78,17 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
   // Sesame Street ban + analogous holiday-promotion bans.
   [
     /\b(heres(?:y|ies|ical)|inquisition|contradicting the teaching|criticizing (?:christianity|islam|hinduism|judaism|buddhism|sikhism|the church|catholicism|protestantism)|promoting (?:hanukkah|christmas|easter|ramadan|eid))\b/i,
+    'religious',
+  ],
+
+  // ── Religious — ALA corpus (added 2026-05-14) ───────────────────────────
+  // ALA cells cite "witchcraft", "occult themes", "supernatural themes",
+  // "religious viewpoint" (used as a complaint about books that *contain*
+  // a religious viewpoint), "anti-religion", and "promotion of Islam" as
+  // ban reasons. These are religious-content concerns even when the framing
+  // is anti-religious (the ban exists because religion is involved).
+  [
+    /\b(witchcraft|occult|supernatural themes?|religious viewpoint|anti-religion|promotion of (?:islam|christianity|judaism|hinduism|buddhism))\b/i,
     'religious',
   ],
 
@@ -146,11 +169,33 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'political',
   ],
 
+  // ── Political — ALA corpus (added 2026-05-14) ───────────────────────────
+  // "political viewpoint" is the ALA boilerplate complaint about books that
+  // express a political stance. "Un-American content" / "anti-American"
+  // appear in the Librarian of Basra-style cells. Communist/socialist
+  // sympathy (Call of the Wild) is also political under the ALA framing.
+  [
+    /\b(political viewpoint|"?un-american"? content|anti-american|pro-socialism|socialist sympathies)\b/i,
+    'political',
+  ],
+
   // ── Drugs ───────────────────────────────────────────────────────────────
-  [/\b(drug abuse|narcot|cannabis|marijuana|opium|heroin)\b/i, 'drugs'],
+  [/\b(drug abuse|drug use|drug references?|narcot|cannabis|marijuana|opium|heroin)\b/i, 'drugs'],
 
   // ── Violence / gore ─────────────────────────────────────────────────────
   [/\b(graphic violence|gore|grisly|gratuitous violence)\b/i, 'violence'],
+
+  // ── Violence — ALA corpus (added 2026-05-14) ────────────────────────────
+  // Bare "violence" hits a lot of ALA challenge cells where violence IS the
+  // ban reason. "gang violence" / "depictions of torture" / "torture and
+  // mutilation" / "firearms" / "depictions of violence against women" are
+  // common variants. Risk of false positives in other sources is low —
+  // existing imports route to review-queue anyway, and the previous narrow
+  // pattern was leaving ~30 ALA rows unmapped.
+  [
+    /\b(?:gang violence|violence against|firearms?|torture|mutilation|dark themes?\/violence|darkness\/scariness|violence(?: and (?:torture|mutilation))?)\b/i,
+    'violence',
+  ],
 
   // ── Racial / caste / Indigenous ─────────────────────────────────────────
   // Caste is context-gated: bare "caste" appears in descriptive notes about
@@ -173,6 +218,16 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'racial',
   ],
 
+  // ── Racial — ALA corpus (added 2026-05-14) ──────────────────────────────
+  // ALA cells flag "stereotypes of [ethnicity/race] culture" and bare
+  // "racially offensive" / "racially insensitive". These are ethnicity-
+  // depiction complaints, distinct from the colonial racism / antisemitism
+  // patterns above.
+  [
+    /\b(?:stereotypes? of (?:mexican|asian|african|black|hispanic|indigenous|native|jewish|chinese|indian|arab)|racially (?:offensive|insensitive))\b/i,
+    'racial',
+  ],
+
   // ── Moral / family-values ───────────────────────────────────────────────
   [/\b(immoral(?:ity)?|good taste|family value|moral decay)\b/i, 'moral'],
 
@@ -185,8 +240,47 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     'moral',
   ],
 
+  // ── Moral — ALA corpus (added 2026-05-14) ───────────────────────────────
+  // ALA challenges cite "anti-family", "encouraging disobedience",
+  // "references to suicide" / "assisted suicide", "alcoholism", "drinking",
+  // "smoking", "gambling", "infidelity", "child abuse" as ban reasons.
+  // These are moral/family-values concerns about content unsuitable for
+  // young readers. "Unsuited to age group" is the most common ALA
+  // boilerplate — also moral by ALA's own framing.
+  [
+    /\b(?:anti-family|encouraging disobedience|references? to (?:suicide|assisted suicide|drinking|smoking|gambling)|alcoholism|infidelity|child abuse|unsuited (?:to|for) age group|unsuitable for (?:young readers|children))\b/i,
+    'moral',
+  ],
+
   // ── Language / profanity ────────────────────────────────────────────────
   [/\b(inappropriate language|profan|swear word|vulgar language)\b/i, 'language'],
+
+  // ── Language — ALA corpus (added 2026-05-14) ────────────────────────────
+  // "offensive language", "crude language", and "slur" / "slurs" appear in
+  // ~10 ALA cells. "Offensive language" alone is the most common.
+  [/\b(?:offensive language|crude language|slurs?)\b/i, 'language'],
+
+  // ── Obscenity — NZ Indecent Publications regime ─────────────────────────
+  // The NZ wikitable uses "restricted N in YYYY" (e.g. "restricted 18 in
+  // 1972") as boilerplate for adult-content rating decisions by the Indecent
+  // Publications Tribunal (1963-1994) and its successor OFLC. The numeric
+  // value is an age-restriction (R16/R18) imposed for sexual or violent
+  // adult content — both code as 'obscenity' in this DB's vocabulary.
+  [/\brestricted\s+\d+\s+in\s+\d{4}\b/i, 'obscenity'],
+
+  // ── Political — China dataset (added 2026-05-14) ────────────────────────
+  // Wikipedia's "Book censorship in China" page uses recurring phrasing for
+  // bans driven by CCP political control: "critical of the CCP", "Cultural
+  // Revolution" purges/massacres, books "banned for discussing" sensitive
+  // historical events (Great Leap Forward, Tiananmen, Mao-era purges).
+  // These are state-imposed political bans, not religious/sexual/moral.
+  // Patterns are narrow enough that academic mentions of the same terms in
+  // unrelated bans (e.g. Western ban of a Chinese-history textbook) won't
+  // false-match because they require the China-specific phrasing.
+  [
+    /\b(critical of (?:the )?ccp|cultural revolution|chinese communist (?:party|rule)|mainland china|communist (?:party|government)|peasant protests?|great chinese famine|propaganda department|mao zedong|ccp deemed|chinese communists|tiananmen|fictional collapse of (?:chinese|communist))\b/i,
+    'political',
+  ],
 ]
 
 // Detects notes that *only* describe an import-ban mechanism. Step 2 in the
@@ -240,7 +334,19 @@ export type ReasonMapResult = {
   extra_flags: QualityFlag[]
 }
 
-export function mapReason(notes: string): ReasonMapResult {
+// True when `notes` carries no reason signal — empty after trim, or composed
+// solely of matrix-style tick markers ("✓", "✓ ✓", "✓ ✓ ✓"). The Hong Kong
+// table represents each ban location as a separate ✓-column; stripWikitext
+// joins those into a notes blob that's just whitespace + checkmarks. Without
+// this guard, the source-fallback never fires for HK because notes !== ''.
+function hasNoReasonSignal(notes: string): boolean {
+  return /^[\s✓]*$/u.test(notes)
+}
+
+export function mapReason(
+  notes: string,
+  fallbackSlug?: string | null,
+): ReasonMapResult {
   if (DEFAMATION_SUIT_PATTERNS.some(p => p.test(notes))) {
     return {
       mapping: { slug: 'other', confidence: 'low' },
@@ -268,6 +374,17 @@ export function mapReason(notes: string): ReasonMapResult {
     return {
       mapping: { slug: 'other', confidence: 'low' },
       extra_flags: ['import_ban_no_explicit_reason'],
+    }
+  }
+  // Source-level fallback: applies only when the row itself carries no
+  // signal AND the section config declares a fallback (Index Librorum →
+  // religious; Hong Kong NSL list → political). Confidence stays 'low'
+  // because the slug comes from context, not from the cell — the editor
+  // should still glance at the row before approving.
+  if (fallbackSlug && hasNoReasonSignal(notes)) {
+    return {
+      mapping: { slug: fallbackSlug, confidence: 'low' },
+      extra_flags: ['source_default_reason'],
     }
   }
   return {

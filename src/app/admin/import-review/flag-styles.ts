@@ -2,7 +2,7 @@
 //   red    = editorial blocker (civil suit, defamation, court stay)
 //   amber  = needs human attention (Model 3 review, possible duplicate)
 //   yellow = data gap (missing reason, unmapped, missing author/year/citation)
-//   blue   = informational (author disjunction)
+//   blue   = informational (author disjunction, source-default reason)
 // Unknown flags fall back to gray.
 
 import type { QueueStatus } from './list-client'
@@ -25,6 +25,8 @@ export const FLAG_BADGE_CLASS: Record<string, string> = {
   incomplete_year:              YELLOW,
   citation_needed:              YELLOW,
   author_disjunction:           BLUE,
+  source_default_reason:        BLUE,
+  year_inferred_from_notes:     AMBER,
 }
 
 export const FLAG_TOOLTIPS: Record<string, string> = {
@@ -52,6 +54,10 @@ export const FLAG_TOOLTIPS: Record<string, string> = {
     '{{cn}} or [citation needed] tag in the source notes — Wikipedia itself flags this as unverified.',
   author_disjunction:
     'Author cell had "X or Y" — ambiguous attribution; only the first name was kept.',
+  source_default_reason:
+    'Notes cell had no reason text; reason slug filled from the source-level context (e.g. Index Librorum → religious, Hong Kong NSL list → political). Confidence stays low — glance at the row before approving.',
+  year_inferred_from_notes:
+    'Year column was empty; the first 4-digit year inside notes_raw was used as a best-guess ban year. Verify before approving — phrases like "released in YYYY" or "lifted in YYYY" would mark the ban END year, not start.',
 }
 
 export const STATUS_BADGE_CLASS: Record<QueueStatus, string> = {

@@ -1,6 +1,6 @@
 /**
  * Re-run reason mapping over import_review_queue rows that still carry the
- * `unmapped_reason` quality_flag. Two passes per row:
+ * `unmapped_reason` quality_flag. Three passes per row, in order:
  *
  *   1. The current strict `mapReason()` from src/lib/wikipedia/reason-mapper.ts.
  *      If it now finds a slug (patterns were extended after the row was
@@ -9,13 +9,20 @@
  *      flag, and add any extra flags the mapper produced (defamation_suit_civil,
  *      import_ban_no_explicit_reason, etc.).
  *
- *   2. If pass-1 still returns null, try a broader keyword heuristic ported
- *      from scripts/reclassify-other-reasons.ts. On a hit, set
- *      reason_mapping = { slug: <first>, confidence: 'low' } but KEEP the
- *      `unmapped_reason` flag so the editor recognises this as a low-confidence
- *      guess in the review UI.
+ *   2. Source-level fallback. `mapReason()` is now called with the section
+ *      config's `fallback_reason_slug` (when configured). For rows whose
+ *      notes are empty or carry only trivial markers (HK's "✓"), the mapper
+ *      returns the fallback slug with confidence='low' and the new
+ *      `source_default_reason` quality flag. The `unmapped_reason` flag is
+ *      dropped because the row is now mapped, just at low confidence.
  *
- * Rows with empty/whitespace notes_raw are skipped (no signal).
+ *   3. If passes 1+2 still return null AND notes are non-empty, try a
+ *      broader keyword heuristic ported from
+ *      scripts/reclassify-other-reasons.ts. On a hit, set reason_mapping =
+ *      { slug: <first>, confidence: 'low' } but KEEP the `unmapped_reason`
+ *      flag so the editor recognises this as a low-confidence guess.
+ *
+ * Rows with truly empty notes AND no configured fallback are skipped.
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts          # dry-run
@@ -23,6 +30,8 @@
  */
 import { adminClient } from '../src/lib/supabase'
 import { mapReason } from '../src/lib/wikipedia/reason-mapper'
+import { findWikipediaSourceConfig } from '../src/lib/imports/review-approve'
+import type { SectionConfig } from '../src/lib/wikipedia/types'
 
 const WRITE = process.argv.includes('--write')
 
@@ -67,11 +76,28 @@ type QueueRow = {
   id: number
   source_slug: string
   agreement_details: {
-    parsed_row?: { title?: string; notes_raw?: string }
+    parsed_row?: { title?: string; notes_raw?: string; source_anchor?: string }
+    section_anchor?: string
     quality_flags?: string[]
     reason_mapping?: { slug: string | null; confidence: 'high' | 'low' }
     [k: string]: unknown
   } | null
+}
+
+// Resolve the SectionConfig for a queue row, mirroring the lookup used by
+// getQueueSourceContext / getQueueSectionDefaults in src/lib/imports/
+// review-approve.ts. Returns null if the source slug isn't in the live
+// config (e.g. a renamed/removed source) — in that case no fallback applies
+// even if it was originally configured.
+function findSectionForRow(row: QueueRow): SectionConfig | null {
+  const cfg = findWikipediaSourceConfig(row.source_slug)
+  if (!cfg) return null
+  const anchor =
+    row.agreement_details?.parsed_row?.source_anchor
+    ?? row.agreement_details?.section_anchor
+    ?? ''
+  const matched = cfg.sections.find(s => s.heading.replace(/ /g, '_') === anchor)
+  return matched ?? cfg.sections[0] ?? null
 }
 
 async function loadPendingUnmapped(s: ReturnType<typeof adminClient>): Promise<QueueRow[]> {
@@ -99,8 +125,9 @@ async function main() {
   console.log(`Pending rows with unmapped_reason: ${rows.length}`)
   console.log(`Mode: ${WRITE ? 'WRITE' : 'DRY-RUN'}\n`)
 
-  let pass1Hits = 0
-  let pass2Hits = 0
+  let pass1PatternHits = 0
+  let pass2FallbackHits = 0
+  let pass3BroadHits = 0
   let noSignal = 0
   let emptyNotes = 0
   let errors = 0
@@ -110,39 +137,51 @@ async function main() {
     const notes = (ad.parsed_row?.notes_raw ?? '').trim()
     const title = ad.parsed_row?.title ?? '(no title)'
 
-    if (!notes) {
-      emptyNotes++
-      continue
-    }
+    const section = findSectionForRow(row)
+    const fallback = section?.fallback_reason_slug ?? null
 
     const flags = [...(ad.quality_flags ?? [])]
-    const result = mapReason(notes)
+    // mapReason handles three branches: strict patterns, source-fallback (when
+    // notes carry no signal AND fallback is configured), or null+unmapped.
+    const result = mapReason(notes, fallback)
 
     let nextMapping: { slug: string | null; confidence: 'high' | 'low' } | null = null
     let nextFlags: string[] | null = null
     let label = ''
 
     if (result.mapping.slug !== null) {
-      // Pass-1 hit: strict mapper now produces a slug.
+      // Pass-1 OR pass-2 hit. Distinguish by the extra_flags returned: the
+      // source-fallback always carries 'source_default_reason'.
+      const isFallback = result.extra_flags.includes('source_default_reason')
       nextMapping = result.mapping
       nextFlags = flags.filter(f => f !== 'unmapped_reason')
       for (const f of result.extra_flags) {
         if (!nextFlags.includes(f)) nextFlags.push(f)
       }
-      label = `pass-1 (${result.mapping.confidence}) → ${result.mapping.slug}`
-      pass1Hits++
-    } else {
-      // Pass-2 fallback: broad keyword heuristic.
+      if (isFallback) {
+        label = `pass-2 source-default → ${result.mapping.slug}`
+        pass2FallbackHits++
+      } else {
+        label = `pass-1 (${result.mapping.confidence}) → ${result.mapping.slug}`
+        pass1PatternHits++
+      }
+    } else if (notes) {
+      // Pass-3: broad keyword heuristic. Only meaningful when notes have
+      // content — mapReason already handled the empty/trivial case above.
       const broad = inferReasonsBroad(notes)
       if (broad.length > 0) {
         nextMapping = { slug: broad[0], confidence: 'low' }
         nextFlags = flags // keep unmapped_reason — signals "guessed via broad heuristic"
-        label = `pass-2 (low) → ${broad[0]}${broad.length > 1 ? ` (also: ${broad.slice(1).join(', ')})` : ''}`
-        pass2Hits++
+        label = `pass-3 (low) → ${broad[0]}${broad.length > 1 ? ` (also: ${broad.slice(1).join(', ')})` : ''}`
+        pass3BroadHits++
       } else {
         noSignal++
         continue
       }
+    } else {
+      // Empty notes AND no fallback configured for this source/section.
+      emptyNotes++
+      continue
     }
 
     console.log(`[${row.id}] ${title}`)
@@ -168,12 +207,13 @@ async function main() {
   }
 
   console.log('\n──────────── Summary ────────────')
-  console.log(`Total inspected:        ${rows.length}`)
-  console.log(`Pass-1 strict hits:     ${pass1Hits}   (slug filled, unmapped_reason flag removed)`)
-  console.log(`Pass-2 broad hits:      ${pass2Hits}   (low-confidence slug; flag kept)`)
-  console.log(`Empty notes (skipped):  ${emptyNotes}`)
-  console.log(`No signal (skipped):    ${noSignal}`)
-  if (WRITE) console.log(`Update errors:          ${errors}`)
+  console.log(`Total inspected:           ${rows.length}`)
+  console.log(`Pass-1 strict pattern hits: ${pass1PatternHits}   (slug filled, unmapped_reason flag removed)`)
+  console.log(`Pass-2 source-default hits: ${pass2FallbackHits}   (slug from section fallback; source_default_reason flag added)`)
+  console.log(`Pass-3 broad-heuristic hits: ${pass3BroadHits}   (low-confidence guess; unmapped_reason flag kept)`)
+  console.log(`Empty notes (skipped):     ${emptyNotes}   (no notes AND no source fallback configured)`)
+  console.log(`No signal (skipped):       ${noSignal}   (notes have text but no pattern matched)`)
+  if (WRITE) console.log(`Update errors:             ${errors}`)
   if (!WRITE) console.log(`\n[DRY-RUN] Re-run with --write to apply.`)
 }
 

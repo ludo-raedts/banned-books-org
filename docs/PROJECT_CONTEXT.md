@@ -9,7 +9,7 @@
 > Live site: <https://www.banned-books.org>
 > Owner: Ludo Raedts (Groningen, NL) — solo project, started April 2026.
 >
-> **Last updated: 2026-05-14** — review-queue triage helper toegevoegd + lèse-majesté word-boundary fix in `reason-mapper.ts`; "Google ↗"-knop op review-queue rijen en detail-header voor snelle background-research.
+> **Last updated: 2026-05-15** — review-queue gerichte schoonmaak: 1099 → 307 pending via source-level fallbacks, year-extractie uit titel/notes, slug-collision merges en bulk auto-accept. Zie entry "Queue-clearing operatie (2026-05-15)" verderop.
 
 ---
 
@@ -614,6 +614,34 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 **Review-queue triage helper (2026-05-14)** — `scripts/remap-unmapped-queue.ts` haalt de huidige `mapReason()` opnieuw over `import_review_queue`-rijen die nog de `unmapped_reason` quality-flag dragen. Strict-mapper hits (pass-1) verwijderen de flag en updaten `agreement_details.reason_mapping`; brede heuristiek (pass-2, geport vanuit `scripts/reclassify-other-reasons.ts`) vult een low-confidence slug in maar behoudt de flag zodat de editor de gok herkent. Eerste run patchte 19 van 181 unmapped rijen (1 strict + 18 broad). Tegelijk: word-boundary bug in `reason-mapper.ts` lèse-majesté-patroon gefixt — JS `\b` werkt niet op de trailing `é` (non-`\w`), waardoor "lese-majesté rules" niet matchte. Gedocumenteerd op `/admin/scripts#review-queue-helpers` en gelinkt vanaf de import-review banner.
 
 **Review-queue Google-search knop (2026-05-14)** — kleine UX-toevoeging voor boeken die vast zitten in review. Elke rij in `/admin/import-review` toont nu een "Google ↗"-knop naast "Open →"; de detailpagina-header heeft dezelfde knop naast de status-badge. Klik opent `google.com/search?q=` met `"titel" auteur1 auteur2` in een nieuw tabblad (`target="_blank"` + `rel="noopener noreferrer"`) zodat de editor snel achtergrond-info kan opzoeken zonder handmatig te kopiëren. Implementatie: helper `googleSearchUrl()` lokaal in `src/app/admin/import-review/list-client.tsx` en `[id]/detail-client.tsx`. Commit `c73ce28`.
+
+**Reason-mapper ALA-corpus expansion (2026-05-14)** — Naast de eerdere master-aggregator (international-corpus) patterns nu ook ALA-challenge-cell phrasings toegevoegd aan `src/lib/wikipedia/reason-mapper.ts`: zeven nieuwe pattern-blokken voor `sexual` / `religious` / `political` / `violence` / `racial` / `moral` / `language`. Pakt ALA-boilerplate zoals "sexual references", "sex education", "witchcraft", "supernatural themes", "political viewpoint", "un-American content", "gang violence", "stereotypes of [ethnicity]", "anti-family", "unsuited to age group", "offensive language", "slurs" — die de eerdere Wikipedia-georiënteerde patterns niet dekten. Bestaande blokken uitgebreid: LGBTQ + `gay marriage` / `gender identity`; drugs + `drug use` / `drug references`. Doel: nieuwe ALA-imports leveren minder rijen met `unmapped_reason` af; reeds binnengekomen rijen worden retroactief opgepakt door `scripts/remap-unmapped-queue.ts`.
+
+**Queue-clearing operatie (2026-05-15)** — `import_review_queue` van 1099 → 307 pending (−72%) in één sessie, 792 commits naar production books + bans. Vier nieuwe mechanismen + zes scripts. **Geen DB-schema-wijzigingen**; alleen JSONB `agreement_details` + nieuwe enum-waarden in `QualityFlag` (TS-only).
+
+*Mechanismen:*
+
+1. **Source-level `fallback_reason_slug`** (`src/lib/wikipedia/types.ts`, `config.ts`, `reason-mapper.ts`). Nieuwe optionele `SectionConfig.fallback_reason_slug`. `mapReason(notes, fallback?)` retourneert die slug + nieuwe flag `source_default_reason` (blauw badge) wanneer notes leeg/triviaal zijn (HK matrix-`✓`, Index Librorum lege citatie-cellen). Geconfigureerd: HK → `political`, Index Librorum → `religious`, NZ per-sectie (IPT eras → `obscenity`, WW1/WW2 → `political`). Plus HK section krijgt `original_language: 'zh'` zodat review-form auto-fills. Wired in `import-wikipedia-list.ts`, `replay-dedup-on-queue.ts`, `remap-unmapped-queue.ts`.
+2. **Reason-mapper pattern-uitbreiding** — NZ R-rating: `restricted N in YYYY` → `obscenity`. China political corpus: `critical of (the )?CCP`, `cultural revolution`, `mao zedong`, `propaganda department`, `chinese communist (party|rule)`, etc → `political`.
+3. **Year-extractie** uit titel + notes. `src/lib/wikipedia/parser.ts` krijgt `TRAILING_YEAR_RANGE_PAREN` (`(YYYY – YYYY)` / `(YYYY or YYYY)`, eerste jaar wint) — gespiegeld in `scripts/backfill-year-from-title.ts` voor bestaande queue-rows (33 hits: China + Index). `scripts/backfill-year-from-notes.ts` haalt het eerste 4-digit jaar uit `notes_raw` voor rows die ook geen jaar in de titel hebben — tag met nieuwe flag `year_inferred_from_notes` (amber, niet-blokkerend) zodat de reviewer weet dat het een best-guess is. NZ-scope eerste run: 87 hits.
+4. **Bulk auto-accept + auto-merge** — `scripts/bulk-auto-accept-queue.ts` keurt rijen goed via het bestaande `approveQueueRow` pad. Acceptcriteria: `reason_mapping.slug` gevuld, year + authors[0] + title aanwezig, `dedup_check.kind` in `{null, 'none'}`, geen civil/defamation/possible_duplicate flags. **Operator-decision 2026-05-15: `model_3_review_needed` is voor de wiki-parser géén blokker meer** — de bilingual `/` splitter levert stabiele Latin-transliteraties als canonical title. Non-Latin filter (`[\p{Script=Han}\p{Script=Cyrillic}…]`) blijft als safety net voor de ~15 HK rows waar de parser op `=` separator faalt. Idempotent: `approveQueueRow` werkt SELECT-then-INSERT op `(slug)` en `(book,country,year,scope)`. `scripts/auto-merge-confirmed-duplicates.ts` doet hetzelfde via `mergeQueueRowIntoBook` voor `dedup_check.kind === 'duplicate'`. `scripts/auto-merge-slug-collisions.ts` vangt het edge case waar year-backfill een titel opschoont en de gestripe slug ineens met een bestaand book bottst — wordt automatisch via merge-pad afgehandeld.
+
+*Resultaten per laag:*
+- Phase 1 (source-default reasons): 701 reasons pre-filled (611 HK + 90 Index)
+- Phase 2 (patterns + NZ fallbacks): 82 extra mappings (NZ R-rated + China politics + 12 NZ wartime/IPT)
+- Phase 3 (confirmed duplicates merge): 4 nieuwe bans op bestaande books
+- Phase 4a (bulk auto-accept, Latin-only): 183 nieuwe books
+- Phase 4b (bulk auto-accept met model_3 versoepeld): 518 nieuwe books (allemaal HK Pinyin)
+- Year-from-title backfill: 33 rows (China + Index range-jaren)
+- Year-from-notes backfill: 87 NZ rows
+- Bulk-accept op de nieuw eligible rows: 75 extra (10 + 64 + 1)
+- Slug-collision auto-merge: 9 extra merges
+
+*Wat de 307 nog vasthoudt:* ~62 Iran (geen jaar in titel of notes), ~80 essay-style notes zonder pattern, ~70 `possible_duplicate` fuzzy-dedup, ~38 `no_author`, ~15 HK met CJK in canonieke titel (parser `=`-separator bug — open follow-up), 13 NZ zonder bruikbaar jaar, 5 civil/defamation editorial, q#1250 (puur-CJK author slug).
+
+*Nieuwe scripts in `scripts/`:* `_check_auto_approve_candidates.ts` (queue-gate histogram), `_check_unmapped_patterns.ts` (notes-text clustering per source), `backfill-year-from-title.ts`, `backfill-year-from-notes.ts`, `auto-merge-confirmed-duplicates.ts`, `auto-merge-slug-collisions.ts`, `bulk-auto-accept-queue.ts`. Allemaal dry-run by default; `--write` voor commit. Pre-existing `remap-unmapped-queue.ts` uitgebreid naar 3-pass (strict-patterns → source-fallback → broad-heuristic).
+
+*Open follow-ups:* (a) parser-fix voor HK `=`-separator zodat de 15 mangled rijen alsnog bilingual splitten; (b) year-from-notes draaien op niet-NZ sources; (c) enrichment-pipeline (covers/descriptions/ISBN) op de ~860 nieuwe books die kaal in de DB staan.
 
 **Sprint A Taak 3 afgerond (2026-05-13)** — pipeline plumbing operationeel. Negen modules onder `src/lib/imports/` implementeren een zeven-fasen-pipeline (fetched → archived → extracted → verified → gated → committed) die LLM-extractie van Gemini 2.5 Pro en GPT-4o parallel draait en consolideert tot één `ExtractionResult` met audit-trail van beide passes intact. Twee migraties toegevoegd: de `import_jobs` tabel voor lifecycle-tracking, plus twee fuzzy-match RPCs (`find_book_candidates_by_title`, `find_author_candidates_by_name`). Eindtest geslaagd met de Wikipedia-pagina over *Suicide, mode d'emploi* als manual-source bron: verifier matched bestaande auteurs (Claude Guillon, Yves Le Bonniec) exact, country zacht `no_match` (manual-source heeft geen `default_country_code`), gate weigerde auto-approve wegens conflict + high-stakes tier, review-queue rij correct gevuld met beide model-outputs apart bewaard. Commits `9843075..74e8c66`.
 

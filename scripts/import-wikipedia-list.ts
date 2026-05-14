@@ -100,7 +100,7 @@ async function main(): Promise<void> {
   console.log(`[classify] reason mapping + dedup against books table`)
   const classified: Classified[] = []
   for (const item of allRows) {
-    const reason = mapReason(item.row.notes_raw)
+    const reason = mapReason(item.row.notes_raw, item.section.fallback_reason_slug)
     const dedup = await dedupAgainstBooks(sb, item.row)
     const decision = decide({
       row: item.row,

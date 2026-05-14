@@ -18,6 +18,8 @@ export type QualityFlag =
   | 'civil_action_private_party'   // private party obtained an injunction / sued for damages / filed a lawsuit
   | 'civil_court_stay_order'       // civil court issued a stay-order pending verdict (procedural, not final)
   | 'author_disjunction'           // author cell had "X or Y" — ambiguous attribution, kept first only
+  | 'source_default_reason'        // notes had no signal; reason slug filled from SectionConfig.fallback_reason_slug
+  | 'year_inferred_from_notes'     // year was null after parsing; inferred first 4-digit year from notes_raw (may be ban-end year)
 
 export type ParsedRow = {
   year: number | null
@@ -131,6 +133,16 @@ export type SectionConfig = {
   // the Index Librorum Prohibitorum source where each row is an AUTHOR
   // with one or more banned works.
   multi_title_separator?: RegExp
+  // Reason slug used when the per-row notes cell carries no signal —
+  // either empty or just trivial markers like the "✓" checkboxes on the
+  // Hong Kong matrix. Only set when the source-level context makes the
+  // reason unambiguous (Index Librorum → 'religious'; HK NSL-era list →
+  // 'political'). When the row's notes DO have content, the normal
+  // pattern mapper runs first and wins. The resulting ReasonMapping is
+  // marked confidence='low' and the row carries the
+  // 'source_default_reason' quality flag so the review UI can surface
+  // that the slug came from context, not from the row itself.
+  fallback_reason_slug?: string
 }
 
 export type SourceConfig = {

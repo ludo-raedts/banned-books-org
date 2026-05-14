@@ -279,6 +279,14 @@ const MEANING_PAREN = /\s*\(meaning:\s*([^)]+)\)/i
 // string anyway).
 const TRAILING_YEAR_PAREN = /\s*\((1[5-9]\d{2}|20\d{2}|2100)\)\s*$/
 
+// Trailing publication-year range: "Death Note (2003 – 2006)" (China manga
+// serialization runs), "Juliette (1797–1801)" (Index Librorum multi-volume),
+// "Zhou Enlai (2003 or 2008)" (disputed dates). Takes the FIRST year as the
+// canonical publication year. Both en-dash (–) and ASCII hyphen (-) accepted
+// as the range separator; "or" handles the disjunction form.
+const TRAILING_YEAR_RANGE_PAREN =
+  /\s*\((1[5-9]\d{2}|20\d{2}|2100)\s*(?:[–-]|or)\s*(?:1[5-9]\d{2}|20\d{2}|2100)\)\s*$/i
+
 // "(pub. YYYY)" / "(published YYYY)" variant — Index Librorum Prohibitorum
 // rows use this form to flag the publication year of works listed alongside
 // other annotations. The parens may appear in the MIDDLE of the title text
@@ -343,6 +351,15 @@ function splitModel3Title(rawTitle: string): Model3Split {
   if (yearMatch) {
     if (year_extracted === null) year_extracted = parseInt(yearMatch[1], 10)
     working = working.replace(TRAILING_YEAR_PAREN, '').trim()
+  } else {
+    // Range form: "(YYYY – YYYY)" / "(YYYY or YYYY)". Only consulted when
+    // the single-year form didn't match, since matching both regexes against
+    // the same paren is impossible.
+    const rangeMatch = working.match(TRAILING_YEAR_RANGE_PAREN)
+    if (rangeMatch) {
+      if (year_extracted === null) year_extracted = parseInt(rangeMatch[1], 10)
+      working = working.replace(TRAILING_YEAR_RANGE_PAREN, '').trim()
+    }
   }
 
   // 1.5 Bilingual `Native-Script / Latin-Transliteration` title (Hong Kong
