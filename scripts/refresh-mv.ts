@@ -1,14 +1,16 @@
 import { adminClient } from '../src/lib/supabase'
+
 async function main() {
   const supabase = adminClient()
-  const { error } = await supabase.rpc('refresh_mv_ban_counts' as any)
+  const { error } = await supabase.rpc('refresh_all_materialized_views')
   if (error) {
-    // Try direct SQL
-    const { error: e2 } = await (supabase as any).rpc('exec_sql', { sql: 'REFRESH MATERIALIZED VIEW mv_ban_counts;' })
-    if (e2) console.error('Error:', e2.message)
-    else console.log('✓ mv_ban_counts refreshed via exec_sql')
-  } else {
-    console.log('✓ mv_ban_counts refreshed')
+    console.error('Error:', error.message)
+    process.exit(1)
   }
+  console.log('✓ Materialized views refreshed (mv_ban_counts, mv_country_reason_counts, mv_top_books_rising, mv_top_authors_rising)')
 }
-main().catch(console.error)
+
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})

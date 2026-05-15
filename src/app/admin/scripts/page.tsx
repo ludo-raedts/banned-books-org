@@ -790,7 +790,7 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
 
           <Script
             name="refresh-mv.ts"
-            what="Refreshes mv_ban_counts (used by countries / stats / trending). Run after any bulk import or enrichment. Also available as a button on the admin dashboard."
+            what="Refreshes all materialized views (mv_ban_counts, mv_country_reason_counts, mv_top_books_rising, mv_top_authors_rising) via the refresh_all_materialized_views RPC — used by countries, stats, and trending pages. Run after any bulk import or enrichment. Also available as a button on the admin dashboard, which calls the same RPC under the hood."
             tags={['safe']}
             command={`npx tsx --env-file=.env.local scripts/refresh-mv.ts`}
           />
