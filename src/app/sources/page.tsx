@@ -1,4 +1,9 @@
-export const dynamic = 'force-dynamic'
+// Sources page is data-driven but the ban_sources table changes rarely
+// (only on import runs, which happen at most a few times per week). Cache
+// the rendered output for an hour — far cheaper than re-aggregating join
+// counts on every page hit, and the staleness window matches how often
+// the underlying data actually changes.
+export const revalidate = 3600
 
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
@@ -309,20 +314,22 @@ const CATEGORIES: readonly Category[] = [
 async function fetchBansBySource(): Promise<Map<string, number>> {
   const sb = adminClient()
   const counts = new Map<string, number>()
-  // Single query — count(ban_source_links) per source url substring would
-  // be O(N*M) joins, so we pull all rows and bucket in-memory. The table is
-  // ~3000 links across ~70 sources, so this stays well under a few KB.
+  // PostgREST's `count` aggregate on a related table returns
+  // `[{ count: N }]` per parent row instead of materialising every
+  // ban_source_links row. Cuts the response from ~3000 join rows to ~70
+  // parent rows × a single integer each. Combined with the 1-hour ISR
+  // cache above, this page is effectively free under normal traffic.
   const { data } = await sb
     .from('ban_sources')
-    .select('source_url, ban_source_links(ban_id)')
+    .select('source_url, ban_source_links(count)')
   for (const row of (data ?? []) as Array<{
     source_url: string | null
-    ban_source_links: Array<{ ban_id: number }> | null
+    ban_source_links: Array<{ count: number }> | null
   }>) {
     const url = (row.source_url ?? '').toLowerCase()
-    const links = (row.ban_source_links ?? []).length
-    if (!links) continue
-    counts.set(url, (counts.get(url) ?? 0) + links)
+    const n = row.ban_source_links?.[0]?.count ?? 0
+    if (!n) continue
+    counts.set(url, (counts.get(url) ?? 0) + n)
   }
   return counts
 }
