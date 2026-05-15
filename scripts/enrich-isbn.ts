@@ -40,6 +40,7 @@ async function main() {
   Found via Google Books:              ${result.foundGb}
   Total found:                         ${result.foundOl + result.foundOlTitle + result.foundGb}
   Not found:                           ${result.notFound}
+  Skipped (ISBN already on another row): ${result.skippedDup}
   DB write errors:                     ${result.errors}
   ${APPLY ? 'Written to DB ✓' : 'DRY-RUN — re-run with --apply to write'}
 `)

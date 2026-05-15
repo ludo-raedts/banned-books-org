@@ -69,6 +69,7 @@ export type EnrichIsbnResult = {
   foundOlTitle: number
   foundGb: number
   notFound: number
+  skippedDup: number
   errors: number
   samples: Array<{ title: string; isbn: string | null; source: string }>
 }
@@ -95,6 +96,9 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       .from('books')
       .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, book_authors(authors(display_name))')
       .is('isbn13', null)
+      // "— All works" pseudo-titles are author-omnibus records with no real ISBN;
+      // any OL/GB hit is by construction wrong (will match some random book by the author).
+      .not('title', 'ilike', '%— All works%')
       .order('title')
       .range(offset, offset + 999)
     if (error) throw new Error(`DB read: ${error.message}`)
@@ -113,12 +117,12 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     : dryLimit
 
   if (limit === 0) {
-    return { totalCandidates, processed: 0, foundOl: 0, foundOlTitle: 0, foundGb: 0, notFound: 0, errors: 0, samples: [] }
+    return { totalCandidates, processed: 0, foundOl: 0, foundOlTitle: 0, foundGb: 0, notFound: 0, skippedDup: 0, errors: 0, samples: [] }
   }
 
   log(`${opts.apply ? `Enriching ${limit} of ${books.length} books…` : `DRY-RUN — sampling ${limit} books`}`)
 
-  let foundOl = 0, foundOlTitle = 0, foundGb = 0, notFound = 0, errors = 0
+  let foundOl = 0, foundOlTitle = 0, foundGb = 0, notFound = 0, skippedDup = 0, errors = 0
   const samples: EnrichIsbnResult['samples'] = []
 
   for (let i = 0; i < limit; i++) {
@@ -158,14 +162,28 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       if (samples.length < 10) samples.push({ title: book.title, isbn, source })
 
       if (opts.apply) {
-        const { error } = await supabase
+        // Pre-check: candidate ISBN may already be claimed by another row.
+        // Catches OL/GB false positives where a search returns a different
+        // book's ISBN (e.g. POD reprints sharing 9798-prefix space).
+        const { data: clash } = await supabase
           .from('books')
-          .update({ isbn13: isbn })
-          .eq('id', book.id)
-          .is('isbn13', null)
-        if (error) {
-          log(`    ✗ DB write failed: ${error.message}`)
-          errors++
+          .select('id, title')
+          .eq('isbn13', isbn)
+          .neq('id', book.id)
+          .maybeSingle()
+        if (clash) {
+          log(`    ⤳ skip: ${isbn} already on book #${clash.id} (${clash.title.slice(0, 40)})`)
+          skippedDup++
+        } else {
+          const { error } = await supabase
+            .from('books')
+            .update({ isbn13: isbn })
+            .eq('id', book.id)
+            .is('isbn13', null)
+          if (error) {
+            log(`    ✗ DB write failed: ${error.message}`)
+            errors++
+          }
         }
       }
     } else {
@@ -175,5 +193,5 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     }
   }
 
-  return { totalCandidates, processed: limit, foundOl, foundOlTitle, foundGb, notFound, errors, samples }
+  return { totalCandidates, processed: limit, foundOl, foundOlTitle, foundGb, notFound, skippedDup, errors, samples }
 }
