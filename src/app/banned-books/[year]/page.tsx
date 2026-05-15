@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
+import { coverAlt } from '@/lib/cover-alt'
 
 export const revalidate = 86400
 
@@ -189,7 +190,7 @@ export default async function BannedBooksYearPage({
                 {book.cover_url ? (
                   <Image
                     src={book.cover_url}
-                    alt={`Cover of ${book.title}`}
+                    alt={coverAlt(book.title, book.author)}
                     width={36}
                     height={48}
                     className="w-full h-full object-cover"

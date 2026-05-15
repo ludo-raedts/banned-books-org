@@ -16,6 +16,7 @@ import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag as countryFlagShared } from '@/lib/country-flag'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
+import { coverAlt } from '@/lib/cover-alt'
 
 type Author = {
   id: number
@@ -30,6 +31,7 @@ type Author = {
   name_transliterated: string | null
   name_english: string | null
   original_language: string | null
+  updated_at: string | null
 }
 
 type Ban = {
@@ -107,7 +109,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at')
     .eq('slug', slug)
     .single()
 
@@ -256,6 +258,9 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
     }))
   }
+  // dateModified — trigger-bumped freshness signal, parallel to the
+  // Book.dateModified emitted on book detail pages.
+  if (a.updated_at) personJsonLd.dateModified = a.updated_at
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -431,7 +436,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                   {book.cover_url ? (
                     <Image
                       src={book.cover_url}
-                      alt={`Cover of ${book.title}`}
+                      alt={coverAlt(book.title, a.display_name, book.first_published_year)}
                       width={160}
                       height={240}
                       className="rounded shadow-sm object-cover w-full"
@@ -471,6 +476,16 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         }}
         url={`https://www.banned-books.org/authors/${a.slug}`}
       />
+
+      {/* Last verified — feeds Person.dateModified above. */}
+      {a.updated_at && (
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-6">
+          Last verified:{' '}
+          <time dateTime={a.updated_at}>
+            {new Date(a.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </time>
+        </p>
+      )}
 
       {/* Other frequently banned authors */}
       {relatedAuthors.length > 0 && (

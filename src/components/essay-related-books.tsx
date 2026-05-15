@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { adminClient } from '@/lib/supabase'
+import { coverAlt } from '@/lib/cover-alt'
 
 type RelatedBook = {
   id: number
@@ -47,7 +48,7 @@ export default async function EssayRelatedBooks({ slugs }: { slugs: string[] }) 
                   {book.cover_url ? (
                     <Image
                       src={book.cover_url}
-                      alt={`Cover of ${book.title}`}
+                      alt={coverAlt(book.title, author)}
                       width={240}
                       height={320}
                       className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"

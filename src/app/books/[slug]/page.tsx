@@ -18,6 +18,7 @@ import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/booksho
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
+import { coverAlt } from '@/lib/cover-alt'
 
 const BOOK_REASON_PHRASE: Record<string, string> = {
   lgbtq: 'LGBTQ+ content',
@@ -170,6 +171,7 @@ type BookDetail = {
   title_native: string | null
   title_transliterated: string | null
   title_english_meaningful: string | null
+  updated_at: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -197,6 +199,7 @@ export default async function BookPage({
       bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
       original_language,
       title_native, title_transliterated, title_english_meaningful,
+      updated_at,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, year_ended, action_type, status, country_code, description,
@@ -502,6 +505,11 @@ export default async function BookPage({
   if (book.cover_url) bookJsonLd.image = book.cover_url
   if (book.isbn13) bookJsonLd.isbn = book.isbn13
   if (book.genres && book.genres.length > 0) bookJsonLd.genre = book.genres
+  // dateModified bumps on every UPDATE via the public.set_updated_at trigger
+  // installed in migration 20260515143605. Crawlers (especially Bing &
+  // AI-Overview reranking) use this as a freshness signal — without it our
+  // enrichment passes were invisible to indexers.
+  if (book.updated_at) bookJsonLd.dateModified = book.updated_at
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -537,7 +545,7 @@ export default async function BookPage({
           {book.cover_url ? (
             <Image
               src={book.cover_url}
-              alt={`Cover of ${book.title}`}
+              alt={coverAlt(book.title, author, book.first_published_year)}
               width={240}
               height={360}
               className="rounded-lg shadow-md object-cover w-[110px] sm:w-[200px] h-auto"
@@ -672,7 +680,9 @@ export default async function BookPage({
       {/* Bans table */}
       {sortedBans.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-3">Bans</h2>
+          <h2 className="text-lg font-semibold mb-3">
+            Where {book.title} has been banned
+          </h2>
           <BanTimeline
             rows={timelineRows}
             firstPublishedYear={book.first_published_year}
@@ -848,6 +858,19 @@ export default async function BookPage({
         url={`https://www.banned-books.org/books/${book.slug}`}
       />
 
+      {/* Last verified — feeds Book.dateModified in JSON-LD (above) and gives
+          users + Google an explicit freshness signal that this catalogue
+          entry is actively maintained. Uses the updated_at column added in
+          migration 20260515143605, which bumps on every UPDATE via trigger. */}
+      {book.updated_at && (
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-6 mb-10">
+          Last verified:{' '}
+          <time dateTime={book.updated_at}>
+            {new Date(book.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </time>
+        </p>
+      )}
+
       {/* Related */}
       {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0 || booksInCountry.length > 0 || booksForReason.length > 0) && (
         <section className="mb-10">
@@ -901,7 +924,7 @@ export default async function BookPage({
                         {sim.cover_url ? (
                           <Image
                             src={sim.cover_url}
-                            alt={`Cover of ${sim.title}`}
+                            alt={coverAlt(sim.title, sim.authorName)}
                             width={160}
                             height={240}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
@@ -944,7 +967,7 @@ export default async function BookPage({
                             {b.cover_url ? (
                               <Image
                                 src={b.cover_url}
-                                alt={`Cover of ${b.title}`}
+                                alt={coverAlt(b.title, b.authorName)}
                                 fill
                                 className="object-cover"
                                 sizes="48px"
@@ -998,7 +1021,7 @@ export default async function BookPage({
                             {b.cover_url ? (
                               <Image
                                 src={b.cover_url}
-                                alt={`Cover of ${b.title}`}
+                                alt={coverAlt(b.title, b.authorName)}
                                 fill
                                 className="object-cover"
                                 sizes="48px"

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
+import { coverAlt } from '@/lib/cover-alt'
 
 export const metadata: Metadata = {
   title: 'The 100 Most Banned Books in the World',
@@ -102,7 +103,7 @@ export default async function Top100Page() {
                 {book.cover_url ? (
                   <Image
                     src={book.cover_url}
-                    alt={`Cover of ${book.title}`}
+                    alt={coverAlt(book.title, author)}
                     width={40}
                     height={56}
                     className="w-full h-full object-cover"

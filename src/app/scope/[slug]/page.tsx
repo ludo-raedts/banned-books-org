@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import { coverAlt } from '@/lib/cover-alt'
 
 export async function generateMetadata({
   params,
@@ -132,7 +133,7 @@ export default async function ScopePage({
                 {book.cover_url ? (
                   <Image
                     src={book.cover_url}
-                    alt={`Cover of ${book.title}`}
+                    alt={coverAlt(book.title, authorName(book), book.first_published_year)}
                     fill
                     className="object-cover"
                     sizes="(max-width: 640px) 60px, 160px"

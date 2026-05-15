@@ -10,6 +10,7 @@ import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
+import { coverAlt } from '@/lib/cover-alt'
 
 export async function generateMetadata({
   params,
@@ -339,7 +340,7 @@ export default async function CountryPage({
                     {book.cover_url ? (
                       <Image
                         src={book.cover_url}
-                        alt={`Cover of ${book.title}`}
+                        alt={coverAlt(book.title, authorName(book), book.first_published_year)}
                         fill
                         className="object-cover"
                         sizes="(max-width: 640px) 60px, 160px"

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
+import { coverAlt } from '@/lib/cover-alt'
 
 interface ReadingListCoverProps {
   isbn?: string
@@ -21,7 +22,7 @@ export default function ReadingListCover({ isbn, title, author }: ReadingListCov
   return (
     <Image
       src={`https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`}
-      alt={`Cover of ${title}`}
+      alt={coverAlt(title, author)}
       width={128}
       height={192}
       className="w-full rounded object-cover aspect-[2/3]"

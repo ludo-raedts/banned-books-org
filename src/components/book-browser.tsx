@@ -8,6 +8,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
 import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'
+import { coverAlt } from '@/lib/cover-alt'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -416,7 +417,7 @@ export default function BookBrowser({
                     {featuredBook.cover_url ? (
                       <Image
                         src={featuredBook.cover_url}
-                        alt={`Cover of ${featuredBook.title}`}
+                        alt={coverAlt(featuredBook.title, authorName(featuredBook), featuredBook.first_published_year)}
                         width={96} height={144}
                         className="rounded shadow-md object-cover w-24 h-[144px]"
                         priority sizes="96px"
@@ -578,7 +579,7 @@ export default function BookBrowser({
                   {/* Cover */}
                   <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] sm:mb-2 relative overflow-hidden rounded shadow-sm">
                     {book.cover_url ? (
-                      <Image src={book.cover_url} alt={`Cover of ${book.title}`} fill
+                      <Image src={book.cover_url} alt={coverAlt(book.title, authorName(book), book.first_published_year)} fill
                         className="object-cover" sizes="(max-width: 640px) 60px, (max-width: 768px) 33vw, 25vw" />
                     ) : (
                       <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />

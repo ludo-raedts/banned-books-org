@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
+import { coverAlt } from '@/lib/cover-alt'
 
 export const metadata: Metadata = {
   title: 'Banned Classic Literature — Works Published Before 1970',
@@ -149,7 +150,7 @@ export default async function BannedClassicsPage() {
                       {book.cover_url ? (
                         <Image
                           src={book.cover_url}
-                          alt={`Cover of ${book.title}`}
+                          alt={coverAlt(book.title, author, book.first_published_year)}
                           width={36}
                           height={48}
                           className="w-full h-full object-cover"

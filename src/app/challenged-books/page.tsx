@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
+import { coverAlt } from '@/lib/cover-alt'
 
 export const metadata: Metadata = {
   title: 'Challenged Books — Attempted Censorship | Banned Books',
@@ -242,7 +243,7 @@ export default async function ChallengedBooksPage() {
                   {book.cover_url ? (
                     <Image
                       src={book.cover_url}
-                      alt={`Cover of ${book.title}`}
+                      alt={coverAlt(book.title, authorName(book), book.first_published_year)}
                       width={160}
                       height={240}
                       className="rounded shadow-sm object-cover w-full"

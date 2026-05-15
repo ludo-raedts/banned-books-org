@@ -6,6 +6,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+import { coverAlt } from '@/lib/cover-alt'
 import ReasonBadge, { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ReasonControls from '@/components/reason-controls'
@@ -299,7 +300,7 @@ export default async function ReasonPage({
                 {/* Cover */}
                 <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:mb-2 relative overflow-hidden rounded shadow-sm">
                   {book.cover_url ? (
-                    <Image src={book.cover_url} alt={`Cover of ${book.title}`} fill
+                    <Image src={book.cover_url} alt={coverAlt(book.title, authorName(book), book.first_published_year)} fill
                       className="object-cover" sizes="(max-width: 640px) 60px, 160px" />
                   ) : (
                     <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />

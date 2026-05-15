@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from './book-cover-placeholder'
 import type { Book } from './book-browser'
+import { coverAlt } from '@/lib/cover-alt'
 
 export type HighlightSlot = 'most-banned' | 'trending' | 'all-time'
 
@@ -94,7 +95,7 @@ export default function HighlightsStrip({
                     {item.book.cover_url ? (
                       <Image
                         src={item.book.cover_url}
-                        alt={`Cover of ${item.book.title}`}
+                        alt={coverAlt(item.book.title, author)}
                         fill
                         className="object-cover"
                         sizes="64px"
