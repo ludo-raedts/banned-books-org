@@ -76,6 +76,20 @@ export type DetailViewData = {
   // separate change without breaking this type contract (it lands together
   // with the inferScriptAndLanguage helper in page.tsx).
   language_suggestion?: { language: string; script: string | null } | null
+  // Set by scripts/enrich-pending-non-latin.ts when a queue row had its Model 3
+  // fields pre-filled by gpt-4o-mini. The reviewer sees a banner so they know
+  // the values are LLM suggestions, not raw parser output. The original
+  // parser values are preserved under agreement_details.parsed_row_pre_llm
+  // for rollback.
+  llm_prefill?: {
+    model: string
+    prompt_version: string
+    ran_at: string
+    confidence: 'high' | 'medium' | 'low'
+    reasoning: string
+    changed_fields: string[]
+    notes?: string
+  } | null
   approved_book_id: number | null
 }
 
@@ -140,7 +154,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
     data.quality_flags.includes('model_3_review_needed') ||
     !!data.parsed.title_native ||
     !!data.parsed.title_english_meaningful ||
-    hasNonLatinScript(data.parsed.title)
+    hasNonLatinScript(data.parsed.title) ||
+    !!data.llm_prefill
 
   const canMerge = !!data.duplicate_book_full
   const mergeTarget = data.duplicate_book_full
@@ -427,6 +442,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
             Edit & commit
           </h2>
+
+          {data.llm_prefill && <LlmPrefillBanner meta={data.llm_prefill} />}
 
           <FormField label="Title" required>
             <input
@@ -799,6 +816,35 @@ function ReadOnlyField({ label, children }: { label: string; children: React.Rea
     <div className="flex flex-col gap-0.5">
       <span className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{label}</span>
       <div className="text-sm text-gray-700 dark:text-gray-300">{children}</div>
+    </div>
+  )
+}
+
+function LlmPrefillBanner({
+  meta,
+}: {
+  meta: NonNullable<DetailViewData['llm_prefill']>
+}) {
+  const tone =
+    meta.confidence === 'high'
+      ? 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-100'
+      : meta.confidence === 'medium'
+        ? 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-100'
+        : 'bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-100'
+  return (
+    <div className={`rounded-lg border px-3 py-2 text-xs leading-relaxed ${tone}`}>
+      <div className="font-semibold uppercase tracking-wide text-[10px] mb-1">
+        ✨ Pre-filled by {meta.model} — confidence: {meta.confidence}
+      </div>
+      <div>{meta.reasoning}</div>
+      {meta.notes && (
+        <div className="mt-1 italic">⚠ {meta.notes}</div>
+      )}
+      {meta.changed_fields.length > 0 && (
+        <div className="mt-1 opacity-75">
+          Filled fields: {meta.changed_fields.join(', ')}
+        </div>
+      )}
     </div>
   )
 }

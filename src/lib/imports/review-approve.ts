@@ -171,6 +171,7 @@ export function getQueueSectionDefaults(
 export type ApproveOverlay = {
   title: string
   title_native?: string | null
+  title_transliterated?: string | null
   title_english_meaningful?: string | null
   original_language?: string | null
   authors: string[]
@@ -192,6 +193,7 @@ export function buildCommitInput(
   return {
     title: overlay.title,
     title_native: overlay.title_native ?? null,
+    title_transliterated: overlay.title_transliterated ?? null,
     title_english_meaningful: overlay.title_english_meaningful ?? null,
     original_language: overlay.original_language ?? null,
     authors: overlay.authors,
@@ -339,6 +341,7 @@ export async function mergeQueueRowIntoBook(
     type Fillable = { col: keyof ExistingBookRow; value: string | number | null }
     const candidates: Fillable[] = [
       { col: 'title_native', value: overlay.title_native ?? null },
+      { col: 'title_transliterated', value: overlay.title_transliterated ?? null },
       { col: 'title_english_meaningful', value: overlay.title_english_meaningful ?? null },
       { col: 'original_language', value: overlay.original_language ?? null },
       { col: 'first_published_year', value: overlay.first_published_year ?? null },
@@ -368,6 +371,7 @@ export async function mergeQueueRowIntoBook(
     }
     pushAlias(overlay.title, 'merge_canonical_form')
     pushAlias(overlay.title_native, 'title_native')
+    pushAlias(overlay.title_transliterated, 'title_transliterated')
     pushAlias(overlay.title_english_meaningful, 'title_english_meaningful')
     for (const c of aliasCandidates) {
       const collision = await pg.query(

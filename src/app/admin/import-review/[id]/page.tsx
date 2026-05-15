@@ -11,13 +11,25 @@ type QueueStatus = 'pending_review' | 'approved' | 'rejected' | 'deferred'
 type ParsedRowShape = {
   title?: string
   title_native?: string | null
+  title_transliterated?: string | null
   title_english_meaningful?: string | null
+  original_language?: string | null
   authors?: string[]
   year?: number | null
   state?: string | null
   notes_raw?: string
   source_anchor?: string
   quality_flags?: string[]
+}
+
+type LlmPrefillMeta = {
+  model: string
+  prompt_version: string
+  ran_at: string
+  confidence: 'high' | 'medium' | 'low'
+  reasoning: string
+  changed_fields: string[]
+  notes?: string
 }
 
 type AgreementDetails = {
@@ -29,6 +41,7 @@ type AgreementDetails = {
   quality_flags?: string[]
   reason_mapping?: { slug: string | null; confidence: string }
   dedup_check?: { kind: string; book_id?: number; similarity?: number; match_type?: string } | null
+  llm_prefill?: LlmPrefillMeta
 }
 
 type RawQueueRow = {
@@ -307,9 +320,16 @@ export default async function ImportReviewDetailPage({
     duplicate_book_full: duplicateBook,
     reason_suggestion: reasonSuggestion,
     section_defaults: sectionDefaults,
-    language_suggestion: inferredLanguage
-      ? { language: inferredLanguage, script: inferredScript }
-      : null,
+    // language_suggestion priority: explicit LLM pre-fill (script wrote it
+     // into parsed_row.original_language) wins over deterministic
+     // script+country inference. Both fall through to null when neither
+     // produces a value.
+    language_suggestion: parsed.original_language
+      ? { language: parsed.original_language, script: inferredScript }
+      : inferredLanguage
+        ? { language: inferredLanguage, script: inferredScript }
+        : null,
+    llm_prefill: queueRow.agreement_details?.llm_prefill ?? null,
     approved_book_id: queueRow.approved_book_id,
   }
 
