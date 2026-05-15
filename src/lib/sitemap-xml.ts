@@ -1,5 +1,9 @@
-export const SITEMAP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.banned-books.org'
+import { SITE_URL } from './canonical-host'
+
+// Re-export under the long-standing name used by every sitemap route. The
+// host-normalisation logic lives in canonical-host.ts so robots.ts and the
+// root layout share the same definition.
+export const SITEMAP_BASE_URL = SITE_URL
 
 export const SITEMAP_RESPONSE_HEADERS = {
   'Content-Type': 'application/xml; charset=utf-8',

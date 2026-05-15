@@ -6,6 +6,7 @@ import MobileNav from "@/components/mobile-nav";
 import NavLink from "@/components/nav-link";
 import AnalyticsWrapper from "@/components/AnalyticsWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SITE_URL } from '@/lib/canonical-host'
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,10 +19,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.banned-books.org'
-
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Banned Books',
     template: '%s | Banned Books',
