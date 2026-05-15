@@ -139,7 +139,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   const showModel3Fields =
     data.quality_flags.includes('model_3_review_needed') ||
     !!data.parsed.title_native ||
-    !!data.parsed.title_english_meaningful
+    !!data.parsed.title_english_meaningful ||
+    hasNonLatinScript(data.parsed.title)
 
   const canMerge = !!data.duplicate_book_full
   const mergeTarget = data.duplicate_book_full
@@ -764,7 +765,20 @@ function googleSearchUrl(title: string, authors: string[]): string {
 
 function buildDefaultBanDescription(parsed: DetailViewData['parsed']): string {
   const prefix = parsed.state ? `State: ${parsed.state}. ` : ''
-  return `${prefix}${parsed.notes_raw ?? ''}`.trim()
+  const notes = parsed.notes_raw ?? ''
+  // Wikipedia notes-cells with just {{tick}} parse to "✓" — semantically empty.
+  // Strip if what's left is only ornament punctuation / symbols.
+  const meaningful = /[\p{L}\p{N}]/u.test(notes) ? notes : ''
+  return `${prefix}${meaningful}`.trim()
+}
+
+function hasNonLatinScript(s: string | null | undefined): boolean {
+  if (!s) return false
+  // Any letter that is NOT Latin → opens the model-3 ladder fields.
+  for (const ch of s) {
+    if (/\p{L}/u.test(ch) && !/\p{Script=Latin}/u.test(ch)) return true
+  }
+  return false
 }
 
 function buildDefaultRationale(data: DetailViewData): string {
