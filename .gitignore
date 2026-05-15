@@ -44,6 +44,10 @@ yarn-error.log*
 supabase/.temp/
 supabase/.branches/
 
+# ad-hoc throwaway scripts (prefix _ marks one-off check/find/inspect helpers
+# that should never be committed; real scripts use kebab-case without prefix)
+scripts/_*.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
