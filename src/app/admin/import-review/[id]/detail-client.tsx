@@ -157,6 +157,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   const showModel3Fields =
     data.quality_flags.includes('model_3_review_needed') ||
     !!data.parsed.title_native ||
+    !!data.parsed.title_transliterated ||
     !!data.parsed.title_english_meaningful ||
     hasNonLatinScript(data.parsed.title) ||
     !!data.llm_prefill
@@ -302,6 +303,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           target_book_id: mergeTarget.id,
           title: title.trim(),
           title_native: titleNative.trim() || null,
+          title_transliterated: titleTransliterated.trim() || null,
           title_english_meaningful: titleEnglish.trim() || null,
           original_language: originalLanguage.trim() || null,
           authors: cleanAuthors,
