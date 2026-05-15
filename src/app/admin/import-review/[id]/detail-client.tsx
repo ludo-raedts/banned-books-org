@@ -55,6 +55,7 @@ export type DetailViewData = {
   parsed: {
     title: string
     title_native: string | null
+    title_transliterated: string | null
     title_english_meaningful: string | null
     authors: string[]
     year: number | null
@@ -113,6 +114,9 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
   // Default the form to what auto-approve would have written if it could.
   const [title, setTitle] = useState(data.parsed.title)
   const [titleNative, setTitleNative] = useState(data.parsed.title_native ?? '')
+  const [titleTransliterated, setTitleTransliterated] = useState(
+    data.parsed.title_transliterated ?? '',
+  )
   const [titleEnglish, setTitleEnglish] = useState(data.parsed.title_english_meaningful ?? '')
   const [originalLanguage, setOriginalLanguage] = useState(
     data.language_suggestion?.language ?? '',
@@ -225,6 +229,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
     const ok = await callAction('approve', {
       title: title.trim(),
       title_native: titleNative.trim() || null,
+      title_transliterated: titleTransliterated.trim() || null,
       title_english_meaningful: titleEnglish.trim() || null,
       original_language: originalLanguage.trim() || null,
       authors: cleanAuthors,
@@ -465,6 +470,19 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                   type="text"
                   value={titleNative}
                   onChange={e => setTitleNative(e.target.value)}
+                  className={inputCls}
+                  disabled={!isPending}
+                />
+              </FormField>
+
+              <FormField
+                label="Title (transliteration)"
+                hint="Romanized form (pinyin, romaji, ALA-LC, …)"
+              >
+                <input
+                  type="text"
+                  value={titleTransliterated}
+                  onChange={e => setTitleTransliterated(e.target.value)}
                   className={inputCls}
                   disabled={!isPending}
                 />

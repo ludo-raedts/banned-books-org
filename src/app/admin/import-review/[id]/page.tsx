@@ -298,6 +298,7 @@ export default async function ImportReviewDetailPage({
     parsed: {
       title: parsed.title ?? '',
       title_native: parsed.title_native ?? null,
+      title_transliterated: parsed.title_transliterated ?? null,
       title_english_meaningful: parsed.title_english_meaningful ?? null,
       authors: parsed.authors ?? [],
       year: parsed.year ?? null,
