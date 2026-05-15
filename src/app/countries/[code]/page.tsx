@@ -11,6 +11,7 @@ import GenreBadge from '@/components/genre-badge'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
+import { reasonPhrase } from '@/lib/reason-phrases'
 
 export async function generateMetadata({
   params,
@@ -244,8 +245,117 @@ export default async function CountryPage({
   const timeline = [...timelineCounts.entries()].sort((a, b) => a[0] - b[0]).map(([k, v]) => ({ key: k, count: v }))
   const maxTimeline = Math.max(...timeline.map(t => t.count), 1)
 
+  // ── Direct-answer lead + FAQ + CollectionPage JSON-LD ────────────────────
+  // Same SEO pattern as book detail: short prose answer in the first
+  // viewport for AI Overview/Featured Snippet eligibility, plus FAQPage
+  // schema for People-Also-Ask. CollectionPage with hasPart=ItemList
+  // surfaces the catalogue to crawlers as a structured list rather than a
+  // flat <div> of book covers.
+  const earliestBanYear = countryBansForTimeline.length > 0
+    ? Math.min(...countryBansForTimeline)
+    : null
+  const latestBanYear = countryBansForTimeline.length > 0
+    ? Math.max(...countryBansForTimeline)
+    : null
+  const topReasonName = topReasons[0] ? reasonPhrase(topReasons[0].slug) : null
+
+  let countryLead: string | null = null
+  if (totalBanCount > 0) {
+    const head = `${totalBanCount} ${totalBanCount === 1 ? 'book has' : 'books have'} been banned or challenged in ${country.name_en}`
+    if (earliestBanYear && topReasonName) {
+      countryLead = `${head} since ${earliestBanYear}, most often for ${topReasonName}.`
+    } else if (earliestBanYear) {
+      countryLead = `${head} since ${earliestBanYear}.`
+    } else if (topReasonName) {
+      countryLead = `${head}, most often for ${topReasonName}.`
+    } else {
+      countryLead = `${head}.`
+    }
+    if (topReasons.length >= 2) {
+      const more = topReasons.slice(1, 3).map(r => reasonPhrase(r.slug)).join(' and ')
+      if (more) countryLead += ` Documented bans also cite ${more}.`
+    }
+  }
+
+  const collectionUrl = `https://www.banned-books.org/countries/${upperCode}`
+  const collectionJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Books banned in ${country.name_en}`,
+    url: collectionUrl,
+    mainEntityOfPage: collectionUrl,
+    about: {
+      '@type': 'Place',
+      name: country.name_en,
+      identifier: upperCode,
+    },
+  }
+  if (countryLead) collectionJsonLd.description = countryLead
+  if (books.length > 0) {
+    collectionJsonLd.mainEntity = {
+      '@type': 'ItemList',
+      numberOfItems: totalBanCount,
+      itemListElement: books.slice(0, 50).map((b, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://www.banned-books.org/books/${b.slug}`,
+        name: b.title,
+      })),
+    }
+  }
+
+  const countryFaq: { q: string; a: string }[] = []
+  countryFaq.push({
+    q: `How many books are banned in ${country.name_en}?`,
+    a: `${totalBanCount} ${totalBanCount === 1 ? 'book is' : 'books are'} documented as banned or challenged in ${country.name_en}.${
+      topReasonName ? ` ${topReasonName.charAt(0).toUpperCase() + topReasonName.slice(1)} is the most frequently cited reason.` : ''
+    }`,
+  })
+  if (earliestBanYear && latestBanYear) {
+    countryFaq.push({
+      q: `When did book banning begin in ${country.name_en}?`,
+      a: `The earliest documented ban in ${country.name_en} dates to ${earliestBanYear}.${
+        latestBanYear > earliestBanYear ? ` The most recent recorded ban dates to ${latestBanYear}.` : ''
+      }`,
+    })
+  }
+  if (topReasons.length >= 2) {
+    const phrases = topReasons.slice(0, 3).map(r => reasonPhrase(r.slug))
+    countryFaq.push({
+      q: `What are the most common reasons for book bans in ${country.name_en}?`,
+      a: `The most frequently cited reasons in ${country.name_en} are ${phrases.join(', ')}.`,
+    })
+  }
+  if (books.length >= 3) {
+    countryFaq.push({
+      q: `What are notable banned books in ${country.name_en}?`,
+      a: `Examples of banned books in ${country.name_en} include ${books.slice(0, 5).map(b => b.title).join(', ')}.`,
+    })
+  }
+  const faqJsonLd = countryFaq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: countryFaq.map(it => ({
+      '@type': 'Question',
+      name: it.q,
+      acceptedAnswer: { '@type': 'Answer', text: it.a },
+    })),
+  } : null
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
+        />
+      )}
       <Link href="/countries" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All countries
       </Link>
@@ -260,6 +370,15 @@ export default async function CountryPage({
           </div>
         </div>
       </div>
+
+      {/* Direct-answer lead. Editorial country.description (if present)
+          renders below as supplementary context — the lead is the
+          AI-Overview-eligible TL;DR. */}
+      {countryLead && (
+        <p className="mb-6 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+          {countryLead}
+        </p>
+      )}
 
       {/* Description */}
       {country.description && (

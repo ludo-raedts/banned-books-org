@@ -19,21 +19,7 @@ import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
-
-const BOOK_REASON_PHRASE: Record<string, string> = {
-  lgbtq: 'LGBTQ+ content',
-  political: 'political content',
-  religious: 'religious content',
-  sexual: 'sexual content',
-  violence: 'violent content',
-  racial: 'racial content',
-  drugs: 'drug references',
-  obscenity: 'obscenity',
-  blasphemy: 'blasphemy',
-  moral: 'moral grounds',
-  language: 'language reasons',
-  other: 'other reasons',
-}
+import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
 
 // Programmatically-generated direct-answer summary + FAQ Q&As, used to
 // surface the "why was X banned" answer in the first 200 words of the page

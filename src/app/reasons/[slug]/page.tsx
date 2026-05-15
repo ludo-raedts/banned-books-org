@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import { coverAlt } from '@/lib/cover-alt'
+import { reasonPhrase } from '@/lib/reason-phrases'
 import ReasonBadge, { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ReasonControls from '@/components/reason-controls'
@@ -235,8 +236,101 @@ export default async function ReasonPage({
 
   const intro = REASON_INTROS[slug]
 
+  // ── Direct-answer lead + CollectionPage + FAQPage JSON-LD ────────────────
+  // Same SEO pattern as book and country detail. The reasonPhrase() helper
+  // gives natural prose — "LGBTQ+ content" stays cased correctly while
+  // "political content" / "sexual content" don't get awkwardly capitalised.
+  // Note: reasonPhrase already includes the noun ("content", "references"
+  // etc.), so prose reads "banned for {phrase}" not "banned for {phrase}
+  // content".
+  const phrase = reasonPhrase(slug)
+  const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
+  const allBanYears = books.flatMap(b => b.bans.map(bn => bn.year_started).filter((y): y is number => y != null))
+  const earliestBanYear = allBanYears.length > 0 ? Math.min(...allBanYears) : null
+
+  let reasonLead: string | null = null
+  if (bookIds.length > 0) {
+    const bookCount = bookIds.length
+    const head = `${bookCount} ${bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for ${phrase} worldwide`
+    const tail = earliestBanYear ? ` since ${earliestBanYear}` : ''
+    reasonLead = `${head}${tail}.`
+    if (topCountries.length >= 2) {
+      const names = topCountries.slice(0, 3).map(c => c.name_en).join(', ')
+      reasonLead += ` ${sentencePhrase} bans are most frequently documented in ${names}.`
+    }
+  }
+
+  const collectionUrl = `https://www.banned-books.org/reasons/${slug}`
+  const collectionJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Books banned for ${phrase}`,
+    url: collectionUrl,
+    mainEntityOfPage: collectionUrl,
+  }
+  if (reasonLead) collectionJsonLd.description = reasonLead
+  if (books.length > 0) {
+    collectionJsonLd.mainEntity = {
+      '@type': 'ItemList',
+      numberOfItems: bookIds.length,
+      itemListElement: books.slice(0, 50).map((b, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://www.banned-books.org/books/${b.slug}`,
+        name: b.title,
+      })),
+    }
+  }
+
+  const reasonFaq: { q: string; a: string }[] = []
+  reasonFaq.push({
+    q: `How many books have been banned for ${phrase}?`,
+    a: `${bookIds.length} ${bookIds.length === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
+      topCountries.length >= 1 ? ` ${topCountries[0].name_en} has the most documented cases.` : ''
+    }`,
+  })
+  if (topCountries.length >= 2) {
+    reasonFaq.push({
+      q: `Where are ${phrase}-related book bans most common?`,
+      a: `The countries with the most documented ${phrase} bans are ${topCountries.slice(0, 5).map(c => c.name_en).join(', ')}.`,
+    })
+  }
+  if (earliestBanYear) {
+    reasonFaq.push({
+      q: `When did ${phrase}-based book censorship begin?`,
+      a: `The earliest documented ${phrase} ban in this catalogue dates to ${earliestBanYear}.`,
+    })
+  }
+  if (books.length >= 3) {
+    reasonFaq.push({
+      q: `What books have been banned for ${phrase}?`,
+      a: `Notable examples include ${books.slice(0, 5).map(b => b.title).join(', ')}.`,
+    })
+  }
+  const faqJsonLd = reasonFaq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: reasonFaq.map(it => ({
+      '@type': 'Question',
+      name: it.q,
+      acceptedAnswer: { '@type': 'Answer', text: it.a },
+    })),
+  } : null
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
+        />
+      )}
       <Link href="/reasons" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All reasons
       </Link>
@@ -251,6 +345,14 @@ export default async function ReasonPage({
           <span>{totalBans} bans across {countries} countries</span>
           {activeBans > 0 && <span>{activeBans} currently active</span>}
         </div>
+        {/* Direct-answer lead — AI-Overview / Featured-Snippet eligible. The
+            editorial REASON_INTROS narrative renders below as supplementary
+            context; this is the data-driven TL;DR. */}
+        {reasonLead && (
+          <p className="mb-4 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+            {reasonLead}
+          </p>
+        )}
         {intro && (
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl text-sm">{intro}</p>
         )}
