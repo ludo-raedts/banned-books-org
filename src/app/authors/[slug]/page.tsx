@@ -224,8 +224,61 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     // Non-fatal
   }
 
+  // ── Schema.org Person + BreadcrumbList JSON-LD ──────────────────────────────
+  // Sits alongside the citation_* meta tags built in generateMetadata above.
+  // The Person type lets Google build entity-graph relations between this
+  // author and the Book JSON-LD on each book detail page (where author.url
+  // points back here).
+  const canonicalUrlLd = `https://www.banned-books.org/authors/${a.slug}`
+  const personAlternateNames = [a.name_native, a.name_english, a.name_transliterated]
+    .filter((n): n is string => !!n && n.trim() !== '' && n.trim().toLowerCase() !== a.display_name.trim().toLowerCase())
+  const personJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: a.display_name,
+    url: canonicalUrlLd,
+    mainEntityOfPage: canonicalUrlLd,
+  }
+  if (personAlternateNames.length > 0) {
+    personJsonLd.alternateName = personAlternateNames.length === 1 ? personAlternateNames[0] : personAlternateNames
+  }
+  if (a.photo_url)      personJsonLd.image = a.photo_url
+  if (a.bio)            personJsonLd.description = a.bio
+  if (a.birth_year)     personJsonLd.birthDate = String(a.birth_year)
+  if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
+  if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
+  if (a.original_language) personJsonLd.knowsLanguage = a.original_language
+  if (books.length > 0) {
+    personJsonLd.workExample = books.slice(0, 50).map(b => ({
+      '@type': 'Book',
+      name: b.title,
+      url: `https://www.banned-books.org/books/${b.slug}`,
+      ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
+    }))
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home',    item: 'https://www.banned-books.org/' },
+      { '@type': 'ListItem', position: 2, name: 'Authors', item: 'https://www.banned-books.org/authors' },
+      { '@type': 'ListItem', position: 3, name: a.display_name, item: canonicalUrlLd },
+    ],
+  }
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(personJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}
+      />
       <Link
         href="/stats"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors"
