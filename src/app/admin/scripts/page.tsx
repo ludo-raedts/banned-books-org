@@ -450,31 +450,65 @@ npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force`}
 
           <Script
             name="enrich-descriptions.ts"
-            what="Fills missing book descriptions. Tries Open Library, then Google Books, then GPT-4o-mini for books neither found. Also fixes truncated descriptions (no sentence-final punctuation)."
-            tags={['free', 'gpt']}
-            command={`npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply`}
+            what="Fills missing book descriptions. Tries Open Library, then Google Books, then GPT-4o-mini for books neither found. Also fixes truncated descriptions (no sentence-final punctuation). With --slug or --overwrite it re-enriches even books that already have a description_book — useful for replacing earlier GPT-drafted text with OL/GB content after the title-ladder has been improved."
+            tags={['free', 'gpt', 'destructive']}
+            command={`# Default — only books with empty description_book
+npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply
+
+# Re-enrich one specific book (overwrites existing)
+npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --slug=the-kite-runner
+
+# Re-enrich the first 50 books alphabetically, overwriting existing
+npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --overwrite --limit=50`}
             flags={[
               { flag: '--apply', desc: 'Write description_book; sets ai_drafted=true for GPT-generated rows' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+              { flag: '--slug=<slug>', desc: 'Re-enrich a single book, overwriting any existing description_book' },
+              { flag: '--overwrite', desc: 'Process all books (not just NULL ones); overwrites existing description_book' },
             ]}
             writes={
               <>
-                Only fills empty <code className="font-mono">description_book</code>. Repairs truncated{' '}
+                <strong>Default mode:</strong> only fills empty <code className="font-mono">description_book</code>. Repairs truncated{' '}
                 <code className="font-mono">description</code> strings by writing the repaired version into{' '}
-                <code className="font-mono">description_book</code> — the original <code className="font-mono">description</code> field is never modified.
+                <code className="font-mono">description_book</code> — the original <code className="font-mono">description</code> field is never modified.{' '}
+                <strong>With <code className="font-mono">--slug</code> or <code className="font-mono">--overwrite</code>:</strong>{' '}
+                runs Part B (OL → GB → GPT) over the targeted rows and <strong>overwrites</strong>{' '}
+                <code className="font-mono">description_book</code> regardless of its current value.{' '}
+                <code className="font-mono">ai_drafted</code> is rewritten too (true when GPT was used, false otherwise).
+                Part A (truncated-repair) is skipped in overwrite mode.
               </>
             }
+            note="No backup is written before overwriting. Sanity-check on a single --slug first; combine --overwrite with --limit for staged rollouts."
           />
 
           <Script
             name="enrich-ban-descriptions-gpt.ts"
-            what="Generates per-ban descriptions — explains why this specific book was banned in this specific country."
-            tags={['gpt']}
-            command={`npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --limit=100`}
+            what="Generates per-ban descriptions — explains why this specific book was banned in this specific country. With --slug or --overwrite it re-generates even when description_ban is already filled."
+            tags={['gpt', 'destructive']}
+            command={`# Default — only books with empty description_ban
+npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --limit=100
+
+# Re-generate one specific book (overwrites existing)
+npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --slug=the-kite-runner
+
+# Re-generate all books, overwriting existing description_ban
+npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --overwrite --limit=50`}
             flags={[
               { flag: '--apply', desc: 'Write ban descriptions' },
-              { flag: '--limit=N', desc: 'Cap at N bans (default 150)' },
+              { flag: '--limit=N', desc: 'Cap at N bans (default 999 in apply mode, 3 in dry-run)' },
+              { flag: '--slug=<slug>', desc: 'Re-generate for a single book, overwriting any existing description_ban' },
+              { flag: '--overwrite', desc: 'Process all books with bans (not just NULL ones); overwrites existing description_ban' },
+              { flag: '--delay=N', desc: 'Milliseconds between calls (default 500)' },
             ]}
-            writes={<>Only fills empty <code className="font-mono">description_ban</code>.</>}
+            writes={
+              <>
+                <strong>Default mode:</strong> only fills empty <code className="font-mono">description_ban</code>.{' '}
+                <strong>With <code className="font-mono">--slug</code> or <code className="font-mono">--overwrite</code>:</strong>{' '}
+                <strong>overwrites</strong> <code className="font-mono">description_ban</code> regardless of current value.
+                No backup is written.
+              </>
+            }
+            note="Sanity-check on a single --slug first before running --overwrite."
           />
 
           <Script

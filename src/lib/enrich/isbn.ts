@@ -6,6 +6,7 @@
 //   3. Google Books API                  → industryIdentifiers ISBN_13
 
 import { adminClient } from '../supabase'
+import { titleLadder } from './_title-ladder'
 
 const OL_DELAY_MS = 400
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
@@ -80,6 +81,10 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     id: number
     slug: string
     title: string
+    title_native: string | null
+    title_transliterated: string | null
+    title_english_meaningful: string | null
+    original_language: string | null
     book_authors: Array<{ authors: { display_name: string } | null }>
   }
 
@@ -88,7 +93,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
   while (true) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, slug, title, book_authors(authors(display_name))')
+      .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, book_authors(authors(display_name))')
       .is('isbn13', null)
       .order('title')
       .range(offset, offset + 999)
@@ -119,28 +124,35 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
   for (let i = 0; i < limit; i++) {
     const book = books[i]
     const author = book.book_authors?.[0]?.authors?.display_name ?? ''
+    const ladder = titleLadder(book)
     let isbn: string | null = null
     let source = ''
 
-    isbn = await searchOL(book.title, author)
-    await sleep(OL_DELAY_MS)
-    if (isbn) source = 'OL'
+    // Walk the title ladder; for each variant try OL+author, OL-title-only,
+    // then GB. First hit wins. Source gets a variant tag (e.g.
+    // 'OL:english_meaningful') when the winning variant is not canonical.
+    for (const variant of ladder) {
+      if (isbn) break
+      const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
 
-    if (!isbn && author) {
-      isbn = await searchOL(book.title, '')
+      isbn = await searchOL(variant.title, author)
       await sleep(OL_DELAY_MS)
-      if (isbn) source = 'OL-title'
-    }
+      if (isbn) { source = `OL${tag}`; break }
 
-    if (!isbn) {
-      isbn = await searchGoogleBooks(book.title, author)
-      if (isbn) source = 'GB'
+      if (author) {
+        isbn = await searchOL(variant.title, '')
+        await sleep(OL_DELAY_MS)
+        if (isbn) { source = `OL-title${tag}`; break }
+      }
+
+      isbn = await searchGoogleBooks(variant.title, author)
+      if (isbn) { source = `GB${tag}`; break }
     }
 
     if (isbn) {
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → ${isbn} [${source}]`)
-      if (source === 'OL') foundOl++
-      else if (source === 'OL-title') foundOlTitle++
+      if (source.startsWith('OL-title')) foundOlTitle++
+      else if (source.startsWith('OL')) foundOl++
       else foundGb++
 
       if (samples.length < 10) samples.push({ title: book.title, isbn, source })
@@ -150,6 +162,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
           .from('books')
           .update({ isbn13: isbn })
           .eq('id', book.id)
+          .is('isbn13', null)
         if (error) {
           log(`    ✗ DB write failed: ${error.message}`)
           errors++

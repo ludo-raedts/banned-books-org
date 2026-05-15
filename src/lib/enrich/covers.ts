@@ -14,6 +14,7 @@
 
 import { adminClient } from '../supabase'
 import { checkImageUrl } from './_placeholder'
+import { titleLadder } from './_title-ladder'
 
 const OL_DELAY_MS   = 200
 const GB_DELAY_MS   = 600
@@ -120,6 +121,10 @@ type BookRow = {
   id: number
   slug: string
   title: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
   openlibrary_work_id: string | null
   author: string | null
   prevSources: string[]
@@ -149,31 +154,43 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   const log = opts.onProgress ?? (() => {})
   const supabase = adminClient()
 
-  let query = supabase
-    .from('books')
-    .select(`
-      id, slug, title, openlibrary_work_id, cover_status,
-      cover_search_attempts!inner(sources_tried),
-      book_authors!left(authors!left(display_name))
-    `)
-    .is('cover_url', null)
-    .order('title')
-
-  if (!opts.force) {
-    query = query.or('cover_status.is.null,cover_status.eq.valid')
-  }
-
-  const { data: eligible, error } = await query
-  if (error) throw new Error(`DB read: ${error.message}`)
-
   type RawRow = {
     id: number; slug: string; title: string
+    title_native: string | null
+    title_transliterated: string | null
+    title_english_meaningful: string | null
+    original_language: string | null
     openlibrary_work_id: string | null
     cover_status: string | null
-    cover_search_attempts: Array<{ sources_tried: string[] }>
+    cover_search_attempts: Array<{ sources_tried: string[] }> | null
     book_authors: Array<{ authors: { display_name: string } | null }> | null
   }
-  const all = (eligible ?? []) as unknown as RawRow[]
+
+  const PAGE = 1000
+  const all: RawRow[] = []
+  for (let from = 0; ; from += PAGE) {
+    let q = supabase
+      .from('books')
+      .select(`
+        id, slug, title, openlibrary_work_id, cover_status,
+        title_native, title_transliterated, title_english_meaningful, original_language,
+        cover_search_attempts!left(sources_tried),
+        book_authors!left(authors!left(display_name))
+      `)
+      .is('cover_url', null)
+      .order('id')
+      .range(from, from + PAGE - 1)
+
+    if (!opts.force) {
+      q = q.or('cover_status.is.null,cover_status.eq.valid')
+    }
+
+    const { data, error } = await q
+    if (error) throw new Error(`DB read: ${error.message}`)
+    const page = (data ?? []) as unknown as RawRow[]
+    all.push(...page)
+    if (page.length < PAGE) break
+  }
 
   const toSearch: BookRow[] = []
   let alreadyDoneCount = 0
@@ -185,6 +202,10 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
       id: row.id,
       slug: row.slug,
       title: row.title,
+      title_native: row.title_native,
+      title_transliterated: row.title_transliterated,
+      title_english_meaningful: row.title_english_meaningful,
+      original_language: row.original_language,
       openlibrary_work_id: row.openlibrary_work_id,
       author: row.book_authors?.[0]?.authors?.display_name ?? null,
       prevSources,
@@ -218,36 +239,48 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   for (let i = 0; i < limit; i++) {
     const book = toSearch[i]
     const author = book.author ?? ''
-    const stripped = stripSubtitle(book.title)
+    const ladder = titleLadder(book)
     let coverUrl: string | null = null
     let source = ''
     const newSources: string[] = []
     const placeholderTracker = { sawPlaceholder: false }
 
     try {
-      if (!coverUrl) {
-        newSources.push('gb_title_only')
-        coverUrl = await gbSearchVerified(`intitle:${book.title}`, placeholderTracker)
-          ?? await gbSearchVerified(book.title, placeholderTracker)
-        if (coverUrl) source = 'GB-title-only'
-      }
-      if (!coverUrl) {
-        newSources.push('ol_title_only')
-        const { coverUrl: url, workId } = await olSearch(book.title, '')
-        if (url) { coverUrl = url; source = 'OL-title-only' }
+      // Walk the title ladder; for each variant try GB → OL → OL-stripped →
+      // Wikipedia in order. First hit (across all variants) wins. The
+      // `newSources` list is annotated with the variant tag (e.g.
+      // 'gb_title_only:english_meaningful') so cover_search_attempts records
+      // which title variant we actually probed.
+      for (const variant of ladder) {
+        if (coverUrl) break
+        const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
+        const stripped = stripSubtitle(variant.title)
+
+        newSources.push(`gb_title_only${tag}`)
+        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, placeholderTracker)
+          ?? await gbSearchVerified(variant.title, placeholderTracker)
+        if (coverUrl) { source = `GB-title-only${tag}`; break }
+
+        newSources.push(`ol_title_only${tag}`)
+        const { coverUrl: olUrl, workId } = await olSearch(variant.title, '')
+        if (olUrl) { coverUrl = olUrl; source = `OL-title-only${tag}` }
         if (workId && !book.openlibrary_work_id && opts.apply) {
-          await supabase.from('books').update({ openlibrary_work_id: workId }).eq('id', book.id)
+          await supabase.from('books')
+            .update({ openlibrary_work_id: workId })
+            .eq('id', book.id)
+            .is('openlibrary_work_id', null)
         }
-      }
-      if (!coverUrl && stripped !== book.title) {
-        newSources.push('ol_stripped')
-        const { coverUrl: url } = await olSearch(stripped, author)
-        if (url) { coverUrl = url; source = 'OL-stripped' }
-      }
-      if (!coverUrl) {
-        newSources.push('wikipedia')
-        const url = await wikipediaCover(book.title, author)
-        if (url) { coverUrl = url; source = 'Wikipedia' }
+        if (coverUrl) break
+
+        if (stripped !== variant.title) {
+          newSources.push(`ol_stripped${tag}`)
+          const { coverUrl: strippedUrl } = await olSearch(stripped, author)
+          if (strippedUrl) { coverUrl = strippedUrl; source = `OL-stripped${tag}`; break }
+        }
+
+        newSources.push(`wikipedia${tag}`)
+        const wikiUrl = await wikipediaCover(variant.title, author)
+        if (wikiUrl) { coverUrl = wikiUrl; source = `Wikipedia${tag}`; break }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -269,6 +302,7 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
           .from('books')
           .update({ cover_url: coverUrl, cover_status: 'valid', cover_checked_at: nowIso })
           .eq('id', book.id)
+          .is('cover_url', null)
         if (ue) { log(`    ✗ DB write failed: ${ue.message}`); errCount++ }
         else await supabase.from('cover_search_attempts').delete().eq('book_id', book.id)
       }
@@ -281,6 +315,7 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
           .from('books')
           .update({ cover_status: 'rejected_placeholder', cover_checked_at: nowIso })
           .eq('id', book.id)
+          .is('cover_url', null)
         if (ue) { log(`    ✗ DB write failed: ${ue.message}`); errCount++ }
         else {
           const allSources = [...new Set([...book.prevSources, ...newSources])]

@@ -14,6 +14,7 @@
 import OpenAI from 'openai'
 import { franc } from 'franc-min'
 import { adminClient } from '../supabase'
+import { titleLadder } from './_title-ladder'
 
 const OL_DELAY_MS = 600
 const SENTENCE_FINAL = new Set(['.', '?', '!', '"', '’', '”'])
@@ -134,6 +135,10 @@ type BookRow = {
   id: number
   slug: string
   title: string
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
+  original_language: string | null
   description: string | null
   description_book: string | null
   openlibrary_work_id: string | null
@@ -143,6 +148,8 @@ type BookRow = {
 export type EnrichDescriptionsOpts = {
   apply: boolean
   limit?: number
+  overwrite?: boolean
+  slug?: string
   onProgress?: (msg: string) => void
 }
 
@@ -163,15 +170,22 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   const hasGpt = Boolean(process.env.OPENAI_API_KEY)
   const openai = hasGpt ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null
 
+  const overwriteMode = Boolean(opts.overwrite || opts.slug)
+
   let all: BookRow[] = []
   let offset = 0
   while (true) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('books')
-      .select('id, slug, title, description, description_book, openlibrary_work_id, book_authors(authors(display_name))')
-      .is('description_book', null)
+      .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, description, description_book, openlibrary_work_id, book_authors(authors(display_name))')
       .order('id', { ascending: true })
       .range(offset, offset + 999)
+    if (opts.slug) {
+      query = query.eq('slug', opts.slug) as typeof query
+    } else if (!opts.overwrite) {
+      query = query.is('description_book', null) as typeof query
+    }
+    const { data, error } = await query
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
     all = all.concat(data as unknown as BookRow[])
@@ -180,8 +194,15 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   }
   all.sort((a, b) => a.title.localeCompare(b.title))
 
-  const truncated = all.filter(b => b.description && isTruncated(b.description) && !b.description_book)
-  const missing   = all.filter(b => !b.description_book && !b.description)
+  // In overwrite/slug mode, skip Part A (which only makes sense when description_book
+  // is still NULL and we're salvaging a truncated legacy `description`) and route
+  // every fetched row through Part B as a re-fill.
+  const truncated = overwriteMode
+    ? []
+    : all.filter(b => b.description && isTruncated(b.description) && !b.description_book)
+  const missing   = overwriteMode
+    ? all
+    : all.filter(b => !b.description_book && !b.description)
 
   log(`Part A — truncated descriptions to repair: ${truncated.length}`)
   log(`Part B — missing descriptions to fill:     ${missing.length}`)
@@ -198,6 +219,7 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   for (let i = 0; i < limitA; i++) {
     const book = truncated[i]
     const author = book.book_authors?.[0]?.authors?.display_name ?? ''
+    const ladder = titleLadder(book)
     let proposed: string | null = null
 
     if (book.openlibrary_work_id) {
@@ -205,24 +227,27 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
       await sleep(OL_DELAY_MS)
       if (raw) { const c = clean(raw); if (isEnglish(c) && c.length >= 80) proposed = c }
     }
-    if (!proposed) {
-      const { desc } = await searchOl(book.title, author)
+    // Walk the title ladder; for each variant try OL then GB. First match wins.
+    for (const variant of ladder) {
+      if (proposed) break
+      const { desc } = await searchOl(variant.title, author)
       await sleep(OL_DELAY_MS)
-      if (desc) { const c = clean(desc); if (isEnglish(c) && c.length >= 80) proposed = c }
-    }
-    if (!proposed) {
-      const gb = await fetchGoogleBooks(book.title, author)
+      if (desc) { const c = clean(desc); if (isEnglish(c) && c.length >= 80) { proposed = c; break } }
+      const gb = await fetchGoogleBooks(variant.title, author)
       await sleep(OL_DELAY_MS)
-      if (gb) { const c = clean(gb); if (isEnglish(c) && c.length >= 80) proposed = c }
+      if (gb) { const c = clean(gb); if (isEnglish(c) && c.length >= 80) { proposed = c; break } }
     }
     if (!proposed) { log(`  [A ${i + 1}/${limitA}] ${book.title.slice(0, 50)} — no source`); skippedA++; continue }
 
     log(`  [A ${i + 1}/${limitA}] ${book.title.slice(0, 50)} → ${proposed.length} chars`)
     if (samples.length < 10) samples.push({ title: book.title, source: 'A-repair', chars: proposed.length })
     if (opts.apply) {
+      // Part A only runs in default mode (overwriteMode === false), so the
+      // NULL guard always applies here.
       const { error: ue } = await supabase.from('books')
         .update({ description_book: proposed, ai_drafted: false })
         .eq('id', book.id)
+        .is('description_book', null)
       if (ue) { log(`    ✗ DB write failed: ${ue.message}`); skippedA++; errCount++ }
       else updatedA++
     }
@@ -239,18 +264,31 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   for (let i = 0; i < limitB; i++) {
     const book = missing[i]
     const author = book.book_authors?.[0]?.authors?.display_name ?? ''
+    const ladder = titleLadder(book)
     let proposed: string | null = null
     let source = ''
 
-    const { desc: olDesc } = await searchOl(book.title, author)
-    await sleep(OL_DELAY_MS)
-    if (olDesc) { const c = clean(olDesc); if (isEnglish(c) && c.length >= 80) { proposed = c; source = 'OL' } }
-    if (!proposed) {
-      const gb = await fetchGoogleBooks(book.title, author)
+    // Walk the title ladder. The `source` label gets a variant tag for
+    // telemetry (e.g. 'OL:english_meaningful') when the winning variant
+    // is not the canonical title.
+    for (const variant of ladder) {
+      if (proposed) break
+      const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
+      const { desc: olDesc } = await searchOl(variant.title, author)
       await sleep(OL_DELAY_MS)
-      if (gb) { const c = clean(gb); if (isEnglish(c) && c.length >= 80) { proposed = c; source = 'GB' } }
+      if (olDesc) {
+        const c = clean(olDesc)
+        if (isEnglish(c) && c.length >= 80) { proposed = c; source = `OL${tag}`; break }
+      }
+      const gb = await fetchGoogleBooks(variant.title, author)
+      await sleep(OL_DELAY_MS)
+      if (gb) {
+        const c = clean(gb)
+        if (isEnglish(c) && c.length >= 80) { proposed = c; source = `GB${tag}`; break }
+      }
     }
     if (!proposed && openai) {
+      // GPT uses canonical title only — generation, not retrieval.
       proposed = await generateWithGPT(openai, book.title, author)
       if (proposed) source = 'GPT'
     }
@@ -261,12 +299,14 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
     if (samples.length < 10) samples.push({ title: book.title, source, chars: proposed.length })
     if (opts.apply) {
       const aiDrafted = source === 'GPT'
-      const { error: ue } = await supabase.from('books')
+      let upd = supabase.from('books')
         .update({ description_book: proposed, ai_drafted: aiDrafted })
         .eq('id', book.id)
+      if (!overwriteMode) upd = upd.is('description_book', null) as typeof upd
+      const { error: ue } = await upd
       if (ue) { log(`    ✗ DB write failed: ${ue.message}`); skippedB++; errCount++ }
-      else if (source === 'OL') updatedB_ol++
-      else if (source === 'GB') updatedB_gb++
+      else if (source.startsWith('OL')) updatedB_ol++
+      else if (source.startsWith('GB')) updatedB_gb++
       else updatedB_gpt++
     }
   }

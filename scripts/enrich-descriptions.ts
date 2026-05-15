@@ -12,6 +12,10 @@
  *     → dry-run: shows counts and up to 3 samples per part, no writes
  *   npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply
  *     → writes to description_book; sets ai_drafted=true when GPT is used
+ *   npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --slug=<slug>
+ *     → re-enrich a single book regardless of existing description_book
+ *   npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --overwrite --limit=50
+ *     → re-enrich all books, overwriting existing description_book
  *
  * Core logic lives in src/lib/enrich/descriptions.ts so /api/admin/enrich/run
  * can call it in-process from the UI.
@@ -19,13 +23,25 @@
 
 import { enrichDescriptions } from '../src/lib/enrich/descriptions'
 
-const APPLY = process.argv.includes('--apply')
+const APPLY     = process.argv.includes('--apply')
+const OVERWRITE = process.argv.includes('--overwrite')
+const limitArg  = process.argv.find(a => a.startsWith('--limit='))
+const slugArg   = process.argv.find(a => a.startsWith('--slug='))
+const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : undefined
+const SLUG      = slugArg?.split('=')[1] ?? undefined
 
 async function main() {
-  console.log(`\n── enrich-descriptions (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──\n`)
+  console.log(`\n── enrich-descriptions (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
+  if (SLUG)      console.log(`  --slug=${SLUG} (single book, overwrites existing)`)
+  if (OVERWRITE) console.log(`  --overwrite: replacing existing description_book too`)
+  if (LIMIT)     console.log(`  --limit=${LIMIT}`)
+  console.log()
 
   const result = await enrichDescriptions({
     apply: APPLY,
+    limit: LIMIT,
+    overwrite: OVERWRITE,
+    slug: SLUG,
     onProgress: msg => console.log(msg),
   })
 
