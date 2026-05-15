@@ -464,8 +464,69 @@ export default async function BookPage({
   const titleQuery = encodeURIComponent(book.title)
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
 
+  // ── Schema.org JSON-LD ─────────────────────────────────────────────────────
+  // Book + BreadcrumbList, emitted as <script type="application/ld+json">.
+  // Sits alongside the existing Google-Scholar citation_* meta tags (built via
+  // buildCitationMeta in generateMetadata above) — those target academic
+  // indexers; this targets Google's Knowledge Panel and rich-result eligibility.
+  //
+  // Only fields with real values are emitted; null/empty fields are dropped so
+  // we never expose placeholder strings to crawlers. The canonical URL is the
+  // same one used in generateMetadata's alternates.canonical.
+  const canonicalUrl = `https://www.banned-books.org/books/${book.slug}`
+  const authorList = book.book_authors
+    .map(ba => ba.authors)
+    .filter((a): a is { display_name: string; slug: string | null } => !!a)
+  const alternateNames = [book.title_native, book.title_english_meaningful, book.title_transliterated]
+    .filter((t): t is string => !!t && t.trim() !== '' && t.trim().toLowerCase() !== book.title.trim().toLowerCase())
+  const bookJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: book.title,
+    url: canonicalUrl,
+    mainEntityOfPage: canonicalUrl,
+  }
+  if (alternateNames.length > 0) {
+    bookJsonLd.alternateName = alternateNames.length === 1 ? alternateNames[0] : alternateNames
+  }
+  if (authorList.length > 0) {
+    bookJsonLd.author = authorList.map(a => ({
+      '@type': 'Person',
+      name: a.display_name,
+      ...(a.slug ? { url: `https://www.banned-books.org/authors/${a.slug}` } : {}),
+    }))
+  }
+  if (book.original_language) bookJsonLd.inLanguage = book.original_language
+  if (book.first_published_year) bookJsonLd.datePublished = String(book.first_published_year)
+  if (book.description_book) bookJsonLd.description = book.description_book
+  if (book.cover_url) bookJsonLd.image = book.cover_url
+  if (book.isbn13) bookJsonLd.isbn = book.isbn13
+  if (book.genres && book.genres.length > 0) bookJsonLd.genre = book.genres
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home',  item: 'https://www.banned-books.org/' },
+      { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://www.banned-books.org/books' },
+      { '@type': 'ListItem', position: 3, name: book.title, item: canonicalUrl },
+    ],
+  }
+
+  // Escape `<` to prevent a malicious title from closing the script tag early.
+  // JSON.stringify already escapes `&`, `'`, `"` inside string values.
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(bookJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}
+      />
       <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All books
       </Link>
@@ -1007,37 +1068,6 @@ export default async function BookPage({
         </section>
       )}
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Book',
-            name: book.title,
-            url: `https://www.banned-books.org/books/${book.slug}`,
-            ...(author ? { author: { '@type': 'Person', name: author } } : {}),
-            ...(book.first_published_year ? { datePublished: book.first_published_year.toString() } : {}),
-            ...(book.description_book ?? book.description ? { description: book.description_book ?? book.description } : {}),
-            ...(book.cover_url ? { image: book.cover_url } : {}),
-            ...(book.isbn13 ? { isbn: book.isbn13 } : {}),
-            ...(book.original_language ? { inLanguage: book.original_language } : {}),
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.banned-books.org' },
-              { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://www.banned-books.org' },
-              { '@type': 'ListItem', position: 3, name: book.title, item: `https://www.banned-books.org/books/${book.slug}` },
-            ],
-          }),
-        }}
-      />
     </main>
   )
 }
