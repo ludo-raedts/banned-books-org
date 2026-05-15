@@ -175,6 +175,7 @@ function validateMergeOverlay(input: unknown): ValidationOk | ValidationErr {
       target_book_id: targetBookId,
       title,
       title_native: optionalString(b.title_native),
+      title_transliterated: optionalString(b.title_transliterated),
       title_english_meaningful: optionalString(b.title_english_meaningful),
       original_language: originalLanguage,
       authors,

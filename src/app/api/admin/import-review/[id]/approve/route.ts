@@ -162,6 +162,7 @@ function validateOverlay(input: unknown): ValidationOk | ValidationErr {
     overlay: {
       title,
       title_native: optionalString(b.title_native),
+      title_transliterated: optionalString(b.title_transliterated),
       title_english_meaningful: optionalString(b.title_english_meaningful),
       original_language: originalLanguage,
       authors,
