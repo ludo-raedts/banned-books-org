@@ -413,7 +413,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
 
           <Script
             name="enrich-isbn.ts"
-            what="Finds missing ISBN-13 values via Open Library (title+author, then title-only) and Google Books."
+            what="Finds missing ISBN-13 via Open Library (title+author, then title-only) and Google Books. Excludes '— All works' author-omnibus pseudo-titles (no real ISBN exists for them). Pre-checks the candidate ISBN against the books table — false positives that collide with another row are skipped rather than crashing the run on the books_isbn13_key unique constraint."
             tags={['free']}
             command={`npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply
 npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
@@ -421,7 +421,14 @@ npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
               { flag: '--apply', desc: 'Write isbn13 to database' },
               { flag: '--limit=N', desc: 'Cap at N books per run' },
             ]}
-            writes={<>Only fills empty <code className="font-mono">isbn13</code>.</>}
+            writes={
+              <>
+                Only fills empty <code className="font-mono">isbn13</code>. Candidate ISBNs already on another
+                row are skipped and counted under <code className="font-mono">Skipped (ISBN already on another row)</code>{' '}
+                in the summary.
+              </>
+            }
+            note="OL/GB occasionally surface POD/9798-prefix reprints that share an ISBN with an unrelated canonical edition — the pre-write duplicate check catches those. Pseudo-title filter is title ILIKE '%— All works%' at the SELECT level."
           />
 
           <Script
