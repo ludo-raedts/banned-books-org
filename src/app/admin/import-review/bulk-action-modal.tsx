@@ -4,8 +4,12 @@ import { useState } from 'react'
 import type { SlugLabel } from './list-client'
 
 type Props = {
-  mode: 'approve' | 'reject' | 'defer'
+  mode: 'approve' | 'reject' | 'defer' | 'merge'
   selectedIds: number[]
+  // Subset of selectedIds that carry a dedup target. Merge-mode only — used
+  // to warn the operator about rows that will fail per-row with "no dedup
+  // target". null in other modes.
+  mergeEligibleIds?: number[]
   reasons: SlugLabel[]
   scopes: SlugLabel[]
   onClose: () => void
@@ -24,6 +28,7 @@ const inputCls =
 export default function BulkActionModal({
   mode,
   selectedIds,
+  mergeEligibleIds,
   reasons,
   scopes,
   onClose,
@@ -45,12 +50,41 @@ export default function BulkActionModal({
   // Reject-mode reason
   const [rejectReason, setRejectReason] = useState('')
 
-  const approveReady = reasonSlug && scopeSlug && actionType && banStatus
+  // Approve and merge share the same overlay-completeness check.
+  const overlayReady = reasonSlug && scopeSlug && actionType && banStatus
 
   async function submit() {
     setBusy(true)
     setError(null)
     try {
+      // Merge posts to a different endpoint and takes only `ids` + `overlay`
+      // (no `action` field). Approve/reject/defer all go through the shared
+      // /bulk endpoint with `action` switching the behavior.
+      if (mode === 'merge') {
+        const res = await fetch('/api/admin/import-review/bulk/merge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ids: selectedIds,
+            overlay: {
+              reason_slug: reasonSlug,
+              action_type: actionType,
+              scope_slug: scopeSlug,
+              ban_status: banStatus,
+              description_ban: descriptionBan || null,
+              inclusion_rationale_template: inclusionRationaleTpl || null,
+            },
+          }),
+        })
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}))
+          throw new Error(j.error ?? `HTTP ${res.status}`)
+        }
+        const json = await res.json() as BulkResult
+        setResult(json)
+        return
+      }
+
       const body: Record<string, unknown> = {
         action: mode,
         ids: selectedIds,
@@ -101,20 +135,36 @@ export default function BulkActionModal({
         <div className="p-5 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold">
             {mode === 'approve' && `Approve ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
-            {mode === 'reject' && `Reject ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
-            {mode === 'defer' && `Defer ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
+            {mode === 'reject'  && `Reject ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
+            {mode === 'defer'   && `Defer ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
+            {mode === 'merge'   && `Merge ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
           </h2>
           {mode === 'approve' && !result && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               Apply these settings to every selected row. Title, authors, and year stay as parsed.
             </p>
           )}
+          {mode === 'merge' && !result && (
+            <div className="mt-1 space-y-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Attach a new ban to each row&apos;s suggested existing book. The canonical book row is
+                never overwritten; title variants become slug aliases.
+              </p>
+              {mergeEligibleIds && mergeEligibleIds.length < selectedIds.length && (
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  {selectedIds.length - mergeEligibleIds.length} of {selectedIds.length} selected
+                  row{selectedIds.length !== 1 ? 's' : ''} have no dedup target and will fail —
+                  open those individually to pick a book.
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="p-5">
           {result ? (
             <BulkResultView result={result} onDone={handleDoneClick} />
-          ) : mode === 'approve' ? (
+          ) : mode === 'approve' || mode === 'merge' ? (
             <div className="flex flex-col gap-4">
               <Field label="Reason" required>
                 <select
@@ -227,16 +277,26 @@ export default function BulkActionModal({
             </button>
             <button
               onClick={submit}
-              disabled={busy || (mode === 'approve' && !approveReady)}
+              disabled={busy || ((mode === 'approve' || mode === 'merge') && !overlayReady)}
               className={`px-3 py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-40 ${
                 mode === 'approve'
                   ? 'bg-emerald-600 hover:bg-emerald-700'
                   : mode === 'reject'
                   ? 'bg-red-600 hover:bg-red-700'
+                  : mode === 'merge'
+                  ? 'bg-sky-600 hover:bg-sky-700'
                   : 'bg-gray-700 hover:bg-gray-800'
               }`}
             >
-              {busy ? 'Working…' : mode === 'approve' ? 'Approve & commit' : mode === 'reject' ? 'Reject' : 'Defer'}
+              {busy
+                ? 'Working…'
+                : mode === 'approve'
+                ? 'Approve & commit'
+                : mode === 'reject'
+                ? 'Reject'
+                : mode === 'merge'
+                ? 'Merge & commit'
+                : 'Defer'}
             </button>
           </div>
         )}

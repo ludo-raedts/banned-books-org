@@ -45,6 +45,16 @@ const INDIA: SourceConfig = {
 // No year column. The "type of literature" cell at index 2 is intentionally
 // skipped (notes starts at 3) so phrases like "novel" / "short stories" do
 // not pollute the reason-mapper input.
+//
+// Most rows on this page carry no reason text — the Ministry of Culture and
+// Islamic Guidance revokes/withholds publication permits without publishing
+// rationale. Where notes exist they often only credit the translator
+// ("Translated by Hossin Shahrabi"). reason-mapper's hasNoReasonSignal
+// recognises both empty notes and translator-credit-only notes so the
+// fallback below applies. 'moral' is the editorial default: Iranian permit
+// decisions cite morality/social-mores and Islamic-conformity concerns;
+// editors flip to 'religious' or 'political' per-row during review where the
+// notes spell out a specific cause.
 const IRAN: SourceConfig = {
   page: 'Book_censorship_in_Iran',
   country_code: 'IR',
@@ -57,6 +67,8 @@ const IRAN: SourceConfig = {
       scope_default: 'government',
       status_default: 'historical',
       columns: { title: 0, authors: 1, year: null, state: null, notes: 3 },
+      fallback_reason_slug: 'moral',
+      original_language: 'fa',
     },
   ],
 }
@@ -232,6 +244,13 @@ const ALA: SourceConfig = {
       scope_default: 'school',
       status_default: 'historical',
       columns: { title: 0, authors: 1, year: 3, state: null, notes: 2, notes_end: 2 },
+      // A handful of ALA rows have an empty notes cell where Wikipedia omits
+      // the per-challenge rationale. ALA's framing for school challenges is
+      // overwhelmingly age-appropriateness / moral-content based ("unsuited
+      // to age group" is the most common ALA challenge category), so 'moral'
+      // is the safest editorial default. Editors switch to lgbtq / sexual /
+      // violence / religious during review where the row warrants it.
+      fallback_reason_slug: 'moral',
     },
   ],
 }

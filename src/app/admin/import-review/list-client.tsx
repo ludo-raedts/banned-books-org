@@ -57,7 +57,7 @@ export default function ImportReviewListClient({
   const [flagFilter, setFlagFilter] = useState<Set<string>>(new Set())
   const [page, setPage] = useState(0)
   const [selected, setSelected] = useState<Set<number>>(new Set())
-  const [bulkMode, setBulkMode] = useState<null | 'approve' | 'reject' | 'defer'>(null)
+  const [bulkMode, setBulkMode] = useState<null | 'approve' | 'reject' | 'defer' | 'merge'>(null)
 
   const filtered = useMemo(() => {
     return items.filter(it => {
@@ -111,6 +111,18 @@ export default function ImportReviewListClient({
 
   const allVisibleSelected =
     visible.length > 0 && visible.every(it => selected.has(it.id))
+
+  // Merge-eligible = selected rows that have a dedup target. The bulk-merge
+  // endpoint will still accept rows without a target (and fail them per-row),
+  // but surfacing the count up-front prevents operators from accidentally
+  // running merge on a mixed selection where most rows would error out.
+  const mergeEligibleIds = useMemo(() => {
+    const byId = new Map(items.map(it => [it.id, it]))
+    return Array.from(selected).filter(id => {
+      const it = byId.get(id)
+      return it?.dedup_kind === 'possible_duplicate' && it.dedup_book_id != null
+    })
+  }, [items, selected])
 
   async function handleBulkComplete(refresh: boolean) {
     setBulkMode(null)
@@ -200,6 +212,22 @@ export default function ImportReviewListClient({
           >
             Approve {selected.size}
           </button>
+          {mergeEligibleIds.length > 0 && (
+            <button
+              onClick={() => setBulkMode('merge')}
+              title={
+                mergeEligibleIds.length === selected.size
+                  ? 'Attach a new ban to each row’s suggested existing book'
+                  : `${mergeEligibleIds.length} of ${selected.size} selected have dedup targets`
+              }
+              className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium transition-colors"
+            >
+              Merge {mergeEligibleIds.length}
+              {mergeEligibleIds.length < selected.size && (
+                <span className="opacity-70"> / {selected.size}</span>
+              )}
+            </button>
+          )}
           <button
             onClick={() => setBulkMode('reject')}
             className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
@@ -365,6 +393,7 @@ export default function ImportReviewListClient({
         <BulkActionModal
           mode={bulkMode}
           selectedIds={Array.from(selected)}
+          mergeEligibleIds={bulkMode === 'merge' ? mergeEligibleIds : undefined}
           reasons={reasons}
           scopes={scopes}
           onClose={() => setBulkMode(null)}

@@ -281,6 +281,138 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
     /\b(critical of (?:the )?ccp|cultural revolution|chinese communist (?:party|rule)|mainland china|communist (?:party|government)|peasant protests?|great chinese famine|propaganda department|mao zedong|ccp deemed|chinese communists|tiananmen|fictional collapse of (?:chinese|communist))\b/i,
     'political',
   ],
+
+  // ── Political — China/HK extended (added 2026-05-15) ────────────────────
+  // Xi-Jinping comparisons (Chongzhen Emperor row in CN), CCP-adjacent figures
+  // (Zhao Ziyang memoirs), state-pressure euphemisms on the HK Sino-United
+  // chain ("banned by bookstores under Sino United Publishing" — Sino-United
+  // is a CCP-controlled retailer/publisher conglomerate; the phrase is the
+  // standard wording on the HK page for post-2020 retail-level NSL bans).
+  // Disqualifications from the HK Biennial Awards (3 rows in 2023) are the
+  // post-NSL purge of dissenting authors from the literary establishment.
+  [
+    /\b(?:xi jinping|zhao ziyang|chongzhen emperor|chinese characters|spiritual pollution|plasma economy|sino united publishing|disqualified from the (?:award|hong kong biennial))\b/i,
+    'political',
+  ],
+
+  // ── Political — wartime / pacifist / anti-war (added 2026-05-15) ────────
+  // NZ WW1/WW2 era and master-aggregator wartime bans repeatedly use these
+  // phrases: pacifism, anti-war propaganda, anti-imperialist, conscientious
+  // objectors, IWW agitation. All are state-imposed political bans even when
+  // the cell does not explicitly say "political".
+  [
+    /\b(?:pacifis|anti-?war|anti-?imperialis|anti-?military|conscientious objector|industrial workers of the world|seditious propaganda)/i,
+    'political',
+  ],
+
+  // ── Political — statutory state-censorship machinery (added 2026-05-15) ─
+  // NZ wartime and master-aggregator rows where the cell only names the
+  // enforcement instrument: "War Regulations Act 1914", "War Precautions Act",
+  // "prohibited by an Order in Council", "withheld by the Controller of
+  // Censorship", Indonesian "Presidential Instruction" / "Inpres No.". These
+  // are unambiguous state-action verbs, not editorial complaints.
+  [
+    /\b(?:war regulations? act|war precautions? act|order in council|controller of censorship|presidential instruction|inpres no\.?)\b/i,
+    'political',
+  ],
+
+  // ── Political — communist/marxist works (added 2026-05-15) ──────────────
+  // Tsarist/NZ-wartime/Nazi-era bans on Lenin, Stalin, Trotsky, Marx, and
+  // associated communist literature. "Communist Programme" and "Land of
+  // Socialism" titles also fit here. Narrow enough to skip academic mentions.
+  [
+    /\b(?:works? of (?:lenin|stalin|trotsky|marx|engels)|lenin and stalin|land of socialism|the communist programme|programme of the world revolution|marxist literature|communist literature|communist propaganda)\b/i,
+    'political',
+  ],
+
+  // ── Political — named regimes / banning authorities (added 2026-05-15) ──
+  // Captures master-aggregator rows where the cell is "Banned by the Spanish
+  // censors", "Banned in Apartheid South Africa", "Banned in Tsarist Russia",
+  // "Banned in the Soviet Union", "Banned by the Portuguese government", etc.
+  // These are regime-level political bans by definition; the previous master
+  // pattern only caught "banned by/during" (verb-bound) which missed
+  // "Banned in Tsarist Russia" and "Banned in Apartheid South Africa".
+  [
+    /\b(?:apartheid south africa|tsarist russia|tsarist russian|the soviet (?:union|government|censors?)|the spanish censors|spanish censors gave|the portuguese (?:government|censors)|the second czechoslovak republic|saudi (?:government|arabia for|arabia from|arabia since)|the bangladeshi government|francoist spain|the francoist|the nazi (?:government|regime|censors|authorities)|nazi germany|banned by the reform government|banned by the military censor|the british central board for conscientious objectors)\b/i,
+    'political',
+  ],
+
+  // ── Political — state-rationale euphemisms (added 2026-05-15) ───────────
+  // Pakistan/Malaysia ban announcements consistently cite "objectionable
+  // material as the cause" or "confusion and anxiety among the Muslims";
+  // El Salvador cites "portrayal of human rights violations"; Saudi Arabia
+  // bans citing scriptural reinterpretation ("suggesting the Hebrews
+  // originated in Yemen..."). These are political-control framings even
+  // when the announcement itself avoids the word "political".
+  [
+    /\b(?:objectionable material as the cause|confusion and anxiety among the muslims|portrayal of human rights violations|human rights violations|criticism of the actions of the national liberation front|criticism of the (?:government|state|regime))\b/i,
+    'political',
+  ],
+
+  // ── Racial — antisemitic ban basis (added 2026-05-15) ───────────────────
+  // Master aggregator: "Banned in Lebanon for its positive depiction of Jews"
+  // — the ban exists because Jews are depicted positively, antisemitic in
+  // motivation. Treated as racial (antisemitism bucket), distinct from
+  // religious-content bans of Jewish texts.
+  [
+    /\b(?:positive depiction of jews|positive portrayal of jews|sympathetic.*?\bjews\b|because of jews|jewish characters? in (?:a |an )?positive)\b/i,
+    'racial',
+  ],
+
+  // ── Moral — youth-protection framing (added 2026-05-15) ─────────────────
+  // China's manga bans ("Attack on Titan", "Highschool of the Dead", "Death
+  // Note") use the standard PRC formula "for the purpose of protecting the
+  // healthy development of youth". Other jurisdictions echo: "harmful to
+  // minors", "unfit for young readers". These are moral/age-protection
+  // framings, distinct from sexual/violent content patterns above.
+  [
+    /\b(?:healthy development of youth|protect(?:ing|ion of)? (?:the )?(?:youth|children|minors)|harmful to (?:youth|children|minors)|unfit for young readers)\b/i,
+    'moral',
+  ],
+
+  // ── Obscenity — NZ/Australian classification regime extras (added 2026-05-15) ─
+  // NZ Office of Film & Literature Classification cells phrase rationale as
+  // "deemed to be objectionable" / "interim restriction order" / "R18
+  // classification" / "Restricted N unless instructed by parents" /
+  // "degrading and dehumanising images". Australian "bawdiness amounting to
+  // sex obsession" / "obsession" / "in a way that is likely to cause offence
+  // to a reasonable adult, [of] a person who is, or appears to be, a child
+  // under 18". These all map to obscenity in this DB's vocabulary.
+  [
+    /\b(?:deemed to be objectionable|interim restriction order|r\s*18 classification|degrading and dehumanising|sex obsession|bawdiness|appears to be(?:,)? a child under 18|child under 18|restricted \d+ unless instructed)\b/i,
+    'obscenity',
+  ],
+
+  // ── Political — military regimes / state-permit denial (added 2026-05-15) ─
+  // Master aggregator: "military dictator Zia-ul-Haq's government" (Pakistan),
+  // "the Vietnamese government had seized" / "unable to get certification for
+  // publication" (Vietnam state-permit denial). These are political-control
+  // mechanisms even when the cell does not spell out "political".
+  [
+    /\b(?:military dictator|military junta|military government|military regime|unable to get certification for publication|certification for publication|government had seized|government seized|attempted to suspend publication of classified|publishing classified information)\b/i,
+    'political',
+  ],
+
+  // ── Political — NZ wartime "withheld" decisions (added 2026-05-15) ──────
+  // NZ Controller of Censorship cells repeatedly use "withheld and held for
+  // decision by a higher authority" or "Withheld from Wellington booksellers"
+  // — both are wartime-political censorship mechanisms. Not caught by the
+  // generic "Controller of Censorship" pattern above when that phrase is
+  // absent from the cell.
+  [
+    /\bwithheld (?:and held for decision|from (?:wellington )?booksellers)\b/i,
+    'political',
+  ],
+
+  // ── Moral — NZ pre-1963 booksellers cooperation (added 2026-05-15) ──────
+  // "Banned by the Department of Justice with the cooperation of Associated
+  // Booksellers of New Zealand" — pre-Indecent-Publications-Tribunal moral
+  // censorship of pulp/crime/sex paperbacks. Distinct from political wartime
+  // bans which used the Controller of Censorship apparatus.
+  [
+    /\bdepartment of justice\b[^.]*\bassociated booksellers\b/i,
+    'moral',
+  ],
 ]
 
 // Detects notes that *only* describe an import-ban mechanism. Step 2 in the
@@ -313,6 +445,12 @@ const PRIVATE_PARTY_PATTERNS: ReadonlyArray<RegExp> = [
   /\bfiled a lawsuit\b/i,
   /\blawsuit filed by\b/i,
   /\bout-of-court settlement\b/i,
+  // Self-censorship by publisher to avoid threatened civil action — e.g.
+  // "HarperCollins anticipated legal action from the Ambani family". The
+  // book was never published but the row is still in the ban list because
+  // the chilling effect was state-equivalent. Editor decides scope.
+  /\banticipated legal action\b/i,
+  /\bfear(?:ed|ing) legal action\b/i,
 ]
 
 // Civil-court procedural stay orders (interim restraints pending verdict).
@@ -334,13 +472,23 @@ export type ReasonMapResult = {
   extra_flags: QualityFlag[]
 }
 
-// True when `notes` carries no reason signal — empty after trim, or composed
-// solely of matrix-style tick markers ("✓", "✓ ✓", "✓ ✓ ✓"). The Hong Kong
-// table represents each ban location as a separate ✓-column; stripWikitext
-// joins those into a notes blob that's just whitespace + checkmarks. Without
-// this guard, the source-fallback never fires for HK because notes !== ''.
+// True when `notes` carries no reason signal — empty after trim, composed
+// solely of matrix-style tick markers ("✓", "✓ ✓", "✓ ✓ ✓"), or carrying only
+// translator-credit boilerplate ("Translated by X" / "translated into Persian
+// by Y"). The Hong Kong table represents each ban location as a separate
+// ✓-column; stripWikitext joins those into a notes blob that's just whitespace
+// + checkmarks. The Iran table has a similar pattern where the notes cell
+// sometimes contains only translator attribution and no ban-reason text.
+// Without this guard, the source-fallback never fires for those rows because
+// notes !== ''.
 function hasNoReasonSignal(notes: string): boolean {
-  return /^[\s✓]*$/u.test(notes)
+  const trimmed = notes.trim()
+  if (/^[\s✓]*$/u.test(trimmed)) return true
+  // Iran ministry-of-culture rows: cells like "Translated by Hossin Shahrabi"
+  // or "translated into Persian by Kaveh Mirabasi" carry no reason signal —
+  // fall through to the source-level fallback configured for wikipedia-iran.
+  if (/^translated (?:by|into)\b[^.]*\.?\s*$/i.test(trimmed)) return true
+  return false
 }
 
 export function mapReason(
