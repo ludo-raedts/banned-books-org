@@ -53,11 +53,20 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
   // ── Filters: collect sets of matching book IDs per condition, then intersect ──
   const idSets: Set<number>[] = []
 
-  // Text search — title OR author name
+  // Text search — match across all 4 title variants (so a query for
+  // "The Book of Sadegh Hedayat" finds the canonical "ketāb-e sādeq-e hedāyat"
+  // via title_english_meaningful, and vice versa) plus author name.
+  // PostgREST's `or()` accepts comma-separated conditions; ilike values are
+  // wrapped with % wildcards for substring match.
   if (q) {
     const lq = `%${q}%`
+    const titleOr =
+      `title.ilike.${lq},` +
+      `title_native.ilike.${lq},` +
+      `title_transliterated.ilike.${lq},` +
+      `title_english_meaningful.ilike.${lq}`
     const [{ data: titleHits }, { data: authorHits }] = await Promise.all([
-      supabase.from('books').select('id').ilike('title', lq),
+      supabase.from('books').select('id').or(titleOr),
       supabase.from('authors').select('id').ilike('display_name', lq),
     ])
     const ids = new Set((titleHits ?? []).map(b => b.id as number))

@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import { headers } from 'next/headers'
 import { trackPageview } from '@/lib/trackPageview'
@@ -167,6 +167,9 @@ type BookDetail = {
   inclusion_rationale: string | null
   extended_context: string | null
   original_language: string | null
+  title_native: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -193,6 +196,7 @@ export default async function BookPage({
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
       original_language,
+      title_native, title_transliterated, title_english_meaningful,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, year_ended, action_type, status, country_code, description,
@@ -205,7 +209,22 @@ export default async function BookPage({
     .eq('slug', slug)
     .single()
 
-  if (error || !data) notFound()
+  if (error || !data) {
+    // Alias fallback: maybe this slug points to a book via book_slug_aliases.
+    // If so, 308 permanent-redirect to the canonical /books/<canonical_slug>.
+    // Search engines and link-juice consolidate on the canonical URL.
+    const { data: alias } = await supabase
+      .from('book_slug_aliases')
+      .select('books(slug)')
+      .eq('slug', slug)
+      .maybeSingle()
+    type AliasRow = { books: { slug: string } | null } | null
+    const canonicalSlug = (alias as AliasRow)?.books?.slug ?? null
+    if (canonicalSlug && canonicalSlug !== slug) {
+      permanentRedirect(`/books/${canonicalSlug}`)
+    }
+    notFound()
+  }
 
   const book = data as unknown as BookDetail
   const author = authorName(book)
@@ -273,7 +292,24 @@ export default async function BookPage({
     .map(([id, v]) => ({ id, slug: v.slug }))[0] ?? null
 
   const bookReasonIds = [...reasonFreqInBook.keys()]
-  const safeTitle = book.title.replace(/'/g, "''")
+  // Build a set of news-search title variants. For non-English books the
+  // English meaning often matches news headlines better than the canonical
+  // (transliterated) title. We OR ilike across all eligible variants ≥ 4
+  // chars; PostgREST single-quotes are doubled so they don't break the or()
+  // grammar.
+  const escape = (s: string) => s.replace(/'/g, "''")
+  const newsTitleVariants = [
+    book.title,
+    book.title_english_meaningful,
+    book.title_native,
+    book.title_transliterated,
+  ]
+    .filter((t): t is string => !!t && t.trim().length >= 4)
+    .map(t => escape(t.trim()))
+  const newsOrClause = [
+    ...newsTitleVariants.map(t => `title.ilike.%${t}%`),
+    ...newsTitleVariants.map(t => `summary.ilike.%${t}%`),
+  ].join(',')
 
   // ── Run all relation lookups in parallel ─────────────────────────────────────
   const [similarMatchesRes, newsRes, countryBansRes, reasonLinksRes] = await Promise.all([
@@ -283,12 +319,12 @@ export default async function BookPage({
           .select('reason_id, bans!inner(book_id)')
           .in('reason_id', bookReasonIds)
       : Promise.resolve({ data: null }),
-    book.title.length >= 4
+    newsTitleVariants.length > 0
       ? supabase
           .from('news_items')
           .select('id, title, source_url, source_name, published_at, summary')
           .eq('status', 'published')
-          .or(`title.ilike.%${safeTitle}%,summary.ilike.%${safeTitle}%`)
+          .or(newsOrClause)
           .order('published_at', { ascending: false })
           .limit(3)
       : Promise.resolve({ data: null }),
@@ -463,6 +499,49 @@ export default async function BookPage({
           >
             {book.title}
           </h1>
+          {/* Secondary title: English meaning (for transliterated/non-English titles)
+              OR native-script form (for English canonical titles whose original is non-Latin).
+              Suppressed when the alt-title equals the canonical title to avoid
+              duplicating the H1 (cf. legacy backfill that set title_native = title for
+              en/fr books — see migration 20260512092437). */}
+          {(() => {
+            const norm = (s: string) => s.trim().toLowerCase()
+            const canonical = norm(book.title)
+            const english =
+              book.title_english_meaningful &&
+              norm(book.title_english_meaningful) !== canonical
+                ? book.title_english_meaningful
+                : null
+            const native =
+              !english &&
+              book.title_native &&
+              norm(book.title_native) !== canonical
+                ? book.title_native
+                : null
+            const subtitle = english ?? native
+            if (!subtitle) return null
+            return (
+              <h2
+                className="text-lg font-medium text-gray-700 dark:text-gray-300 leading-snug"
+                lang={english ? 'en' : book.original_language ?? undefined}
+              >
+                {subtitle}
+              </h2>
+            )
+          })()}
+          {/* Transliteration annotation — small italic line under H1/H2, only
+              shown when distinct from both. Pronunciation aid for non-Latin
+              titles where the canonical is in Latin script + an English
+              meaning is also present (i.e. all three differ). */}
+          {book.title_transliterated &&
+            book.title_transliterated.trim().toLowerCase() !== book.title.trim().toLowerCase() &&
+            (!book.title_english_meaningful ||
+              book.title_transliterated.trim().toLowerCase() !==
+                book.title_english_meaningful.trim().toLowerCase()) && (
+              <p className="text-sm italic text-gray-500 dark:text-gray-400">
+                {book.title_transliterated}
+              </p>
+            )}
           <p className="text-gray-600 dark:text-gray-400">
             {book.book_authors.map((ba, i) => {
               if (!ba.authors) return null
