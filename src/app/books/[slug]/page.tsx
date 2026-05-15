@@ -35,6 +35,115 @@ const BOOK_REASON_PHRASE: Record<string, string> = {
   other: 'other reasons',
 }
 
+// Programmatically-generated direct-answer summary + FAQ Q&As, used to
+// surface the "why was X banned" answer in the first 200 words of the page
+// (the window AI Overview and Featured Snippet ranking cares about) and
+// to emit FAQPage JSON-LD for rich-result eligibility.
+//
+// All inputs come from already-loaded book + bans data; no extra DB calls.
+type Ban_ = {
+  year_started: number | null
+  status: string
+  description: string | null
+  country_code: string
+  countries: { name_en: string } | null
+  ban_reason_links: { reasons: { id: number; slug: string } | null }[]
+}
+type FaqItem = { q: string; a: string }
+function buildBanSummary(
+  bookTitle: string,
+  authorStr: string,
+  sortedBans: Ban_[],
+): { lead: string; faqItems: FaqItem[] } | null {
+  if (sortedBans.length === 0) return null
+
+  const baseTitle = authorStr ? `${bookTitle} by ${authorStr}` : bookTitle
+
+  const countryNames = new Map<string, string>()
+  for (const b of sortedBans) {
+    if (b.countries?.name_en && !countryNames.has(b.country_code)) {
+      countryNames.set(b.country_code, b.countries.name_en)
+    }
+  }
+  const countries = [...countryNames.values()]
+
+  const reasonCount = new Map<string, number>()
+  for (const b of sortedBans) {
+    for (const link of b.ban_reason_links) {
+      const slug = link.reasons?.slug
+      if (slug) reasonCount.set(slug, (reasonCount.get(slug) ?? 0) + 1)
+    }
+  }
+  const topReasonSlug = [...reasonCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+  const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
+
+  const datedBans = sortedBans.filter(b => b.year_started != null)
+  const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map(b => b.year_started!)) : null
+  const activeBanCount = sortedBans.filter(b => b.status === 'active').length
+
+  let lead: string
+  if (countries.length === 1 && earliestYear && topReasonPhrase) {
+    lead = `${baseTitle} has been banned in ${countries[0]} since ${earliestYear} for ${topReasonPhrase}.`
+  } else if (countries.length === 1 && topReasonPhrase) {
+    lead = `${baseTitle} has been banned in ${countries[0]} for ${topReasonPhrase}.`
+  } else if (countries.length === 1 && earliestYear) {
+    lead = `${baseTitle} has been banned in ${countries[0]} since ${earliestYear}.`
+  } else if (countries.length === 1) {
+    lead = `${baseTitle} has been banned in ${countries[0]}.`
+  } else if (earliestYear && topReasonPhrase) {
+    lead = `${baseTitle} has been banned in ${countries.length} countries since ${earliestYear}, most often for ${topReasonPhrase}.`
+  } else if (earliestYear) {
+    lead = `${baseTitle} has been banned in ${countries.length} countries since ${earliestYear}.`
+  } else if (topReasonPhrase) {
+    lead = `${baseTitle} has been banned in ${countries.length} countries, most often for ${topReasonPhrase}.`
+  } else {
+    lead = `${baseTitle} has been banned in ${countries.length} countries.`
+  }
+  if (countries.length >= 3) {
+    lead += ` Documented bans include ${countries.slice(0, 3).join(', ')}, among others.`
+  }
+  if (activeBanCount > 0 && sortedBans.length > activeBanCount) {
+    lead += ` ${activeBanCount} ${activeBanCount === 1 ? 'ban remains' : 'bans remain'} active today.`
+  }
+
+  // FAQ items: prioritise unique-country Q&As (Google ignores duplicate
+  // questions across the same FAQPage). Capped at 5 to stay under the
+  // Search Console "FAQPage with too many entries" advisory.
+  const items: FaqItem[] = []
+  const seenCountries = new Set<string>()
+  for (const ban of sortedBans) {
+    const country = ban.countries?.name_en
+    if (!country || seenCountries.has(country)) continue
+    seenCountries.add(country)
+    const reasonsForBan = ban.ban_reason_links
+      .map(l => l.reasons?.slug)
+      .filter((s): s is string => !!s)
+      .map(s => BOOK_REASON_PHRASE[s] ?? s)
+    const yearPart = ban.year_started ? ` in ${ban.year_started}` : ''
+    const reasonPart = reasonsForBan.length > 0 ? ` for ${reasonsForBan.join(' and ')}` : ''
+    const descPart = ban.description?.trim() ? ` ${ban.description.trim()}` : ''
+    const q = `Why was ${bookTitle} banned in ${country}?`
+    let a = `${bookTitle} was banned in ${country}${yearPart}${reasonPart}.${descPart}`
+    if (a.length > 600) a = a.slice(0, 597) + '…'
+    items.push({ q, a })
+    if (items.length >= 5) break
+  }
+  if (earliestYear && items.length < 5) {
+    const firstCountry = sortedBans.find(b => b.year_started === earliestYear)?.countries?.name_en
+    if (firstCountry) {
+      const more = countries.length - 1
+      items.push({
+        q: `When was ${bookTitle} first banned?`,
+        a: `${bookTitle} was first banned in ${firstCountry} in ${earliestYear}.${
+          more > 0 ? ` It has since been banned in ${more} more ${more === 1 ? 'country' : 'countries'}.` : ''
+        }`,
+      })
+    }
+  }
+
+  return { lead, faqItems: items }
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -511,6 +620,22 @@ export default async function BookPage({
   // enrichment passes were invisible to indexers.
   if (book.updated_at) bookJsonLd.dateModified = book.updated_at
 
+  // Direct-answer + FAQPage. The lead paragraph renders right after the
+  // hero (visible to users); the FAQ JSON-LD targets Google's Featured
+  // Snippet / People-Also-Ask / AI Overview surfaces.
+  const banSummary = buildBanSummary(book.title, author, sortedBans)
+  const faqJsonLd = banSummary && banSummary.faqItems.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: banSummary.faqItems.map(it => ({
+          '@type': 'Question',
+          name: it.q,
+          acceptedAnswer: { '@type': 'Answer', text: it.a },
+        })),
+      }
+    : null
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -535,6 +660,12 @@ export default async function BookPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
+        />
+      )}
       <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All books
       </Link>
@@ -650,6 +781,17 @@ export default async function BookPage({
           />
         </div>
       </div>
+
+      {/* Direct-answer lead paragraph — placed in the first viewport so
+          "Why was {title} banned?" queries find the answer above the fold.
+          This is the same prose surfaced to Google's AI Overview and
+          Featured Snippets; the deeper "Why it was banned" section below
+          still carries the per-ban editorial description. */}
+      {banSummary && (
+        <p className="mb-8 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+          {banSummary.lead}
+        </p>
+      )}
 
       {/* About the book */}
       {(book.description_book ?? book.description) && (
