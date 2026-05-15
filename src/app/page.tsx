@@ -37,6 +37,19 @@ const FULL_SELECT = `
   )
 `
 
+// Latin-script writing languages. Used to gate the daily-pick: a book whose
+// `original_language` falls outside this set typically lacks a real English
+// title and ends up displayed in pinyin/transliteration — unreadable for the
+// English-language homepage. NULL passes (most NULLs are unenriched English).
+const LATIN_SCRIPT_LANGS = [
+  'en','es','fr','de','nl','it','pt','ca','gl','eu',
+  'sv','da','no','nb','nn','fi','is',
+  'pl','cs','sk','hu','ro','hr','sl','lv','lt','et','sq','bs',
+  'tr','id','ms','vi','tl','sw','af','cy','ga','mt','lb','la',
+] as const
+const DAILY_PICK_LANG_FILTER =
+  `original_language.in.(${LATIN_SCRIPT_LANGS.join(',')}),original_language.is.null`
+
 export default async function HomePage() {
   const timer = newTimer('home')
   const supabase = adminClient()
@@ -50,7 +63,9 @@ export default async function HomePage() {
     'homepage-stats-parallel-3',
     () => Promise.all([
       supabase.from('books').select('*', { count: 'exact', head: true }),
-      supabase.from('books').select('*', { count: 'exact', head: true }).not('description_book', 'is', null),
+      supabase.from('books').select('*', { count: 'exact', head: true })
+        .not('description_book', 'is', null)
+        .or(DAILY_PICK_LANG_FILTER),
       supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(2),
     ]),
   )
@@ -67,7 +82,10 @@ export default async function HomePage() {
 
   const { data: pickedArr } = eligibleCount > 0
     ? await timer.wrap('book-of-the-day', () =>
-        supabase.from('books').select('id').not('description_book', 'is', null).order('title').range(idx, idx),
+        supabase.from('books').select('id')
+          .not('description_book', 'is', null)
+          .or(DAILY_PICK_LANG_FILTER)
+          .order('title').range(idx, idx),
       )
     : { data: null as { id: number }[] | null }
   const pickedLight = (pickedArr?.[0] as { id: number } | undefined) ?? null
