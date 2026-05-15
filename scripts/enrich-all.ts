@@ -104,6 +104,12 @@ const steps: Step[] = [
     gpt: true,
   },
   {
+    name: 'Genres (GPT)',
+    script: 'enrich-genres-gpt.ts',
+    args: APPLY ? ['--apply', `--limit=${GPT_LIMIT}`] : [],
+    gpt: true,
+  },
+  {
     name: 'Ban descriptions (GPT)',
     script: 'enrich-ban-descriptions-gpt.ts',
     args: APPLY ? ['--apply', `--limit=${GPT_LIMIT}`] : [],

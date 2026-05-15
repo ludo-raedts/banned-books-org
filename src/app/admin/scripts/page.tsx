@@ -402,6 +402,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
             <Row field="Ban reason classification" script="enrich-reasons.ts" tag="gpt" />
             <Row field="Author bios (Wikipedia)" script="enrich-author-bios.ts" tag="free" />
             <Row field="Author photos — second pass (Wikidata + OpenLibrary)" script="enrich-author-photos-v2.ts" tag="free" />
+            <Row field="Genres (1–3 slugs from fixed vocabulary)" script="enrich-genres-gpt.ts" tag="gpt" />
             <Row field="Editorial classification suggestions" script="suggest-editorial-classification-gpt.ts" tag="gpt" />
             <Row field="Reading Club discussion questions" script="generate-discussion-questions.ts" tag="claude" />
           </dl>
@@ -587,6 +588,39 @@ npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit
             ]}
             writes={<>Only fills empty <code className="font-mono">photo_url</code>.</>}
             note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields ~5–15% on what's left. If you ever extend with a new image source, add the host to src/lib/allowed-image-hosts.ts."
+          />
+
+          <Script
+            name="enrich-genres-gpt.ts"
+            what="Picks 1–3 genre slugs from the fixed 21-slug vocabulary (src/components/genre-badge.tsx) using title + author + first_published_year + description_book as signal. Only targets books with an empty genres array; manual edits and seed-genres.ts entries survive re-runs."
+            tags={['gpt']}
+            command={`# Dry-run on 5 samples
+npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts
+
+# Test on one specific book
+npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --slug=animal-farm
+
+# Small batch first
+npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply --limit=100
+
+# Full sweep
+npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
+            flags={[
+              { flag: '--apply', desc: 'Write genres to DB (omit for dry-run)' },
+              { flag: '--limit=N', desc: 'Cap at N books (default 999 in apply mode, 5 in dry-run)' },
+              { flag: '--slug=X', desc: 'Re-classify a single book (works with or without --overwrite)' },
+              { flag: '--overwrite', desc: 'Process books that already have genres too' },
+              { flag: '--delay=N', desc: 'Milliseconds between calls (default 300)' },
+              { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
+            ]}
+            writes={
+              <>
+                Only targets books where <code className="font-mono">genres = &apos;{'{}'}&apos;</code> (empty array).
+                Writes 1–3 slugs from the fixed vocabulary. Books where GPT returns no slugs or low confidence are
+                skipped — they stay in the candidate pool for a later, smarter pass or manual editing via the admin.
+              </>
+            }
+            note="Genre vocabulary lives in src/components/genre-badge.tsx (21 slugs). The script mirrors that list — keep them in sync until the vocabulary moves to a DB table. Estimated cost: ~€1–€3 for the full backlog at gpt-4o-mini pricing."
           />
 
           <Script
