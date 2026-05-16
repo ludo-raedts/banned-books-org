@@ -35,7 +35,12 @@ function stripSubtitle(title: string): string {
   return title
 }
 
-async function olSearch(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
+// Exported for unit tests (see __tests__/ol-search.test.ts) which verify
+// that author is forwarded to the OL search API — the bug fixed in
+// 2026-05-16 was a caller passing '' for author, which made title-only
+// matches return the most-popular hit (a 19th-century classic) and
+// poison subsequent enrichment fields.
+export async function olSearch(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
   try {
     const params = new URLSearchParams({
       title,
