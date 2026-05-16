@@ -262,7 +262,16 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         if (coverUrl) { source = `GB-title-only${tag}`; break }
 
         newSources.push(`ol_title_only${tag}`)
-        const { coverUrl: olUrl, workId } = await olSearch(variant.title, '')
+        // Pass the author into the title-only branch too. Previously this
+        // line passed '' for author, which made Open Library fall back to
+        // the most popular title match and dropped a 19th-century classic
+        // workId onto modern titles ("Ask the Passengers" → Huckleberry
+        // Finn's OL work; "Dime" → Twain). The stored workId then
+        // poisoned subsequent description and first_published_year
+        // enrichment via descriptions.ts. Three confirmed records were
+        // wiped to NULL on 2026-05-16; this prevents the next round of
+        // imports from re-creating the same collisions.
+        const { coverUrl: olUrl, workId } = await olSearch(variant.title, author)
         if (olUrl) { coverUrl = olUrl; source = `OL-title-only${tag}` }
         if (workId && !book.openlibrary_work_id && opts.apply) {
           await supabase.from('books')
