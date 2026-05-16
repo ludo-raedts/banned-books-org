@@ -413,7 +413,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
 
           <Script
             name="enrich-isbn.ts"
-            what="Finds missing ISBN-13 via Open Library (title+author, then title-only) and Google Books. Excludes '— All works' author-omnibus pseudo-titles (no real ISBN exists for them). Pre-checks the candidate ISBN against the books table — false positives that collide with another row are skipped rather than crashing the run on the books_isbn13_key unique constraint."
+            what="Finds missing ISBN-13 via Open Library (title+author across the title ladder: canonical → transliteration → English-meaningful) and Google Books. Excludes '— All works' author-omnibus pseudo-titles (no real ISBN exists for them). Pre-checks the candidate ISBN against the books table — false positives that collide with another row are skipped rather than crashing the run on the books_isbn13_key unique constraint. (The previous OL title-only retry was dropped 2026-05-16 — it surfaced 19th-century-classic ISBNs on modern titles. Author-name mismatches are now handled via the title ladder instead.)"
             tags={['free']}
             command={`npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply
 npx tsx --env-file=.env.local scripts/enrich-isbn.ts --apply --limit=200`}
