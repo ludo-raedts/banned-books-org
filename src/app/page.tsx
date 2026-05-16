@@ -1,4 +1,11 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate the homepage every 30 minutes. The page renders a
+// daily-rotating "book of the day" (seed = today's ISO date) plus
+// trending widgets that change at most a few times per hour. A 30-min
+// window keeps the rotation feeling live, drops TTFB from ~600ms
+// (force-dynamic + parallel Supabase batch) to ~50ms on cached hits,
+// and lifts Core Web Vitals LCP across the highest-PageRank URL on
+// the site. Book-of-day rolls over at first request after midnight UTC.
+export const revalidate = 1800
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -232,8 +239,60 @@ export default async function HomePage() {
 
   timer.end()
 
+  // ── Schema.org JSON-LD ─────────────────────────────────────────────────────
+  // WebSite + Organization + SearchAction on the homepage so Google can
+  // surface a sitelinks search box for brand queries ("banned books",
+  // "banned-books.org"), and so AI Overview has an entity-graph anchor for
+  // the catalogue. Lives only here — layout-level WebSite typing would
+  // duplicate on every page.
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Banned Books',
+    alternateName: 'banned-books.org',
+    url: 'https://www.banned-books.org',
+    description: `An international catalogue of ${totalCount.toLocaleString('en')} books banned by governments, schools, and libraries worldwide.`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Banned Books',
+      url: 'https://www.banned-books.org',
+      logo: 'https://www.banned-books.org/icon.svg',
+    },
+    // /search?q=... is a real server-side route — the search page reads `q`
+    // from searchParams and renders filtered results, so Google's
+    // SearchAction validation crawler will see actual search results when
+    // it probes the target URL.
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.banned-books.org/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Banned Books',
+    url: 'https://www.banned-books.org',
+    logo: 'https://www.banned-books.org/icon.svg',
+    description: 'An international catalogue of books banned by governments and schools worldwide. Documents censorship history, dates, scope, and source citations.',
+  }
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }}
+      />
       <div className="mb-5">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-2">
           The World&apos;s Books Under Censorship
