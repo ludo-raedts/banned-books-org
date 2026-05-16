@@ -129,6 +129,73 @@ export default async function BannedBooksYearPage({
   const prevYear = yearNum - 1 >= FIRST_YEAR ? yearNum - 1 : null
   const nextYear = yearNum + 1 <= CURRENT_YEAR ? yearNum + 1 : null
 
+  // ── Direct-answer lead + CollectionPage + FAQPage JSON-LD ────────────────
+  // Same SEO pattern as book/author/country/reason: prose-lead in viewport
+  // + FAQ schema for People-Also-Ask. Year-specific queries
+  // ("books banned in 2024", "what books were banned in 2017") hit this
+  // route directly.
+  const collectionUrl = `https://www.banned-books.org/banned-books/${year}`
+  const topCountryNames = topCountries.slice(0, 3).map(([, v]) => v.name)
+  let yearLead: string | null = null
+  if (books.length > 0) {
+    const head = `${books.length} ${books.length === 1 ? 'book had a documented ban' : 'books had documented bans'} starting in ${year}, across ${countryTotals.size} ${countryTotals.size === 1 ? 'country' : 'countries'} and totalling ${rawBans.length} ${rawBans.length === 1 ? 'ban' : 'bans'}`
+    yearLead = topCountryNames.length >= 2
+      ? `${head}. The countries with the most documented bans were ${topCountryNames.join(', ')}.`
+      : `${head}.`
+  }
+
+  const collectionJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Books Banned in ${year}`,
+    url: collectionUrl,
+    mainEntityOfPage: collectionUrl,
+  }
+  if (yearLead) collectionJsonLd.description = yearLead
+  if (books.length > 0) {
+    collectionJsonLd.mainEntity = {
+      '@type': 'ItemList',
+      numberOfItems: books.length,
+      itemListElement: books.slice(0, 50).map((b, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://www.banned-books.org/books/${b.slug}`,
+        name: b.title,
+      })),
+    }
+  }
+
+  const yearFaq: { q: string; a: string }[] = []
+  if (books.length > 0) {
+    yearFaq.push({
+      q: `How many books were banned in ${year}?`,
+      a: `${books.length} ${books.length === 1 ? 'book' : 'books'} in this catalogue had a documented ban starting in ${year}, with ${rawBans.length} total ${rawBans.length === 1 ? 'ban' : 'bans'} across ${countryTotals.size} ${countryTotals.size === 1 ? 'country' : 'countries'}.`,
+    })
+  }
+  if (topCountryNames.length >= 2) {
+    yearFaq.push({
+      q: `Which countries banned the most books in ${year}?`,
+      a: `The countries with the most documented bans starting in ${year} were ${topCountries.slice(0, 5).map(([, v]) => `${v.name} (${v.count})`).join(', ')}.`,
+    })
+  }
+  if (books.length >= 3) {
+    yearFaq.push({
+      q: `What books were banned in ${year}?`,
+      a: `Examples of books banned in ${year} include ${books.slice(0, 5).map(b => b.title).join(', ')}.`,
+    })
+  }
+  const faqJsonLd = yearFaq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: yearFaq.map(it => ({
+      '@type': 'Question',
+      name: it.q,
+      acceptedAnswer: { '@type': 'Answer', text: it.a },
+    })),
+  } : null
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   if (books.length === 0) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-10">
@@ -147,6 +214,16 @@ export default async function BannedBooksYearPage({
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
+        />
+      )}
       <Link href="/stats" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 inline-block transition-colors">
         ← Stats
       </Link>
@@ -173,6 +250,13 @@ export default async function BannedBooksYearPage({
           )}
         </div>
       </div>
+
+      {/* Direct-answer lead — AI-Overview eligible TL;DR above the book list. */}
+      {yearLead && (
+        <p className="mb-6 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+          {yearLead}
+        </p>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Book list */}
