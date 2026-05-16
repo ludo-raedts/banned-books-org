@@ -115,7 +115,8 @@ export default async function HomePage() {
     bannedAuthorsRes,
     trendingAuthorsThisWeekRes,
     trendingAuthorsAllTimeRes,
-  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
+    placeholderAuthorsRes,
+  ] = await timer.wrap('parallel-batch-11', () => Promise.all([
     supabase.from('books').select(FULL_SELECT).order('title').range(0, 47),
     pickedLight
       ? supabase.from('books').select(FULL_SELECT).eq('id', pickedLight.id).single()
@@ -129,6 +130,12 @@ export default async function HomePage() {
     supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(10),
     supabase.from('v_top_authors_this_week').select('entity_id, views').limit(10),
     supabase.from('v_top_authors_all_time').select('entity_id, views').limit(10),
+    // Placeholder authors ("Anonymous", "Unknown", "Various", ...) — flagged
+    // via the is_placeholder column added in migration 20260516100951.
+    // Filter them out before picking the most-banned highlight, otherwise
+    // "Anonymous" sits at #6 on the leaderboard but aggregates 22 unrelated
+    // books and would mislead readers.
+    supabase.from('authors').select('id').eq('is_placeholder', true),
   ]))
 
   const initialBooks = (initialBooksRaw as unknown as Book[]) ?? []
@@ -185,17 +192,24 @@ export default async function HomePage() {
   }
 
   // ── Author highlights: most banned + trending #1 + all-time #1, deduped ─────
+  // Anonymous/Unknown/Various-style buckets are filtered out via the
+  // placeholder_authors set so they don't claim leaderboard spots.
+  const placeholderAuthorIds = new Set<number>(
+    (placeholderAuthorsRes.data ?? []).map((a: { id: number }) => a.id),
+  )
   const usedAuthors = new Set<number>()
+  const isHighlightable = (id: number) => !usedAuthors.has(id) && !placeholderAuthorIds.has(id)
+
   const bannedAuthorRows = (bannedAuthorsRes.data as { entity_id: number; total_bans: number; banned_books: number }[] | null) ?? []
-  const bannedAuthor = bannedAuthorRows.find(r => !usedAuthors.has(Number(r.entity_id)))
+  const bannedAuthor = bannedAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
   if (bannedAuthor) usedAuthors.add(Number(bannedAuthor.entity_id))
 
   const trendingAuthorRows = (trendingAuthorsThisWeekRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const trendingAuthor = trendingAuthorRows.find(r => !usedAuthors.has(Number(r.entity_id)))
+  const trendingAuthor = trendingAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
   if (trendingAuthor) usedAuthors.add(Number(trendingAuthor.entity_id))
 
   const allTimeAuthorRows = (trendingAuthorsAllTimeRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const allTimeAuthor = allTimeAuthorRows.find(r => !usedAuthors.has(Number(r.entity_id)))
+  const allTimeAuthor = allTimeAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
 
   const authorIds = [...usedAuthors, allTimeAuthor ? Number(allTimeAuthor.entity_id) : null].filter((v): v is number => v !== null)
   const { data: authorsRaw } = authorIds.length > 0

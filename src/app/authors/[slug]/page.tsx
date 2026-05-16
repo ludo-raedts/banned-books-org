@@ -35,6 +35,7 @@ type Author = {
   name_english: string | null
   original_language: string | null
   updated_at: string | null
+  is_placeholder: boolean | null
 }
 
 type Ban = {
@@ -112,7 +113,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at, is_placeholder')
     .eq('slug', slug)
     .single()
 
@@ -210,9 +211,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       if (top5Ids.length > 0) {
         const { data: authorDetails } = await supabase
           .from('authors')
-          .select('id, display_name, slug')
+          .select('id, display_name, slug, is_placeholder')
           .in('id', top5Ids.map(x => x.id))
           .not('slug', 'is', null)
+          .eq('is_placeholder', false)
         const nameMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
         relatedAuthors = top5Ids
           .map(({ id, count }) => {
@@ -227,6 +229,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     // Non-fatal
   }
 
+  // Placeholder authors ("Anonymous", "Unknown", "Various") aggregate
+  // unrelated books. They are real catalogue navigation points but NOT
+  // entities — emitting Person JSON-LD or a "23 of Anonymous's books..."
+  // lead would misrepresent the data and undermine SEO trust on /
+  // authors/anonymous. Switch the whole SEO surface to a no-promotion
+  // mode for these records.
+  const isPlaceholder = a.is_placeholder === true
+
   // ── Schema.org Person + BreadcrumbList JSON-LD ──────────────────────────────
   // Sits alongside the citation_* meta tags built in generateMetadata above.
   // The Person type lets Google build entity-graph relations between this
@@ -235,33 +245,35 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const canonicalUrlLd = `https://www.banned-books.org/authors/${a.slug}`
   const personAlternateNames = [a.name_native, a.name_english, a.name_transliterated]
     .filter((n): n is string => !!n && n.trim() !== '' && n.trim().toLowerCase() !== a.display_name.trim().toLowerCase())
-  const personJsonLd: Record<string, unknown> = {
+  const personJsonLd: Record<string, unknown> | null = isPlaceholder ? null : {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: a.display_name,
     url: canonicalUrlLd,
     mainEntityOfPage: canonicalUrlLd,
   }
-  if (personAlternateNames.length > 0) {
+  if (personJsonLd && personAlternateNames.length > 0) {
     personJsonLd.alternateName = personAlternateNames.length === 1 ? personAlternateNames[0] : personAlternateNames
   }
-  if (a.photo_url)      personJsonLd.image = a.photo_url
-  if (a.bio)            personJsonLd.description = a.bio
-  if (a.birth_year)     personJsonLd.birthDate = String(a.birth_year)
-  if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
-  if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
-  if (a.original_language) personJsonLd.knowsLanguage = a.original_language
-  if (books.length > 0) {
-    personJsonLd.workExample = books.slice(0, 50).map(b => ({
-      '@type': 'Book',
-      name: b.title,
-      url: `https://www.banned-books.org/books/${b.slug}`,
-      ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
-    }))
+  if (personJsonLd) {
+    if (a.photo_url)      personJsonLd.image = a.photo_url
+    if (a.bio)            personJsonLd.description = a.bio
+    if (a.birth_year)     personJsonLd.birthDate = String(a.birth_year)
+    if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
+    if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
+    if (a.original_language) personJsonLd.knowsLanguage = a.original_language
+    if (books.length > 0) {
+      personJsonLd.workExample = books.slice(0, 50).map(b => ({
+        '@type': 'Book',
+        name: b.title,
+        url: `https://www.banned-books.org/books/${b.slug}`,
+        ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
+      }))
+    }
+    // dateModified — trigger-bumped freshness signal, parallel to the
+    // Book.dateModified emitted on book detail pages.
+    if (a.updated_at) personJsonLd.dateModified = a.updated_at
   }
-  // dateModified — trigger-bumped freshness signal, parallel to the
-  // Book.dateModified emitted on book detail pages.
-  if (a.updated_at) personJsonLd.dateModified = a.updated_at
 
   // ── Direct-answer lead + FAQPage JSON-LD ──────────────────────────────────
   // Same SEO surface as book/country/reason: a prose summary in the first
@@ -271,7 +283,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   type AuthorBan = Author['display_name'] extends never ? never : Book['bans'][number]
   let authorLead: string | null = null
   let authorFaqJsonLd: object | null = null
-  if (books.length > 0 && totalBans > 0) {
+  // Placeholder authors get a special editorial lead instead of the
+  // counts-driven one — see below — and no FAQ schema (no real entity
+  // to answer questions about).
+  if (!isPlaceholder && books.length > 0 && totalBans > 0) {
     const reasonSlugCounts = new Map<string, number>()
     for (const b of books) {
       for (const ban of b.bans) {
@@ -345,6 +360,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     }
   }
 
+  // Placeholder lead — single sentence noting this is a catalogue bucket
+  // for anonymously-authored books rather than a person's oeuvre.
+  if (isPlaceholder && books.length > 0) {
+    authorLead = `This page collects ${books.length} ${books.length === 1 ? 'book' : 'books'} in our catalogue without an attributed author. These are separate works by different (unknown or anonymous) writers, grouped here for catalogue navigation only.`
+  }
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -359,10 +380,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: ldHtml(personJsonLd) }}
-      />
+      {personJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(personJsonLd) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}

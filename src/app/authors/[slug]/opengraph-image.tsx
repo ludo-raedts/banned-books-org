@@ -19,7 +19,7 @@ export default async function Image({ params }: Params) {
 
   const { data: author } = await adminClient()
     .from('authors')
-    .select('id, display_name, photo_url')
+    .select('id, display_name, photo_url, is_placeholder')
     .eq('slug', slug)
     .single()
 
@@ -51,9 +51,15 @@ export default async function Image({ params }: Params) {
     countryCount = new Set((bans ?? []).map((b: { country_code: string }) => b.country_code)).size
   }
 
+  // Placeholder authors ("Anonymous", "Unknown", ...) aggregate unrelated
+  // books — emitting "22 books · 24 bans across 8 countries" implies a
+  // single oeuvre. Show a neutral count instead.
+  const isPlaceholder = (author as { is_placeholder?: boolean }).is_placeholder === true
   const summary = bookIds.length === 0
     ? null
-    : `${bookIds.length} ${bookIds.length === 1 ? 'book' : 'books'} · ${totalBans} ${totalBans === 1 ? 'ban' : 'bans'} across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
+    : isPlaceholder
+      ? `${bookIds.length} anonymously-authored ${bookIds.length === 1 ? 'book' : 'books'}`
+      : `${bookIds.length} ${bookIds.length === 1 ? 'book' : 'books'} · ${totalBans} ${totalBans === 1 ? 'ban' : 'bans'} across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
 
   const nameLen = author.display_name.length
   const nameSize = nameLen > 30 ? 56 : nameLen > 20 ? 72 : 96
