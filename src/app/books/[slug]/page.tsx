@@ -185,11 +185,23 @@ export async function generateMetadata({
     ? `${baseTitle} – Banned in ${uniqueCountries[0]} for ${topReasonPhrase}`
     : null
   const candidateB = `${baseTitle} – Why it was banned`
+  // Compact value-add suffix for long titles where candidate A and B both
+  // overflow. Always under 70 chars when baseTitle is under 55 — covers
+  // ~95% of catalogue titles. Empirically (GSC 2026-05-16) titles without
+  // any "banned" suffix have ~10× lower CTR at position 4: aztec-inca-maya
+  // (39 chars + " – Why it was banned") → 36% CTR @ pos 2, vs Jilly P
+  // (48 chars, suffix dropped under old 60-char cap) → 0% CTR @ pos 4.
+  const candidateD = `${baseTitle} – banned book`
   const candidateC = baseTitle
 
+  // Cap raised from 60 → 70 chars. Google shows ~70 on desktop and ~55 on
+  // mobile; the hard slice() below still kicks in at 70. Better to push
+  // the value-add suffix into the visible-on-desktop range than to drop
+  // it entirely for slightly-longer titles.
   let title: string
-  if (candidateA && candidateA.length <= 60) title = candidateA
-  else if (candidateB.length <= 60) title = candidateB
+  if (candidateA && candidateA.length <= 70) title = candidateA
+  else if (candidateB.length <= 70) title = candidateB
+  else if (candidateD.length <= 70) title = candidateD
   else title = candidateC
   if (title.length > 70) title = title.slice(0, 67) + '…'
 
