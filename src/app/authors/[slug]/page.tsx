@@ -17,6 +17,7 @@ import { countryFlag as countryFlagShared } from '@/lib/country-flag'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
+import { reasonPhrase } from '@/lib/reason-phrases'
 
 type Author = {
   id: number
@@ -262,6 +263,88 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // Book.dateModified emitted on book detail pages.
   if (a.updated_at) personJsonLd.dateModified = a.updated_at
 
+  // ── Direct-answer lead + FAQPage JSON-LD ──────────────────────────────────
+  // Same SEO surface as book/country/reason: a prose summary in the first
+  // viewport plus 3-4 query-shaped Q&As targeting "is [author] banned?",
+  // "how many of [author]'s books are banned?", "why are [author]'s books
+  // banned?". Computed from already-loaded books + bans data.
+  type AuthorBan = Author['display_name'] extends never ? never : Book['bans'][number]
+  let authorLead: string | null = null
+  let authorFaqJsonLd: object | null = null
+  if (books.length > 0 && totalBans > 0) {
+    const reasonSlugCounts = new Map<string, number>()
+    for (const b of books) {
+      for (const ban of b.bans) {
+        for (const link of ban.ban_reason_links) {
+          const slug = link.reasons?.slug
+          if (slug) reasonSlugCounts.set(slug, (reasonSlugCounts.get(slug) ?? 0) + 1)
+        }
+      }
+    }
+    const topReasonSlug = [...reasonSlugCounts.entries()].sort((x, y) => y[1] - x[1])[0]?.[0]
+    const topReasonPhrase = topReasonSlug ? reasonPhrase(topReasonSlug) : null
+
+    const datedBans = books.flatMap(b => b.bans.filter((ban: AuthorBan) => ban.year_started != null))
+    const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map((b: AuthorBan) => b.year_started!)) : null
+
+    const bannedBookCount = books.filter(b => b.bans.length > 0).length
+
+    let head = `${a.display_name} has ${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} that ${bannedBookCount === 1 ? 'has' : 'have'} been banned or challenged in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
+    if (earliestYear) head += ` since ${earliestYear}`
+    if (topReasonPhrase) head += `, most often for ${topReasonPhrase}`
+    authorLead = head + '.'
+    if (activeBanCount > 0 && totalBans > activeBanCount) {
+      authorLead += ` ${activeBanCount} of the ${totalBans} bans ${activeBanCount === 1 ? 'remains' : 'remain'} active today.`
+    } else if (activeBanCount === totalBans && totalBans > 1) {
+      authorLead += ` All ${totalBans} bans remain active.`
+    }
+
+    const items: { q: string; a: string }[] = []
+    items.push({
+      q: `How many of ${a.display_name}'s books have been banned?`,
+      a: `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${a.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned or challenged, with ${totalBans} documented ${totalBans === 1 ? 'ban' : 'bans'} across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`,
+    })
+    if (topReasonPhrase) {
+      items.push({
+        q: `Why have ${a.display_name}'s books been banned?`,
+        a: `The most frequently cited reason for banning ${a.display_name}'s work is ${topReasonPhrase}, with ${reasonSlugCounts.get(topReasonSlug!)} ${reasonSlugCounts.get(topReasonSlug!) === 1 ? 'documented ban' : 'documented bans'} citing this reason.`,
+      })
+    }
+    if (earliestYear) {
+      const firstBookBan = books
+        .map(b => ({ title: b.title, slug: b.slug, earliest: Math.min(...b.bans.filter(bn => bn.year_started != null).map(bn => bn.year_started!), Infinity) }))
+        .filter(x => Number.isFinite(x.earliest))
+        .sort((x, y) => x.earliest - y.earliest)[0]
+      if (firstBookBan && firstBookBan.earliest === earliestYear) {
+        items.push({
+          q: `When was the first ban of a ${a.display_name} book?`,
+          a: `${firstBookBan.title} by ${a.display_name} was first banned in ${earliestYear} — the earliest documented ban of any of ${a.display_name}'s works in this catalogue.`,
+        })
+      } else {
+        items.push({
+          q: `When was the first ban of a ${a.display_name} book?`,
+          a: `The earliest documented ban of a book by ${a.display_name} dates to ${earliestYear}.`,
+        })
+      }
+    }
+    if (books.length >= 3) {
+      const titles = books.slice(0, 5).map(b => b.title).join(', ')
+      items.push({
+        q: `Which books by ${a.display_name} have been banned?`,
+        a: `Banned or challenged books by ${a.display_name} include ${titles}.`,
+      })
+    }
+    authorFaqJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: items.map(it => ({
+        '@type': 'Question',
+        name: it.q,
+        acceptedAnswer: { '@type': 'Answer', text: it.a },
+      })),
+    }
+  }
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -284,6 +367,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}
       />
+      {authorFaqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(authorFaqJsonLd) }}
+        />
+      )}
       <Link
         href="/stats"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors"
@@ -364,6 +453,15 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
+      {/* Direct-answer lead — AI-Overview/Featured-Snippet-eligible TL;DR.
+          Bio above is editorial about the person; this lead is data-driven
+          about the bans, the angle that drives author-name searches. */}
+      {authorLead && (
+        <p className="mb-8 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+          {authorLead}
+        </p>
+      )}
+
       {/* Find books */}
       {(() => {
         const authorQuery = encodeURIComponent(a.display_name)
@@ -425,6 +523,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       {books.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No books recorded for this author yet.</p>
       ) : (
+        <>
+        <h2 className="text-lg font-semibold mb-4">
+          Banned books by {a.display_name}
+        </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {books.map(book => {
             const reasons = getReasons(book.bans)
@@ -466,6 +568,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             )
           })}
         </div>
+        </>
       )}
 
       <CitationBlock
