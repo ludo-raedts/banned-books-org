@@ -5,7 +5,10 @@ import DatasetCheckoutButton from '@/components/dataset-checkout-button'
 
 const DATASET_PRICE_USD = 19.99
 
-export const dynamic = 'force-dynamic'
+// ISR: dataset landing page reads totals (counts of books/authors/bans)
+// for the marketing copy. Hourly regen catches enrichment-cycle growth
+// without re-querying on every visit.
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Download the Banned Books dataset',

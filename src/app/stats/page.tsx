@@ -1,4 +1,10 @@
-export const dynamic = 'force-dynamic'
+// ISR: stats page reads materialized views (mv_ban_counts, v_top_*) plus
+// raw counts. MV's are refreshed hourly by the refresh-views cron, so a
+// 1h revalidate aligns with how often the displayed numbers can change.
+// searchParams (country/reason/active filters) make Next bail to dynamic
+// rendering per request — that's the expected behaviour for filtered
+// views; the no-param /stats page benefits from the cache window.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Link from 'next/link'

@@ -3,7 +3,12 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 
-export const dynamic = 'force-dynamic'
+// ISR: news content auto-publishes daily via cron (fetch-news cron at
+// 08:00 UTC). 30-min revalidate keeps the list reasonably fresh between
+// cron cycles without re-rendering the page on every visit. ?page=N
+// pagination forces dynamic per page-param, but the default landing
+// view (/news without params) benefits from the cache window.
+export const revalidate = 1800
 
 // Items per page. Tuned so a typical page is ~3–6 daily groups under the
 // daily auto-publish flow, which keeps the HTML payload small without making

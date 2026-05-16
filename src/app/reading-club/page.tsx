@@ -3,7 +3,11 @@ import Link from 'next/link'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import { isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
 
-export const dynamic = 'force-dynamic'
+// ISR: reading-club page reads content blocks (editor-managed) + a
+// banned-books-week promo flag. Both change at most a few times per
+// week; 1h revalidate is plenty. Promo flag is time-derived so the
+// regen also catches week boundaries within the hour.
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Reading Club — Reading banned books together',

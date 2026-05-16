@@ -1,4 +1,7 @@
-export const dynamic = 'force-dynamic'
+// ISR: about page is mostly editorial copy + 4 small DB counts (totals
+// shown in the hero). Hourly regen is plenty; the counts change at most
+// after enrichment cycles.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Link from 'next/link'

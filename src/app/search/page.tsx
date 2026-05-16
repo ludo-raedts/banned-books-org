@@ -1,4 +1,10 @@
-export const dynamic = 'force-dynamic'
+// ISR hint: search page receives searchParams (q/country/reason/etc.)
+// which makes Next render dynamically per request — that's correct
+// because each query needs fresh results. The revalidate value here
+// applies only to the no-param /search landing page (the form-default
+// view); Google's SearchAction crawler hits /search?q=foo which always
+// bypasses the cache.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
