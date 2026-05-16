@@ -230,9 +230,26 @@ export default async function ReasonPage({
     return b.bans.length - a.bans.length
   })
 
-  const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)
-  const activeBans = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
-  const countries = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
+  // A book on /reasons/lgbtq can also have non-LGBTQ+ bans (Index Librorum
+  // 1559, sedition 1933, etc.). Filter every per-reason aggregate to only
+  // the bans that actually carry THIS reason — otherwise the lead claims
+  // censorship started in 1559 because some LGBTQ+-tagged book also has
+  // an Index Librorum entry. matchesReason() is shared by totals, country
+  // counts, and the earliest-year calculation below.
+  const matchesReason = (ban: Book['bans'][number]) =>
+    ban.ban_reason_links.some(l => l.reasons?.slug === slug)
+
+  const totalBans = books.reduce(
+    (sum, b) => sum + b.bans.filter(matchesReason).length,
+    0,
+  )
+  const activeBans = books.reduce(
+    (sum, b) => sum + b.bans.filter(bn => matchesReason(bn) && bn.status === 'active').length,
+    0,
+  )
+  const countries = [...new Set(
+    books.flatMap(b => b.bans.filter(matchesReason).map(bn => bn.country_code)),
+  )].length
 
   const intro = REASON_INTROS[slug]
 
@@ -245,7 +262,10 @@ export default async function ReasonPage({
   // content".
   const phrase = reasonPhrase(slug)
   const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
-  const allBanYears = books.flatMap(b => b.bans.map(bn => bn.year_started).filter((y): y is number => y != null))
+  // Reason-scoped year extraction (see matchesReason note above).
+  const allBanYears = books.flatMap(b =>
+    b.bans.filter(matchesReason).map(bn => bn.year_started).filter((y): y is number => y != null),
+  )
   const earliestBanYear = allBanYears.length > 0 ? Math.min(...allBanYears) : null
 
   let reasonLead: string | null = null
