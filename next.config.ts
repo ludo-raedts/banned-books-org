@@ -18,6 +18,19 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Canonical host enforcement. Google indexed both banned-books.org
+      // (apex) and www.banned-books.org until 2026-05-16 — Search Console
+      // shows 360 pages on the apex variant vs 640 on www, with click
+      // attribution split across both copies (the top page aztec-inca-maya
+      // had 22 clicks on www + 17 on apex = 39 spread across two URLs).
+      // A 308 host-level redirect tells Google to consolidate on the www
+      // form, which our JSON-LD / canonical / sitemap already use.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'banned-books.org' }],
+        destination: 'https://www.banned-books.org/:path*',
+        permanent: true,
+      },
       ...NFD_REDIRECTS,
     ]
   },
