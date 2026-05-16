@@ -223,10 +223,14 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      ...(data.cover_url ? { images: [{ url: data.cover_url }] } : {}),
+      // Image is provided by ./opengraph-image.tsx — a branded 1200×630
+      // card (cover + title + author + ban summary) generated per book.
+      // Setting images here would override the file-based convention.
     },
     twitter: {
-      card: data.cover_url ? 'summary_large_image' : 'summary',
+      // Always summary_large_image: the per-book OG card is always 1200×630
+      // regardless of whether the book has its own cover.
+      card: 'summary_large_image',
     },
     other: citationOther,
   }
