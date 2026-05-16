@@ -1,4 +1,7 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate author detail pages every hour. Pageview-tracking
+// moved client-side (see <PageviewTracker> below) so the page itself can
+// cache. Same migration as book/country/reason detail pages.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -6,8 +9,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
-import { headers } from 'next/headers'
-import { trackPageview } from '@/lib/trackPageview'
+import PageviewTracker from '@/components/pageview-tracker'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
@@ -116,8 +118,6 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   if (!author) notFound()
   const a = author as unknown as Author
-
-  void trackPageview('author', author.id, new Request('https://x', { headers: await headers() }))
 
   const { data: bookLinks } = await supabase
     .from('book_authors')
@@ -373,6 +373,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           dangerouslySetInnerHTML={{ __html: ldHtml(authorFaqJsonLd) }}
         />
       )}
+      <PageviewTracker entityType="author" entityId={a.id} />
       <Link
         href="/stats"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors"

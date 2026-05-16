@@ -1,4 +1,6 @@
-export const dynamic = 'force-dynamic'
+// ISR: re-render every hour. Same migration rationale as country detail:
+// no per-request mutations, content changes on enrichment cycles.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Image from 'next/image'

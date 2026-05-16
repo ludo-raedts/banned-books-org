@@ -1,4 +1,9 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate book detail pages every hour. Detail pages were
+// previously force-dynamic because they did server-side pageview tracking;
+// that's now a fire-and-forget POST to /api/pageview from the client
+// (<PageviewTracker> below), so the page itself can be cached statically.
+// Drops TTFB on cached hits from ~500ms to ~50ms (CWV ranking signal).
+export const revalidate = 3600
 
 import React from 'react'
 import type { Metadata } from 'next'
@@ -7,8 +12,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
-import { headers } from 'next/headers'
-import { trackPageview } from '@/lib/trackPageview'
+import PageviewTracker from '@/components/pageview-tracker'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
@@ -326,8 +330,6 @@ export default async function BookPage({
 
   const book = data as unknown as BookDetail
   const author = authorName(book)
-
-  void trackPageview('book', book.id, new Request('https://x', { headers: await headers() }))
 
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
@@ -652,6 +654,7 @@ export default async function BookPage({
           dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
         />
       )}
+      <PageviewTracker entityType="book" entityId={book.id} />
       <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All books
       </Link>

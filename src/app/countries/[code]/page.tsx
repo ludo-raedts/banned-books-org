@@ -1,4 +1,7 @@
-export const dynamic = 'force-dynamic'
+// ISR: re-render every hour. Country pages have no per-request mutations
+// or auth-gated content, so static caching is safe; the bans/books lists
+// change on enrichment or new imports — both lower-frequency than 3600s.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
