@@ -132,9 +132,17 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     let isbn: string | null = null
     let source = ''
 
-    // Walk the title ladder; for each variant try OL+author, OL-title-only,
-    // then GB. First hit wins. Source gets a variant tag (e.g.
-    // 'OL:english_meaningful') when the winning variant is not canonical.
+    // Walk the title ladder; for each variant try OL+author then GB. First
+    // hit wins. Source gets a variant tag (e.g. 'OL:english_meaningful')
+    // when the winning variant is not canonical.
+    //
+    // The previous OL-title-only fallback was dropped on 2026-05-16: it
+    // was supposed to "catch author-name mismatches" but in practice the
+    // most-popular hit for an ambiguous modern title is typically a
+    // 19th-century classic with the wrong ISBN. The title ladder already
+    // handles real author-name mismatches by retrying with transliterated
+    // and English-meaningful title variants; GB-fallback below provides
+    // additional recall without OL's bias toward popular hits.
     for (const variant of ladder) {
       if (isbn) break
       const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
@@ -143,20 +151,15 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       await sleep(OL_DELAY_MS)
       if (isbn) { source = `OL${tag}`; break }
 
-      if (author) {
-        isbn = await searchOL(variant.title, '')
-        await sleep(OL_DELAY_MS)
-        if (isbn) { source = `OL-title${tag}`; break }
-      }
-
       isbn = await searchGoogleBooks(variant.title, author)
       if (isbn) { source = `GB${tag}`; break }
     }
 
     if (isbn) {
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → ${isbn} [${source}]`)
-      if (source.startsWith('OL-title')) foundOlTitle++
-      else if (source.startsWith('OL')) foundOl++
+      // OL-title-only branch retired 2026-05-16; foundOlTitle stays at 0
+      // for API back-compat with /api/admin/enrich/run consumers.
+      if (source.startsWith('OL')) foundOl++
       else foundGb++
 
       if (samples.length < 10) samples.push({ title: book.title, isbn, source })

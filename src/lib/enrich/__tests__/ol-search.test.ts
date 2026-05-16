@@ -12,12 +12,15 @@ const olJson = (docs: Array<{ key?: string; cover_i?: number }>) =>
   Promise.resolve({ ok: true, json: () => Promise.resolve({ docs }) } as Response)
 
 describe('olSearch (covers.ts)', () => {
-  let fetchSpy: ReturnType<typeof vi.spyOn>
+  // Loose type — vitest's MockInstance generic over fetch is awkward to
+  // pin down across versions and the assertions below only need .mock.calls
+  // and .mockImplementationOnce, both present on any MockInstance shape.
+  let fetchSpy: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
       olJson([{ key: '/works/OL999W', cover_i: 12345 }]),
-    )
+    ) as unknown as ReturnType<typeof vi.fn>
   })
 
   afterEach(() => {
