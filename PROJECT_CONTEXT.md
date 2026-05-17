@@ -116,7 +116,7 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 
 | Table | Purpose |
 |---|---|
-| `news_items` | Aggregated censorship news. Fields incl. `embedding vector(1536)` (pgvector), `auto_published` flag (audit), `status` (`draft` / `published`). |
+| `news_items` | Aggregated censorship news. Fields incl. `embedding vector(1536)` (pgvector), `headline` (short attention-grabbing kop above the bron-titel), `auto_published` flag (audit), `status` (`draft` / `published`). |
 | `dataset_orders` | Stripe Checkout sessions. `stripe_session_id`, `email`, `amount_cents`, `paid_at`, `download_token` (UUID), `download_token_expires_at` (now + 30d), `downloads_count`. Webhook is sole writer for `paid_at`/token; download endpoint is sole writer for `downloads_count`. |
 | `inbox_preview` | Last 5 inbox messages from Zoho Mail (TRUNCATE+INSERT every hour). Powers the dashboard inbox card. |
 | `cover_search_attempts` | Throttles cover-enrichment retries per book. |
@@ -226,7 +226,7 @@ data/                                 # Local CSVs from one-off enrichment / aud
 | `cloudflare-analytics.ts` | Cloudflare GraphQL Analytics fetch (24h totals, 24h-vs-prev-24h deltas, top IPs, status buckets). Cached via `unstable_cache`. |
 | `known-bots.ts` (+ test) | Curated CIDR ranges for Googlebot, Bingbot, GPTBot, ChatGPT-User, OAI-SearchBot, PerplexityBot, Applebot, Meta. Used by traffic dashboard to tag bot vs human. **Refreshed 2026-05-09.** |
 | `trackPageview.ts` | Inserts a row into `pageviews` from server components — extracts referrer host, computes `visitor_hash = sha256(VISITOR_SALT_SECRET ‖ today ‖ ip ‖ ua)`. |
-| `fetch-news.ts` | RSS pipeline: fetches PEN America, Index on Censorship, Publishers Weekly, Freedom to Read Canada, Google News (`banned books`); normalises Google News titles; calls OpenAI to summarise (40–70 words, banned-phrase list); embeds with `text-embedding-3-small`; cosine-dedupes against last `dedup_window_days` items; inserts as `draft` (or `published` if `news_config.auto_publish`). |
+| `fetch-news.ts` | RSS pipeline: fetches PEN America, Index on Censorship, Publishers Weekly, Freedom to Read Canada, Google News (`banned books`); normalises Google News titles; calls OpenAI in JSON-mode to produce `{ headline (4–8 words, Title Case), summary (40–70 words, banned-phrase list) }`; embeds with `text-embedding-3-small`; cosine-dedupes against last `dedup_window_days` items; inserts as `draft` (or `published` if `news_config.auto_publish`). Backfill of pre-headline rows: `scripts/backfill-news-headlines.ts`. |
 | `inbox-sync.ts` | Connects to Zoho IMAP, fetches last 5 messages, TRUNCATE+INSERT into `inbox_preview` (5 rows max). |
 | `email.ts` | Resend wrapper. `sendDownloadEmail` (post-purchase), contact-form forwarder. |
 | `stripe.ts` | Stripe SDK init. Used by checkout / webhook / download. |
@@ -367,7 +367,8 @@ Overview · Stats · BBW · Reading Club · Content blocks.
 
 ### News admin
 - Triage drafts → publish (single Publish button per row).
-- Toggle `news_config.auto_publish` (so daily cron auto-publishes vs. parks as draft).
+- Inline edit per row: both `headline` (the eyebrow) and `summary` — API action `update_text`. Save merges in-place into local state so the row stays put.
+- Toggle `news_config.auto_publish` (so daily cron auto-publishes vs. parks as draft). Reads via service-role: anon can't see `news_config` despite the migration's GRANTs, so an anon read would silently fall back to defaults.
 - Tune `dedup_threshold` and `dedup_window_days`.
 
 ### Banned Books Week admin
@@ -467,7 +468,7 @@ Index at `/sitemap.xml` references five split sitemaps so each stays small:
 - Materialized views for ban counts (per-country, per-(country×reason)).
 - `pg_trgm` indexes for free-text search.
 - Composite pageview indexes for trending/rising.
-- 60s in-memory cache for `bbw_config` and `news_config` (keeps the DB cold for the homepage tile check).
+- 60s in-memory cache for `bbw_config` (keeps the DB cold for the homepage tile check). `news_config` is read uncached via service-role on each call — module caches split across Fluid Compute instances and caused the auto-publish toggle to look like it wasn't saving.
 
 ---
 
@@ -515,7 +516,7 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **A repeatable enrichment pipeline** — descriptions, censorship context, covers, ISBNs, author bios + photos, Bookshop ISBN cross-reference, Project Gutenberg detection, genre seeding. Roughly 180 maintenance scripts catalogued in the admin Scripts page.
 - **A privacy-safe analytics layer** (visitor_hash, 90-day retention) with trending / rising / top-by-country / top-referrer views and an admin dashboard for Cloudflare zone analytics.
 - **Editorial CMS** for content blocks + Banned Books Week + 4-track Reading Club, with draft/publish workflow, audit log, and editor-controlled BBW kill switch + dates without code deploys.
-- **News pipeline** with embeddings-based dedup, runtime auto-publish toggle, RSS ingestion from 5 sources, summarised by `gpt-4.1-mini`.
+- **News pipeline** with embeddings-based dedup, runtime auto-publish toggle, RSS ingestion from 5 sources, summarised by `gpt-4.1-mini` which also generates a short attention-grabbing `headline` (eyebrow on /news + admin, card title on homepage, `<title>` in /feed.xml).
 - **Monetisation live** — paid dataset via Stripe + 30-day download tokens + Resend delivery; Bookshop / Kobo affiliate tracking with click-type analytics.
 - **SEO infrastructure** — split sitemaps, IndexNow integration with bulk-submit, schema.org JSON-LD, open-graph + RSS, second-tier landings (top-100, banned-classics, year archives, scope, challenged).
 - **Operational tooling** — admin dashboard with DB-size gauge, materialized-view refresh button, dataset-rebuild button, Zoho inbox preview, and a one-page reference for every CLI script.
