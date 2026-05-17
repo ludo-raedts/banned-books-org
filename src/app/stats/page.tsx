@@ -13,6 +13,7 @@ import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import TrendingWidget from '@/components/trending-widget'
 import StatsFilters from '@/components/stats-filters'
+import HighlightsStripBlock from '@/components/highlights-strip-block'
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = adminClient()
@@ -428,6 +429,11 @@ export default async function StatsPage({
         >
           See what&rsquo;s in the dataset →
         </Link>
+      </section>
+
+      {/* ── 9b. Highlights strip — most-banned / trending / all-time picks ── */}
+      <section className="mb-10">
+        <HighlightsStripBlock />
       </section>
 
       {/* ── 10. Closing disclaimer ── */}

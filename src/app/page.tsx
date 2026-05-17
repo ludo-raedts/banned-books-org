@@ -1,26 +1,40 @@
-// ISR: regenerate the homepage every 30 minutes. The page renders a
-// daily-rotating "book of the day" (seed = today's ISO date) plus
-// trending widgets that change at most a few times per hour. A 30-min
-// window keeps the rotation feeling live, drops TTFB from ~600ms
-// (force-dynamic + parallel Supabase batch) to ~50ms on cached hits,
-// and lifts Core Web Vitals LCP across the highest-PageRank URL on
-// the site. Book-of-day rolls over at first request after midnight UTC.
+// ISR: regenerate every 30 minutes. The homepage renders a daily-rotating
+// "book of the day" plus five top-lists whose source views (v_top_books_*,
+// mv_top_books_rising, v_top_banned_authors, ban_reason_links) only update
+// on aggregation cycles. 30 min keeps the feel live, drops TTFB from
+// 600ms+ (old force-dynamic batch) to ~50ms on cached hits, and lifts
+// Core Web Vitals LCP on the highest-PageRank URL on the site.
 export const revalidate = 1800
 
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
-import BookBrowser, { type Book, type NewsPreview, type CountryOption } from '@/components/book-browser'
-import HighlightsStrip, { type HighlightItem, type HighlightSlot, type AuthorHighlightItem } from '@/components/highlights-strip'
+import { coverAlt } from '@/lib/cover-alt'
+import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import CatalogueNav from '@/components/catalogue-nav'
-import TrendingWidget from '@/components/trending-widget'
-import RisingWidget from '@/components/rising-widget'
-import TrendingTabs from '@/components/trending-tabs'
+import {
+  TopListBooksSection,
+  TopListAuthorsSection,
+  TopListByReasonSection,
+} from '@/components/top-list-section'
+import type { TopListBook, TopListAuthor } from '@/components/top-list-card'
+import { reasonLabel } from '@/components/reason-badge'
+import {
+  TOP_LIST_BOOK_SELECT,
+  type TopListBookRow,
+  authorNameOf,
+  banContext,
+  isNonLatin,
+  langContext,
+  toBookCard,
+} from '@/lib/top-list-data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const timer = newTimer('metadata')
-  // Planner statistic — close enough for an SEO description, avoids a COUNT(*) scan.
+  // Planner-estimated count: close enough for the meta description, avoids a
+  // full COUNT(*) scan on every metadata revalidation.
   const { count } = await timer.wrap('books-count-estimated', () =>
     adminClient().from('books').select('*', { count: 'estimated', head: true }),
   )
@@ -28,26 +42,14 @@ export async function generateMetadata(): Promise<Metadata> {
   const n = count ?? 0
   return {
     title: 'Banned Books — International Catalogue of Censored Literature',
-    description: `An international catalogue of ${n.toLocaleString('en')} books banned by governments and schools worldwide. Browse by country, genre, and reason.`,
+    description: `An international catalogue of ${n.toLocaleString('en')} books banned by governments and schools worldwide. Browse trending titles, rising titles, the most-banned authors, and books originally written outside English.`,
     alternates: { canonical: '/' },
   }
 }
 
-const FULL_SELECT = `
-  id, title, slug, cover_url, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
-  book_authors(authors(display_name)),
-  bans(
-    id, status, country_code, year_started,
-    countries(name_en),
-    scopes(slug, label_en),
-    ban_reason_links(reasons(slug))
-  )
-`
-
-// Latin-script writing languages. Used to gate the daily-pick: a book whose
-// `original_language` falls outside this set typically lacks a real English
-// title and ends up displayed in pinyin/transliteration — unreadable for the
-// English-language homepage. NULL passes (most NULLs are unenriched English).
+// Daily-pick language gate — keep English readers on Latin-script titles.
+// The non-Latin titles surface elsewhere (their own homepage section + a
+// dedicated /non-english-banned-books page).
 const LATIN_SCRIPT_LANGS = [
   'en','es','fr','de','nl','it','pt','ca','gl','eu',
   'sv','da','no','nb','nn','fi','is',
@@ -57,225 +59,195 @@ const LATIN_SCRIPT_LANGS = [
 const DAILY_PICK_LANG_FILTER =
   `original_language.in.(${LATIN_SCRIPT_LANGS.join(',')}),original_language.is.null`
 
+const REASON_SLUGS = ['lgbtq', 'sexual', 'political', 'religious', 'racial'] as const
+
 export default async function HomePage() {
   const timer = newTimer('home')
   const supabase = adminClient()
-  let fetchError: string | null = null
 
-  // Three small queries replace the old "fetch every book" loop:
-  //   - total count for the H1 sub-line
-  //   - eligible count (books with description) → idx for book-of-the-day
-  //   - top-banned book ids → "most banned" highlight slot
-  const [totalCountRes, eligibleCountRes, topBannedRes] = await timer.wrap(
-    'homepage-stats-parallel-3',
-    () => Promise.all([
-      supabase.from('books').select('*', { count: 'exact', head: true }),
-      supabase.from('books').select('*', { count: 'exact', head: true })
-        .not('description_book', 'is', null)
-        .or(DAILY_PICK_LANG_FILTER),
-      supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(2),
-    ]),
-  )
-
-  const totalCount = totalCountRes.count ?? 0
-  const eligibleCount = eligibleCountRes.count ?? 0
-  if (totalCountRes.error) fetchError = totalCountRes.error.message
-  else if (eligibleCountRes.error) fetchError = eligibleCountRes.error.message
-
-  // ── Pick book of the day — deterministic offset into title-ordered eligibles ──
-  const seed = new Date().toISOString().slice(0, 10)
-  const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const idx = eligibleCount > 0 ? seedSum % eligibleCount : 0
-
-  const { data: pickedArr } = eligibleCount > 0
-    ? await timer.wrap('book-of-the-day', () =>
-        supabase.from('books').select('id')
-          .not('description_book', 'is', null)
-          .or(DAILY_PICK_LANG_FILTER)
-          .order('title').range(idx, idx),
-      )
-    : { data: null as { id: number }[] | null }
-  const pickedLight = (pickedArr?.[0] as { id: number } | undefined) ?? null
-
-  // ── Highlight slot IDs: most banned (deduped vs featured) ───────────────────
-  const featuredId = pickedLight?.id ?? null
-  const topBannedRows = (topBannedRes.data ?? []) as { entity_id: number; total_bans: number }[]
-  const mostBannedRow = topBannedRows.find(r => Number(r.entity_id) !== featuredId) ?? null
-  const mostBannedId: number | null = mostBannedRow ? Number(mostBannedRow.entity_id) : null
-
-  // ── Parallel: initial 48 books + featured + news + countries + trending IDs ──
   const [
-    { data: initialBooksRaw },
-    { data: featuredRaw },
-    { data: newsRaw },
-    { data: banCounts },
-    { data: countriesRaw },
-    trendingThisWeekRes,
-    trendingAllTimeRes,
+    totalCountRes,
+    eligibleCountRes,
+    trendingRes,
     bannedAuthorsRes,
-    trendingAuthorsThisWeekRes,
-    trendingAuthorsAllTimeRes,
+    topBannedRes,
+    risingRes,
+    countriesRes,
+    banCountsRes,
     placeholderAuthorsRes,
-  ] = await timer.wrap('parallel-batch-11', () => Promise.all([
-    supabase.from('books').select(FULL_SELECT).order('title').range(0, 47),
-    pickedLight
-      ? supabase.from('books').select(FULL_SELECT).eq('id', pickedLight.id).single()
-      : Promise.resolve({ data: null }),
-    supabase.from('news_items').select('id, title, source_name, published_at, summary, source_language')
-      .eq('status', 'published').order('published_at', { ascending: false }).limit(3),
-    supabase.from('mv_ban_counts').select('country_code, total_bans').gt('total_bans', 0),
-    supabase.from('countries').select('code, name_en'),
+    reasonsRes,
+  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
+    supabase.from('books').select('*', { count: 'exact', head: true }),
+    supabase.from('books').select('*', { count: 'exact', head: true })
+      .not('description_book', 'is', null).or(DAILY_PICK_LANG_FILTER),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
-    supabase.from('v_top_books_all_time').select('entity_id, views').limit(10),
-    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(10),
-    supabase.from('v_top_authors_this_week').select('entity_id, views').limit(10),
-    supabase.from('v_top_authors_all_time').select('entity_id, views').limit(10),
-    // Placeholder authors ("Anonymous", "Unknown", "Various", ...) — flagged
-    // via the is_placeholder column added in migration 20260516100951.
-    // Filter them out before picking the most-banned highlight, otherwise
-    // "Anonymous" sits at #6 on the leaderboard but aggregates 22 unrelated
-    // books and would mislead readers.
+    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(30),
+    supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(100),
+    supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(10),
+    supabase.from('countries').select('code, name_en'),
+    supabase.from('mv_ban_counts').select('country_code, total_bans').gt('total_bans', 0),
     supabase.from('authors').select('id').eq('is_placeholder', true),
+    supabase.from('reasons').select('id, slug').in('slug', REASON_SLUGS),
   ]))
 
-  const initialBooks = (initialBooksRaw as unknown as Book[]) ?? []
-  const featuredBook = featuredRaw as unknown as Book | null
-  const latestNews = (newsRaw ?? []) as NewsPreview[]
+  const total = totalCountRes.count ?? 0
+  const eligible = eligibleCountRes.count ?? 0
+  const seed = new Date().toISOString().slice(0, 10)
+  const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+  const idx = eligible > 0 ? seedSum % eligible : 0
 
-  // ── Resolve trending IDs, dedupe against featured + most banned ─────────────
-  const used = new Set<number>([featuredId, mostBannedId].filter((v): v is number => v !== null))
+  const { data: pickArr } = eligible > 0
+    ? await timer.wrap('book-of-the-day', () =>
+        supabase.from('books').select('id').not('description_book', 'is', null)
+          .or(DAILY_PICK_LANG_FILTER).order('title').range(idx, idx),
+      )
+    : { data: null as { id: number }[] | null }
+  const pickId = pickArr?.[0]?.id ?? null
 
-  const trendingThisWeekRows = (trendingThisWeekRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const trendingId = trendingThisWeekRows.find(r => !used.has(Number(r.entity_id)))
-  if (trendingId) used.add(Number(trendingId.entity_id))
+  const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
+  const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
+  const risingIds = risingRows.map(r => Number(r.entity_id))
+  const topBannedRows = (topBannedRes.data ?? []) as { entity_id: number; total_bans: number }[]
+  const placeholderIds = new Set(((placeholderAuthorsRes.data ?? []) as { id: number }[]).map(a => a.id))
+  const bannedAuthorRows = ((bannedAuthorsRes.data ?? []) as { entity_id: number; total_bans: number; banned_books: number }[])
+    .filter(r => !placeholderIds.has(Number(r.entity_id)))
+    .slice(0, 10)
+  const bannedAuthorIds = bannedAuthorRows.map(r => Number(r.entity_id))
 
-  const trendingAllTimeRows = (trendingAllTimeRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const allTimeId = trendingAllTimeRows.find(r => !used.has(Number(r.entity_id)))
+  // ── Aggregate top-3 books per reason in a single paginated round-trip ─────
+  const reasons = ((reasonsRes.data ?? []) as { id: number; slug: string }[])
+  const reasonIdToSlug = new Map(reasons.map(r => [r.id, r.slug]))
+  const reasonIds = reasons.map(r => r.id)
+  const byReason = new Map<string, Map<number, number>>()
+  if (reasonIds.length > 0) {
+    let offset = 0
+    while (true) {
+      const { data } = await timer.wrap('ban_reason_links-page', () =>
+        supabase.from('ban_reason_links').select('reason_id, bans(book_id)')
+          .in('reason_id', reasonIds).range(offset, offset + 999),
+      )
+      if (!data || data.length === 0) break
+      for (const link of data as unknown as Array<{ reason_id: number; bans: { book_id: number } | null }>) {
+        const slug = reasonIdToSlug.get(link.reason_id)
+        const bookId = link.bans?.book_id
+        if (!slug || !bookId) continue
+        if (!byReason.has(slug)) byReason.set(slug, new Map())
+        const m = byReason.get(slug)!
+        m.set(bookId, (m.get(bookId) ?? 0) + 1)
+      }
+      if (data.length < 1000) break
+      offset += 1000
+    }
+  }
+  const reasonTopBookIds = new Map<string, number[]>()
+  const reasonAllBookIds = new Set<number>()
+  for (const slug of REASON_SLUGS) {
+    const m = byReason.get(slug) ?? new Map<number, number>()
+    const top3 = [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id as number)
+    reasonTopBookIds.set(slug, top3)
+    top3.forEach(id => reasonAllBookIds.add(id))
+  }
 
-  // ── Fetch full data for highlight books in one round-trip ───────────────────
-  const highlightIds: number[] = []
-  if (mostBannedId !== null) highlightIds.push(mostBannedId)
-  if (trendingId) highlightIds.push(Number(trendingId.entity_id))
-  if (allTimeId) highlightIds.push(Number(allTimeId.entity_id))
+  // ── Single book-details fetch covers every list ──────────────────────────
+  const allBookIds = new Set<number>()
+  if (pickId) allBookIds.add(pickId)
+  trendingIds.forEach(id => allBookIds.add(id))
+  risingIds.forEach(id => allBookIds.add(id))
+  topBannedRows.forEach(r => allBookIds.add(Number(r.entity_id)))
+  reasonAllBookIds.forEach(id => allBookIds.add(id))
 
-  const { data: highlightBooksRaw } = highlightIds.length > 0
-    ? await timer.wrap('highlight-books', () =>
-        supabase.from('books').select(FULL_SELECT).in('id', highlightIds),
-        { ids: highlightIds.length })
+  const { data: allBooksRaw } = allBookIds.size > 0
+    ? await timer.wrap('all-books', () =>
+        supabase.from('books').select(TOP_LIST_BOOK_SELECT).in('id', [...allBookIds]),
+        { ids: allBookIds.size })
     : { data: null }
-  const highlightBooks = (highlightBooksRaw as unknown as Book[]) ?? []
-  const bookById = new Map(highlightBooks.map(b => [b.id, b]))
+  const allBooks = (allBooksRaw as unknown as TopListBookRow[]) ?? []
+  const bookById = new Map(allBooks.map(b => [b.id, b]))
 
-  const highlights: HighlightItem[] = []
-  if (mostBannedId !== null && bookById.has(mostBannedId)) {
-    const b = bookById.get(mostBannedId)!
-    const countries = new Set(b.bans.map(x => x.country_code)).size
-    highlights.push({
-      slot: 'most-banned' as HighlightSlot,
-      book: b,
-      context: `${b.bans.length} ${b.bans.length === 1 ? 'ban' : 'bans'} across ${countries} ${countries === 1 ? 'country' : 'countries'}`,
-    })
-  }
-  if (trendingId && bookById.has(Number(trendingId.entity_id))) {
-    highlights.push({
-      slot: 'trending' as HighlightSlot,
-      book: bookById.get(Number(trendingId.entity_id))!,
-      context: '',
-    })
-  }
-  if (allTimeId && bookById.has(Number(allTimeId.entity_id))) {
-    highlights.push({
-      slot: 'all-time' as HighlightSlot,
-      book: bookById.get(Number(allTimeId.entity_id))!,
-      context: '',
-    })
-  }
-
-  // ── Author highlights: most banned + trending #1 + all-time #1, deduped ─────
-  // Anonymous/Unknown/Various-style buckets are filtered out via the
-  // placeholder_authors set so they don't claim leaderboard spots.
-  const placeholderAuthorIds = new Set<number>(
-    (placeholderAuthorsRes.data ?? []).map((a: { id: number }) => a.id),
+  const { data: authorsRaw } = bannedAuthorIds.length > 0
+    ? await timer.wrap('authors', () =>
+        supabase.from('authors').select('id, display_name, slug, photo_url').in('id', bannedAuthorIds),
+        { ids: bannedAuthorIds.length })
+    : { data: null }
+  const authorById = new Map(
+    ((authorsRaw ?? []) as { id: number; display_name: string; slug: string; photo_url: string | null }[])
+      .map(a => [a.id, a]),
   )
-  const usedAuthors = new Set<number>()
-  const isHighlightable = (id: number) => !usedAuthors.has(id) && !placeholderAuthorIds.has(id)
 
-  const bannedAuthorRows = (bannedAuthorsRes.data as { entity_id: number; total_bans: number; banned_books: number }[] | null) ?? []
-  const bannedAuthor = bannedAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
-  if (bannedAuthor) usedAuthors.add(Number(bannedAuthor.entity_id))
+  // ── Shape the lists ──────────────────────────────────────────────────────
+  const trendingBooks: TopListBook[] = trendingIds
+    .map(id => bookById.get(id))
+    .filter((b): b is TopListBookRow => !!b)
+    .map(b => toBookCard(b, banContext(b)))
 
-  const trendingAuthorRows = (trendingAuthorsThisWeekRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const trendingAuthor = trendingAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
-  if (trendingAuthor) usedAuthors.add(Number(trendingAuthor.entity_id))
-
-  const allTimeAuthorRows = (trendingAuthorsAllTimeRes.data as { entity_id: number; views: number }[] | null) ?? []
-  const allTimeAuthor = allTimeAuthorRows.find(r => isHighlightable(Number(r.entity_id)))
-
-  const authorIds = [...usedAuthors, allTimeAuthor ? Number(allTimeAuthor.entity_id) : null].filter((v): v is number => v !== null)
-  const { data: authorsRaw } = authorIds.length > 0
-    ? await timer.wrap('highlight-authors', () =>
-        supabase.from('authors').select('id, display_name, slug, photo_url').in('id', authorIds),
-        { ids: authorIds.length })
-    : { data: null }
-  const authorById = new Map(((authorsRaw ?? []) as { id: number; display_name: string; slug: string; photo_url: string | null }[]).map(a => [a.id, a]))
-
-  const authorHighlights: AuthorHighlightItem[] = []
-  if (bannedAuthor && authorById.has(Number(bannedAuthor.entity_id))) {
-    authorHighlights.push({
-      slot: 'most-banned' as HighlightSlot,
-      author: authorById.get(Number(bannedAuthor.entity_id))!,
-      context: `${bannedAuthor.total_bans.toLocaleString('en')} ${bannedAuthor.total_bans === 1 ? 'ban' : 'bans'} across ${bannedAuthor.banned_books} ${bannedAuthor.banned_books === 1 ? 'book' : 'books'}`,
+  const risingBooks: TopListBook[] = risingRows
+    .map(r => {
+      const b = bookById.get(Number(r.entity_id))
+      if (!b) return null
+      const pct = r.prev_week > 0
+        ? Math.round(((r.this_week - r.prev_week) / r.prev_week) * 100)
+        : null
+      const ctx = pct !== null && pct > 0 ? `↑${pct}% this week` : 'New this week'
+      return toBookCard(b, ctx)
     })
-  }
-  if (trendingAuthor && authorById.has(Number(trendingAuthor.entity_id))) {
-    authorHighlights.push({
-      slot: 'trending' as HighlightSlot,
-      author: authorById.get(Number(trendingAuthor.entity_id))!,
-      context: '',
-    })
-  }
-  if (allTimeAuthor && authorById.has(Number(allTimeAuthor.entity_id))) {
-    authorHighlights.push({
-      slot: 'all-time' as HighlightSlot,
-      author: authorById.get(Number(allTimeAuthor.entity_id))!,
-      context: '',
-    })
-  }
+    .filter((x): x is TopListBook => x !== null)
 
-  // ── Countries for dropdown ────────────────────────────────────────────────────
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
-  const countries: CountryOption[] = (countriesRaw ?? [])
-    .filter(c => countMap.has(c.code))
-    .sort((a, b) => a.name_en.localeCompare(b.name_en))
-    .map(c => ({ code: c.code, name: c.name_en, count: countMap.get(c.code) ?? 0 }))
+  const nonEnglishBooks: TopListBook[] = topBannedRows
+    .map(r => bookById.get(Number(r.entity_id)))
+    .filter((b): b is TopListBookRow => !!b)
+    .filter(b => isNonLatin(b.original_language))
+    .slice(0, 10)
+    .map(b => toBookCard(b, langContext(b)))
 
-  const countryCount = countries.length
+  const bannedAuthors: TopListAuthor[] = bannedAuthorRows
+    .map((r): TopListAuthor | null => {
+      const a = authorById.get(Number(r.entity_id))
+      if (!a) return null
+      const totalBans = Number(r.total_bans)
+      const banBooks = Number(r.banned_books)
+      return {
+        id: a.id,
+        display_name: a.display_name,
+        slug: a.slug,
+        photo_url: a.photo_url,
+        context: `${totalBans.toLocaleString('en')} ${totalBans === 1 ? 'ban' : 'bans'} across ${banBooks} ${banBooks === 1 ? 'book' : 'books'}`,
+      }
+    })
+    .filter((a): a is TopListAuthor => a !== null)
+
+  const reasonBlocks = REASON_SLUGS.map(slug => ({
+    reasonSlug: slug,
+    reasonLabel: reasonLabel(slug) ?? slug,
+    books: (reasonTopBookIds.get(slug) ?? [])
+      .map(id => bookById.get(id))
+      .filter((b): b is TopListBookRow => !!b)
+      .map(b => toBookCard(b, banContext(b))),
+  }))
+
+  const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
+
+  const pickBook = pickId ? bookById.get(pickId) : null
 
   timer.end()
 
-  // ── Schema.org JSON-LD ─────────────────────────────────────────────────────
-  // WebSite + Organization + SearchAction on the homepage so Google can
-  // surface a sitelinks search box for brand queries ("banned books",
-  // "banned-books.org"), and so AI Overview has an entity-graph anchor for
-  // the catalogue. Lives only here — layout-level WebSite typing would
-  // duplicate on every page.
+  // ── Schema.org JSON-LD ───────────────────────────────────────────────────
+  // WebSite + Organization on the homepage so Google can surface a sitelinks
+  // search box for brand queries and so AI Overview has an entity anchor for
+  // the catalogue.
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Banned Books',
     alternateName: 'banned-books.org',
     url: 'https://www.banned-books.org',
-    description: `An international catalogue of ${totalCount.toLocaleString('en')} books banned by governments, schools, and libraries worldwide.`,
+    description: `An international catalogue of ${total.toLocaleString('en')} books banned by governments, schools, and libraries worldwide.`,
     publisher: {
       '@type': 'Organization',
       name: 'Banned Books',
       url: 'https://www.banned-books.org',
       logo: 'https://www.banned-books.org/icon.svg',
     },
-    // /search?q=... is a real server-side route — the search page reads `q`
-    // from searchParams and renders filtered results, so Google's
-    // SearchAction validation crawler will see actual search results when
-    // it probes the target URL.
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -298,21 +270,16 @@ export default async function HomePage() {
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }}
-      />
-      <div className="mb-5">
+    <main className="max-w-5xl mx-auto px-4 py-6 space-y-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }} />
+
+      <div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-2">
           The World&apos;s Books Under Censorship
         </h1>
         <p className="text-base text-gray-500 dark:text-gray-400">
-          {totalCount.toLocaleString('en')} books documented across {countryCount} {countryCount === 1 ? 'country' : 'countries'} — real bans, real sources.{' '}
+          {total.toLocaleString('en')} books documented across {countryCount} {countryCount === 1 ? 'country' : 'countries'} — real bans, real sources.{' '}
           <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
             See statistics →
           </Link>
@@ -320,37 +287,109 @@ export default async function HomePage() {
           <Link href="/top-100-banned-books" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
             100 most banned books →
           </Link>
-          {' · '}
-          <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-            Banned classics →
+        </p>
+      </div>
+
+      <CatalogueNav />
+
+      {pickBook && (
+        <section>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Book of the day</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            A daily pick from the catalogue. Rotates at midnight.
+          </p>
+          <Link
+            href={`/books/${pickBook.slug}`}
+            className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
+          >
+            <div className="flex gap-4 sm:gap-6">
+              <div className="shrink-0 w-24 sm:w-36 aspect-[2/3] relative overflow-hidden rounded shadow-md">
+                {pickBook.cover_url ? (
+                  <Image
+                    src={pickBook.cover_url}
+                    alt={coverAlt(pickBook.title, authorNameOf(pickBook))}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 640px) 144px, 96px"
+                    priority
+                  />
+                ) : (
+                  <BookCoverPlaceholder
+                    title={pickBook.title}
+                    author={authorNameOf(pickBook)}
+                    slug={pickBook.slug}
+                    className="absolute inset-0 w-full h-full"
+                  />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors line-clamp-2">
+                  {pickBook.title}
+                </h3>
+                {authorNameOf(pickBook) && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    {authorNameOf(pickBook)}
+                    {pickBook.first_published_year ? ` · ${pickBook.first_published_year}` : ''}
+                  </p>
+                )}
+                {pickBook.description_book && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 line-clamp-4 leading-relaxed">
+                    {pickBook.description_book}
+                  </p>
+                )}
+                {banContext(pickBook) && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">{banContext(pickBook)}</p>
+                )}
+              </div>
+            </div>
           </Link>
-        </p>
-      </div>
-      <div className="mb-5">
-        <CatalogueNav />
-      </div>
-      {fetchError && (
-        <p className="text-red-600 border border-red-200 rounded-lg p-4 bg-red-50 mb-5">
-          Could not load books: {fetchError}
-        </p>
+        </section>
       )}
-      {!fetchError && (
-        <BookBrowser
-          initialBooks={initialBooks}
-          totalCount={totalCount}
-          latestNews={latestNews}
-          featuredBook={featuredBook}
-          countries={countries}
-          highlightsSlot={<HighlightsStrip items={highlights} authorItems={authorHighlights} />}
-          trendingSlot={
-            <TrendingTabs
-              key="trending-tabs"
-              trendingSlot={<TrendingWidget compact showHeader={false} mode="all-time" />}
-              risingSlot={<RisingWidget compact />}
-            />
-          }
-        />
-      )}
+
+      <TopListBooksSection
+        title="Trending this week"
+        subtitle="Books people read most over the last 7 days."
+        viewAllHref="/trending-banned-books"
+        books={trendingBooks}
+      />
+
+      <TopListAuthorsSection
+        title="Most banned authors"
+        subtitle="Writers censored across the most jurisdictions."
+        viewAllHref="/most-banned-authors"
+        authors={bannedAuthors}
+      />
+
+      <TopListBooksSection
+        title="Rising this week"
+        subtitle="Books gaining momentum compared to last week."
+        viewAllHref="/rising-banned-books"
+        books={risingBooks}
+      />
+
+      <TopListBooksSection
+        title="Banned books not written in English"
+        subtitle="The international half of the catalogue — translated, transliterated, suppressed."
+        viewAllHref="/non-english-banned-books"
+        books={nonEnglishBooks}
+      />
+
+      <TopListByReasonSection
+        title="Why books get banned"
+        subtitle="Three most-banned titles per top reason."
+        blocks={reasonBlocks}
+      />
+
+      <section className="border-t border-gray-200 dark:border-gray-700 pt-6">
+        <Link
+          href="/search"
+          className="block text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-6 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors group"
+        >
+          <span className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors">
+            Browse all {total.toLocaleString('en')} books →
+          </span>
+        </Link>
+      </section>
     </main>
   )
 }
