@@ -620,6 +620,12 @@ function parseAuthors(cell: string): ParseAuthorsResult {
   if (/^(various|religious text|followers of\b|anonymous)\b/i.test(stripped0)) {
     return { authors: [], author_meta: [], parser_flags: [] }
   }
+  // Reject "no further information [available]" / "no information [available]"
+  // / "information not available" / "not available" / "unavailable" buckets —
+  // same aggregator problem as Anonymous, see authors.is_placeholder.
+  if (/^(no (further )?information( available)?|information not available|not available|unavailable)\.?$/i.test(stripped0)) {
+    return { authors: [], author_meta: [], parser_flags: [] }
+  }
   // 1. Unwrap bilingual `Native / Latin` author cells (Hong Kong format).
   //    Must run BEFORE the sorted-name unflip because the right-hand-side
   //    of the bilingual pair is often itself in `Lastname, Firstname` form
