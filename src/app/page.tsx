@@ -50,17 +50,16 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-// Daily-pick language gate — keep English readers on Latin-script titles.
-// The non-Latin titles surface elsewhere (their own homepage section + a
-// dedicated /non-english-banned-books page).
+// Latin-script language gate for the Book-of-the-day pick — keeps the
+// English homepage hero on titles that render with a real English name
+// (not pinyin/transliteration). Non-Latin titles surface elsewhere in
+// their own homepage section + a dedicated /non-english-banned-books page.
 const LATIN_SCRIPT_LANGS = [
   'en','es','fr','de','nl','it','pt','ca','gl','eu',
   'sv','da','no','nb','nn','fi','is',
   'pl','cs','sk','hu','ro','hr','sl','lv','lt','et','sq','bs',
   'tr','id','ms','vi','tl','sw','af','cy','ga','mt','lb','la',
 ] as const
-const DAILY_PICK_LANG_FILTER =
-  `original_language.in.(${LATIN_SCRIPT_LANGS.join(',')}),original_language.is.null`
 
 const REASON_SLUGS = ['lgbtq', 'sexual', 'political', 'religious', 'racial'] as const
 
@@ -70,7 +69,6 @@ export default async function HomePage() {
 
   const [
     totalCountRes,
-    eligibleCountRes,
     trendingRes,
     bannedAuthorsRes,
     topBannedRes,
@@ -79,10 +77,8 @@ export default async function HomePage() {
     banCountsRes,
     placeholderAuthorsRes,
     reasonsRes,
-  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
+  ] = await timer.wrap('parallel-batch-9', () => Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('books').select('*', { count: 'exact', head: true })
-      .not('description_book', 'is', null).or(DAILY_PICK_LANG_FILTER),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
     supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(30),
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(100),
@@ -94,18 +90,6 @@ export default async function HomePage() {
   ]))
 
   const total = totalCountRes.count ?? 0
-  const eligible = eligibleCountRes.count ?? 0
-  const seed = new Date().toISOString().slice(0, 10)
-  const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const idx = eligible > 0 ? seedSum % eligible : 0
-
-  const { data: pickArr } = eligible > 0
-    ? await timer.wrap('book-of-the-day', () =>
-        supabase.from('books').select('id').not('description_book', 'is', null)
-          .or(DAILY_PICK_LANG_FILTER).order('title').range(idx, idx),
-      )
-    : { data: null as { id: number }[] | null }
-  const pickId = pickArr?.[0]?.id ?? null
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -153,7 +137,6 @@ export default async function HomePage() {
 
   // ── Single book-details fetch covers every list ──────────────────────────
   const allBookIds = new Set<number>()
-  if (pickId) allBookIds.add(pickId)
   trendingIds.forEach(id => allBookIds.add(id))
   risingIds.forEach(id => allBookIds.add(id))
   topBannedRows.forEach(r => allBookIds.add(Number(r.entity_id)))
@@ -230,7 +213,20 @@ export default async function HomePage() {
   const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.total_bans as number]))
   const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
 
-  const pickBook = pickId ? bookById.get(pickId) : null
+  // Book of the day: pick from the top-100 globally-banned pool (already in
+  // bookById from the top-banned rail) so the daily rotation lands on a
+  // recognisable censored title — 1984, Lolita, Satanic Verses, etc. —
+  // rather than a random catalogue entry. Latin-script + description filter
+  // are the same constraints as before so the hero card always has English
+  // copy + a real synopsis to render.
+  const pickPool = topBannedRows
+    .map(r => bookById.get(Number(r.entity_id)))
+    .filter((b): b is TopListBookRow => !!b)
+    .filter(b => !!b.description_book)
+    .filter(b => !b.original_language || (LATIN_SCRIPT_LANGS as readonly string[]).includes(b.original_language))
+  const seed = new Date().toISOString().slice(0, 10)
+  const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+  const pickBook = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
 
   // FAQ: reuse the top-banned signal already in scope. mostBanned is the #1
   // entry from v_top_banned_books, fully hydrated via bookById — no extra
@@ -301,7 +297,7 @@ export default async function HomePage() {
           The World&apos;s Books Under Censorship
         </h1>
         <p className="text-base text-gray-500 dark:text-gray-400">
-          A free, international database of {total.toLocaleString('en')} books censored by governments, schools, and libraries across {countryCount} {countryCount === 1 ? 'country' : 'countries'}. Every entry citation-backed; updated weekly.
+          A free, international database of {total.toLocaleString('en')} books censored by governments, schools, and libraries across {countryCount} {countryCount === 1 ? 'country' : 'countries'}. Every entry citation-backed.
         </p>
         {/* Mobile-only shortcut row. CatalogueNav below is `hidden sm:block`,
             so without these links the mobile visitor has no above-fold nav
@@ -378,7 +374,7 @@ export default async function HomePage() {
 
       <TopListBooksSection
         title="Trending this week"
-        subtitle="Books people read most over the last 7 days."
+        subtitle="Most-read titles in the last 7 days."
         viewAllHref="/trending-banned-books"
         books={trendingBooks}
       />
@@ -392,7 +388,7 @@ export default async function HomePage() {
 
       <TopListBooksSection
         title="Rising this week"
-        subtitle="Books gaining momentum compared to last week."
+        subtitle="Biggest week-over-week jump in readership."
         viewAllHref="/rising-banned-books"
         books={risingBooks}
       />
