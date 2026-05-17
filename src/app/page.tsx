@@ -15,6 +15,8 @@ import { coverAlt } from '@/lib/cover-alt'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import CatalogueNav from '@/components/catalogue-nav'
 import NewsBlock from '@/components/news-block'
+import FaqAccordion from '@/components/faq-accordion'
+import { buildHomepageFaq } from '@/lib/homepage-faq'
 import {
   TopListBooksSection,
   TopListAuthorsSection,
@@ -230,6 +232,25 @@ export default async function HomePage() {
 
   const pickBook = pickId ? bookById.get(pickId) : null
 
+  // FAQ: reuse the top-banned signal already in scope. mostBanned is the #1
+  // entry from v_top_banned_books, fully hydrated via bookById — no extra
+  // DB roundtrip needed for the data-driven answer.
+  const mostBannedRow = topBannedRows[0]
+  const mostBannedBookRow = mostBannedRow ? bookById.get(Number(mostBannedRow.entity_id)) : null
+  const faqItems = buildHomepageFaq({
+    total,
+    countryCount,
+    mostBannedBook: mostBannedBookRow
+      ? {
+          title: mostBannedBookRow.title,
+          author: authorNameOf(mostBannedBookRow),
+          slug: mostBannedBookRow.slug,
+          banCount: mostBannedBookRow.bans.length,
+          countryCount: new Set(mostBannedBookRow.bans.map(b => b.country_code)).size,
+        }
+      : null,
+  })
+
   timer.end()
 
   // ── Schema.org JSON-LD ───────────────────────────────────────────────────
@@ -381,6 +402,12 @@ export default async function HomePage() {
         title="Why books get banned"
         subtitle="Three most-banned titles per top reason."
         blocks={reasonBlocks}
+      />
+
+      <FaqAccordion
+        title="Frequently asked questions"
+        items={faqItems}
+        defaultOpenCount={2}
       />
 
       <section className="border-t border-gray-200 dark:border-gray-700 pt-6">
