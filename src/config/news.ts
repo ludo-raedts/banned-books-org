@@ -8,7 +8,7 @@
 // only when the row hasn't been seeded or the read fails, so the public
 // site never 500s on a missing config.
 
-import { adminClient, serverClient } from '@/lib/supabase'
+import { adminClient } from '@/lib/supabase'
 
 export type NewsConfig = {
   /** When true, items that pass relevance + dedup are saved as 'published'. */
@@ -25,9 +25,6 @@ const DEFAULTS: NewsConfig = {
   dedupWindowDays: 14,
 }
 
-let cached: { config: NewsConfig; expiresAt: number } | null = null
-const TTL_MS = 60_000
-
 type DbRow = {
   auto_publish: boolean
   dedup_threshold: number
@@ -42,17 +39,18 @@ function rowToConfig(row: DbRow): NewsConfig {
   }
 }
 
+// Read via service role: news_config is admin/cron-only and the anon role
+// can't see the row (RLS in the live project blocks it even though the
+// migration only declares GRANTs). Falling back to DEFAULTS silently was the
+// bug that made the auto-publish toggle look like it wasn't being saved.
 export async function getNewsConfig(): Promise<NewsConfig> {
-  if (cached && Date.now() < cached.expiresAt) return cached.config
   try {
-    const { data } = await serverClient()
+    const { data } = await adminClient()
       .from('news_config')
       .select('auto_publish, dedup_threshold, dedup_window_days')
       .eq('id', 1)
       .maybeSingle()
-    const config = data ? rowToConfig(data as DbRow) : DEFAULTS
-    cached = { config, expiresAt: Date.now() + TTL_MS }
-    return config
+    return data ? rowToConfig(data as DbRow) : DEFAULTS
   } catch {
     return DEFAULTS
   }
@@ -75,6 +73,5 @@ export async function updateNewsConfig(
     .select('auto_publish, dedup_threshold, dedup_window_days')
     .single()
   if (error) throw new Error(error.message)
-  cached = null
   return rowToConfig(data as DbRow)
 }
