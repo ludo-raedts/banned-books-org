@@ -1,11 +1,16 @@
 // Core author-photo enrichment logic (second-pass), callable from either the
 // CLI script (scripts/enrich-author-photos-v2.ts) or the in-process API route
-// (/api/admin/enrich/run). Two sources, in order:
+// (/api/admin/enrich/run). Three sources, in order:
 //
 //   1. Wikidata — wbsearchentities → must be human (P31=Q5) AND have a
 //      writer-ish occupation (P106), then take the image (P18) and resolve
 //      it to a Commons thumbnail.
 //   2. OpenLibrary — /search/authors fallback, HEAD-checked photo URL.
+//   3. Site — Wikipedia title → QID → Wikidata P856 (official website) →
+//      fetch site with a browser UA → JSON-LD Person.image / og:image /
+//      twitter:image. Catches modern authors whose Wikipedia page exists
+//      but has no infobox image (the common case for YA / contemporary
+//      authors with no free-licence portrait on Commons).
 //
 // The CLI version writes a CSV log; the library version returns samples in
 // the result instead. The script remains the source of truth for CSV logging.
@@ -15,6 +20,17 @@ import { authorLadder } from './_author-ladder'
 
 const DELAY_MS = 200
 const UA = 'banned-books.org/1.0 (contact@banned-books.org)'
+// Author personal sites (Squarespace, Wix, Blogger, custom) often block bare
+// `node` / `fetch` UAs. Use a desktop Chrome string for HTML-page fetches.
+const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+
+// Sites we won't bother fetching — heavy bot protection that returns 403 for
+// scripted GETs and almost never has a useful Person.image anyway.
+const SITE_HOSTNAME_DENYLIST = new Set([
+  'twitter.com', 'x.com', 'www.twitter.com', 'www.x.com',
+  'facebook.com', 'www.facebook.com', 'instagram.com', 'www.instagram.com',
+  'tiktok.com', 'www.tiktok.com', 'youtube.com', 'www.youtube.com',
+])
 
 const WRITER_TERMS = [
   'writer', 'author', 'poet', 'novelist', 'journalist',
@@ -66,7 +82,7 @@ async function resolveCommonsImageUrl(filename: string): Promise<string | null> 
 }
 
 interface PhotoResult {
-  source: 'wikidata' | 'openlibrary' | null
+  source: 'wikidata' | 'openlibrary' | 'site' | null
   url: string | null
   meta: string
 }
@@ -113,6 +129,122 @@ async function tryWikidata(name: string): Promise<PhotoResult> {
 interface OlAuthorDoc { key?: string; name?: string; work_count?: number; birth_date?: string }
 interface OlAuthorResp { docs?: OlAuthorDoc[] }
 
+// ─── Site source: Wikipedia title → QID → Wikidata P856 → site → image ──────
+
+interface WikiSearchHit { title: string }
+interface WikiSearchResp { query?: { search?: WikiSearchHit[] } }
+interface WikiPagesResp { query?: { pages?: Record<string, { pageprops?: { wikibase_item?: string } }> } }
+
+async function getQidFromName(name: string): Promise<string | null> {
+  const sUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&srlimit=1&format=json&origin=*`
+  const s = await fetchJson<WikiSearchResp>(sUrl)
+  const title = s?.query?.search?.[0]?.title
+  if (!title) return null
+  await sleep(DELAY_MS)
+  const pUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageprops&format=json&origin=*`
+  const p = await fetchJson<WikiPagesResp>(pUrl)
+  const page = Object.values(p?.query?.pages ?? {})[0]
+  return page?.pageprops?.wikibase_item ?? null
+}
+
+// JSON-LD Person.image / og:image / twitter:image. Returns absolute URL.
+function extractImageFromHtml(html: string, baseUrl: string): { source: string; url: string } | null {
+  const resolve = (raw: string): string | null => {
+    if (!raw) return null
+    if (raw.startsWith('data:')) return null
+    try { return new URL(raw, baseUrl).toString() } catch { return null }
+  }
+
+  const ldMatches = html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)
+  for (const m of ldMatches) {
+    try {
+      const json = JSON.parse(m[1].trim())
+      const blocks = Array.isArray(json) ? json : [json]
+      for (const blk of blocks) {
+        const items = blk['@graph'] && Array.isArray(blk['@graph']) ? blk['@graph'] : [blk]
+        for (const it of items) {
+          if (it?.['@type'] === 'Person' && it.image) {
+            const raw: unknown = typeof it.image === 'string' ? it.image : it.image?.url ?? it.image?.['@id']
+            const resolved = typeof raw === 'string' ? resolve(raw) : null
+            if (resolved) return { source: 'ld+json', url: resolved }
+          }
+        }
+      }
+    } catch { /* malformed JSON-LD — try next block */ }
+  }
+
+  const og = html.match(/<meta\s+(?:property|name)=["']og:image(?::secure_url)?["']\s+content=["']([^"']+)["']/i)
+    ?? html.match(/<meta\s+content=["']([^"']+)["']\s+(?:property|name)=["']og:image(?::secure_url)?["']/i)
+  if (og) {
+    const resolved = resolve(og[1])
+    if (resolved) return { source: 'og:image', url: resolved }
+  }
+
+  const tw = html.match(/<meta\s+(?:property|name)=["']twitter:image["']\s+content=["']([^"']+)["']/i)
+  if (tw) {
+    const resolved = resolve(tw[1])
+    if (resolved) return { source: 'twitter:image', url: resolved }
+  }
+
+  return null
+}
+
+async function trySite(name: string): Promise<PhotoResult> {
+  const qid = await getQidFromName(name)
+  if (!qid) return { source: null, url: null, meta: 'site: no QID from Wikipedia' }
+  await sleep(DELAY_MS)
+
+  // Verify the QID is a human writer before trusting any property from it.
+  // Wikipedia's search endpoint is fuzzy — for editorial-committee names and
+  // foreign-script titles it cheerfully returns a tangentially-related page,
+  // and we don't want the wrong entity's P856 wired up as someone's portrait.
+  const ent = await fetchJson<WdEntityResp>(`https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`)
+  const claims = ent?.entities?.[qid]?.claims
+  if (!claims) return { source: null, url: null, meta: `site: ${qid} no claims` }
+  if (!claimIds(claims, 'P31').includes('Q5')) {
+    return { source: null, url: null, meta: `site: ${qid} not a human (P31)` }
+  }
+  const occIds = claimIds(claims, 'P106')
+  if (occIds.length === 0) return { source: null, url: null, meta: `site: ${qid} no P106` }
+  await sleep(DELAY_MS)
+  const labelsResp = await fetchJson<WdLabelResp>(
+    `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${occIds.join('|')}&props=labels&languages=en&format=json&origin=*`
+  )
+  const occLabels = Object.values(labelsResp?.entities ?? {})
+    .map(e => e?.labels?.en?.value)
+    .filter((s): s is string => Boolean(s))
+    .map(s => s.toLowerCase())
+  if (!occLabels.some(lbl => WRITER_TERMS.some(t => lbl.includes(t)))) {
+    return { source: null, url: null, meta: `site: ${qid} not a writer (P106=${occLabels.slice(0, 2).join('/')})` }
+  }
+
+  const website = claimString(claims, 'P856')
+  if (!website) return { source: null, url: null, meta: `site: ${qid} no P856` }
+
+  let host: string
+  try { host = new URL(website).hostname.toLowerCase() }
+  catch { return { source: null, url: null, meta: `site: ${qid} invalid P856 url` } }
+  if (SITE_HOSTNAME_DENYLIST.has(host)) {
+    return { source: null, url: null, meta: `site: ${qid} P856=${host} (denylisted)` }
+  }
+
+  await sleep(DELAY_MS)
+  let res: Response
+  try {
+    res = await fetch(website, {
+      headers: { 'User-Agent': BROWSER_UA, 'Accept': 'text/html,application/xhtml+xml' },
+      redirect: 'follow',
+    })
+  } catch (e) {
+    return { source: null, url: null, meta: `site: ${qid} ${host} fetch error` }
+  }
+  if (!res.ok) return { source: null, url: null, meta: `site: ${qid} ${host} HTTP ${res.status}` }
+  const html = await res.text()
+  const img = extractImageFromHtml(html, res.url)
+  if (!img) return { source: null, url: null, meta: `site: ${qid} ${host} no image meta` }
+  return { source: 'site', url: img.url, meta: `${qid} ${img.source} from ${host}` }
+}
+
 async function tryOpenLibrary(name: string): Promise<PhotoResult> {
   const searchUrl = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(name)}&limit=3`
   const data = await fetchJson<OlAuthorResp>(searchUrl)
@@ -146,7 +278,7 @@ export type EnrichAuthorPhotosResult = {
   processed: number
   accepted: number
   skipped: number
-  bySource: { wikidata: number; openlibrary: number }
+  bySource: { wikidata: number; openlibrary: number; site: number }
   errors: number
   // All per-author results — used by the CLI to write a comprehensive CSV.
   // The API route truncates this to <=10 before returning to the browser.
@@ -180,11 +312,11 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
   const authors = (data ?? []) as AuthorRow[]
   log(`Authors without photo: ${authors.length}`)
   if (authors.length === 0) {
-    return { totalCandidates: 0, processed: 0, accepted: 0, skipped: 0, bySource: { wikidata: 0, openlibrary: 0 }, errors: 0, results: [] }
+    return { totalCandidates: 0, processed: 0, accepted: 0, skipped: 0, bySource: { wikidata: 0, openlibrary: 0, site: 0 }, errors: 0, results: [] }
   }
 
   let accepted = 0, skipped = 0, errCount = 0
-  const bySource = { wikidata: 0, openlibrary: 0 }
+  const bySource = { wikidata: 0, openlibrary: 0, site: 0 }
   const results: EnrichAuthorPhotosResult['results'] = []
 
   for (let i = 0; i < authors.length; i++) {
@@ -212,6 +344,13 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
       }
       metaParts.push(`ol[${variant.source}]: ${olResult.meta}`)
       await sleep(DELAY_MS)
+      const siteResult = await trySite(variant.name)
+      if (siteResult.url) {
+        result = { ...siteResult, meta: `${siteResult.meta} [via ${variant.source}]` }
+        break
+      }
+      metaParts.push(`site[${variant.source}]: ${siteResult.meta}`)
+      await sleep(DELAY_MS)
     }
     if (!result.url) {
       result = { source: null, url: null, meta: metaParts.slice(0, 3).join(' | ') }
@@ -225,6 +364,7 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
     if (result.url) {
       if (result.source === 'wikidata') bySource.wikidata++
       if (result.source === 'openlibrary') bySource.openlibrary++
+      if (result.source === 'site') bySource.site++
       if (opts.apply) {
         const { error: ue } = await supabase
           .from('authors')

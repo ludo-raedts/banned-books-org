@@ -401,7 +401,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
             <Row field="Censorship context (broader political background)" script="enrich-censorship-context-gpt.ts" tag="gpt" />
             <Row field="Ban reason classification" script="enrich-reasons.ts" tag="gpt" />
             <Row field="Author bios (Wikipedia)" script="enrich-author-bios.ts" tag="free" />
-            <Row field="Author photos — second pass (Wikidata + OpenLibrary)" script="enrich-author-photos-v2.ts" tag="free" />
+            <Row field="Author photos — second pass (Wikidata + OpenLibrary + author site)" script="enrich-author-photos-v2.ts" tag="free" />
             <Row field="Genres (1–3 slugs from fixed vocabulary)" script="enrich-genres-gpt.ts" tag="gpt" />
             <Row field="Editorial classification suggestions" script="suggest-editorial-classification-gpt.ts" tag="gpt" />
             <Row field="Reading Club discussion questions" script="generate-discussion-questions.ts" tag="claude" />

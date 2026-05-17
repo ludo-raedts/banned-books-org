@@ -5,6 +5,7 @@
  * Sources, in order:
  *   1. Wikidata — wbsearchentities → P31=Q5 (human) + writer-ish P106 → P18 → Commons thumbnail
  *   2. OpenLibrary — /search/authors fallback, HEAD-checked
+ *   3. Site — Wikipedia title → QID → Wikidata P856 (official website) → og:image / JSON-LD Person.image
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts                  # dry-run, 50 authors
@@ -50,7 +51,7 @@ async function main() {
   fs.writeFileSync(csvPath, rows.join('\n') + '\n', 'utf8')
 
   console.log(`\n── Done ──`)
-  console.log(`Accepted : ${result.accepted}  (wikidata=${result.bySource.wikidata} ol=${result.bySource.openlibrary})`)
+  console.log(`Accepted : ${result.accepted}  (wikidata=${result.bySource.wikidata} ol=${result.bySource.openlibrary} site=${result.bySource.site})`)
   console.log(`Skipped  : ${result.skipped}`)
   console.log(`Errors   : ${result.errors}`)
   console.log(`CSV log  : ${path.relative(process.cwd(), csvPath)} (${result.results.length} rows)`)

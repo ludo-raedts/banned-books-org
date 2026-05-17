@@ -115,6 +115,7 @@ export async function POST(req: NextRequest) {
             skipped: r.skipped,
             viaWikidata: r.bySource.wikidata,
             viaOpenlibrary: r.bySource.openlibrary,
+            viaSite: r.bySource.site,
             errors: r.errors,
           },
           // Truncate to avoid bloating the JSON payload to the browser.
