@@ -32,7 +32,7 @@ const STEPS: StepDef[] = [
   { key: 'censorship_context',  label: 'Censorship context',          paid: true,  description: 'GPT — political/historical background.', inProcess: false },
   { key: 'reasons',             label: 'Ban reason classification',   paid: true,  description: 'GPT — re-classifies bans currently tagged "other".', inProcess: false },
   { key: 'author_bios',         label: 'Author bios (Wikipedia)',     paid: false, description: 'Wikipedia article + infobox.', inProcess: false },
-  { key: 'author_photos',       label: 'Author photos (v2)',          paid: false, description: 'Wikidata + OpenLibrary photo backfill.', inProcess: true },
+  { key: 'author_photos',       label: 'Author photos (v2)',          paid: false, description: 'Wikidata → OpenLibrary → author personal site (P856 + JSON-LD/og:image).', inProcess: true },
   { key: 'classification',      label: 'Editorial classification',    paid: true,  description: 'GPT-4o-mini suggests warning_level + inclusion_rationale.', inProcess: false },
 ]
 

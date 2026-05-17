@@ -585,7 +585,7 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
 
           <Script
             name="enrich-author-photos-v2.ts"
-            what="Second-pass photo backfill — what enrich-author-bios.ts couldn't find via Wikipedia article search. Tries Wikidata (P31=human + writer-ish P106 → P18) then OpenLibrary cover endpoint. Logs every attempt to data/photo-enrichment-{ts}.csv for spot-checking."
+            what="Second-pass photo backfill — what enrich-author-bios.ts couldn't find via Wikipedia article search. Three sources tried in order: (1) Wikidata (P31=Q5 human + writer-ish P106 → P18 → Commons thumbnail); (2) OpenLibrary /search/authors fallback, HEAD-checked; (3) personal site — Wikipedia title → QID → Wikidata P856 (official website) → fetched with a desktop Chrome UA → JSON-LD Person.image / og:image / twitter:image. The site source is QID-gated (must be human + writer occupation) so fuzzy Wikipedia search matches can't wire a stranger's portrait to an author, and has a social-media host denylist (twitter/x/facebook/instagram/tiktok/youtube) because those return 403 for scripted GETs. Logs every attempt to data/photo-enrichment-{ts}.csv for spot-checking."
             tags={['free']}
             command={`# Apply on 250 authors (~10 min runtime)
 npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=250`}
@@ -594,7 +594,7 @@ npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit
               { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
             ]}
             writes={<>Only fills empty <code className="font-mono">photo_url</code>.</>}
-            note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields ~5–15% on what's left. If you ever extend with a new image source, add the host to src/lib/allowed-image-hosts.ts."
+            note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields a few % more. Heads-up: the `site` source can return URLs on hosts outside src/lib/allowed-image-hosts.ts (any author's personal CDN); those URLs are stored fine but the Next.js image optimizer will refuse them at render time — the AuthorAvatar component falls back to initials via onError, so the user-visible degradation is graceful. Add common hosts (e.g. squarespace-cdn.com, weebly.com) to the whitelist after a v2 run if you notice many initials where photos should be."
           />
 
           <Script
