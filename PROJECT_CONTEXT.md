@@ -121,6 +121,7 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 | `inbox_preview` | Last 5 inbox messages from Zoho Mail (TRUNCATE+INSERT every hour). Powers the dashboard inbox card. |
 | `cover_search_attempts` | Throttles cover-enrichment retries per book. |
 | `description_search_attempts` | Same, for descriptions. |
+| `indexnow_submissions` | Audit log for every IndexNow ping. Fields: `kind` (`full` / `delta`), `url_count`, `ok`, `status`, `error`, `static_urls jsonb`. The `static_urls` snapshot lets the delta endpoint diff the current static-URL set against the last successful submission so newly-added landing pages (top-list destinations etc.) get auto-pinged on the next "Submit new pages" click. |
 
 ### Important indexes / extensions
 
@@ -137,7 +138,7 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 src/
 ├── app/                              # Next.js App Router
 │   ├── layout.tsx                    # Header / footer / nav / analytics
-│   ├── page.tsx                      # Homepage — book browser, highlights, trending, news preview
+│   ├── page.tsx                      # Homepage — topical hub: book-of-day + news + 5 top-lists + FAQ
 │   ├── globals.css
 │   ├── robots.ts                     # robots.txt (allow all)
 │   ├── sitemap.xml/ + sitemap-*.xml/ # Split sitemaps: static / books / authors / countries / reasons
@@ -156,6 +157,10 @@ src/
 │   ├── banned-classics/              # Pre-1970 SEO landing (24h)
 │   ├── challenged-books/             # School-scope SEO landing
 │   ├── banned-books/[year]/          # Year-archive SEO landings (2022..2026, generateStaticParams)
+│   ├── trending-banned-books/        # Top-50 trending (homepage rail destination)
+│   ├── rising-banned-books/          # Top-50 rising (homepage rail destination)
+│   ├── most-banned-authors/          # Top-50 banned authors (homepage rail destination)
+│   ├── non-english-banned-books/     # Top-50 non-Latin-script (homepage rail destination)
 │   ├── banned-books-week/ + archive/ # BBW hub + per-year archive
 │   ├── reading-club/                 # Hub
 │   │   ├── currently-challenged/     # ALA OIF list
@@ -239,9 +244,12 @@ data/                                 # Local CSVs from one-off enrichment / aud
 | `bbw-data.ts` | DB queries for BBW page (published vs preview-as-admin paths; live stats). |
 | `content-blocks.ts` | `getPublishedBlockMap`, `REQUIRED_BLOCKS_BY_PAGE` map; rendering + publish-time validation. |
 | `markdown.ts` (+ test) | `marked` + `sanitize-html` to compute `body_html` at save time so reads stay cheap. |
-| `sitemap-xml.ts` + `sitemap-static-entries.ts` + `site-urls.ts` | Sitemap helpers; `getAllCanonicalUrls` aggregates static + book + author + country + reason URLs for IndexNow bulk submit. |
+| `sitemap-xml.ts` + `sitemap-static-entries.ts` + `site-urls.ts` | Sitemap helpers; `getAllCanonicalUrls` aggregates static + book + author + country + reason URLs for IndexNow bulk submit. `sitemap-static-entries.ts` lists every landing-page URL with its `changefreq` + `priority`; new pages must be added here to surface in both sitemap-static.xml and IndexNow. |
 | `news-display.ts` | Helpers for rendering news lists. |
 | `allowed-image-hosts.ts` | Whitelist of image hostnames; used by `next.config.ts` `remotePatterns` and admin cover-URL validation. |
+| `top-list-data.ts` | Shared helpers for the homepage top-lists + their `/top-*` destination pages: `TOP_LIST_BOOK_SELECT` (the cheap book-detail shape used by every list), `LATIN_SCRIPT_LANGS` + `LANG_NAMES` (non-English context labels), `banContext` / `langContext` / `toBookCard` formatters. |
+| `homepage-faq.ts` | Builds the 10-item homepage FAQ from page-state inputs (`total`, `countryCount`, `mostBannedBook`). Pure function — no DB calls, reuses the homepage's existing fetches. |
+| `country-faq.ts` + `country-faq-facts.ts` | `buildCountryFaq()` returns the FaqItem[] for a given country: data-only for every country with bans, editorial Q&As added when `COUNTRY_FAQ_FACTS` has an entry (currently US, GB, RU, CN, IR). `articulateCountryName` adds the definite article where prose requires it. |
 
 External SaaS connected:
 - **Supabase** (DB)
@@ -279,9 +287,9 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 ### Pages
 
 **Homepage `/`** — topical hub, not a catalogue browser. ISR 30 min.
-- Live total counts (books × countries) in the H1 sub-line.
+- H1 + database-frame sub-line: *"A free, international database of N books censored by governments, schools, and libraries across M countries. Every entry citation-backed."* — written as a complete, AI-Overview-citable claim. Mobile-only shortcut row underneath links to /stats + /top-100 (the desktop tiles below it cover the same nav so `sm:hidden`).
 - `CatalogueNav` — 4-tile shortcut grid (Top 100 · Countries · Reasons · Stats); swaps the Top-100 tile for a BBW promo tile during the BBW window.
-- "Book of the day" — deterministic per calendar date (`seed = today's ISO`), large hero card with cover + description + first ban context. Latin-script gate on `original_language` so the English homepage never lands on a pinyin/transliterated title.
+- "Book of the day" — deterministic per calendar date (`seed = today's ISO`), large hero card with cover + description + first ban context. **Pool is the top-100 globally-banned set** (`v_top_banned_books`) filtered to Latin-script + has-description, so the daily pick lands on a recognisable censored title (1984, Lolita, Satanic Verses, Emile, etc.) rather than a random catalogue entry.
 - `NewsBlock` — 3 most-recent published news items as a 3-col grid (1-col on mobile).
 - Five top-list sections (`TopListBooksSection` / `TopListAuthorsSection` / `TopListByReasonSection`), each linking through to a deeper destination page:
   1. **Trending this week** — `v_top_books_this_week`, → `/trending-banned-books`.
@@ -289,6 +297,7 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
   3. **Rising this week** — `mv_top_books_rising` (this-week vs prev-week views), → `/rising-banned-books`.
   4. **Banned books not written in English** — `original_language NOT IN` Latin-script set, → `/non-english-banned-books`.
   5. **Why books get banned** — top 3 books per top-5 reasons (lgbtq/sexual/political/religious/racial), each sub-block linking to `/reasons/{slug}`.
+- **FAQ accordion** (10 Q&As, first 2 open by default) — `FaqAccordion` component renders native `<details>` AND emits FAQPage JSON-LD from the same items array. Two of the answers are data-driven (total bans, most-banned book) and reuse the homepage's existing fetch — no extra DB queries.
 - Final CTA: `Browse all N books →` linking to `/search` (which doubles as the catalogue browse).
 - Mobile shows 5 items per list (items 6–10 are `hidden sm:contents`); list titles are theme-only ("Trending this week", not "Top 10 …") since the count differs per breakpoint.
 
@@ -308,7 +317,9 @@ Old surfaces that moved off the homepage: `BookBrowser` now lives at `/search` (
 - Triggers `trackPageview('book', id)`.
 
 **Per-author page `/authors/{slug}`** — bio, photo (loaded via `AuthorAvatar` with `onError` fallback to initials so rate-limited Wikipedia thumbnails degrade gracefully), birth country, all banned books.
-**Country pages `/countries` and `/countries/{code}`** — flag, description, all bans for that country split by status.
+**Country pages `/countries` and `/countries/{code}`** — flag, description, all bans for that country split by status. Each `/countries/{code}` ends with a `FaqAccordion` (visible HTML + FAQPage JSON-LD). Two tiers:
+- Data-only (every country with bans): how many, when, top reasons, notable books — the notable-book answer cross-references the country's bans against `v_top_banned_books` top-100 so the answer surfaces globally-famous classics (1984, Mein Kampf, Origin of Species) instead of the alphabetically-first titles.
+- Editorial (top-5 countries in `COUNTRY_FAQ_FACTS` — US, GB, RU, CN, IR): three extra Q&As — who decides bans (named authorities with statute citations), can I read (`legal` / `restricted` / `criminal` ladder + reading-risk note), can I buy (with Bookshop affiliate link). `articulateCountryName` adds the definite article ("the United States") where grammar requires it.
 **Reason pages `/reasons` and `/reasons/{slug}`** — index + book lists per reason.
 **Scope pages `/scope/school`, `/scope/government`** — books banned in that scope.
 
@@ -459,12 +470,15 @@ Index at `/sitemap.xml` references five split sitemaps so each stays small:
 - `lib/indexnow.ts` submits up to 10 000 URLs per call.
 - Hooks: every editorial publish (news, content blocks, BBW, Reading Club) and a manual "submit all canonical URLs" button at `/admin/sitemap` ping IndexNow so Bing / Yandex / Naver pick changes up immediately.
 - `getAllCanonicalUrls()` aggregates static + book + author + country (with bans) + reason URLs.
+- Two admin buttons:
+  - **Resubmit all** → `/api/admin/indexnow-bulk` — submits the full canonical set (~9k URLs).
+  - **Submit new pages** → `/api/admin/indexnow-delta` — pings books/authors with `created_at > last_successful_submission.submitted_at`, **plus** any static URLs added since the last submission's recorded set (`indexnow_submissions.static_urls` diff). NULL on the last row = legacy / pre-migration; the next delta call re-baselines by submitting the current static set once.
 
 ### On-page
 - `metadataBase` + per-page `generateMetadata`. Every page sets `alternates.canonical`.
 - Open Graph: `siteName: 'Banned Books'`, `type: 'website'`, locale `en_US`. Default OG image at `app/opengraph-image.tsx`.
 - Twitter: `summary` card.
-- Schema.org JSON-LD: `Organization` on `/about`, `Book` on `/books/[slug]`.
+- Schema.org JSON-LD: `WebSite` + `Organization` on `/`, `Book` on `/books/[slug]`, `Person` on `/authors/[slug]`, `CollectionPage` + `ItemList` on `/countries/[code]` and on each top-list destination (`/trending-banned-books` etc.), and `FAQPage` on `/`, every `/countries/[code]`, `/challenged-books`, `/banned-books/[year]`, and `/authors/[slug]`. One FAQPage per URL — Google's rule. `FaqAccordion` is the single source for both the visible accordion and the FAQPage payload so they can't drift apart.
 - RSS at `/feed.xml` linked from `<head>`.
 - Canonical pages: `/books/{slug}` and `/authors/{slug}` are the indexable canonicals; pages like `/top-100-banned-books`, `/banned-classics`, `/banned-books/{year}`, `/challenged-books`, `/scope/{school|government}` exist as **second-tier landing pages** that link inward.
 
@@ -515,13 +529,15 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 
 ---
 
-## 12. Achievements to date (snapshot 2026-05-09)
+## 12. Achievements to date (snapshot 2026-05-17)
 
 - **A working catalogue** with thousands of books and bans across many countries (live counts on `/about` and the homepage). The recent commit history adds:
-  - `feat(admin): show 24h-vs-prev-24h deltas on Cloudflare cards`
-  - `feat(scripts): grounded rewrite + filler strip for ban descriptions`
-  - `feat(analytics): track Bookshop/Kobo clicks and dataset purchases`
-  - `feat(admin): restructure scripts reference page`
+  - `feat(home): homepage redesign — catalogue browser replaced with 5 top-lists, 4 destination pages, FAQPage block`
+  - `feat(countries): FAQ accordion with editorial Q&As for US/GB/RU/CN/IR + data-only fallback`
+  - `feat(enrich/authors): third photo source (Wikidata P856 + Wikipedia extlinks) with JSON-LD + name-matched img tag scoring`
+  - `fix(home): onError-fallback on author avatars for rate-limited Wikipedia thumbnails`
+  - `fix(seo): IndexNow delta picks up newly-added static pages via static_urls jsonb diff`
+  - `feat(news): GPT generates short eyebrow headline above source title`
 - **20 schema migrations** covering core entities + materialized views + dataset orders + inbox preview + BBW & Reading Club CMS + news embeddings + Bookshop probe state.
 - **A repeatable enrichment pipeline** — descriptions, censorship context, covers, ISBNs, author bios + photos, Bookshop ISBN cross-reference, Project Gutenberg detection, genre seeding. Roughly 180 maintenance scripts catalogued in the admin Scripts page.
 - **A privacy-safe analytics layer** (visitor_hash, 90-day retention) with trending / rising / top-by-country / top-referrer views and an admin dashboard for Cloudflare zone analytics.
