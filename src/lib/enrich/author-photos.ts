@@ -7,10 +7,13 @@
 //      it to a Commons thumbnail.
 //   2. OpenLibrary — /search/authors fallback, HEAD-checked photo URL.
 //   3. Site — Wikipedia title → QID → Wikidata P856 (official website) →
-//      fetch site with a browser UA → JSON-LD Person.image / og:image /
-//      twitter:image. Catches modern authors whose Wikipedia page exists
-//      but has no infobox image (the common case for YA / contemporary
-//      authors with no free-licence portrait on Commons).
+//      fetch site with a browser UA → JSON-LD Person.image only. We
+//      considered also accepting og:image/twitter:image but they were 4/4
+//      false positives in a sample run (logos, banners, ISBN-named book
+//      covers) because templated author sites use them for site branding.
+//      JSON-LD Person.image is semantically a portrait and has near-zero
+//      false-positive rate, at the cost of much lower recall — most
+//      author sites don't expose Person markup at all.
 //
 // The CLI version writes a CSV log; the library version returns samples in
 // the result instead. The script remains the source of truth for CSV logging.
@@ -129,32 +132,155 @@ async function tryWikidata(name: string): Promise<PhotoResult> {
 interface OlAuthorDoc { key?: string; name?: string; work_count?: number; birth_date?: string }
 interface OlAuthorResp { docs?: OlAuthorDoc[] }
 
-// ─── Site source: Wikipedia title → QID → Wikidata P856 → site → image ──────
+// ─── Site source ─────────────────────────────────────────────────────────────
+//
+// Wikipedia title → QID → validate human + writer → discover candidate sites
+// (Wikidata P856 + Wikipedia External Links section) → fetch each → extract
+// the most-likely-portrait image. We score images using two strong precision
+// signals — JSON-LD `Person.image` markup and the author's name appearing in
+// the image alt-text or filename. Together they reduce the false-positive
+// rate that pure og:image suffered from (logos / banners / book covers on
+// template-generated personal sites).
 
 interface WikiSearchHit { title: string }
 interface WikiSearchResp { query?: { search?: WikiSearchHit[] } }
 interface WikiPagesResp { query?: { pages?: Record<string, { pageprops?: { wikibase_item?: string } }> } }
+interface WikiExtlinksResp {
+  query?: { pages?: Record<string, { extlinks?: Array<{ '*': string }> }> }
+}
 
-async function getQidFromName(name: string): Promise<string | null> {
+async function getWikiTitle(name: string): Promise<string | null> {
   const sUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&srlimit=1&format=json&origin=*`
   const s = await fetchJson<WikiSearchResp>(sUrl)
-  const title = s?.query?.search?.[0]?.title
-  if (!title) return null
-  await sleep(DELAY_MS)
-  const pUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageprops&format=json&origin=*`
-  const p = await fetchJson<WikiPagesResp>(pUrl)
+  return s?.query?.search?.[0]?.title ?? null
+}
+
+async function getQidFromTitle(title: string): Promise<string | null> {
+  const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageprops&format=json&origin=*`
+  const p = await fetchJson<WikiPagesResp>(url)
   const page = Object.values(p?.query?.pages ?? {})[0]
   return page?.pageprops?.wikibase_item ?? null
 }
 
-// JSON-LD Person.image / og:image / twitter:image. Returns absolute URL.
-function extractImageFromHtml(html: string, baseUrl: string): { source: string; url: string } | null {
-  const resolve = (raw: string): string | null => {
-    if (!raw) return null
-    if (raw.startsWith('data:')) return null
-    try { return new URL(raw, baseUrl).toString() } catch { return null }
+async function getWikipediaExtlinks(title: string): Promise<string[]> {
+  const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=extlinks&ellimit=50&format=json&origin=*`
+  const data = await fetchJson<WikiExtlinksResp>(url)
+  const page = Object.values(data?.query?.pages ?? {})[0]
+  return (page?.extlinks ?? []).map(e => e['*']).filter(Boolean)
+}
+
+// Hostname-substring denylist of sites that aren't the author's own homepage
+// even if they happen to be linked from Wikipedia. These are aggregators,
+// social profiles, and retailer pages — none of them yield reliable
+// author-portrait extraction (social = bot blocks, retailers = book covers).
+const EXTLINK_HOSTNAME_DENY = [
+  'wikipedia.org', 'wikimedia.org', 'wikidata.org', 'wikisource.org',
+  'twitter.com', 'x.com', 'facebook.com', 'instagram.com', 'tiktok.com',
+  'youtube.com', 'youtu.be', 'linkedin.com', 'tumblr.com', 'reddit.com',
+  'amazon.com', 'amazon.co.uk', 'goodreads.com', 'imdb.com',
+  'penguinrandomhouse.com', 'harpercollins.com', 'simonandschuster.com',
+  'us.macmillan.com', 'panmacmillan.com', 'hachettebookgroup.com',
+  'nytimes.com', 'theguardian.com', 'washingtonpost.com', 'npr.org',
+  'bbc.co.uk', 'bbc.com', 'cnn.com', 'newyorker.com', 'theatlantic.com',
+  'jstor.org', 'doi.org', 'academia.edu', 'researchgate.net', 'archive.org',
+  'spotify.com', 'soundcloud.com', 'vimeo.com', 'patreon.com',
+  'substack.com', 'medium.com', 'twitch.tv', 'flickr.com',
+  'viaf.org', 'isni.org', 'd-nb.info', 'bnf.fr', 'loc.gov',
+]
+
+function isPlausibleAuthorHomepage(url: string, nameTokens: string[]): boolean {
+  let parsed: URL
+  try { parsed = new URL(url) } catch { return false }
+  if (!/^https?:$/.test(parsed.protocol)) return false
+  const host = parsed.hostname.toLowerCase()
+  if (EXTLINK_HOSTNAME_DENY.some(d => host === d || host.endsWith('.' + d))) return false
+  // Strong signal: hostname contains one of the author's name tokens. This
+  // is the typical pattern for personal author sites (mindymcginnis.com,
+  // shaundavidhutchinson.com, www.aaronstarmer.com).
+  return nameTokens.some(t => host.includes(t))
+}
+
+async function discoverAuthorSites(qid: string, title: string, nameTokens: string[]): Promise<string[]> {
+  const sites: string[] = []
+  const seen = new Set<string>()
+  const add = (url: string) => {
+    try {
+      const u = new URL(url)
+      // Strip fragment; normalise.
+      const norm = `${u.protocol}//${u.host}${u.pathname}`
+      if (!seen.has(norm)) { seen.add(norm); sites.push(url) }
+    } catch { /* skip invalid */ }
   }
 
+  const ent = await fetchJson<WdEntityResp>(`https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`)
+  const p856 = claimString(ent?.entities?.[qid]?.claims, 'P856')
+  if (p856) add(p856)
+
+  await sleep(DELAY_MS)
+  const ext = await getWikipediaExtlinks(title)
+  for (const url of ext) {
+    if (isPlausibleAuthorHomepage(url, nameTokens)) add(url)
+  }
+  return sites
+}
+
+// Returns the author's name broken into search-tokens of length >= 3,
+// lowercased, accent-stripped. Used to score images by alt-text / filename
+// matches and to filter Wikipedia extlinks by hostname.
+function nameTokens(name: string): string[] {
+  return name
+    .normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z\s-]/g, ' ')
+    .split(/\s+/)
+    .filter(t => t.length >= 3)
+}
+
+// Defence-in-depth filename filter. Rejects obvious non-portrait images even
+// if they're served from a JSON-LD Person.image tag or matched by name in
+// alt text. False negatives are cheap (we just don't pick that image);
+// false positives pollute the photo column permanently. We use a generous
+// non-alphanumeric separator class (`[^a-z0-9]`) instead of `[-_/.]` because
+// Squarespace + WordPress CDNs encode spaces as `+` / `%2B`, which the
+// stricter class missed (e.g. `blacktabby+logo-white.png`).
+const NON_PORTRAIT_KEYWORDS = [
+  'logo', 'banner', 'header', 'favicon', 'placeholder', 'sprite',
+  'background', 'hero', 'wallpaper', 'lettering', 'typography',
+  'instagram', 'facebook', 'twitter', 'youtube', 'tiktok',
+  'icon', 'social',
+]
+function isObviouslyNotAPortrait(url: string): boolean {
+  const lower = decodeURIComponent(url).toLowerCase()
+  if (/\b97[89]\d{10}\b/.test(lower)) return true // ISBN-13 used as filename
+  if (/(^|[^a-z0-9])cover[^a-z0-9]/.test(lower)) return true   // book cover patterns
+  for (const kw of NON_PORTRAIT_KEYWORDS) {
+    const re = new RegExp(`(^|[^a-z0-9])${kw}(?=[^a-z0-9]|$)`)
+    if (re.test(lower)) return true
+  }
+  // Tiny standalone icons (ig.png, fb.svg, x.png on their own as filenames)
+  if (/\/(ig|fb|tw|yt|tt|li)\.(png|svg|gif|jpg|jpeg|webp)$/i.test(lower)) return true
+  return false
+}
+
+const PORTRAIT_HINTS = ['headshot', 'portrait', 'author photo', 'photo of', 'author-photo', 'author_photo', 'profile']
+
+type ImageCandidate = { url: string; score: number; reason: string }
+
+function extractBestAuthorImage(
+  html: string,
+  baseUrl: string,
+  tokens: string[],
+): ImageCandidate | null {
+  const resolve = (raw: string): string | null => {
+    if (!raw) return null
+    const trimmed = raw.trim()
+    if (!trimmed || trimmed.startsWith('data:')) return null
+    try { return new URL(trimmed, baseUrl).toString() } catch { return null }
+  }
+
+  const candidates: ImageCandidate[] = []
+
+  // 1. JSON-LD Person.image (semantic, highest priority).
   const ldMatches = html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)
   for (const m of ldMatches) {
     try {
@@ -166,38 +292,71 @@ function extractImageFromHtml(html: string, baseUrl: string): { source: string; 
           if (it?.['@type'] === 'Person' && it.image) {
             const raw: unknown = typeof it.image === 'string' ? it.image : it.image?.url ?? it.image?.['@id']
             const resolved = typeof raw === 'string' ? resolve(raw) : null
-            if (resolved) return { source: 'ld+json', url: resolved }
+            if (resolved && !isObviouslyNotAPortrait(resolved)) {
+              candidates.push({ url: resolved, score: 100, reason: 'ld+json Person.image' })
+            }
           }
         }
       }
     } catch { /* malformed JSON-LD — try next block */ }
   }
 
-  const og = html.match(/<meta\s+(?:property|name)=["']og:image(?::secure_url)?["']\s+content=["']([^"']+)["']/i)
-    ?? html.match(/<meta\s+content=["']([^"']+)["']\s+(?:property|name)=["']og:image(?::secure_url)?["']/i)
-  if (og) {
-    const resolved = resolve(og[1])
-    if (resolved) return { source: 'og:image', url: resolved }
+  // 2. Walk <img> tags; score by alt/path containing author tokens and
+  //    portrait hints. We score against the URL's *path* only (not its
+  //    hostname), because candidate sites are pre-selected to have the
+  //    author's name in the hostname — so a hostname token match carries
+  //    zero information. The path (folder + filename) is the real signal.
+  const imgTags = html.matchAll(/<img\b([^>]+)>/gi)
+  for (const m of imgTags) {
+    const attrs = m[1]
+    const src = attrs.match(/\bsrc=["']([^"']+)["']/i)?.[1]
+      ?? attrs.match(/\bdata-src=["']([^"']+)["']/i)?.[1]
+      ?? attrs.match(/\bdata-lazy-src=["']([^"']+)["']/i)?.[1]
+    if (!src) continue
+    const resolved = resolve(src)
+    if (!resolved) continue
+    if (isObviouslyNotAPortrait(resolved)) continue
+    const alt = (attrs.match(/\balt=["']([^"']*)["']/i)?.[1] ?? '').toLowerCase()
+    let pathLower: string
+    try { pathLower = decodeURIComponent(new URL(resolved).pathname).toLowerCase() }
+    catch { pathLower = resolved.toLowerCase() }
+
+    let score = 0
+    const reasons: string[] = []
+    const tokensInAlt = tokens.filter(t => alt.includes(t)).length
+    const tokensInPath = tokens.filter(t => pathLower.includes(t)).length
+    if (tokens.length > 0 && tokensInAlt === tokens.length) { score += 40; reasons.push('alt=full name') }
+    else if (tokensInAlt > 0) { score += 15 * tokensInAlt; reasons.push(`alt=${tokensInAlt}/${tokens.length} tokens`) }
+    if (tokens.length > 0 && tokensInPath === tokens.length) { score += 30; reasons.push('path=full name') }
+    else if (tokensInPath > 0) { score += 10 * tokensInPath; reasons.push(`path=${tokensInPath}/${tokens.length} tokens`) }
+    if (PORTRAIT_HINTS.some(h => alt.includes(h))) { score += 15; reasons.push('alt has portrait hint') }
+    if (PORTRAIT_HINTS.some(h => pathLower.includes(h.replace(/\s/g, '')))) { score += 10; reasons.push('path has portrait hint') }
+
+    // Require some real name signal in the path or alt-text. Pure portrait
+    // hints aren't enough — the word "photo" / "profile" appears on many
+    // theme assets and template stock images.
+    if (tokensInAlt + tokensInPath === 0) continue
+    if (score >= 25) candidates.push({ url: resolved, score, reason: reasons.join(', ') })
   }
 
-  const tw = html.match(/<meta\s+(?:property|name)=["']twitter:image["']\s+content=["']([^"']+)["']/i)
-  if (tw) {
-    const resolved = resolve(tw[1])
-    if (resolved) return { source: 'twitter:image', url: resolved }
-  }
-
-  return null
+  if (candidates.length === 0) return null
+  candidates.sort((a, b) => b.score - a.score)
+  return candidates[0]
 }
 
 async function trySite(name: string): Promise<PhotoResult> {
-  const qid = await getQidFromName(name)
-  if (!qid) return { source: null, url: null, meta: 'site: no QID from Wikipedia' }
+  const wikiTitle = await getWikiTitle(name)
+  if (!wikiTitle) return { source: null, url: null, meta: 'site: no Wikipedia match' }
   await sleep(DELAY_MS)
 
-  // Verify the QID is a human writer before trusting any property from it.
+  const qid = await getQidFromTitle(wikiTitle)
+  if (!qid) return { source: null, url: null, meta: `site: ${wikiTitle} no QID` }
+  await sleep(DELAY_MS)
+
+  // Verify the QID is a human writer before trusting anything from it.
   // Wikipedia's search endpoint is fuzzy — for editorial-committee names and
   // foreign-script titles it cheerfully returns a tangentially-related page,
-  // and we don't want the wrong entity's P856 wired up as someone's portrait.
+  // and we don't want the wrong entity's site wired up as someone's portrait.
   const ent = await fetchJson<WdEntityResp>(`https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`)
   const claims = ent?.entities?.[qid]?.claims
   if (!claims) return { source: null, url: null, meta: `site: ${qid} no claims` }
@@ -218,31 +377,37 @@ async function trySite(name: string): Promise<PhotoResult> {
     return { source: null, url: null, meta: `site: ${qid} not a writer (P106=${occLabels.slice(0, 2).join('/')})` }
   }
 
-  const website = claimString(claims, 'P856')
-  if (!website) return { source: null, url: null, meta: `site: ${qid} no P856` }
+  const tokens = nameTokens(name)
+  const sites = await discoverAuthorSites(qid, wikiTitle, tokens)
+  if (sites.length === 0) return { source: null, url: null, meta: `site: ${qid} no candidate sites (no P856, no name-matched extlinks)` }
 
-  let host: string
-  try { host = new URL(website).hostname.toLowerCase() }
-  catch { return { source: null, url: null, meta: `site: ${qid} invalid P856 url` } }
-  if (SITE_HOSTNAME_DENYLIST.has(host)) {
-    return { source: null, url: null, meta: `site: ${qid} P856=${host} (denylisted)` }
-  }
+  const tried: string[] = []
+  for (const url of sites.slice(0, 3)) {
+    let host: string
+    try { host = new URL(url).hostname.toLowerCase() }
+    catch { continue }
+    if (SITE_HOSTNAME_DENYLIST.has(host)) continue
 
-  await sleep(DELAY_MS)
-  let res: Response
-  try {
-    res = await fetch(website, {
-      headers: { 'User-Agent': BROWSER_UA, 'Accept': 'text/html,application/xhtml+xml' },
-      redirect: 'follow',
-    })
-  } catch (e) {
-    return { source: null, url: null, meta: `site: ${qid} ${host} fetch error` }
+    await sleep(DELAY_MS)
+    let res: Response
+    try {
+      res = await fetch(url, {
+        headers: { 'User-Agent': BROWSER_UA, 'Accept': 'text/html,application/xhtml+xml' },
+        redirect: 'follow',
+      })
+    } catch {
+      tried.push(`${host}=fetch-err`)
+      continue
+    }
+    if (!res.ok) { tried.push(`${host}=${res.status}`); continue }
+    const html = await res.text()
+    const img = extractBestAuthorImage(html, res.url, tokens)
+    if (img) {
+      return { source: 'site', url: img.url, meta: `${qid} ${host} score=${img.score} (${img.reason})` }
+    }
+    tried.push(`${host}=no-match`)
   }
-  if (!res.ok) return { source: null, url: null, meta: `site: ${qid} ${host} HTTP ${res.status}` }
-  const html = await res.text()
-  const img = extractImageFromHtml(html, res.url)
-  if (!img) return { source: null, url: null, meta: `site: ${qid} ${host} no image meta` }
-  return { source: 'site', url: img.url, meta: `${qid} ${img.source} from ${host}` }
+  return { source: null, url: null, meta: `site: ${qid} tried [${tried.join(', ')}]` }
 }
 
 async function tryOpenLibrary(name: string): Promise<PhotoResult> {

@@ -5,7 +5,7 @@
  * Sources, in order:
  *   1. Wikidata — wbsearchentities → P31=Q5 (human) + writer-ish P106 → P18 → Commons thumbnail
  *   2. OpenLibrary — /search/authors fallback, HEAD-checked
- *   3. Site — Wikipedia title → QID → Wikidata P856 (official website) → og:image / JSON-LD Person.image
+ *   3. Site — Wikipedia title → QID → Wikidata P856 (official website) → JSON-LD Person.image only
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts                  # dry-run, 50 authors

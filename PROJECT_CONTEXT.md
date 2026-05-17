@@ -401,7 +401,7 @@ A curated catalogue of the ~180 TSX scripts in `scripts/`, grouped by purpose
 (adders, enrichers, fixers, audits, builders) with cost tags (`free APIs`,
 `OpenAI cost`, `Anthropic cost`, `destructive`, `read-only`) and the exact
 command lines. Highlights: `add-books-batch{1..47}.ts`, `enrich-covers-v2.ts`,
-`enrich-isbn.ts`, `enrich-author-bios.ts`, `enrich-author-photos-v2.ts` (3-source cascade: Wikidata P18 → OpenLibrary → personal site via Wikidata P856 + JSON-LD/og:image, gated by P31=Q5/P106-writer verification with a social-host denylist),
+`enrich-isbn.ts`, `enrich-author-bios.ts`, `enrich-author-photos-v2.ts` (3-source cascade: Wikidata P18 → OpenLibrary → author site discovered via Wikidata P856 + name-matched Wikipedia External Links, scored on JSON-LD Person.image and name tokens in alt/URL with a non-portrait keyword denylist; QID-gated on P31=Q5 + P106-writer),
 `enrich-descriptions-gpt.ts`, `enrich-ban-descriptions-gpt.ts`,
 `rewrite-descriptions-grounded.ts`, `strip-filler-sentences.ts`,
 `audit-covers-for-placeholders.ts`, `audit-quality.ts`, `audit-db.ts`,
