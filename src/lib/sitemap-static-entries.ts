@@ -16,6 +16,14 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: base, changefreq: 'daily', priority: 1.0 },
     { loc: `${base}/top-100-banned-books`, changefreq: 'daily', priority: 1.0 },
     { loc: `${base}/banned-classics`, changefreq: 'weekly', priority: 0.9 },
+    // Top-list destination pages introduced with the homepage redesign
+    // (commit 628c317). Each shows top-50 with ItemList JSON-LD; trending /
+    // rising are view-driven so refresh daily, most-banned / non-english
+    // are ban-driven so weekly is enough.
+    { loc: `${base}/trending-banned-books`, changefreq: 'daily', priority: 0.9 },
+    { loc: `${base}/rising-banned-books`, changefreq: 'daily', priority: 0.8 },
+    { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9 },
+    { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2026`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/banned-books/2025`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2024`, changefreq: 'monthly', priority: 0.8 },
