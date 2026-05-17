@@ -16,7 +16,7 @@ function escapeXml(str: string): string {
 export async function GET() {
   const { data: items } = await adminClient()
     .from('news_items')
-    .select('id, title, source_url, source_name, published_at, summary')
+    .select('id, title, headline, source_url, source_name, published_at, summary')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(50)
@@ -27,9 +27,13 @@ export async function GET() {
       : ''
     const link = item.source_url ?? `${BASE}/news`
     const guid = `${BASE}/news#item-${item.id}`
+    // RSS readers display <title> prominently — use the punchy generated
+    // headline when present, fall back to the source title for legacy rows
+    // that haven't been backfilled yet.
+    const rssTitle = item.headline?.trim() || item.title || ''
     return `
     <item>
-      <title>${escapeXml(item.title ?? '')}</title>
+      <title>${escapeXml(rssTitle)}</title>
       <link>${escapeXml(link)}</link>
       <guid isPermaLink="false">${escapeXml(guid)}</guid>
       <description>${escapeXml(item.summary ?? '')}</description>

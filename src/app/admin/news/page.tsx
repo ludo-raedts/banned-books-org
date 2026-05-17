@@ -4,7 +4,7 @@ import NewsAdminClient from './news-admin-client'
 
 export const dynamic = 'force-dynamic'
 
-const SELECT_COLS = 'id, title, source_name, source_url, published_at, summary, source_language, original_title, original_summary'
+const SELECT_COLS = 'id, title, headline, source_name, source_url, published_at, summary, source_language, original_title, original_summary'
 
 export default async function AdminNewsPage() {
   const supabase = adminClient()

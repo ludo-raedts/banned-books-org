@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 type NewsItem = {
   id: number
   title: string
+  headline: string | null
   source_name: string
   source_url: string
   published_at: string | null
@@ -114,7 +115,7 @@ export default async function NewsPage({
     // rows: 30 per page | reason: paginated daily news feed; count drives the pager
     supabase
       .from('news_items')
-      .select('id, title, source_name, source_url, published_at, summary, published_week, source_language, original_title', { count: 'exact' })
+      .select('id, title, headline, source_name, source_url, published_at, summary, published_week, source_language, original_title', { count: 'exact' })
       .eq('status', 'published')
       .order('published_at', { ascending: false, nullsFirst: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1),
@@ -178,6 +179,11 @@ export default async function NewsPage({
               const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
               return (
                 <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                  {item.headline && (
+                    <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
+                      {item.headline}
+                    </p>
+                  )}
                   <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
                     <a
                       href={item.source_url}

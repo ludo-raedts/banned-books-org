@@ -8,6 +8,7 @@ import type { NewsConfig } from '@/config/news'
 type NewsItem = {
   id: number
   title: string
+  headline: string | null
   source_name: string
   source_url: string
   published_at: string | null
@@ -65,6 +66,11 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
+          {item.headline && (
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-brand mb-1">
+              {item.headline}
+            </p>
+          )}
           <a
             href={item.source_url}
             target="_blank"
@@ -302,6 +308,11 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
+          {item.headline && (
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-brand mb-1">
+              {item.headline}
+            </p>
+          )}
           <div className="flex items-center gap-2 flex-wrap">
             <a
               href={item.source_url}

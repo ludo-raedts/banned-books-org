@@ -91,8 +91,12 @@ export type FetchNewsResult = {
 
 const SUMMARY_SYSTEM = `You write short, neutral news briefs about book bans, censorship, and literary freedom for banned-books.org.
 
-Hard rules:
-- 40–70 words. One paragraph. No copying phrases from the source.
+Return a JSON object with two fields:
+- "headline": 4–8 words. A punchy, concrete attention-grabber that names the specific actor or book or place. Title case. No trailing punctuation. No clickbait, no "you won't believe", no questions. If the source title is already a strong concrete headline, you may lightly rewrite it for tone — do not just copy it verbatim.
+- "summary": 40–70 words. One paragraph. The full brief.
+
+Hard rules for the summary:
+- No copying phrases from the source.
 - Output English only. If the source is not in English, translate the facts into English first; do not transliterate names ad-hoc — use the standard English spelling when there is one.
 - Open with the most concrete fact: a number, a name, a place, or the specific action taken. Avoid generic openers like "A new…", "A recently…", "A report shows…".
 - Vary sentence structure between briefs. Do not start every brief with the same subject-verb pattern.
@@ -101,32 +105,44 @@ Hard rules:
 - Stay factual; no editorialising.
 - Banned phrases (do not use): "highlights", "underscores", "such efforts", "such developments", "such actions", "ongoing challenges", "this is significant for readers interested in", "raises important questions", "reflects broader concerns", "draws attention to", "sheds light on", "the importance of", "literary freedom" as filler.
 
-If the item is not about book bans, censorship, or literary freedom, respond with exactly: NOT_RELEVANT`
+If the item is not about book bans, censorship, or literary freedom, return exactly: {"not_relevant": true}`
 
-async function summarize(
+export type GeneratedBrief = { headline: string; summary: string }
+
+export async function summarize(
   openai: OpenAI,
   title: string,
   sourceName: string,
   description: string,
   language: string,
-): Promise<string | null> {
+): Promise<GeneratedBrief | null> {
   const langNote = language && language !== 'en'
     ? `\nSource language: ${language}. Translate as needed; output English only.`
     : ''
   const res = await openai.chat.completions.create({
     model: SUMMARY_MODEL,
-    max_tokens: 220,
+    max_tokens: 260,
     temperature: 0.8,
+    response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: SUMMARY_SYSTEM },
       {
         role: 'user',
-        content: `Title: ${title}\nSource: ${sourceName}${langNote}\nDescription: ${description.slice(0, 1500)}\n\nWrite the brief.`,
+        content: `Title: ${title}\nSource: ${sourceName}${langNote}\nDescription: ${description.slice(0, 1500)}\n\nReturn the JSON object.`,
       },
     ],
   })
   const text = res.choices[0]?.message?.content?.trim() ?? ''
-  return text === 'NOT_RELEVANT' ? null : text
+  if (!text) return null
+  let parsed: unknown
+  try { parsed = JSON.parse(text) } catch { return null }
+  if (typeof parsed !== 'object' || parsed === null) return null
+  const obj = parsed as Record<string, unknown>
+  if (obj.not_relevant === true) return null
+  const headline = typeof obj.headline === 'string' ? obj.headline.trim() : ''
+  const summary = typeof obj.summary === 'string' ? obj.summary.trim() : ''
+  if (!headline || !summary) return null
+  return { headline, summary }
 }
 
 async function embed(openai: OpenAI, title: string, description: string): Promise<number[]> {
@@ -251,24 +267,25 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
       }
 
       const language = feed.language ?? 'en'
-      let summary: string | null
+      let brief: GeneratedBrief | null
       try {
-        summary = await summarize(openai, title, sourceName, description, language)
+        brief = await summarize(openai, title, sourceName, description, language)
       } catch (e) {
         errors.push(`OpenAI error for "${title.slice(0, 40)}": ${e instanceof Error ? e.message : String(e)}`)
         continue
       }
 
-      if (!summary) { skipped++; continue }
+      if (!brief) { skipped++; continue }
       if (!apply) continue
 
       const status = config.autoPublish ? 'published' : 'draft'
       const insertRow: Record<string, unknown> = {
         title,
+        headline: brief.headline,
         source_name: sourceName,
         source_url: url,
         published_at: item.pubDate ? new Date(item.pubDate).toISOString() : null,
-        summary,
+        summary: brief.summary,
         status,
         embedding,
         auto_published: config.autoPublish,

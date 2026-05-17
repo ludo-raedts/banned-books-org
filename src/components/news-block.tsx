@@ -13,6 +13,7 @@ import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'
 type NewsRow = {
   id: number
   title: string
+  headline: string | null
   source_name: string
   published_at: string | null
   summary: string
@@ -30,7 +31,7 @@ export default async function NewsBlock() {
   const { data } = await timer.wrap('news_items', () =>
     supabase
       .from('news_items')
-      .select('id, title, source_name, published_at, summary, source_language')
+      .select('id, title, headline, source_name, published_at, summary, source_language')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
       .limit(3),
@@ -63,6 +64,11 @@ export default async function NewsBlock() {
               href="/news"
               className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
             >
+              {item.headline && (
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5 group-hover:text-brand transition-colors line-clamp-2">
+                  {item.headline}
+                </h3>
+              )}
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug line-clamp-4 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                 {item.summary}
               </p>
