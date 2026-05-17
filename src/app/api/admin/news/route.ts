@@ -13,7 +13,10 @@ function currentMonday(): string {
 export async function PATCH(req: NextRequest) {
   const auth = await requireAdmin()
   if (!auth.ok) return auth.response
-  const { id, action, summary } = await req.json()
+  const body = await req.json()
+  const { id, action } = body
+  const summary: unknown = body.summary
+  const headline: unknown = body.headline
   if (!action) return NextResponse.json({ error: 'Missing action' }, { status: 400 })
 
   if (action === 'reject_all') {
@@ -27,11 +30,18 @@ export async function PATCH(req: NextRequest) {
 
   const supabase = adminClient()
 
+  // Build the optional headline/summary patch shared by publish + update_text:
+  // string fields are only included when provided so we never overwrite an
+  // existing value with undefined or null.
+  const textPatch: Record<string, string> = {}
+  if (typeof headline === 'string' && headline.trim() !== '') textPatch.headline = headline.trim()
+  if (typeof summary === 'string' && summary.trim() !== '') textPatch.summary = summary.trim()
+
   if (action === 'publish') {
     const { error } = await supabase.from('news_items').update({
       status: 'published',
       published_week: currentMonday(),
-      ...(summary ? { summary } : {}),
+      ...textPatch,
     }).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
@@ -57,8 +67,11 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
-  if (action === 'update_summary') {
-    const { error } = await supabase.from('news_items').update({ summary }).eq('id', id)
+  if (action === 'update_text') {
+    if (Object.keys(textPatch).length === 0) {
+      return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
+    }
+    const { error } = await supabase.from('news_items').update(textPatch).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
   }

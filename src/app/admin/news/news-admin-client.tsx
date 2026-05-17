@@ -45,20 +45,26 @@ function formatDate(iso: string | null) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => void }) {
+const editInputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400'
+
+function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: number) => void; onPatch: (patch: Partial<NewsItem>) => void }) {
   const [editing, setEditing] = useState(false)
+  const [headline, setHeadline] = useState(item.headline ?? '')
   const [summary, setSummary] = useState(item.summary ?? '')
   const [loading, setLoading] = useState<string | null>(null)
 
-  async function call(action: string, extraSummary?: string) {
+  async function call(action: string, extras?: { headline?: string; summary?: string }) {
     setLoading(action)
     await fetch('/api/admin/news', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: item.id, action, summary: extraSummary }),
+      body: JSON.stringify({ id: item.id, action, ...extras }),
     })
     setLoading(null)
-    onDone(item.id)
+    // publish + reject move the draft out of the queue; update_text keeps the
+    // row visible and merges the edit into parent state.
+    if (action === 'update_text' && extras) onPatch(extras)
+    else onDone(item.id)
   }
 
   const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
@@ -66,7 +72,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          {item.headline && (
+          {item.headline && !editing && (
             <p className="text-[11px] font-semibold uppercase tracking-widest text-brand mb-1">
               {item.headline}
             </p>
@@ -92,12 +98,27 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
       </div>
 
       {editing ? (
-        <textarea
-          value={summary}
-          onChange={e => setSummary(e.target.value)}
-          rows={4}
-          className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none"
-        />
+        <div className="flex flex-col gap-2">
+          <label className="flex flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-widest text-gray-500">Headline</span>
+            <input
+              type="text"
+              value={headline}
+              onChange={e => setHeadline(e.target.value)}
+              placeholder="Short attention-grabbing kop"
+              className={editInputCls}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-widest text-gray-500">Summary</span>
+            <textarea
+              value={summary}
+              onChange={e => setSummary(e.target.value)}
+              rows={4}
+              className={`${editInputCls} resize-none`}
+            />
+          </label>
+        </div>
       ) : (
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
@@ -106,7 +127,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
 
       <div className="flex gap-2 flex-wrap">
         <button
-          onClick={() => call('publish', editing ? summary : undefined)}
+          onClick={() => call('publish', editing ? { headline, summary } : undefined)}
           disabled={!!loading}
           className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium disabled:opacity-50 hover:bg-green-700"
         >
@@ -122,7 +143,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
         {editing ? (
           <>
             <button
-              onClick={() => { call('update_summary', summary); setEditing(false) }}
+              onClick={() => { call('update_text', { headline, summary }); setEditing(false) }}
               disabled={!!loading}
               className="px-3 py-1.5 rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 text-xs font-medium disabled:opacity-50"
             >
@@ -137,7 +158,7 @@ function NewsRow({ item, onDone }: { item: NewsItem; onDone: (id: number) => voi
             onClick={() => setEditing(true)}
             className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs hover:border-gray-400"
           >
-            Edit summary
+            Edit
           </button>
         )}
       </div>
@@ -181,6 +202,18 @@ export default function NewsAdminClient({
 
   function onUnpublished(id: number) {
     setPublished(prev => prev.filter(i => i.id !== id))
+  }
+
+  // In-place merge after Save edit: parent owns the items array and the child
+  // can't mutate the row's props directly. router.refresh() re-runs the server
+  // component but doesn't propagate into useState(initialItems), so we patch
+  // the local state ourselves.
+  function patchDraft(id: number, patch: Partial<NewsItem>) {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, ...patch } : i))
+  }
+
+  function patchPublished(id: number, patch: Partial<PublishedItem>) {
+    setPublished(prev => prev.map(i => i.id === id ? { ...i, ...patch } : i))
   }
 
   async function fetchNow() {
@@ -260,7 +293,7 @@ export default function NewsAdminClient({
         </p>
       ) : (
         filteredItems.map(item => (
-          <NewsRow key={item.id} item={item} onDone={onDone} />
+          <NewsRow key={item.id} item={item} onDone={onDone} onPatch={patch => patchDraft(item.id, patch)} />
         ))
       )}
 
@@ -274,7 +307,7 @@ export default function NewsAdminClient({
             </p>
           </div>
           {published.map(item => (
-            <PublishedRow key={item.id} item={item} onDone={onUnpublished} />
+            <PublishedRow key={item.id} item={item} onDone={onUnpublished} onPatch={patch => patchPublished(item.id, patch)} />
           ))}
         </section>
       )}
@@ -282,20 +315,22 @@ export default function NewsAdminClient({
   )
 }
 
-function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: number) => void }) {
+function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: (id: number) => void; onPatch: (patch: Partial<PublishedItem>) => void }) {
   const [editing, setEditing] = useState(false)
+  const [headline, setHeadline] = useState(item.headline ?? '')
   const [summary, setSummary] = useState(item.summary ?? '')
   const [loading, setLoading] = useState<string | null>(null)
 
-  async function call(action: string, extraSummary?: string) {
+  async function call(action: string, extras?: { headline?: string; summary?: string }) {
     setLoading(action)
     await fetch('/api/admin/news', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: item.id, action, summary: extraSummary }),
+      body: JSON.stringify({ id: item.id, action, ...extras }),
     })
     setLoading(null)
     if (action === 'unpublish') onDone(item.id)
+    else if (action === 'update_text' && extras) onPatch(extras)
   }
 
   async function unpublish() {
@@ -308,7 +343,7 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          {item.headline && (
+          {item.headline && !editing && (
             <p className="text-[11px] font-semibold uppercase tracking-widest text-brand mb-1">
               {item.headline}
             </p>
@@ -341,12 +376,27 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
       </div>
 
       {editing ? (
-        <textarea
-          value={summary}
-          onChange={e => setSummary(e.target.value)}
-          rows={4}
-          className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none"
-        />
+        <div className="flex flex-col gap-2">
+          <label className="flex flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-widest text-gray-500">Headline</span>
+            <input
+              type="text"
+              value={headline}
+              onChange={e => setHeadline(e.target.value)}
+              placeholder="Short attention-grabbing kop"
+              className={editInputCls}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-widest text-gray-500">Summary</span>
+            <textarea
+              value={summary}
+              onChange={e => setSummary(e.target.value)}
+              rows={4}
+              className={`${editInputCls} resize-none`}
+            />
+          </label>
+        </div>
       ) : (
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
@@ -364,7 +414,7 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
         {editing ? (
           <>
             <button
-              onClick={() => { call('update_summary', summary); setEditing(false) }}
+              onClick={() => { call('update_text', { headline, summary }); setEditing(false) }}
               disabled={!!loading}
               className="px-3 py-1.5 rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 text-xs font-medium disabled:opacity-50"
             >
@@ -379,7 +429,7 @@ function PublishedRow({ item, onDone }: { item: PublishedItem; onDone: (id: numb
             onClick={() => setEditing(true)}
             className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs hover:border-gray-400"
           >
-            Edit summary
+            Edit
           </button>
         )}
       </div>
