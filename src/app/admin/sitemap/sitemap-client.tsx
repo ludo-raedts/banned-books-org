@@ -91,7 +91,13 @@ export default function SitemapClient({
       type BatchResult = { ok: boolean; status: number; error?: string; count: number }
       const results: BatchResult[] = data.results ?? []
       const failed = results.filter((r) => !r.ok)
-      const detail = `${data.total} new URL${data.total === 1 ? '' : 's'} (${data.books} book${data.books === 1 ? '' : 's'}, ${data.authors} author${data.authors === 1 ? '' : 's'})`
+      const staticPages: number = data.staticPages ?? 0
+      const breakdownParts = [
+        `${data.books} book${data.books === 1 ? '' : 's'}`,
+        `${data.authors} author${data.authors === 1 ? '' : 's'}`,
+        ...(staticPages > 0 ? [`${staticPages} landing page${staticPages === 1 ? '' : 's'}`] : []),
+      ]
+      const detail = `${data.total} new URL${data.total === 1 ? '' : 's'} (${breakdownParts.join(', ')})`
       if (failed.length > 0) {
         const first = failed[0]
         setDeltaMsg(`${detail} — ${failed.length} batch failed. Upstream: HTTP ${first.status} ${first.error ?? ''}`.trim())
@@ -194,7 +200,7 @@ export default function SitemapClient({
           </button>
         </div>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-          &ldquo;Submit new pages&rdquo; pings only books/authors added since the last successful submission.
+          &ldquo;Submit new pages&rdquo; pings books/authors added since the last successful submission, plus any landing pages added to the static sitemap entries since then.
           &ldquo;Resubmit all&rdquo; pings every canonical URL — use sparingly (rate-limited).
         </p>
 
