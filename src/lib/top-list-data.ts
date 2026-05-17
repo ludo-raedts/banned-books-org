@@ -20,6 +20,15 @@ export const LANG_NAMES: Record<string, string> = {
   hy: 'Armenian', ka: 'Georgian', am: 'Amharic', my: 'Burmese',
   km: 'Khmer', lo: 'Lao', si: 'Sinhala', gu: 'Gujarati', pa: 'Punjabi',
   ml: 'Malayalam', kn: 'Kannada', mr: 'Marathi', ne: 'Nepali',
+  // `sh` is the ISO 639-1 macro-code for Serbo-Croatian (now split into
+  // sr/hr/bs); used in the catalogue for Yugoslav-era writers like Đilas
+  // and Kiš who pre-date the split.
+  sh: 'Serbo-Croatian',
+  // `cn` is not a valid ISO 639-1 code (Chinese is `zh`); kept as a
+  // defensive fallback for one historic import error which is also
+  // corrected in migration 20260517091505_books_fix_cn_language. Drop
+  // this line once the migration has run against prod.
+  cn: 'Chinese',
 }
 
 export const TOP_LIST_BOOK_SELECT =
