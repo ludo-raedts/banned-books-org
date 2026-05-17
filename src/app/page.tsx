@@ -301,7 +301,9 @@ export default async function HomePage() {
           The World&apos;s Books Under Censorship
         </h1>
         <p className="text-base text-gray-500 dark:text-gray-400">
-          {total.toLocaleString('en')} books documented across {countryCount} {countryCount === 1 ? 'country' : 'countries'} — real bans, real sources.{' '}
+          A free, international database of {total.toLocaleString('en')} books censored by governments, schools, and libraries across {countryCount} {countryCount === 1 ? 'country' : 'countries'}. Every entry citation-backed; updated weekly.
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
           <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
             See statistics →
           </Link>
