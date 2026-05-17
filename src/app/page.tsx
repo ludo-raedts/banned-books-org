@@ -14,6 +14,7 @@ import { newTimer } from '@/lib/timing'
 import { coverAlt } from '@/lib/cover-alt'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import CatalogueNav from '@/components/catalogue-nav'
+import NewsBlock from '@/components/news-block'
 import {
   TopListBooksSection,
   TopListAuthorsSection,
@@ -345,6 +346,8 @@ export default async function HomePage() {
           </Link>
         </section>
       )}
+
+      <NewsBlock />
 
       <TopListBooksSection
         title="Trending this week"
