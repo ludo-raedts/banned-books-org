@@ -109,8 +109,14 @@ export function TopListAuthorsSection({
   )
 }
 
-// Reason grid: 5 sub-sections (one per reason), each with 3 books.
-// Two cols on tablet, five on desktop. Each sub-section is its own mini-list.
+// Reason grid: 5 sub-sections (one per reason), each with 3 books. The
+// outer grid is single-col through `md` and 5-col at `lg+`. Inside each
+// reason, books are laid out as a horizontal 3-card sub-grid on `sm`+
+// (matching the vertical card geometry of the Trending/Rising rows above
+// at the same breakpoints) and as a vertical stack at `lg+` (since the
+// reason column is then narrow). This keeps card width consistent with
+// the other top-list sections at every breakpoint — was visibly off on
+// iPad when the outer was a 2-col grid.
 export function TopListByReasonSection({
   title,
   subtitle,
@@ -122,7 +128,7 @@ export function TopListByReasonSection({
   return (
     <section>
       <SectionHeader title={title} subtitle={subtitle} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-4 gap-y-6">
         {blocks.map(block => (
           <div key={block.reasonSlug} className="min-w-0">
             <Link
@@ -131,7 +137,7 @@ export function TopListByReasonSection({
             >
               {block.reasonLabel} →
             </Link>
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 lg:gap-2">
               {block.books.slice(0, 3).map(book => (
                 <TopListBookCard key={book.id} book={book} />
               ))}
