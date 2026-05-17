@@ -12,9 +12,11 @@ import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import CitationBlock from '@/components/citation-block'
+import FaqAccordion from '@/components/faq-accordion'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
+import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 
 export async function generateMetadata({
   params,
@@ -307,43 +309,19 @@ export default async function CountryPage({
     }
   }
 
-  const countryFaq: { q: string; a: string }[] = []
-  countryFaq.push({
-    q: `How many books are banned in ${country.name_en}?`,
-    a: `${totalBanCount} ${totalBanCount === 1 ? 'book is' : 'books are'} documented as banned or challenged in ${country.name_en}.${
-      topReasonName ? ` ${topReasonName.charAt(0).toUpperCase() + topReasonName.slice(1)} is the most frequently cited reason.` : ''
-    }`,
+  // FAQ: data-only for every country; editorial questions (who decides / can
+  // I read / can I buy) added for top-5 countries in COUNTRY_FAQ_FACTS. The
+  // FaqAccordion component renders the visible HTML AND emits FAQPage
+  // JSON-LD from the same items array, so no separate ld+json block needed.
+  const countryFaq = buildCountryFaq({
+    countryCode: upperCode,
+    countryName: country.name_en,
+    totalBanCount,
+    earliestBanYear,
+    latestBanYear,
+    topReasonNames: topReasons.map(r => reasonPhrase(r.slug)),
+    topBookTitles: books.map(b => b.title),
   })
-  if (earliestBanYear && latestBanYear) {
-    countryFaq.push({
-      q: `When did book banning begin in ${country.name_en}?`,
-      a: `The earliest documented ban in ${country.name_en} dates to ${earliestBanYear}.${
-        latestBanYear > earliestBanYear ? ` The most recent recorded ban dates to ${latestBanYear}.` : ''
-      }`,
-    })
-  }
-  if (topReasons.length >= 2) {
-    const phrases = topReasons.slice(0, 3).map(r => reasonPhrase(r.slug))
-    countryFaq.push({
-      q: `What are the most common reasons for book bans in ${country.name_en}?`,
-      a: `The most frequently cited reasons in ${country.name_en} are ${phrases.join(', ')}.`,
-    })
-  }
-  if (books.length >= 3) {
-    countryFaq.push({
-      q: `What are notable banned books in ${country.name_en}?`,
-      a: `Examples of banned books in ${country.name_en} include ${books.slice(0, 5).map(b => b.title).join(', ')}.`,
-    })
-  }
-  const faqJsonLd = countryFaq.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: countryFaq.map(it => ({
-      '@type': 'Question',
-      name: it.q,
-      acceptedAnswer: { '@type': 'Answer', text: it.a },
-    })),
-  } : null
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
@@ -353,12 +331,6 @@ export default async function CountryPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
       />
-      {faqJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
-        />
-      )}
       <Link href="/countries" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
         ← All countries
       </Link>
@@ -503,6 +475,19 @@ export default async function CountryPage({
         }}
         url={`https://www.banned-books.org/countries/${code.toLowerCase()}`}
       />
+
+      {/* FAQ — data-driven for every country, plus editorial Q&As (who
+          decides / read / buy) for the top-5 countries that have facts in
+          COUNTRY_FAQ_FACTS. FaqAccordion emits FAQPage JSON-LD inline. */}
+      {countryFaq.length > 0 && (
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <FaqAccordion
+            title={`Frequently asked questions about ${articulateCountryName(country.name_en)}`}
+            items={countryFaq}
+            defaultOpenCount={2}
+          />
+        </div>
+      )}
 
       {/* Related countries */}
       {relatedCountries.length > 0 && (
