@@ -32,7 +32,11 @@ export type CountryFaqInputs = {
   earliestBanYear: number | null
   latestBanYear: number | null
   topReasonNames: string[]
-  topBookTitles: string[]
+  // Titles of books that are banned in THIS country AND globally well-known
+  // (intersection with v_top_banned_books top-100). Empty array = skip the
+  // "notable books" question. Caller is responsible for the cross-reference;
+  // we don't want to mis-label every alphabetically-first title as "notable".
+  notableBookTitles: string[]
 }
 
 /**
@@ -52,7 +56,7 @@ export function buildCountryFaq({
   earliestBanYear,
   latestBanYear,
   topReasonNames,
-  topBookTitles,
+  notableBookTitles,
 }: CountryFaqInputs): FaqItem[] {
   if (totalBanCount === 0) return []
 
@@ -124,11 +128,14 @@ export function buildCountryFaq({
     })
   }
 
-  // 7. Notable books
-  if (topBookTitles.length >= 3) {
+  // 7. Notable books — only included when notableBookTitles is non-empty
+  // (the country page only fills it when there's a meaningful intersection
+  // with globally-famous bans; otherwise the question is skipped so we
+  // don't pass off alphabetically-first titles as "notable").
+  if (notableBookTitles.length >= 3) {
     items.push({
       q: `What are notable banned books in ${articulate(countryName)}?`,
-      a: `Examples of banned books in ${articulate(countryName)} include ${topBookTitles.slice(0, 5).join(', ')}. Browse the full list below.`,
+      a: `Globally well-known titles also banned in ${articulate(countryName)} include ${notableBookTitles.slice(0, 5).join(', ')}. These are books with documented bans across multiple countries — search the full list below for everything else.`,
     })
   }
 

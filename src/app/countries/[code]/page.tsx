@@ -309,6 +309,33 @@ export default async function CountryPage({
     }
   }
 
+  // ── Notable books: globally-famous bans that intersect this country ──────
+  // The country `books` array is alphabetical (top 100 by title), so picking
+  // its first 5 gave a weak "notable" answer — usually the latest
+  // school-board removals at the front of the alphabet. Cross-reference
+  // with v_top_banned_books (the global most-banned top 100, ordered by
+  // worldwide ban count) and pick the country's books that are also
+  // globally famous. If fewer than 3 hits, skip the question rather than
+  // surface a misleading answer.
+  const allBookIdsSet = new Set(allBookIds)
+  const { data: globalTopBanned } = await supabase
+    .from('v_top_banned_books')
+    .select('entity_id, total_bans')
+    .limit(100)
+  const notableBookIds = ((globalTopBanned ?? []) as { entity_id: number; total_bans: number }[])
+    .filter(r => allBookIdsSet.has(Number(r.entity_id)))
+    .sort((a, b) => b.total_bans - a.total_bans)
+    .slice(0, 5)
+    .map(r => Number(r.entity_id))
+
+  let notableBookTitles: string[] = []
+  if (notableBookIds.length >= 3) {
+    const { data: notableBooksRaw } = await supabase
+      .from('books').select('id, title').in('id', notableBookIds)
+    const titleMap = new Map(((notableBooksRaw ?? []) as { id: number; title: string }[]).map(b => [b.id, b.title]))
+    notableBookTitles = notableBookIds.map(id => titleMap.get(id)).filter((t): t is string => !!t)
+  }
+
   // FAQ: data-only for every country; editorial questions (who decides / can
   // I read / can I buy) added for top-5 countries in COUNTRY_FAQ_FACTS. The
   // FaqAccordion component renders the visible HTML AND emits FAQPage
@@ -320,7 +347,7 @@ export default async function CountryPage({
     earliestBanYear,
     latestBanYear,
     topReasonNames: topReasons.map(r => reasonPhrase(r.slug)),
-    topBookTitles: books.map(b => b.title),
+    notableBookTitles,
   })
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
