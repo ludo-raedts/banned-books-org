@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from './book-cover-placeholder'
+import AuthorAvatar from './author-avatar'
 import { coverAlt } from '@/lib/cover-alt'
 
 export type TopListBook = {
@@ -18,13 +19,6 @@ export type TopListAuthor = {
   slug: string
   photo_url: string | null
   context?: string
-}
-
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 0) return '?'
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
 }
 
 // Vertical-on-desktop, horizontal-on-mobile book card. Layout mirrors the
@@ -81,20 +75,13 @@ export function TopListAuthorCard({ author }: { author: TopListAuthor }) {
       className="group flex flex-row sm:flex-col gap-3 sm:gap-0 sm:items-center sm:text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors h-full"
     >
       <div className="shrink-0 sm:flex sm:justify-center sm:w-full">
-        {author.photo_url ? (
-          <Image
-            src={author.photo_url}
-            alt={`Photo of ${author.display_name}`}
-            width={96}
-            height={96}
-            className="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm"
-            sizes="(min-width: 640px) 80px, 56px"
-          />
-        ) : (
-          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-red-300 flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm">
-            {initials(author.display_name)}
-          </div>
-        )}
+        <AuthorAvatar
+          name={author.display_name}
+          photoUrl={author.photo_url}
+          className="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm"
+          initialsClassName="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-red-300 flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm"
+          sizes="(min-width: 640px) 80px, 56px"
+        />
       </div>
       <div className="flex-1 min-w-0 sm:mt-2.5">
         <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">

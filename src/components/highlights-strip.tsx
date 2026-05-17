@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from './book-cover-placeholder'
+import AuthorAvatar from './author-avatar'
 import type { Book } from './book-browser'
 import { coverAlt } from '@/lib/cover-alt'
 
@@ -37,32 +38,10 @@ function bookAuthorName(book: Book): string {
   return book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
 }
 
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 0) return '?'
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-}
-
-function AuthorAvatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
-  if (photoUrl) {
-    return (
-      <Image
-        src={photoUrl}
-        alt={`Photo of ${name}`}
-        width={64}
-        height={64}
-        className="w-16 h-16 rounded-full object-cover shadow-sm"
-        sizes="64px"
-      />
-    )
-  }
-  return (
-    <div className="w-16 h-16 rounded-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-red-300 flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm">
-      {initials(name)}
-    </div>
-  )
-}
+// Author avatar moved to its own file (`./author-avatar`) so it can run as
+// a client component and catch <Image> load failures via onError — the
+// stripped-down version that used to live here showed alt-text fallback
+// instead of initials when Wikipedia rate-limited the optimizer batch.
 
 export default function HighlightsStrip({
   items,
@@ -140,7 +119,13 @@ export default function HighlightsStrip({
                 </span>
                 <div className="flex gap-3 items-center">
                   <div className="shrink-0">
-                    <AuthorAvatar name={item.author.display_name} photoUrl={item.author.photo_url} />
+                    <AuthorAvatar
+                      name={item.author.display_name}
+                      photoUrl={item.author.photo_url}
+                      className="w-16 h-16 rounded-full object-cover shadow-sm"
+                      initialsClassName="w-16 h-16 rounded-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-red-300 flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm"
+                      sizes="64px"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">
