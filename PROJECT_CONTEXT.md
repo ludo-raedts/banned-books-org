@@ -278,13 +278,23 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 
 ### Pages
 
-**Homepage `/`**
+**Homepage `/`** — topical hub, not a catalogue browser. ISR 30 min.
 - Live total counts (books × countries) in the H1 sub-line.
-- `BookBrowser` — paged catalogue (initial 48 books, infinite scroll), filters by country, genre, reason, author. Server-rendered first paint.
-- `HighlightsStrip` — three book + three author cards: most-banned, trending (this week), all-time; deduped against each other.
-- `TrendingTabs` — toggles between Trending (all-time pageviews) and Rising (rolling 14-day window).
-- "Book of the day" — deterministic per calendar date (`seed = today's ISO`).
-- Latest 3 news items.
+- `CatalogueNav` — 4-tile shortcut grid (Top 100 · Countries · Reasons · Stats); swaps the Top-100 tile for a BBW promo tile during the BBW window.
+- "Book of the day" — deterministic per calendar date (`seed = today's ISO`), large hero card with cover + description + first ban context. Latin-script gate on `original_language` so the English homepage never lands on a pinyin/transliterated title.
+- `NewsBlock` — 3 most-recent published news items as a 3-col grid (1-col on mobile).
+- Five top-list sections (`TopListBooksSection` / `TopListAuthorsSection` / `TopListByReasonSection`), each linking through to a deeper destination page:
+  1. **Trending this week** — `v_top_books_this_week`, → `/trending-banned-books`.
+  2. **Most banned authors** — `v_top_banned_authors`, placeholder-filtered (`is_placeholder=true` set), → `/most-banned-authors`.
+  3. **Rising this week** — `mv_top_books_rising` (this-week vs prev-week views), → `/rising-banned-books`.
+  4. **Banned books not written in English** — `original_language NOT IN` Latin-script set, → `/non-english-banned-books`.
+  5. **Why books get banned** — top 3 books per top-5 reasons (lgbtq/sexual/political/religious/racial), each sub-block linking to `/reasons/{slug}`.
+- Final CTA: `Browse all N books →` linking to `/search` (which doubles as the catalogue browse).
+- Mobile shows 5 items per list (items 6–10 are `hidden sm:contents`); list titles are theme-only ("Trending this week", not "Top 10 …") since the count differs per breakpoint.
+
+**Top-list destinations** — each shows top-50 with `ItemList` JSON-LD for AI Overview citations: `/trending-banned-books` (ISR 30 min), `/rising-banned-books` (ISR 30 min), `/most-banned-authors` (ISR 1h), `/non-english-banned-books` (ISR 1h; queries `books` directly with a non-Latin language filter rather than via `v_top_banned_books`, which only surfaces ~10 non-English in its global top-100).
+
+Old surfaces that moved off the homepage: `BookBrowser` now lives at `/search` (default view with no query). `HighlightsStrip` (the three book × three author top-1 spotlights) moved to the bottom of `/stats` via `HighlightsStripBlock` (self-fetching server component). `TrendingTabs` no longer rendered — its content is the dedicated Trending / Rising destination pages.
 
 **Per-book page `/books/{slug}`**
 - Cover (with `BookCoverPlaceholder` fallback), title, author(s), first published year, genres, ISBN.
@@ -297,7 +307,7 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 - Schema.org `Book` JSON-LD.
 - Triggers `trackPageview('book', id)`.
 
-**Per-author page `/authors/{slug}`** — bio, photo, birth country, all banned books.
+**Per-author page `/authors/{slug}`** — bio, photo (loaded via `AuthorAvatar` with `onError` fallback to initials so rate-limited Wikipedia thumbnails degrade gracefully), birth country, all banned books.
 **Country pages `/countries` and `/countries/{code}`** — flag, description, all bans for that country split by status.
 **Reason pages `/reasons` and `/reasons/{slug}`** — index + book lists per reason.
 **Scope pages `/scope/school`, `/scope/government`** — books banned in that scope.
@@ -391,7 +401,7 @@ A curated catalogue of the ~180 TSX scripts in `scripts/`, grouped by purpose
 (adders, enrichers, fixers, audits, builders) with cost tags (`free APIs`,
 `OpenAI cost`, `Anthropic cost`, `destructive`, `read-only`) and the exact
 command lines. Highlights: `add-books-batch{1..47}.ts`, `enrich-covers-v2.ts`,
-`enrich-isbn.ts`, `enrich-author-bios.ts`, `enrich-author-photos-v2.ts`,
+`enrich-isbn.ts`, `enrich-author-bios.ts`, `enrich-author-photos-v2.ts` (3-source cascade: Wikidata P18 → OpenLibrary → personal site via Wikidata P856 + JSON-LD/og:image, gated by P31=Q5/P106-writer verification with a social-host denylist),
 `enrich-descriptions-gpt.ts`, `enrich-ban-descriptions-gpt.ts`,
 `rewrite-descriptions-grounded.ts`, `strip-filler-sentences.ts`,
 `audit-covers-for-placeholders.ts`, `audit-quality.ts`, `audit-db.ts`,
