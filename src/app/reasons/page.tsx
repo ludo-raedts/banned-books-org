@@ -72,7 +72,11 @@ export default async function ReasonsPage() {
 
   const reasons = [...reasonCounts.entries()]
     .sort((a, b) => b[1] - a[1])
-    .map(([slug, count]) => ({ slug, count, pct: ((count / totalReasonBans) * 100).toFixed(0) }))
+    .map(([slug, count]) => {
+      const raw = (count / totalReasonBans) * 100
+      const pct = raw > 0 && raw < 0.5 ? '<1' : raw.toFixed(0)
+      return { slug, count, pct }
+    })
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
