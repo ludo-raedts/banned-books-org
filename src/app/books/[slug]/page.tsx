@@ -23,6 +23,12 @@ import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
+import {
+  QualityCheck,
+  QualityFlaggedNotice,
+  QualityFooterLine,
+  type DataQualityStatus,
+} from '@/components/data-quality'
 import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
 
 // Programmatically-generated direct-answer summary + FAQ Q&As, used to
@@ -287,6 +293,8 @@ type BookDetail = {
   title_transliterated: string | null
   title_english_meaningful: string | null
   updated_at: string | null
+  data_quality_status: DataQualityStatus
+  data_quality_evaluated_at: string | null
   book_authors: { authors: { display_name: string; slug: string | null } | null }[]
   bans: Ban[]
 }
@@ -315,6 +323,7 @@ export default async function BookPage({
       original_language,
       title_native, title_transliterated, title_english_meaningful,
       updated_at,
+      data_quality_status, data_quality_evaluated_at,
       book_authors(authors(display_name, slug)),
       bans(
         id, year_started, year_ended, action_type, status, country_code, description,
@@ -623,6 +632,17 @@ export default async function BookPage({
   // AI-Overview reranking) use this as a freshness signal — without it our
   // enrichment passes were invisible to indexers.
   if (book.updated_at) bookJsonLd.dateModified = book.updated_at
+  // Data-quality signal for AI-citation surfaces. additionalProperty is the
+  // schema.org escape hatch for fields that don't map to a built-in property;
+  // we expose the classification level + an explainer URL so crawlers can
+  // pick up the provenance signal without it taking up visual real estate.
+  bookJsonLd.additionalProperty = {
+    '@type': 'PropertyValue',
+    propertyID: 'dataQualityStatus',
+    name: 'Data quality',
+    value: book.data_quality_status,
+    url: 'https://www.banned-books.org/data-quality',
+  }
 
   // Direct-answer + FAQPage. The lead paragraph renders right after the
   // hero (visible to users); the FAQ JSON-LD targets Google's Featured
@@ -703,6 +723,7 @@ export default async function BookPage({
             lang={book.original_language && book.original_language !== 'en' ? book.original_language : undefined}
           >
             {book.title}
+            <QualityCheck status={book.data_quality_status} />
           </h1>
           {/* Secondary title: English meaning (for transliterated/non-English titles)
               OR native-script form (for English canonical titles whose original is non-Latin).
@@ -786,6 +807,11 @@ export default async function BookPage({
           />
         </div>
       </div>
+
+      <QualityFlaggedNotice
+        status={book.data_quality_status}
+        entityLabel="book"
+      />
 
       {/* Direct-answer lead paragraph — placed in the first viewport so
           "Why was {title} banned?" queries find the answer above the fold.
@@ -1009,14 +1035,20 @@ export default async function BookPage({
           users + Google an explicit freshness signal that this catalogue
           entry is actively maintained. Uses the updated_at column added in
           migration 20260515143605, which bumps on every UPDATE via trigger. */}
-      {book.updated_at && (
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-6 mb-10">
-          Last verified:{' '}
-          <time dateTime={book.updated_at}>
-            {new Date(book.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-          </time>
-        </p>
-      )}
+      <div className="mt-6 mb-10">
+        {book.updated_at && (
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            Last verified:{' '}
+            <time dateTime={book.updated_at}>
+              {new Date(book.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </time>
+          </p>
+        )}
+        <QualityFooterLine
+          status={book.data_quality_status}
+          evaluatedAt={book.data_quality_evaluated_at}
+        />
+      </div>
 
       {/* Related */}
       {(primaryAuthor?.slug || uniqueCountries.length > 0 || uniqueReasonSlugs.length > 0 || similarBooks.length > 0 || booksInCountry.length > 0 || booksForReason.length > 0) && (

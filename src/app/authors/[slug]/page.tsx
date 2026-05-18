@@ -20,6 +20,12 @@ import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
+import {
+  QualityCheck,
+  QualityFlaggedNotice,
+  QualityFooterLine,
+  type DataQualityStatus,
+} from '@/components/data-quality'
 
 type Author = {
   id: number
@@ -36,6 +42,8 @@ type Author = {
   original_language: string | null
   updated_at: string | null
   is_placeholder: boolean | null
+  data_quality_status: DataQualityStatus
+  data_quality_evaluated_at: string | null
 }
 
 type Ban = {
@@ -113,7 +121,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at, is_placeholder')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at')
     .eq('slug', slug)
     .single()
 
@@ -273,6 +281,16 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     // dateModified — trigger-bumped freshness signal, parallel to the
     // Book.dateModified emitted on book detail pages.
     if (a.updated_at) personJsonLd.dateModified = a.updated_at
+    // Data-quality signal — same shape as Book.additionalProperty on book
+    // detail pages, so AI-citation crawlers see a uniform provenance field
+    // across both entity types.
+    personJsonLd.additionalProperty = {
+      '@type': 'PropertyValue',
+      propertyID: 'dataQualityStatus',
+      name: 'Data quality',
+      value: a.data_quality_status,
+      url: 'https://www.banned-books.org/data-quality',
+    }
   }
 
   // ── Direct-answer lead + FAQPage JSON-LD ──────────────────────────────────
@@ -419,7 +437,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           </div>
         )}
         <div className="flex flex-col justify-center gap-2 min-w-0">
-          <h1 className="text-3xl font-bold tracking-tight">{a.display_name}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {a.display_name}
+            <QualityCheck status={a.data_quality_status} />
+          </h1>
           {/* Secondary name: native-script form (for authors whose original
               writing language is non-English) OR a known English pen name
               when it differs from the canonical display_name. Suppressed
@@ -476,6 +497,11 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           )}
         </div>
       </div>
+
+      <QualityFlaggedNotice
+        status={a.data_quality_status}
+        entityLabel="author"
+      />
 
       {/* Direct-answer lead — AI-Overview/Featured-Snippet-eligible TL;DR.
           Bio above is editorial about the person; this lead is data-driven
@@ -605,14 +631,20 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       />
 
       {/* Last verified — feeds Person.dateModified above. */}
-      {a.updated_at && (
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-6">
-          Last verified:{' '}
-          <time dateTime={a.updated_at}>
-            {new Date(a.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-          </time>
-        </p>
-      )}
+      <div className="mt-6">
+        {a.updated_at && (
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            Last verified:{' '}
+            <time dateTime={a.updated_at}>
+              {new Date(a.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </time>
+          </p>
+        )}
+        <QualityFooterLine
+          status={a.data_quality_status}
+          evaluatedAt={a.data_quality_evaluated_at}
+        />
+      </div>
 
       {/* Other frequently banned authors */}
       {relatedAuthors.length > 0 && (

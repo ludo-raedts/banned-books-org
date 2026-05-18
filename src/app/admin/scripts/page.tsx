@@ -204,6 +204,7 @@ export default function ScriptsPage() {
               ['Fix a bad cover permanently', 'mark-cover-override.ts <slug>'],
               ['Backfill author photos', 'enrich-author-bios.ts --photos-only --apply'],
               ['Audit overall data quality', 'audit-db.ts'],
+              ['Recompute data-quality classification (confident / default / flagged)', 'score-data-quality.ts --write'],
               ['Generate Reading Club discussion questions', 'generate-discussion-questions.ts --apply'],
             ].map(([task, script]) => (
               <div key={task} className="contents">
@@ -854,6 +855,49 @@ npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply -
 npx tsx --env-file=.env.local scripts/check-dupes.ts
 npx tsx --env-file=.env.local scripts/check-no-desc.ts
 npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
+        </div>
+
+        {/* Data quality classification */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Data quality classification</h2>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Recomputes the <code className="font-mono">data_quality_status</code> column on every book and author
+            (<code className="font-mono">confident</code> / <code className="font-mono">default</code> /{' '}
+            <code className="font-mono">flagged</code>) based on canonical-id presence, ban evidence, editorial
+            completeness, and author legitimacy. Drives the UI indicators on{' '}
+            <a href="/data-quality" className="text-brand hover:underline">/data-quality</a> and feeds schema.org
+            JSON-LD <code className="font-mono">additionalProperty</code> for AI-citation surfaces. Run after every
+            bulk enrichment pass so the labels reflect the latest data.
+          </p>
+
+          <Script
+            name="score-data-quality.ts"
+            what="Paginated reads of books + authors with joins (ban_source_links, book_authors). Classifies into three buckets and writes data/data-quality-report.md with per-bucket counts, top-25 confident sample, flag-frequency tables, and a canary check against well-known titles (1984, Animal Farm, etc.). With --write also updates data_quality_status + data_quality_evaluated_at on every books/authors row via chunked bulk updates."
+            tags={['safe']}
+            command={`# Dry-run — writes report only, no DB writes
+npx tsx --env-file=.env.local scripts/score-data-quality.ts
+
+# Apply — also persists verdicts to books + authors
+npx tsx --env-file=.env.local scripts/score-data-quality.ts --write`}
+            flags={[
+              { flag: '--write', desc: 'Persist data_quality_status to DB (default: dry-run, report-only)' },
+            ]}
+            writes={
+              <>
+                <strong>Always</strong> writes{' '}
+                <code className="font-mono">data/data-quality-report.md</code>. With{' '}
+                <code className="font-mono">--write</code>: bulk-updates{' '}
+                <code className="font-mono">books.data_quality_status</code> +{' '}
+                <code className="font-mono">authors.data_quality_status</code> +{' '}
+                <code className="font-mono">data_quality_evaluated_at</code> on every row. Idempotent — re-running
+                with unchanged data produces the same verdicts.
+              </>
+            }
+            note="Heuristics live in the script. Tune by editing the scoring functions, run dry-run, eyeball the canary table, then re-run with --write. Recompute after each enrich-all run, mark-cover-override sweep, or import."
+          />
         </div>
 
         {/* Maintenance */}
