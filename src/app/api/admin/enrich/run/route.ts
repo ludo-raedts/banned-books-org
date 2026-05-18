@@ -55,6 +55,8 @@ export async function POST(req: NextRequest) {
             foundGb: r.foundGb,
             totalFound: r.foundOl + r.foundOlTitle + r.foundGb,
             notFound: r.notFound,
+            skippedPrefilter: r.skippedPrefilter,
+            rejectedLowSimilarity: r.rejectedLowSimilarity,
             skippedDup: r.skippedDup,
             errors: r.errors,
           },

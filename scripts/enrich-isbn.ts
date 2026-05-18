@@ -35,13 +35,15 @@ async function main() {
 
   console.log(`
 ── Summary ──────────────────────────────
-  Found via Open Library (w/ author): ${result.foundOl}
-  Found via Open Library (title only): ${result.foundOlTitle}
-  Found via Google Books:              ${result.foundGb}
-  Total found:                         ${result.foundOl + result.foundOlTitle + result.foundGb}
-  Not found:                           ${result.notFound}
+  Found via Open Library (w/ author):    ${result.foundOl}
+  Found via Open Library (title only):   ${result.foundOlTitle}
+  Found via Google Books:                ${result.foundGb}
+  Total found:                           ${result.foundOl + result.foundOlTitle + result.foundGb}
+  Not found:                             ${result.notFound}
+  Skipped (prefilter, unsearchable):     ${result.skippedPrefilter}
+  Rejected (low title similarity):       ${result.rejectedLowSimilarity}
   Skipped (ISBN already on another row): ${result.skippedDup}
-  DB write errors:                     ${result.errors}
+  DB write errors:                       ${result.errors}
   ${APPLY ? 'Written to DB ✓' : 'DRY-RUN — re-run with --apply to write'}
 `)
 }
