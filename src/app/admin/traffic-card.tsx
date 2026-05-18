@@ -24,11 +24,12 @@ function flagEmoji(code: string) {
 }
 
 function ViewDelta({ thisWeek, lastWeek }: { thisWeek: number; lastWeek: number | null }) {
-  if (lastWeek === null) return <span className="text-[10px] text-blue-500 font-medium shrink-0">new</span>
+  const base = 'text-[10px] font-medium shrink-0 w-8 text-left leading-none'
+  if (lastWeek === null) return <span className={`${base} text-blue-500`}>new</span>
   const delta = thisWeek - lastWeek
-  if (delta > 0) return <span className="text-[10px] text-emerald-600 dark:text-emerald-400 shrink-0">↑</span>
-  if (delta < 0) return <span className="text-[10px] text-red-400 shrink-0">↓</span>
-  return null
+  if (delta > 0) return <span className={`${base} text-emerald-600 dark:text-emerald-400`}>↑</span>
+  if (delta < 0) return <span className={`${base} text-red-400`}>↓</span>
+  return <span className={base} aria-hidden />
 }
 
 function MiniBar({ value, max, color }: { value: number; max: number; color: 'red' | 'blue' }) {
