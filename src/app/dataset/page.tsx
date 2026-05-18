@@ -19,29 +19,105 @@ export const metadata: Metadata = {
 
 async function getStats() {
   const s = adminClient()
-  const [books, bans, sources] = await Promise.all([
+  const [books, bans, sources, countryRowsRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
     s.from('books').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }),
     s.from('ban_sources').select('*', { count: 'exact', head: true }),
+    s.from('bans').select('country_code').neq('country_code', null),
+    s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: true }).limit(1).maybeSingle(),
+    s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: false }).limit(1).maybeSingle(),
+    s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
-  const { data: countryRows } = await s
-    .from('bans')
-    .select('country_code')
-    .neq('country_code', null)
-  const countries = new Set((countryRows ?? []).map((r) => r.country_code)).size
+  const countries = new Set((countryRowsRes.data ?? []).map((r) => r.country_code)).size
   return {
     books: books.count ?? 0,
     bans: bans.count ?? 0,
     sources: sources.count ?? 0,
     countries,
+    minYear: yearMinRes.data?.year_started ?? null,
+    maxYear: yearMaxRes.data?.year_started ?? null,
+    dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,
   }
 }
 
 export default async function DatasetPage() {
   const stats = await getStats()
 
+  const minYear = stats.minYear ?? 1900
+  const maxYear = stats.maxYear ?? new Date().getUTCFullYear()
+  const datasetSchema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'Banned Books: International Censorship Database',
+    alternateName: 'banned-books.org dataset',
+    description: `A structured, citation-backed dataset of ${stats.books.toLocaleString('en')} books banned, challenged, or restricted across ${stats.countries} countries (${stats.bans.toLocaleString('en')} total ban records, ${minYear}–${maxYear}). Every ban record carries a verifiable source citation. Includes books, authors, bans (with year, scope, status, reasons), source citations, and country dimensions. CSV, JSON, and SQLite formats. International scope; includes defunct states (USSR, East Germany, Czechoslovakia, Yugoslavia).`,
+    url: 'https://www.banned-books.org/dataset',
+    sameAs: 'https://www.banned-books.org',
+    keywords: [
+      'book censorship',
+      'banned books',
+      'library censorship',
+      'intellectual freedom',
+      'challenged books',
+      'school book bans',
+      'government censorship',
+      'international censorship',
+      'free expression',
+    ],
+    creator: {
+      '@type': 'Person',
+      name: 'Ludo Raedts',
+      url: 'https://www.banned-books.org/about',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Banned Books',
+      url: 'https://www.banned-books.org',
+      logo: 'https://www.banned-books.org/brand/compact-bb.png',
+    },
+    license: 'https://www.banned-books.org/dataset',
+    isAccessibleForFree: false,
+    offers: {
+      '@type': 'Offer',
+      price: DATASET_PRICE_USD.toFixed(2),
+      priceCurrency: 'USD',
+      url: 'https://www.banned-books.org/dataset',
+      availability: 'https://schema.org/InStock',
+    },
+    distribution: [
+      { '@type': 'DataDownload', encodingFormat: 'text/csv', name: 'CSV files (books, bans, sources, countries, authors, reasons)' },
+      { '@type': 'DataDownload', encodingFormat: 'application/json', name: 'Single-file JSON dataset' },
+      { '@type': 'DataDownload', encodingFormat: 'application/vnd.sqlite3', name: 'SQLite database' },
+    ],
+    temporalCoverage: `${String(minYear).padStart(4, '0')}/${String(maxYear).padStart(4, '0')}`,
+    spatialCoverage: { '@type': 'Place', name: 'Global (worldwide)' },
+    variableMeasured: [
+      'book title',
+      'author name',
+      'first published year',
+      'ISBN',
+      'country of ban',
+      'ban year (start, end)',
+      'ban scope (school, government, prison)',
+      'ban status (active, historical)',
+      'ban action type (banned, restricted, challenged)',
+      'ban reason taxonomy',
+      'source citation URL',
+    ],
+    datePublished: '2026-04-24',
+    inLanguage: 'en',
+    // TODO(zenodo): add "citation" with DOI once Zenodo upload is live
+  }
+  if (stats.dataLastChanged) datasetSchema.dateModified = stats.dataLastChanged
+
+  const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
+
   return (
     <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(datasetSchema) }}
+      />
 
       <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Dataset</p>
