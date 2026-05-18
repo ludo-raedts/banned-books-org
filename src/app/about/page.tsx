@@ -4,6 +4,7 @@
 export const revalidate = 3600
 
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import ContactForm from '@/components/contact-form'
@@ -251,7 +252,65 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 7. Press & researchers */}
+        {/* 7. Why I built this */}
+        <section aria-labelledby="why-heading">
+          <div className="flex flex-col items-center sm:flex-row-reverse sm:items-start sm:justify-between sm:gap-6 mb-4">
+            <Image
+              src="/ludo.png"
+              alt="Portrait of Ludo Raedts"
+              width={120}
+              height={120}
+              className="w-[120px] h-[120px] shrink-0 rounded-full object-cover mb-4 sm:mb-0"
+            />
+            <h2 id="why-heading" className="text-xl font-semibold sm:mt-1">Why I built this</h2>
+          </div>
+          <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+            <p>
+              I&apos;m Ludo Raedts. I started Banned Books in April 2026, and I should be honest about what I
+              bring to it.
+            </p>
+            <p>
+              In 2024 I visited the Bebelplatz Memorial in Berlin. It&apos;s a small underground room visible
+              through a glass plate in the square — rows of empty white bookshelves, marking the spot where,
+              on 10 May 1933, students of the Nazi German Student Union burned around 20,000 books they had
+              branded &ldquo;un-German.&rdquo; Inscribed on a bronze plaque nearby is a line from Heinrich
+              Heine: <em>&ldquo;Where they burn books, they will in the end also burn people.&rdquo;</em>{' '}
+              Heine wrote it in 1820, in a play about the Spanish Inquisition&apos;s burning of the Quran.
+              More than a century before the Nazis proved him right.
+            </p>
+            <p>
+              What struck me at Bebelplatz was not that this had happened. It was how unsurprising it now
+              felt. Across democracies and authoritarian states alike, restricting what people can read,
+              watch, or say is again being treated as a reasonable response to disagreement. Facts are
+              routinely reframed as opinions; opinions someone disagrees with are reframed as harms that
+              must be silenced. Public debate has become less a conversation between equals and more a
+              contest over who is allowed to speak.
+            </p>
+            <p>
+              I&apos;m of a generation, and from a country, that took the opposite for granted. The
+              Netherlands was the first country in the world to legalise same-sex marriage, on 1 April 2001
+              — not because everyone agreed it was right, but because a long, slow public conversation had
+              moved the consensus. That conversation depended on people being free to read, write, and
+              argue badly without being shut down. The freedom that lets a country change its mind is the
+              same freedom that lets censorship be challenged when it happens. Both are weakening.
+            </p>
+            <p>
+              Banned Books is my response to that — not an answer, but a record. A catalogue cannot stop a
+              ban, but it can make it harder to deny one happened.
+            </p>
+            <p>
+              The principle of the project is to document, not endorse: to include books I disagree with,
+              bans I find justified, and bans I find indefensible, with the same citation standard for each.
+              I do not get to decide which forms of censorship history will judge most harshly. Future
+              readers can — but only if someone keeps a record.
+            </p>
+            <p className="text-right italic text-gray-500 dark:text-gray-400 mt-2">
+              — Ludo Raedts, Groningen
+            </p>
+          </div>
+        </section>
+
+        {/* 8. Press & researchers */}
         <section>
           <h2 className="text-xl font-semibold mb-4">For press &amp; researchers</h2>
           <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">

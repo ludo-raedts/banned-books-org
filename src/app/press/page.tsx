@@ -289,11 +289,19 @@ export default async function PressPage() {
                 <p className="text-sm text-gray-500 dark:text-gray-400">Founder · Groningen, Netherlands</p>
               </div>
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                Ludo Raedts is a Dutch entrepreneur who started Banned Books in April 2026 as a solo project,
-                frustrated by the absence of a single structured international reference for book-censorship data.
-                He built one from scratch using open sources, public records, and AI-assisted tooling. The
-                catalogue documents what governments, schools, and libraries have banned — without endorsing the
-                bans or the books — and treats coverage gaps as facts to disclose, not problems to hide.
+                Ludo Raedts is a Dutch entrepreneur based in Groningen. He started Banned Books in April 2026
+                as a solo project, after finding no single structured international reference for
+                book-censorship data. He built one from scratch using open sources, public records, and
+                AI-assisted tooling. The catalogue documents what governments, schools, and libraries have
+                banned — without endorsing the bans or the books — and treats coverage gaps as facts to
+                disclose, not problems to hide.
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                For Ludo&apos;s personal motivation behind the project, see{' '}
+                <Link href="/about" className="text-brand font-medium hover:underline">
+                  About →
+                </Link>
+                .
               </p>
               {/* TODO: Ludo to supply ORCID iD; render as a labelled link once available. */}
             </div>
