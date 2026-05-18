@@ -270,6 +270,13 @@ export default async function AboutPage() {
               </Link>
               {' '}— CSV, JSON, and SQLite — under a personal/research-use license.
             </p>
+            <p>
+              Boilerplate copy, live stats, logos, and story angles are collected on the{' '}
+              <Link href="/press" className="underline font-medium hover:text-gray-900 dark:hover:text-gray-100">
+                press &amp; media kit page
+              </Link>
+              .
+            </p>
           </div>
         </section>
 

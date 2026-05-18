@@ -36,6 +36,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/essays`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/reading-list`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/about`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/press`, changefreq: 'monthly', priority: 0.6 },
     { loc: `${base}/sources`, changefreq: 'monthly', priority: 0.4 },
     { loc: `${base}/methodology`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/dataset`, changefreq: 'monthly', priority: 0.8 },

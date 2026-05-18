@@ -94,6 +94,7 @@ export default function RootLayout({
               <Link href="/dataset" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Download dataset</Link>
               <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
+              <Link href="/press" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Press</Link>
               <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>
               <Link href="/reading-club" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading club</Link>
               <Link href="/banned-books-week" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Banned Books Week</Link>
