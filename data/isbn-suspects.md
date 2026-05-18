@@ -1,91 +1,63 @@
 # ISBN enrichment — suspect list
 
-Derived from the 2026-05-18 `enrich-all` run output. Each row below is a
-book whose `isbn13` was *already in the database when the run started*, and
-the run then attempted to assign the **same** ISBN to a clearly unrelated
-title. Two interpretations are possible per case:
+Derived from the 2026-05-18 `enrich-all` run output and verified against
+Open Library's `/isbn/<isbn>.json` endpoint via a one-shot script.
 
-1. The ISBN on the suspect row was assigned by an earlier enrich-isbn run
-   that hit the same OL/GB false positive — i.e. the suspect row's ISBN is
-   wrong and was just lucky enough to be written first.
-2. The ISBN on the suspect row is correct, but it shares the 9798 POD prefix
-   space or a popular-doc-ranking quirk with whatever the new query asked.
+Verdict legend:
+- `✗ WRONG` — OL record clearly belongs to a different book. Clear the ISBN.
+- `? CHECK` — partial overlap; needs human eye (same author / same series / different volume).
+- `✓ MATCH` — OL record matches the DB row. Leave alone.
 
-Either way, these rows deserve a manual ISBN check before the
-title-similarity guard (added 2026-05-18) silently locks them in place.
+## ✗ WRONG (19) — recommend clearing the ISBN
 
-## High priority — 2+ unrelated titles tried to claim the same ISBN
-
-Strong signal that the ISBN is incorrectly attached to the listed book.
-
-| Book # | Title | ISBN-13 | Tried to claim same ISBN |
-|---|---|---|---|
-| 1014 | Over Life's Edge | 9780310437178 | The Atlas Six · The Greek News · Six Chapters in a Man's Life |
-| 6756 | Jie dao shang, zhang peng ren | 9787546303857 | Jin sheng bu zuo Zhongguo ren · Shen tu bu er · Si jiao yu hui xiang · Xianggang yue yu cheng dao di |
-| 2255 | Don't Ask Me Where I'm From | 9798593908988 | Flowers in the Attic · Night Blood · The Drowning Summer |
-| 781 | Devil on the Cross | 9798404017427 | Ladies on Call · Taming the Star Runner |
-| 2118 | Into the Garden | 9798532003682 | Mu ji tian an men. Di si juan · Mu ji tian an men. Di yi juan |
-| 6820 | Huang si dai yu san, ji xiao ji dan | 9780887271786 | Xianggang wu de jiu · Xing jiao yu shi han de |
-| 3265 | The Broken Halo | 9781454949015 | The Divine Order · The Watcher's Test |
-| 6989 | Fei lao Li shi bian tian xia | 9789578288195 | Shi dao ren sheng zhi wang shi jin shi · Wang Dan yu zhong hui yi lu |
-
-## Medium priority — 1 unrelated title tried to claim the same ISBN
-
-The skip-guard caught these. Worth a spot check — could be either the
-existing row or the new candidate that's wrong.
-
-| Book # | Title | ISBN-13 | Tried to claim same ISBN |
-|---|---|---|---|
-| 4863 | Blade (Series, Title Not Specified) | 9780192763617 | Flight |
-| 7021 | Ko xue ying yang xue | 9780231081641 | Min zhu shi wen |
-| 6941 | Zhongguo yu min zhu | 9787208042896 | Shi yu Zhongguo wen hua |
-| 3670 | Far Eastern Art | 9781433600340 | The Bible |
-| 3219 | Pride: Celebrating Diversity and Community | 9781459809932 | Pride: The Celebration and the Struggle |
-| 2775 | The Magical Misfits: The Minor Third | 9780316426244 | The Magical Misfits: The Second Story |
-| 7159 | Beijing feng bo ji shi | 9787530206478 | Xue xi Jing hua shi lu |
-
-## Low priority — likely legit (translation / same work)
-
-The skip caught these but they look like genuine same-work edition matches.
-Decision is whether to *split* into separate rows (preserving each edition's
-ISBN) or accept the merge.
-
-| Book # | Title | ISBN-13 | Claimed by | Note |
+| Book # | DB title | DB author | Bad ISBN | OL says it points to |
 |---|---|---|---|---|
-| 341 | Gabi, a Girl in Pieces | 9781484443798 | Gabi, fragmentos de una adolescente | Spanish edition |
-| 1400 | Tomboy: A Graphic Memoir | 9781936976553 | Tomboy: una chica ruda | Spanish edition |
-| 5498 | Crepúsculo: un amor peligroso | 9780606264693 | Twilight | English original collided with Spanish edition's ISBN — likely a metadata mix-up; the *English* row should have a different ISBN |
-| 309 | I'll Give You the Sun | 9788375153545 | Te daría el sol | Spanish edition |
-| 368 | Simon vs. the Homo Sapiens Agenda | 9780062839701 | Yo, Simon, homo sapiens | Spanish edition |
-| 5016 | Love, Creekwood | 9780241492246 | Simonverse | Simonverse is a series umbrella; collision is structural |
-| 7336 | Little Black Sambo | 9780916410582 | Little Black Sambo (1899) | Same work, dup row should probably be merged |
-| 1088 | Respect: Everything a Guy Needs to Know | 9780143134251 | Respect: Everything a Guy Needs to Know About Sex | Same work |
-| 6241 | Kritik der reinen Vernunft | 9780312450106 | Critique of Pure Reason | Same work; English ISBN on German title row is wrong direction |
-| 6248 | How the Red Sun Rose | 9789629968229 | How the Red Sun Rose: The Origins and Development | Same work |
-| 6249 | The Tiananmen Papers | 9781586481223 | Zhongguo "Liu si" zhen xiang | Same work |
-| 7112 | Gong min kang ming | 9789888249473 | Gong min kang ming san ju ren | Same work |
-| 7063 | Zhongguo min zhu yun dong shi. Cong Yan' | 9789869225755 | Zhongguo min zhu yun dong shi. Cong Zhongguo zhu c | Same series, different volume — should probably get separate ISBNs |
-| 4615 | Monument 14 | 9781444914726 | Monument 14: Savage Drift · Monument 14: Sky On Fire | Series volumes — separate ISBNs warranted |
-| 4647 | Plague Land | 9781492660231 | Plague Land No Escape · Plague Land Reborn | Series volumes — separate ISBNs warranted |
-| 514 | Soul Eater | 9780759530010 | Soul Eater, Vol. 1 · Soul Eater, Vol. 11 | Vol. 1 → same as canonical; Vol. 11 needs its own |
-| 1981 | Soul Eater, Vol. 10 | 9783551792297 | Soul Eater, Vol. 19 | Wrong volume mapping |
-| 1985 | Soul Eater, Vol. 14 | 9780759530485 | Soul Eater, Vol. 2 | Wrong volume mapping |
-| 1232 | Clockwork Angel | 9781406393743 | The Infernal Devices | Series-vs-volume |
-| 1169 | Last Sacrifice | 9780141960371 | Vampire Academy (A Graphic Novel) | Different format/work |
-| 587 | Far from the Tree (parent suspect) | — | — | Standalone — included for completeness |
+| 1014 | Over Life's Edge | Victoria Cross | `9780310437178` | NIV Student Bible |
+| 6756 | Jie dao shang, zhang peng ren | Zhan ling qu de kang zheng zhe | `9787546303857` | Xi you ji (Journey to the West) |
+| 2255 | Don't Ask Me Where I'm From | Jennifer De Leon | `9798593908988` | SuperSummary Study Guide |
+| 781 | Devil on the Cross | Ngũgĩ wa Thiong'o | `9798404017427` | SuperSummary Study Guide |
+| 2118 | Into the Garden | V.C. Andrews | `9798532003682` | Hamlet by William Shakespeare Illustrated |
+| 6820 | Huang si dai yu san, ji xiao ji dan | Qiongzhu Jiang | `9780887271786` | A Dream of Red Mansions |
+| 3265 | The Broken Halo | Hamish Steele | `9781454949015` | DeadEndia *(same author, different work)* |
+| 4863 | Blade (Series, Title Not Specified) | Tim Bowler | `9780192763617` | Flight *(by same author — but #4863 is the series stub, not Flight)* |
+| 7021 | Ko xue ying yang xue | Guo | `9780231081641` | Records of the Grand Historian: Han Dynasty I |
+| 3670 | Far Eastern Art | John Scott | `9781433600340` | KJV Study Bible, Jacketed Hardcover |
+| 5498 | Crepúsculo: un amor peligroso | Stephanie Meyer | `9780606264693` | Twilight *(English edition's ISBN on Spanish row)* |
+| 309 | I'll Give You the Sun | Jandy Nelson | `9788375153545` | Oddam ci słońce *(Polish translation ISBN on English row)* |
+| 6241 | Kritik der reinen Vernunft | Immanuel Kant | `9780312450106` | Immanuel Kant's Critique of Pure Reason *(English ISBN on German row)* |
+| 1169 | Last Sacrifice | Richelle Mead | `9780141960371` | Vampire Academy *(book 1 ISBN on book 6 row)* |
+| 1981 | Soul Eater, Vol. 10 | Atsushi Ohkubo | `9783551792297` | Soul Eater 19 *(wrong volume)* |
+| 7382 | Les Mœurs | François-Vincent Toussaint | `9780576121002` | Les Moeurs *(OL record is duplicate ghost; verify and merge upstream)* |
+| 7371 | Little Bill | Bill Cosby | `9780439693042` | The Best Way To Play *(specific Little Bill volume — generic row should not pin to one vol)* |
+| 7373 | The Adventures of Super Diaper Baby | Dav Pilkey | `9788467557138` | El Capitán Calzoncillos y las aventuras de Superpañal *(Spanish ISBN)* |
+| 7372 | Guess What? | Mem Fox | `9781862911345` | Que Crees *(Spanish ISBN on English row)* |
+| 7377 | The Death of Lorca | Ian Gibson | `9788450534252` | Antología poética *(Lorca's own poetry, not the biography)* |
 
-## How to verify a row
+## ? CHECK (5) — partial overlap, needs human eye
 
-1. Open `https://www.banned-books.org/admin/books/<id>` and compare its ISBN to a canonical source (OpenLibrary, Library of Congress, Goodreads, publisher site).
-2. If wrong: clear the ISBN via `UPDATE books SET isbn13 = NULL WHERE id = <id>;` so the next enrich run can re-attempt (now protected by the similarity guard).
-3. If right: leave it. The collisions just mean OL/GB returned a popular-doc false positive against other queries — that's now blocked at the guard layer.
+| Book # | DB title | DB author | ISBN | OL says it points to | Note |
+|---|---|---|---|---|---|
+| 6989 | Fei lao Li shi bian tian xia | Zhiying Li | `9789578288195` | Lao Fuzi (老夫子) by Ze Wang | Different author entirely — almost certainly wrong |
+| 6941 | Zhongguo yu min zhu | Yingshi Yu | `9787208042896` | Shi yu Zhongguo wen hua | Same author, different book — wrong |
+| 2775 | The Magical Misfits: The Minor Third | Neil Patrick Harris | `9780316426244` | Magic Misfits | Series-level ISBN on volume row — clear or accept |
+| 7159 | Beijing feng bo ji shi | (北京風波紀實 編委會) | `9787530206478` | Xi you ji | Clearly wrong |
 
-## Notes
+## ✓ MATCH (23) — verified correct, no action needed
 
-- The two **accepted writes from the 2026-05-18 run** that bypassed both
-  guard and dup-skip and may also be wrong (low-confidence):
-  - `Les Mœurs (Toussaint, 1748)` → 9780576121002 — plausible 1980s reprint, verify
-  - `The Other Boy` → 9798855056198 — 9798 POD prefix, verify against title
-  - `Little Bill` → 9780439693042 — series umbrella; if not the specific vol, clear
-  - `Përbindëshi` → 9789994332168 — Albanian ISBN prefix, plausible
-  - `The Adventures of Super Diaper Baby` → 9788467557138 — Spanish edition ISBN on English row?
+`341`, `1400`, `368`, `5016`, `7336`, `1088`, `6248`, `6249`, `7112`, `7063`, `4615`, `4647`, `514`, `1985`, `1232`, `3219`, `2103`, `7374`, `7379`, `3929`, `7376`, `7370`, `7378`
+
+## How to apply
+
+```sql
+-- Clears all 19 WRONG rows in one statement (audit-friendly).
+UPDATE books SET isbn13 = NULL WHERE id IN (
+  1014, 6756, 2255, 781, 2118, 6820, 3265, 4863, 7021, 3670,
+  5498, 309, 6241, 1169, 1981, 7382, 7371, 7373, 7372, 7377
+);
+-- Optionally also clear the CHECK rows after manual review:
+-- UPDATE books SET isbn13 = NULL WHERE id IN (6989, 6941, 7159);
+```
+
+After clearing, the next `enrich-isbn --apply` run will re-attempt those
+rows. The 2026-05-18 prefilter + similarity guard ([src/lib/enrich/isbn.ts](../src/lib/enrich/isbn.ts))
+should now prevent the same false positives from being re-written.
