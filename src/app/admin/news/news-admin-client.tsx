@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation'
 import { normalizeNewsDisplay, languageInfo, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 import type { NewsConfig } from '@/config/news'
 
+// router.refresh() re-runs the server component but won't re-seed
+// useState(initialX), so newly-fetched items stayed invisible until a
+// hard reload. Use this instead for any flow that needs the parent
+// state to reflect server-side inserts.
+function hardReload() {
+  if (typeof window !== 'undefined') window.location.reload()
+}
+
 type NewsItem = {
   id: number
   title: string
@@ -227,7 +235,7 @@ export default function NewsAdminClient({
       } else {
         const dupBit = typeof data.duplicates === 'number' ? `, ${data.duplicates} duplicate${data.duplicates !== 1 ? 's' : ''}` : ''
         setFetchMsg(`Done — ${data.saved} saved, ${data.skipped} not relevant${dupBit}${data.errors?.length ? `, ${data.errors.length} error(s)` : ''}`)
-        router.refresh()
+        hardReload()
       }
     } catch {
       setFetchMsg('Network error')

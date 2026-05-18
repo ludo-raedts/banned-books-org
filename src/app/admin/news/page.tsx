@@ -15,12 +15,15 @@ export default async function AdminNewsPage() {
       .eq('status', 'draft')
       .order('published_at', { ascending: false }),
     // Recent 50 — enough to catch and undo a bad auto-publish run without
-    // turning the admin page into the full archive.
+    // turning the admin page into the full archive. Ordered by created_at
+    // (ingest time) so today's auto-published items appear at the top,
+    // even when the source article's published_at is older than items
+    // we manually reviewed yesterday.
     supabase
       .from('news_items')
       .select(`${SELECT_COLS}, auto_published`)
       .eq('status', 'published')
-      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false, nullsFirst: false })
       .limit(50),
     getNewsConfig(),
   ])
