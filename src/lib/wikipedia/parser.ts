@@ -560,8 +560,11 @@ const AUTHOR_DISJUNCTION = /\s+\bor\b\s+/i
 // Both halves must look like proper names: 1-3 capitalized words, optional
 // honorific abbreviation like "M." inside. We require EXACTLY one comma so
 // we don't accidentally unflip "Smith, Jones, and Doe" (a 3-author list).
+// The optional trailing "." absorbs sentence-ending punctuation from the
+// source page (e.g. Wikipedia HK's "Thomas, Gordon.") that would otherwise
+// defeat the firstname match and cascade into a bogus two-author split.
 const SORTED_NAME =
-  /^([A-Z][\p{L}'`’-]+(?:\s+(?:[A-Z][\p{L}'`’-]+|[A-Z]\.|de|van|von|der|le|la))*),\s+([A-Z][\p{L}'`’-]+(?:\s+(?:[A-Z][\p{L}'`’-]+|[A-Z]\.|de|van|von|der|le|la))*)$/u
+  /^([A-Z][\p{L}'`’-]+(?:\s+(?:[A-Z][\p{L}'`’-]+|[A-Z]\.|de|van|von|der|le|la))*),\s+([A-Z][\p{L}'`’-]+(?:\s+(?:[A-Z][\p{L}'`’-]+|[A-Z]\.|de|van|von|der|le|la))*)\.?$/u
 
 function maybeUnflipSortedName(s: string): string {
   const m = s.match(SORTED_NAME)
@@ -613,7 +616,7 @@ export type ParseAuthorsResult = {
   parser_flags: QualityFlag[]
 }
 
-function parseAuthors(cell: string): ParseAuthorsResult {
+export function parseAuthors(cell: string): ParseAuthorsResult {
   const stripped0 = stripWikitext(cell)
   if (!stripped0) return { authors: [], author_meta: [], parser_flags: [] }
   // Reject non-author placeholders that appear in the India page.
