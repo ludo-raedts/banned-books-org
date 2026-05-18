@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
             notFound: r.notFound,
             skippedPrefilter: r.skippedPrefilter,
             rejectedLowSimilarity: r.rejectedLowSimilarity,
+            rejectedEditionMismatch: r.rejectedEditionMismatch,
             skippedDup: r.skippedDup,
             errors: r.errors,
           },

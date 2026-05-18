@@ -42,6 +42,7 @@ async function main() {
   Not found:                             ${result.notFound}
   Skipped (prefilter, unsearchable):     ${result.skippedPrefilter}
   Rejected (low title similarity):       ${result.rejectedLowSimilarity}
+  Rejected (edition title/language):     ${result.rejectedEditionMismatch}
   Skipped (ISBN already on another row): ${result.skippedDup}
   DB write errors:                       ${result.errors}
   ${APPLY ? 'Written to DB ✓' : 'DRY-RUN — re-run with --apply to write'}

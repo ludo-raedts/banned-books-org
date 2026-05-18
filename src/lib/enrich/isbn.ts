@@ -5,9 +5,14 @@
 //      only zh rows without an English fallback) → no network at all.
 //   1. Open Library search title+author → isbn13 + matched record title
 //   2. Google Books API → ISBN_13 + matched volumeInfo title
-//   Title-similarity guard rejects any candidate whose matched record title
-//   has too little overlap with the query (catches 9798-prefix POD
-//   collisions and other "top-popular-doc-wins" false positives).
+//   3. Work-title-similarity guard rejects any candidate whose matched record
+//      title has too little overlap with the query (catches 9798-prefix POD
+//      collisions and other "top-popular-doc-wins" false positives).
+//   4. Edition-level guard: fetch /isbn/<isbn>.json and verify both the
+//      EDITION title and language. OL's search.json returns the work-level
+//      title (often the English canonical), but the ISBN belongs to a
+//      specific edition that may be in another language. Catches
+//      "Twilight (English row) → German edition's ISBN" cases.
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
@@ -91,6 +96,81 @@ export function titleContainment(a: string, b: string): number {
   return hits / smaller.size
 }
 
+// ISO-639-1 (DB original_language) → ISO-639-2/B (OL languages.key). Only
+// the languages this catalogue actually contains. Add entries lazily as new
+// originals appear.
+const ISO_639_1_TO_2: Record<string, string> = {
+  en: 'eng', de: 'ger', es: 'spa', fr: 'fre', pl: 'pol',
+  zh: 'chi', ja: 'jpn', it: 'ita', pt: 'por', nl: 'dut',
+  ru: 'rus', ar: 'ara', hi: 'hin', vi: 'vie', ko: 'kor',
+  tr: 'tur', sv: 'swe', da: 'dan', no: 'nor', fi: 'fin',
+  cs: 'cze', el: 'gre', he: 'heb', fa: 'per', ur: 'urd',
+  bn: 'ben', ta: 'tam', th: 'tha', sq: 'alb', la: 'lat',
+  id: 'ind', ms: 'may', ro: 'rum', hu: 'hun', uk: 'ukr',
+  ca: 'cat', sr: 'srp', bg: 'bul', hr: 'hrv', sl: 'slv',
+}
+
+// True if the edition language is compatible with the DB row's
+// original_language. If the DB row has no `original_language` we default to
+// English-only — most catalogue rows without a tag are English originals.
+// Trade-off: rows that *are* English translations of non-English originals
+// (e.g. "How the Red Sun Rose" tagged zh) will reject English-edition ISBNs
+// under this rule. That's acceptable — better to leave them null than to
+// silently assign a foreign-language ISBN. Set `original_language='en'` on
+// such rows to opt into English-edition matching.
+export function editionLanguageAcceptable(
+  edLang: string | null | undefined,
+  dbLang: string | null | undefined,
+): boolean {
+  if (!edLang) return true // OL has no language data; soft-pass
+  const expected = dbLang
+    ? (ISO_639_1_TO_2[dbLang.toLowerCase()] ?? dbLang.toLowerCase())
+    : 'eng'
+  if (edLang === expected) return true
+  // OL sometimes uses 'cmn' (Mandarin) instead of the broader 'chi'
+  if (expected === 'chi' && edLang === 'cmn') return true
+  return false
+}
+
+// Edition-level verification: fetch /isbn/<isbn>.json and check both the
+// edition title and the edition language. Returns `{ ok: true }` on soft
+// failures (OL unreachable, no record, no metadata) so transient OL
+// outages don't block all enrichment.
+type EditionCheck = { ok: true } | { ok: false; reason: string }
+
+async function verifyEdition(
+  isbn: string,
+  queryTitle: string,
+  dbLang: string | null,
+): Promise<EditionCheck> {
+  let res: Response
+  try {
+    res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`, {
+      headers: OL_HEADERS,
+      redirect: 'follow',
+    })
+  } catch {
+    return { ok: true } // network blip — don't block
+  }
+  if (!res.ok) return { ok: true } // OL has no record — can't verify
+  const json = (await res.json().catch(() => null)) as
+    | { title?: string; languages?: Array<{ key: string }> }
+    | null
+  if (!json) return { ok: true }
+
+  if (json.title) {
+    const sim = titleContainment(queryTitle, json.title)
+    if (sim < TITLE_MATCH_THRESHOLD) {
+      return { ok: false, reason: `edition-title:"${json.title.slice(0, 40)}"` }
+    }
+  }
+  const edLang = json.languages?.[0]?.key?.split('/').pop() ?? null
+  if (!editionLanguageAcceptable(edLang, dbLang)) {
+    return { ok: false, reason: `edition-language:${edLang} vs ${dbLang ?? '(null)'}` }
+  }
+  return { ok: true }
+}
+
 type SearchHit = { isbn: string; matchedTitle: string }
 
 async function searchOL(title: string, author: string): Promise<SearchHit | null> {
@@ -153,6 +233,7 @@ export type EnrichIsbnResult = {
   skippedDup: number
   skippedPrefilter: number
   rejectedLowSimilarity: number
+  rejectedEditionMismatch: number
   errors: number
   samples: Array<{ title: string; isbn: string | null; source: string }>
 }
@@ -208,12 +289,12 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     : dryLimit
 
   if (limit === 0) {
-    return { totalCandidates, processed: 0, foundOl: 0, foundOlTitle: 0, foundGb: 0, notFound: 0, skippedDup: 0, skippedPrefilter, rejectedLowSimilarity: 0, errors: 0, samples: [] }
+    return { totalCandidates, processed: 0, foundOl: 0, foundOlTitle: 0, foundGb: 0, notFound: 0, skippedDup: 0, skippedPrefilter, rejectedLowSimilarity: 0, rejectedEditionMismatch: 0, errors: 0, samples: [] }
   }
 
   log(`${opts.apply ? `Enriching ${limit} of ${eligibleBooks.length} eligible books…` : `DRY-RUN — sampling ${limit} books`}`)
 
-  let foundOl = 0, foundOlTitle = 0, foundGb = 0, notFound = 0, skippedDup = 0, rejectedLowSimilarity = 0, errors = 0
+  let foundOl = 0, foundOlTitle = 0, foundGb = 0, notFound = 0, skippedDup = 0, rejectedLowSimilarity = 0, rejectedEditionMismatch = 0, errors = 0
   const samples: EnrichIsbnResult['samples'] = []
 
   for (let i = 0; i < limit; i++) {
@@ -224,12 +305,16 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     let source = ''
 
     // Walk the ladder. For each variant try OL+author, then GB+author. Any
-    // hit must pass the title-similarity guard against the variant we
-    // searched with — catches the OL/GB "top-popular-doc wins" bias where
-    // a search for an obscure title returns the ISBN of an unrelated bestseller.
-    // First passing hit wins; source gets a variant tag (e.g. 'OL:english_meaningful')
-    // when the winning variant isn't canonical.
-    let rejectedThisBook = 0
+    // hit must pass TWO guards:
+    //   (a) work-title similarity against the variant we queried (rejects
+    //       "top-popular-doc wins" bias — unrelated bestseller's ISBN)
+    //   (b) edition-level check via /isbn/<isbn>.json (rejects translation/
+    //       language collisions where the work-title matches but the
+    //       specific edition is in another language)
+    // First passing hit wins; source tag (e.g. 'OL:english_meaningful')
+    // is added when the winning variant isn't canonical.
+    let rejectedSim = 0
+    let rejectedEd = 0
     outer: for (const variant of ladder) {
       const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
 
@@ -241,16 +326,17 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
         if (name === 'OL') await sleep(OL_DELAY_MS)
         if (!hit) continue
         const sim = titleContainment(variant.title, hit.matchedTitle)
-        if (sim < TITLE_MATCH_THRESHOLD) {
-          rejectedThisBook++
-          continue
-        }
+        if (sim < TITLE_MATCH_THRESHOLD) { rejectedSim++; continue }
+        const ed = await verifyEdition(hit.isbn, variant.title, book.original_language)
+        await sleep(OL_DELAY_MS)
+        if (!ed.ok) { rejectedEd++; continue }
         isbn = hit.isbn
         source = `${name}${tag}`
         break outer
       }
     }
-    if (!isbn && rejectedThisBook > 0) rejectedLowSimilarity++
+    if (!isbn && rejectedSim > 0) rejectedLowSimilarity++
+    if (!isbn && rejectedEd > 0) rejectedEditionMismatch++
 
     if (isbn) {
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → ${isbn} [${source}]`)
@@ -287,12 +373,15 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
         }
       }
     } else {
-      const tag = rejectedThisBook > 0 ? ` (rejected ${rejectedThisBook} low-sim)` : ''
+      const parts: string[] = []
+      if (rejectedSim > 0) parts.push(`${rejectedSim} low-sim`)
+      if (rejectedEd > 0) parts.push(`${rejectedEd} edition-mismatch`)
+      const tag = parts.length ? ` (rejected ${parts.join(', ')})` : ''
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → not found${tag}`)
       notFound++
       if (samples.length < 10) samples.push({ title: book.title, isbn: null, source: '' })
     }
   }
 
-  return { totalCandidates, processed: limit, foundOl, foundOlTitle, foundGb, notFound, skippedDup, skippedPrefilter, rejectedLowSimilarity, errors, samples }
+  return { totalCandidates, processed: limit, foundOl, foundOlTitle, foundGb, notFound, skippedDup, skippedPrefilter, rejectedLowSimilarity, rejectedEditionMismatch, errors, samples }
 }

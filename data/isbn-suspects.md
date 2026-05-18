@@ -61,3 +61,26 @@ UPDATE books SET isbn13 = NULL WHERE id IN (
 After clearing, the next `enrich-isbn --apply` run will re-attempt those
 rows. The 2026-05-18 prefilter + similarity guard ([src/lib/enrich/isbn.ts](../src/lib/enrich/isbn.ts))
 should now prevent the same false positives from being re-written.
+
+## 2026-05-18 update — applied + edition guard added
+
+- All 20 ✗ WRONG rows were cleared via SQL on 2026-05-18.
+- A first re-run under the work-title similarity guard surfaced a second
+  failure mode: OL's `search.json` returns the work-level title (often the
+  English canonical), but the ISBN belongs to a specific edition that may be
+  in another language. Seven rows got re-written with translation-edition
+  ISBNs (e.g. "Twilight" → German "Biss zum Morgengrauen", "Kritik der reinen
+  Vernunft" → English translation's ISBN, "Soul Eater Vol. 10" → German edition).
+- Those seven were cleared and an **edition-level guard** added: after the
+  work-title check passes, `verifyEdition()` fetches `/isbn/<isbn>.json` and
+  rejects when (a) the edition title also fails containment, or (b) the
+  edition language disagrees with the row's `original_language`.
+- Second re-run under both guards: 7 edition-mismatches correctly rejected,
+  27 low-similarity hits rejected, 14 dup-skipped, 2 net-new writes — both
+  verified correct (`Guess What?` → 9780785786443, `Twilight` → 9780606264693).
+
+The catalogue is now ~242 rows still without ISBN-13. OL/GB simply have no
+record for those titles. Future enrichment paths to consider:
+- Wikidata `wdt:P212` (ISBN-13) cross-reference for the pinyin-zh rows
+- Library of Congress / National Library of Australia for HK/China imprints
+- Manual entry for high-traffic catalogue rows

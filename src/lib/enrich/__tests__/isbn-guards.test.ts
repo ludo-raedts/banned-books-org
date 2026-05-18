@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isPlaceholderTitle, isPinyinOnlyZh, titleContainment } from '../isbn'
+import { isPlaceholderTitle, isPinyinOnlyZh, titleContainment, editionLanguageAcceptable } from '../isbn'
 
 describe('isPlaceholderTitle', () => {
   it.each([
@@ -100,5 +100,36 @@ describe('titleContainment', () => {
 
   it('zero when no significant overlap', () => {
     expect(titleContainment('The Bible', 'Far Eastern Art')).toBe(0)
+  })
+})
+
+describe('editionLanguageAcceptable', () => {
+  // The 2026-05-18 run revealed translation-edition mismatches that the
+  // work-title guard couldn't catch. These cases MUST be rejected.
+  it.each<[string, string | null]>([
+    ['ger', 'en'], // Twilight → Biss zum Morgengrauen
+    ['eng', 'de'], // Kritik der reinen Vernunft → Critique of Pure Reason
+    ['pol', 'en'], // I'll Give You the Sun → Oddam ci słońce
+    ['spa', 'en'], // Adventures of Super Diaper Baby → El Capitán Calzoncillos
+    ['ger', 'ja'], // Soul Eater Vol. 10 → German Soul Eater 10
+    ['spa', null], // Untagged English row gets Spanish
+    ['pol', null], // Untagged English row gets Polish
+  ])('rejects %s edition on %s row', (edLang, dbLang) => {
+    expect(editionLanguageAcceptable(edLang, dbLang)).toBe(false)
+  })
+
+  it.each<[string | null, string | null]>([
+    ['eng', 'en'],
+    ['eng', null], // English-only fallback for untagged rows
+    ['ger', 'de'],
+    ['spa', 'es'],
+    ['chi', 'zh'],
+    ['cmn', 'zh'], // OL sometimes uses 'cmn' for Mandarin
+    ['jpn', 'ja'],
+    ['alb', 'sq'], // Albanian — Përbindëshi case
+    [null, 'en'], // No edition lang data → soft-pass
+    [null, null],
+  ])('accepts %s edition on %s row', (edLang, dbLang) => {
+    expect(editionLanguageAcceptable(edLang, dbLang)).toBe(true)
   })
 })
