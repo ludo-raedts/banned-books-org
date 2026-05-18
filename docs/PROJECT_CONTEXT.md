@@ -83,8 +83,8 @@ Migration files live in `supabase/migrations/`. As of 2026-05-12:
 | Table | Purpose |
 |---|---|
 | `countries` | Country dimension. `code` (char(2), unique), `name_en`, `description` (editorial). Includes defunct states (`SU`, `CS`, `DD`, `YU`). |
-| `authors` | Author dimension. `slug`, `display_name`, `bio`, `birth_country`, `photo_url`. |
-| `books` | The book catalogue. `slug`, `title`, `first_published_year`, `genres text[]`, `isbn13`, `openlibrary_work_id`, `cover_url`, `cover_status` (`valid` / `rejected_placeholder` / `manual_override`), `bookshop_status` (`valid` / `not_found`), `bookshop_isbn13`, `description_book`, `description_ban`, `censorship_context`, `ai_drafted` (boolean), `warning_level` (`none` / `context` / `extended`), `inclusion_rationale`, `extended_context`, `original_language` (default `'en'`), `title_native`, `title_native_script`, `title_transliterated`, `title_english_meaningful`. Model 3 kolommen, additief gemigreerd in Taak 2A. Backfill in Taak 2B vulde `title_native` voor 4099 en-books en 49 fr-books. 334 rijen met non-en/non-fr `original_language` zijn nog NULL — Taak 4-scope. Doctrine: kolommen alleen op `books`, niet op `authors`. |
+| `authors` | Author dimension. `slug`, `display_name`, `bio`, `birth_country`, `photo_url`, `name_native` / `name_transliterated` / `name_english` / `original_language` (multilingual ladder, migration `20260514191552`), `is_placeholder` (migration `20260516100951` — flags Anonymous / Unknown / Various Authors entries that aggregate unrelated books), `data_quality_status` (`confident` / `default` / `flagged`) + `data_quality_evaluated_at` (migration `20260518065314` — set by `score-data-quality.ts`). |
+| `books` | The book catalogue. `slug`, `title`, `first_published_year`, `genres text[]`, `isbn13`, `openlibrary_work_id`, `cover_url`, `cover_status` (`valid` / `rejected_placeholder` / `manual_override`), `bookshop_status` (`valid` / `not_found`), `bookshop_isbn13`, `description_book`, `description_ban`, `censorship_context`, `ai_drafted` (boolean), `warning_level` (`none` / `context` / `extended`), `inclusion_rationale`, `extended_context`, `original_language` (default `'en'`), `title_native`, `title_native_script`, `title_transliterated`, `title_english_meaningful`, `data_quality_status` (`confident` / `default` / `flagged`) + `data_quality_evaluated_at` (migration `20260518065314`). Model 3 kolommen, additief gemigreerd in Taak 2A. Backfill in Taak 2B vulde `title_native` voor 4099 en-books en 49 fr-books. 334 rijen met non-en/non-fr `original_language` zijn nog NULL — Taak 4-scope. Doctrine: kolommen alleen op `books`, niet op `authors`. |
 | `book_authors` | M:N join `book_id` ↔ `author_id`. |
 | `bans` | The act of censorship. `book_id`, `country_code`, `status` (`active` / `historical`), `action_type` (`banned` / `restricted` / `challenged`), `year_started`, `year_ended`, scope (school vs government), description. |
 | `ban_sources` | Citation per ban — `source_name`, `source_url` (UNIQUE), `source_type`, `accessed_at`, `verification_status` (enum). Sprint A heeft de `[archive pending]`-conventie vervangen door een `verification_status` enum met vier waarden: `verified` (URL werkt + archive geslaagd), `pending` (URL werkt + archive faalde), `unverified` (nooit geverifieerd), `broken` (4xx/5xx). Backfill 2026-05-12: 2 `[archive pending]` → `pending`, 252 NULL → `unverified`. `verified` en `broken` zijn nog ongebruikt; toekomstige verificatie-runs zullen die vullen. |
@@ -373,9 +373,10 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 - Affiliate links: Bookshop.org (deep link if probed valid, otherwise storefront), Kobo. **No Amazon links** — see `/why-not-amazon`.
 - Free Project Gutenberg link when available.
 - Share buttons; tracked outbound links (logged for Bookshop / Kobo / dataset purchase).
-- Schema.org `Book` JSON-LD with `inLanguage` set from `original_language`.
+- Schema.org `Book` JSON-LD with `inLanguage` set from `original_language` and `additionalProperty` carrying the record's `data_quality_status` (propertyID `dataQualityStatus`, link to `/data-quality`) so AI-citation crawlers see the provenance signal.
 - `lang="fr"` (or other ISO 639-1) attribute on the h1 when `original_language ≠ 'en'`.
 - `BanTimeline` component (horizontal SVG timeline) when a book has ≥3 bans.
+- **Data-quality indicators** (driven by `books.data_quality_status`): subtle green check next to the title on `confident` records, amber "Limited verification" notice above the lead on `flagged`, neutral provenance line in the footer on every page — all link to `/data-quality`.
 - Triggers `trackPageview('book', id)`.
 
 **Model 3 rendering doctrine** (post Step-0):
@@ -383,7 +384,7 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 - Non-Latin originals (Russian, Chinese, Arabic, etc.): English meaningful translation is primary; native + transliteration secondary.
 - See `docs/sprint-a/step-0-findings.md` and the `imports/extraction-prompt.ts` for the doctrine in full.
 
-**Per-author page `/authors/{slug}`** — bio, photo, birth country, all banned books.
+**Per-author page `/authors/{slug}`** — bio, photo, birth country, all banned books. Same data-quality indicators as the book page (driven by `authors.data_quality_status`); flagged-notice copy switches to author-specific facts (biographical dates, nationality, name spelling). `Person` JSON-LD carries the same `additionalProperty` shape as `Book`.
 **Country pages `/countries` and `/countries/{code}`** — flag, description, all bans for that country split by status.
 **Reason pages `/reasons` and `/reasons/{slug}`** — index + book lists per reason.
 **Scope pages `/scope/school`, `/scope/government`** — books banned in that scope.
@@ -394,7 +395,7 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 - `/challenged-books` — school-scope challenges.
 - `/banned-books/[year]` — `2022..2026` archives, with `generateStaticParams`.
 
-**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay.
+**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay. **/data-quality** — explainer for the three-level record classification (confident / default / flagged), the signals behind it, and what flagged-status means for a reader. Linked from every quality indicator on book/author pages and from the methodology page.
 
 **Search `/search`** — server-rendered FTS with client filters.
 
@@ -587,8 +588,9 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 
 ---
 
-## 12. Achievements to date (snapshot 2026-05-13)
+## 12. Achievements to date (snapshot 2026-05-18)
 
+- **Data-quality classification system (2026-05-18)** — three-level per-record status (`confident` / `default` / `flagged`) on books + authors, computed offline by `scripts/score-data-quality.ts` from canonical-id presence, ban evidence (≥3 landen of ≥5 totaal, of geverifieerde bans), editorial completeness, and author legitimacy. Drives UI indicators (subtle green check, amber "limited verification" notice, footer provenance line — all linking to `/data-quality`), the new `/data-quality` explainer page, and `additionalProperty` on Book + Person JSON-LD for AI-citation surfaces. Initial classification on production: 2545/2861/141 books (confident/default/flagged) and 998/2693/23 authors. Migration `20260518065314_data_quality_status.sql`; admin script reference in `/admin/scripts`.
 - **A working catalogue** with thousands of books and bans across many countries (live counts on `/about` and the homepage).
 - **Database baseline established (Sprint 0.5)** — schema-history consolidated into a single baseline migration generated from production via `supabase db dump`; legacy 001-023 migrations archived; Supabase CLI integrated as the canonical migration tooling; `supabase_migrations.schema_migrations` registered in production for the first time.
 - **Seven-dimensions schema-drift diagnostic** — `scripts/diagnose-schema-drift.ts` compares production against migration files for tables, columns, views, materialized views, indexes, RLS policies, and triggers. Confirmed zero drift after Sprint 0.5.

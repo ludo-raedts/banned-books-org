@@ -70,8 +70,8 @@ Migration files live in `supabase/migrations/` (001–020).
 | Table | Purpose |
 |---|---|
 | `countries` | Country dimension. `code` (char(2), unique), `name_en`, `description` (editorial). Includes defunct states (`SU`, `CS`, `DD`, `YU`). |
-| `authors` | Author dimension. `slug`, `display_name`, `bio`, `birth_country`, `photo_url`. |
-| `books` | The book catalogue. `slug`, `title`, `first_published_year`, `genres text[]`, `isbn13`, `openlibrary_work_id`, `cover_url`, `cover_status` (`valid` / `rejected_placeholder` / `manual_override`), `bookshop_status` (`valid` / `not_found`), `bookshop_isbn13` (alternative ISBN that resolves on Bookshop), `description_book`, `description_ban`, `censorship_context`, `ai_drafted` (boolean), `warning_level` (`none` / `context` / `extended`), `inclusion_rationale`, `extended_context`. |
+| `authors` | Author dimension. `slug`, `display_name`, `bio`, `birth_country`, `photo_url`, `data_quality_status` (`confident` / `default` / `flagged`) + `data_quality_evaluated_at`. |
+| `books` | The book catalogue. `slug`, `title`, `first_published_year`, `genres text[]`, `isbn13`, `openlibrary_work_id`, `cover_url`, `cover_status` (`valid` / `rejected_placeholder` / `manual_override`), `bookshop_status` (`valid` / `not_found`), `bookshop_isbn13` (alternative ISBN that resolves on Bookshop), `description_book`, `description_ban`, `censorship_context`, `ai_drafted` (boolean), `warning_level` (`none` / `context` / `extended`), `inclusion_rationale`, `extended_context`, `data_quality_status` (`confident` / `default` / `flagged`) + `data_quality_evaluated_at` — recomputed by `score-data-quality.ts`. |
 | `book_authors` | M:N join `book_id` ↔ `author_id`. |
 | `bans` | The act of censorship. `book_id`, `country_code`, `status` (`active` / `historical`), `action_type` (`banned` / `restricted` / `challenged`), `year_started`, `year_ended`, scope (school vs government), description. |
 | `ban_sources` | Citation per ban — `source_name`, `url`. |
@@ -315,8 +315,9 @@ Old surfaces that moved off the homepage: `BookBrowser` now lives at `/search` (
 - Share buttons; tracked outbound links (logged for Bookshop / Kobo / dataset purchase).
 - Schema.org `Book` JSON-LD.
 - Triggers `trackPageview('book', id)`.
+- **Data-quality indicators** (driven by `books.data_quality_status`): subtle green check next to the title on `confident` records, amber "Limited verification" notice above the lead on `flagged`, neutral provenance line in the footer on every page — all link to `/data-quality`.
 
-**Per-author page `/authors/{slug}`** — bio, photo (loaded via `AuthorAvatar` with `onError` fallback to initials so rate-limited Wikipedia thumbnails degrade gracefully), birth country, all banned books.
+**Per-author page `/authors/{slug}`** — bio, photo (loaded via `AuthorAvatar` with `onError` fallback to initials so rate-limited Wikipedia thumbnails degrade gracefully), birth country, all banned books. Same data-quality indicators as the book page (driven by `authors.data_quality_status`); the flagged notice copy switches to author-specific facts (biographical dates, nationality, name spelling).
 **Country pages `/countries` and `/countries/{code}`** — flag, description, all bans for that country split by status. Each `/countries/{code}` ends with a `FaqAccordion` (visible HTML + FAQPage JSON-LD). Two tiers:
 - Data-only (every country with bans): how many, when, top reasons, notable books — the notable-book answer cross-references the country's bans against `v_top_banned_books` top-100 so the answer surfaces globally-famous classics (1984, Mein Kampf, Origin of Species) instead of the alphabetically-first titles.
 - Editorial (top-5 countries in `COUNTRY_FAQ_FACTS` — US, GB, RU, CN, IR): three extra Q&As — who decides bans (named authorities with statute citations), can I read (`legal` / `restricted` / `criminal` ladder + reading-risk note), can I buy (with Bookshop affiliate link). `articulateCountryName` adds the definite article ("the United States") where grammar requires it.
@@ -329,7 +330,7 @@ Old surfaces that moved off the homepage: `BookBrowser` now lives at `/search` (
 - `/challenged-books` — school-scope challenges.
 - `/banned-books/[year]` — `2022..2026` archives, with `generateStaticParams`.
 
-**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay.
+**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay. **/data-quality** — explainer for the three-level record classification (confident / default / flagged), the signals behind it, and what flagged-status means for a reader. Linked from every quality indicator on book/author pages and from the methodology page.
 
 **Search `/search`** — server-rendered FTS with client filters.
 
@@ -416,6 +417,7 @@ command lines. Highlights: `add-books-batch{1..47}.ts`, `enrich-covers-v2.ts`,
 `enrich-descriptions-gpt.ts`, `enrich-ban-descriptions-gpt.ts`,
 `rewrite-descriptions-grounded.ts`, `strip-filler-sentences.ts`,
 `audit-covers-for-placeholders.ts`, `audit-quality.ts`, `audit-db.ts`,
+`score-data-quality.ts` (recomputes `data_quality_status` for every book + author — dry-run by default; `--write` persists),
 `build-dataset.ts`, `cross-reference-bookshop-isbn.ts`,
 `probe-bookshop-isbn.ts`, `seed-bbw-content-blocks.ts`,
 `seed-country-descriptions.ts`, `seed-genres.ts`.
@@ -478,7 +480,7 @@ Index at `/sitemap.xml` references five split sitemaps so each stays small:
 - `metadataBase` + per-page `generateMetadata`. Every page sets `alternates.canonical`.
 - Open Graph: `siteName: 'Banned Books'`, `type: 'website'`, locale `en_US`. Default OG image at `app/opengraph-image.tsx`.
 - Twitter: `summary` card.
-- Schema.org JSON-LD: `WebSite` + `Organization` on `/`, `Book` on `/books/[slug]`, `Person` on `/authors/[slug]`, `CollectionPage` + `ItemList` on `/countries/[code]` and on each top-list destination (`/trending-banned-books` etc.), and `FAQPage` on `/`, every `/countries/[code]`, `/challenged-books`, `/banned-books/[year]`, and `/authors/[slug]`. One FAQPage per URL — Google's rule. `FaqAccordion` is the single source for both the visible accordion and the FAQPage payload so they can't drift apart.
+- Schema.org JSON-LD: `WebSite` + `Organization` on `/`, `Book` on `/books/[slug]`, `Person` on `/authors/[slug]`, `CollectionPage` + `ItemList` on `/countries/[code]` and on each top-list destination (`/trending-banned-books` etc.), and `FAQPage` on `/`, every `/countries/[code]`, `/challenged-books`, `/banned-books/[year]`, and `/authors/[slug]`. One FAQPage per URL — Google's rule. `FaqAccordion` is the single source for both the visible accordion and the FAQPage payload so they can't drift apart. The `Book` and `Person` payloads carry `additionalProperty` with `propertyID: 'dataQualityStatus'` + the record's classification value + a link to `/data-quality`, so AI-citation crawlers see the provenance signal without it competing for visual real estate.
 - RSS at `/feed.xml` linked from `<head>`.
 - Canonical pages: `/books/{slug}` and `/authors/{slug}` are the indexable canonicals; pages like `/top-100-banned-books`, `/banned-classics`, `/banned-books/{year}`, `/challenged-books`, `/scope/{school|government}` exist as **second-tier landing pages** that link inward.
 
@@ -529,9 +531,10 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 
 ---
 
-## 12. Achievements to date (snapshot 2026-05-17)
+## 12. Achievements to date (snapshot 2026-05-18)
 
 - **A working catalogue** with thousands of books and bans across many countries (live counts on `/about` and the homepage). The recent commit history adds:
+  - `feat(data-quality): per-record classification (confident / default / flagged) computed from canonical-id + ban evidence + editorial completeness + author legitimacy; drives subtle UI indicators, /data-quality explainer, and schema.org additionalProperty for AI citation`
   - `feat(home): homepage redesign — catalogue browser replaced with 5 top-lists, 4 destination pages, FAQPage block`
   - `feat(countries): FAQ accordion with editorial Q&As for US/GB/RU/CN/IR + data-only fallback`
   - `feat(enrich/authors): third photo source (Wikidata P856 + Wikipedia extlinks) with JSON-LD + name-matched img tag scoring`
