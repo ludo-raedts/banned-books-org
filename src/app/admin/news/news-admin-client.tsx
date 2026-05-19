@@ -506,7 +506,7 @@ function NewsConfigCard({ initial, onSave }: { initial: NewsConfig; onSave: () =
       <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
         <div>
           <div className="text-[11px] uppercase tracking-wide text-gray-500">Auto-publish</div>
-          <div className="text-xs text-gray-500 mt-0.5">Daily cron pulls feeds at 08:00 UTC. When on, items skip the draft queue.</div>
+          <div className="text-xs text-gray-500 mt-0.5">Daily cron pulls feeds at 08:00 Amsterdam time (07:00 in winter). When on, items skip the draft queue.</div>
         </div>
         <ToggleSwitch
           checked={autoPublish}

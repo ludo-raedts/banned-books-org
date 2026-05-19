@@ -4,10 +4,11 @@ import { adminClient } from '@/lib/supabase'
 import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 
 // ISR: news content auto-publishes daily via cron (fetch-news cron at
-// 08:00 UTC). 30-min revalidate keeps the list reasonably fresh between
-// cron cycles without re-rendering the page on every visit. ?page=N
-// pagination forces dynamic per page-param, but the default landing
-// view (/news without params) benefits from the cache window.
+// 06:00 UTC = 08:00 Amsterdam in summer, 07:00 in winter). 30-min
+// revalidate keeps the list reasonably fresh between cron cycles without
+// re-rendering the page on every visit. ?page=N pagination forces
+// dynamic per page-param, but the default landing view (/news without
+// params) benefits from the cache window.
 export const revalidate = 1800
 
 // Items per page. Tuned so a typical page is ~3–6 daily groups under the
