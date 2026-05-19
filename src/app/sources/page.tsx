@@ -182,6 +182,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['Censorship_of_Publications_Act_1929'],
       },
       {
+        name: 'Légifrance — Journal officiel (France)',
+        url: 'https://www.legifrance.gouv.fr',
+        description:
+          'French government legal database indexing the Journal officiel de la République française. Source for arrêtés issued by the Ministry of Interior under Article 14 of the Loi n° 49-956 du 16 juillet 1949 sur les publications destinées à la jeunesse, restricting publications from sale to minors. Each ban cites its JORFTEXT identifier.',
+        match: ['legifrance.gouv.fr'],
+      },
+      {
         name: 'FYI.org.nz — New Zealand Official Information requests',
         url: 'https://fyi.org.nz',
         description:
@@ -229,6 +236,13 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Apartheid-era catalogue under the Publications Act 1974 (~26,000 titles 1950–1990). Curated by SAHA from Department of Internal Affairs records.',
         match: ['sahistory.org.za'],
+      },
+      {
+        name: 'The Literature Police — apartheid censor reports',
+        url: 'https://theliteraturepolice.com',
+        description:
+          'Prof. Peter D. McDonald (University of Oxford) curated collection of original censor reports from the Western Cape Provincial Archives. PDF scans of decisions by the Publications Control Board and Publications Appeal Board on works by Coetzee, Gordimer, Brink, Breytenbach, La Guma, Modisane, Rive, and other South African writers (1958–1983).',
+        match: ['theliteraturepolice.com'],
       },
       {
         name: 'Memoria Abierta — Argentina',
