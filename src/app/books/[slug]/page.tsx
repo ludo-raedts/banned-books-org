@@ -285,6 +285,8 @@ type BookDetail = {
   isbn13: string | null
   bookshop_status: 'valid' | 'not_found' | null
   bookshop_isbn13: string | null
+  archive_org_id: string | null
+  archive_org_status: 'valid' | 'not_found' | null
   warning_level: WarningLevel | null
   inclusion_rationale: string | null
   extended_context: string | null
@@ -320,7 +322,8 @@ export default async function BookPage({
     .select(`
       id, title, slug, cover_url, description, description_book, description_ban,
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
-      bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
+      bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
+      warning_level, inclusion_rationale, extended_context,
       original_language,
       title_native, title_transliterated, title_english_meaningful,
       created_at, updated_at,
@@ -1012,6 +1015,19 @@ export default async function BookPage({
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
               </svg>
               Read free on Project Gutenberg
+            </a>
+          )}
+          {book.archive_org_status === 'valid' && book.archive_org_id && (
+            <a
+              href={`https://archive.org/details/${book.archive_org_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-200 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              Read free on the Internet Archive
             </a>
           )}
           <div className="flex flex-col sm:flex-row gap-3">
