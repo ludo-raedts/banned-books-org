@@ -92,14 +92,14 @@ export default async function StatsPage({
   }
 
   // rows: all book_authors | reason: top-authors leaderboard
-  type BARow = { book_id: number; authors: { display_name: string; slug: string | null } | null }
+  type BARow = { book_id: number; authors: { display_name: string; slug: string | null; is_placeholder: boolean | null } | null }
   let bookAuthorsRaw: BARow[] = []
   {
     let offset = 0
     while (true) {
       const { data } = await supabase
         .from('book_authors')
-        .select('book_id, authors(display_name, slug)')
+        .select('book_id, authors(display_name, slug, is_placeholder)')
         .range(offset, offset + 999)
       if (!data || data.length === 0) break
       bookAuthorsRaw = bookAuthorsRaw.concat(data as unknown as BARow[])
@@ -126,6 +126,7 @@ export default async function StatsPage({
   const bookAuthorMap = new Map<number, string[]>()
   for (const ba of bookAuthorsRaw) {
     if (!ba.authors?.display_name) continue
+    if (ba.authors.is_placeholder === true) continue
     const list = bookAuthorMap.get(ba.book_id) ?? []
     list.push(ba.authors.display_name)
     bookAuthorMap.set(ba.book_id, list)
