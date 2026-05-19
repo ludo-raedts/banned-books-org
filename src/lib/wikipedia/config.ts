@@ -69,6 +69,13 @@ const IRAN: SourceConfig = {
       columns: { title: 0, authors: 1, year: null, state: null, notes: 3 },
       fallback_reason_slug: 'moral',
       original_language: 'fa',
+      // The Iran wikitable has no year column and rarely embeds a year in
+      // notes. The bans listed are products of the post-1979 Islamic Republic
+      // censorship regime (Ministry of Culture and Islamic Guidance permits
+      // were instituted with the Revolution). 1979 is the editorial default
+      // for `bans.year_started` when no per-row date is available; auto-accept
+      // stamps the 'default_ban_year_applied' flag in inclusion_rationale.
+      default_ban_year: 1979,
     },
   ],
 }

@@ -69,6 +69,9 @@ const BLOCKING_FLAGS = new Set([
   'incomplete_year',
   'no_author',
   'no_title',
+  // LLM 2nd-pass output: high/medium-confidence picks auto-accept,
+  // low-confidence picks ('other' or close calls) stay manual.
+  'llm_low_confidence',
 ])
 
 // Memory doctrine: non-Latin title-translation cases need manual review. The
@@ -161,14 +164,29 @@ function evaluate(row: QueueRow): Eligibility {
 
   if (!parsed.title) return { ok: false, reason: 'missing title' }
   if (!parsed.authors?.length) return { ok: false, reason: 'missing authors' }
-  if (parsed.year == null) return { ok: false, reason: 'missing year' }
+  // Year resolution: parsed.year wins if present, else fall back to the
+  // SectionConfig.default_ban_year regime-level default (Iran=1979). When
+  // neither is available the row stays manual.
+  const section = findSectionForRow(row)
+  const yearFromDefault =
+    parsed.year == null && section?.default_ban_year != null
+      ? section.default_ban_year
+      : null
+  const effectiveYear = parsed.year ?? yearFromDefault
+  if (effectiveYear == null) return { ok: false, reason: 'missing year' }
   if (!reason?.slug) return { ok: false, reason: 'no reason_slug' }
   if (dedupKind && dedupKind !== 'none') return { ok: false, reason: `dedup=${dedupKind}` }
   if (NON_LATIN_SCRIPT_IN_TITLE.test(parsed.title)) {
     return { ok: false, reason: 'non-Latin script in title (per Sprint A doctrine)' }
   }
 
-  const blockingPresent = flags.filter(f => BLOCKING_FLAGS.has(f))
+  // When SectionConfig.default_ban_year was applied, the parser-emitted
+  // 'incomplete_year' flag is no longer a real blocker — it just records that
+  // the source row had no year cell, which the default now compensates for.
+  const effectiveFlags = yearFromDefault != null
+    ? flags.filter(f => f !== 'incomplete_year')
+    : flags
+  const blockingPresent = effectiveFlags.filter(f => BLOCKING_FLAGS.has(f))
   if (blockingPresent.length > 0) {
     return { ok: false, reason: `blocking flag: ${blockingPresent.join(',')}` }
   }
@@ -176,11 +194,9 @@ function evaluate(row: QueueRow): Eligibility {
   const defaults = getQueueSectionDefaults(row.source_slug, ad)
   if (!defaults) return { ok: false, reason: 'section defaults unresolvable' }
 
-  // SectionConfig also carries `original_language` for sources that span a
-  // single language (Hong Kong = 'zh', etc). When set, we propagate it into
-  // the overlay so books from those sources land with the right
-  // original_language code instead of NULL.
-  const section = findSectionForRow(row)
+  // `section` already resolved above for the default_ban_year check. It also
+  // carries `original_language` for single-language sources (Hong Kong = 'zh',
+  // Iran = 'fa', etc.).
   const originalLanguage = section?.original_language ?? null
 
   const sourceName =
@@ -189,9 +205,18 @@ function evaluate(row: QueueRow): Eligibility {
     ?? row.source_slug
   const sectionHeading = ad.source_context?.section_heading ?? '(section)'
 
-  const inclusionRationale =
-    `Auto-accepted from Wikipedia ${sourceName} → ${sectionHeading}. `
-    + `Reason classified as '${reason.slug}' (confidence ${reason.confidence ?? '?'}).`
+  const rationaleParts = [
+    `Auto-accepted from Wikipedia ${sourceName} → ${sectionHeading}.`,
+    `Reason classified as '${reason.slug}' (confidence ${reason.confidence ?? '?'}).`,
+  ]
+  if (yearFromDefault != null) {
+    rationaleParts.push(
+      `Ban-start year ${yearFromDefault} applied from regime-level default `
+      + `(SectionConfig.default_ban_year): source page provides no per-row date `
+      + `[default_ban_year_applied].`,
+    )
+  }
+  const inclusionRationale = rationaleParts.join(' ')
 
   const overlay: ApproveOverlay = {
     title: parsed.title,
@@ -199,7 +224,7 @@ function evaluate(row: QueueRow): Eligibility {
     title_english_meaningful: parsed.title_english_meaningful ?? null,
     original_language: originalLanguage,
     authors: parsed.authors,
-    year: parsed.year,
+    year: effectiveYear,
     first_published_year: null,
     reason_slug: reason.slug,
     action_type: defaults.action_type,

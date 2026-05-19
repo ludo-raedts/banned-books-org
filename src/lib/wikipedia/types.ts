@@ -20,6 +20,7 @@ export type QualityFlag =
   | 'author_disjunction'           // author cell had "X or Y" — ambiguous attribution, kept first only
   | 'source_default_reason'        // notes had no signal; reason slug filled from SectionConfig.fallback_reason_slug
   | 'year_inferred_from_notes'     // year was null after parsing; inferred first 4-digit year from notes_raw (may be ban-end year)
+  | 'default_ban_year_applied'     // parsed.year was null; SectionConfig.default_ban_year supplied a regime-level fallback (e.g. 1979 for post-Revolution Iran)
 
 export type ParsedRow = {
   year: number | null
@@ -133,6 +134,14 @@ export type SectionConfig = {
   // the Index Librorum Prohibitorum source where each row is an AUTHOR
   // with one or more banned works.
   multi_title_separator?: RegExp
+  // Regime-level fallback for ban-start year when the source page provides
+  // no per-row dates. Used by sources like wikipedia-iran whose "Books banned
+  // in Iran" table has no year column AND no notes-embedded dates — the
+  // implicit timeframe is "post-1979 Islamic Republic". Applied at approval
+  // time when `parsed_row.year` is null; the auto-accept path stamps the
+  // 'default_ban_year_applied' quality flag for audit. Bulk auto-accept
+  // treats this as non-blocking; manual review can still override per-row.
+  default_ban_year?: number
   // Reason slug used when the per-row notes cell carries no signal —
   // either empty or just trivial markers like the "✓" checkboxes on the
   // Hong Kong matrix. Only set when the source-level context makes the
