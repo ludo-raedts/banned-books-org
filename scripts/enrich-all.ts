@@ -12,13 +12,14 @@
  *   2. Cover images         — Open Library + Google Books (first-pass)
  *   3. Cover images (v2)    — title-only / Wikipedia retries with pHash placeholder rejection
  *   4. Gutenberg IDs        — Gutendex API  (slow; skip with --no-gutenberg)
- *   5. Descriptions         — Open Library + Google Books
+ *   5. archive.org IDs      — Advanced Search API (slow; skip with --no-archive)
+ *   6. Descriptions         — Open Library + Google Books
  *
  *  GPT (skipped with --free-only, costs API credits):
- *   6. Descriptions (GPT fallback for books OL/GB couldn't find)
- *   7. Ban descriptions
- *   8. Censorship context
- *   9. Ban reason classification
+ *   7. Descriptions (GPT fallback for books OL/GB couldn't find)
+ *   8. Ban descriptions
+ *   9. Censorship context
+ *  10. Ban reason classification
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts
@@ -29,6 +30,8 @@
  *     → run only free steps (no OpenAI cost)
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
  *     → skip the slow Gutenberg lookup step
+ *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-archive
+ *     → skip the slow archive.org lookup step
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50
  *     → cap each GPT step at 50 books (useful for incremental runs)
  */
@@ -42,6 +45,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const APPLY        = process.argv.includes('--apply')
 const FREE_ONLY    = process.argv.includes('--free-only')
 const NO_GUTENBERG = process.argv.includes('--no-gutenberg')
+const NO_ARCHIVE   = process.argv.includes('--no-archive')
 const GPT_LIMIT    = (() => {
   const a = process.argv.find(x => x.startsWith('--gpt-limit='))
   return a ? parseInt(a.split('=')[1], 10) : 150
@@ -60,6 +64,7 @@ type Step = {
   gpt: boolean
   alwaysWrites?: boolean  // scripts with no dry-run mode
   gutenberg?: boolean     // skipped with --no-gutenberg
+  archive?: boolean       // skipped with --no-archive
 }
 
 const steps: Step[] = [
@@ -90,6 +95,13 @@ const steps: Step[] = [
     gpt: false,
     alwaysWrites: true,
     gutenberg: true,
+  },
+  {
+    name: 'archive.org IDs',
+    script: 'enrich-archive-org.ts',
+    args: APPLY ? ['--apply'] : [],
+    gpt: false,
+    archive: true,
   },
   {
     name: 'Book descriptions (OL / Google Books)',
@@ -147,6 +159,10 @@ function run(step: Step, index: number, total: number): boolean {
     console.log(`  ⟶  skipped (--no-gutenberg)\n`)
     return true
   }
+  if (step.archive && NO_ARCHIVE) {
+    console.log(`  ⟶  skipped (--no-archive)\n`)
+    return true
+  }
   if (step.alwaysWrites && !APPLY) {
     console.log(`  ⟶  skipped in dry-run (this script always writes)\n`)
     return true
@@ -169,7 +185,11 @@ async function main() {
   const modeBase = APPLY
     ? (FREE_ONLY ? 'APPLY — free steps only' : `APPLY — all steps (GPT limit: ${GPT_LIMIT}/step)`)
     : 'DRY-RUN'
-  const mode = NO_GUTENBERG ? `${modeBase} — no Gutenberg` : modeBase
+  const skipTags = [
+    NO_GUTENBERG ? 'no Gutenberg' : null,
+    NO_ARCHIVE ? 'no archive.org' : null,
+  ].filter(Boolean)
+  const mode = skipTags.length ? `${modeBase} — ${skipTags.join(', ')}` : modeBase
 
   console.log(`\n${'═'.repeat(60)}`)
   console.log(`  enrich-all  [${mode}]`)
@@ -191,8 +211,10 @@ async function main() {
     const tag = step.gpt ? ' (GPT)' : ''
     const skipGpt = step.gpt && FREE_ONLY
     const skipGut = step.gutenberg && NO_GUTENBERG
+    const skipArc = step.archive && NO_ARCHIVE
     const skipMsg = skipGpt ? '  — skipped (--free-only)'
                   : skipGut ? '  — skipped (--no-gutenberg)'
+                  : skipArc ? '  — skipped (--no-archive)'
                   : ''
 
     banner(`${num} ${step.name}${tag}${skipMsg}`)

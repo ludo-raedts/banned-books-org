@@ -198,7 +198,7 @@ export default function ScriptsPage() {
               ['Add a new source (PEN list, court ruling, etc.)', 'see "Adding a new source" below'],
               ['Re-map unmapped_reason flags in the review queue', 'remap-unmapped-queue.ts --write'],
               ['Fill all open fields after an import', 'enrich-all.ts --apply'],
-              ['Same, fastest cheap pass first', 'enrich-all.ts --apply --free-only --no-gutenberg'],
+              ['Same, fastest cheap pass first', 'enrich-all.ts --apply --free-only --no-gutenberg --no-archive'],
               ['Refresh public stats / countries', 'refresh-mv.ts'],
               ['Improve weak ban descriptions', 'see "Description quality" below'],
               ['Fix a bad cover permanently', 'mark-cover-override.ts <slug>'],
@@ -259,13 +259,13 @@ npx tsx --env-file=.env.local scripts/add-<your-source>.ts --write`}</Code>
                 <strong>Fill open fields.</strong> The master pipeline runs every per-field step in order,
                 only touching records the new books left empty.
               </p>
-              <Code>{`# Cheap pass — free APIs only, skips slow Gutenberg lookup
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg
+              <Code>{`# Cheap pass — free APIs only, skips slow Gutenberg + archive.org lookups
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg --no-archive
 
 # Then GPT pass for what's still missing (descriptions, ban context, reasons)
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg --no-archive
 
-# Or run everything in one go (slower because of Gutenberg)
+# Or run everything in one go (slower because of Gutenberg + archive.org)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply`}</Code>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 See <code className="font-mono">enrich-all.ts</code> reference below for all flags.
@@ -347,7 +347,7 @@ npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts --write`}
           </p>
           <Script
             name="enrich-all.ts"
-            what="Runs ISBN, covers (first-pass + v2 with placeholder rejection), Gutenberg, descriptions (with GPT fallback for what OL/Google Books missed), ban descriptions, censorship context, and ban reason classifications — in that order. Every step is idempotent. This is what to run after an import."
+            what="Runs ISBN, covers (first-pass + v2 with placeholder rejection), Gutenberg IDs, archive.org IDs, descriptions (with GPT fallback for what OL/Google Books missed), ban descriptions, censorship context, and ban reason classifications — in that order. Every step is idempotent. The archive.org step is gated by archive_org_checked_at so each book is queried exactly once and a 'not_found' verdict is permanent (unlike Gutenberg, which is gated on a NULL id and would silently re-query forever). This is what to run after an import."
             tags={['free', 'gpt']}
             command={`# Dry-run — shows eligible counts per step
 npx tsx --env-file=.env.local scripts/enrich-all.ts
@@ -355,11 +355,11 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts
 # Full run (free + GPT)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply
 
-# Cheapest-first — free APIs, no Gutenberg
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg
+# Cheapest-first — free APIs, no slow external lookups
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg --no-archive
 
-# Everything except slow Gutenberg lookup
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg
+# Everything except slow external lookups
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg --no-archive
 
 # Cap GPT steps (incremental run)
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
@@ -367,6 +367,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
               { flag: '--apply', desc: 'Write to database (omit for dry-run)' },
               { flag: '--free-only', desc: 'Skip all GPT steps' },
               { flag: '--no-gutenberg', desc: 'Skip Gutenberg ID lookup (slow; safe to skip day-to-day)' },
+              { flag: '--no-archive', desc: 'Skip archive.org ID lookup (slow; safe to skip day-to-day)' },
               { flag: '--gpt-limit=N', desc: 'Cap each GPT step at N books (default 150)' },
             ]}
             writes={
@@ -397,6 +398,8 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
           <dl className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-6 gap-y-2.5 mt-2">
             <Row field="ISBN-13" script="enrich-isbn.ts" tag="free" />
             <Row field="Cover images" script="enrich-covers-v2.ts" tag="free" />
+            <Row field="Project Gutenberg IDs (public-domain titles)" script="enrich-gutenberg.ts" tag="free" />
+            <Row field="archive.org IDs (scanned/lendable titles)" script="enrich-archive-org.ts" tag="free" />
             <Row field="Book descriptions (with GPT fallback)" script="enrich-descriptions.ts" tag="gpt" />
             <Row field="Ban descriptions (why this book in this country)" script="enrich-ban-descriptions-gpt.ts" tag="gpt" />
             <Row field="Censorship context (broader political background)" script="enrich-censorship-context-gpt.ts" tag="gpt" />
@@ -455,6 +458,33 @@ npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force`}
               </>
             }
             note="Reference image lives at assets/google-books-placeholder.png. Hamming threshold = 5."
+          />
+
+          <Script
+            name="enrich-archive-org.ts"
+            what="Looks up each book on archive.org via the Advanced Search API (title + author + mediatype:texts) and stores the identifier when a match passes the title-contains + author-last-name validation. One lookup per book, ever: archive_org_checked_at is set on both hit and miss, so 'not_found' is sticky and the catalogue is never re-queried wholesale. Rate-limited to 1 req/sec."
+            tags={['free']}
+            command={`# Dry-run — counts only, no DB writes
+npx tsx --env-file=.env.local scripts/enrich-archive-org.ts
+
+# Apply across all books that have never been checked
+npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply
+
+# Cap at N books per run
+npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply --limit=200`}
+            flags={[
+              { flag: '--apply', desc: 'Write archive_org_id / archive_org_status / archive_org_checked_at' },
+              { flag: '--limit=N', desc: 'Cap at N books per run' },
+            ]}
+            writes={
+              <>
+                Only targets books where <code className="font-mono">archive_org_checked_at IS NULL</code>. Sets{' '}
+                <code className="font-mono">archive_org_id</code> + <code className="font-mono">archive_org_status=&apos;valid&apos;</code>{' '}
+                on hit; sets <code className="font-mono">archive_org_status=&apos;not_found&apos;</code> on miss. In both cases{' '}
+                <code className="font-mono">archive_org_checked_at</code> is stamped so the book is skipped on every future run.
+              </>
+            }
+            note="Network errors / timeouts leave archive_org_checked_at NULL so the row is retried next time. Resolved IDs render as https://archive.org/details/<archive_org_id>."
           />
 
           <Script
