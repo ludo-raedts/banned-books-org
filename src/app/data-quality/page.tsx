@@ -10,7 +10,10 @@ export const metadata: Metadata = {
   title: 'Data quality — how we classify records',
   description:
     'Every book and author entry in this catalogue is rated for data quality. This page explains the three levels — confident, default, and limited — and the automated signals behind them.',
-  alternates: { canonical: '/data-quality' },
+  alternates: {
+    canonical: '/data-quality',
+    types: { 'text/markdown': '/data-quality.md' },
+  },
   other: buildCitationMeta({
     entityType: 'methodology',
     title: 'Data quality — how we classify records',

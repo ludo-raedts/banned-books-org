@@ -62,6 +62,19 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
       changefreq: isBbwActive ? 'daily' : 'monthly',
       priority: isBbwActive ? 0.9 : 0.6,
     },
+    // LLM-facing surfaces. /llms.txt is the curated entry point for AI
+    // crawlers; the .md twins of the long-form prose pages give crawlers
+    // clean markdown without parsing JSX. Listed here so they flow through
+    // sitemap-static.xml, indexnow-delta diffs, and getAllCanonicalUrls().
+    { loc: `${base}/llms.txt`, changefreq: 'weekly', priority: 0.5 },
+    { loc: `${base}/methodology.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/data-quality.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/about.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/history.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/why-not-amazon.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/what-we-document.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/forbidden-knowledge-iceberg.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/the-grey-zone.md`, changefreq: 'monthly', priority: 0.5 },
   ]
 
   // Essay routes are derived from the registry so /essays index, sitemap, and

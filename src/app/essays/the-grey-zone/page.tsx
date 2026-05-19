@@ -13,7 +13,10 @@ export const metadata: Metadata = {
   title: essay.title,
   description: essay.dek,
   openGraph: { title: essay.title, description: essay.dek, type: 'article' },
-  alternates: { canonical: essay.href },
+  alternates: {
+    canonical: essay.href,
+    types: { 'text/markdown': `${essay.href}.md` },
+  },
   robots: essay.draft ? { index: false, follow: true } : undefined,
   other: buildCitationMeta({
     entityType: 'essay',

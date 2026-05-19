@@ -9,7 +9,10 @@ const METHODOLOGY_ONLINE_DATE = '2025-08-01'
 export const metadata: Metadata = {
   title: 'Methodology — Why the US Dominates This Data',
   description: 'An honest explanation of why the United States accounts for most bans in this catalogue, and what that says about transparency, advocacy, and the limits of available data.',
-  alternates: { canonical: '/methodology' },
+  alternates: {
+    canonical: '/methodology',
+    types: { 'text/markdown': '/methodology.md' },
+  },
   other: buildCitationMeta({
     entityType: 'methodology',
     title: 'Methodology and coverage notes',

@@ -5,7 +5,10 @@ import MoreEssays from '@/components/more-essays'
 export const metadata: Metadata = {
   title: 'Why We Don\'t Link to Amazon',
   description: 'We deliberately choose not to link to Amazon. Here is why.',
-  alternates: { canonical: '/why-not-amazon' },
+  alternates: {
+    canonical: '/why-not-amazon',
+    types: { 'text/markdown': '/why-not-amazon.md' },
+  },
 }
 
 export default function WhyNotAmazonPage() {

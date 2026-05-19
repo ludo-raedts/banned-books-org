@@ -1,4 +1,4 @@
-import { Terminal, DollarSign, AlertTriangle, CheckCircle, Plus, Wrench, Sparkles, ShieldCheck, RefreshCw, ImageIcon, GitBranch } from 'lucide-react'
+import { Terminal, DollarSign, AlertTriangle, CheckCircle, Plus, Wrench, Sparkles, ShieldCheck, RefreshCw, ImageIcon, GitBranch, FileText } from 'lucide-react'
 import EnrichRunner from './enrich-runner'
 
 const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-4 bg-white dark:bg-gray-900'
@@ -898,6 +898,45 @@ npx tsx --env-file=.env.local scripts/score-data-quality.ts --write`}
             }
             note="Heuristics live in the script. Tune by editing the scoring functions, run dry-run, eyeball the canary table, then re-run with --write. Recompute after each enrich-all run, mark-cover-override sweep, or import."
           />
+        </div>
+
+        {/* LLM-facing surfaces */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">LLM-facing surfaces (llms.txt + .md exports)</h2>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            <a href="/llms.txt" className="font-mono text-xs underline">/llms.txt</a> is a curated, plain-text entry point for LLM crawlers (GPTBot,
+            ClaudeBot, PerplexityBot, OAI-SearchBot, Google-Extended). It lists the highest-value canonical URLs — methodology,
+            data quality, essays, hub pages — so a model has one place to start. The total book count and country count are
+            rendered live from the homepage query, and the <code className="font-mono text-xs">/banned-books-week</code> link
+            is gated on <code className="font-mono text-xs">bbw_config.enabled</code>, so it disappears out of season.
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            Each long-form essay plus <code className="font-mono text-xs">/methodology</code>,{' '}
+            <code className="font-mono text-xs">/data-quality</code>, and <code className="font-mono text-xs">/about</code>{' '}
+            has a parallel <code className="font-mono text-xs">.md</code> URL (e.g.{' '}
+            <a href="/methodology.md" className="font-mono text-xs underline">/methodology.md</a>) that serves the same prose
+            as clean markdown with YAML frontmatter — no JSX, no nav chrome. The HTML page advertises it via{' '}
+            <code className="font-mono text-xs">&lt;link rel=&quot;alternate&quot; type=&quot;text/markdown&quot;&gt;</code>.
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            <strong className="text-gray-800 dark:text-gray-200">When to touch them:</strong> edit the essay or reference page
+            as usual, then mirror the change in{' '}
+            <code className="font-mono text-xs">src/lib/markdown-pages/&lt;slug&gt;.ts</code> so the{' '}
+            <code className="font-mono text-xs">.md</code> twin stays in sync. When adding a new essay, also add it to{' '}
+            <code className="font-mono text-xs">src/app/llms.txt/route.ts</code> (description map) and add the new{' '}
+            <code className="font-mono text-xs">.md</code> URL to{' '}
+            <code className="font-mono text-xs">src/lib/sitemap-static-entries.ts</code>.
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            <strong className="text-gray-800 dark:text-gray-200">Rule:</strong>{' '}
+            <code className="font-mono text-xs">.md</code> exports are for long-form prose only. Do not create per-book or
+            per-author <code className="font-mono text-xs">.md</code> pages — book and author detail pages already publish
+            structured citation via JSON-LD (Book, Person, FAQPage, ItemList, additionalProperty.dataQualityStatus), which is
+            the right channel for AI citation and avoids creating thousands of duplicate canonical surfaces.
+          </p>
         </div>
 
         {/* Maintenance */}

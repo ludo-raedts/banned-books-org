@@ -12,7 +12,10 @@ export const metadata: Metadata = {
       'A history of censorship from the burning of the Library of Alexandria to modern school board challenges. How book banning evolved across 2,000 years.',
     type: 'article',
   },
-  alternates: { canonical: '/history' },
+  alternates: {
+    canonical: '/history',
+    types: { 'text/markdown': '/history.md' },
+  },
 }
 
 const jsonLd = {

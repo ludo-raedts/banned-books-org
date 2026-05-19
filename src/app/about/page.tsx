@@ -12,7 +12,10 @@ import ContactForm from '@/components/contact-form'
 export const metadata: Metadata = {
   title: 'About',
   description: 'Banned Books is an independent open catalogue of books banned by governments and schools worldwide. Learn about our mission, methodology, and editorial principles.',
-  alternates: { canonical: '/about' },
+  alternates: {
+    canonical: '/about',
+    types: { 'text/markdown': '/about.md' },
+  },
 }
 
 async function getStats() {
