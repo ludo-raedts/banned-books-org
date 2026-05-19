@@ -91,9 +91,8 @@ const steps: Step[] = [
   {
     name: 'Gutenberg IDs',
     script: 'enrich-gutenberg.ts',
-    args: [],
+    args: APPLY ? ['--apply'] : [],
     gpt: false,
-    alwaysWrites: true,
     gutenberg: true,
   },
   {
