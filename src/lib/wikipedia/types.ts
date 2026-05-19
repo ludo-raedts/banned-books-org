@@ -13,6 +13,7 @@ export type QualityFlag =
   | 'unmapped_reason'              // notes did not match any reason pattern
   | 'import_ban_no_explicit_reason'// notes only describe an import-ban mechanism, no underlying reason
   | 'possible_duplicate'           // dedup found a 0.5 < sim ≤ 0.85 match
+  | 'possible_year_dup_for_book'   // dedup matched an existing book and the book already has a ban in the same country+scope within ±NEARBY_BAN_YEAR_WINDOW
   | 'model_3_review_needed'        // title contained native-script or meaning annotation; editor decides script + language
   | 'defamation_suit_civil'        // notes describe a civil defamation suit, not a state-imposed ban
   | 'civil_action_private_party'   // private party obtained an injunction / sued for damages / filed a lawsuit
@@ -91,6 +92,10 @@ export type ImportDecision =
       reason: ReasonMapping
       dedup: DedupResult
       quality_flags: QualityFlag[]
+      // Set when 'possible_year_dup_for_book' triggered the review routing,
+      // so commitReview can record which existing ban the new row is likely
+      // a duplicate of. NULL when review was triggered by some other flag.
+      nearby_ban?: { ban_id: number; year_started: number } | null
     }
 
 // Per-section column mapping. Indices are 0-based cell positions within a

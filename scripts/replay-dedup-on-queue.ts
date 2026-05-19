@@ -50,7 +50,7 @@ async function main() {
   const limit = limitFlag ? Number(limitFlag.split('=')[1]) : null
 
   const { adminClient } = await import('../src/lib/supabase')
-  const { dedupAgainstBooks } = await import('../src/lib/wikipedia/dedup')
+  const { dedupAgainstBooks, findNearbyBanForBook } = await import('../src/lib/wikipedia/dedup')
   const { mapReason } = await import('../src/lib/wikipedia/reason-mapper')
   const { decide, commitDecision, newPgClient } = await import('../src/lib/wikipedia/importer')
   const { WIKIPEDIA_SOURCES } = await import('../src/lib/wikipedia/config')
@@ -144,12 +144,29 @@ async function main() {
 
         const dedup = await dedupAgainstBooks(sb, parsedRow)
         const reasonResult = mapReason(parsedRow.notes_raw, section.fallback_reason_slug)
+        // Mirror the soft-dup check in import-wikipedia-list.ts so re-played
+        // rows that target an existing book are routed to review whenever
+        // that book already carries a same-country / same-scope ban within
+        // ±NEARBY_BAN_YEAR_WINDOW. Without this, the replay would keep
+        // promoting near-duplicates to auto_add_ban silently.
+        const replayCountryCode = section.country_code ?? sourceConfig.country_code
+        const nearbyBan =
+          dedup.kind === 'duplicate' && parsedRow.year !== null && replayCountryCode
+            ? await findNearbyBanForBook(
+                sb,
+                dedup.book_id,
+                replayCountryCode,
+                section.scope_default,
+                parsedRow.year,
+              )
+            : null
 
         const decision = decide({
           row: parsedRow,
           reason: reasonResult.mapping,
           reasonFlags: reasonResult.extra_flags,
           dedup,
+          nearbyBan,
         })
 
         const oldKind =

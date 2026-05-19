@@ -57,12 +57,20 @@ export type DecideInput = {
   reason: ReasonMapping
   reasonFlags: QualityFlag[]
   dedup: DedupResult
+  // Set when the dedup-matched book already has a ban in the same country
+  // and scope within ±NEARBY_BAN_YEAR_WINDOW of row.year (see
+  // findNearbyBanForBook in dedup.ts). Forces the row to review so an editor
+  // can choose between MERGE (extend the existing ban's source/reason links)
+  // and KEEP-BOTH (genuinely distinct event). Only meaningful when
+  // dedup.kind === 'duplicate'; callers MAY omit it otherwise.
+  nearbyBan?: import('./dedup').NearbyBan | null
 }
 
 export function decide(input: DecideInput): ImportDecision {
-  const { row, reason, reasonFlags, dedup } = input
+  const { row, reason, reasonFlags, dedup, nearbyBan } = input
   const flags: QualityFlag[] = [...row.quality_flags, ...reasonFlags]
   if (dedup.kind === 'possible_duplicate') flags.push('possible_duplicate')
+  if (dedup.kind === 'duplicate' && nearbyBan) flags.push('possible_year_dup_for_book')
 
   // Baseline quality gates that both auto-paths share. The only difference
   // between auto_approve and auto_add_ban is whether dedup found an existing
@@ -80,7 +88,14 @@ export function decide(input: DecideInput): ImportDecision {
   if (baselineEligible && dedup.kind === 'duplicate') {
     return { mode: 'auto_add_ban', row, reason, dedup }
   }
-  return { mode: 'review', row, reason, dedup, quality_flags: flags }
+  return {
+    mode: 'review',
+    row,
+    reason,
+    dedup,
+    quality_flags: flags,
+    nearby_ban: nearbyBan ?? null,
+  }
 }
 
 export type CommitResult =
@@ -293,7 +308,7 @@ async function commitReview(
   section: SectionConfig,
   decision: Extract<ImportDecision, { mode: 'review' }>,
 ): Promise<CommitResult> {
-  const { row, reason, dedup, quality_flags } = decision
+  const { row, reason, dedup, quality_flags, nearby_ban } = decision
 
   // Stable source_row_id per source — slugified title under the section
   // anchor. Survives Wikipedia revid changes; if the same page+title comes
@@ -353,6 +368,11 @@ async function commitReview(
     quality_flags,
     reason_mapping: reason,
     dedup_check: dedup.kind === 'none' ? null : dedup,
+    // Identifies the existing same-book/same-country/same-scope ban (within
+    // NEARBY_BAN_YEAR_WINDOW) that triggered 'possible_year_dup_for_book'.
+    // Null when the flag was not raised. Used by the admin /import-review
+    // UI to show "this is probably a soft-duplicate of ban id=N (year=Y)".
+    nearby_ban_check: nearby_ban ?? null,
     source_context: sourceContext,
   }
 

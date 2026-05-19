@@ -19,7 +19,7 @@ import { WIKIPEDIA_SOURCES } from '../src/lib/wikipedia/config'
 import { fetchWikipediaPage } from '../src/lib/wikipedia/fetcher'
 import { parseWikipediaPage } from '../src/lib/wikipedia/parser'
 import { mapReason, type ReasonMapResult } from '../src/lib/wikipedia/reason-mapper'
-import { dedupAgainstBooks } from '../src/lib/wikipedia/dedup'
+import { dedupAgainstBooks, findNearbyBanForBook } from '../src/lib/wikipedia/dedup'
 import {
   commitDecision,
   decide,
@@ -102,11 +102,29 @@ async function main(): Promise<void> {
   for (const item of allRows) {
     const reason = mapReason(item.row.notes_raw, item.section.fallback_reason_slug)
     const dedup = await dedupAgainstBooks(sb, item.row)
+    // Soft-dup check: when dedup matched an existing book and the row has a
+    // year, see whether that book already has a ban in the same country+scope
+    // within ±NEARBY_BAN_YEAR_WINDOW. If so, decide() will push
+    // 'possible_year_dup_for_book' and route to review instead of silently
+    // auto_add_ban — preventing the Lolita-style 1955-vs-1956 dupes that
+    // the bans_unique_per_scope constraint cannot see.
+    const countryCode = item.section.country_code ?? config.country_code
+    const nearbyBan =
+      dedup.kind === 'duplicate' && item.row.year !== null && countryCode
+        ? await findNearbyBanForBook(
+            sb,
+            dedup.book_id,
+            countryCode,
+            item.section.scope_default,
+            item.row.year,
+          )
+        : null
     const decision = decide({
       row: item.row,
       reason: reason.mapping,
       reasonFlags: reason.extra_flags,
       dedup,
+      nearbyBan,
     })
     classified.push({ row: item.row, section: item.section, reason, dedup, decision })
   }

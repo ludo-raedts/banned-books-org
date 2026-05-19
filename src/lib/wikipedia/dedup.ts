@@ -174,3 +174,55 @@ export async function dedupAgainstBooks(
     match_type: 'fuzzy_possible',
   }
 }
+
+// Window (in years) for nearby-ban detection. The `bans_unique_per_scope`
+// UNIQUE constraint catches year-exact duplicates; this widens the net so
+// the auto_add_ban path doesn't silently insert a second row for the same
+// real-world event when two sources report it with off-by-N years.
+// Empirically (data/ban-soft-dupes-review.md, 2026-05-19): a ±3-year window
+// covers 36 of 42 known soft-duplicate groups while leaving room for
+// genuinely distinct same-country/same-scope events (e.g. The Stranger US
+// 1980 vs 1982 challenges; Burned US 2001 vs 2007). Wider windows route
+// too many legitimate re-banning events to review.
+export const NEARBY_BAN_YEAR_WINDOW = 3
+
+export type NearbyBan = { ban_id: number; year_started: number }
+
+// Returns the closest existing ban on `bookId` matching `(country_code, scope)`
+// within ±NEARBY_BAN_YEAR_WINDOW of `year`, or `null` if none. The strict
+// year-exact case is handled separately by the SELECT-first guard in
+// commitNewBanForBook + the bans_unique_per_scope UNIQUE constraint; we
+// deliberately skip year-equal rows here so this helper only flags the
+// soft-dup case the constraint cannot see.
+export async function findNearbyBanForBook(
+  sb: Sb,
+  bookId: number,
+  countryCode: string,
+  scopeSlug: string,
+  year: number,
+): Promise<NearbyBan | null> {
+  const scopeRes = await sb.from('scopes').select('id').eq('slug', scopeSlug).maybeSingle()
+  if (!scopeRes.data) return null
+  const scopeId = scopeRes.data.id as number
+
+  const { data, error } = await sb
+    .from('bans')
+    .select('id, year_started')
+    .eq('book_id', bookId)
+    .eq('country_code', countryCode)
+    .eq('scope_id', scopeId)
+    .gte('year_started', year - NEARBY_BAN_YEAR_WINDOW)
+    .lte('year_started', year + NEARBY_BAN_YEAR_WINDOW)
+  if (error) throw new Error(`findNearbyBanForBook: ${error.message}`)
+
+  let best: NearbyBan | null = null
+  for (const r of data ?? []) {
+    if (r.year_started == null) continue
+    if (r.year_started === year) continue // exact-match handled by UNIQUE constraint
+    const candidate = { ban_id: r.id as number, year_started: r.year_started as number }
+    if (!best || Math.abs(candidate.year_started - year) < Math.abs(best.year_started - year)) {
+      best = candidate
+    }
+  }
+  return best
+}
