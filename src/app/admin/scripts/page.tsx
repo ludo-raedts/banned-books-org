@@ -461,6 +461,23 @@ npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force`}
           />
 
           <Script
+            name="enrich-gutenberg.ts"
+            what="Looks up each book on Project Gutenberg via the Gutendex API (title + author) and stores the Gutenberg ebook id when the API returns a copyright=false match whose title normalises into (or contains) the DB title. Public-domain titles only — copyrighted entries are skipped at the API level. Rate-limited to 1 req/sec."
+            tags={['free']}
+            command={`# Always-writes: there is no dry-run mode — run with --apply via enrich-all.ts
+npx tsx --env-file=.env.local scripts/enrich-gutenberg.ts`}
+            writes={
+              <>
+                Only targets books where <code className="font-mono">gutenberg_id IS NULL</code>. Writes the integer{' '}
+                <code className="font-mono">gutenberg_id</code> on hit; misses leave the row untouched so it stays in the
+                candidate pool. Resolved IDs render as{' '}
+                <code className="font-mono">https://gutenberg.org/ebooks/&lt;gutenberg_id&gt;</code>.
+              </>
+            }
+            note="Gating-by-NULL means a miss is retried on every run (unlike archive.org, which stamps a permanent 'not_found' verdict). Safe but slow — that's why enrich-all.ts gates this step behind --no-gutenberg."
+          />
+
+          <Script
             name="enrich-archive-org.ts"
             what="Looks up each book on archive.org via the Advanced Search API (title + author + mediatype:texts) and stores the identifier when a match passes the title-contains + author-last-name validation. One lookup per book, ever: archive_org_checked_at is set on both hit and miss, so 'not_found' is sticky and the catalogue is never re-queried wholesale. Rate-limited to 1 req/sec."
             tags={['free']}
