@@ -68,3 +68,8 @@ next-env.d.ts
 
 # wikipedia bulk-parser run artifacts (timestamped per run, local-only)
 /data/wikipedia-import-runs/
+
+# The Literature Police PDFs (Western Cape Provincial Archives, via P.D. McDonald).
+# Re-fetchable from https://theliteraturepolice.com/documents/ — filenames are
+# pinned in scripts/import-literature-police.ts and ban_sources.source_url.
+/data/literature-police-pdfs/
