@@ -13,6 +13,24 @@
 import { Client } from 'pg'
 import { slugify } from './slugify'
 
+// Pick the first candidate that slugifies to a non-empty string. Non-Latin
+// titles (Hanzi, Cyrillic, Arabic, …) collapse to '' under slugify(), so we
+// fall back to the transliteration and then the English-meaningful variant —
+// matching the doctrine in slugify.ts and the LLM-pass canonical-title rule
+// in normalize-extraction.ts (chooseCanonicalTitle).
+export function pickSlugSource(
+  title: string,
+  titleTransliterated?: string | null,
+  titleEnglishMeaningful?: string | null,
+): string {
+  for (const candidate of [title, titleTransliterated, titleEnglishMeaningful]) {
+    if (!candidate) continue
+    const slug = slugify(candidate)
+    if (slug) return slug
+  }
+  return ''
+}
+
 // Author shape exposed to importer callers. `display_name` is the
 // slug-canonical Anglo-friendly form (e.g. "Yun Chen", "Sadeq Hedayat") and
 // drives both `authors.slug` and the `display_name` column. The remaining
@@ -97,9 +115,15 @@ export async function commitParsedRow(input: CommitInput, pg: Client): Promise<C
     const scopeId = scopeRes.rows[0].id as number
 
     // 3. Book
-    const slug = slugify(input.title)
+    const slug = pickSlugSource(
+      input.title,
+      input.title_transliterated,
+      input.title_english_meaningful,
+    )
     if (!slug) {
-      throw new Error(`commitParsedRow: slugify produced empty slug for title '${input.title}'`)
+      throw new Error(
+        `commitParsedRow: slugify produced empty slug for title '${input.title}' (no usable transliteration or English-meaningful fallback)`,
+      )
     }
     const bookRes = await pg.query(
       `insert into books (
