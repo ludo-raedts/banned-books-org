@@ -1,10 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import CitationBlock from '@/components/citation-block'
-import { buildCitationMeta } from '@/lib/citation-meta'
-
-const PAGE_CANONICAL = 'https://www.banned-books.org/data-quality'
-const PAGE_ONLINE_DATE = '2026-05-18'
 
 export const metadata: Metadata = {
   title: 'Data quality — how we classify records',
@@ -14,12 +9,6 @@ export const metadata: Metadata = {
     canonical: '/data-quality',
     types: { 'text/markdown': '/data-quality.md' },
   },
-  other: buildCitationMeta({
-    entityType: 'methodology',
-    title: 'Data quality — how we classify records',
-    url: PAGE_CANONICAL,
-    onlineDate: PAGE_ONLINE_DATE,
-  }),
 }
 
 export default function DataQualityPage() {
@@ -47,15 +36,6 @@ export default function DataQualityPage() {
           much weight to put on it.
         </p>
       </div>
-
-      <CitationBlock
-        entityType="methodology"
-        entity={{
-          title: 'Data quality — how we classify records',
-          slug: 'data-quality',
-        }}
-        url={PAGE_CANONICAL}
-      />
 
       <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-red-700 prose-a:no-underline hover:prose-a:underline">
         <h2>Three levels</h2>
