@@ -40,6 +40,7 @@ type Author = {
   name_transliterated: string | null
   name_english: string | null
   original_language: string | null
+  created_at: string | null
   updated_at: string | null
   is_placeholder: boolean | null
   data_quality_status: DataQualityStatus
@@ -121,7 +122,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at')
     .eq('slug', slug)
     .single()
 
@@ -256,6 +257,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const personJsonLd: Record<string, unknown> | null = isPlaceholder ? null : {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': `${canonicalUrlLd}#person`,
     name: a.display_name,
     url: canonicalUrlLd,
     mainEntityOfPage: canonicalUrlLd,
@@ -394,6 +396,23 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     ],
   }
 
+  // WebPage JSON-LD — same role as on book detail pages: name Banned Books
+  // as the page author/publisher for citation-tool attribution. Person LD
+  // above carries the real person. Placeholder records (Anonymous/Unknown)
+  // get the WebPage without an `about` ref because no Person entity exists
+  // to point at.
+  const webPageJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: canonicalUrlLd,
+    name: `${a.display_name} — Banned Books`,
+    author: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
+    publisher: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
+  }
+  if (!isPlaceholder) webPageJsonLd.about = { '@id': `${canonicalUrlLd}#person` }
+  if (a.created_at) webPageJsonLd.datePublished = a.created_at
+  if (a.updated_at) webPageJsonLd.dateModified = a.updated_at
+
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   return (
@@ -404,6 +423,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           dangerouslySetInnerHTML={{ __html: ldHtml(personJsonLd) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(webPageJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(breadcrumbJsonLd) }}

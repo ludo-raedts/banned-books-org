@@ -256,16 +256,13 @@ export default async function HomePage() {
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': 'https://www.banned-books.org/#website',
     name: 'Banned Books',
     alternateName: 'banned-books.org',
     url: 'https://www.banned-books.org',
     description: `An international catalogue of ${total.toLocaleString('en')} books banned by governments, schools, and libraries worldwide.`,
-    publisher: {
-      '@type': 'Organization',
-      name: 'Banned Books',
-      url: 'https://www.banned-books.org',
-      logo: 'https://www.banned-books.org/icon.svg',
-    },
+    author: { '@id': 'https://www.banned-books.org/#organization' },
+    publisher: { '@id': 'https://www.banned-books.org/#organization' },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -279,6 +276,7 @@ export default async function HomePage() {
   const organizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': 'https://www.banned-books.org/#organization',
     name: 'Banned Books',
     url: 'https://www.banned-books.org',
     logo: 'https://www.banned-books.org/icon.svg',

@@ -292,6 +292,7 @@ type BookDetail = {
   title_native: string | null
   title_transliterated: string | null
   title_english_meaningful: string | null
+  created_at: string | null
   updated_at: string | null
   data_quality_status: DataQualityStatus
   data_quality_evaluated_at: string | null
@@ -322,7 +323,7 @@ export default async function BookPage({
       bookshop_status, bookshop_isbn13, warning_level, inclusion_rationale, extended_context,
       original_language,
       title_native, title_transliterated, title_english_meaningful,
-      updated_at,
+      created_at, updated_at,
       data_quality_status, data_quality_evaluated_at,
       book_authors(authors(display_name, slug)),
       bans(
@@ -607,6 +608,7 @@ export default async function BookPage({
   const bookJsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Book',
+    '@id': `${canonicalUrl}#book`,
     name: book.title,
     url: canonicalUrl,
     mainEntityOfPage: canonicalUrl,
@@ -670,6 +672,24 @@ export default async function BookPage({
     ],
   }
 
+  // WebPage JSON-LD — names Banned Books as the page author/publisher so
+  // citation tools (MyBib, ZoteroBib, Cite This For Me) can attribute the
+  // catalogue page itself to us, instead of falling back to "Anon." The
+  // Book LD above already carries the work's real author (Nabokov, etc.);
+  // this LD is about the *page*, not the book. datePublished/dateModified
+  // come from the books row so generators stop guessing the crawl year.
+  const webPageJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: canonicalUrl,
+    name: `${book.title} — Banned Books`,
+    author: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
+    publisher: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
+    about: { '@id': `${canonicalUrl}#book` },
+  }
+  if (book.created_at) webPageJsonLd.datePublished = book.created_at
+  if (book.updated_at) webPageJsonLd.dateModified = book.updated_at
+
   // Escape `<` to prevent a malicious title from closing the script tag early.
   // JSON.stringify already escapes `&`, `'`, `"` inside string values.
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
@@ -679,6 +699,10 @@ export default async function BookPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(bookJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ldHtml(webPageJsonLd) }}
       />
       <script
         type="application/ld+json"
