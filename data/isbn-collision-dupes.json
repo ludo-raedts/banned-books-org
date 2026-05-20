@@ -1,0 +1,20 @@
+[
+  {
+    "keep": 1088,
+    "drop": 6362,
+    "keep_title": "Respect: Everything a Guy Needs to Know About Sex",
+    "drop_title": "Respect: Everything a Guy Needs to Know About Sex",
+    "confidence": "high",
+    "reasons": ["same author Inti Chávez Pérez; identical title; both KR ban"],
+    "flags": []
+  },
+  {
+    "keep": 368,
+    "drop": 6133,
+    "keep_title": "Simon vs. the Homo Sapiens Agenda",
+    "drop_title": "Yo, Simon, homo sapiens",
+    "confidence": "high",
+    "reasons": ["Becky Albertalli — Spanish-language edition of the same work; OL lookup of ES title resolves to EN ISBN"],
+    "flags": ["different language editions — Spanish slug preserved as alias"]
+  }
+]

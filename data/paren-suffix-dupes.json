@@ -1,0 +1,1817 @@
+[
+  {
+    "keep": 7536,
+    "drop": 208,
+    "keep_title": "Tilt",
+    "drop_title": "Tilt (EH)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ellen Hopkins"
+    ],
+    "flags": [
+      "year mismatch 2012 vs 2000"
+    ]
+  },
+  {
+    "keep": 381,
+    "drop": 1712,
+    "keep_title": "Vampire Academy",
+    "drop_title": "Vampire Academy (A Graphic Novel)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Richelle Mead"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2025"
+    ]
+  },
+  {
+    "keep": 608,
+    "drop": 1095,
+    "keep_title": "Melissa",
+    "drop_title": "Melissa (George)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Alex Gino"
+    ],
+    "flags": [
+      "year mismatch 2015 vs 2024"
+    ]
+  },
+  {
+    "keep": 1099,
+    "drop": 461,
+    "keep_title": "Untamed",
+    "drop_title": "Untamed (PCC)",
+    "confidence": "high",
+    "reasons": [
+      "same author: P. C. Cast"
+    ],
+    "flags": [
+      "year mismatch 2025 vs 2000"
+    ]
+  },
+  {
+    "keep": 10,
+    "drop": 722,
+    "keep_title": "Lady Chatterley's Lover",
+    "drop_title": "Lady Chatterley's Lover (Japanese translation)",
+    "confidence": "high",
+    "reasons": [
+      "same author: D.H. Lawrence",
+      "year 1928"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 1124,
+    "drop": 386,
+    "keep_title": "Choke",
+    "drop_title": "Choke (CP)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Chuck Palahniuk"
+    ],
+    "flags": [
+      "year mismatch 2025 vs 2000"
+    ]
+  },
+  {
+    "keep": 1368,
+    "drop": 1549,
+    "keep_title": "On the Bright Side, I'm Now the Girlfriend of a Sex God",
+    "drop_title": "On the Bright Side, I'm Now the Girlfriend of a Sex God (Confessions of Georgia Nicolson #2)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Louise Rennison",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 203,
+    "drop": 1208,
+    "keep_title": "Assassination Classroom",
+    "drop_title": "Assassination Classroom (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yūsei Matsui"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2024"
+    ]
+  },
+  {
+    "keep": 7537,
+    "drop": 276,
+    "keep_title": "Jack of Hearts",
+    "drop_title": "Jack of Hearts (and other parts)",
+    "confidence": "high",
+    "reasons": [
+      "same author: L. C. Rosen",
+      "year 2018"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 1141,
+    "drop": 469,
+    "keep_title": "If I Was Your Girl",
+    "drop_title": "If I Was Your Girl (MR)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Meredith Russo"
+    ],
+    "flags": [
+      "year mismatch 2025 vs 2000"
+    ]
+  },
+  {
+    "keep": 1118,
+    "drop": 533,
+    "keep_title": "After",
+    "drop_title": "After (AE)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Amy Efaw"
+    ],
+    "flags": [
+      "year mismatch 2025 vs 2000"
+    ]
+  },
+  {
+    "keep": 7538,
+    "drop": 1253,
+    "keep_title": "37 Things I Love",
+    "drop_title": "37 Things I Love (in no particular order)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kekla Magoon"
+    ],
+    "flags": [
+      "year mismatch 2012 vs 2025"
+    ]
+  },
+  {
+    "keep": 7232,
+    "drop": 2049,
+    "keep_title": "Tokyo Ghoul",
+    "drop_title": "Tokyo Ghoul (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Sui Ishida"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7539,
+    "drop": 1800,
+    "keep_title": "Friendship, Dating, and Relationships",
+    "drop_title": "Friendship, Dating, and Relationships (Teens: Being Gay, Lesbian, Bisexual, or Transgender)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Simone Payment"
+    ],
+    "flags": [
+      "year mismatch 2010 vs 2025"
+    ]
+  },
+  {
+    "keep": 7540,
+    "drop": 1856,
+    "keep_title": "Life at School and in the Community",
+    "drop_title": "Life at School and in the Community (Teens: Being Gay, Lesbian, Bisexual, or Transgender)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Richard Worth"
+    ],
+    "flags": [
+      "year mismatch 1686 vs 2025"
+    ]
+  },
+  {
+    "keep": 7541,
+    "drop": 1979,
+    "keep_title": "Fairy Tail",
+    "drop_title": "Fairy Tail (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hiro Mashima"
+    ],
+    "flags": [
+      "year mismatch 2008 vs 2024"
+    ]
+  },
+  {
+    "keep": 7542,
+    "drop": 1997,
+    "keep_title": "The Sandman",
+    "drop_title": "The Sandman (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Neil Gaiman"
+    ],
+    "flags": [
+      "year mismatch 1991 vs 2024"
+    ]
+  },
+  {
+    "keep": 7543,
+    "drop": 2008,
+    "keep_title": "Boruto: Naruto Next Generations",
+    "drop_title": "Boruto: Naruto Next Generations (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ukyo Kodachi"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2025"
+    ]
+  },
+  {
+    "keep": 7544,
+    "drop": 2038,
+    "keep_title": "Hunter X Hunter",
+    "drop_title": "Hunter X Hunter (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yoshihiro Togashi"
+    ],
+    "flags": [
+      "year mismatch 1999 vs 2025"
+    ]
+  },
+  {
+    "keep": 7545,
+    "drop": 2040,
+    "keep_title": "Jujutsu Kaisen",
+    "drop_title": "Jujutsu Kaisen (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gege Akutami"
+    ],
+    "flags": [
+      "year mismatch 2019 vs 2025"
+    ]
+  },
+  {
+    "keep": 7546,
+    "drop": 2042,
+    "keep_title": "Parasyte",
+    "drop_title": "Parasyte (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hitoshi Iwaaki"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2025"
+    ]
+  },
+  {
+    "keep": 7547,
+    "drop": 2047,
+    "keep_title": "The Odyssey",
+    "drop_title": "The Odyssey (Graphic Novel)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gareth Hinds"
+    ],
+    "flags": [
+      "year mismatch 2010 vs 2025"
+    ]
+  },
+  {
+    "keep": 7548,
+    "drop": 2048,
+    "keep_title": "The Promised Neverland",
+    "drop_title": "The Promised Neverland (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kaiu Shirai"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2025"
+    ]
+  },
+  {
+    "keep": 7549,
+    "drop": 2070,
+    "keep_title": "InuYasha",
+    "drop_title": "InuYasha (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Rumiko Takahashi"
+    ],
+    "flags": [
+      "year mismatch 1998 vs 2024"
+    ]
+  },
+  {
+    "keep": 7550,
+    "drop": 2094,
+    "keep_title": "LGBT Families",
+    "drop_title": "LGBT Families (Changing Families)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Leanna Currie-McGhee",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 4819,
+    "drop": 7612,
+    "keep_title": "The Walking Dead (Series, Title Not Specified)",
+    "drop_title": "The Walking Dead",
+    "confidence": "high",
+    "reasons": [
+      "same author: Robert Kirkman"
+    ],
+    "flags": [
+      "year mismatch 2004 vs 2024"
+    ]
+  },
+  {
+    "keep": 855,
+    "drop": 6371,
+    "keep_title": "Politics for Everyone",
+    "drop_title": "Politics for Everyone (Chính Trị Bình Dân)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Pham Doan Trang"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 1077,
+    "drop": 6372,
+    "keep_title": "A Handbook of How to Support Prisoners of Conscience",
+    "drop_title": "A Handbook of How to Support Prisoners of Conscience (Cẩm nang nuôi tù)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Pham Doan Trang"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7551,
+    "drop": 2641,
+    "keep_title": "Teen Titans",
+    "drop_title": "Teen Titans (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: DC Comics"
+    ],
+    "flags": [
+      "year mismatch 2004 vs 2024"
+    ]
+  },
+  {
+    "keep": 2731,
+    "drop": 7552,
+    "keep_title": "El Libro de la Familia/The Family Book (Spanish Edition)",
+    "drop_title": "El Libro de la Familia/The Family Book",
+    "confidence": "high",
+    "reasons": [
+      "same author: Todd Parr",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7553,
+    "drop": 2750,
+    "keep_title": "Pay It Forward",
+    "drop_title": "Pay It Forward (Young Readers Edition)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Catherine Ryan Hyde"
+    ],
+    "flags": [
+      "year mismatch 1999 vs 2024"
+    ]
+  },
+  {
+    "keep": 7554,
+    "drop": 2928,
+    "keep_title": "Be Your True Self",
+    "drop_title": "Be Your True Self (Social Justice and You)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gonzalez. Maribel Valdez"
+    ],
+    "flags": [
+      "year mismatch 2022 vs 2025"
+    ]
+  },
+  {
+    "keep": 7555,
+    "drop": 3148,
+    "keep_title": "Lofladoros. Un plan terrible",
+    "drop_title": "Lofladoros. Un plan terrible (Lumberjanes: A Terrible Plan Spanish Edition)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Shannon Watters",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7556,
+    "drop": 3174,
+    "keep_title": "Magical Boy",
+    "drop_title": "Magical Boy (Series, Title Not Specifed)",
+    "confidence": "high",
+    "reasons": [
+      "same author: The Kao"
+    ],
+    "flags": [
+      "year mismatch 2022 vs 2025"
+    ]
+  },
+  {
+    "keep": 3289,
+    "drop": 7558,
+    "keep_title": "The Sum of Us: How Racism Hurts Everyone (Adapted for young readers)",
+    "drop_title": "The Sum of Us: How Racism Hurts Everyone",
+    "confidence": "high",
+    "reasons": [
+      "same author: Heather C. McGhee",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7559,
+    "drop": 3295,
+    "keep_title": "Things That Make White People Uncomfortable",
+    "drop_title": "Things That Make White People Uncomfortable (Adapted for Young Adults)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Michael Bennett"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2025"
+    ]
+  },
+  {
+    "keep": 7560,
+    "drop": 3317,
+    "keep_title": "Wangjawa Deuleseumeikeo",
+    "drop_title": "Wangjawa Deuleseumeikeo (The Prince and the Dressmaker Korean Edition)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Jen Wang",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7561,
+    "drop": 3369,
+    "keep_title": "Berserk",
+    "drop_title": "Berserk (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kenaro Miura",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7562,
+    "drop": 3381,
+    "keep_title": "Hero Heel",
+    "drop_title": "Hero Heel (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Makoto Tateno"
+    ],
+    "flags": [
+      "year mismatch 2008 vs 2024"
+    ]
+  },
+  {
+    "keep": 7563,
+    "drop": 3419,
+    "keep_title": "Abortion",
+    "drop_title": "Abortion (Title, no author)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7564,
+    "drop": 3502,
+    "keep_title": "Calvin and Hobbes",
+    "drop_title": "Calvin and Hobbes (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Bill Watterson"
+    ],
+    "flags": [
+      "year mismatch 1988 vs 2025"
+    ]
+  },
+  {
+    "keep": 7565,
+    "drop": 3524,
+    "keep_title": "Child Sexual Abuse in the Catholic Church",
+    "drop_title": "Child Sexual Abuse in the Catholic Church (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7566,
+    "drop": 3528,
+    "keep_title": "Children of Violence in America",
+    "drop_title": "Children of Violence in America (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7567,
+    "drop": 3556,
+    "keep_title": "Crimes of Gender: Violence Against Women",
+    "drop_title": "Crimes of Gender: Violence Against Women (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7568,
+    "drop": 3616,
+    "keep_title": "Dog Tags",
+    "drop_title": "Dog Tags (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Alexander London"
+    ],
+    "flags": [
+      "year mismatch 2013 vs 2025"
+    ]
+  },
+  {
+    "keep": 7569,
+    "drop": 3668,
+    "keep_title": "Family Violence",
+    "drop_title": "Family Violence (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7570,
+    "drop": 3702,
+    "keep_title": "Fullmetal Alchemist",
+    "drop_title": "Fullmetal Alchemist (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hiromu Arakawa"
+    ],
+    "flags": [
+      "year mismatch 2005 vs 2025"
+    ]
+  },
+  {
+    "keep": 7571,
+    "drop": 3728,
+    "keep_title": "Gun Control",
+    "drop_title": "Gun Control (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7572,
+    "drop": 3730,
+    "keep_title": "Guns and Violence",
+    "drop_title": "Guns and Violence (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7573,
+    "drop": 3838,
+    "keep_title": "Mayo Clinic Family Health Book",
+    "drop_title": "Mayo Clinic Family Health Book (Unknown Edition)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Scott Litin"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2025"
+    ]
+  },
+  {
+    "keep": 7574,
+    "drop": 3851,
+    "keep_title": "Monsters of Mythology",
+    "drop_title": "Monsters of Mythology (Vol. not specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Bernard Evslin"
+    ],
+    "flags": [
+      "year mismatch 1967 vs 2025"
+    ]
+  },
+  {
+    "keep": 7575,
+    "drop": 3858,
+    "keep_title": "Mysteries of Mankind",
+    "drop_title": "Mysteries of Mankind (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: National Geographic Society"
+    ],
+    "flags": [
+      "year mismatch 1992 vs 2025"
+    ]
+  },
+  {
+    "keep": 7576,
+    "drop": 3886,
+    "keep_title": "Read With Dick and Jane books",
+    "drop_title": "Read With Dick and Jane books (Series, Title not specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Penguin Young Readers",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7577,
+    "drop": 3889,
+    "keep_title": "Reproductive Technologies",
+    "drop_title": "Reproductive Technologies (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7578,
+    "drop": 3900,
+    "keep_title": "Sexual Harassment",
+    "drop_title": "Sexual Harassment (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7579,
+    "drop": 3911,
+    "keep_title": "Suicide",
+    "drop_title": "Suicide (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7580,
+    "drop": 3918,
+    "keep_title": "Teen pregnancy",
+    "drop_title": "Teen pregnancy (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7581,
+    "drop": 3922,
+    "keep_title": "The Abortion Controversy",
+    "drop_title": "The Abortion Controversy (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7582,
+    "drop": 3931,
+    "keep_title": "The Chronicles of Vladimir Tod",
+    "drop_title": "The Chronicles of Vladimir Tod (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Heather Brewer"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2025"
+    ]
+  },
+  {
+    "keep": 7583,
+    "drop": 3943,
+    "keep_title": "The Digestive System",
+    "drop_title": "The Digestive System (Title and author only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Parramon",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7584,
+    "drop": 3952,
+    "keep_title": "The Great Civilizations",
+    "drop_title": "The Great Civilizations (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Sheila Wyborny"
+    ],
+    "flags": [
+      "year mismatch 2004 vs 2025"
+    ]
+  },
+  {
+    "keep": 7585,
+    "drop": 3955,
+    "keep_title": "The Haiti Earthquake",
+    "drop_title": "The Haiti Earthquake (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7586,
+    "drop": 4012,
+    "keep_title": "The Vampire Diaries",
+    "drop_title": "The Vampire Diaries (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: L. J. Smith"
+    ],
+    "flags": [
+      "year mismatch 1991 vs 2025"
+    ]
+  },
+  {
+    "keep": 7587,
+    "drop": 4039,
+    "keep_title": "Violence Against Women",
+    "drop_title": "Violence Against Women (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7588,
+    "drop": 4043,
+    "keep_title": "Violence in the Media",
+    "drop_title": "Violence in the Media (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7589,
+    "drop": 4055,
+    "keep_title": "Weapons of Mass Destruction",
+    "drop_title": "Weapons of Mass Destruction (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information Available",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7590,
+    "drop": 4139,
+    "keep_title": "Chainsaw Man",
+    "drop_title": "Chainsaw Man (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Tatsuki Fujimoto"
+    ],
+    "flags": [
+      "year mismatch 2019 vs 2025"
+    ]
+  },
+  {
+    "keep": 7591,
+    "drop": 4145,
+    "keep_title": "Children of the Sea",
+    "drop_title": "Children of the Sea (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Daisuke Igarashi"
+    ],
+    "flags": [
+      "year mismatch 2009 vs 2025"
+    ]
+  },
+  {
+    "keep": 7592,
+    "drop": 4237,
+    "keep_title": "Jojo's Bizarre Adventure",
+    "drop_title": "Jojo's Bizarre Adventure (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hirohiko Araki"
+    ],
+    "flags": [
+      "year mismatch 2008 vs 2025"
+    ]
+  },
+  {
+    "keep": 7593,
+    "drop": 4253,
+    "keep_title": "Locke & Key",
+    "drop_title": "Locke & Key (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Joe Hill"
+    ],
+    "flags": [
+      "year mismatch 1848 vs 2025"
+    ]
+  },
+  {
+    "keep": 7594,
+    "drop": 4259,
+    "keep_title": "Man-Eaters",
+    "drop_title": "Man-Eaters (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Chelsea Cain",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7595,
+    "drop": 4279,
+    "keep_title": "Mobile Suit Gundam Thunderbolt",
+    "drop_title": "Mobile Suit Gundam Thunderbolt (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yasuo Ohtagaki"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2025"
+    ]
+  },
+  {
+    "keep": 7596,
+    "drop": 4283,
+    "keep_title": "My Hero Academia",
+    "drop_title": "My Hero Academia (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kōhei Horikoshi"
+    ],
+    "flags": [
+      "year mismatch 2014 vs 2025"
+    ]
+  },
+  {
+    "keep": 7597,
+    "drop": 4311,
+    "keep_title": "Ranma 1/2",
+    "drop_title": "Ranma 1/2 (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Rumiko Takahashi"
+    ],
+    "flags": [
+      "year mismatch 2015 vs 2025"
+    ]
+  },
+  {
+    "keep": 7598,
+    "drop": 4391,
+    "keep_title": "The Iliad",
+    "drop_title": "The Iliad (A Graphic Novel)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gareth Hinds"
+    ],
+    "flags": [
+      "year mismatch 2019 vs 2025"
+    ]
+  },
+  {
+    "keep": 7599,
+    "drop": 4475,
+    "keep_title": "AirGear",
+    "drop_title": "AirGear (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Makoto Yukon",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7600,
+    "drop": 4476,
+    "keep_title": "Akira",
+    "drop_title": "Akira (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Katsuhiro Otomo"
+    ],
+    "flags": [
+      "year mismatch 1984 vs 2024"
+    ]
+  },
+  {
+    "keep": 7601,
+    "drop": 4477,
+    "keep_title": "Alice 19th",
+    "drop_title": "Alice 19th (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yu Watase",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7602,
+    "drop": 4495,
+    "keep_title": "Black Butler",
+    "drop_title": "Black Butler (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yana Toboso"
+    ],
+    "flags": [
+      "year mismatch 2010 vs 2024"
+    ]
+  },
+  {
+    "keep": 7603,
+    "drop": 4500,
+    "keep_title": "Bloom Into You",
+    "drop_title": "Bloom Into You (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Nakatani Nio"
+    ],
+    "flags": [
+      "year mismatch 2017 vs 2024"
+    ]
+  },
+  {
+    "keep": 7604,
+    "drop": 4501,
+    "keep_title": "Blue Exorcist",
+    "drop_title": "Blue Exorcist (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kazue Kato"
+    ],
+    "flags": [
+      "year mismatch 2011 vs 2024"
+    ]
+  },
+  {
+    "keep": 7605,
+    "drop": 4502,
+    "keep_title": "Bungo Stray Dogs",
+    "drop_title": "Bungo Stray Dogs (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kafka Asagiri"
+    ],
+    "flags": [
+      "year mismatch 2021 vs 2024"
+    ]
+  },
+  {
+    "keep": 7606,
+    "drop": 4504,
+    "keep_title": "Case Closed",
+    "drop_title": "Case Closed (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gosho Aoyama"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2024"
+    ]
+  },
+  {
+    "keep": 7607,
+    "drop": 4533,
+    "keep_title": "Fist of the North Star",
+    "drop_title": "Fist of the North Star (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Tetsuo Hara Buronson"
+    ],
+    "flags": [
+      "year mismatch 2021 vs 2024"
+    ]
+  },
+  {
+    "keep": 7608,
+    "drop": 4637,
+    "keep_title": "Paper Girls",
+    "drop_title": "Paper Girls (Series Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Brian K. Vaughan"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2024"
+    ]
+  },
+  {
+    "keep": 7609,
+    "drop": 4671,
+    "keep_title": "Rosario and Vampire",
+    "drop_title": "Rosario and Vampire (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Akihisa Ikeda"
+    ],
+    "flags": [
+      "year mismatch 2009 vs 2024"
+    ]
+  },
+  {
+    "keep": 7610,
+    "drop": 4685,
+    "keep_title": "Seven Deadly Sins",
+    "drop_title": "Seven Deadly Sins (Series, Title not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Nakaba Suzuki"
+    ],
+    "flags": [
+      "year mismatch 2015 vs 2024"
+    ]
+  },
+  {
+    "keep": 4801,
+    "drop": 7611,
+    "keep_title": "The Ten Things We Did (and Probably Shouldn't Have)",
+    "drop_title": "The Ten Things We Did",
+    "confidence": "high",
+    "reasons": [
+      "same author: Sarah Mlynowski",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7613,
+    "drop": 4833,
+    "keep_title": "Vampire Knight",
+    "drop_title": "Vampire Knight (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Matsuri Hino"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2024"
+    ]
+  },
+  {
+    "keep": 7614,
+    "drop": 4843,
+    "keep_title": "We Stand on Guard",
+    "drop_title": "We Stand on Guard (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Brian K. Vaughan"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2024"
+    ]
+  },
+  {
+    "keep": 7615,
+    "drop": 4863,
+    "keep_title": "Blade",
+    "drop_title": "Blade (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Tim Bowler"
+    ],
+    "flags": [
+      "year mismatch 2008 vs 2024"
+    ]
+  },
+  {
+    "keep": 7617,
+    "drop": 4968,
+    "keep_title": "Gender Equality",
+    "drop_title": "Gender Equality (Foundations of Democracy)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Marie des Neiges Léonard"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2024"
+    ]
+  },
+  {
+    "keep": 7618,
+    "drop": 5366,
+    "keep_title": "A Devil and Her Love Song",
+    "drop_title": "A Devil and Her Love Song (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Miyoshi Tōmori"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2024"
+    ]
+  },
+  {
+    "keep": 7619,
+    "drop": 5398,
+    "keep_title": "Ajin: Demi-Human",
+    "drop_title": "Ajin: Demi-Human (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gamon Sakurai",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7620,
+    "drop": 5434,
+    "keep_title": "Ao Haru Ride",
+    "drop_title": "Ao Haru Ride (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Io Sakisaka"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2024"
+    ]
+  },
+  {
+    "keep": 7621,
+    "drop": 5458,
+    "keep_title": "Beyond the Clouds: The Girl Who Fell from the Sky",
+    "drop_title": "Beyond the Clouds: The Girl Who Fell from the Sky (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Nicke",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7622,
+    "drop": 5460,
+    "keep_title": "Black Clover",
+    "drop_title": "Black Clover (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yūki Tabata"
+    ],
+    "flags": [
+      "year mismatch 2021 vs 2025"
+    ]
+  },
+  {
+    "keep": 7623,
+    "drop": 5461,
+    "keep_title": "Black Panther: A Nation Under Our Feet",
+    "drop_title": "Black Panther: A Nation Under Our Feet (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ta-Nehisi Coates",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7624,
+    "drop": 5474,
+    "keep_title": "Cagaster",
+    "drop_title": "Cagaster (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Kacho Hashimoto",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7625,
+    "drop": 5482,
+    "keep_title": "Check, Please!",
+    "drop_title": "Check, Please! (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ngozi Ukazu"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2024"
+    ]
+  },
+  {
+    "keep": 7626,
+    "drop": 5483,
+    "keep_title": "Chicagoland Detective Agency",
+    "drop_title": "Chicagoland Detective Agency (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Trina Robbins"
+    ],
+    "flags": [
+      "year mismatch 2010 vs 2024"
+    ]
+  },
+  {
+    "keep": 7627,
+    "drop": 5518,
+    "keep_title": "Dragon Ball Z",
+    "drop_title": "Dragon Ball Z (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Akira Toriyama"
+    ],
+    "flags": [
+      "year mismatch 2002 vs 2024"
+    ]
+  },
+  {
+    "keep": 7629,
+    "drop": 5587,
+    "keep_title": "Gin Tama",
+    "drop_title": "Gin Tama (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hideaki Sorachi"
+    ],
+    "flags": [
+      "year mismatch 2007 vs 2024"
+    ]
+  },
+  {
+    "keep": 7630,
+    "drop": 5639,
+    "keep_title": "Heroman",
+    "drop_title": "Heroman (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Stan Lee"
+    ],
+    "flags": [
+      "year mismatch 2013 vs 2024"
+    ]
+  },
+  {
+    "keep": 7631,
+    "drop": 5645,
+    "keep_title": "Hikaru No Go",
+    "drop_title": "Hikaru No Go (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yumi Hotta"
+    ],
+    "flags": [
+      "year mismatch 1999 vs 2024"
+    ]
+  },
+  {
+    "keep": 7633,
+    "drop": 5701,
+    "keep_title": "Kekkaishi",
+    "drop_title": "Kekkaishi (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yellow Tanabe"
+    ],
+    "flags": [
+      "year mismatch 2005 vs 2024"
+    ]
+  },
+  {
+    "keep": 7634,
+    "drop": 5755,
+    "keep_title": "Manifest Destiny",
+    "drop_title": "Manifest Destiny (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Chris Dingess"
+    ],
+    "flags": [
+      "year mismatch 2014 vs 2024"
+    ]
+  },
+  {
+    "keep": 7635,
+    "drop": 5757,
+    "keep_title": "Mär: Märchen Awakens Romance",
+    "drop_title": "Mär: Märchen Awakens Romance (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Nobuyuki Anzai"
+    ],
+    "flags": [
+      "year mismatch 2005 vs 2024"
+    ]
+  },
+  {
+    "keep": 7636,
+    "drop": 5771,
+    "keep_title": "MeruPuri: Märchen Prince",
+    "drop_title": "MeruPuri: Märchen Prince (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Matsuri Hino"
+    ],
+    "flags": [
+      "year mismatch 2005 vs 2024"
+    ]
+  },
+  {
+    "keep": 7637,
+    "drop": 5781,
+    "keep_title": "Minecraft",
+    "drop_title": "Minecraft (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Sfé R. Monster"
+    ],
+    "flags": [
+      "year mismatch 2020 vs 2024"
+    ]
+  },
+  {
+    "keep": 7638,
+    "drop": 5793,
+    "keep_title": "My Hero Academia: School Briefs",
+    "drop_title": "My Hero Academia: School Briefs (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Anri Yoshi"
+    ],
+    "flags": [
+      "year mismatch 2019 vs 2024"
+    ]
+  },
+  {
+    "keep": 7639,
+    "drop": 5797,
+    "keep_title": "Nancy Drew, Girl Detective: The New Case Files",
+    "drop_title": "Nancy Drew, Girl Detective: The New Case Files (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Stefan Petrucha",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7640,
+    "drop": 5799,
+    "keep_title": "Naruto",
+    "drop_title": "Naruto (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Masashi Kishimoto"
+    ],
+    "flags": [
+      "year mismatch 2003 vs 2024"
+    ]
+  },
+  {
+    "keep": 7641,
+    "drop": 5809,
+    "keep_title": "Noragami: Stray God",
+    "drop_title": "Noragami: Stray God (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Toka Adachi"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2025"
+    ]
+  },
+  {
+    "keep": 7642,
+    "drop": 5811,
+    "keep_title": "Not Your Idol",
+    "drop_title": "Not Your Idol (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Aoi Makino"
+    ],
+    "flags": [
+      "year mismatch 2020 vs 2025"
+    ]
+  },
+  {
+    "keep": 7643,
+    "drop": 5817,
+    "keep_title": "ONE PIECE",
+    "drop_title": "ONE PIECE (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Eiichiro Oda"
+    ],
+    "flags": [
+      "year mismatch 1997 vs 2025"
+    ]
+  },
+  {
+    "keep": 7644,
+    "drop": 5835,
+    "keep_title": "Pandora Hearts",
+    "drop_title": "Pandora Hearts (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Jun Mochizuki"
+    ],
+    "flags": [
+      "year mismatch 2014 vs 2025"
+    ]
+  },
+  {
+    "keep": 7645,
+    "drop": 5845,
+    "keep_title": "Pokémon: Sun & Moon",
+    "drop_title": "Pokémon: Sun & Moon (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hidenori Kusaka",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7646,
+    "drop": 5849,
+    "keep_title": "Princess Jellyfish",
+    "drop_title": "Princess Jellyfish (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Akiko Higashimura"
+    ],
+    "flags": [
+      "year mismatch 2016 vs 2025"
+    ]
+  },
+  {
+    "keep": 7647,
+    "drop": 5851,
+    "keep_title": "Psyren",
+    "drop_title": "Psyren (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Toshiaki Iwashiro"
+    ],
+    "flags": [
+      "year mismatch 2011 vs 2025"
+    ]
+  },
+  {
+    "keep": 7648,
+    "drop": 5879,
+    "keep_title": "Riverdale: All-New Stories",
+    "drop_title": "Riverdale: All-New Stories (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Aaron Allen",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7649,
+    "drop": 5889,
+    "keep_title": "RWBY: Official Manga Anthology",
+    "drop_title": "RWBY: Official Manga Anthology (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Rooster Teeth Productions"
+    ],
+    "flags": [
+      "year mismatch 2021 vs 2025"
+    ]
+  },
+  {
+    "keep": 7650,
+    "drop": 5907,
+    "keep_title": "Shaolin Sisters",
+    "drop_title": "Shaolin Sisters (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Toshiki Hirano"
+    ],
+    "flags": [
+      "year mismatch 2002 vs 2025"
+    ]
+  },
+  {
+    "keep": 7651,
+    "drop": 5911,
+    "keep_title": "Sherlock Bones",
+    "drop_title": "Sherlock Bones (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Yūma Andō"
+    ],
+    "flags": [
+      "year mismatch 2014 vs 2025"
+    ]
+  },
+  {
+    "keep": 7652,
+    "drop": 5921,
+    "keep_title": "Splatoon Squid Kids Comedy Show",
+    "drop_title": "Splatoon Squid Kids Comedy Show (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Hideki Goto"
+    ],
+    "flags": [
+      "year mismatch 2020 vs 2025"
+    ]
+  },
+  {
+    "keep": 7653,
+    "drop": 5959,
+    "keep_title": "The Earl & the Fairy",
+    "drop_title": "The Earl & the Fairy (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ayuko",
+      "year 2025"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7654,
+    "drop": 5975,
+    "keep_title": "The Hardy Boys Graphic Novels: Undercover Brothers",
+    "drop_title": "The Hardy Boys Graphic Novels: Undercover Brothers (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Scott, Lobdell"
+    ],
+    "flags": [
+      "year mismatch 2005 vs 2025"
+    ]
+  },
+  {
+    "keep": 6010,
+    "drop": 7655,
+    "keep_title": "The Summer of Jordi Perez (And the Best Burger in Los Angeles)",
+    "drop_title": "The Summer of Jordi Perez",
+    "confidence": "high",
+    "reasons": [
+      "same author: Amy Spalding"
+    ],
+    "flags": [
+      "year mismatch 2018 vs 2025"
+    ]
+  },
+  {
+    "keep": 6056,
+    "drop": 7656,
+    "keep_title": "True Things (Adults Don't Want Kids to Know)",
+    "drop_title": "True Things",
+    "confidence": "high",
+    "reasons": [
+      "same author: Jimmy Gownley"
+    ],
+    "flags": [
+      "year mismatch 2010 vs 2025"
+    ]
+  },
+  {
+    "keep": 7657,
+    "drop": 6072,
+    "keep_title": "Van Von Hunter",
+    "drop_title": "Van Von Hunter (Series, Title Not Specified)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Mike Schwark"
+    ],
+    "flags": [
+      "year mismatch 2006 vs 2025"
+    ]
+  },
+  {
+    "keep": 7658,
+    "drop": 6145,
+    "keep_title": "Adolescence and the Teenage Crush",
+    "drop_title": "Adolescence and the Teenage Crush (Journal Article)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Carl Pickhardt",
+      "year 2024"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7659,
+    "drop": 6160,
+    "keep_title": "European Art",
+    "drop_title": "European Art (Title only, no further information)",
+    "confidence": "high",
+    "reasons": [
+      "same author: No Further Information"
+    ],
+    "flags": [
+      "year mismatch 2004 vs 2024"
+    ]
+  },
+  {
+    "keep": 6175,
+    "drop": 7660,
+    "keep_title": "Mono No Aware (Short Story)",
+    "drop_title": "Mono No Aware",
+    "confidence": "high",
+    "reasons": [
+      "same author: Ken Liu"
+    ],
+    "flags": [
+      "year mismatch 2017 vs 2024"
+    ]
+  },
+  {
+    "keep": 6393,
+    "drop": 7321,
+    "keep_title": "Le roi prédateur",
+    "drop_title": "Le roi prédateur (2012)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Éric Laurent"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 6394,
+    "drop": 7322,
+    "keep_title": "Jinnah of Pakistan",
+    "drop_title": "Jinnah of Pakistan (1982)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Stanley Wolpert"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 6395,
+    "drop": 7318,
+    "keep_title": "One Day of Life",
+    "drop_title": "One Day of Life (1980)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Manlio Argueta"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 6396,
+    "drop": 7317,
+    "keep_title": "The White Disease",
+    "drop_title": "The White Disease (1937)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Karel Čapek"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 6518,
+    "drop": 7422,
+    "keep_title": "The Lottery",
+    "drop_title": "The Lottery (1948)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Shirley Jackson"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 6567,
+    "drop": 6614,
+    "keep_title": "Notre ami le roi",
+    "drop_title": "Notre ami le roi (1993)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Gilles Perrault"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7334,
+    "drop": 7315,
+    "keep_title": "Amar Fashi Chai",
+    "drop_title": "Amar Fashi Chai (1999)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Motiur Rahman Rentu"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7335,
+    "drop": 7316,
+    "keep_title": "Happy New Year",
+    "drop_title": "Happy New Year (1975)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Rubem Fonseca"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7336,
+    "drop": 7319,
+    "keep_title": "Little Black Sambo",
+    "drop_title": "Little Black Sambo (1899)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Helen Bannerman"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7337,
+    "drop": 7331,
+    "keep_title": "United States Vietnam Relations, 1945–1967: A Study Prepared by the Department of Defense",
+    "drop_title": "United States Vietnam Relations, 1945–1967: A Study Prepared by the Department of Defense (1971)",
+    "confidence": "high",
+    "reasons": [
+      "same author: the United States Department of Defense"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7375,
+    "drop": 7417,
+    "keep_title": "Naree",
+    "drop_title": "Naree (1992)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Humayun Azad"
+    ],
+    "flags": []
+  },
+  {
+    "keep": 7424,
+    "drop": 7419,
+    "keep_title": "The Mountain Wreath",
+    "drop_title": "The Mountain Wreath (1847)",
+    "confidence": "high",
+    "reasons": [
+      "same author: Petar II Petrović-Njegoš"
+    ],
+    "flags": []
+  }
+]
