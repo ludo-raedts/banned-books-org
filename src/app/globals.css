@@ -11,9 +11,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-source-serif);
   --color-brand: #8B2020;
   --color-brand-light: #F5E8E8;
   --color-brand-dark: #5C1010;
+  --color-oxblood: #5C1010;
+  --color-cream: #F4E8E2;
+  --color-cream-border: #e8d5cc;
   --animate-fade-in: fade-in 0.15s ease-out;
 }
 
@@ -33,4 +37,58 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Homepage hover utilities — used by sections under src/components/home/. */
+
+.hover-lift-book {
+  transition: transform 200ms ease-out,
+              box-shadow 200ms ease-out,
+              border-color 200ms ease-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.hover-lift-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(92, 16, 16, 0.10);
+  border-color: #d8d8d8;
+}
+.hover-lift-book:hover .book-title {
+  color: var(--color-oxblood);
+}
+.book-title {
+  transition: color 200ms ease-out;
+}
+
+.hover-lift-card {
+  transition: transform 200ms ease-out,
+              box-shadow 200ms ease-out,
+              border-color 200ms ease-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.hover-lift-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(92, 16, 16, 0.10);
+  border-color: #d8d8d8;
+}
+
+.hover-faq-row {
+  transition: background 200ms ease-out;
+  cursor: pointer;
+}
+.hover-faq-row:hover {
+  background: var(--color-cream);
+}
+.hover-faq-row:hover .faq-chev {
+  color: var(--color-oxblood);
+  transform: translateX(2px);
+}
+.faq-chev {
+  transition: color 200ms ease-out, transform 200ms ease-out;
+}
+
+.hover-avatar {
+  transition: box-shadow 200ms ease-out;
+}
+.hover-avatar:hover {
+  box-shadow: 0 0 0 2px var(--color-oxblood);
 }

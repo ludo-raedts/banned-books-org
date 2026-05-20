@@ -2,28 +2,15 @@
 // "book of the day" plus five top-lists whose source views (v_top_books_*,
 // mv_top_books_rising, v_top_banned_authors, ban_reason_links) only update
 // on aggregation cycles. 30 min keeps the feel live, drops TTFB from
-// 600ms+ (old force-dynamic batch) to ~50ms on cached hits, and lifts
+// 600ms+ (force-dynamic batch) to ~50ms on cached hits, and lifts
 // Core Web Vitals LCP on the highest-PageRank URL on the site.
 export const revalidate = 1800
 
 import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
-import { coverAlt } from '@/lib/cover-alt'
-import BookCoverPlaceholder from '@/components/book-cover-placeholder'
-import CatalogueNav from '@/components/catalogue-nav'
-import NewsBlock from '@/components/news-block'
-import FaqAccordion from '@/components/faq-accordion'
-import { buildHomepageFaq } from '@/lib/homepage-faq'
-import {
-  TopListBooksSection,
-  TopListAuthorsSection,
-  TopListByReasonSection,
-} from '@/components/top-list-section'
-import type { TopListBook, TopListAuthor } from '@/components/top-list-card'
 import { reasonLabel } from '@/components/reason-badge'
+import { buildHomepageFaq } from '@/lib/homepage-faq'
 import {
   TOP_LIST_BOOK_SELECT,
   type TopListBookRow,
@@ -33,6 +20,21 @@ import {
   langContext,
   toBookCard,
 } from '@/lib/top-list-data'
+import type { TopListBook, TopListAuthor } from '@/components/top-list-card'
+
+import HeroSection from '@/components/home/HeroSection'
+import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
+import HappeningNowSection from '@/components/home/HappeningNowSection'
+import TrendingSection from '@/components/home/TrendingSection'
+import MostBannedAuthorsSection from '@/components/home/MostBannedAuthorsSection'
+import RisingSection from '@/components/home/RisingSection'
+import WhyBooksGetBannedSection, {
+  withReasonDescriptions,
+} from '@/components/home/WhyBooksGetBannedSection'
+import NonEnglishSection from '@/components/home/NonEnglishSection'
+import FaqSection from '@/components/home/FaqSection'
+import FinalCtaSection from '@/components/home/FinalCtaSection'
+import type { RisingBook } from '@/components/home/RisingCard'
 
 export async function generateMetadata(): Promise<Metadata> {
   const timer = newTimer('metadata')
@@ -52,8 +54,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // Latin-script language gate for the Book-of-the-day pick — keeps the
 // English homepage hero on titles that render with a real English name
-// (not pinyin/transliteration). Non-Latin titles surface elsewhere in
-// their own homepage section + a dedicated /non-english-banned-books page.
+// (not pinyin/transliteration). Non-Latin titles surface in the dedicated
+// Non-English section + the /non-english-banned-books destination.
 const LATIN_SCRIPT_LANGS = [
   'en','es','fr','de','nl','it','pt','ca','gl','eu',
   'sv','da','no','nb','nn','fi','is',
@@ -69,6 +71,7 @@ export default async function HomePage() {
 
   const [
     totalCountRes,
+    totalBansRes,
     trendingRes,
     bannedAuthorsRes,
     topBannedRes,
@@ -77,19 +80,21 @@ export default async function HomePage() {
     banCountsRes,
     placeholderAuthorsRes,
     reasonsRes,
-  ] = await timer.wrap('parallel-batch-9', () => Promise.all([
+  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
+    supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
     supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(30),
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(100),
     supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(10),
     supabase.from('countries').select('code, name_en'),
-    supabase.from('mv_ban_counts').select('country_code, total_bans').gt('total_bans', 0),
+    supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('authors').select('id').eq('is_placeholder', true),
     supabase.from('reasons').select('id, slug').in('slug', REASON_SLUGS),
   ]))
 
   const total = totalCountRes.count ?? 0
+  const totalBans = totalBansRes.count ?? 0
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -166,17 +171,23 @@ export default async function HomePage() {
     .filter((b): b is TopListBookRow => !!b)
     .map(b => toBookCard(b, banContext(b)))
 
-  const risingBooks: TopListBook[] = risingRows
-    .map(r => {
+  const risingBooks: RisingBook[] = risingRows
+    .map((r): RisingBook | null => {
       const b = bookById.get(Number(r.entity_id))
       if (!b) return null
       const pct = r.prev_week > 0
         ? Math.round(((r.this_week - r.prev_week) / r.prev_week) * 100)
         : null
-      const ctx = pct !== null && pct > 0 ? `↑${pct}% this week` : 'New this week'
-      return toBookCard(b, ctx)
+      return {
+        id: b.id,
+        title: b.title,
+        slug: b.slug,
+        cover_url: b.cover_url,
+        author: authorNameOf(b),
+        pct: pct !== null && pct > 0 ? pct : null,
+      }
     })
-    .filter((x): x is TopListBook => x !== null)
+    .filter((x): x is RisingBook => x !== null)
 
   const nonEnglishBooks: TopListBook[] = topBannedRows
     .map(r => bookById.get(Number(r.entity_id)))
@@ -189,14 +200,14 @@ export default async function HomePage() {
     .map((r): TopListAuthor | null => {
       const a = authorById.get(Number(r.entity_id))
       if (!a) return null
-      const totalBans = Number(r.total_bans)
+      const totalBansA = Number(r.total_bans)
       const banBooks = Number(r.banned_books)
       return {
         id: a.id,
         display_name: a.display_name,
         slug: a.slug,
         photo_url: a.photo_url,
-        context: `${totalBans.toLocaleString('en')} ${totalBans === 1 ? 'ban' : 'bans'} across ${banBooks} ${banBooks === 1 ? 'book' : 'books'}`,
+        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned (${totalBansA.toLocaleString('en')} ${totalBansA === 1 ? 'event' : 'events'})`,
       }
     })
     .filter((a): a is TopListAuthor => a !== null)
@@ -209,8 +220,9 @@ export default async function HomePage() {
       .filter((b): b is TopListBookRow => !!b)
       .map(b => toBookCard(b, banContext(b))),
   }))
+  const reasonBlocksWithDesc = withReasonDescriptions(reasonBlocks)
 
-  const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.distinct_books as number]))
   const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
 
   // Book of the day: pick from the top-100 globally-banned pool (already in
@@ -226,7 +238,20 @@ export default async function HomePage() {
     .filter(b => !b.original_language || (LATIN_SCRIPT_LANGS as readonly string[]).includes(b.original_language))
   const seed = new Date().toISOString().slice(0, 10)
   const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const pickBook = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
+  const pickBookRow = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
+
+  const bookOfDay: BookOfDay | null = pickBookRow
+    ? {
+        title: pickBookRow.title,
+        slug: pickBookRow.slug,
+        cover_url: pickBookRow.cover_url,
+        author: authorNameOf(pickBookRow),
+        year: pickBookRow.first_published_year,
+        description: pickBookRow.description_book,
+        banCount: pickBookRow.bans.length,
+        countryCount: new Set(pickBookRow.bans.map(b => b.country_code)).size,
+      }
+    : null
 
   // FAQ: reuse the top-banned signal already in scope. mostBanned is the #1
   // entry from v_top_banned_books, fully hydrated via bookById — no extra
@@ -286,140 +311,20 @@ export default async function HomePage() {
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 space-y-10">
+    <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }} />
 
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-2">
-          The World&apos;s Books Under Censorship
-        </h1>
-        <p className="text-base text-gray-500 dark:text-gray-400">
-          A free, international database of {total.toLocaleString('en')} books censored by governments, schools, and libraries across {countryCount} {countryCount === 1 ? 'country' : 'countries'}. Every entry citation-backed.
-        </p>
-        {/* Mobile-only shortcut row. CatalogueNav below is `hidden sm:block`,
-            so without these links the mobile visitor has no above-fold nav
-            to /stats or /top-100. On >=sm the tiles are visible and this
-            row is redundant — hide it there. */}
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 sm:hidden">
-          <Link href="/stats" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-            See statistics →
-          </Link>
-          {' · '}
-          <Link href="/top-100-banned-books" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-            100 most banned books →
-          </Link>
-        </p>
-      </div>
-
-      <CatalogueNav />
-
-      {pickBook && (
-        <section>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Book of the day</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            A daily pick from the catalogue. Rotates at midnight.
-          </p>
-          <Link
-            href={`/books/${pickBook.slug}`}
-            className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
-          >
-            <div className="flex gap-4 sm:gap-6">
-              <div className="shrink-0 w-24 sm:w-36 aspect-[2/3] relative overflow-hidden rounded shadow-md">
-                {pickBook.cover_url ? (
-                  <Image
-                    src={pickBook.cover_url}
-                    alt={coverAlt(pickBook.title, authorNameOf(pickBook))}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 640px) 144px, 96px"
-                    priority
-                  />
-                ) : (
-                  <BookCoverPlaceholder
-                    title={pickBook.title}
-                    author={authorNameOf(pickBook)}
-                    slug={pickBook.slug}
-                    className="absolute inset-0 w-full h-full"
-                  />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors line-clamp-2">
-                  {pickBook.title}
-                </h3>
-                {authorNameOf(pickBook) && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                    {authorNameOf(pickBook)}
-                    {pickBook.first_published_year ? ` · ${pickBook.first_published_year}` : ''}
-                  </p>
-                )}
-                {pickBook.description_book && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 line-clamp-4 leading-relaxed">
-                    {pickBook.description_book}
-                  </p>
-                )}
-                {banContext(pickBook) && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">{banContext(pickBook)}</p>
-                )}
-              </div>
-            </div>
-          </Link>
-        </section>
-      )}
-
-      <NewsBlock />
-
-      <TopListBooksSection
-        title="Trending this week"
-        subtitle="Most-read titles in the last 7 days."
-        viewAllHref="/trending-banned-books"
-        books={trendingBooks}
-      />
-
-      <TopListAuthorsSection
-        title="Most banned authors"
-        subtitle="Writers censored across the most jurisdictions."
-        viewAllHref="/most-banned-authors"
-        authors={bannedAuthors}
-      />
-
-      <TopListBooksSection
-        title="Rising this week"
-        subtitle="Biggest week-over-week jump in readership."
-        viewAllHref="/rising-banned-books"
-        books={risingBooks}
-      />
-
-      <TopListBooksSection
-        title="Banned books not written in English"
-        subtitle="The international half of the catalogue — translated, transliterated, suppressed."
-        viewAllHref="/non-english-banned-books"
-        books={nonEnglishBooks}
-      />
-
-      <TopListByReasonSection
-        title="Why books get banned"
-        subtitle="Three most-banned titles per top reason."
-        blocks={reasonBlocks}
-      />
-
-      <FaqAccordion
-        title="Frequently asked questions"
-        items={faqItems}
-        defaultOpenCount={2}
-      />
-
-      <section className="border-t border-gray-200 dark:border-gray-700 pt-6">
-        <Link
-          href="/search"
-          className="block text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg py-6 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors group"
-        >
-          <span className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors">
-            Browse all {total.toLocaleString('en')} books →
-          </span>
-        </Link>
-      </section>
+      <HeroSection totalBooks={total} countryCount={countryCount} totalBans={totalBans} />
+      {bookOfDay && <BookOfDaySection book={bookOfDay} />}
+      <HappeningNowSection />
+      <TrendingSection books={trendingBooks} />
+      <MostBannedAuthorsSection authors={bannedAuthors} />
+      <RisingSection books={risingBooks} />
+      <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} />
+      <NonEnglishSection books={nonEnglishBooks} />
+      <FaqSection items={faqItems} />
+      <FinalCtaSection totalBooks={total} />
     </main>
   )
 }
