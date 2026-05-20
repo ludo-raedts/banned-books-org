@@ -167,7 +167,9 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     original_language: string | null
     openlibrary_work_id: string | null
     cover_status: string | null
-    cover_search_attempts: Array<{ sources_tried: string[] }> | null
+    // PostgREST returns this embed as a single object (1-to-1: cover_search_attempts.book_id
+    // is unique), not an array. Tolerate either shape for safety.
+    cover_search_attempts: { sources_tried: string[] } | Array<{ sources_tried: string[] }> | null
     book_authors: Array<{ authors: { display_name: string } | null }> | null
   }
 
@@ -200,7 +202,10 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   const toSearch: BookRow[] = []
   let alreadyDoneCount = 0
   for (const row of all) {
-    const prevSources = row.cover_search_attempts?.[0]?.sources_tried ?? []
+    const ca = Array.isArray(row.cover_search_attempts)
+      ? row.cover_search_attempts[0]
+      : row.cover_search_attempts
+    const prevSources = ca?.sources_tried ?? []
     const hasNewSources = NEW_SOURCES.some(s => prevSources.includes(s))
     if (!opts.reset && hasNewSources) { alreadyDoneCount++; continue }
     toSearch.push({

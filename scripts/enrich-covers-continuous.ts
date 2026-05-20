@@ -211,7 +211,12 @@ async function fetchBooksToSearch(loopStart: Date): Promise<{ books: BookRow[]; 
   type RawRow = {
     id: number; slug: string; title: string; isbn13: string | null
     openlibrary_work_id: string | null; created_at: string | null
-    cover_search_attempts: Array<{ book_id: number; last_searched_at: string }> | null
+    // PostgREST returns this embed as a single object (1-to-1: cover_search_attempts.book_id
+    // is unique), not an array. Tolerate either shape for safety.
+    cover_search_attempts:
+      | { book_id: number; last_searched_at: string }
+      | Array<{ book_id: number; last_searched_at: string }>
+      | null
     book_authors: Array<{ authors: { display_name: string } | null }> | null
   }
 
@@ -221,7 +226,9 @@ async function fetchBooksToSearch(loopStart: Date): Promise<{ books: BookRow[]; 
   let skippedCount = 0
 
   for (const row of all) {
-    const attempt = row.cover_search_attempts?.[0] ?? null
+    const attempt = Array.isArray(row.cover_search_attempts)
+      ? (row.cover_search_attempts[0] ?? null)
+      : (row.cover_search_attempts ?? null)
     if (attempt) {
       const importedAt = row.created_at ? new Date(row.created_at) : null
       const searchedAt = new Date(attempt.last_searched_at)
