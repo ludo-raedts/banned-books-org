@@ -433,6 +433,14 @@ export default function AdminDashboardClient({
             >
               → Bookshop.org affiliate dashboard
             </a>
+            <a
+              href="https://publisher.rakutenadvertising.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+            >
+              → Kobo affiliate dashboard
+            </a>
           </div>
         </div>
 
