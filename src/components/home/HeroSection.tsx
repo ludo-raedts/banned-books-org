@@ -1,20 +1,7 @@
-import Link from 'next/link'
 import Eyebrow from '@/components/section/Eyebrow'
+import HeroSearch from './HeroSearch'
 
 type Stat = { value: string; label: string }
-
-type PillLink = {
-  href: string
-  label: string
-  primary?: boolean
-}
-
-const PILLS: PillLink[] = [
-  { href: '/top-100-banned-books', label: 'Top 100 banned books', primary: true },
-  { href: '/countries', label: 'By country' },
-  { href: '/reasons', label: 'By reason' },
-  { href: '/stats', label: 'Statistics' },
-]
 
 export default function HeroSection({
   totalBooks,
@@ -59,20 +46,8 @@ export default function HeroSection({
             Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            {PILLS.map(pill => (
-              <Link
-                key={pill.href}
-                href={pill.href}
-                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full border text-xs font-medium transition-colors ${
-                  pill.primary
-                    ? 'border-black text-gray-900 hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:text-gray-100 dark:hover:bg-gray-100 dark:hover:text-gray-900'
-                    : 'border-neutral-300 text-gray-700 hover:border-oxblood hover:text-oxblood dark:border-gray-700 dark:text-gray-300'
-                }`}
-              >
-                {pill.label}
-              </Link>
-            ))}
+          <div className="mt-6">
+            <HeroSearch bookCount={totalBooks} />
           </div>
         </div>
       </div>

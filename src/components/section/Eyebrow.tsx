@@ -1,6 +1,6 @@
 export default function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] uppercase tracking-[0.14em] font-semibold text-oxblood mb-3">
+    <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
       {children}
     </p>
   )
