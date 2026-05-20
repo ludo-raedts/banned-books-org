@@ -24,7 +24,7 @@ const DELAY    = 300 // ms between GPT calls
 const REASON_IDS: Record<string, number> = {
   lgbtq: 1, political: 2, religious: 3, sexual: 4,
   violence: 5, racial: 6, drugs: 7, other: 8,
-  obscenity: 9, language: 10, moral: 11, blasphemy: 12,
+  obscenity: 9, language: 10, moral: 11,
 }
 const VALID_REASONS = new Set(Object.keys(REASON_IDS).filter(r => r !== 'other'))
 
@@ -37,7 +37,6 @@ const REASON_GUIDE = `
 - racial: racism, racial slurs, racial inequality, police brutality, colonialism
 - drugs: drug use, addiction, alcohol abuse
 - obscenity: broad obscenity claims not captured by sexual/language
-- blasphemy: specifically anti-religious blasphemy (distinct from general religious)
 - moral: general immorality claims, bad values, inappropriate for age group
 - language: profanity, offensive language, slurs (outside racial)
 `.trim()
@@ -56,7 +55,7 @@ async function askGPT(
   if (!text) return []
 
   const prompt = `A book called "${title}" was banned. Based on the information below, return the most accurate reason(s) it was banned from this exact list:
-lgbtq, political, religious, sexual, violence, racial, drugs, obscenity, blasphemy, moral, language
+lgbtq, political, religious, sexual, violence, racial, drugs, obscenity, moral, language
 
 Guide:
 ${REASON_GUIDE}

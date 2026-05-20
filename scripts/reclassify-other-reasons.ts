@@ -20,7 +20,7 @@ const WRITE = process.argv.includes('--write')
 const REASON_IDS: Record<string, number> = {
   lgbtq: 1, political: 2, religious: 3, sexual: 4,
   violence: 5, racial: 6, drugs: 7, other: 8,
-  obscenity: 9, language: 10, moral: 11, blasphemy: 12,
+  obscenity: 9, language: 10, moral: 11,
 }
 
 function inferReasons(desc: string): string[] {
@@ -55,8 +55,10 @@ function inferReasons(desc: string): string[] {
   if (/obscen/.test(t) && !found.has('sexual'))
     found.add('obscenity')
 
+  // `blasphemy` was merged into `religious` on 2026-05-20. Anything that
+  // matched the blasphemy stem is religious by definition.
   if (/blasphemy|blasphemous/.test(t))
-    found.add('blasphemy')
+    found.add('religious')
 
   return [...found]
 }

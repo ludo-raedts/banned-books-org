@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const n = count ?? 0
   return {
     title: `Why Books Are Banned — ${n} Documented Reasons | Banned Books`,
-    description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious blasphemy, and more.',
+    description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious offence, and more.',
     alternates: { canonical: '/reasons' },
   }
 }
@@ -24,7 +24,6 @@ const REASON_COLORS: Record<string, string> = {
   racial:    'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
   drugs:     'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
   obscenity: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
-  blasphemy: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
   moral:     'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
   language:  'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
   other:     'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700',
@@ -33,13 +32,12 @@ const REASON_COLORS: Record<string, string> = {
 const REASON_DESCRIPTIONS: Record<string, string> = {
   lgbtq: 'Books featuring LGBTQ+ characters, relationships, or themes have become the single most targeted category in American schools since 2020. Internationally, such books face outright government bans in countries where homosexuality is criminalized.',
   political: 'Political censorship is the oldest form of book banning — from Socrates\'s death sentence to Solzhenitsyn\'s labour camps. Works critical of governments, documenting atrocities, or promoting opposition ideologies have been suppressed by regimes across the political spectrum.',
-  religious: 'Blasphemy laws and religious censorship have restricted literary expression for centuries. The Catholic Church\'s Index Librorum Prohibitorum ran from 1559 to 1966 and included most of the Enlightenment. In parts of the Middle East and South Asia, blasphemy accusations can still carry the death penalty.',
+  religious: 'Religious censorship — including blasphemy laws, ecclesiastical bans, and offence-to-faith prosecutions — has restricted literary expression for centuries. The Catholic Church\'s Index Librorum Prohibitorum ran from 1559 to 1966 and included most of the Enlightenment; the 1989 fatwa against Salman Rushdie made The Satanic Verses the defining case of the modern era. Blasphemy remains a criminal offence in over 70 countries.',
   sexual: 'Sexual content was the dominant censorship category throughout the 19th and 20th centuries. Flaubert, Lawrence, Miller, Nabokov, and Burroughs all faced prosecution for novels that are now considered literary classics.',
   violence: 'Depictions of violence — particularly in books aimed at young readers — are a frequent target of school board challenges in the United States. Internationally, books that document atrocities committed by governments face suppression for political rather than moral reasons.',
   racial: 'Books that address race honestly have been challenged both for using racial slurs (in works like Huckleberry Finn) and for challenging racial hierarchies (in works by Black authors). The US school ban wave of the 2020s has a strong racial dimension.',
   drugs: 'Depictions of drug use, especially in books marketed to young adults, face regular challenges. Burroughs\'s Naked Lunch — prosecuted in multiple countries — remains the most famous example of this category.',
   obscenity: 'Obscenity as a legal category has been used to prosecute books from the Victorian era through the 20th century. The Obscene Publications Act (1857) in Britain and the Comstock Act (1873) in the US gave authorities broad powers to seize and destroy publications.',
-  blasphemy: 'Blasphemy bans target works deemed offensive to religious belief. The most internationally prominent modern case is the fatwa issued by Ayatollah Khomeini against Salman Rushdie in 1989, which forced Rushdie into hiding for nearly a decade.',
   moral: 'Broad moral grounds have been invoked to ban books that don\'t fit neatly into other categories — often targeting authors who challenge prevailing social norms around class, gender, or family.',
   language: 'Language bans have targeted books written in minority or indigenous languages as part of broader cultural suppression campaigns. The Russian Empire\'s 1863 Ems Decree banned Ukrainian-language publications; Spain\'s Franco regime suppressed Catalan, Basque, and Galician literature.',
   other: 'Some bans defy easy categorization, targeting books for defamation, national security grounds, or simply because of who wrote them.',
@@ -84,9 +82,9 @@ export default async function ReasonsPage() {
         <h1 className="text-3xl font-bold tracking-tight mb-1">Why Books Are Banned</h1>
         <p className="text-sm text-brand/70 dark:text-brand/60 mb-2">{reasons.length} documented reasons</p>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-          Every ban has an official justification. The stated reason — obscenity, blasphemy, political
-          subversion — tells us what the authorities wanted to protect. The book itself tells us what
-          they were afraid of.
+          Every ban has an official justification. The stated reason — obscenity, religious offence,
+          political subversion — tells us what the authorities wanted to protect. The book itself
+          tells us what they were afraid of.
         </p>
       </div>
 

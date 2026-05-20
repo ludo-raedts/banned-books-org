@@ -34,7 +34,7 @@ const limitFlag = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = limitFlag ? Number(limitFlag.split('=')[1]) : null
 
 const REASON_SLUGS = [
-  'blasphemy', 'drugs', 'language', 'lgbtq', 'moral', 'obscenity',
+  'drugs', 'language', 'lgbtq', 'moral', 'obscenity',
   'other', 'political', 'racial', 'religious', 'sexual', 'violence',
 ] as const
 
@@ -48,7 +48,6 @@ type Classification = z.infer<typeof ClassificationSchema>
 const SYSTEM_PROMPT = `You classify the editorial reason a book was banned.
 
 Pick exactly one slug from this vocabulary:
-- blasphemy: insulting religion as religion (distinct from religious-content concerns)
 - drugs: drug references / glorification / instruction
 - language: profanity, vulgar language, slurs
 - lgbtq: LGBTQ+ identity / themes
@@ -56,7 +55,7 @@ Pick exactly one slug from this vocabulary:
 - obscenity: pornography, indecency, sexually explicit material framed as obscene
 - political: state-imposed political censorship, sedition, criticism of regime/government/leader, communist/anti-state, named regime bans, military/wartime censorship
 - racial: racism, antisemitism, ethnic hatred, hate speech, white-supremacy
-- religious: religious content concerns, heresy, occult, witchcraft, "religious viewpoint" complaints, mocking a religion, promoting one religion over another
+- religious: religious content concerns, heresy, blasphemy (offending a religion), occult, witchcraft, "religious viewpoint" complaints, mocking a religion, promoting one religion over another
 - sexual: sex education, sexual content, references to rape/abuse, nudity (when framed as content concern not obscenity)
 - violence: graphic violence, gore, torture, weapons promotion
 - other: use ONLY when the reason is genuinely unknown or unclassifiable

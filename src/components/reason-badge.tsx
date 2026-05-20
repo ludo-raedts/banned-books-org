@@ -7,7 +7,6 @@ const REASONS: Record<string, { label: string; icon: string; classes: string }> 
   racial:    { label: 'Racial',    icon: '✊🏾',    classes: 'bg-purple-100 text-purple-700' },
   drugs:     { label: 'Drugs',     icon: '💊',     classes: 'bg-green-100 text-green-700' },
   obscenity: { label: 'Obscenity', icon: '🚫',     classes: 'bg-rose-100 text-rose-700' },
-  blasphemy: { label: 'Blasphemy', icon: '🙏',     classes: 'bg-yellow-100 text-yellow-800' },
   moral:     { label: 'Moral',     icon: '⚖️',     classes: 'bg-teal-100 text-teal-700' },
   language:  { label: 'Language',  icon: '🗣️',     classes: 'bg-indigo-100 text-indigo-700' },
   other:     { label: 'Other',     icon: '•',      classes: 'bg-gray-100 text-gray-600' },

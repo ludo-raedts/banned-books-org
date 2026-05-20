@@ -16,7 +16,6 @@ export const BOOK_REASON_PHRASE: Readonly<Record<string, string>> = {
   racial: 'racial content',
   drugs: 'drug references',
   obscenity: 'obscenity',
-  blasphemy: 'blasphemy',
   moral: 'moral grounds',
   language: 'language reasons',
   other: 'other reasons',

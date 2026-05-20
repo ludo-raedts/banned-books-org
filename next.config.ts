@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // /reasons/blasphemy collapsed into /reasons/religious on 2026-05-20
+      // (see migration 20260520150000_merge_blasphemy_into_religious). The
+      // standalone page no longer exists; preserve any external links.
+      {
+        source: '/reasons/blasphemy',
+        destination: '/reasons/religious',
+        permanent: true,
+      },
       // Canonical host enforcement. Google indexed both banned-books.org
       // (apex) and www.banned-books.org until 2026-05-16 — Search Console
       // shows 360 pages on the apex variant vs 640 on www, with click

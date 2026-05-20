@@ -15,7 +15,7 @@ import type { SuggesterBook } from './bbw-suggester'
 // in our `reasons` table (see scripts/enrich-reasons.ts and
 // src/components/reason-badge.tsx for the canonical list:
 //   lgbtq, sexual, racial, political, religious, violence, language, drugs,
-//   obscenity, moral, blasphemy, other).
+//   obscenity, moral, other).
 //
 // Books matching any of the listed reasons are auto-pulled into the theme.
 // Admins can override the featured set per theme via the admin UI.
@@ -23,7 +23,7 @@ import type { SuggesterBook } from './bbw-suggester'
 export const THEME_REASON_MAP: Record<string, readonly string[]> = {
   'lgbtq':                 ['lgbtq'],
   'political-dissent':     ['political'],
-  'religious-censorship':  ['religious', 'blasphemy'],
+  'religious-censorship':  ['religious'],
   'race-and-racism':       ['racial'],
   'sexuality':             ['sexual', 'obscenity', 'moral'],
 } as const

@@ -66,8 +66,9 @@ function inferReasonsBroad(text: string): string[] {
   if (/obscen/.test(t) && !found.has('sexual'))
     found.add('obscenity')
 
+  // `blasphemy` was merged into `religious` on 2026-05-20.
   if (/blasphemy|blasphemous/.test(t))
-    found.add('blasphemy')
+    found.add('religious')
 
   return [...found]
 }

@@ -1,7 +1,7 @@
 // Notes-text → reason slug.
 //
 // The slug vocabulary mirrors the `reasons` table in production:
-//   blasphemy, drugs, language, lgbtq, moral, obscenity, other,
+//   drugs, language, lgbtq, moral, obscenity, other,
 //   political, racial, religious, sexual, violence.
 // No new slugs are introduced here; everything not matching a pattern is
 // routed to review.
@@ -39,8 +39,11 @@ const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
   // excluded because they appear in unrelated defamation contexts.
   [/\b(lgbt|homosexual|same-sex|sexual orientation|transgender|gay rights|lesbian rights|gay (community|relationship)|lesbian (community|relationship)|gay marriage|gender identity)\b/i, 'lgbtq'],
 
-  // ── Blasphemy ────────────────────────────────────────────────────────────
-  [/\bblasph/i, 'blasphemy'],
+  // ── Blasphemy → religious ────────────────────────────────────────────────
+  // The standalone `blasphemy` reason was merged into `religious` on
+  // 2026-05-20; keep the high-signal blasph* stem so future imports still
+  // route religion-offence rows to religious instead of unmapped_reason.
+  [/\bblasph/i, 'religious'],
 
   // ── Obscenity / pornography ──────────────────────────────────────────────
   [/\b(obscen|pornograph|sexually explicit|indecen)/i, 'obscenity'],
