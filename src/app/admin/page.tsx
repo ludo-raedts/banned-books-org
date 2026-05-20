@@ -16,7 +16,7 @@ export default async function AdminPage() {
     reviewQueueRes,
     approvedRecentRes,
     needsEnrichmentRes,
-    { data: countryRows },
+    { count: countryCountRaw },
     { data: refreshLog },
   ] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
@@ -30,7 +30,7 @@ export default async function AdminPage() {
     // without a dedicated flag column. ISBN deliberately excluded: it's nice-to-have, not editorial.
     supabase.from('books').select('*', { count: 'exact', head: true })
       .or('description_book.is.null,cover_url.is.null,description_ban.is.null'),
-    supabase.from('bans').select('country_code').range(0, 9999),
+    supabase.from('countries').select('*', { count: 'exact', head: true }),
     supabase.from('mv_refresh_log').select('key, updated_at'),
   ])
   // `import_review_queue` is new (Sprint A Task 2A); fail soft so the page
@@ -39,7 +39,7 @@ export default async function AdminPage() {
   const approvedLast7Days = approvedRecentRes.error ? 0 : (approvedRecentRes.count ?? 0)
   const needsEnrichment = needsEnrichmentRes.error ? 0 : (needsEnrichmentRes.count ?? 0)
 
-  const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
+  const countryCount = countryCountRaw ?? 0
   const logMap = new Map((refreshLog ?? []).map(r => [r.key, r.updated_at as string]))
   const dataLastChanged  = logMap.get('data_last_changed') ?? null
   const viewsLastRefreshed = logMap.get('last_refreshed') ?? null
