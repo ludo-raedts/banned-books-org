@@ -13,6 +13,19 @@
 //      title (often the English canonical), but the ISBN belongs to a
 //      specific edition that may be in another language. Catches
 //      "Twilight (English row) → German edition's ISBN" cases.
+//
+// Persistence model (mirrors gutenberg_status / archive_org_status):
+//   - Eligibility is `isbn_checked_at IS NULL`, not `isbn13 IS NULL`. Every
+//     book gets exactly one lookup; the verdict sticks.
+//   - On a hit:   isbn13, isbn_status='valid', isbn_checked_at = now.
+//   - On a true miss (no candidates at all): isbn_status='not_found' +
+//     isbn_checked_at, so the row drops out of the pool.
+//   - On a prefilter-reject: same not_found stamp (structurally unsearchable
+//     — no upside to re-trying).
+//   - On a low-similarity or edition-mismatch reject: NOT stamped. OL/GB
+//     metadata can improve; we want the row to re-try on a future sweep.
+//   - On a dup-collision (candidate ISBN already on another row): NOT
+//     stamped. The clashing row may later get reassigned.
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
@@ -259,7 +272,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     const { data, error } = await supabase
       .from('books')
       .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, book_authors(authors(display_name))')
-      .is('isbn13', null)
+      .is('isbn_checked_at', null)
       // "— All works" pseudo-titles are author-omnibus records with no real ISBN;
       // any OL/GB hit is by construction wrong (will match some random book by the author).
       .not('title', 'ilike', '%— All works%')
@@ -272,15 +285,37 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     offset += 1000
   }
 
-  log(`Books without ISBN-13: ${books.length}`)
+  log(`Books pending ISBN-13 lookup: ${books.length}`)
 
   const totalCandidates = books.length
   // Drop rows where the title is structurally unsearchable BEFORE we spend
   // any API budget on them. These would only ever produce false positives.
+  const prefilterRejects = books.filter(b => isPlaceholderTitle(b.title) || isPinyinOnlyZh(b))
   const eligibleBooks = books.filter(b => !isPlaceholderTitle(b.title) && !isPinyinOnlyZh(b))
-  const skippedPrefilter = books.length - eligibleBooks.length
+  const skippedPrefilter = prefilterRejects.length
   if (skippedPrefilter > 0) {
     log(`Prefilter dropped ${skippedPrefilter} unsearchable rows (placeholder titles / pinyin-only zh)`)
+  }
+
+  // Stamp prefilter-rejects as not_found so they drop out of the eligible
+  // pool on the next sweep. Structurally unsearchable → re-trying never helps.
+  if (opts.apply && prefilterRejects.length > 0) {
+    const now = new Date().toISOString()
+    const CHUNK = 500
+    let stamped = 0
+    for (let i = 0; i < prefilterRejects.length; i += CHUNK) {
+      const ids = prefilterRejects.slice(i, i + CHUNK).map(b => b.id)
+      const { error } = await supabase
+        .from('books')
+        .update({ isbn_status: 'not_found', isbn_checked_at: now })
+        .in('id', ids)
+      if (error) {
+        log(`  ✗ Prefilter stamp failed (chunk ${i}..${i + ids.length - 1}): ${error.message}`)
+      } else {
+        stamped += ids.length
+      }
+    }
+    log(`Stamped ${stamped} prefilter-rejects as not_found`)
   }
 
   const dryLimit = Math.min(10, eligibleBooks.length)
@@ -363,7 +398,11 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
         } else {
           const { error } = await supabase
             .from('books')
-            .update({ isbn13: isbn })
+            .update({
+              isbn13: isbn,
+              isbn_status: 'valid',
+              isbn_checked_at: new Date().toISOString(),
+            })
             .eq('id', book.id)
             .is('isbn13', null)
           if (error) {
@@ -380,6 +419,21 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → not found${tag}`)
       notFound++
       if (samples.length < 10) samples.push({ title: book.title, isbn: null, source: '' })
+
+      // Stamp true misses only — OL/GB returned nothing usable. Leave
+      // low-similarity and edition-mismatch rejects unstamped so they
+      // retry once OL/GB metadata improves.
+      if (opts.apply && rejectedSim === 0 && rejectedEd === 0) {
+        const { error } = await supabase
+          .from('books')
+          .update({
+            isbn_status: 'not_found',
+            isbn_checked_at: new Date().toISOString(),
+          })
+          .eq('id', book.id)
+          .is('isbn13', null)
+        if (error) log(`    ✗ Not-found stamp failed: ${error.message}`)
+      }
     }
   }
 
