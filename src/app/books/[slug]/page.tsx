@@ -261,11 +261,42 @@ type Ban = {
   action_type: string
   status: string
   country_code: string
+  region: string | null
+  institution: string | null
   description: string | null
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
   ban_reason_links: { reasons: { id: number; slug: string } | null }[]
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
+}
+
+// A cluster groups bans that share (country, year, scope, source). Action
+// type is NOT part of the key — a 2024-25 PEN cluster may contain a mix of
+// 'banned', 'restricted', and 'challenged' actions, surfaced as a per-type
+// count in the Where cell. PEN America's per-district data produces one ban
+// row per (book, district) in the same school year — without clustering, a
+// heavily-banned book renders 80+ visually-identical table rows. The cluster
+// carries each member's region/institution so the sub-row can list them
+// grouped by state.
+type BanCluster = {
+  key: string
+  country_code: string
+  country_name: string
+  year_started: number | null
+  year_ended: number | null
+  status: string
+  scope_label: string | null
+  source: { source_name: string; source_url: string } | null
+  reason_slugs: Set<string>
+  description: string | null
+  bans: Ban[]
+  // action_type → count of bans of that type within the cluster.
+  action_counts: Map<string, number>
+  // Locations: bans with region === 'Nation' (statewide/federal) accumulate
+  // into nation_count; everything else groups by region (state) and lists
+  // institutions (districts) within.
+  nation_count: number
+  by_state: Map<string, string[]>  // state → [district names]
 }
 
 type WarningLevel = 'none' | 'context' | 'extended'
@@ -309,6 +340,73 @@ function authorName(book: BookDetail): string {
     .join(', ')
 }
 
+// Group bans into clusters keyed on (country, year, action, scope, source).
+// Members of a cluster share everything except their (region, institution),
+// which the sub-row will list. Returns clusters sorted by year_started for
+// stable display order (matches the previous sortedBans ordering).
+function clusterBans(bans: Ban[]): BanCluster[] {
+  const map = new Map<string, BanCluster>()
+  for (const ban of bans) {
+    const sourceUrl = ban.ban_source_links[0]?.ban_sources?.source_url ?? ''
+    const key = `${ban.country_code}|${ban.year_started ?? ''}|${ban.scopes?.label_en ?? ''}|${sourceUrl}`
+    let c = map.get(key)
+    if (!c) {
+      c = {
+        key,
+        country_code: ban.country_code,
+        country_name: ban.countries?.name_en ?? ban.country_code,
+        year_started: ban.year_started,
+        year_ended: ban.year_ended,
+        status: ban.status,
+        scope_label: ban.scopes?.label_en ?? null,
+        source: ban.ban_source_links[0]?.ban_sources ?? null,
+        reason_slugs: new Set<string>(),
+        description: ban.description,
+        bans: [],
+        action_counts: new Map<string, number>(),
+        nation_count: 0,
+        by_state: new Map<string, string[]>(),
+      }
+      map.set(key, c)
+    }
+    c.bans.push(ban)
+    c.action_counts.set(ban.action_type, (c.action_counts.get(ban.action_type) ?? 0) + 1)
+    for (const l of ban.ban_reason_links) if (l.reasons) c.reason_slugs.add(l.reasons.slug)
+    if (c.description == null && ban.description) c.description = ban.description
+    // 'historical' wins over 'active' for cluster status if any member is lifted —
+    // surfaces the "some bans rescinded" signal without losing it in the aggregate.
+    if (ban.status === 'historical' && c.status !== 'historical') c.status = 'historical'
+
+    if (ban.region === 'Nation') {
+      c.nation_count++
+    } else if (ban.region) {
+      const list = c.by_state.get(ban.region) ?? []
+      if (ban.institution) list.push(ban.institution)
+      c.by_state.set(ban.region, list)
+    }
+  }
+  return [...map.values()].sort((a, b) => (a.year_started ?? 9999) - (b.year_started ?? 9999))
+}
+
+// Human-friendly "School · 6 banned, 3 restricted" suffix. Uses a stable
+// action ordering so 'banned, restricted' always appears in the same order
+// regardless of insertion order in the Map.
+const ACTION_ORDER = ['banned', 'restricted', 'challenged', 'removed', 'blocked'] as const
+function actionBreakdown(action_counts: Map<string, number>): string {
+  const total = [...action_counts.values()].reduce((n, c) => n + c, 0)
+  if (total <= 1) return ''  // single ban: action already implicit in row context
+  const parts: string[] = []
+  for (const a of ACTION_ORDER) {
+    const n = action_counts.get(a)
+    if (n) parts.push(`${n} ${a}`)
+  }
+  // Any uncategorised action_type (defensive — shouldn't happen given the CHECK constraint)
+  for (const [a, n] of action_counts) {
+    if (!ACTION_ORDER.includes(a as (typeof ACTION_ORDER)[number])) parts.push(`${n} ${a}`)
+  }
+  return parts.join(', ')
+}
+
 export default async function BookPage({
   params,
 }: {
@@ -330,7 +428,7 @@ export default async function BookPage({
       data_quality_status, data_quality_evaluated_at,
       book_authors(authors(display_name, slug)),
       bans(
-        id, year_started, year_ended, action_type, status, country_code, description,
+        id, year_started, year_ended, action_type, status, country_code, region, institution, description,
         countries(name_en),
         scopes(label_en),
         ban_reason_links(reasons(id, slug)),
@@ -363,6 +461,7 @@ export default async function BookPage({
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
   )
+  const banClusters = clusterBans(sortedBans)
 
   // ── Timeline rows: one per country, sorted by earliest ban year ─────────────
   const timelineRows: TimelineRow[] = (() => {
@@ -902,58 +1001,91 @@ export default async function BookPage({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {sortedBans.map((ban) => {
-                    const source = ban.ban_source_links[0]?.ban_sources
+                  {banClusters.map((c) => {
+                    const districtCount = [...c.by_state.values()].reduce((n, list) => n + list.length, 0)
+                    const stateCount = c.by_state.size
+                    const hasLocations = c.nation_count > 0 || stateCount > 0
+                    const sortedStates = [...c.by_state.entries()].sort((a, b) => a[0].localeCompare(b[0]))
                     return (
-                      <React.Fragment key={ban.id}>
+                      <React.Fragment key={c.key}>
                         <tr className="align-top">
                           <td className="px-3 py-2.5 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap text-xs sm:text-sm">
                             <Link
-                              href={`/countries/${ban.country_code}`}
+                              href={`/countries/${c.country_code}`}
                               className="hover:underline"
                             >
-                              {ban.countries?.name_en ?? ban.country_code}
+                              {c.country_name}
                             </Link>
                           </td>
                           <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 whitespace-nowrap text-xs sm:text-sm">
-                            {ban.year_started ?? '—'}
-                            {ban.status === 'historical' && (
+                            {c.year_started ?? '—'}
+                            {c.status === 'historical' && (
                               <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                                 lifted
                               </span>
                             )}
                           </td>
                           <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
-                            {ban.scopes?.label_en ?? '—'}
+                            {c.scope_label ?? '—'}
+                            {c.bans.length > 1 && (
+                              <span className="ml-1 text-[11px] text-gray-500 dark:text-gray-500">
+                                · {actionBreakdown(c.action_counts)}
+                              </span>
+                            )}
                           </td>
                           <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1">
-                              {ban.ban_reason_links.map((l) =>
-                                l.reasons ? (
-                                  <ReasonBadge key={l.reasons.slug} slug={l.reasons.slug} />
-                                ) : null
-                              )}
+                              {[...c.reason_slugs].map((slug) => (
+                                <ReasonBadge key={slug} slug={slug} />
+                              ))}
                             </div>
                           </td>
                           <td className="px-3 py-2.5 hidden sm:table-cell">
-                            {source ? (
+                            {c.source ? (
                               <a
-                                href={source.source_url}
+                                href={c.source.source_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap text-xs"
                               >
-                                {source.source_name}
+                                {c.source.source_name}
                               </a>
                             ) : (
                               <span className="text-gray-400 dark:text-gray-600">—</span>
                             )}
                           </td>
                         </tr>
-                        {ban.description && (
+                        {hasLocations && (
+                          <tr className="bg-gray-50/60 dark:bg-gray-800/30">
+                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                              {c.nation_count > 0 && (
+                                <div>
+                                  <span className="font-medium text-gray-700 dark:text-gray-300">Nationwide / statewide</span>
+                                  {c.nation_count > 1 && (
+                                    <span className="ml-1 text-gray-500">({c.nation_count} actions)</span>
+                                  )}
+                                </div>
+                              )}
+                              {sortedStates.map(([state, districts]) => (
+                                <div key={state}>
+                                  <span className="font-medium text-gray-700 dark:text-gray-300">{state}</span>
+                                  {districts.length > 0 && (
+                                    <span> — {districts.join(', ')}</span>
+                                  )}
+                                </div>
+                              ))}
+                              {!c.nation_count && stateCount > 0 && districtCount > 0 && (
+                                <div className="mt-1 text-[11px] text-gray-500 dark:text-gray-500">
+                                  {districtCount} district{districtCount === 1 ? '' : 's'} across {stateCount} state{stateCount === 1 ? '' : 's'}
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {c.description && (
                           <tr className="bg-amber-50/50 dark:bg-amber-900/10">
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 dark:text-gray-400 italic leading-relaxed">
-                              {ban.description}
+                              {c.description}
                             </td>
                           </tr>
                         )}
