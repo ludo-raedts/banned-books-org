@@ -77,7 +77,7 @@ We do not have comprehensive coverage of non-English-language sources. A book ba
 
 This site documents censorship. It does not endorse it — and it does not endorse the books it catalogues either. Some of the titles in this database contain material that many readers will find offensive, disturbing, or morally objectionable. That is not a reason to exclude them. A catalogue of banned books that omits controversial titles is not a catalogue of banned books.
 
-We link to legal purchase options for every book (Bookshop.org, Kobo). We deliberately do not link to Amazon, which has itself been involved in book removal decisions. We link to free Project Gutenberg texts where available.
+We link to Bookshop.org for every book — purchases support independent bookstores. We deliberately do not link to Amazon, which has itself been involved in book removal decisions. Where available, we also link to free Project Gutenberg texts and Internet Archive scans.
 
 Some outbound book links are Bookshop.org affiliate links. They help support independent bookstores and this project at no extra cost to you. We do not run tracking pixels, third-party scripts, or sponsored content alongside the catalogue, and the affiliate links never determine which books we include.
 

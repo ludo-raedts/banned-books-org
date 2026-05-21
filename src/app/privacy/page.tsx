@@ -120,8 +120,8 @@ export default function PrivacyPage() {
             tells the bookseller the click came from us, which lets them pay a small commission on any
             resulting purchase at no extra cost to you. The affiliate platform — and the bookseller — can
             measure clicks, sessions, and purchases attributed to that tag. We use Bookshop.org affiliate
-            links (which support independent bookstores) and ordinary search links to Kobo. We do not run
-            our own click tracking on top of these links.
+            links, which support independent bookstores. We do not run our own click tracking on top of
+            these links.
           </p>
           <p>
             <strong>We deliberately do not link to Amazon.</strong> Amazon has itself been involved in book
