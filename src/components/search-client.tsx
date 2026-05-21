@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { track } from '@vercel/analytics'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -107,6 +108,7 @@ export default function SearchClient({
   const [loadingFilter, setLoadingFilter] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const isFirstRender = useRef(true)
+  const hasTrackedSearchUsage = useRef(false)
 
   // ── Autocomplete state ──────────────────────────────────────────────────────
   type Suggestion = { id: number; slug: string; title: string; cover_url: string | null; author: string; banCount: number }
@@ -192,6 +194,11 @@ export default function SearchClient({
     }
 
     const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly }
+
+    if (debouncedQ.trim() && !hasTrackedSearchUsage.current) {
+      hasTrackedSearchUsage.current = true
+      track('Search Submitted', { source: 'search-page' })
+    }
 
     // Sync URL (replace, don't push, so back button doesn't get spammed)
     const qs = urlParams(filters)

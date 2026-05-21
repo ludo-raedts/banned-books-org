@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@vercel/analytics'
 import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -13,6 +14,7 @@ export default function HeroSearch({ bookCount }: { bookCount: number }) {
     e.preventDefault()
     const trimmed = q.trim()
     if (!trimmed) return
+    track('Search Submitted', { source: 'home' })
     router.push(`/search?q=${encodeURIComponent(trimmed)}`)
   }
 
