@@ -72,7 +72,7 @@ type RichBookOfDayRow = {
   cover_url: string | null
   first_published_year: number | null
   description_book: string | null
-  censorship_summary: string | null
+  description_ban: string | null
   genres: string[] | null
   book_authors: { authors: { display_name: string } | null }[] | null
   bans:
@@ -113,7 +113,7 @@ function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>
     }
   }
 
-  let summary = row.censorship_summary
+  let summary = row.description_ban
   if (!summary) {
     const others = countries.size - 1
     const banWord = `${total === 1 ? 'ban remains' : 'bans remain'}`
@@ -341,32 +341,20 @@ export default async function HomePage() {
   const pickBookRow = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
 
   // One follow-up fetch to pull the richer fields we need for the new card
-  // shape (censorship_summary, genres, per-ban status + year + reasons).
-  // Cheap because it's a single book by id, and the page is on revalidate=1800.
-  //
-  // The fallback path drops `censorship_summary` from the select — it shields
-  // the homepage during the window between deploy and the
-  // 20260521120000_books_censorship_summary migration being applied. Once the
-  // column exists the primary select returns and editorial summaries surface
-  // automatically.
+  // shape (description_ban, genres, per-ban status + year + reasons). Cheap
+  // because it's a single book by id, and the page is on revalidate=1800.
+  // `description_ban` is the editor-maintained "why was this banned" copy
+  // already surfaced on the book detail page; reused here so the homepage
+  // doesn't need a parallel editorial field.
   let bookOfDay: BookOfDay | null = null
   if (pickBookRow) {
-    const richSelect =
-      'id, title, slug, cover_url, first_published_year, description_book, censorship_summary, genres, ' +
-      'book_authors(authors(display_name)), ' +
-      'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))'
-    const richFallbackSelect = richSelect.replace('censorship_summary, ', '')
-
-    const primary = await timer.wrap('book-of-day-rich', () =>
-      supabase.from('books').select(richSelect).eq('id', pickBookRow.id).maybeSingle(),
+    const { data: richRaw } = await timer.wrap('book-of-day-rich', () =>
+      supabase.from('books').select(
+        'id, title, slug, cover_url, first_published_year, description_book, description_ban, genres, ' +
+        'book_authors(authors(display_name)), ' +
+        'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))',
+      ).eq('id', pickBookRow.id).maybeSingle(),
     )
-    let richRaw = primary.data
-    if (primary.error) {
-      const fallback = await timer.wrap('book-of-day-fallback', () =>
-        supabase.from('books').select(richFallbackSelect).eq('id', pickBookRow.id).maybeSingle(),
-      )
-      richRaw = fallback.data
-    }
     if (richRaw) bookOfDay = buildBookOfDay(richRaw as unknown as RichBookOfDayRow, countryNameMap)
   }
 
