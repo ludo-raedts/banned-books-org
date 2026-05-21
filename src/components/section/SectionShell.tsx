@@ -16,7 +16,7 @@ export default function SectionShell({
   const toneClasses =
     tone === 'cream'
       ? 'bg-cream border-y border-cream-border'
-      : 'bg-white dark:bg-gray-950'
+      : 'bg-white'
   return (
     <section
       id={id}

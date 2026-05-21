@@ -56,18 +56,18 @@ export default async function HappeningNowSection() {
             <Link
               key={item.id}
               href="/news"
-              className="hover-lift-card group block bg-white dark:bg-gray-900 border-t border-r border-b border-neutral-200 dark:border-gray-700 rounded-r-sm p-4"
+              className="hover-lift-card group block bg-white border-t border-r border-b border-neutral-200 rounded-r-sm p-4"
               style={{ borderLeft: '2px solid var(--color-oxblood)' }}
             >
               {item.headline && (
-                <h3 className="font-serif text-[13px] font-semibold leading-snug text-gray-900 dark:text-gray-50 line-clamp-2 mb-1.5 group-hover:text-oxblood transition-colors">
+                <h3 className="font-serif text-[13px] font-semibold leading-snug text-gray-900 line-clamp-2 mb-1.5 group-hover:text-oxblood transition-colors">
                   {item.headline}
                 </h3>
               )}
-              <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-2">
+              <p className="text-xs text-gray-700 leading-snug line-clamp-2">
                 {item.summary}
               </p>
-              <p className="mt-2 text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1.5 flex-wrap">
+              <p className="mt-2 text-[11px] text-gray-500 flex items-center gap-1.5 flex-wrap">
                 <span>
                   {sourceName}
                   {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}

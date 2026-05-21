@@ -20,7 +20,7 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
     <SectionShell tone="cream" eyebrow="Book of the day">
       <Link
         href={`/books/${book.slug}`}
-        className="hover-lift-book group block bg-white dark:bg-gray-900 border border-cream-border dark:border-gray-700 rounded-sm p-5 md:p-7"
+        className="hover-lift-book group block bg-white border border-cream-border rounded-sm p-5 md:p-7"
       >
         <div className="flex flex-col sm:flex-row gap-6 md:gap-10 items-start">
           <div className="shrink-0 mx-auto sm:mx-0">
@@ -49,7 +49,7 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="book-title font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-50">
+            <h3 className="book-title font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900">
               {book.title}
             </h3>
             {book.author && (
@@ -59,12 +59,12 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
               </p>
             )}
             {book.description && (
-              <p className="mt-4 font-serif text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-200 max-w-[460px] line-clamp-5">
+              <p className="mt-4 font-serif text-base md:text-lg leading-relaxed text-gray-800 max-w-[460px] line-clamp-5">
                 {book.description}
               </p>
             )}
 
-            <div className="mt-5 pt-3 border-t flex items-center justify-between gap-3 text-xs text-gray-700 dark:text-gray-300" style={{ borderColor: '#e8d4cd' }}>
+            <div className="mt-5 pt-3 border-t flex items-center justify-between gap-3 text-xs text-gray-700" style={{ borderColor: '#e8d4cd' }}>
               <span>
                 {book.countryCount} {book.countryCount === 1 ? 'country' : 'countries'}
                 {book.banCount > book.countryCount

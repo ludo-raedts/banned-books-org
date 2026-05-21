@@ -58,19 +58,19 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
     <SectionShell tone="white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml }} />
       <Eyebrow>Questions readers ask</Eyebrow>
-      <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 mb-6 pb-3 border-b border-black/80 dark:border-gray-200">
+      <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-black/80">
         Frequently asked.
       </h2>
-      <div className="divide-y divide-neutral-200 dark:divide-gray-800">
+      <div className="divide-y divide-neutral-200">
         {items.map((item, i) => (
           <details key={i} className="group">
-            <summary className="hover-faq-row flex items-center justify-between gap-4 px-4 md:px-5 py-4 list-none select-none font-serif text-base md:text-lg font-medium text-gray-900 dark:text-gray-50">
+            <summary className="hover-faq-row flex items-center justify-between gap-4 px-4 md:px-5 py-4 list-none select-none font-serif text-base md:text-lg font-medium text-gray-900">
               <span>{item.q}</span>
               <span className="faq-chev shrink-0 text-neutral-500 group-open:rotate-90 text-base">
                 ›
               </span>
             </summary>
-            <div className="px-4 md:px-5 pb-5 text-sm leading-relaxed text-neutral-700 dark:text-gray-300 max-w-[600px]">
+            <div className="px-4 md:px-5 pb-5 text-sm leading-relaxed text-neutral-700 max-w-[600px]">
               {renderAnswer(item.a)}
             </div>
           </details>

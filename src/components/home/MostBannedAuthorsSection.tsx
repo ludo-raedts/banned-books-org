@@ -31,11 +31,11 @@ export default function MostBannedAuthorsSection({ authors }: { authors: TopList
                 sizes="(min-width: 768px) 78px, 56px"
               />
             </div>
-            <div className="mt-2 text-xs font-semibold text-gray-900 dark:text-gray-50 line-clamp-2 leading-snug group-hover:text-oxblood transition-colors">
+            <div className="mt-2 text-xs font-semibold text-gray-900 line-clamp-2 leading-snug group-hover:text-oxblood transition-colors">
               {author.display_name}
             </div>
             {author.context && (
-              <div className="mt-0.5 text-[10px] text-neutral-600 dark:text-gray-400 line-clamp-2 leading-snug">
+              <div className="mt-0.5 text-[10px] text-neutral-600 line-clamp-2 leading-snug">
                 {author.context}
               </div>
             )}

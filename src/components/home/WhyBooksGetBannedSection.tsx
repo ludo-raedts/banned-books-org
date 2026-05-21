@@ -52,7 +52,7 @@ export default function WhyBooksGetBannedSection({ blocks }: { blocks: ReasonBlo
                   {block.reasonLabel}
                 </Link>
                 {block.description && (
-                  <p className="mt-2 text-xs text-neutral-600 dark:text-gray-400 leading-snug">
+                  <p className="mt-2 text-xs text-neutral-600 leading-snug">
                     {block.description}
                   </p>
                 )}

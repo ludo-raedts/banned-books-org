@@ -18,15 +18,15 @@ export default function SectionHeader({
   const hairline =
     accent === 'oxblood'
       ? 'border-b border-oxblood/30'
-      : 'border-b border-black/80 dark:border-gray-200'
+      : 'border-b border-black/80'
   return (
     <div className={`mb-6 pb-3 flex items-end justify-between gap-4 ${hairline}`}>
       <div className="min-w-0">
-        <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-50">
+        <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900">
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-gray-600">
             {subtitle}
           </p>
         )}
@@ -34,7 +34,7 @@ export default function SectionHeader({
       {viewAllHref && (
         <Link
           href={viewAllHref}
-          className="shrink-0 text-xs font-medium tracking-wide text-gray-700 dark:text-gray-300 hover:text-oxblood transition-colors whitespace-nowrap"
+          className="shrink-0 text-xs font-medium tracking-wide text-gray-700 hover:text-oxblood transition-colors whitespace-nowrap"
         >
           {viewAllLabel} →
         </Link>
