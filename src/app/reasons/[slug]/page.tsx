@@ -20,6 +20,8 @@ import Eyebrow from '@/components/section/Eyebrow'
 import FaqSection from '@/components/home/FaqSection'
 import CitationBlock from '@/components/citation-block'
 import type { FaqItem } from '@/components/faq-accordion'
+import { BookshopListEmbed } from '@/components/bookshop-list-embed'
+import { getBookshopListForReason, bookshopListUrl } from '@/lib/bookshop-lists'
 
 // Long-form editorial intros per reason — anchored on the reason page so
 // the prose surfaces in both the visible <p> below the hero and the
@@ -461,6 +463,25 @@ export default async function ReasonPage({
           </ol>
         </SectionShell>
       )}
+
+      {/* ── Curated reading list on Bookshop.org ────────────────────────── */}
+      {(() => {
+        const bookshopSlug = getBookshopListForReason(slug)
+        if (!bookshopSlug) return null
+        return (
+          <SectionShell tone="cream" eyebrow="Read these · Buy from a local bookstore">
+            <SectionHeader
+              title="On the shelf at Bookshop.org"
+              subtitle="Our curated list of the most-banned titles in this category. Every purchase supports independent bookstores."
+              accent="oxblood"
+              viewAllHref={bookshopListUrl(bookshopSlug)}
+              viewAllLabel="Open the full list"
+              viewAllExternal
+            />
+            <BookshopListEmbed slug={bookshopSlug} />
+          </SectionShell>
+        )
+      })()}
 
       {/* ── Filter + Full catalogue (A–Z, gated to non-top-12) ─────────── */}
       <SectionShell tone="cream" eyebrow="Full catalogue · A–Z">

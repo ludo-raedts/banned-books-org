@@ -25,6 +25,8 @@ import {
   buildScopeFaq,
   scopeFaqTitle,
 } from '@/lib/scope-meta'
+import { BookshopListEmbed } from '@/components/bookshop-list-embed'
+import { getBookshopListForScope, bookshopListUrl } from '@/lib/bookshop-lists'
 
 export async function generateMetadata({
   params,
@@ -604,6 +606,25 @@ export default async function ScopePage({
           </div>
         </SectionShell>
       )}
+
+      {/* ── Curated reading list on Bookshop.org ────────────────────────── */}
+      {(() => {
+        const bookshopSlug = getBookshopListForScope(scope.slug)
+        if (!bookshopSlug) return null
+        return (
+          <SectionShell tone="cream" eyebrow="Read these · Buy from a local bookstore">
+            <SectionHeader
+              title="On the shelf at Bookshop.org"
+              subtitle="Our curated list of the most-banned titles in this category. Every purchase supports independent bookstores."
+              accent="oxblood"
+              viewAllHref={bookshopListUrl(bookshopSlug)}
+              viewAllLabel="Open the full list"
+              viewAllExternal
+            />
+            <BookshopListEmbed slug={bookshopSlug} />
+          </SectionShell>
+        )
+      })()}
 
       {/* ── When bans happen (timeline) ─────────────────────────────────── */}
       {timeline.length >= 3 && (
