@@ -14,7 +14,8 @@ const LINKS = [
   { href: '/essays', label: 'Essays' },
   { href: '/news', label: 'News' },
   { href: '/about', label: 'About' },
-  { href: '/reading-list', label: 'Reading list' },
+  { href: '/reading-club', label: 'Reading club' },
+  { href: '/reading-list', label: 'Further reading' },
 ]
 
 export default function MobileNav() {

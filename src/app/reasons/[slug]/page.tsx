@@ -22,6 +22,7 @@ import CitationBlock from '@/components/citation-block'
 import type { FaqItem } from '@/components/faq-accordion'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForReason, bookshopListUrl } from '@/lib/bookshop-lists'
+import { getReadingClubThemeForReason } from '@/lib/reading-club-data'
 
 // Long-form editorial intros per reason — anchored on the reason page so
 // the prose surfaces in both the visible <p> below the hero and the
@@ -480,6 +481,29 @@ export default async function ReasonPage({
             />
             <BookshopListEmbed slug={bookshopSlug} />
           </SectionShell>
+        )
+      })()}
+
+      {/* ── Reading-Club theme deeplink ─────────────────────────────────── */}
+      {(() => {
+        const theme = getReadingClubThemeForReason(slug)
+        if (!theme) return null
+        return (
+          <section className="bg-white px-6 md:px-9 py-6 border-t border-neutral-200">
+            <div className="max-w-3xl mx-auto">
+              <Link
+                href={`/reading-club/by-theme/${theme.slug}`}
+                className="group flex items-start gap-3 text-sm text-gray-800 hover:text-oxblood transition-colors"
+              >
+                <span aria-hidden="true" className="text-oxblood text-base leading-none mt-0.5">★</span>
+                <span>
+                  <span className="font-semibold">Read together:</span>{' '}
+                  discussion packs on {theme.inSentence} in our Reading Club
+                  <span aria-hidden="true" className="opacity-70 group-hover:opacity-100"> →</span>
+                </span>
+              </Link>
+            </div>
+          </section>
         )
       })()}
 

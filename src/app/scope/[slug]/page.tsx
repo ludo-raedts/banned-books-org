@@ -626,6 +626,37 @@ export default async function ScopePage({
         )
       })()}
 
+      {/* ── Reading-Club deeplink (track-aware) ─────────────────────────── */}
+      {(() => {
+        // School bans → currently-challenged track (ALA US data).
+        // Government bans → international track (state-level bans worldwide).
+        // Anything else → Reading Club hub.
+        const href =
+          scope.slug === 'school'      ? '/reading-club/currently-challenged' :
+          scope.slug === 'government'  ? '/reading-club/international'        :
+                                          '/reading-club'
+        const lead =
+          scope.slug === 'school'      ? 'discussion packs for today\'s most-challenged US titles' :
+          scope.slug === 'government'  ? 'book-club guides for state-banned titles worldwide'      :
+                                          'discussion packs for the books on this list'
+        return (
+          <section className="bg-white px-6 md:px-9 py-6 border-t border-neutral-200">
+            <div className="max-w-3xl mx-auto">
+              <Link
+                href={href}
+                className="group flex items-start gap-3 text-sm text-gray-800 hover:text-oxblood transition-colors"
+              >
+                <span aria-hidden="true" className="text-oxblood text-base leading-none mt-0.5">★</span>
+                <span>
+                  <span className="font-semibold">Read together:</span> {lead} in our Reading Club
+                  <span aria-hidden="true" className="opacity-70 group-hover:opacity-100"> →</span>
+                </span>
+              </Link>
+            </div>
+          </section>
+        )
+      })()}
+
       {/* ── When bans happen (timeline) ─────────────────────────────────── */}
       {timeline.length >= 3 && (
         <SectionShell tone="cream" eyebrow={`By time · ${useYears ? `${timeline[0].key}–${timeline[timeline.length-1].key}` : 'by decade'}`}>

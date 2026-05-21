@@ -30,6 +30,51 @@ export const THEME_REASON_MAP: Record<string, readonly string[]> = {
 
 export type ThemeSlug = keyof typeof THEME_REASON_MAP
 
+// Public display names for each Reading-Club theme — match the rows seeded
+// in `reading_club_themes`. Inlined so reason/scope pages can render a
+// theme-deeplink callout without a second DB round-trip.
+export const READING_CLUB_THEME_DISPLAY_NAME: Record<string, string> = {
+  'lgbtq':                'LGBTQ+',
+  'political-dissent':    'Political dissent',
+  'religious-censorship': 'Religious censorship',
+  'race-and-racism':      'Race and racism',
+  'sexuality':            'Sexuality',
+}
+
+// In-sentence forms — used inside prose like "discussion packs on
+// {theme} in our Reading Club". Lower-cases the natural-language themes
+// but keeps the LGBTQ+ acronym intact.
+export const READING_CLUB_THEME_INSENTENCE: Record<string, string> = {
+  'lgbtq':                'LGBTQ+',
+  'political-dissent':    'political dissent',
+  'religious-censorship': 'religious censorship',
+  'race-and-racism':      'race and racism',
+  'sexuality':            'sexuality',
+}
+
+// Reverse of THEME_REASON_MAP: which Reading-Club theme covers a given
+// reason slug? Returns null when the reason isn't mapped to any theme
+// (e.g. "violence", "language", "drugs" today). Built lazily so the lookup
+// stays O(1) per call.
+let _reasonToThemeCache: Record<string, ThemeSlug> | null = null
+export function getReadingClubThemeForReason(
+  reasonSlug: string,
+): { slug: ThemeSlug; displayName: string; inSentence: string } | null {
+  if (!_reasonToThemeCache) {
+    _reasonToThemeCache = {}
+    for (const [theme, reasons] of Object.entries(THEME_REASON_MAP)) {
+      for (const r of reasons) _reasonToThemeCache[r] = theme as ThemeSlug
+    }
+  }
+  const slug = _reasonToThemeCache[reasonSlug]
+  if (!slug) return null
+  return {
+    slug,
+    displayName: READING_CLUB_THEME_DISPLAY_NAME[slug] ?? slug,
+    inSentence:  READING_CLUB_THEME_INSENTENCE[slug] ?? slug,
+  }
+}
+
 // ── Common card shape used on every public track page ───────────────────────
 
 export type ReadingClubCard = {
@@ -524,4 +569,102 @@ export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClub
   }
 
   return out.slice(0, FEATURED_BOOK_LIMIT)
+}
+
+// ── Per-book Reading Club lookup ────────────────────────────────────────────
+//
+// Used by the book-detail page to render a "Reading Club guide" badge next to
+// the title. Checks the four track tables in priority order and returns the
+// first published match (or null when this book isn’t in any track yet).
+//
+// Priority is editorial: a book that appears in the curated tracks
+// (international / classics) outranks the auto-pulled theme listings; the
+// currently-challenged track wins last because its detail URL uses
+// (year, position) rather than a book slug. Only one badge is rendered, so
+// one match is enough.
+
+export type ReadingClubLink = {
+  track: 'international' | 'classics' | 'currently-challenged' | 'by-theme'
+  trackLabel: string
+  href: string
+}
+
+export async function getReadingClubLinkForBook(
+  bookId: number,
+  bookSlug: string | null,
+): Promise<ReadingClubLink | null> {
+  if (!bookSlug && bookId == null) return null
+  const supabase = serverClient()
+
+  // International
+  if (bookSlug) {
+    const { data } = await supabase
+      .from('reading_club_international')
+      .select('book_id, published_at')
+      .eq('book_id', bookId)
+      .not('published_at', 'is', null)
+      .maybeSingle()
+    if (data) {
+      return {
+        track: 'international',
+        trackLabel: 'International cases',
+        href: `/reading-club/international/${bookSlug}`,
+      }
+    }
+  }
+
+  // Classics
+  if (bookSlug) {
+    const { data } = await supabase
+      .from('reading_club_classics')
+      .select('book_id, published_at')
+      .eq('book_id', bookId)
+      .not('published_at', 'is', null)
+      .maybeSingle()
+    if (data) {
+      return {
+        track: 'classics',
+        trackLabel: 'Banned classics',
+        href: `/reading-club/classics/${bookSlug}`,
+      }
+    }
+  }
+
+  // By Theme — first matching published row wins. We need the theme slug to
+  // build the URL, so select that here too.
+  if (bookSlug) {
+    const { data } = await supabase
+      .from('reading_club_theme_books')
+      .select('theme_slug, published_at')
+      .eq('book_id', bookId)
+      .not('published_at', 'is', null)
+      .limit(1)
+      .maybeSingle()
+    if (data?.theme_slug) {
+      return {
+        track: 'by-theme',
+        trackLabel: 'By theme',
+        href: `/reading-club/by-theme/${data.theme_slug}/${bookSlug}`,
+      }
+    }
+  }
+
+  // Currently Challenged — most recent year first.
+  const { data: cc } = await supabase
+    .from('reading_club_currently_challenged')
+    .select('year, position, published_at')
+    .eq('book_id', bookId)
+    .not('published_at', 'is', null)
+    .order('year', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (cc) {
+    return {
+      track: 'currently-challenged',
+      trackLabel: 'Currently challenged',
+      href: `/reading-club/currently-challenged/${cc.year}/${cc.position}`,
+    }
+  }
+
+  return null
 }

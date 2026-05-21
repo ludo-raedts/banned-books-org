@@ -56,7 +56,7 @@ export default function ReadingListPage() {
         <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
           <div className="max-w-3xl mx-auto">
             <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
-              Reading list · Curated
+              Further reading · Curated
             </p>
             <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
               Books about censorship.

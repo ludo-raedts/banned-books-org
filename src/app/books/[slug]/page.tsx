@@ -30,6 +30,7 @@ import {
   type DataQualityStatus,
 } from '@/components/data-quality'
 import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
+import { getReadingClubLinkForBook } from '@/lib/reading-club-data'
 
 // Programmatically-generated direct-answer summary + FAQ Q&As, used to
 // surface the "why was X banned" answer in the first 200 words of the page
@@ -457,6 +458,11 @@ export default async function BookPage({
 
   const book = data as unknown as BookDetail
   const author = authorName(book)
+
+  // Reading-Club badge: rendered next to the title when this book has a
+  // published entry in any track (international / classics / by-theme /
+  // currently-challenged). One small extra round-trip; ISR (1h) absorbs it.
+  const readingClubLink = await getReadingClubLinkForBook(book.id, book.slug)
 
   const sortedBans = [...book.bans].sort((a, b) =>
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
@@ -929,6 +935,20 @@ export default async function BookPage({
             Banned in {book.bans.length}{' '}
             {book.bans.length === 1 ? 'country' : 'countries'}
           </p>
+          {readingClubLink && (
+            <Link
+              href={readingClubLink.href}
+              className="group mt-0.5 inline-flex items-center gap-2 self-start rounded-full border border-oxblood/40 bg-oxblood/5 pl-3 pr-3.5 py-1 text-xs font-medium text-oxblood hover:bg-oxblood hover:text-white transition-colors"
+              aria-label={`Open the Reading Club guide for ${book.title}`}
+            >
+              <span aria-hidden="true">★</span>
+              <span>
+                <span className="font-semibold">Reading Club</span>
+                <span className="text-oxblood/70 group-hover:text-white/80"> · {readingClubLink.trackLabel}</span>
+              </span>
+              <span aria-hidden="true" className="opacity-70 group-hover:opacity-100">→</span>
+            </Link>
+          )}
           <ShareButtons
             url={`https://www.banned-books.org/books/${book.slug}`}
             title={book.title}

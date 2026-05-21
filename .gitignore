@@ -66,6 +66,9 @@ next-env.d.ts
 /data/filler-strip-*.csv
 /data/photo-enrichment-*.csv
 
+# resumable-script state — regenerated on every run
+/data/*.state.json
+
 # wikipedia bulk-parser run artifacts (timestamped per run, local-only)
 /data/wikipedia-import-runs/
 

@@ -82,7 +82,8 @@ export default function RootLayout({
               <NavLink href="/essays">Essays</NavLink>
               <NavLink href="/news">News</NavLink>
               <NavLink href="/about">About</NavLink>
-              <NavLink href="/reading-list">Reading list</NavLink>
+              <NavLink href="/reading-club">Reading club</NavLink>
+              <NavLink href="/reading-list">Further reading</NavLink>
             </nav>
             <MobileNav />
           </div>
@@ -104,7 +105,7 @@ export default function RootLayout({
               <Link href="/news" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">News</Link>
               <Link href="/about" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">About</Link>
               <Link href="/press" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Press</Link>
-              <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading list</Link>
+              <Link href="/reading-list" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Further reading</Link>
               <Link href="/reading-club" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading club</Link>
               <Link href="/banned-books-week" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Banned Books Week</Link>
               <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Classics</Link>
