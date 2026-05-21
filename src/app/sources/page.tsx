@@ -7,6 +7,8 @@ export const revalidate = 3600
 
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata = {
   title: 'Sources',
@@ -367,24 +369,27 @@ export default async function SourcesPage() {
   const totalBans = [...counts.values()].reduce((a, n) => a + n, 0)
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-10">
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">
-          Reference
-        </p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Sources</h1>
-        <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-          Every ban in this catalogue links back to its originating source — a public register, an
-          NGO report, an academic archive, or a news article. The list below shows every source
-          family currently in use, the count of ban records attributed to it, and where the data
-          comes from. The catalogue currently aggregates <strong>{totalBans.toLocaleString('en-US')}</strong>{' '}
-          source citations across <strong>{counts.size}</strong> distinct source URLs.
-        </p>
-      </div>
+    <main>
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <Eyebrow>Reference · Sources and citations</Eyebrow>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Where the data comes from.
+          </h1>
+          <p className="mt-6 max-w-[720px] font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+            Every ban in this catalogue links back to its originating source — a public register, an NGO report, an academic archive, or a news article.
+          </p>
+          <p className="mt-3 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            The list below shows every source family currently in use, the count of ban records attributed to it, and where the data comes from. The catalogue currently aggregates <strong>{totalBans.toLocaleString('en-US')}</strong> source citations across <strong>{counts.size}</strong> distinct source URLs.
+          </p>
+        </div>
+      </section>
 
+      <SectionShell tone="cream">
+        <div className="max-w-4xl mx-auto">
       {CATEGORIES.map(category => (
         <section key={category.heading} className="mb-12">
-          <h2 className="text-xl font-bold mb-2 tracking-tight">{category.heading}</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">{category.heading}</h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-5 max-w-3xl leading-relaxed">
             {category.blurb}
           </p>
@@ -437,9 +442,14 @@ export default async function SourcesPage() {
           </div>
         </section>
       ))}
+        </div>
+      </SectionShell>
 
-      <div className="mt-10 border rounded-xl p-6">
-        <h2 className="text-lg font-semibold mb-3">Data limitations</h2>
+      <SectionShell tone="white">
+        <div className="max-w-4xl mx-auto">
+
+      <div className="mt-2 border rounded-xl p-6 bg-white">
+        <h2 className="font-serif text-lg md:text-xl font-semibold mb-3 text-gray-900">Data limitations</h2>
         <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex flex-col gap-3">
           <p>
             This catalogue is not a neutral global census of book bans — it is a record of what has
@@ -480,18 +490,20 @@ export default async function SourcesPage() {
         </p>
       </div>
 
-      <p className="mt-10 text-xs text-gray-400 leading-relaxed">
+      <p className="mt-10 text-xs text-neutral-500 leading-relaxed">
         If you spot an error or want to suggest a source, please{' '}
         <a
           href="https://github.com/ludo-raedts/banned-books-org/issues"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-gray-600"
+          className="text-oxblood hover:underline"
         >
           open an issue on GitHub
         </a>
         .
       </p>
+        </div>
+      </SectionShell>
     </main>
   )
 }

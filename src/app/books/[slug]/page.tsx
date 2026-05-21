@@ -817,7 +817,7 @@ export default async function BookPage({
         />
       )}
       <PageviewTracker entityType="book" entityId={book.id} />
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors">
         ← All books
       </Link>
 
@@ -844,8 +844,11 @@ export default async function BookPage({
           )}
         </div>
         <div className="flex flex-col justify-center gap-2 min-w-0">
+          <p className="text-[11px] uppercase tracking-[0.12em] font-semibold text-oxblood">
+            Book {book.first_published_year ? `· ${book.first_published_year}` : ''}
+          </p>
           <h1
-            className="text-2xl font-bold leading-snug"
+            className="font-serif text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] text-gray-900"
             lang={book.original_language && book.original_language !== 'en' ? book.original_language : undefined}
           >
             {book.title}

@@ -50,15 +50,18 @@ export default function ReadingListPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="max-w-3xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Reading list</p>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Books about censorship</h1>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+      <main className="max-w-3xl mx-auto px-6 py-10">
+        {/* Hero — homepage design language (serif H1, oxblood eyebrow) */}
+        <div className="mb-10 pb-8 border-b border-neutral-200">
+          <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">Reading list · Curated</p>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-4">
+            Books about censorship.
+          </h1>
+          <p className="font-serif text-lg md:text-xl leading-relaxed text-gray-900">
             A curated reading list of books about censorship, free expression, and the history of banned literature.
           </p>
         </div>
+
 
         {/* Intro */}
         <div className="mb-6 text-sm text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">

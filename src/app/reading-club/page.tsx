@@ -68,11 +68,14 @@ export default async function ReadingClubHubPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <header className="mb-8">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">Reading banned books together</h1>
+      <header className="mb-10 pb-8 border-b border-neutral-200">
+        <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">Reading club · Four tracks</p>
+        <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-3">
+          Reading banned books together.
+        </h1>
         {showBBWLink && (
-          <p className="text-sm text-brand">
-            <Link href="/banned-books-week" className="hover:underline">→ Banned Books Week hub</Link>
+          <p className="text-sm">
+            <Link href="/banned-books-week" className="text-oxblood hover:underline">→ Banned Books Week hub</Link>
           </p>
         )}
       </header>

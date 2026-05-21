@@ -81,128 +81,124 @@ export default async function BannedClassicsPage() {
     grouped[era(book.first_published_year)].push(book)
   }
 
+  const erasInOrder = (['pre1900', '1900to1945', '1945to1970'] as const).filter(k => grouped[k].length > 0)
+
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
-          Banned Classic Literature
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl text-sm">
-          A common assumption is that book banning is a relic of less enlightened times. The titles
-          below prove otherwise. Every work on this page was first published before 1970 — and every
-          one has been formally banned, challenged, or removed from shelves within living memory.
-          Orwell wrote <em>1984</em> in 1948; it is still removed from school curricula today.
-          Nabokov&apos;s <em>Lolita</em> was prosecuted in multiple countries in the 1950s; it
-          still appears on challenge lists. The books that threaten power tend to keep threatening it.
-          For how we define a ban, see our{' '}
-          <Link href="/methodology" className="underline hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-            methodology
-          </Link>.
-        </p>
-      </div>
+    <main>
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All books
+          </Link>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        {books.length} works · sorted by ban count within each era
-      </p>
+          <Eyebrow>Top-list · Published before 1970</Eyebrow>
 
-      <nav aria-label="Jump to era" className="mb-8 flex flex-wrap gap-2">
-        {(['pre1900', '1900to1945', '1945to1970'] as const).map(eraKey => {
-          const group = grouped[eraKey]
-          if (group.length === 0) return null
-          return (
-            <a
-              key={eraKey}
-              href={`#${eraKey}`}
-              className="text-xs px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {ERA_LABELS[eraKey]}
-              <span className="ml-1.5 text-gray-400 dark:text-gray-500 tabular-nums">{group.length}</span>
-            </a>
-          )
-        })}
-      </nav>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+            Banned classic literature.
+          </h1>
 
-      {(['pre1900', '1900to1945', '1945to1970'] as const).map(eraKey => {
+          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            A common assumption is that book banning is a relic of less enlightened times. The titles below prove otherwise. Every work on this page was first published before 1970 — and every one has been formally banned, challenged, or removed from shelves within living memory. Orwell wrote <em>1984</em> in 1948; it is still removed from school curricula today. Nabokov&apos;s <em>Lolita</em> was prosecuted in multiple countries in the 1950s; it still appears on challenge lists. The books that threaten power tend to keep threatening it. For how we define a ban, see our{' '}
+            <Link href="/methodology" className="text-oxblood hover:underline">methodology</Link>.
+          </p>
+
+          <nav aria-label="Jump to era" className="mt-6 flex flex-wrap gap-2">
+            {erasInOrder.map(eraKey => (
+              <a
+                key={eraKey}
+                href={`#${eraKey}`}
+                className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors"
+              >
+                {ERA_LABELS[eraKey]}
+                <span className="ml-1.5 text-neutral-400 tabular-nums">{grouped[eraKey].length}</span>
+              </a>
+            ))}
+          </nav>
+        </div>
+      </section>
+
+      {/* ── Eras (alternating cream / white) ──────────────────────────── */}
+      {erasInOrder.map((eraKey, idx) => {
         const group = grouped[eraKey]
-        if (group.length === 0) return null
+        const tone = idx % 2 === 0 ? 'cream' : 'white'
         return (
-          <section key={eraKey} id={eraKey} className="mb-12 scroll-mt-20">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 pb-2 border-b border-gray-200 dark:border-gray-700">
+          <SectionShell key={eraKey} tone={tone} id={eraKey} eyebrow={`Era · ${group.length} ${group.length === 1 ? 'work' : 'works'}`}>
+            <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
               {ERA_LABELS[eraKey]}
             </h2>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">{group.length} works</p>
 
-            <div className="divide-y divide-gray-100 dark:divide-gray-800">
+            <ol className="divide-y divide-neutral-200 bg-white border border-neutral-200 rounded-sm">
               {group.map((book, i) => {
                 const author = book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
                 const top = topCountry(book.bans)
                 return (
-                  <Link
-                    key={book.id}
-                    href={`/books/${book.slug}`}
-                    className="flex items-center gap-4 py-3 group hover:bg-gray-50 dark:hover:bg-gray-900/50 -mx-3 px-3 rounded-lg transition-colors"
-                  >
-                    {/* Rank */}
-                    <span className="w-7 shrink-0 text-right text-xs tabular-nums text-gray-400 dark:text-gray-500 font-mono">
-                      {i + 1}
-                    </span>
-
-                    {/* Cover */}
-                    <div className="shrink-0 w-9 h-12 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
-                      {book.cover_url ? (
-                        <Image
-                          src={book.cover_url}
-                          alt={coverAlt(book.title, author, book.first_published_year)}
-                          width={36}
-                          height={48}
-                          className="w-full h-full object-cover"
-                          sizes="36px"
-                        />
-                      ) : (
-                        <BookCoverPlaceholder title={book.title} slug={book.slug} className="h-full" />
-                      )}
-                    </div>
-
-                    {/* Title + meta */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug group-hover:underline truncate">
-                        {book.title}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                        {author}
-                        {book.first_published_year && (
-                          <span className="text-gray-400 dark:text-gray-500"> · {book.first_published_year}</span>
-                        )}
-                      </p>
-                      {top && (
-                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">{top}</p>
-                      )}
-                    </div>
-
-                    {/* Ban count */}
-                    <div className="shrink-0 text-right">
-                      <span className="text-sm font-bold tabular-nums text-red-500 dark:text-red-400">
-                        {book.bans.length}
+                  <li key={book.id}>
+                    <Link
+                      href={`/books/${book.slug}`}
+                      className="group flex items-center gap-4 px-4 py-3 hover:bg-cream/50 transition-colors"
+                    >
+                      <span className="w-8 shrink-0 text-right font-serif text-base tabular-nums text-oxblood font-semibold">
+                        {i + 1}
                       </span>
-                      <p className="text-xs text-gray-400 dark:text-gray-500">
-                        {book.bans.length === 1 ? 'ban' : 'bans'}
-                      </p>
-                    </div>
-                  </Link>
+
+                      <div className="shrink-0 w-10 h-14 rounded overflow-hidden bg-neutral-100">
+                        {book.cover_url ? (
+                          <Image
+                            src={book.cover_url}
+                            alt={coverAlt(book.title, author, book.first_published_year)}
+                            width={40}
+                            height={56}
+                            className="w-full h-full object-cover"
+                            sizes="40px"
+                          />
+                        ) : (
+                          <BookCoverPlaceholder title={book.title} slug={book.slug} className="h-full" />
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="font-serif text-base font-medium text-gray-900 leading-snug group-hover:text-oxblood transition-colors truncate">
+                          {book.title}
+                        </p>
+                        <p className="text-xs text-neutral-600 truncate">
+                          {author}
+                          {book.first_published_year && (
+                            <span className="text-neutral-400"> · {book.first_published_year}</span>
+                          )}
+                        </p>
+                        {top && (
+                          <p className="text-[11px] text-neutral-500 truncate mt-0.5">{top}</p>
+                        )}
+                      </div>
+
+                      <div className="shrink-0 text-right">
+                        <span className="font-serif text-lg font-semibold tabular-nums text-oxblood">
+                          {book.bans.length}
+                        </span>
+                        <p className="text-[10px] uppercase tracking-wider text-neutral-500">
+                          {book.bans.length === 1 ? 'ban' : 'bans'}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
                 )
               })}
-            </div>
-          </section>
+            </ol>
+          </SectionShell>
         )
       })}
 
-      <p className="mt-6 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-800 pt-6">
-        Includes only works with at least one documented ban in our catalogue. Coverage skews toward
-        English-language sources.{' '}
-        <Link href="/methodology" className="underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-          Read the methodology →
-        </Link>
-      </p>
+      {/* ── Footer note ───────────────────────────────────────────────── */}
+      <SectionShell tone={erasInOrder.length % 2 === 0 ? 'cream' : 'white'}>
+        <p className="text-xs text-neutral-500 leading-relaxed max-w-2xl">
+          Includes only works with at least one documented ban in our catalogue. Coverage skews toward English-language sources.{' '}
+          <Link href="/methodology" className="text-oxblood hover:underline">Read the methodology →</Link>
+        </p>
+      </SectionShell>
     </main>
   )
 }

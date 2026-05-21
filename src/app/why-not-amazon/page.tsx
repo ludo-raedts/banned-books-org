@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import MoreEssays from '@/components/more-essays'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Why We Don\'t Link to Amazon',
@@ -13,22 +15,30 @@ export const metadata: Metadata = {
 
 export default function WhyNotAmazonPage() {
   return (
-    <main className="max-w-2xl mx-auto px-6 py-10">
-      <Link href="/" className="inline-block text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 mb-8">
-        ← Home
-      </Link>
+    <main>
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← Home
+          </Link>
 
-      <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-700 rounded-r-lg p-8 mb-12">
-        <p className="text-xs tracking-widest text-red-700 dark:text-red-400 uppercase mb-2">Essay</p>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4 text-gray-900 dark:text-gray-100">
-          Why we don&apos;t link to Amazon
-        </h1>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-          We deliberately choose not to link to Amazon.
-        </p>
-      </div>
+          <Eyebrow>Essay · Editorial policy</Eyebrow>
 
-      <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-red-700 prose-a:no-underline hover:prose-a:underline">
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Why we don&apos;t link to Amazon.
+          </h1>
+
+          <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+            We deliberately choose not to link to Amazon. Access to knowledge should not depend on opaque systems of control.
+          </p>
+        </div>
+      </section>
+
+      <SectionShell tone="cream">
+        <article className="max-w-3xl mx-auto prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-oxblood/30 prose-h3:mt-6 prose-h3:mb-2 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900">
 
         <p>
           Amazon plays a dominant role in global book distribution, but it also exercises significant
@@ -156,9 +166,14 @@ export default function WhyNotAmazonPage() {
           Instead, we link to alternative bookstores and platforms that better align with that principle.
         </p>
 
-      </article>
+        </article>
+      </SectionShell>
 
-      <MoreEssays currentSlug="why-not-amazon" />
+      <SectionShell tone="white">
+        <div className="max-w-3xl mx-auto">
+          <MoreEssays currentSlug="why-not-amazon" />
+        </div>
+      </SectionShell>
     </main>
   )
 }

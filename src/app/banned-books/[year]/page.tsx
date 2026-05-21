@@ -228,23 +228,24 @@ export default async function BannedBooksYearPage({
         ← Stats
       </Link>
 
-      <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
+      <div className="flex items-start justify-between gap-4 mb-6 flex-wrap pb-6 border-b border-neutral-200">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-1">
-            Books Banned in {year}
+          <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">By year · {year}</p>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-2">
+            Books banned in {year}.
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-neutral-600 text-sm">
             {books.length} {books.length === 1 ? 'book' : 'books'}, {rawBans.length} {rawBans.length === 1 ? 'ban' : 'bans'} documented
           </p>
         </div>
-        <div className="flex items-center gap-3 text-sm shrink-0">
+        <div className="flex items-center gap-3 text-sm shrink-0 mt-1">
           {prevYear && (
-            <Link href={`/banned-books/${prevYear}`} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <Link href={`/banned-books/${prevYear}`} className="text-neutral-500 hover:text-oxblood transition-colors">
               ← {prevYear}
             </Link>
           )}
           {nextYear && (
-            <Link href={`/banned-books/${nextYear}`} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <Link href={`/banned-books/${nextYear}`} className="text-neutral-500 hover:text-oxblood transition-colors">
               {nextYear} →
             </Link>
           )}

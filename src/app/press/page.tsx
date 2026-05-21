@@ -206,17 +206,18 @@ export default async function PressPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-14">
         {/* 1. Hero */}
-        <header className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">
-            Media kit
+        <header className="pb-8 border-b border-neutral-200">
+          <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
+            Media kit · For journalists &amp; researchers
           </p>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Press &amp; Media Kit</h1>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
-            Everything journalists and researchers need to write about Banned Books: live stats, boilerplate
-            copy in three lengths, founder details, downloadable logos, story angles, and a press contact.
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-4">
+            Press &amp; Media Kit.
+          </h1>
+          <p className="font-serif text-lg md:text-xl leading-relaxed text-gray-900 max-w-2xl">
+            Everything journalists and researchers need to write about Banned Books: live stats, boilerplate copy in three lengths, founder details, downloadable logos, story angles, and a press contact.
           </p>
-          <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-            Data last updated <strong className="font-medium text-gray-700 dark:text-gray-300">{lastUpdated}</strong>.
+          <p className="mt-3 text-xs text-neutral-500">
+            Data last updated <strong className="font-medium text-neutral-700">{lastUpdated}</strong>.
           </p>
         </header>
 

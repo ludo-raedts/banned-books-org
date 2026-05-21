@@ -440,13 +440,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       <PageviewTracker entityType="author" entityId={a.id} />
       <Link
         href="/stats"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
       >
         ← Stats
       </Link>
 
       {/* Hero */}
-      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10">
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 pb-8 border-b border-neutral-200">
         {a.photo_url && (
           <div className="shrink-0 flex justify-center sm:block">
             <Image
@@ -460,7 +460,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           </div>
         )}
         <div className="flex flex-col justify-center gap-2 min-w-0">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <p className="text-[11px] uppercase tracking-[0.12em] font-semibold text-oxblood">
+            Author
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
             {a.display_name}
             <QualityCheck status={a.data_quality_status} />
           </h1>

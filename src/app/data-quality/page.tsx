@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Data quality — how we classify records',
@@ -13,31 +15,32 @@ export const metadata: Metadata = {
 
 export default function DataQualityPage() {
   return (
-    <main className="max-w-2xl mx-auto px-6 py-10">
-      <Link
-        href="/methodology"
-        className="inline-block text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 mb-8"
-      >
-        ← Methodology
-      </Link>
+    <main>
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/methodology"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← Methodology
+          </Link>
 
-      <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-700 rounded-r-lg p-8 mb-12">
-        <p className="text-xs tracking-widest text-red-700 dark:text-red-400 uppercase mb-2">
-          Data quality
-        </p>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4 text-gray-900 dark:text-gray-100">
-          How we classify what we know
-        </h1>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-          This catalogue is built mostly by automated import from public
-          sources, then enriched and reviewed. Not every entry has been
-          checked by a human, and we don&apos;t pretend otherwise — every
-          record carries a quality label so you can tell at a glance how
-          much weight to put on it.
-        </p>
-      </div>
+          <Eyebrow>Data quality</Eyebrow>
 
-      <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-red-700 prose-a:no-underline hover:prose-a:underline">
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            How we classify what we know.
+          </h1>
+
+          <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+            This catalogue is built mostly by automated import from public sources, then enriched and reviewed. Not every entry has been checked by a human, and we don&apos;t pretend otherwise — every record carries a quality label so you can tell at a glance how much weight to put on it.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Essay body ────────────────────────────────────────────────── */}
+      <SectionShell tone="cream">
+        <article className="max-w-3xl mx-auto prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-oxblood/30 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900">
         <h2>Three levels</h2>
         <p>
           Every book and author entry falls into one of three buckets,
@@ -215,31 +218,24 @@ export default function DataQualityPage() {
           .
         </p>
 
-        <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg p-6 mt-12 not-prose">
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            <strong className="text-gray-800 dark:text-gray-200">
-              Related reading.
-            </strong>{' '}
-            For context on the catalogue as a whole, the country
-            rankings, and how we treat school bans vs. national bans,
-            see the{' '}
-            <Link
-              href="/methodology"
-              className="text-red-700 dark:text-red-400 underline hover:text-red-900"
-            >
-              methodology page
-            </Link>
-            . For the policy on which works we include and why, see{' '}
-            <Link
-              href="/essays/what-we-document"
-              className="text-red-700 dark:text-red-400 underline hover:text-red-900"
-            >
-              What we document — and why that is a choice
-            </Link>
-            .
-          </p>
-        </div>
       </article>
+      </SectionShell>
+
+      {/* ── Related reading ──────────────────────────────────────────── */}
+      <SectionShell tone="white">
+        <div className="max-w-3xl mx-auto">
+          <div className="border border-neutral-200 bg-white rounded-sm p-6">
+            <p className="text-xs uppercase tracking-wider text-neutral-500 mb-2">Related reading</p>
+            <p className="text-sm text-neutral-700 leading-relaxed">
+              For context on the catalogue as a whole, the country rankings, and how we treat school bans vs. national bans, see the{' '}
+              <Link href="/methodology" className="text-oxblood hover:underline">methodology page</Link>
+              . For the policy on which works we include and why, see{' '}
+              <Link href="/essays/what-we-document" className="text-oxblood hover:underline">What we document — and why that is a choice</Link>
+              .
+            </p>
+          </div>
+        </div>
+      </SectionShell>
     </main>
   )
 }

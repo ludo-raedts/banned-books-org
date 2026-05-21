@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import MoreEssays from '@/components/more-essays'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'History of Book Banning — From Ancient Rome to Today',
@@ -38,22 +40,25 @@ export default function HistoryPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-3xl mx-auto px-6 py-10">
+      <main>
+        {/* ── Hero ──────────────────────────────────────────────────── */}
+        <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+          <div className="max-w-3xl mx-auto">
+            <Eyebrow>Essay · A history of censorship</Eyebrow>
 
-        {/* Header */}
-        <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">
-            Essay
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-            The long shadow of censorship: a history of banned books
-          </h1>
-          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-            There is something almost paradoxical about banned books. The act of suppressing a text
-            often guarantees its survival. If anything, censorship is less a tool of control than a
-            confession of fear — fear of ideas, of dissent, of readers thinking for themselves.
-          </p>
-        </div>
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+              The long shadow of censorship.
+            </h1>
+
+            <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+              There is something almost paradoxical about banned books. The act of suppressing a text often guarantees its survival. Censorship is less a tool of control than a confession of fear — fear of ideas, of dissent, of readers thinking for themselves.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Essay body ────────────────────────────────────────────── */}
+        <SectionShell tone="cream">
+          <div className="max-w-3xl mx-auto">
 
         {/* Hero image */}
         <figure className="mb-12 -mx-4 sm:mx-0">
@@ -80,7 +85,7 @@ export default function HistoryPage() {
         </figure>
 
         {/* Article body */}
-        <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-gray-900 dark:prose-a:text-gray-100 prose-a:underline prose-a:underline-offset-2 prose-a:decoration-gray-300 dark:prose-a:decoration-gray-600 hover:prose-a:decoration-gray-600 dark:hover:prose-a:decoration-gray-300 prose-p:leading-relaxed">
+        <article className="prose prose-gray max-w-none prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-oxblood/30 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-p:leading-relaxed">
 
           <p>
             This article traces the history of literary censorship from ancient times to the present —
@@ -370,10 +375,13 @@ export default function HistoryPage() {
             And questions have a way of spreading.
           </p>
         </article>
+          </div>
+        </SectionShell>
 
-        {/* FAQ */}
-        <section className="mt-16 border-t border-gray-200 dark:border-gray-800 pt-10">
-          <h2 className="text-xl font-bold tracking-tight mb-8">FAQ: banned books and censorship</h2>
+        {/* ── FAQ ───────────────────────────────────────────────────── */}
+        <SectionShell tone="white" eyebrow="Questions readers ask">
+          <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight mb-8 pb-3 border-b border-black/80 text-gray-900">FAQ: banned books and censorship</h2>
           <div className="flex flex-col gap-6">
             {[
               {
@@ -403,13 +411,12 @@ export default function HistoryPage() {
               </div>
             ))}
           </div>
-        </section>
+          </div>
+        </SectionShell>
 
-        {/* Explore links */}
-        <section className="mt-12 p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
-          <p className="text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
-            Explore the catalogue
-          </p>
+        {/* ── Explore links ─────────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="Explore the catalogue">
+          <div className="max-w-3xl mx-auto">
           <div className="flex flex-wrap gap-3">
             <Link
               href="/"
@@ -448,9 +455,14 @@ export default function HistoryPage() {
               🇩🇪 Germany
             </Link>
           </div>
-        </section>
+          </div>
+        </SectionShell>
 
-        <MoreEssays currentSlug="history" />
+        <SectionShell tone="white">
+          <div className="max-w-3xl mx-auto">
+            <MoreEssays currentSlug="history" />
+          </div>
+        </SectionShell>
       </main>
     </>
   )
