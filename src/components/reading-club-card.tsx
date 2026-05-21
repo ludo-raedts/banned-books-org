@@ -6,12 +6,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
+import TrackedPdfDownload from '@/components/tracked-pdf-download'
 import type { ReadingClubCard as Card } from '@/lib/reading-club-data'
 
 export default function ReadingClubBookCard({
   card,
   showCountries,
   clubHref,
+  track,
+  themeSlug,
+  year,
 }: {
   card: Card
   showCountries?: boolean
@@ -19,6 +23,11 @@ export default function ReadingClubBookCard({
   // Each track passes its own URL; auto-pulled by-theme rows without a
   // curator entry omit it to avoid 404s.
   clubHref?: string
+  // Track context for Vercel Analytics — passed through to the PDF
+  // download tracker so we can group events by track in the dashboard.
+  track?: 'international' | 'classics' | 'by-theme' | 'currently-challenged'
+  themeSlug?: string
+  year?: number
 }) {
   // Always go through the canonical helper: per-ISBN deeplink when
   // bookshop_status='valid', otherwise storefront fallback. Manual URL
@@ -77,14 +86,19 @@ export default function ReadingClubBookCard({
             Book-club guide →
           </Link>
         )}
-        {clubHref && (
-          <a
+        {clubHref && track && (
+          <TrackedPdfDownload
             href={`${clubHref}/pdf`}
-            download
+            track={track}
+            bookSlug={card.bookSlug}
+            themeSlug={themeSlug ?? null}
+            year={year ?? null}
+            position={card.position}
+            source="card"
             className="text-oxblood hover:underline"
           >
             Download PDF
-          </a>
+          </TrackedPdfDownload>
         )}
         {card.bookSlug && (
           <Link href={`/books/${card.bookSlug}`} className="text-brand hover:underline">

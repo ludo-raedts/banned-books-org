@@ -36,7 +36,14 @@ export default async function ClassicsTrackPage() {
 
       {rows.length > 0 ? (
         <ul className="grid grid-cols-1 gap-4 mb-10">
-          {rows.map(r => <ReadingClubBookCard key={r.bookId ?? r.position} card={r} />)}
+          {rows.map(r => (
+            <ReadingClubBookCard
+              key={r.bookId ?? r.position}
+              card={r}
+              track="classics"
+              clubHref={r.bookSlug ? `/reading-club/classics/${r.bookSlug}` : undefined}
+            />
+          ))}
         </ul>
       ) : (
         <p className="text-sm text-gray-500 my-10">List not yet published.</p>

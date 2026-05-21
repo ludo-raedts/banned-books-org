@@ -52,7 +52,16 @@ export default async function ThemeSubpage({
 
       {books.length > 0 ? (
         <ul className="grid grid-cols-1 gap-4 mb-10">
-          {books.map(b => <ReadingClubBookCard key={b.bookId ?? b.position} card={b} showCountries />)}
+          {books.map(b => (
+            <ReadingClubBookCard
+              key={b.bookId ?? b.position}
+              card={b}
+              showCountries
+              track="by-theme"
+              themeSlug={slug}
+              clubHref={b.bookSlug ? `/reading-club/by-theme/${slug}/${b.bookSlug}` : undefined}
+            />
+          ))}
         </ul>
       ) : (
         <p className="text-sm text-gray-500 my-10">No books match this theme yet.</p>

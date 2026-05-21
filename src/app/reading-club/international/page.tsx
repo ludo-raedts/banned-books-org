@@ -33,7 +33,15 @@ export default async function InternationalTrackPage() {
 
       {rows.length > 0 ? (
         <ul className="grid grid-cols-1 gap-4 mb-10">
-          {rows.map(r => <ReadingClubBookCard key={r.bookId ?? r.position} card={r} showCountries />)}
+          {rows.map(r => (
+            <ReadingClubBookCard
+              key={r.bookId ?? r.position}
+              card={r}
+              showCountries
+              track="international"
+              clubHref={r.bookSlug ? `/reading-club/international/${r.bookSlug}` : undefined}
+            />
+          ))}
         </ul>
       ) : (
         <p className="text-sm text-gray-500 my-10">List not yet published.</p>

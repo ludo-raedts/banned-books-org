@@ -46,7 +46,15 @@ export default async function CurrentlyChallengedPage() {
 
       {rows.length > 0 ? (
         <ul className="grid grid-cols-1 gap-4 mb-10">
-          {rows.map(r => <ReadingClubBookCard key={r.position} card={r} />)}
+          {rows.map(r => (
+            <ReadingClubBookCard
+              key={r.position}
+              card={r}
+              track="currently-challenged"
+              year={yearShown}
+              clubHref={`/reading-club/currently-challenged/${yearShown}/${r.position}`}
+            />
+          ))}
         </ul>
       ) : (
         <p className="text-sm text-gray-500 my-10">List for {yearShown} not yet published.</p>
