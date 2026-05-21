@@ -1,14 +1,14 @@
 # Bookshop ISBN cross-reference report
 
-Generated: 2026-05-21T14:55:56.103Z
-Progress: 969 of 1967 books _(partial, run still in progress)_
+Generated: 2026-05-21T17:15:00.665Z
+Progress: 1967 of 1967 books
 
-- **169** books got a working Bookshop alt-ISBN — `books.bookshop_isbn13` could be set to the suggested value (or pasted into the bookshop affiliate list).
-- **294** books had alt editions but none resolved on Bookshop.
-- **441** books had no alt editions from Open Library.
-- **65** books were not findable in Open Library at all.
+- **374** books got a working Bookshop alt-ISBN — `books.bookshop_isbn13` could be set to the suggested value (or pasted into the bookshop affiliate list).
+- **491** books had alt editions but none resolved on Bookshop.
+- **1007** books had no alt editions from Open Library.
+- **95** books were not findable in Open Library at all.
 
-## Books with a suggested working ISBN (169)
+## Books with a suggested working ISBN (374)
 
 Replace `current` with `suggested` to make Bookshop resolve the per-ISBN deeplink.
 
@@ -183,8 +183,213 @@ Replace `current` with `suggested` to make Bookshop resolve the per-ISBN deeplin
 | 167 | [Specials](https://banned-books.org/books/specials) | Scott Westerfeld | `9781484481639` | `9781442419797` | Simon & Schuster |
 | 168 | [The Host](https://banned-books.org/books/the-host) | Stephenie Meyer | `9781600241666` | `9780316034111` | Little, Brown and Company |
 | 169 | [The Titan's Curse](https://banned-books.org/books/the-titans-curse) | Rick Riordan | `9788364297816` | `9781616379247` | Random House |
+| 170 | [The Italian Renaissance](https://banned-books.org/books/the-italian-renaissance) | George Holmes | `9781542853781` | `9786555522068` | Principis |
+| 171 | [Vincent van Gogh: The Complete Paintings](https://banned-books.org/books/vincent-van-gogh-the-complete-paintings) | Rainer Metzger | `9783720401845` | `9781588391650` | Metropolitan Museum of Art New York |
+| 172 | [Audacious](https://banned-books.org/books/audacious) | Gabrielle Prendergast | `9781459802650` | `9781459802667` | Orca Book Publishers |
+| 173 | [If There Be Thorns](https://banned-books.org/books/if-there-be-thorns) | V.C. Andrews | `9788401371172` | `9781451636963` | Simon & Schuster, Limited |
+| 174 | [Seeds of Yesterday](https://banned-books.org/books/seeds-of-yesterday) | V.C. Andrews | `9789044924824` | `9781476799476` | Pocket Books |
+| 175 | [The Color of Water](https://banned-books.org/books/the-color-of-water) | Kim Dong Hwa | `9783827002730` | `9781594481925` | Riverhead Trade |
+| 176 | [The Complete Persepolis: Volumes 1 and 2](https://banned-books.org/books/the-complete-persepolis-volumes-1-and-2) | Marjane Satrapi | `9781407070759` | `9780375714832` | Pantheon Books |
+| 177 | [The Degenerates](https://banned-books.org/books/the-degenerates) | Jennifer Ann / Mann, J. Albert Mann | `9780582402126` | `9781452317359` | Smashwords |
+| 178 | [The Drawing of the Three - The Prisoner](https://banned-books.org/books/the-drawing-of-the-three-the-prisoner) | Robin Furth | `9781101975800` | `9781797106243` | Simon & Schuster Audio |
+| 179 | [Walk the Edge](https://banned-books.org/books/walk-the-edge) | Katie McGarry | `9780373211623` | `9781504698580` | Harlequin Audio |
+| 180 | [The Death of Vivek Oji](https://banned-books.org/books/the-death-of-vivek-oji) | Akwaeke Emezi | `9786556923178` | `9780525541615` | Penguin Publishing Group |
+| 181 | [Read Me Like a Book](https://banned-books.org/books/read-me-like-a-book) | Liz Kessler | `9781780622095` | `9780763681319` | Candlewick Press |
+| 182 | [Trevor: A Novella](https://banned-books.org/books/trevor-a-novella) | James Lecesne | `9780091684600` | `9781504058155` | Open Road Integrated Media, Inc. |
+| 183 | [Children's Book of Art](https://banned-books.org/books/childrens-book-of-art) | DK | `9781299045705` | `9788491018148` | Combel Editorial |
+| 184 | [Amanecer](https://banned-books.org/books/amanecer) | Stephanie Meyer | `9789944821551` | `9780316328326` | Little, Brown Books for Young Readers |
+| 185 | [Cesar Chavez: Fighting for Farmworkers](https://banned-books.org/books/cesar-chavez-fighting-for-farmworkers) | Eric Braun | `9780736231459` | `9780736861915` | Capstone Press |
+| 186 | [Desperation](https://banned-books.org/books/desperation) | Stephen King | `9780753155226` | `9781501141164` | Scribner |
+| 187 | [Inkspell](https://banned-books.org/books/inkspell) | Cornelia Funke | `9781908435095` | `9780545406314` | Scholastic Inc. |
+| 188 | [Karate](https://banned-books.org/books/karate) | Tim O'Shei | `9788408086017` | `9780545103695` | Scholastic |
+| 189 | [La batalla del laberinto](https://banned-books.org/books/la-batalla-del-laberinto) | Rick Riordan | `9788983781338` | `9781368051460` | Hyperion Books for Children |
+| 190 | [La maldición del Titán](https://banned-books.org/books/la-maldicion-del-titan) | Rick Riordan | `9780141919133` | `9781616379247` | Random House |
+| 191 | [Max](https://banned-books.org/books/max) | James Patterson | `9780801014390` | `9780785261599` | HarperCollins Christian Pub. |
+| 192 | [The Blind Assassin](https://banned-books.org/books/the-blind-assassin) | Margaret Atwood | `9781408802786` | `9780385720953` | Anchor Books |
+| 193 | [The Great American Dust Bowl: A Graphic Novel](https://banned-books.org/books/the-great-american-dust-bowl-a-graphic-novel) | Don Brown | `9788937461750` | `9786070785580` | Editorial Planeta Mexicana |
+| 194 | [The Jungle Book](https://banned-books.org/books/the-jungle-book) | Rudyard Kipling | `9780954510398` | `9780061062865` | HarperCollins Publishers |
+| 195 | [The Secrets of Peaches](https://banned-books.org/books/the-secrets-of-peaches) | Jodi Lynn Anderson | `9780060733094` | `9780060733100` | HarperTeen |
+| 196 | [The Thief Lord](https://banned-books.org/books/the-thief-lord) | Cornelia Funke | `9780439420891` | `9780545227704` | Scholastic |
+| 197 | [The Time Machine](https://banned-books.org/books/the-time-machine) | H. G. Wells | `9781774415702` | `9780451470706` | Signet |
+| 198 | [The Water Knife](https://banned-books.org/books/the-water-knife) | Paolo Bacigalupi | `9781469298320` | `9780804171533` | Vintage |
+| 199 | [Twilight: The Graphic Novel](https://banned-books.org/books/twilight-the-graphic-novel) | Stephenie Meyer | `9781905654383` | `9781616579173` | Random House |
+| 200 | [Understanding Reproductive Health](https://banned-books.org/books/understanding-reproductive-health) | Jeanne Marie Ford | `9781532179037` | `9781532192234` | ABDO Publishing Company |
+| 201 | [Du contrat social](https://banned-books.org/books/du-contrat-social) | Jean-Jacques Rousseau | `9780785912682` | `9780140442014` | Penguin Classics |
+| 202 | [Thérèse Raquin](https://banned-books.org/books/therese-raquin) | Émile Zola | `9780140057751` | `9780140449440` | Penguin Classics |
+| 203 | [The Good Soldier Švejk](https://banned-books.org/books/the-good-soldier-svejk) | Jaroslav Hašek | `9780140035681` | `9780062835444` | Harper Perennial Modern Classics |
+| 204 | [Quotations from Chairman Mao Tse-tung](https://banned-books.org/books/quotations-from-chairman-mao) | Mao Zedong | `9781627740289` | `9781638231868` | Meirovich, Igal |
+| 205 | [Why I Am Not a Christian](https://banned-books.org/books/why-i-am-not-a-christian) | Bertrand Russell | `9780415079181` | `9780415325103` | Routledge |
+| 206 | [Submission](https://banned-books.org/books/submission-hirsi-ali) | Theo van Gogh, Ayaan Hirsi Ali | `9781784702052` | `9781250097347` | Picador |
+| 207 | [Heather Has Two Mommies](https://banned-books.org/books/heather-has-two-mommies) | Lesléa Newman | `9780962278907` | `9780763690427` | Candlewick |
+| 208 | [Our Bodies, Ourselves](https://banned-books.org/books/our-bodies-ourselves) | Boston Women's Health Book Collective | `9780671214357` | `9781583220245` | Siete Cuentos Editorial |
+| 209 | [La Question](https://banned-books.org/books/la-question) | Henri Alleg | `9789756865057` | `9780803259607` | Bison Books |
+| 210 | [Independent Kashmir](https://banned-books.org/books/independent-kashmir) | Christopher Snedden | `9781526156167` | `9781526156143` | Manchester University Press |
+| 211 | [Kashmir & the Future of South Asia](https://banned-books.org/books/kashmir-the-future-of-south-asia) | Sugata Bose, Ayesha Jalal | `9781000318784` | `9780367622398` | Taylor & Francis Group |
+| 212 | [The Price of Power: Kissinger and Nixon in the White House](https://banned-books.org/books/the-price-of-power-kissinger-and-nixon-in-the-white-house) | Seymour Hersh | `9780671447601` | `9780671506889` | Summit Books |
+| 213 | [China's Foreign Relations Since 1949](https://banned-books.org/books/chinas-foreign-relations-since-1949) | Alan Lawrence | `9781136572319` | `9781138970427` | Taylor & Francis Group |
+| 214 | [Lost Girls](https://banned-books.org/books/lost-girls) | Alan Moore, Melinda Gebbie | `9781891830747` | `9781603094368` | Idea & Design Works, LLC |
+| 215 | [My Secret Garden](https://banned-books.org/books/my-secret-garden) | Nancy Friday | `9783596319046` | `9781416567011` | Pocket Books |
+| 216 | [Frankenstein](https://banned-books.org/books/frankenstein-1818) | Mary Shelley | `9780133305159` | `9781982146160` | Gallery Books |
+| 217 | [Fanny Hill or Memoirs of a Woman of Pleasure](https://banned-books.org/books/fanny-hill-or-memoirs-of-a-woman-of-pleasure) | John Cleland | `9798487473882` | `9781443426114` | HarperCollins Publishers |
+| 218 | [Howl (1955)](https://banned-books.org/books/howl-1955) | Allen Ginsberg | `9780520240155` | `9780520246775` | University of California Press |
+| 219 | [I Didn't Do It for You: How the World Betrayed a Small African Nation](https://banned-books.org/books/i-didnt-do-it-for-you-how-the-world-betrayed-a-small-african-nation-2005) | Michela Wrong | `9780007150960` | `9780007150953` | HarperPerennial |
+| 220 | [The Satanic Bible](https://banned-books.org/books/the-satanic-bible-1969) | Anton LaVey | `9780685418949` | `9780380015399` | Avon Publications |
+| 221 | [The Spanish Labyrinth](https://banned-books.org/books/the-spanish-labyrinth) | Gerald Brenan | `9788401332562` | `9781376185539` | Andesite Press |
+| 222 | [The Spanish Civil War](https://banned-books.org/books/the-spanish-civil-war) | Hugh Thomas | `9788425306938` | `9788466344692` | Penguin Random House Grupo Editorial |
+| 223 | [Thế lực thù địch](https://banned-books.org/books/the-luc-thu-dich) | Hoàng Minh Tường | `9789721041547` | `9780063412637` | HarperCollins Publishers |
+| 224 | [Thoughts of a Corpse](https://banned-books.org/books/thoughts-of-a-corpse) | Prvoslav Vujčić | `9781566190268` | `9781020569845` | Creative Media Partners, LLC |
+| 225 | [A Message to Man and Humanity](https://banned-books.org/books/a-message-to-man-and-humanity) | Aleksandar Cvetković | `9781548755010` | `9781936830916` | Suzeteo Enterprises |
+| 226 | [Curved River](https://banned-books.org/books/curved-river) | Živojin Pavlović | `9781565116337` | `9780743470827` | Washington Square Press |
+| 227 | [The Road To Serfdom](https://banned-books.org/books/the-road-to-serfdom) | Friedrich Hayek | `9780786100507` | `9780226320540` | University of Chicago Press |
+| 228 | [White Snow, Red Blood](https://banned-books.org/books/white-snow-red-blood) | Zhang Zhenglong | `9780688109134` | `9781435152632` | Barnes & Noble, Incorporated |
+| 229 | [The White Disease](https://banned-books.org/books/the-white-disease) | Karel Čapek | `9781589266018` | `9780786181902` | Blackstone Audiobooks |
+| 230 | [Alice (series)](https://banned-books.org/books/alice-series) | Phyllis Reynolds Naylor | `9781416958765` | `9781442465787` | Simon & Schuster Children's Publishing |
+| 231 | [Annie on My Mind](https://banned-books.org/books/annie-on-my-mind) | Nancy Garden | `9780606072007` | `9780374400118` | Farrar, Straus, Giroux |
+| 232 | [Blood and Chocolate](https://banned-books.org/books/blood-and-chocolate) | Annette Curtis Klause | `9780329209582` | `9780375843167` | Random House Children's Books |
+| 233 | [Cat's Cradle](https://banned-books.org/books/cats-cradle) | Kurt Vonnegut | `9780694502219` | `9780062314352` | HarperAudio |
+| 234 | [Crazy](https://banned-books.org/books/crazy) | Benjamin Lebert | `9780606288217` | `9780375708312` | Vintage |
+| 235 | [Daughters of Eve](https://banned-books.org/books/daughters-of-eve) | Lois Duncan | `9780330313681` | `9780316098977` | Little, Brown |
+| 236 | [The Earth, My Butt, and Other Big Round Things](https://banned-books.org/books/the-earth-my-butt-and-other-big-round-things) | Carolyn Mackler | `9780606343930` | `9781681198002` | Bloomsbury Publishing USA |
+| 237 | [Gone with the Wind](https://banned-books.org/books/gone-with-the-wind) | Margaret Mitchell | `9780785940548` | `9781451635621` | Scribner |
+| 238 | [It's So Amazing](https://banned-books.org/books/its-so-amazing) | Robie Harris | `9780763669980` | `9780763668730` | Candlewick Press |
+| 239 | [Jump Ship to Freedom](https://banned-books.org/books/jump-ship-to-freedom) | James Lincoln Collier, Christopher Collier | `9780440911586` | `9780440443230` | Yearling |
+| 240 | [Less than Zero](https://banned-books.org/books/less-than-zero) | Bret Easton Ellis | `9789056377243` | `9780679781493` | Vintage |
+| 241 | [Mick Harte Was Here](https://banned-books.org/books/mick-harte-was-here) | Barbara Park | `9780788757051` | `9780780766945` | Random House Children's Books |
+| 242 | [Ordinary People](https://banned-books.org/books/ordinary-people) | Judith Guest | `9788425313431` | `9781101042168` | Penguin USA, Inc. |
+| 243 | [The Pillars of the Earth](https://banned-books.org/books/the-pillars-of-the-earth) | Ken Follett | `9780330465731` | `9780451166890` | Signet |
+| 244 | [Shade's Children](https://banned-books.org/books/shades-children) | Garth Nix | `9780007243129` | `9780062075987` | HarperCollins Publishers |
+| 245 | [The Story of Little Black Sambo](https://banned-books.org/books/the-story-of-little-black-sambo) | Helen Bannerman | `9780448496085` | `9781557094148` | Applewood Books |
+| 246 | [Summer of My German Soldier](https://banned-books.org/books/summer-of-my-german-soldier) | Bette Greene | `9780719545139` | `9780141306360` | Puffin Books |
+| 247 | [That Was Then, This Is Now](https://banned-books.org/books/that-was-then-this-is-now) | S.E. Hinton | `9789995691882` | `9780593114384` | Penguin Young Readers Group |
+| 248 | [Tiger Eyes](https://banned-books.org/books/tiger-eyes) | Judy Blume | `9781447280439` | `9781665980784` | Simon & Schuster Children's Publishing |
+| 249 | [Uncle Bobby's Wedding](https://banned-books.org/books/uncle-bobbys-wedding) | Sarah S. Brannen | `9780399247125` | `9781499810080` | Little Bee Books Inc. |
+| 250 | [Women in Love](https://banned-books.org/books/women-in-love) | D. H. Lawrence | `9780451525918` | `9781016762137` | Creative Media Partners, LLC |
+| 251 | [Women on Top](https://banned-books.org/books/women-on-top) | Nancy Friday | `9788440616449` | `9781476715605` | Gallery Books |
+| 252 | [Asking About Sex and Growing Up](https://banned-books.org/books/asking-about-sex-and-growing-up) | Joanna Cole | `9780061923333` | `9780061429866` | HarperCollins |
+| 253 | [The Boy Who Lost His Face](https://banned-books.org/books/the-boy-who-lost-his-face) | Louis Sachar | `9781408850336` | `9780812493382` | San Val |
+| 254 | [Brideshead Revisited](https://banned-books.org/books/brideshead-revisited) | Evelyn Waugh | `9780736618502` | `9780316216449` | Little, Brown and Company |
+| 255 | [Crazy Lady!](https://banned-books.org/books/crazy-lady) | Jane Leslie Conly | `9780060213572` | `9780064405713` | HarperTrophy |
+| 256 | [Deenie](https://banned-books.org/books/deenie) | Judy Blume | `9780745109558` | `9781665980777` | Simon & Schuster Children's Publishing |
+| 257 | [Final Exit](https://banned-books.org/books/final-exit) | Derek Humphry | `9780960603039` | `9780385336536` | Delta |
+| 258 | [Goosebumps (series)](https://banned-books.org/books/goosebumps-series) | R. L. Stine | `9781536428285` | `9780545296489` | Scholastic, Incorporated |
+| 259 | [Grendel](https://banned-books.org/books/grendel) | John Gardner | `9781664405561` | `9780679723110` | Vintage |
+| 260 | [Harry Potter (series)](https://banned-books.org/books/harry-potter-series) | J.K. Rowling | `9781408810545` | `9780807281185` | Random House |
+| 261 | [His Dark Materials (series)](https://banned-books.org/books/his-dark-materials-series) | Philip Pullman | `9783453720596` | `9788417092566` | Roca Editorial |
+| 262 | [Jumper](https://banned-books.org/books/jumper) | Steven Gould | `9780765342287` | `9780765378163` | Tor Books |
+| 263 | [Junie B. Jones (series)](https://banned-books.org/books/junie-b-jones-series) | Barbara Park | `9780375868412` | `9780307754844` | Random House |
+| 264 | [Madeline and the Gypsies](https://banned-books.org/books/madeline-and-the-gypsies) | Ludwig Bemelmans | `9780590542708` | `9780140566475` | Puffin Books |
+| 265 | [Make Something Up](https://banned-books.org/books/make-something-up) | Chuck Palahniuk | `9788466347747` | `9788439734178` | Literatura Random House |
+| 266 | [Prince & Knight](https://banned-books.org/books/prince-knight) | Daniel Haack, illus. by Stevie Lewis | `9781499819083` | `9781499805529` | Little Bee Books Inc. |
+| 267 | [So Far from the Bamboo Grove](https://banned-books.org/books/so-far-from-the-bamboo-grove) | Yoko Kawashima Watkins | `9780606067478` | `9780062347114` | HarperCollins Publishers |
+| 268 | [Where's Waldo?](https://banned-books.org/books/wheres-waldo) | Martin Handford | `9780763603120` | `9780763645250` | Candlewick Press |
+| 269 | [The Wish Giver](https://banned-books.org/books/the-wish-giver) | Bill Brittain | `9780808574903` | `9780061958496` | HarperCollins |
+| 270 | [My Life and Loves](https://banned-books.org/books/my-life-and-loves) | Frank Harris | `9798594417038` | `9789390354115` | Tingle Books |
+| 271 | [Damaged Goods](https://banned-books.org/books/damaged-goods) | Eugène Brieux | `9781981223381` | `9781034719823` | Blurb |
+| 272 | [My Secret Life](https://banned-books.org/books/my-secret-life) | Walter | `9780786703463` | `9781443426916` | HarperCollins Publishers |
+| 273 | [Hello Sex](https://banned-books.org/books/hello-sex) | Anders Jorgens, Gunilla Jorgens | `9781480455702` | `9781480455597` | Open Road Integrated Media, Inc. |
+| 274 | [One for the Gods](https://banned-books.org/books/one-for-the-gods) | Gordon Merrick | `9781555832919` | `9781497666221` | Open Road Integrated Media, Inc. |
+| 275 | [David Hamilton's Private Collection](https://banned-books.org/books/david-hamiltons-private-collection) | David Hamilton | `9783355001120` | `9780553211894` | Bantam Classics |
+| 276 | [The Reasonableness of Christianity, as Delivered in the Scriptures](https://banned-books.org/books/the-reasonableness-of-christianity-as-delivered-in-the-scriptures) | John Locke | `9780713602142` | `9780729405638` | Voltaire Foundation |
+| 277 | [Justine](https://banned-books.org/books/justine) | Sade | `9781387894772` | `9780007300440` | HarperCollins Publishers Limited |
+| 278 | [Chinese Democracy after Tiananmen](https://banned-books.org/books/chinese-democracy-after-tiananmen) | Yijiang Ding | `9781283111560` | `9780231125659` | Columbia University Press |
+| 279 | [Principles of Political Economy](https://banned-books.org/books/principles-of-political-economy) | John Stuart Mill | `9781421273075` | `9781345382457` | Arkose Press |
+| 280 | [After the Fall : 1989 and the Future of Freedom](https://banned-books.org/books/after-the-fall-1989-and-the-future-of-freedom) | George Katsiaficas | `9781136803253` | `9780415930253` | Routledge |
+| 281 | [Notre Dame de Paris](https://banned-books.org/books/notre-dame-de-paris) | Victor Hugo | `9781404307827` | `9781613825372` | Simon & Brown |
+| 282 | [Lettres Persanes](https://banned-books.org/books/lettres-persanes) | Montesquieu | `9781724028211` | `9780140442816` | Penguin Classics |
+| 283 | [Lili : a novel of Tiananmen](https://banned-books.org/books/lili-a-novel-of-tiananmen) | Wang, Ban. | `9780330488945` | `9780385720502` | Anchor |
+| 284 | [The Group](https://banned-books.org/books/the-group) | Mary McCarthy | `9780297167228` | `9781480438231` | Open Road Integrated Media, Inc. |
+| 285 | [Beijing Spring 1989: Confrontation and Conflict - The Basic Documents](https://banned-books.org/books/beijing-spring-1989-confrontation-and-conflict-the-basic-documents) | Michel C. Oksenberg | `9781315289076` | `9780873326841` | M E Sharpe Inc |
+| 286 | [Salammbô](https://banned-books.org/books/salammbo) | Gustave Flaubert | `9781731526373` | `9781406546255` | Simon & Schuster |
+| 287 | [Jacques le fataliste et son maître](https://banned-books.org/books/jacques-le-fataliste-et-son-maitre) | Denis Diderot | `9782070367634` | `9780199537952` | Oxford University Press |
+| 288 | [China live : two decades in the heart of the dragon](https://banned-books.org/books/china-live-two-decades-in-the-heart-of-the-dragon) | Mike Chinoy | `9781570363603` | `9780847693184` | Rowman & Littlefield Publishers |
+| 289 | [Mysterious India](https://banned-books.org/books/mysterious-india) | Moki Singh | `9798766017585` | `9788415211679` | Bolchiro |
+| 290 | [Cease-Fire](https://banned-books.org/books/cease-fire) | Agha Babar | `9781146585309` | `9781376415285` | Creative Media Partners, LLC |
+| 291 | [Pensées , with notes by Voltaire](https://banned-books.org/books/pensees-with-notes-by-voltaire) | Blaise Pascal | `9780785940807` | `9783842486508` | tredition Verlag |
+| 292 | [The ordinary and the extraordinary : an anthropological study of Chinese reform and the 1989 People's Movement in Beijing](https://banned-books.org/books/the-ordinary-and-the-extraordinary-an-anthropological-study-of-chinese-reform-and-the-1989-peoples-movement-in-beijing) | Frank N. Pieke | `9781283839082` | `9781138977648` | Taylor & Francis Group |
+| 293 | [Hello World](https://banned-books.org/books/hello-world) | Zhaoda Huang | `9781784163068` | `9780393635003` | Norton & Company, Incorporated, W. W. |
+| 294 | [Essai sur les données immédiates de la conscience](https://banned-books.org/books/essai-sur-les-donnees-immediates-de-la-conscience) | Henri Bergson | `9781306853934` | `9781605205717` | Cosimo Classics |
+| 295 | [Les passions de l'âme](https://banned-books.org/books/les-passions-de-lame) | René Descartes | `9780741004703` | `9781420926729` | Digireads.com |
+| 296 | [Hello World. 2](https://banned-books.org/books/hello-world-2) | Zhaoda Huang | `9780881039122` | `9780060511142` | HarperTrophy |
+| 297 | [Matière et mémoire; essai sur la relation du corps à l'esprit](https://banned-books.org/books/matiere-et-memoire-essai-sur-la-relation-du-corps-a-lesprit) | Henri Bergson | `9782130545590` | `9788027278916` | OK Publishing |
+| 298 | [Beijing Review](https://banned-books.org/books/beijing-review) | China International Publishing Group (Publisher) | `9781543292442` | `9781400341825` | HarperCollins Focus |
+| 299 | [Neither gods nor emperors : students and the struggle for democracy in China](https://banned-books.org/books/neither-gods-nor-emperors-students-and-the-struggle-for-democracy-in-china) | Craig J. Calhoun | `9780520088269` | `9780520211612` | University of California Press |
+| 300 | [Popular protest and political culture in modern China](https://banned-books.org/books/popular-protest-and-political-culture-in-modern-china) | Wasserstrom, Jeffrey N. (Editor), Perry, Elizabeth J. (Editor) | `9780429985539` | `9780367319434` | Taylor & Francis Group |
+| 301 | [All love stories](https://banned-books.org/books/all-love-stories) | Gabriele D'Annunzio | `9786052992937` | `9781665951647` | Simon & Schuster Books For Young Readers |
+| 302 | [Mémoires](https://banned-books.org/books/memoires) | Giacomo Casanova | `9782070130542` | `9781781393796` | Benediction Classics |
+| 303 | [The Mandarins](https://banned-books.org/books/the-mandarins) | de Beauvoir, Simone | `9789953890982` | `9780393318838` | W. W. Norton & Company |
+| 304 | [Reisebilder](https://banned-books.org/books/reisebilder) | Heinrich Heine | `9783458321446` | `9780979333033` | Archipelago Books |
+| 305 | [Paradise Lost](https://banned-books.org/books/paradise-lost) | John Milton | `9781587263200` | `9780820703930` | Duquesne Univ Pr |
+| 306 | [De la France](https://banned-books.org/books/de-la-france) | Heinrich Heine | `9780451507778` | `9780061957888` | HarperCollins Publishers |
+| 307 | [Ping xing shi kong I. Li zu ben tu de guo ji shi ye](https://banned-books.org/books/ping-xing-shi-kong-i-li-zu-ben-tu-de-guo-ji-shi-ye) | Xuhui Shen | `9789570525229` | `9780253340252` | Indiana University Press |
+| 308 | [Kang ming shi dai de ri chang](https://banned-books.org/books/kang-ming-shi-dai-de-ri-chang) | Shining He | `9781598890457` | `9781496500038` | Capstone |
+| 309 | [Tian an men xue an jing wei](https://banned-books.org/books/tian-an-men-xue-an-jing-wei) | Zhiwei Hu | `9781985276321` | `9781935814115` | Cricket House Books LLC |
+| 310 | [Du li zhi jing shen : zi you zhi si xiang](https://banned-books.org/books/du-li-zhi-jing-shen-zi-you-zhi-si-xiang) | Yi Li | `9787504304209` | `9780804834681` | Tuttle Publishing |
+| 311 | [Ma ma de hao bang shou](https://banned-books.org/books/ma-ma-de-hao-bang-shou) | Xianggang Zhong wen da xue shou yu ji long ren yan jiu zhong xin, Zunzi | `9789867047663` | `9780787980962` | Jossey-Bass |
+| 312 | [Xin, Taiwan de zhu zhang](https://banned-books.org/books/xin-taiwan-de-zhu-zhang) | Denghui Li | `9798726205540` | `9780804830805` | Charles E Tuttle Co |
+| 313 | [Dao gong yuan qu san bu](https://banned-books.org/books/dao-gong-yuan-qu-san-bu) | Xianggang Zhong wen da xue shou yu ji long ren yan jiu zhong xin, Zunzi | `9787119016436` | `9780385093798` | Anchor |
+| 314 | [Xianggang zheng zhi can yu xin xing tai](https://banned-books.org/books/xianggang-zheng-zhi-can-yu-xin-xing-tai) | Yushuo Zheng | `9786053327073` | `9789386538185` | Prakash Book Depot |
+| 315 | [Mao Zedong de da ji huang : 1958-1962 nian de Zhongguo hao jie shi](https://banned-books.org/books/mao-zedong-de-da-ji-huang-1958-1962-nian-de-zhongguo-hao-jie-shi) | Frank Dikötter | `9781408810033` | `9781408886366` | Bloomsbury Publishing Plc |
+| 316 | [Shi dai fei qing](https://banned-books.org/books/shi-dai-fei-qing) | Jiazhen Shao | `9781407147833` | `9798225008314` | Scholastic, Incorporated |
+| 317 | [Tian'anmen de fan si](https://banned-books.org/books/tiananmen-de-fan-si) | Cheong Ching | `9789578654648` | `9781522665571` | Audible Studios on Brilliance |
+| 318 | [Peichi](https://banned-books.org/books/peichi) | Ma. Naveen | `9781529213386` | `9781529213379` | Bristol University Press |
+| 319 | [Bao xiao jiao shi. 8](https://banned-books.org/books/bao-xiao-jiao-shi-8) | Ge Juan | `9787550234406` | `9780253340252` | Indiana University Press |
+| 320 | [Wai shen](https://banned-books.org/books/wai-shen) | Wai shen za zhi she (Publisher) | `9780765351944` | `9780369380241` | ReadHowYouWant |
+| 321 | [Bao xiao jiao shi. 11](https://banned-books.org/books/bao-xiao-jiao-shi-11) | Ge Juan | `9783741205101` | `9782070318643` | Gallimard |
+| 322 | [Xianggang zen me le?](https://banned-books.org/books/xianggang-zen-me-le) | Jixian Wang | `9783982529721` | `9789386538185` | Prakash Book Depot |
+| 323 | [Tai wan xing bao](https://banned-books.org/books/tai-wan-xing-bao) | Tai wan xing bao gu fen you xian gong si (Publisher) | `9781719556309` | `9781398850859` | Arcturus Publishing |
+| 324 | [Chu mai Zhongguo : quan gui zi ben zhu yi de qi yuan yu Gong chan dang zheng quan de kui bai](https://banned-books.org/books/chu-mai-zhongguo-quan-gui-zi-ben-zhu-yi-de-qi-yuan-yu-gong-chan-dang-zheng-quan-de-kui-bai) | Minxin Pei | `9780674974340` | `9780674737297` | Harvard University Press |
+| 325 | [Tian xia za zhi](https://banned-books.org/books/tian-xia-za-zhi) | Tian xia za zhi she (Publisher) | `9784140816585` | `9780553418286` | Penguin Random House USA Ex |
+| 326 | [Zuo you da ju](https://banned-books.org/books/zuo-you-da-ju) | Huiling Li | `9781846379215` | `9780812969221` | Modern Library |
+| 327 | [Jiao yu yan](https://banned-books.org/books/jiao-yu-yan) | Zhong, Mingxin. et al | `9780809074471` | `9781429934381` | Farrar, Straus & Giroux |
+| 328 | [Nu jiao](https://banned-books.org/books/nu-jiao) | Weibieren | `9781846166006` | `9780375822339` | Alfred A. Knopf |
+| 329 | [Ping guo ri bao](https://banned-books.org/books/ping-guo-ri-bao) | Ping guo ri bao (Publisher) | `9780006743088` | `9780547542003` | Houghton Mifflin Harcourt Publishing Company |
+| 330 | [Liu si wei yuan yong mei wan : liu si shi er nian te kan](https://banned-books.org/books/liu-si-wei-yuan-yong-mei-wan-liu-si-shi-er-nian-te-kan) | Deng, Xiaohua. et al | `9780394905921` | `9782070318643` | Gallimard |
+| 331 | [Beijing feng bo ji shi](https://banned-books.org/books/beijing-feng-bo-ji-shi) | 《北京風波紀實》編委會 (編輯) / "Beijing feng bo ji shi" bian wei hui (Editor) | `9787530206478` | `9780226971438` | University of Chicago Press |
+| 332 | [Di di](https://banned-books.org/books/di-di) | Hui Chen | `9780954455408` | `9780593117194` | Penguin Young Readers Group |
+| 333 | [Tian'an men guang chang qing chang ji shi](https://banned-books.org/books/tianan-men-guang-chang-qing-chang-ji-shi) | Renhua Wu | `9798462647819` | `9781935814115` | Cricket House Books LLC |
+| 334 | [Mu ji tian an men. Di san juan](https://banned-books.org/books/mu-ji-tian-an-men-di-san-juan) | Han, Tailun. (Editor) | `9781495226946` | `9786555522068` | Principis |
+| 335 | [Sex Turned On](https://banned-books.org/books/sex-turned-on) | Richard E. Geis | `9781776764792` | `9780141396903` | Penguin Books, Limited |
+| 336 | [Socialism in Queensland](https://banned-books.org/books/socialism-in-queensland) | Joseph King | `9780429781667` | `9781138360082` | Taylor & Francis Group |
+| 337 | [The Debauched Hospodar](https://banned-books.org/books/the-debauched-hospodar) | Guillaume Apollinaire | `9781596540644` | `9781589630598` | Fredonia Books (NL) |
+| 338 | [The Screw Reader](https://banned-books.org/books/the-screw-reader) | Jim Buckley, Al Goldstein | `9780786280971` | `9781612930992` | Tribeca Books |
+| 339 | [Story of Venus and Tannhauser](https://banned-books.org/books/story-of-venus-and-tannhauser) | Aubrey Beardsley | `9781125158166` | `9781018800950` | Creative Media Partners, LLC |
+| 340 | [Freedom to Love](https://banned-books.org/books/freedom-to-love) | Eberhard, Phyllis Kronhausen | `9781474029858` | `9781488031960` | Harlequin Enterprises, Limited |
+| 341 | [Delta of Venus](https://banned-books.org/books/delta-of-venus) | Anaïs Nin | `9780831721824` | `9780547538679` | Houghton Mifflin Harcourt Publishing Company |
+| 342 | [Love in the Open Air](https://banned-books.org/books/love-in-the-open-air) | Tuppy Owens | `9780750519007` | `9788466337205` | Penguin Random House Grupo Editorial |
+| 343 | [Walter—My Secret Life](https://banned-books.org/books/walter-my-secret-life) | Eberhard, Phyllis Kronhausen | `9780373793501` | `9781443426916` | HarperCollins Publishers |
+| 344 | [My Bed is not for Sleeping](https://banned-books.org/books/my-bed-is-not-for-sleeping) | Gerty Agoston | `9788423974740` | `9781020569845` | Creative Media Partners, LLC |
+| 345 | [No Game No Life (Volumes 1, 2, 9)](https://banned-books.org/books/no-game-no-life-volumes-1-2-9) | Yuu Kamiya | `9781558001022` | `9783842421660` | tredition Verlag |
+| 346 | [História do Mundo para as Crianças](https://banned-books.org/books/historia-do-mundo-para-as-criancas) | Monteiro Lobato | `9781547213740` | `9781800760776` | Toronto Public Domain Publishing |
+| 347 | [Little Black Sambo](https://banned-books.org/books/little-black-sambo) | Helen Bannerman | `9780916410582` | `9781557094148` | Applewood Books |
+| 348 | [A Day in the Life of Marlon Bundo](https://banned-books.org/books/a-day-in-the-life-of-marlon-bundo) | Jill Twiss | `9781452173962` | `9781452176352` | Chronicle Books LLC |
+| 349 | [It's A Book](https://banned-books.org/books/its-a-book) | Lane Smith | `9780330544023` | `9781596436060` | Roaring Brook Press |
+| 350 | [Year of Wonders](https://banned-books.org/books/year-of-wonders) | Geraldine Brooks | `9780007144204` | `9781101079195` | Penguin USA, Inc. |
+| 351 | [My Gun Is Quick](https://banned-books.org/books/my-gun-is-quick) | Mickey Spillane | `9785871060230` | `9781101174456` | Penguin USA, Inc. |
+| 352 | [Programme of the World Revolution](https://banned-books.org/books/programme-of-the-world-revolution) | Nikolai Bukharin | `9780342820818` | `9781016510974` | Creative Media Partners, LLC |
+| 353 | [The Poverty of Philosophy](https://banned-books.org/books/the-poverty-of-philosophy) | Karl Marx | `9781522024569` | `9781021310644` | Creative Media Partners, LLC |
+| 354 | [We Will Not Cease](https://banned-books.org/books/we-will-not-cease) | Archibald Baxter | `9780908561919` | `9781988592992` | Otago University Press |
+| 355 | [C. O.'s Hansard](https://banned-books.org/books/c-o-s-hansard) | Central Board for Conscientious Objectors | `9780486440927` | `9781443437745` | HarperCollins Publishers |
+| 356 | [The Terrorist](https://banned-books.org/books/the-terrorist) | Caroline B. Cooney | `9780590228541` | `9781480480773` | Open Road Integrated Media, Inc. |
+| 357 | [Guess What?](https://banned-books.org/books/guess-what) | Mem Fox | `9780785786443` | `9780152007690` | Voyager Books |
+| 358 | [The Boys](https://banned-books.org/books/the-boys) | Garth Ennis | `9781606900963` | `9781524122607` | Dynamic Forces, Incorporated DBA Dynamite Entertainment |
+| 359 | [Wen ge shi qi Zhongguo nong cun de ji ti sha lu](https://banned-books.org/books/wen-ge-shi-qi-zhongguo-nong-cun-de-ji-ti-sha-lu) | Yang Su | `9781283053921` | `9780511762574` | Cambridge University Press |
+| 360 | [Lethal Marriage](https://banned-books.org/books/lethal-marriage) | Nick Pron | `9780770429362` | `9780345465801` | Ballantine Books |
+| 361 | [The Truth About Muhammad](https://banned-books.org/books/the-truth-about-muhammad) | Robert Spencer | `9780786148820` | `9780786160259` | Blackstone Audio Inc. |
+| 362 | [zahir (The Zahir)](https://banned-books.org/books/zahir-the-zahir) | Paulo Coelho | `9780007208012` | `9780061758010` | HarperCollins |
+| 363 | [Tilt](https://banned-books.org/books/tilt) | Ellen Hopkins | `9781484429471` | `9781416983309` | Margaret K. McElderry Books |
+| 364 | [Jack of Hearts](https://banned-books.org/books/jack-of-hearts) | L. C. Rosen | `9780241365014` | `9780316480512` | Little, Brown Books for Young Readers |
+| 365 | [Be Your True Self](https://banned-books.org/books/be-your-true-self) | Gonzalez. Maribel Valdez | `9781666345568` | `9781666345551` | Capstone |
+| 366 | [Calvin and Hobbes](https://banned-books.org/books/calvin-and-hobbes) | Bill Watterson | `9781417642069` | `9781449472344` | Andrews McMeel Publishing |
+| 367 | [Monsters of Mythology](https://banned-books.org/books/monsters-of-mythology) | Bernard Evslin | `9780881035254` | `9780808501282` | Tandem Library |
+| 368 | [Chainsaw Man](https://banned-books.org/books/chainsaw-man) | Tatsuki Fujimoto | `9786555127331` | `9781974709939` | Viz Media |
+| 369 | [Akira](https://banned-books.org/books/akira) | Katsuhiro Otomo | `9788467932560` | `9781935429005` | Kodansha Comics |
+| 370 | [Bungo Stray Dogs](https://banned-books.org/books/bungo-stray-dogs) | Kafka Asagiri | `9781975337148` | `9798855415308` | Yen Press LLC |
+| 371 | [Mär: Märchen Awakens Romance](https://banned-books.org/books/mar-marchen-awakens-romance) | Nobuyuki Anzai | `9781421504926` | `9781421504896` | Viz Media |
+| 372 | [ONE PIECE](https://banned-books.org/books/one-piece) | Eiichiro Oda | `9781435221444` | `9781569319017` | SHONEN JUMP |
+| 373 | [Van Von Hunter](https://banned-books.org/books/van-von-hunter) | Mike Schwark | `9781427754943` | `9781427821836` | TOKYOPOP, Incorporated |
+| 374 | [European Art](https://banned-books.org/books/european-art) | No Further Information | `9780500289532` | `9780500292716` | Thames & Hudson |
 
-## Books with alt editions but no Bookshop hit (294)
+## Books with alt editions but no Bookshop hit (491)
 
 Bookshop genuinely doesn't stock a probed edition of these. May need manual lookup or a different US imprint Bookshop carries.
 
@@ -484,8 +689,205 @@ Bookshop genuinely doesn't stock a probed edition of these. May need manual look
 | 292 | [Leonardo da Vinci: Artist, Inventor and Scientist of the Renaissance](https://banned-books.org/books/leonardo-da-vinci-artist-inventor-and-scientist-of-the-renaissance) | Francesca Romei | `9780872263130` |
 | 293 | [Magritte](https://banned-books.org/books/magritte) | Richard Calvocoressi | `9780810946804` |
 | 294 | [Manet](https://banned-books.org/books/manet) | John Richardson | `9780714817439` |
+| 295 | [Matisse](https://banned-books.org/books/matisse) | Gabriele Crepaldi | `9782904772085` |
+| 296 | [Michelangelo Buonarroti](https://banned-books.org/books/michelangelo-buonarroti) | Gabriele Bartz | `9783833138201` |
+| 297 | [Michelangelo: Sculptor and Painter](https://banned-books.org/books/michelangelo-sculptor-and-painter) | Barbara A. Somervill | `9780756508142` |
+| 298 | [National Gallery of Art: Master Paintings from the Collection](https://banned-books.org/books/national-gallery-of-art-master-paintings-from-the-collection) | John Oliver Hand | `9780810956193` |
+| 299 | [Pablo Picasso, A Retrospective](https://banned-books.org/books/pablo-picasso-a-retrospective) | Pablo Picasso | `9781551560441` |
+| 300 | [Religion](https://banned-books.org/books/religion) | Myrtle Langley | `9780613026161` |
+| 301 | [Renaissance](https://banned-books.org/books/renaissance) | George Holmes | `9780312153182` |
+| 302 | [Rot & Ruin: Warrior Smart](https://banned-books.org/books/rot-ruin-warrior-smart) | Jonathan Maberry | `9781471144882` |
+| 303 | [Salvador Dali](https://banned-books.org/books/salvador-dali) | O.B. Duane | `9783822893166` |
+| 304 | [Secrets of the Human Body](https://banned-books.org/books/secrets-of-the-human-body) | Chris van Tulleken | `9780008256562` |
+| 305 | [The Complete History of Costume & Fashion: From Ancient Egypt to the Present Day](https://banned-books.org/books/the-complete-history-of-costume-fashion-from-ancient-egypt-to-the-present-day) | Bronwyn Cosgrave | `9780816045747` |
+| 306 | [The Encyclopedia of Sculpting Techniques](https://banned-books.org/books/the-encyclopedia-of-sculpting-techniques) | John Plowman | `9781561385324` |
+| 307 | [The Illustrated Book of Myths: Tales & Legends of the World](https://banned-books.org/books/the-illustrated-book-of-myths-tales-legends-of-the-world) | Neil Philip | `9780756622237` |
+| 308 | [The Poster: A Visual History](https://banned-books.org/books/the-poster-a-visual-history) | Gill Saunders | `9780131817593` |
+| 309 | [Vanished Civilizations of the Ancient World](https://banned-books.org/books/vanished-civilizations-of-the-ancient-world) | Henri Lhote | `9782904227240` |
+| 310 | [Velázquez](https://banned-books.org/books/velazquez) | Rosa Giorgi | `9788487317743` |
+| 311 | [All the Invisible Things](https://banned-books.org/books/all-the-invisible-things) | Orlagh Collins | `9781408888322` |
+| 312 | [Every Young Man's Battle: Strategies for Victory in the Real World of Sexual Temptation](https://banned-books.org/books/every-young-mans-battle-strategies-for-victory-in-the-real-world-of-sexual-temptation) | Stephen Arterburn | `9781578565375` |
+| 313 | [Mangaman](https://banned-books.org/books/mangaman) | Barry Lyga | `9780547677385` |
+| 314 | [Soul Eater, Vol. 18](https://banned-books.org/books/soul-eater-vol-18) | Atsushi Ohkubo | `9784757530560` |
+| 315 | [Soul Eater, Vol. 20](https://banned-books.org/books/soul-eater-vol-20) | Atsushi Ohkubo | `9783551797209` |
+| 316 | [Soul Eater, Vol. 21](https://banned-books.org/books/soul-eater-vol-21) | Atsushi Ohkubo | `9783551797216` |
+| 317 | [Soul Eater, Vol. 22](https://banned-books.org/books/soul-eater-vol-22) | Atsushi Ohkubo | `9783551797223` |
+| 318 | [Soul Eater, Vol. 23](https://banned-books.org/books/soul-eater-vol-23) | Atsushi Ohkubo | `9784757538122` |
+| 319 | [Soul Eater, Vol. 24](https://banned-books.org/books/soul-eater-vol-24) | Atsushi Ohkubo | `9784757539792` |
+| 320 | [Soul Eater, Vol. 25](https://banned-books.org/books/soul-eater-vol-25) | Atsushi Ohkubo | `9784757541634` |
+| 321 | [The Awesome](https://banned-books.org/books/the-awesome) | Eva Darrows | `9781781083246` |
+| 322 | [The Color of Earth](https://banned-books.org/books/the-color-of-earth) | Dong Hwa Kim | `9781442001169` |
+| 323 | [The Gunslinger - Last Shots](https://banned-books.org/books/the-gunslinger-last-shots) | Robin Furth | `9781302906573` |
+| 324 | [The Loners](https://banned-books.org/books/the-loners) | Lex Thomas | `9780606005661` |
+| 325 | [The Other Boleyn Girl](https://banned-books.org/books/the-other-boleyn-girl) | Philippa Gregory | `9785389000926` |
+| 326 | [Fathersonfather](https://banned-books.org/books/fathersonfather) | Evan Jacobs | `9781680210385` |
+| 327 | [Love & Leftovers](https://banned-books.org/books/love-leftovers) | Sarah Tregay | `9780816137060` |
+| 328 | [My Body Belongs to Me = Mi Cuerpo me Pertenece](https://banned-books.org/books/my-body-belongs-to-me-mi-cuerpo-me-pertenece) | Jill Starishevsky | `9781631984785` |
+| 329 | [Otherwise](https://banned-books.org/books/otherwise) | Linda Oatman High | `9780606373203` |
+| 330 | [Ranma 1/2, Vol. 11](https://banned-books.org/books/ranma-1-2-vol-11) | Rumiko Takahashi | `9781591162858` |
+| 331 | [Ranma 1/2, Vol. 20](https://banned-books.org/books/ranma-1-2-vol-20) | Rumiko Takahashi | `9781417658206` |
+| 332 | [Ranma 1/2, Vol. 21](https://banned-books.org/books/ranma-1-2-vol-21) | Rumiko Takahashi | `9781417658336` |
+| 333 | [Take Me Out: A Play](https://banned-books.org/books/take-me-out-a-play) | Richard Greenberg | `9780822219934` |
+| 334 | [The Edge of the Water](https://banned-books.org/books/the-edge-of-the-water) | Elizabeth George | `9781101602485` |
+| 335 | [The Questions Within](https://banned-books.org/books/the-questions-within) | Teresa Schaeffer | `9781841677002` |
+| 336 | [The Blood Runs Like a River Through My Dreams](https://banned-books.org/books/the-blood-runs-like-a-river-through-my-dreams) | Nasdijj | `9780618154487` |
+| 337 | [A Mad, Wicked Folly](https://banned-books.org/books/a-mad-wicked-folly) | Sharon Biggs Waller | `9781484456477` |
+| 338 | [An Echo in the Bone](https://banned-books.org/books/an-echo-in-the-bone) | Diana Gabaldon | `9781409111962` |
+| 339 | [Art Nouveau](https://banned-books.org/books/art-nouveau) | Judith Miller | `9781405302517` |
+| 340 | [Blue Bloods: The Graphic Novel](https://banned-books.org/books/blue-bloods-the-graphic-novel) | Melissa de la Cruz | `9781423134473` |
+| 341 | [Breathing Underwater](https://banned-books.org/books/breathing-underwater) | Alex Flinn | `9780060291983` |
+| 342 | [Chihuly: On Fire](https://banned-books.org/books/chihuly-on-fire) | Dale Chihuly | `9781576841990` |
+| 343 | [Children Who Kill: Profiles of Pre-Teen and Teenage Killers](https://banned-books.org/books/children-who-kill-profiles-of-pre-teen-and-teenage-killers) | Carol Anne Davis | `9780749006105` |
+| 344 | [Christmas in México](https://banned-books.org/books/christmas-in-mexico) | Cheryl L. Enderlein | `9781669008156` |
+| 345 | [Contemporary Art](https://banned-books.org/books/contemporary-art) | John Glaves-Smith | `9780289703922` |
+| 346 | [Dance Team](https://banned-books.org/books/dance-team) | Charnan Simon | `9781512417739` |
+| 347 | [Don't Tell a Soul](https://banned-books.org/books/dont-tell-a-soul) | Kirsten Miller | `9798900342597` |
+| 348 | [Elske](https://banned-books.org/books/elske) | Cynthia Voigt | `9780689824722` |
+| 349 | [Food, Girls, and Other Things I Can't Have](https://banned-books.org/books/food-girls-and-other-things-i-cant-have) | Allen Zadoff | `9781606841518` |
+| 350 | [Helen Keller: Courageous Advocate](https://banned-books.org/books/helen-keller-courageous-advocate) | Scott R. Welvaert | `9780736866040` |
+| 351 | [Hero](https://banned-books.org/books/hero) | Mike Lupica | `9780399252839` |
+| 352 | [Hooked: When Addiction Hits Home](https://banned-books.org/books/hooked-when-addiction-hits-home) | Chloe Shantz-Hilkes | `9781554514755` |
+| 353 | [Medicine](https://banned-books.org/books/medicine) | Steve Parker | `9780789458100` |
+| 354 | [Moving Target: Princess Leia Adventure](https://banned-books.org/books/moving-target-princess-leia-adventure) | Cecil Castellucci | `9781405277877` |
+| 355 | [Next Top Villain](https://banned-books.org/books/next-top-villain) | Suzanne Selfors | `9780316401296` |
+| 356 | [Oblivion](https://banned-books.org/books/oblivion) | Jennifer L. Armentrout | `9781633754799` |
+| 357 | [Reproductive Rights: Who Decides?](https://banned-books.org/books/reproductive-rights-who-decides) | Vicki O. Wittenstein | `9781467788045` |
+| 358 | [Rx](https://banned-books.org/books/rx) | Tracy Lynn | `9781417726783` |
+| 359 | [Seeing Red](https://banned-books.org/books/seeing-red) | Anne Louise MacDonald | `9781554532919` |
+| 360 | [Sex: Opposing Viewpoints](https://banned-books.org/books/sex-opposing-viewpoints) | Mary E. Williams | `9781565105591` |
+| 361 | [Si decido quedarme](https://banned-books.org/books/si-decido-quedarme) | Gayle Forman | `9788498383461` |
+| 362 | [So Much Closer](https://banned-books.org/books/so-much-closer) | Susane Colasanti | `9781407134864` |
+| 363 | [Star Wars Rogue One: A Junior Novel](https://banned-books.org/books/star-wars-rogue-one-a-junior-novel) | Matt Forbeck | `9783833234491` |
+| 364 | [Star Wars: The Last Jedi Colbalt Squadron](https://banned-books.org/books/star-wars-the-last-jedi-colbalt-squadron) | Elizabeth Wein | `9781368008372` |
+| 365 | [Tae Kwon Do](https://banned-books.org/books/tae-kwon-do) | Tim O'Shei | `9780553169713` |
+| 366 | [Thanksgiving](https://banned-books.org/books/thanksgiving) | David F. Marx | `9780516271576` |
+| 367 | [The Alamo](https://banned-books.org/books/the-alamo) | Michael Burgan | `9780756500979` |
+| 368 | [The Alliance](https://banned-books.org/books/the-alliance) | Gerald N. Lund | `9780877479826` |
+| 369 | [The Bitter Kingdom](https://banned-books.org/books/the-bitter-kingdom) | Rae Carson | `9780575099234` |
+| 370 | [The Hundred-Dollar Robber: A Mystery with Money](https://banned-books.org/books/the-hundred-dollar-robber-a-mystery-with-money) | Melinda Thielbar | `9781512417371` |
+| 371 | [The Little Red Train: El trenecito rojo](https://banned-books.org/books/the-little-red-train-el-trenecito-rojo) | Carl Sommer | `9781575371580` |
+| 372 | [The Orphan of Awkward Falls](https://banned-books.org/books/the-orphan-of-awkward-falls) | Keith Graves | `9780811878142` |
+| 373 | [The Secret Ghost: A Mystery with Distance and Measurement](https://banned-books.org/books/the-secret-ghost-a-mystery-with-distance-and-measurement) | Melinda Thielbar | `9780761369448` |
+| 374 | [The Tyrant's Daughter](https://banned-books.org/books/the-tyrants-daughter) | J. C. Carleson | `9780804167024` |
+| 375 | [The Van Alen Legacy](https://banned-books.org/books/the-van-alen-legacy) | Melissa de la Cruz | `9781423102267` |
+| 376 | [The Voices of Rape](https://banned-books.org/books/the-voices-of-rape) | Janet Bode | `9780531151846` |
+| 377 | [Tumbling](https://banned-books.org/books/tumbling) | Caela Carter | `9780451485533` |
+| 378 | [Unplanned Pregnancies](https://banned-books.org/books/unplanned-pregnancies) | Alexis Burling | `9781532196317` |
+| 379 | [Discovering Art History](https://banned-books.org/books/discovering-art-history) | Gerald F. Brommer | `9780871921901` |
+| 380 | [Lippincott Textbook for Nursing Assistants: A Humanistic Approach to Caregiving, Fifth Edition](https://banned-books.org/books/lippincott-textbook-for-nursing-assistants-a-humanistic-approach-to-caregiving-fifth-edition) | Pamela J. Carter | `9780781739818` |
+| 381 | [Simmers DHO Health Science](https://banned-books.org/books/simmers-dho-health-science) | Louise Simmers | `9781133703204` |
+| 382 | [Detained: A Writer's Prison Diary](https://banned-books.org/books/detained-a-writers-prison-diary) | Ngũgĩ wa Thiong'o | `9780435906504` |
+| 383 | [Mandingo](https://banned-books.org/books/mandingo-kyle-onstott) | Kyle Onstott | `9788475305349` |
+| 384 | [Emil and the Detectives](https://banned-books.org/books/emil-and-the-detectives) | Erich Kästner | `9781585675869` |
+| 385 | [Éden, Éden, Éden](https://banned-books.org/books/eden-eden-eden) | Pierre Guyotat | `9781871592474` |
+| 386 | [Human Rights Violations in Kashmir](https://banned-books.org/books/human-rights-violations-in-kashmir) | Piotr Balcerowicz, Agnieszka Kuszewska | `9781000513936` |
+| 387 | [Law & Conflict Resolution in Kashmir](https://banned-books.org/books/law-conflict-resolution-in-kashmir) | Piotr Balcerowicz, Agnieszka Kuszewska | `9781003196549` |
+| 388 | [Hindu Heaven](https://banned-books.org/books/hindu-heaven) | Max Wylie | `9788120809710` |
+| 389 | [Smash and Grab: Annexation of Sikkim](https://banned-books.org/books/smash-and-grab-annexation-of-sikkim) | Sunanda K. Datta-Ray | `9780706925098` |
+| 390 | [India Independent](https://banned-books.org/books/india-independent) | Charles Bettelheim | `9780261615922` |
+| 391 | [The Rape of Sita](https://banned-books.org/books/the-rape-of-sita-1993) | Lindsay Collen | `9780749395483` |
+| 392 | [My Watch](https://banned-books.org/books/my-watch-2005) | Olusegun Obasanjo | `9789785316353` |
+| 393 | [The Hoax of the Twentieth Century](https://banned-books.org/books/the-hoax-of-the-twentieth-century) | Arthur Butz | `9780939484461` |
+| 394 | [Why We Can't Wait](https://banned-books.org/books/why-we-cant-wait) | Martin Luther King Jr. | `9781351353618` |
+| 395 | [The Greedy Barbarian](https://banned-books.org/books/the-greedy-barbarian) | Kakwenza Rukirabashaija | `9789970743001` |
+| 396 | [Jinnah of Pakistan](https://banned-books.org/books/jinnah-of-pakistan) | Stanley Wolpert | `9780195774627` |
+| 397 | [One Day of Life](https://banned-books.org/books/one-day-of-life) | Manlio Argueta | `9780701127992` |
+| 398 | [The Arizona Kid](https://banned-books.org/books/the-arizona-kid) | Ron Koertge | `9780316501019` |
+| 399 | [Deal with It!](https://banned-books.org/books/deal-with-it) | Esther Drill | `9780613237024` |
+| 400 | [Detour for Emmy](https://banned-books.org/books/detour-for-emmy) | Marilyn Reynolds | `9780930934767` |
+| 401 | [Flashcards of My Life](https://banned-books.org/books/flashcards-of-my-life) | Charise Mericle Harper | `9780316756211` |
+| 402 | [My Mom's Having a Baby!](https://banned-books.org/books/my-moms-having-a-baby) | Dori Hillestad Butler | `9780807553442` |
+| 403 | [Private Parts](https://banned-books.org/books/private-parts) | Howard Stern | `9780671510435` |
+| 404 | [Revolutionary Voices](https://banned-books.org/books/revolutionary-voices) | Amy Sonnie | `9780613787208` |
+| 405 | [The Rules of Attraction](https://banned-books.org/books/the-rules-of-attraction) | Bret Easton Ellis | `9788433923325` |
+| 406 | [Sex](https://banned-books.org/books/sex) | Madonna | `9788440631176` |
+| 407 | [Sex Education](https://banned-books.org/books/sex-education) | Jenny Davis | `9780606086028` |
+| 408 | [Arming America](https://banned-books.org/books/arming-america) | Michael A. Bellesiles | `9780375402104` |
+| 409 | [Bumps in the Night](https://banned-books.org/books/bumps-in-the-night) | Harry Allard | `9780613002165` |
+| 410 | [Cross Your Fingers, Spit in Your Hat](https://banned-books.org/books/cross-your-fingers-spit-in-your-hat) | Alvin Schwartz | `9780397324361` |
+| 411 | [Mummy Laid an Egg](https://banned-books.org/books/mummy-laid-an-egg) | Babette Cole | `9788879271622` |
+| 412 | [A Prayer for Owen Meany](https://banned-books.org/books/a-prayer-for-owen-meany) | John Irving | `9780345367631` |
+| 413 | [You Can't See 'Round Corners](https://banned-books.org/books/you-cant-see-round-corners) | Jon Cleary | `9780727800817` |
+| 414 | [Sadopaideia](https://banned-books.org/books/sadopaideia) | Ashantee of Edinburgh | `9781596541849` |
+| 415 | [Candy](https://banned-books.org/books/candy) | Terry Southern, Mason Hoffenberg | `9780802134295` |
+| 416 | [Blue Movie](https://banned-books.org/books/blue-movie) | Terry Southern | `9780586039823` |
+| 417 | [Emmanuelle](https://banned-books.org/books/emmanuelle) | Emmanuelle Arsan | `9780394176574` |
+| 418 | [Oh! Calcutta!](https://banned-books.org/books/oh-calcutta) | Kenneth Tynan | `9781617745546` |
+| 419 | [Frost](https://banned-books.org/books/frost) | Richard Amory | `9780673293916` |
+| 420 | [Roman Orgy](https://banned-books.org/books/roman-orgy) | Marcus van Heller | `9780352320575` |
+| 421 | [The Great Replacement](https://banned-books.org/books/the-great-replacement) | Brenton Tarrant | `9780118032278` |
+| 422 | [Jane's Fighting Ships](https://banned-books.org/books/janes-fighting-ships) | John Frederick Thomas Jane | `9780710623157` |
+| 423 | [The Political History of the Devil](https://banned-books.org/books/the-political-history-of-the-devil) | Daniel Defoe | `9780404093105` |
+| 424 | [China since Tiananmen : the politics of transition](https://banned-books.org/books/china-since-tiananmen-the-politics-of-transition) | Joseph Fewsmith | `9780511413780` |
+| 425 | [De l'esprit des lois](https://banned-books.org/books/de-lesprit-des-lois) | Montesquieu | `9789652239846` |
+| 426 | [Traité sur la tolérance](https://banned-books.org/books/traite-sur-la-tolerance) | Voltaire | `9782080705525` |
+| 427 | [The Goddess Game](https://banned-books.org/books/the-goddess-game) | Hugh Barron | `9780440029816` |
+| 428 | [Cours de philosophie positive](https://banned-books.org/books/cours-de-philosophie-positive) | Auguste Comte | `9781421231297` |
+| 429 | [Chinese society on the eve of Tiananmen : the impact of reform](https://banned-books.org/books/chinese-society-on-the-eve-of-tiananmen-the-impact-of-reform) | Davis, Deborah., Vogel, Ezra F. | `9780674125346` |
+| 430 | [Lettres provinciales](https://banned-books.org/books/lettres-provinciales) | Blaise Pascal | `9780665530968` |
+| 431 | [The Broken mirror : China after Tiananmen](https://banned-books.org/books/the-broken-mirror-china-after-tiananmen) | Hicks, George L., Asai, Motofumi. | `9780582074859` |
+| 432 | [Julie, ou la nouvelle Héloïse](https://banned-books.org/books/julie-ou-la-nouvelle-heloise) | Jean-Jacques Rousseau | `9780543854704` |
+| 433 | [Tiananmen](https://banned-books.org/books/tiananmen) | Morgan Chua | `9789627413011` |
+| 434 | [China Since Tiananmen : Political, Economic and Social Conflicts - Documents and Analysis](https://banned-books.org/books/china-since-tiananmen-political-economic-and-social-conflicts-documents-and-analysis) | Nancy Sullivan | `9781315482163` |
+| 435 | [Wild Lily, Prairie Fire : China's Road to Democracy, Yan'an to Tian'anmen, 1942-1989](https://banned-books.org/books/wild-lily-prairie-fire-chinas-road-to-democracy-yanan-to-tiananmen-1942-1989) | Benton, Gregor., Hunter, Alan. | `9781282752320` |
+| 436 | [Tiananmen Square = Tʻien-an-men](https://banned-books.org/books/tiananmen-square-t-ien-an-men) | Simmie, Scott., Nixon, Bob. | `9780888946751` |
+| 437 | [The Chinese People's Movement : perspectives on spring, 1989](https://banned-books.org/books/the-chinese-peoples-movement-perspectives-on-spring-1989) | Saich, Tony. (Editor) | `9781315489346` |
+| 438 | [Essays](https://banned-books.org/books/essays) | Michel de Montaigne | `9782040041632` |
+| 439 | [Xaviera's Supersex](https://banned-books.org/books/xavieras-supersex) | Xaviera Hollander | `9780451151056` |
+| 440 | [Mandate of heaven : a new generation of entrepreneurs, dissidents, Bohemians and technocrats lays claim to China's future](https://banned-books.org/books/mandate-of-heaven-a-new-generation-of-entrepreneurs-dissidents-bohemians-and-technocrats-lays-claim-to-chinas-future) | Orville Schell | `9780684804477` |
+| 441 | [Sketch for a Historical Picture of the Progress of the Human Mind](https://banned-books.org/books/sketch-for-a-historical-picture-of-the-progress-of-the-human-mind) | Nicholas de Condorcet | `9780837173702` |
+| 442 | [Nepal](https://banned-books.org/books/nepal) | Toni Hagen | `9783259081211` |
+| 443 | [Ayesha](https://banned-books.org/books/ayesha) | Kurt Frischler | `9798625050364` |
+| 444 | [Contes et Nouvelles](https://banned-books.org/books/contes-et-nouvelles) | Jean de La Fontaine | `9780670415816` |
+| 445 | [Zui huai de shi dai, zui hao de shi dai](https://banned-books.org/books/zui-huai-de-shi-dai-zui-hao-de-shi-dai) | Yi Li | `9789881505866` |
+| 446 | [Jiao xue xiao pin](https://banned-books.org/books/jiao-xue-xiao-pin) | Zhicheng Zhao | `9787534327414` |
+| 447 | [Zhi shi fen zi yu Zhongguo](https://banned-books.org/books/zhi-shi-fen-zi-yu-zhongguo) | Yi Li | `9787534807572` |
+| 448 | [Bao wei Xianggang guan hua](https://banned-books.org/books/bao-wei-xianggang-guan-hua) | Yun Chen | `9787806646380` |
+| 449 | [Ben shi lao tu](https://banned-books.org/books/ben-shi-lao-tu) | Chenyu Huang | `9788496964884` |
+| 450 | [Ma ma de sheng ri li wu](https://banned-books.org/books/ma-ma-de-sheng-ri-li-wu) | Xianggang Zhong wen da xue shou yu ji long ren yan jiu zhong xin, Zunzi | `9789620401398` |
+| 451 | [Mei yi ba san](https://banned-books.org/books/mei-yi-ba-san) | Hongyan Li | `9787534407680` |
+| 452 | [Wo shi Li Zhiying : cong yi yuan Gang bi dao wu yi Mei jin de chuang ye chuan qi](https://banned-books.org/books/wo-shi-li-zhiying-cong-yi-yuan-gang-bi-dao-wu-yi-mei-jin-de-chuang-ye-chuan-qi) | Zhiying Li | `9789867964731` |
+| 453 | [Si shui de yi lun : fan song Zhong yun dong she ying ji](https://banned-books.org/books/si-shui-de-yi-lun-fan-song-zhong-yun-dong-she-ying-ji) | Huang, Hui'er. et al. (Editor) | `9787020056873` |
+| 454 | [Zhongguo zhi shi fen zi lun wang shi : zai gong ming he zi you zhi jian de zheng zha yu kang zheng](https://banned-books.org/books/zhongguo-zhi-shi-fen-zi-lun-wang-shi-zai-gong-ming-he-zi-you-zhi-jian-de-zheng-zha-yu-kang-zheng) | Fei Zhou | `9789573269595` |
+| 455 | [Zhongguo yu min zhu](https://banned-books.org/books/zhongguo-yu-min-zhu) | Yingshi Yu | `9787208042896` |
+| 456 | [Liu si shou nan zhe xun fang shi lu : yong zhi bu wang](https://banned-books.org/books/liu-si-shou-nan-zhe-xun-fang-shi-lu-yong-zhi-bu-wang) | Zilin Ding | `9787503628979` |
+| 457 | [Gang shi, Gang qing, Gang yi](https://banned-books.org/books/gang-shi-gang-qing-gang-yi) | Peirong Liu | `9787802067257` |
+| 458 | [Cheng zhi mi](https://banned-books.org/books/cheng-zhi-mi) | Qidengsheng | `9789624912913` |
+| 459 | [Xizang : 2008](https://banned-books.org/books/xizang-2008) | Weise | `9789867762047` |
+| 460 | [Zhongguo da feng xian](https://banned-books.org/books/zhongguo-da-feng-xian) | Xiaolan Liu | `9781940007496` |
+| 461 | [Nei mu](https://banned-books.org/books/nei-mu) | 內幕雜誌社 (出版社) / "Nei mu" za zhi she (Publisher) | `9787300070407` |
+| 462 | [Zhongguo min zhu yun dong shi. Cong Yan'an Wang Shiwei zheng min zhu dao Xidan min zhu qiang](https://banned-books.org/books/zhongguo-min-zhu-yun-dong-shi-cong-yanan-wang-shiwei-zheng-min-zhu-dao-xidan-min-zhu-qiang) | Yanqing Weng | `9789869225755` |
+| 463 | [Ming jing yue kan](https://banned-books.org/books/ming-jing-yue-kan) | Ming jing yue kan za zhi she (Publisher) | `9789578453838` |
+| 464 | [Zao dong de di guo : cong Qing di guo de pu shi zhu yi, dao Zhongguo de min zu zhu yi, yi bu 250 nian de Zhongguo dui wai guan xi shi](https://banned-books.org/books/zao-dong-de-di-guo-cong-qing-di-guo-de-pu-shi-zhu-yi-dao-zhongguo-de-min-zu-zhu-yi-yi-bu-250-nian-de-zhongguo-dui-wai-guan-xi-shi) | Westad, Odd Arne. | `9789578654914` |
+| 465 | [Xi Jinping de zheng zhi gong guan](https://banned-books.org/books/xi-jinping-de-zheng-zhi-gong-guan) | Bo Huang | `9781940007540` |
+| 466 | [Xianggang chao yu hua zhai](https://banned-books.org/books/xianggang-chao-yu-hua-zhai) | Zhiming Peng | `9789620413698` |
+| 467 | [Zheng zhi de dao de : cong zi you zhu yi de guan dian kan](https://banned-books.org/books/zheng-zhi-de-dao-de-cong-zi-you-zhu-yi-de-guan-dian-kan) | Baosong Zhou | `9789629966782` |
+| 468 | [Olympia Reader](https://banned-books.org/books/olympia-reader) | Maurice Girodias | `9780802132949` |
+| 469 | [Over-exposure](https://banned-books.org/books/over-exposure) | Denis William Shirley | `9780131952096` |
+| 470 | [Confessions of a Window Cleaner](https://banned-books.org/books/confessions-of-a-window-cleaner) | Timothy Lea | `9780722193273` |
+| 471 | [All-Night Visitors](https://banned-books.org/books/all-night-visitors) | Clarence Major | `9781555533670` |
+| 472 | [Screen](https://banned-books.org/books/screen) | Barry N. Malzberg | `9780700400102` |
+| 473 | [Thongs](https://banned-books.org/books/thongs) | Alexander Trocchi | `9781563332173` |
+| 474 | [Xaviera](https://banned-books.org/books/xaviera) | Xaviera Hollander | `9780352307132` |
+| 475 | [Highschool of the Dead](https://banned-books.org/books/highschool-of-the-dead) | Daisuke Satō, Shōji Satō | `9780316218573` |
+| 476 | [The Struggle Is My Life](https://banned-books.org/books/the-struggle-is-my-life) | Nelson Mandela | `9781871863086` |
+| 477 | [Happy New Year](https://banned-books.org/books/happy-new-year) | Rubem Fonseca | `9781593692919` |
+| 478 | [On My Honor](https://banned-books.org/books/on-my-honor) | Marion Dane Bauer | `9780899194394` |
+| 479 | [What Will it be Like?](https://banned-books.org/books/what-will-it-be-like) | Richard Acland | `9780805497786` |
+| 480 | [The Room](https://banned-books.org/books/the-room) | Hubert Selby Jr. | `9780141195674` |
+| 481 | [The Federal Mafia](https://banned-books.org/books/the-federal-mafia) | Irwin Schiff | `9780930374099` |
+| 482 | [What Islam Is All About](https://banned-books.org/books/what-islam-is-all-about) | Yahiya Emerick | `9781889720142` |
+| 483 | [Ace G Men](https://banned-books.org/books/ace-g-men) | Anonymous | `9780382034428` |
+| 484 | [Blame Me on History](https://banned-books.org/books/blame-me-on-history) | Bloke Modisane | `9780671707941` |
+| 485 | [When the Lion Feeds](https://banned-books.org/books/when-the-lion-feeds) | Wilbur A. Smith | `9785557087360` |
+| 486 | [Emergency](https://banned-books.org/books/emergency) | Richard Rive | `9780930523879` |
+| 487 | [Fairy Tail](https://banned-books.org/books/fairy-tail) | Hiro Mashima | `9780345501332` |
+| 488 | [Teen Titans](https://banned-books.org/books/teen-titans) | DC Comics | `9781401203085` |
+| 489 | [Blade](https://banned-books.org/books/blade) | Tim Bowler | `9780192754844` |
+| 490 | [Shaolin Sisters](https://banned-books.org/books/shaolin-sisters) | Toshiki Hirano | `9781591820253` |
+| 491 | [Queen of Sheba and Biblical Scholarship](https://banned-books.org/books/queen-of-sheba-and-biblical-scholarship) | Bernard Leeman | `9781592211173` |
 
-## Books with no alternative editions in Open Library (441)
+## Books with no alternative editions in Open Library (1007)
 
 Single-edition works in OL — nothing to swap to.
 
@@ -932,8 +1334,574 @@ Single-edition works in OL — nothing to swap to.
 | 439 | [Joan Miro, 1893-1983: The Poet Among the Surrealists](https://banned-books.org/books/joan-miro-1893-1983-the-poet-among-the-surrealists) | Janis Mink | `9783836531306` |
 | 440 | [Kill Shakespeare, Vol. 4 - The Mask of Night](https://banned-books.org/books/kill-shakespeare-vol-4-the-mask-of-night) | Conor McCreery | `9781631400582` |
 | 441 | [Leonardo da Vinci: 1452-1519](https://banned-books.org/books/leonardo-da-vinci-1452-1519) | Peter Hohenstatt | `9780760726761` |
+| 442 | [Masaccio and the Brancacci Chapel](https://banned-books.org/books/masaccio-and-the-brancacci-chapel) | Ornella Casazza | `9781878351111` |
+| 443 | [Masterpieces: The Best-Loved Paintings from America's Museums](https://banned-books.org/books/masterpieces-the-best-loved-paintings-from-americas-museums) | David Frankel | `9780684801971` |
+| 444 | [Maxfield Parrish, 1870-1966](https://banned-books.org/books/maxfield-parrish-1870-1966) | Sylvia Yount | `9780810982291` |
+| 445 | [Myths & Legends: An Illustrated Guide To Their Origins and Meanings](https://banned-books.org/books/myths-legends-an-illustrated-guide-to-their-origins-and-meanings) | Philip Wilkinson | `9780756674908` |
+| 446 | [Netter's Atlas of the Human Body](https://banned-books.org/books/netters-atlas-of-the-human-body) | Frank H. Netter | `9780764158841` |
+| 447 | [Oceanic Art](https://banned-books.org/books/oceanic-art) | Nicholas Thomas | `9780500202814` |
+| 448 | [Paul Cézanne](https://banned-books.org/books/paul-cezanne) | Trewin Copplestone | `9781853614958` |
+| 449 | [Paul Gaugin](https://banned-books.org/books/paul-gaugin) | Rene Huyghe | `9783775707442` |
+| 450 | [Perseus](https://banned-books.org/books/perseus) | Susan Sales Harkins | `9781584155584` |
+| 451 | [Pierre Auguste Renoir](https://banned-books.org/books/pierre-auguste-renoir) | Trewin Copplestone | `9781853615016` |
+| 452 | [Raphael](https://banned-books.org/books/raphael) | Bruno Santi | `9780810904323` |
+| 453 | [Richard Jolley: Sculptor of Glass](https://banned-books.org/books/richard-jolley-sculptor-of-glass) | Richard Jolley | `9780963588166` |
+| 454 | [Richard Matheson: Master of Terror Graphic Novel Collection](https://banned-books.org/books/richard-matheson-master-of-terror-graphic-novel-collection) | Ted Adams | `9781631407086` |
+| 455 | [Sculpture](https://banned-books.org/books/sculpture) | Mary-Jane Opie | `9780714873541` |
+| 456 | [The Art of Ukraine](https://banned-books.org/books/the-art-of-ukraine) | Alisa Lozhkina | `9789663980423` |
+| 457 | [The Children's Dictionary of Mythology](https://banned-books.org/books/the-childrens-dictionary-of-mythology) | David Adams Leeming | `9780531117088` |
+| 458 | [The Everything Classical Mythology Book: Greek and Roman Gods, Goddesses, Heroes, and Monsters from Ares to Zeus](https://banned-books.org/books/the-everything-classical-mythology-book-greek-and-roman-gods-goddesses-heroes-and-monsters-from-ares-to-zeus) | Lesley Bolton | `9781580626538` |
+| 459 | [The Figure in Clay: Contemporary Sculpting Techniques by Master Artists](https://banned-books.org/books/the-figure-in-clay-contemporary-sculpting-techniques-by-master-artists) | Suzanne Tourtillott | `9781579906115` |
+| 460 | [The Handy Anatomy Answer Book](https://banned-books.org/books/the-handy-anatomy-answer-book) | Naomi E. Balaban | `9781578591909` |
+| 461 | [The Handy Mythology Answer Book](https://banned-books.org/books/the-handy-mythology-answer-book) | David Adams Leeming | `9781578594757` |
+| 462 | [The Journey of Diego Rivera](https://banned-books.org/books/the-journey-of-diego-rivera) | Ernest Goldstein | `9780822520665` |
+| 463 | [The Last Halloween: Children](https://banned-books.org/books/the-last-halloween-children) | Abby Howard | `9780996556804` |
+| 464 | [The Panorama of the Renaissance](https://banned-books.org/books/the-panorama-of-the-renaissance) | Margaret Aston | `9780810981881` |
+| 465 | [The Quest for Paradise: Visions of Heaven and Eternity in the World's Myths and Religions](https://banned-books.org/books/the-quest-for-paradise-visions-of-heaven-and-eternity-in-the-worlds-myths-and-religions) | John Ashton | `9780062517357` |
+| 466 | [The Story of Sculpture: From Prehistory to the Present](https://banned-books.org/books/the-story-of-sculpture-from-prehistory-to-the-present) | Francesca Romei | `9780872263161` |
+| 467 | [Theseus and the Minotaur](https://banned-books.org/books/theseus-and-the-minotaur) | Scott R. Welvaert | `9780736847131` |
+| 468 | [Titian: Sacred and Profane Love](https://banned-books.org/books/titian-sacred-and-profane-love) | Stefano Zuffi | `9781553210115` |
+| 469 | [Tribe: Endangered Peoples Around the World](https://banned-books.org/books/tribe-endangered-peoples-around-the-world) | Piers Gibbon | `9781554077427` |
+| 470 | [Twisted Myths: 20 Classic Stories With a Dark and Dangerous Heart](https://banned-books.org/books/twisted-myths-20-classic-stories-with-a-dark-and-dangerous-heart) | Maura McHugh | `9780764166204` |
+| 471 | [Wake Up Our Souls: A Celebration of Black American Artists](https://banned-books.org/books/wake-up-our-souls-a-celebration-of-black-american-artists) | Tonya Bolden | `9780810948099` |
+| 472 | [What Life Was Like at the Dawn of Democracy: Classical Athens, 525-322 BC](https://banned-books.org/books/what-life-was-like-at-the-dawn-of-democracy-classical-athens-525-322-bc) | Time-Life Books | `9780783554532` |
+| 473 | [What Life Was Like at the Rebirth of Genius: Renaissance Italy, AD 1400-1550](https://banned-books.org/books/what-life-was-like-at-the-rebirth-of-genius-renaissance-italy-ad-1400-1550) | Time-Life Books | `9780783554617` |
+| 474 | [What Life Was Like on the Banks of the Nile: Egypt 3050-30 BC](https://banned-books.org/books/what-life-was-like-on-the-banks-of-the-nile-egypt-3050-30-bc) | Time-Life Books | `9780809493784` |
+| 475 | [What Life Was Like When Rome Ruled the World: The Roman Empire, 100 BC-AD 200](https://banned-books.org/books/what-life-was-like-when-rome-ruled-the-world-the-roman-empire-100-bc-ad-200) | Time-Life Books | `9780783554525` |
+| 476 | [When the Beginning Began: Stories about God, the Creatures, and Us](https://banned-books.org/books/when-the-beginning-began-stories-about-god-the-creatures-and-us) | Julius Lester | `9780152012380` |
+| 477 | [Your Travel Guide to Ancient Greece](https://banned-books.org/books/your-travel-guide-to-ancient-greece) | Nancy Day | `9780822530763` |
+| 478 | [Antipodes](https://banned-books.org/books/antipodes) | Michelle Bacon | `9780140076127` |
+| 479 | [Durarara!! Vol. 2](https://banned-books.org/books/durarara-vol-2) | Ryogo Narita | `9780316209311` |
+| 480 | [Garden of Shadows](https://banned-books.org/books/garden-of-shadows) | V.C. Andrews | `9780671958947` |
+| 481 | [Gentleman](https://banned-books.org/books/gentleman) | Michael Northrop | `9780137806928` |
+| 482 | [Have a Little Faith In Me](https://banned-books.org/books/have-a-little-faith-in-me) | Sona Hartl | `9781493539697` |
+| 483 | [I Kill Giants](https://banned-books.org/books/i-kill-giants) | Joe Kelly | `9781607060925` |
+| 484 | [I'm Glad My Mom Died](https://banned-books.org/books/im-glad-my-mom-died) | Jennette McCurdy | `9798350017038` |
+| 485 | [Jojo's Bizarre Adventure: Part 1 - Phantom Blood, Vol. 1](https://banned-books.org/books/jojos-bizarre-adventure-part-1-phantom-blood-vol-1) | Hirohiko Araki | `9789124109721` |
+| 486 | [Replica: Gemma Lyra](https://banned-books.org/books/replica-gemma-lyra) | Lauren Oliver | `9781473614970` |
+| 487 | [Snow, Glass, Apples](https://banned-books.org/books/snow-glass-apples) | Neil Gaiman | `9781506709802` |
+| 488 | [Still Life with Tornado](https://banned-books.org/books/still-life-with-tornado) | A. S. King | `9781101994887` |
+| 489 | [The Color of Heaven](https://banned-books.org/books/the-color-of-heaven) | Kim Dong Hwa | `9781596434608` |
+| 490 | [The Drawing of the Three - Bitter Medicine](https://banned-books.org/books/the-drawing-of-the-three-bitter-medicine) | Robin Furth | `9780785192800` |
+| 491 | [The Gunslinger - The Man in Black](https://banned-books.org/books/the-gunslinger-the-man-in-black) | Robin Furth | `9780785149354` |
+| 492 | [The Pain Eater](https://banned-books.org/books/the-pain-eater) | Beth Goobie | `9781772600209` |
+| 493 | [The Stan](https://banned-books.org/books/the-stan) | Kevin Knodell | `9781682470985` |
+| 494 | [Enemies](https://banned-books.org/books/enemies) | Tim Bowler | `9780192763600` |
+| 495 | [Firestorm](https://banned-books.org/books/firestorm) | Tim Bowler | `9780192763624` |
+| 496 | [Flight](https://banned-books.org/books/flight) | Tim Bowler | `9780192763617` |
+| 497 | [Killing Comendatore](https://banned-books.org/books/killing-comendatore) | Haruki Murakami | `9781473549449` |
+| 498 | [My Brother's Keeper](https://banned-books.org/books/my-brothers-keeper) | ReShonda Tate Billingsley | `9780970862037` |
+| 499 | [She who Became the Sun](https://banned-books.org/books/she-who-became-the-sun) | Shelley Parker-Chan | `9781637993033` |
+| 500 | [The Executioner](https://banned-books.org/books/the-executioner) | Jay Bennett | `9785552557349` |
+| 501 | [Health Issues When You're Transgender](https://banned-books.org/books/health-issues-when-youre-transgender) | Susan Meyer | `9781508171782` |
+| 502 | [Killers and Other Family](https://banned-books.org/books/killers-and-other-family) | Lucy Thurber | `9780822222668` |
+| 503 | [La teoría de lo perfecto](https://banned-books.org/books/la-teoria-de-lo-perfecto) | Sophie Gonzales | `9788412578171` |
+| 504 | [Leroy](https://banned-books.org/books/leroy) | Sylvia Aguilar Zeleny | `9781680760095` |
+| 505 | [Maria](https://banned-books.org/books/maria) | Sylvia Aguilar Zeleny | `9781680760804` |
+| 506 | [Middletown](https://banned-books.org/books/middletown) | Sarah Moon | `9781646140428` |
+| 507 | [Mikala](https://banned-books.org/books/mikala) | Sylvia Aguilar Zeleny | `9781680760118` |
+| 508 | [Monster of the Week](https://banned-books.org/books/monster-of-the-week) | F.T. Lukens | `9780473204662` |
+| 509 | [Star-Crossed](https://banned-books.org/books/star-crossed) | Barbara Dee | `9780486278278` |
+| 510 | [The Coldest Touch](https://banned-books.org/books/the-coldest-touch) | Isabel Sterling | `9798635531822` |
+| 511 | [The Cutting Room Floor](https://banned-books.org/books/the-cutting-room-floor) | Dawn Klehr | `9780738738048` |
+| 512 | [The Devouring Wolf](https://banned-books.org/books/the-devouring-wolf) | Natalie C. Parker | `9798773342212` |
+| 513 | [The fae keeper](https://banned-books.org/books/the-fae-keeper) | H. E. Edgmon | `9781387745982` |
+| 514 | [The Hazards of Love, Book One: Bright World](https://banned-books.org/books/the-hazards-of-love-book-one-bright-world) | Stan Stanley | `9781620108581` |
+| 515 | [The Inside of Out](https://banned-books.org/books/the-inside-of-out) | Jenn Marie Thorne | `9780803740587` |
+| 516 | [Tom](https://banned-books.org/books/tom) | Sylvia Aguilar Zéleny | `9781680760125` |
+| 517 | [Wandering Son, Vol. 3](https://banned-books.org/books/wandering-son-vol-3) | Takako Shimura | `9781606995334` |
+| 518 | [When Light Shatters](https://banned-books.org/books/when-light-shatters) | Laney Wylde | `9781634223812` |
+| 519 | [Wonnie](https://banned-books.org/books/wonnie) | Sylvia Aguilar Zeleny | `9781680760132` |
+| 520 | [Your Own Safety](https://banned-books.org/books/your-own-safety) | Peggy Pancella | `9781403449382` |
+| 521 | [No Bows!](https://banned-books.org/books/no-bows) | Shirley Smith | `9781561453566` |
+| 522 | [¡Sí! somos Latinos](https://banned-books.org/books/si-somos-latinos) | Alma Flor Ada | `9781484438626` |
+| 523 | [#MeToo: Unveiling Abuse](https://banned-books.org/books/metoo-unveiling-abuse) | Megan Borgert-Spaniol | `9781532173493` |
+| 524 | [#WomensMarch: Insisting on Equality](https://banned-books.org/books/womensmarch-insisting-on-equality) | Rebecca Felix | `9781532173523` |
+| 525 | [1900-10: New Ways of Seeing](https://banned-books.org/books/1900-10-new-ways-of-seeing) | Jackie Gaff | `9780836828481` |
+| 526 | [A History of Western Art: From Prehistory to the 20th Century](https://banned-books.org/books/a-history-of-western-art-from-prehistory-to-the-20th-century) | Antony Mason | `9780810994218` |
+| 527 | [A Midsummer Tights Dream](https://banned-books.org/books/a-midsummer-tights-dream) | Louise Rennison | `9780007156856` |
+| 528 | [A Pair of Socks](https://banned-books.org/books/a-pair-of-socks) | Stuart J. Murphy | `9780590062596` |
+| 529 | [A Strange Wilderness: The Lives of the Great Mathematicians](https://banned-books.org/books/a-strange-wilderness-the-lives-of-the-great-mathematicians) | Amir D. Aczel | `9781402785849` |
+| 530 | [A Warp in Time](https://banned-books.org/books/a-warp-in-time) | Jude Watson | `9781536451214` |
+| 531 | [Alive 4: The Final Evolution](https://banned-books.org/books/alive-4-the-final-evolution) | Tadashi Kawashima | `9780345499387` |
+| 532 | [Ancient Medicine: From Sorcery to Surgery](https://banned-books.org/books/ancient-medicine-from-sorcery-to-surgery) | Michael Woods | `9780822529927` |
+| 533 | [Are There Rainbows on the Moon: Over 200 Weird and Wonderful Science Questions Answered](https://banned-books.org/books/are-there-rainbows-on-the-moon-over-200-weird-and-wonderful-science-questions-answered) | Erwin Brecher | `9781780971070` |
+| 534 | [Art: Over 2,500 Works from Cave to Contemporary](https://banned-books.org/books/art-over-2-500-works-from-cave-to-contemporary) | Nigel Ritchie | `9780756639723` |
+| 535 | [At Work: Twenty-five Contemporary Chinese Artists](https://banned-books.org/books/at-work-twenty-five-contemporary-chinese-artists) | Jon Burris | `9781592650859` |
+| 536 | [Blood of a Thousand Stars](https://banned-books.org/books/blood-of-a-thousand-stars) | Rhoda Belleza | `9781101999134` |
+| 537 | [Bradley Fighting Vehicles](https://banned-books.org/books/bradley-fighting-vehicles) | John Hamilton | `9781617876134` |
+| 538 | [Chasing Brooklyn](https://banned-books.org/books/chasing-brooklyn) | Lisa Schroeder | `9781416991687` |
+| 539 | [Chinese Mythology A to Z](https://banned-books.org/books/chinese-mythology-a-to-z) | Jeremy Roberts | `9780816048700` |
+| 540 | [Cougars](https://banned-books.org/books/cougars) | John Hamilton | `9781617876141` |
+| 541 | [Demon Apocalypse](https://banned-books.org/books/demon-apocalypse) | Darren Shan | `9780316003797` |
+| 542 | [Dumile Feni: The Story of a Great Artist](https://banned-books.org/books/dumile-feni-the-story-of-a-great-artist) | Prince Mbusi Dube | `9780986983306` |
+| 543 | [El diario completamente verídico de un Indio a tiempo parcial](https://banned-books.org/books/el-diario-completamente-veridico-de-un-indio-a-tiempo-parcial) | Sherman Alexie | `9788498412734` |
+| 544 | [El libro salvaje](https://banned-books.org/books/el-libro-salvaje) | Juan Villoro | `9786071600011` |
+| 545 | [Everybody Paints!: The Lives and Art of the Wyeth Family](https://banned-books.org/books/everybody-paints-the-lives-and-art-of-the-wyeth-family) | Susan Goldman Rubin | `9780811869843` |
+| 546 | [Falling Through Darkness](https://banned-books.org/books/falling-through-darkness) | Carolyn MacCullough | `9780761319344` |
+| 547 | [Girl Stays in the Picture](https://banned-books.org/books/girl-stays-in-the-picture) | Melissa de la Cruz | `9781416960966` |
+| 548 | [Goliath Beetles](https://banned-books.org/books/goliath-beetles) | Grace Hansen | `9781680806571` |
+| 549 | [Greek and Roman Mythology](https://banned-books.org/books/greek-and-roman-mythology) | Don Nardo | `9781560063087` |
+| 550 | [Haiku U: From Aristotle to Zola, 100 Great Books in 17 Syllables](https://banned-books.org/books/haiku-u-from-aristotle-to-zola-100-great-books-in-17-syllables) | David M. Bader | `9781592401284` |
+| 551 | [Halloween](https://banned-books.org/books/halloween) | Steve Potts | `9781583406625` |
+| 552 | [Hawks](https://banned-books.org/books/hawks) | Kathleen W. Deady | `9780736810647` |
+| 553 | [Headin' For Better Times: The Arts of the Great Depression](https://banned-books.org/books/headin-for-better-times-the-arts-of-the-great-depression) | Duane Damon | `9780822517412` |
+| 554 | [Healthy Romantic Relationships](https://banned-books.org/books/healthy-romantic-relationships) | Alexis Burling | `9781532179006` |
+| 555 | [Hell's Heroes](https://banned-books.org/books/hells-heroes) | Darren Shan | `9780316048958` |
+| 556 | [Hero on a Bicycle](https://banned-books.org/books/hero-on-a-bicycle) | Shirley Hughes | `9780763660376` |
+| 557 | [Hillbilly Elegy: A Memoir of a Family and Culture in Crisis](https://banned-books.org/books/hillbilly-elegy-a-memoir-of-a-family-and-culture-in-crisis) | J.D. Vance | `9781540884749` |
+| 558 | [Humvees](https://banned-books.org/books/humvees) | John Hamilton | `9781617876158` |
+| 559 | [In the Belly of the Beast: Letters From Prison](https://banned-books.org/books/in-the-belly-of-the-beast-letters-from-prison) | Jack Henry Abbott | `9780091473303` |
+| 560 | [Keys to the Repository](https://banned-books.org/books/keys-to-the-repository) | Melissa de la Cruz | `9781423134541` |
+| 561 | [Kieli](https://banned-books.org/books/kieli) | Yukako Kabei | `9780759529304` |
+| 562 | [Killer Spirit](https://banned-books.org/books/killer-spirit) | Jennifer Lynn Barnes | `9780375849145` |
+| 563 | [Kung Fu](https://banned-books.org/books/kung-fu) | Tim O'Shei | `9781429619639` |
+| 564 | [La travesía de Santiago](https://banned-books.org/books/la-travesia-de-santiago) | Alexandra Diaz | `9789877801279` |
+| 565 | [Louvre: 400 Masterpieces](https://banned-books.org/books/louvre-400-masterpieces) | Daniel Soulié | `9780810971165` |
+| 566 | [Medieval Art](https://banned-books.org/books/medieval-art) | Rachel A. H. Beckett | `9780813336817` |
+| 567 | [Michelangelo Merisi da Caravaggio, 1571-1610](https://banned-books.org/books/michelangelo-merisi-da-caravaggio-1571-1610) | Eberhard Konig | `9783829002431` |
+| 568 | [Michelangelo: His Life and Works in 500 Images](https://banned-books.org/books/michelangelo-his-life-and-works-in-500-images) | Rosalind Ormiston | `9780754820772` |
+| 569 | [Misguided Angel](https://banned-books.org/books/misguided-angel) | Melissa de la Cruz | `9781423121282` |
+| 570 | [Modern Women: Women Artists at the Museum of Modern Art](https://banned-books.org/books/modern-women-women-artists-at-the-museum-of-modern-art) | Connie Butler | `9780870707711` |
+| 571 | [Our Country's Presidents 5th Ed.: A Complete Encyclopedia of the U.S. Presidency](https://banned-books.org/books/our-countrys-presidents-5th-ed-a-complete-encyclopedia-of-the-u-s-presidency) | Ann Bausum | `9781426329449` |
+| 572 | [Out of My Mind](https://banned-books.org/books/out-of-my-mind) | Sharon M. Draper | `9781548005733` |
+| 573 | [Paladins](https://banned-books.org/books/paladins) | John Hamilton | `9781617876165` |
+| 574 | [Queso: Regional Recipes for the World's Favorite Chile-Cheese Dip](https://banned-books.org/books/queso-regional-recipes-for-the-worlds-favorite-chile-cheese-dip) | Lisa, Fain | `9780399579516` |
+| 575 | [Rebecca](https://banned-books.org/books/rebecca) | Daphne du Maurier | `9780582419377` |
+| 576 | [Recuerda aquella vez](https://banned-books.org/books/recuerda-aquella-vez) | Adam Silvera | `9788496886612` |
+| 577 | [Robert Louis Stevenson's Treasure Island](https://banned-books.org/books/robert-louis-stevensons-treasure-island) | Wim Coleman | `9781598892222` |
+| 578 | [Sliding on the Edge](https://banned-books.org/books/sliding-on-the-edge) | C. Lee McKenzie | `9781482022780` |
+| 579 | [Something Like Fate](https://banned-books.org/books/something-like-fate) | Susane Colasanti | `9780670011469` |
+| 580 | [Strykers](https://banned-books.org/books/strykers) | John Hamilton | `9781617876172` |
+| 581 | [The Baroque and Neoclassical age](https://banned-books.org/books/the-baroque-and-neoclassical-age) | Ian Chilvers | `9780307493606` |
+| 582 | [The Canterbury Tales](https://banned-books.org/books/the-canterbury-tales) | Geoffrey Chaucer | `9781586633684` |
+| 583 | [The Contemporary Art Book: The Essential Guide to 200 of the World's Most Widely Exhibited Artists](https://banned-books.org/books/the-contemporary-art-book-the-essential-guide-to-200-of-the-worlds-most-widely-exhibited-artists) | Charlotte Bonham Carter | `9781847960054` |
+| 584 | [The Fences Between Us: The Diary of Piper Davis](https://banned-books.org/books/the-fences-between-us-the-diary-of-piper-davis) | Kirby Larson | `9780545224185` |
+| 585 | [The Gods and Goddesses of Greek Mythology](https://banned-books.org/books/the-gods-and-goddesses-of-greek-mythology) | Don Nardo | `9780756544799` |
+| 586 | [The Language of Flowers: Symbols and Myths](https://banned-books.org/books/the-language-of-flowers-symbols-and-myths) | Marina Heilmeyer | `9783791335704` |
+| 587 | [The Pear Affair](https://banned-books.org/books/the-pear-affair) | Judith Eagle | `9780655666059` |
+| 588 | [The Story Behind ... Toni Morrison's The Bluest Eye](https://banned-books.org/books/the-story-behind-toni-morrisons-the-bluest-eye) | Mary Colson | `9781403482129` |
+| 589 | [We Now Return to Regular Life](https://banned-books.org/books/we-now-return-to-regular-life) | Martin Wilson | `9780735227828` |
+| 590 | [What Dread Hand](https://banned-books.org/books/what-dread-hand) | Jennifer Skogen | `9781680760941` |
+| 591 | [Zom-B: Gladiator](https://banned-books.org/books/zom-b-gladiator) | Darren Shan | `9781443415231` |
+| 592 | [Medical Terminology](https://banned-books.org/books/medical-terminology) | Judi L. Nath | `9781496360991` |
+| 593 | [Mono No Aware (Short Story)](https://banned-books.org/books/mono-no-aware-short-story) | Ken Liu | `9784150121266` |
+| 594 | [Perrine's Literature Structure, Sound, and Sense](https://banned-books.org/books/perrines-literature-structure-sound-and-sense) | Thomas R. Arp | `9780155074941` |
+| 595 | [The Stud](https://banned-books.org/books/the-stud-jackie-collins) | Jackie Collins | `9780330462419` |
+| 596 | [The New Class](https://banned-books.org/books/the-new-class) | Milovan Đilas | `9780043230046` |
+| 597 | [Dialogo sopra i due massimi sistemi del mondo](https://banned-books.org/books/dialogo-sopra-i-due-massimi-sistemi-del-mondo) | Galileo Galilei | `9788876921100` |
+| 598 | [Emile, ou De l'éducation](https://banned-books.org/books/emile-ou-de-l-education) | Jean-Jacques Rousseau | `9783638643474` |
+| 599 | [La Comédie humaine](https://banned-books.org/books/la-comedie-humaine) | Honoré de Balzac | `9782258051140` |
+| 600 | [Understanding Islam Through Hadis](https://banned-books.org/books/understanding-islam-through-hadis) | Ram Swarup | `9780682499484` |
+| 601 | [The Red Sari](https://banned-books.org/books/the-red-sari) | Javier Moro | `9789351941033` |
+| 602 | [Yellow Peril](https://banned-books.org/books/yellow-peril-wang-lixiong) | Wang Lixiong | `9789862130902` |
+| 603 | [The Lotus and the Robot](https://banned-books.org/books/the-lotus-and-the-robot) | Arthur Koestler | `9780090598915` |
+| 604 | [Suicide, mode d'emploi](https://banned-books.org/books/suicide-mode-demploi) | Claude Guillon, Yves Le Bonniec | `9782852090002` |
+| 605 | [Unarmed Victory](https://banned-books.org/books/unarmed-victory) | Bertrand Russell | `9780043270240` |
+| 606 | [Soft Target: How the Indian Intelligence Service Penetrated Canada](https://banned-books.org/books/soft-target-how-the-indian-intelligence-service-penetrated-canada) | Zuhair Kashmeri, Brian McAndrew | `9781550282238` |
+| 607 | [The True Furqan](https://banned-books.org/books/the-true-furqan) | Al Saffee, Al Mahdee | `9781579211752` |
+| 608 | [Satyarth Prakash](https://banned-books.org/books/satyarth-prakash) | Dayananda Saraswati | `9788170771132` |
+| 609 | [The Epic of Shivaji: A Translation and Study of Kavindra Paramananda's Sivabharata](https://banned-books.org/books/the-epic-of-shivaji-a-translation-and-study-of-kavindra-paramanandas-sivabharata) | James Laine | `9788125020462` |
+| 610 | [The Adivasi Will Not Dance: Stories](https://banned-books.org/books/the-adivasi-will-not-dance-stories) | Hansda Sowvendra Shekhar | `9789385288647` |
+| 611 | [Kashmir Politics and Plebiscite](https://banned-books.org/books/kashmir-politics-and-plebiscite) | Abdul Gockhami Jabbar | `9780964684911` |
+| 612 | [Between Democracy & Nation: Gender and Militarisation in Kashmir](https://banned-books.org/books/between-democracy-nation-gender-and-militarisation-in-kashmir) | Seema Kazi | `9788188965465` |
+| 613 | [In Search of a Future: The Story of Kashmir](https://banned-books.org/books/in-search-of-a-future-the-story-of-kashmir) | David Devadas | `9780670081509` |
+| 614 | [The Kashmir Dispute: 1947–2012](https://banned-books.org/books/the-kashmir-dispute-1947-2012) | A G Noorani | `9789382381198` |
+| 615 | [A Dismantled State: The Untold Story of Kashmir after Article 370](https://banned-books.org/books/a-dismantled-state-the-untold-story-of-kashmir-after-article-370) | Anuradha Bhasin | `9789356296084` |
+| 616 | [Confronting Terrorism](https://banned-books.org/books/confronting-terrorism) | Maroof Raza | `9780670083695` |
+| 617 | [USA and Kashmir](https://banned-books.org/books/usa-and-kashmir) | Shamshad Shan | `9788183392235` |
+| 618 | [Towards Freedom](https://banned-books.org/books/towards-freedom) | Sumit Sarkar, K. N. Panikkar | `9780195692457` |
+| 619 | [Korkai](https://banned-books.org/books/korkai) | Joe D'Cruz | `9788193001806` |
+| 620 | [The Descent of Air India](https://banned-books.org/books/the-descent-of-air-india) | Jitendra Bhargava | `9789382951131` |
+| 621 | [Who killed Gandhi](https://banned-books.org/books/who-killed-gandhi) | Lourenço de Salvador | `9788174366177` |
+| 622 | [Early Islam](https://banned-books.org/books/early-islam) | Desmond Stewart | `9780900658006` |
+| 623 | [Nehru: A Political Biography](https://banned-books.org/books/nehru-a-political-biography) | Michael Edwardes | `9780713901887` |
+| 624 | [How to make disposable silencers](https://banned-books.org/books/how-to-make-disposable-silencers-1984) | Desert, Eliezer Flores | `9780879471576` |
+| 625 | [Fra Kristiania-Bohêmen](https://banned-books.org/books/fra-kristiania-bohemen) | Hans Jæger | `9788270990276` |
+| 626 | [The Song of the Red Ruby](https://banned-books.org/books/the-song-of-the-red-ruby) | Agnar Mykle | `9780586015001` |
+| 627 | [New Portuguese Letters (Novas Cartas Portuguesas)](https://banned-books.org/books/new-portuguese-letters-novas-cartas-portuguesas) | Maria Isabel Barreno, Maria Teresa Horta, Maria Velho da Costa | `9780930523978` |
+| 628 | [Operation Dark Heart](https://banned-books.org/books/operation-dark-heart-2010) | Army Reserve Lt. Col. Anthony Shaffer | `9780312603694` |
+| 629 | [Christianity not Mysterious](https://banned-books.org/books/christianity-not-mysterious) | John Toland | `9781874675952` |
+| 630 | [Grover's Eight Nights of Light](https://banned-books.org/books/grovers-eight-nights-of-light) | Jodie Shepherd | `9781536421378` |
+| 631 | [Works](https://banned-books.org/books/works) | Johannes Kepler | `9780486432823` |
+| 632 | [Politics of the police state](https://banned-books.org/books/politics-of-the-police-state) | Pham Doan Trang | `9780679725428` |
+| 633 | [Le roi prédateur](https://banned-books.org/books/le-roi-predateur) | Catherine Graciet, Éric Laurent | `9782757830857` |
+| 634 | [Daddy's Roommate](https://banned-books.org/books/daddys-roommate) | Michael Willhoite | `9781555831189` |
+| 635 | [Family Secrets](https://banned-books.org/books/family-secrets) | Norma Klein | `9780449701959` |
+| 636 | [Gossip Girl (series)](https://banned-books.org/books/gossip-girl-series) | Cecily von Ziegesar | `9798745656408` |
+| 637 | [I Saw Esau](https://banned-books.org/books/i-saw-esau) | Iona, Peter Opie | `9780763611996` |
+| 638 | [The New Joy of Gay Sex](https://banned-books.org/books/the-new-joy-of-gay-sex) | Charles Silverstein, Edmund White, and Felice Picano | `9783861870142` |
+| 639 | [Saga (series)](https://banned-books.org/books/saga-series) | Brian K. Vaughan | `9781637994658` |
+| 640 | [The Upstairs Room](https://banned-books.org/books/the-upstairs-room) | Johanna Reiss | `9788423988525` |
+| 641 | [When Dad Killed Mom](https://banned-books.org/books/when-dad-killed-mom) | Julius Lester | `9780152163051` |
+| 642 | [You Hear Me?](https://banned-books.org/books/you-hear-me) | Betsy Franco | `9780763611583` |
+| 643 | [Boys and Sex](https://banned-books.org/books/boys-and-sex) | Wardell Pomeroy | `9780140211795` |
+| 644 | [Curses, Hexes and Spells](https://banned-books.org/books/curses-hexes-and-spells) | Daniel Cohen | `9780397314935` |
+| 645 | [Girls and Sex](https://banned-books.org/books/girls-and-sex) | Wardell Pomeroy | `9780440208129` |
+| 646 | [Go the Fuck to Sleep](https://banned-books.org/books/go-the-fuck-to-sleep) | Adam Mansbach | `9780857862655` |
+| 647 | [Boss of Britain's Underworld](https://banned-books.org/books/boss-of-britains-underworld) | Billy Hill | `9780956095800` |
+| 648 | [Novi Svijet](https://banned-books.org/books/novi-svijet) | Jugo-Slav Publishing Company | `9788637907329` |
+| 649 | [Juliette](https://banned-books.org/books/juliette) | Marquis de Sade | `9780099821700` |
+| 650 | [Confessions of a Pimp](https://banned-books.org/books/confessions-of-a-pimp) | Nick G. as told to Jon Fowler | `9781453868041` |
+| 651 | [Jackboot Girls](https://banned-books.org/books/jackboot-girls) | Leslie McManus | `9780450007422` |
+| 652 | [Bloody Mama](https://banned-books.org/books/bloody-mama) | Robert Thorn | `9780450005893` |
+| 653 | [Galactic Girl](https://banned-books.org/books/galactic-girl) | Fiona Richmond | `9780352307484` |
+| 654 | [Men Loving Men](https://banned-books.org/books/men-loving-men) | Mitch Walker | `9780917342523` |
+| 655 | [Tiananmen Square, spring 1989 : a chronology of the Chinese democracy movement](https://banned-books.org/books/tiananmen-square-spring-1989-a-chronology-of-the-chinese-democracy-movement) | Han, Theodore., Li, John. | `9789993613619` |
+| 656 | [The Tiananmen Square massacre](https://banned-books.org/books/the-tiananmen-square-massacre) | Kelly Barth | `9780737711752` |
+| 657 | [Alciphron, or The Minute Philosopher](https://banned-books.org/books/alciphron-or-the-minute-philosopher) | George Berkeley | `9780415063722` |
+| 658 | [Chaos Under Heaven : the Shocking Story of China's Search for Democracy](https://banned-books.org/books/chaos-under-heaven-the-shocking-story-of-chinas-search-for-democracy) | Gordon Thomas | `9781559720595` |
+| 659 | [China's Best Actor: Wen Jiabao](https://banned-books.org/books/chinas-best-actor-wen-jiabao) | Yu Jie | `9789881943026` |
+| 660 | [China's students : the struggle for democracy](https://banned-books.org/books/chinas-students-the-struggle-for-democracy) | Ruth Cherrington | `9780415052917` |
+| 661 | [19 titles](https://banned-books.org/books/19-titles) | Ernest Renan | `9780751575194` |
+| 662 | [The dragons of Tiananmen : Beijing as a sacred city](https://banned-books.org/books/the-dragons-of-tiananmen-beijing-as-a-sacred-city) | Jeffrey F. Meyer | `9780872497399` |
+| 663 | [Lee Kuan Yew on China and Hongkong after Tiananmen](https://banned-books.org/books/lee-kuan-yew-on-china-and-hongkong-after-tiananmen) | Lee, Kuan Yew. | `9789971614829` |
+| 664 | [Worm-eaten hinges : tensions and turmoil in Shanghai, 1988-9](https://banned-books.org/books/worm-eaten-hinges-tensions-and-turmoil-in-shanghai-1988-9) | Joan Grant | `9780947062736` |
+| 665 | [A Lesbian Happening](https://banned-books.org/books/a-lesbian-happening) | Tony Trelos | `9781718672079` |
+| 666 | [Behind the Tiananmen Massacre : Social, Political, and Economic Ferment in China](https://banned-books.org/books/behind-the-tiananmen-massacre-social-political-and-economic-ferment-in-china) | Zhuyuan Zheng | `9780813310473` |
+| 667 | [Quelling the People : The Military Suppression of the Beijing Democracy Movement](https://banned-books.org/books/quelling-the-people-the-military-suppression-of-the-beijing-democracy-movement) | Timothy Brook | `9781895555035` |
+| 668 | [Notre ami le roi](https://banned-books.org/books/notre-ami-le-roi) | Gilles Perrault | `9782070719815` |
+| 669 | [The Face of Mother India](https://banned-books.org/books/the-face-of-mother-india) | Katherine Mayo | `9780704344655` |
+| 670 | [China : from the Long March to Tiananmen Square](https://banned-books.org/books/china-from-the-long-march-to-tiananmen-square) | Associated Press | `9780805012910` |
+| 671 | [Old Soldier Sahib](https://banned-books.org/books/old-soldier-sahib) | Frank Richards | `9780571065745` |
+| 672 | [Xianggang jian shi : cong zhi min di zhi te bie xing zheng qu](https://banned-books.org/books/xianggang-jian-shi-cong-zhi-min-di-zhi-te-bie-xing-zheng-qu) | Carroll, John M | `9789888263202` |
+| 673 | [Hong Kong's social movements : forces from the margins](https://banned-books.org/books/hong-kongs-social-movements-forces-from-the-margins) | Sophia Woodman | `9789628073054` |
+| 674 | [De l'Esprit](https://banned-books.org/books/de-lesprit) | Claude Adrien Helvétius | `9782213020235` |
+| 675 | [Religio Medici; the religion of a physician](https://banned-books.org/books/religio-medici-the-religion-of-a-physician) | Thomas Browne | `9780854172658` |
+| 676 | [Cries For Democracy : Writings and Speeches from the Chinese Democracy Movement](https://banned-books.org/books/cries-for-democracy-writings-and-speeches-from-the-chinese-democracy-movement) | Han, Minzhu. | `9780691031460` |
+| 677 | [Summer of betrayal : a novel](https://banned-books.org/books/summer-of-betrayal-a-novel) | Hong, Ying., Avery, Martha. | `9780374271756` |
+| 678 | [De l'homme, de ses facultés intellectuelles et de son éducation](https://banned-books.org/books/de-lhomme-de-ses-facultes-intellectuelles-et-de-son-education) | Claude Adrien Helvétius | `9781855062863` |
+| 679 | [June Four : a chronicle of the Chinese democratic uprising](https://banned-books.org/books/june-four-a-chronicle-of-the-chinese-democratic-uprising) | Jin . Zhou, Qin Jiang | `9781557281401` |
+| 680 | [Moving the mountain : my life in China from the cultural revolution to Tiananmen Square](https://banned-books.org/books/moving-the-mountain-my-life-in-china-from-the-cultural-revolution-to-tiananmen-square) | Li, Lu. | `9780333539101` |
+| 681 | [All plays](https://banned-books.org/books/all-plays) | Gabriele D'Annunzio | `9780825600913` |
+| 682 | [Beijing spring](https://banned-books.org/books/beijing-spring) | Turnley, David C., Peter., Liu, Melinda. | `9781556701306` |
+| 683 | [Crisis at Tiananmen : reform and reality in modern China](https://banned-books.org/books/crisis-at-tiananmen-reform-and-reality-in-modern-china) | Yi, Mu., Thompson, Mark V. | `9780835122900` |
+| 684 | [China after Deng Xiaoping : the power struggle in Beijing since Tiananmen](https://banned-books.org/books/china-after-deng-xiaoping-the-power-struggle-in-beijing-since-tiananmen) | Lam, Wo-Lap Willy. | `9780471131144` |
+| 685 | [Massacre in Beijing : China's struggle for democracy](https://banned-books.org/books/massacre-in-beijing-chinas-struggle-for-democracy) | Donald Morrison | `9780446680004` |
+| 686 | [Lonely Planet](https://banned-books.org/books/lonely-planet) | Zhaoda Huang | `9781740594912` |
+| 687 | [Tiananmen : the rape of Peking](https://banned-books.org/books/tiananmen-the-rape-of-peking) | Fathers, Michael., Higgins, Andrew., Cottrell, Robert Suettinger | `9780385400220` |
+| 688 | [6 titles](https://banned-books.org/books/6-titles) | Jules Michelet | `9781599611495` |
+| 689 | [Tiananmen diary : thirteen days in June](https://banned-books.org/books/tiananmen-diary-thirteen-days-in-june) | Harrison E. Salisbury | `9780316809047` |
+| 690 | [Dark Urge](https://banned-books.org/books/dark-urge) | Robert W. Taylor | `9781447416746` |
+| 691 | [Zoonomia; or The Laws of Organic Life](https://banned-books.org/books/zoonomia-or-the-laws-of-organic-life) | Erasmus Darwin | `9780404082154` |
+| 692 | [A Sentimental Journey Through France and Italy](https://banned-books.org/books/a-sentimental-journey-through-france-and-italy) | Laurence Sterne | `9780486434735` |
+| 693 | [Resistance, chaos, and control in China : Taiping rebels, Taiwanese ghosts, and Tiananmen](https://banned-books.org/books/resistance-chaos-and-control-in-china-taiping-rebels-taiwanese-ghosts-and-tiananmen) | Robert P. Weller | `9780333593813` |
+| 694 | [The Jewel in the Lotus](https://banned-books.org/books/the-jewel-in-the-lotus) | Allen Edwardes | `9780552602891` |
+| 695 | [Black hands of Beijing : lives of defiance in China's democracy movement](https://banned-books.org/books/black-hands-of-beijing-lives-of-defiance-in-chinas-democracy-movement) | Black, George Katsiaficas, Munro, Robin. | `9780471579779` |
+| 696 | [1720](https://banned-books.org/books/1720) | Zhisen Wu | `9789629922504` |
+| 697 | [Chinese democracy and the crisis of 1989 : Chinese and American reflections](https://banned-books.org/books/chinese-democracy-and-the-crisis-of-1989-chinese-and-american-reflections) | Des Forges, Roger V., Luo, Ning., Wu, Yen-bo. | `9780585060118` |
+| 698 | [Deontology, or The science of morality](https://banned-books.org/books/deontology-or-the-science-of-morality) | Jeremy Bentham | `9781402185656` |
+| 699 | [Industrial History in Wartime](https://banned-books.org/books/industrial-history-in-wartime) | Wal Hannington | `9780867849875` |
+| 700 | [Man from Moscow](https://banned-books.org/books/man-from-moscow) | Greville Wynne | `9780090013005` |
+| 701 | [De l'Allemagne](https://banned-books.org/books/de-lallemagne) | Heinrich Heine | `9782070749829` |
+| 702 | [The aftermath of the 1989 Tiananmen crisis in mainland China](https://banned-books.org/books/the-aftermath-of-the-1989-tiananmen-crisis-in-mainland-china) | Bih-jaw Lin | `9780813314075` |
+| 703 | [Buying a Fishing Rod for My Grandfather](https://banned-books.org/books/buying-a-fishing-rod-for-my-grandfather) | Gao Xingjian | `9780007170395` |
+| 704 | [The dragon's brood : conversations with young Chinese](https://banned-books.org/books/the-dragons-brood-conversations-with-young-chinese) | David Rice | `9780246138095` |
+| 705 | [Zhongguo ji shi](https://banned-books.org/books/zhongguo-ji-shi) | Zhiyuan Xu | `9787544322508` |
+| 706 | [Tong shi gai nian gong lüe](https://banned-books.org/books/tong-shi-gai-nian-gong-lue) | Cheng'en Xu | `9787564354008` |
+| 707 | [Xiang Zhongguo di wen ming shuo bu](https://banned-books.org/books/xiang-zhongguo-di-wen-ming-shuo-bu) | Zukang Zhong | `9789888292073` |
+| 708 | [Sheng du shi nian shu : Mao Mengjing ming ren zhuan fang lu](https://banned-books.org/books/sheng-du-shi-nian-shu-mao-mengjing-ming-ren-zhuan-fang-lu) | Mengjing Mao | `9789623576802` |
+| 709 | [Yu zhong de Xianggang](https://banned-books.org/books/yu-zhong-de-xianggang) | Aiyi Wu | `9789882014930` |
+| 710 | [Ai Gang, shi gan de!](https://banned-books.org/books/ai-gang-shi-gan-de) | Cong Chen | `9789888207107` |
+| 711 | [Deng bo ye](https://banned-books.org/books/deng-bo-ye) | Zunzi | `9787501160822` |
+| 712 | [Wo yao cheng wei shi jie de yi bu fen](https://banned-books.org/books/wo-yao-cheng-wei-shi-jie-de-yi-bu-fen) | Zhiyuan Xu | `9787544320122` |
+| 713 | [Tong tu shu gui : qian tu tan pan yi lai de Xianggang xue yun](https://banned-books.org/books/tong-tu-shu-gui-qian-tu-tan-pan-yi-lai-de-xianggang-xue-yun) | Cai, Ziqiang. et al | `9789626550120` |
+| 714 | [⁨Ya Zhou zheng zhi yun dong chang : cong ti yu kan Ya Zhou guo ji guan xi](https://banned-books.org/books/ya-zhou-zheng-zhi-yun-dong-chang-cong-ti-yu-kan-ya-zhou-guo-ji-guan-xi) | Xuhui Shen | `9789881965516` |
+| 715 | [Xianggang jiao yu da ling luo](https://banned-books.org/books/xianggang-jiao-yu-da-ling-luo) | Zhiming Peng | `9789629922955` |
+| 716 | [Yi zhi cao yi dian lu](https://banned-books.org/books/yi-zhi-cao-yi-dian-lu) | Chungou Yan | `9789578013018` |
+| 717 | [Qi yue shi si, wo zai Wangjiao huo dou li!!!](https://banned-books.org/books/qi-yue-shi-si-wo-zai-wangjiao-huo-dou-li) | Huisi Lin | `9789888270651` |
+| 718 | [Zhongguo dui wai zheng ce : cong Jiang Zemin dao Xi Jinping](https://banned-books.org/books/zhongguo-dui-wai-zheng-ce-cong-jiang-zemin-dao-xi-jinping) | Shengping Hu | `9789865681364` |
+| 719 | [Zhe yi dai ren de Zhongguo yi shi](https://banned-books.org/books/zhe-yi-dai-ren-de-zhongguo-yi-shi) | Zhiyuan Xu | `9789889840969` |
+| 720 | [Wo zai Hafo de ri zi](https://banned-books.org/books/wo-zai-hafo-de-ri-zi) | Dan Wang | `9789629734039` |
+| 721 | [Zhongguo bu wei gao guan](https://banned-books.org/books/zhongguo-bu-wei-gao-guan) | Fei Du | `9781935981466` |
+| 722 | [Gong xin shi xia : cong zheng shi ba nian](https://banned-books.org/books/gong-xin-shi-xia-cong-zheng-shi-ba-nian) | Aiyi Wu | `9780190825058` |
+| 723 | [Xianggang su ming yu Taiwan](https://banned-books.org/books/xianggang-su-ming-yu-taiwan) | Jianlong Liao | `9789579361576` |
+| 724 | [Qian bei de fen dou](https://banned-books.org/books/qian-bei-de-fen-dou) | Junren He | `9789888028887` |
+| 725 | [Da jiang dong qu : Situ Hua hui yi lu](https://banned-books.org/books/da-jiang-dong-qu-situ-hua-hui-yi-lu) | Hua Situ | `9780193975910` |
+| 726 | [Qi kan xing dou](https://banned-books.org/books/qi-kan-xing-dou) | Hua Situ | `9789629922450` |
+| 727 | [Kai tuo tong shi : zhi shi fen zi de Xianggang lu](https://banned-books.org/books/kai-tuo-tong-shi-zhi-shi-fen-zi-de-xianggang-lu) | Zhijie Chen | `9789624415827` |
+| 728 | [Jin Yong xiao shuo kan ren sheng](https://banned-books.org/books/jin-yong-xiao-shuo-kan-ren-sheng) | Aiyi Wu | `9789629922092` |
+| 729 | [Hong se shen tou : Zhongguo mei ti quan qiu kuo zhang de zhen xiang](https://banned-books.org/books/hong-se-shen-tou-zhongguo-mei-ti-quan-qiu-kuo-zhang-de-zhen-xiang) | Qinglian He | `9789578654471` |
+| 730 | [Wang Dan yu zhong jia shu](https://banned-books.org/books/wang-dan-yu-zhong-jia-shu) | Dan Wang | `9781894370004` |
+| 731 | [Pi pan Xianggang](https://banned-books.org/books/pi-pan-xianggang) | Sheng Huang | `9789881338907` |
+| 732 | [Tian an men 1989](https://banned-books.org/books/tian-an-men-1989) | Lian he bao bian ji bu | `9789570800364` |
+| 733 | [She ming pei jun zi](https://banned-books.org/books/she-ming-pei-jun-zi) | Hua Situ | `9789627420187` |
+| 734 | [Chao bao Zhongguo : Xin xin Zhongguo cheng shi wen hua bi ji = Chic China chic](https://banned-books.org/books/chao-bao-zhongguo-xin-xin-zhongguo-cheng-shi-wen-hua-bi-ji-chic-china-chic) | Zhaoxing Li | `9787300102078` |
+| 735 | [Yu san zheng zhi si zhong zou](https://banned-books.org/books/yu-san-zheng-zhi-si-zhong-zou) | Chen, Jinghui., Ho, Petula Sik Ying., Xiaoxiao., Anthony | `9787501307067` |
+| 736 | [Wo xi He Shining, jin nian wu shi wu sui](https://banned-books.org/books/wo-xi-he-shining-jin-nian-wu-shi-wu-sui) | Shining He | `9789620435287` |
+| 737 | [Ting feng sui bi : Wang Dan yu zhong shi wen ji](https://banned-books.org/books/ting-feng-sui-bi-wang-dan-yu-zhong-shi-wen-ji) | Dan Wang | `9789623390415` |
+| 738 | [San ju](https://banned-books.org/books/san-ju) | Jialin Ou | `9789888292387` |
+| 739 | [Shou hu zhe Situ Hua, 1931-2011](https://banned-books.org/books/shou-hu-zhe-situ-hua-1931-2011) | Ming bao bian ji bu | `9789888082278` |
+| 740 | [You tu qing si](https://banned-books.org/books/you-tu-qing-si) | Hua Situ | `9789627420194` |
+| 741 | [Jianqiao gui lu](https://banned-books.org/books/jianqiao-gui-lu) | Aiyi Wu | `9789629921590` |
+| 742 | [Fa zhi de wei lai](https://banned-books.org/books/fa-zhi-de-wei-lai) | Yaoting Dai | `9789888011520` |
+| 743 | [Wo de qi huan guo qing jiao yu](https://banned-books.org/books/wo-de-qi-huan-guo-qing-jiao-yu) | Jialin Ou | `9789881680662` |
+| 744 | [Zong guo hao gou](https://banned-books.org/books/zong-guo-hao-gou) | Franck Pavloff | `9789862404683` |
+| 745 | [Cheng bang zhu quan lun](https://banned-books.org/books/cheng-bang-zhu-quan-lun) | Yun Chen | `9789577086198` |
+| 746 | [Xi Jinping jia shi](https://banned-books.org/books/xi-jinping-jia-shi) | Shoucheng Ding | `9781936895311` |
+| 747 | [Zheng hai guan lan : liu si hou de Xianggang zheng zheng](https://banned-books.org/books/zheng-hai-guan-lan-liu-si-hou-de-xianggang-zheng-zheng) | Jibiao Gao | `9789889907402` |
+| 748 | [Ti bao guo qing](https://banned-books.org/books/ti-bao-guo-qing) | Bingquan Lü | `9789888223701` |
+| 749 | [Chao shi hao jie mu](https://banned-books.org/books/chao-shi-hao-jie-mu) | Xianggang Zhong wen da xue shou yu ji long ren yan jiu zhong xin, Zunzi | `9787510418518` |
+| 750 | [Wo wu zui : Liu Xiaobo zhuan](https://banned-books.org/books/wo-wu-zui-liu-xiaobo-zhuan) | Jie Yu | `9789571356280` |
+| 751 | [Xiong zhong hai yue](https://banned-books.org/books/xiong-zhong-hai-yue) | Hua Situ | `9789627420200` |
+| 752 | [Mo sheng de Zhongguo ren](https://banned-books.org/books/mo-sheng-de-zhongguo-ren) | Meng Yang | `9787534011016` |
+| 753 | [Wo men zai yi qi](https://banned-books.org/books/wo-men-zai-yi-qi) | Junyu Kuang | `9789867402165` |
+| 754 | [Min zhu de wei lai](https://banned-books.org/books/min-zhu-de-wei-lai) | Yaoting Dai | `9789888011537` |
+| 755 | [She yun xin li xue](https://banned-books.org/books/she-yun-xin-li-xue) | Lo's Psychology | `9787121215124` |
+| 756 | [Xianggang you](https://banned-books.org/books/xianggang-you) | Xinyu Sun | `9789862115367` |
+| 757 | [Xianggang yi min lun](https://banned-books.org/books/xianggang-yi-min-lun) | Yun Chen | `9789629923174` |
+| 758 | [Dai jin bei hou : 2007 te shou xuan zhan 140 tian](https://banned-books.org/books/dai-jin-bei-hou-2007-te-shou-xuan-zhan-140-tian) | Jiajie Liang | `9789621793423` |
+| 759 | [Xianggang du li](https://banned-books.org/books/xianggang-du-li) | Jie Yu | `9789869665391` |
+| 760 | [Qu shang chan mian](https://banned-books.org/books/qu-shang-chan-mian) | Hua Situ | `9789629920142` |
+| 761 | [Du jin Zhongguo : da guo xiong qi de xu yu shi](https://banned-books.org/books/du-jin-zhongguo-da-guo-xiong-qi-de-xu-yu-shi) | Zhiyuan Xu | `9789881836342` |
+| 762 | [You yi zhong xing fu jiao shou hu](https://banned-books.org/books/you-yi-zhong-xing-fu-jiao-shou-hu) | Junyu Kuang | `9789887711995` |
+| 763 | ["Liang zhi" yu "yi guo" de wei lai](https://banned-books.org/books/liang-zhi-yu-yi-guo-de-wei-lai) | Yaoting Dai | `9789888011544` |
+| 764 | [Bei shi dai xuan zhong de wo men](https://banned-books.org/books/bei-shi-dai-xuan-zhong-de-wo-men) | Sanxiaderen | `9789881357304` |
+| 765 | [Ni gou pin ming ma : Li Zhiying de chuang ye xin fa](https://banned-books.org/books/ni-gou-pin-ming-ma-li-zhiying-de-chuang-ye-xin-fa) | Zhiying Li | `9789866571718` |
+| 766 | [Cong Hu Jintao dao Xi Jinping](https://banned-books.org/books/cong-hu-jintao-dao-xi-jinping) | Danqing Li | `9781936895281` |
+| 767 | [Mei you kang zheng na you gai bian](https://banned-books.org/books/mei-you-kang-zheng-na-you-gai-bian) | Yumin Huang | `9789629921965` |
+| 768 | [Ni quan jiao shi](https://banned-books.org/books/ni-quan-jiao-shi) | Liangzhen | `9787510417269` |
+| 769 | [Wang duan tian ya](https://banned-books.org/books/wang-duan-tian-ya) | Hua Situ | `9789629920500` |
+| 770 | [Zhongguo : Lian Yizheng wen ji I](https://banned-books.org/books/zhongguo-lian-yizheng-wen-ji-i) | Yizheng Lian | `9789881754189` |
+| 771 | [Xie xie ni shang guo wo](https://banned-books.org/books/xie-xie-ni-shang-guo-wo) | Junyu Kuang | `9787505715110` |
+| 772 | [Tian'an Men guang chang li shi dang an](https://banned-books.org/books/tianan-men-guang-chang-li-shi-dang-an) | Jun Shu | `9787503516863` |
+| 773 | [Ren min bu hui wang ji : ba jiu min yun shi lu](https://banned-books.org/books/ren-min-bu-hui-wang-ji-ba-jiu-min-yun-shi-lu) | Liu shi si ming Xianggang ji zhe | `9789889762247` |
+| 774 | [Ye ting chun yu](https://banned-books.org/books/ye-ting-chun-yu) | Hua Situ | `9789629920593` |
+| 775 | [Xianggang : Lian Yizheng wen ji II](https://banned-books.org/books/xianggang-lian-yizheng-wen-ji-ii) | Yizheng Lian | `9789881754196` |
+| 776 | [Wo zai min zhu dang de ri zi](https://banned-books.org/books/wo-zai-min-zhu-dang-de-ri-zi) | Huiqing Liu | `9789888026418` |
+| 777 | [Chou lou de Zhongguo ren](https://banned-books.org/books/chou-lou-de-zhongguo-ren) | Boyang | `9789576770661` |
+| 778 | [Zhi ma ci hui li de "ba shi qian hou"](https://banned-books.org/books/zhi-ma-ci-hui-li-de-ba-shi-qian-hou) | Jiazhen Shao | `9789881524065` |
+| 779 | [Xianggang mi mi xing dong](https://banned-books.org/books/xianggang-mi-mi-xing-dong) | Weili Xiu Yang | `9787507519396` |
+| 780 | [Wo bu shi xi lu : shi ba qian hou](https://banned-books.org/books/wo-bu-shi-xi-lu-shi-ba-qian-hou) | Zhifeng Huang | `9789881435125` |
+| 781 | [Zhua bu Xu Caihou](https://banned-books.org/books/zhua-bu-xu-caihou) | Junji Cheng | `9781630324100` |
+| 782 | [Chou gan Xianggang](https://banned-books.org/books/chou-gan-xianggang) | Zhihao Zeng | `9789628572366` |
+| 783 | [Liu si yu zhen : Zhongguo min yun yao zhe, Dong Ou nu chao peng pai](https://banned-books.org/books/liu-si-yu-zhen-zhongguo-min-yun-yao-zhe-dong-ou-nu-chao-peng-pai) | Si Lu | `9789623571760` |
+| 784 | [Fan song Zhong she ying ji : nian qing de ku nan](https://banned-books.org/books/fan-song-zhong-she-ying-ji-nian-qing-de-ku-nan) | Tianba | `9789869915878` |
+| 785 | [Cang lang zhi shui](https://banned-books.org/books/cang-lang-zhi-shui) | Hua Situ | `9789629920692` |
+| 786 | [Yue yu xue Zhong wen, yu xue yu jing shen](https://banned-books.org/books/yue-yu-xue-zhong-wen-yu-xue-yu-jing-shen) | Yun Chen | `9789888265121` |
+| 787 | [Zhong ji ping lun, kuai le kang zheng](https://banned-books.org/books/zhong-ji-ping-lun-kuai-le-kang-zheng) | Yun Chen | `9789888042227` |
+| 788 | [Bian zou bian chi bian kang zheng](https://banned-books.org/books/bian-zou-bian-chi-bian-kang-zheng) | Shuzhuang Chen | `9789888270644` |
+| 789 | [Tian an men guang chang feng yun lu](https://banned-books.org/books/tian-an-men-guang-chang-feng-yun-lu) | Jin, An | `9787801430021` |
+| 790 | [Wo men de jia zhi : Xianggang yu san yun dong xiang pian ji lu](https://banned-books.org/books/wo-men-de-jia-zhi-xianggang-yu-san-yun-dong-xiang-pian-ji-lu) | Ma Ding | `9789881345493` |
+| 791 | [Fan kang de gong tong ti : er ling yi jiu Xianggang fan song Zhong yun dong](https://banned-books.org/books/fan-kang-de-gong-tong-ti-er-ling-yi-jiu-xianggang-fan-song-zhong-yun-dong) | Yue Ma | `9789869865685` |
+| 792 | [Jiang shan wu xian](https://banned-books.org/books/jiang-shan-wu-xian) | Hua Situ | `9787211047222` |
+| 793 | [Xianggang, yu zao de jia bang : ben tu guan dian de Xianggang yuan liu shi](https://banned-books.org/books/xianggang-yu-zao-de-jia-bang-ben-tu-guan-dian-de-xianggang-yuan-liu-shi) | Cheng'en Xu | `9789869800662` |
+| 794 | [Zhongguo zheng zhi yu wen hua](https://banned-books.org/books/zhongguo-zheng-zhi-yu-wen-hua) | Yaoji Jin | `9780193992931` |
+| 795 | [Ren sheng bu shi ming li chang](https://banned-books.org/books/ren-sheng-bu-shi-ming-li-chang) | Zhiying Li | `9789578288898` |
+| 796 | [Xi Jinping kai ming zhuan zhi](https://banned-books.org/books/xi-jinping-kai-ming-zhuan-zhi) | Xiaoping Chen | `9781940004570` |
+| 797 | [Tian'an Men zhi bian : ba jiu min yun shi](https://banned-books.org/books/tianan-men-zhi-bian-ba-jiu-min-yun-shi) | Xiaoya Chen | `9789576457784` |
+| 798 | [Ta men de zheng tu : zhi ji, yu hui yu chong zhuang, Zhongguo nü xing de gong min jue xing zhi lu](https://banned-books.org/books/ta-men-de-zheng-tu-zhi-ji-yu-hui-yu-chong-zhuang-zhongguo-nu-xing-de-gong-min-jue-xing-zhi-lu) | Sile Zhao | `9789869516884` |
+| 799 | [hua zuo chun ni](https://banned-books.org/books/hua-zuo-chun-ni) | Hua Situ | `9789629920982` |
+| 800 | [Er shi dao yin ying xia de zi you : Xianggang xin wen shen cha ri chang](https://banned-books.org/books/er-shi-dao-yin-ying-xia-de-zi-you-xianggang-xin-wen-shen-cha-ri-chang) | Jialin Ou | `9789629967703` |
+| 801 | [Rong shen chu](https://banned-books.org/books/rong-shen-chu) | Aiyi Wu | `9789623573948` |
+| 802 | [Cheng bang jiu shi : shi er ben shu kan Xianggang ben tu shi](https://banned-books.org/books/cheng-bang-jiu-shi-shi-er-ben-shu-kan-xianggang-ben-tu-shi) | Cheng'en Xu | `9789888270279` |
+| 803 | [Shi nian dong luan](https://banned-books.org/books/shi-nian-dong-luan) | Heiyannan | `9789620406546` |
+| 804 | [Zui huai de nian dai : zui hao de ji zhe](https://banned-books.org/books/zui-huai-de-nian-dai-zui-hao-de-ji-zhe) | Cai, Ziqiang Anyu | `9789888287796` |
+| 805 | [Xi Jinping bu shi yi ge mi](https://banned-books.org/books/xi-jinping-bu-shi-yi-ge-mi) | Xiaoping Chen | `9781630328160` |
+| 806 | ["Liu si" shou nan zhe ming ce](https://banned-books.org/books/liu-si-shou-nan-zhe-ming-ce) | Zilin Ding | `9789627174257` |
+| 807 | [Wan mei de du cai : er shi yi shi ji de Zhongguo](https://banned-books.org/books/wan-mei-de-du-cai-er-shi-yi-shi-ji-de-zhongguo) | Stein Ringen | `9789865727482` |
+| 808 | [Jia ru rang wo hua xia qu](https://banned-books.org/books/jia-ru-rang-wo-hua-xia-qu) | vawongsir | `9789887482314` |
+| 809 | [Shenzhou gu guo you](https://banned-books.org/books/shenzhou-gu-guo-you) | Yun Chen | `9789862219126` |
+| 810 | [Shan niao shan hua](https://banned-books.org/books/shan-niao-shan-hua) | Hua Situ | `9789629921132` |
+| 811 | [Da shi dai de zhe xue](https://banned-books.org/books/da-shi-dai-de-zhe-xue) | Hao qing nian tu du shi | `9789888599479` |
+| 812 | [Chao chi : lang you er shi guo du de gu shi](https://banned-books.org/books/chao-chi-lang-you-er-shi-guo-du-de-gu-shi) | Jialin Ou | `9789889970383` |
+| 813 | [Zhan ling Zhonghuan : he ping kang zheng xin zhan shi](https://banned-books.org/books/zhan-ling-zhonghuan-he-ping-kang-zheng-xin-zhan-shi) | Yaoting Dai | `9789881680853` |
+| 814 | [Wo zuo sheng yi de xin de](https://banned-books.org/books/wo-zuo-sheng-yi-de-xin-de) | Zhiying Li | `9789625778440` |
+| 815 | [Ba shi hou de sheng cun yu sheng huo. 2](https://banned-books.org/books/ba-shi-hou-de-sheng-cun-yu-sheng-huo-2) | Jianwu | `9787505715141` |
+| 816 | [Zhong gong mi mi dang an](https://banned-books.org/books/zhong-gong-mi-mi-dang-an) | Ming Li | `9789881722997` |
+| 817 | [Xi Jinping quan shi sheng ji ban](https://banned-books.org/books/xi-jinping-quan-shi-sheng-ji-ban) | Mengqiu Liao | `9781936895588` |
+| 818 | [Liu si er ling](https://banned-books.org/books/liu-si-er-ling) | Runzhi Chen | `9789627420392` |
+| 819 | [Zhongguo wen ming no li shi : fei Han zhong xin shi guan de jian gou](https://banned-books.org/books/zhongguo-wen-ming-no-li-shi-fei-han-zhong-xin-shi-guan-de-jian-gou) | Hidehiro Okada | `9789869556149` |
+| 820 | [Chen tu yun yue](https://banned-books.org/books/chen-tu-yun-yue) | Hua Situ | `9789577087911` |
+| 821 | [Bei zhuang di min yun](https://banned-books.org/books/bei-zhuang-di-min-yun) | Fang, Liangzhu. et al | `9789623571241` |
+| 822 | [Fei lao Li xue xi zuo ge kuai le ren](https://banned-books.org/books/fei-lao-li-xue-xi-zuo-ge-kuai-le-ren) | Zhiying Li | `9789625777399` |
+| 823 | [Zhe shi nian lai zhe jin guo de shi](https://banned-books.org/books/zhe-shi-nian-lai-zhe-jin-guo-de-shi) | Jianwu | `9789881301758` |
+| 824 | [Tai zi dang meng zhu zhi zhan](https://banned-books.org/books/tai-zi-dang-meng-zhu-zhi-zhan) | Fanglong Nan | `9789629380724` |
+| 825 | [Xianggang min zu lun](https://banned-books.org/books/xianggang-min-zu-lun) | Er ling yi san nian du Xianggang da xue xue sheng hui xue yuan bian | `9789881363107` |
+| 826 | [Zhongguo min yun fan si](https://banned-books.org/books/zhongguo-min-yun-fan-si) | Ping Hu | `9780195857665` |
+| 827 | [Gang shi fa tuan zhu yi : gong neng jie bie 25 nian](https://banned-books.org/books/gang-shi-fa-tuan-zhu-yi-gong-neng-jie-bie-25-nian) | Yue Ma | `9789629372194` |
+| 828 | [Yi ge jie fang jun de 1989](https://banned-books.org/books/yi-ge-jie-fang-jun-de-1989) | Zheng Cai | `9781932138900` |
+| 829 | [Cheng huang ju lu](https://banned-books.org/books/cheng-huang-ju-lu) | Hua Situ | `9789629921347` |
+| 830 | [Hu Wen feng xian, 2005](https://banned-books.org/books/hu-wen-feng-xian-2005) | Shan Yang | `9789889704179` |
+| 831 | [Zong li zheng duo zhan](https://banned-books.org/books/zong-li-zheng-duo-zhan) | Fanping Xie | `9781940063249` |
+| 832 | [Min yun jing ying da qi di](https://banned-books.org/books/min-yun-jing-ying-da-qi-di) | Wuwen | `9787104011590` |
+| 833 | [Xian duan shui ting](https://banned-books.org/books/xian-duan-shui-ting) | Hua Situ | `9789629921507` |
+| 834 | [Zhongguo kong bu ma? : nei di ba ling hou qing nian ru he fan xi nao](https://banned-books.org/books/zhongguo-kong-bu-ma-nei-di-ba-ling-hou-qing-nian-ru-he-fan-xi-nao) | Ji Xu | `9789881994271` |
+| 835 | [Liu si ri ji : guang chang shang de gong he guo](https://banned-books.org/books/liu-si-ri-ji-guang-chang-shang-de-gong-he-guo) | Congde Feng | `9789881780485` |
+| 836 | [Fei lao Li shi bian tian xia](https://banned-books.org/books/fei-lao-li-shi-bian-tian-xia) | Zhiying Li | `9789578288195` |
+| 837 | [Jin quan tai zi dang](https://banned-books.org/books/jin-quan-tai-zi-dang) | Jun Meng | `9789629380717` |
+| 838 | [Zai hui jia](https://banned-books.org/books/zai-hui-jia) | Yanting Mai | `9789881814326` |
+| 839 | [Kan bu jian de Xizang](https://banned-books.org/books/kan-bu-jian-de-xizang) | Weise | `9789862130285` |
+| 840 | [Yan yu ping sheng](https://banned-books.org/books/yan-yu-ping-sheng) | Hua Situ | `9789629921743` |
+| 841 | [Liu si tu sha nei mu jie mi : Liu si shi jian zhong de jie yan bu dui](https://banned-books.org/books/liu-si-tu-sha-nei-mu-jie-mi-liu-si-shi-jian-zhong-de-jie-yan-bu-dui) | Renhua Wu | `9789865794637` |
+| 842 | [Sui yue cang mang : wo yu er zi Wang Dan](https://banned-books.org/books/sui-yue-cang-mang-wo-yu-er-zi-wang-dan) | Lingyun Wang | `9789888027590` |
+| 843 | [Wo tui xiu shi bai le](https://banned-books.org/books/wo-tui-xiu-shi-bai-le) | Zhiying Li | `9789625770321` |
+| 844 | [Xi Jinping de xia yi bu](https://banned-books.org/books/xi-jinping-de-xia-yi-bu) | Sanyun Yang | `9781896642246` |
+| 845 | [Xue lu 1989](https://banned-books.org/books/xue-lu-1989) | Jiesheng Kong | `9789881811127` |
+| 846 | [Ting shuo Xizang](https://banned-books.org/books/ting-shuo-xizang) | Weise, Wang, Lixiong | `9789862131190` |
+| 847 | [Qing shan bu lao](https://banned-books.org/books/qing-shan-bu-lao) | Hua Situ | `9789629921866` |
+| 848 | [Zeng te shou, ni hui zuo hao ne fen gong?](https://banned-books.org/books/zeng-te-shou-ni-hui-zuo-hao-ne-fen-gong) | Zhisen Wu | `9789629921521` |
+| 849 | [Cong liu si dao Yilake zhan chang : Xiong Yan mu jun ri ji](https://banned-books.org/books/cong-liu-si-dao-yilake-zhan-chang-xiong-yan-mu-jun-ri-ji) | Yan Xiong | `9789881811165` |
+| 850 | [Xue ran de li shi : ba jiu min yun](https://banned-books.org/books/xue-ran-de-li-shi-ba-jiu-min-yun) | Long Ma | `9789628530281` |
+| 851 | [Mao Zedong he ta de nu ren men](https://banned-books.org/books/mao-zedong-he-ta-de-nu-ren-men) | Jingfuzi | `9789570805208` |
+| 852 | [Na cui Zhongguo](https://banned-books.org/books/na-cui-zhongguo) | Jie Yu | `9789869520096` |
+| 853 | [Zhongguo nei you wai huan : qiang da de bei hou](https://banned-books.org/books/zhongguo-nei-you-wai-huan-qiang-da-de-bei-hou) | Yuqian Ke | `9781940004563` |
+| 854 | [Wo yao hui jia—wo yao hui jia—Wo](https://banned-books.org/books/wo-yao-hui-jia-wo-yao-hui-jia-wo) | Bingling Zhang | `9789881814319` |
+| 855 | [Yi cun chun xin](https://banned-books.org/books/yi-cun-chun-xin) | Hua Situ | `9789629922030` |
+| 856 | [Xiliang hao du, kan Zhongguo](https://banned-books.org/books/xiliang-hao-du-kan-zhongguo) | Xiliang Liu | `9789629924430` |
+| 857 | [Liu si Tiananmen xue xing qing chang nei mu](https://banned-books.org/books/liu-si-tiananmen-xue-xing-qing-chang-nei-mu) | Renhua Wu | `9789865794194` |
+| 858 | [Gai ge li cheng](https://banned-books.org/books/gai-ge-li-cheng) | Ziyang Zhao | `9789881720276` |
+| 859 | [Xun hua : Xianggang yuan sheng zhi wu shou zha](https://banned-books.org/books/xun-hua-xianggang-yuan-sheng-zhi-wu-shou-zha) | Xiaowen Ye | `9789620436154` |
+| 860 | [Bei xiao shi de Xianggang](https://banned-books.org/books/bei-xiao-shi-de-xianggang) | Zhijian Qian | `9789863194927` |
+| 861 | [He Tiananmen mu qin yi qi](https://banned-books.org/books/he-tiananmen-mu-qin-yi-qi) | Xu, Langyang., Ou, Meibao., Chen, Shiyun | `9789888011094` |
+| 862 | [Xianggang ren, bu gao xing](https://banned-books.org/books/xianggang-ren-bu-gao-xing) | Zhisen Wu | `9789629922245` |
+| 863 | [Song ting huang ji](https://banned-books.org/books/song-ting-huang-ji) | Hua Situ | `9789629922634` |
+| 864 | [Qian ri wu hui : wo de xin lu li cheng](https://banned-books.org/books/qian-ri-wu-hui-wo-de-xin-lu-li-cheng) | Xiang Cheng | `9789622449350` |
+| 865 | [Xianggang yue yu ding ying shang](https://banned-books.org/books/xianggang-yue-yu-ding-ying-shang) | Peng, Zhiming., Zheng, Zhengheng | `9789629923525` |
+| 866 | ["Wen ge" zhong de Zhou Enlai](https://banned-books.org/books/wen-ge-zhong-de-zhou-enlai) | Wusheng Liu | `9789620426162` |
+| 867 | [Zhong Gang dui jue : Xianggang kang zheng yun dong shi. 2](https://banned-books.org/books/zhong-gang-dui-jue-xianggang-kang-zheng-yun-dong-shi-2) | Kuangzheng Lin | `9789629923884` |
+| 868 | [Zhongguo jing ji xue jia bu gan gao su ni de 50 ge zhen xiang](https://banned-books.org/books/zhongguo-jing-ji-xue-jia-bu-gan-gao-su-ni-de-50-ge-zhen-xiang) | Yuwe Duan | `9789881680716` |
+| 869 | [Zhao Ziyang de mi mi](https://banned-books.org/books/zhao-ziyang-de-mi-mi) | Xiaolu Wu | `9781936043064` |
+| 870 | [Bian zhe an](https://banned-books.org/books/bian-zhe-an) | Zhisen Wu | `9789629924089` |
+| 871 | [Hui mou shi kan](https://banned-books.org/books/hui-mou-shi-kan) | Hua Situ | `9789629920050` |
+| 872 | [Zuo jian ji](https://banned-books.org/books/zuo-jian-ji) | Jiazhen Shao | `9789888664221` |
+| 873 | [Zhongguo qiao qiao zhan ling quan shi jie](https://banned-books.org/books/zhongguo-qiao-qiao-zhan-ling-quan-shi-jie) | Cardenal, Juan Pablo., Araújo, Heriberto. | `9789570842852` |
+| 874 | [Shi huang dan you ru he](https://banned-books.org/books/shi-huang-dan-you-ru-he) | Guanzhong Chen | `9780190478254` |
+| 875 | [Ji jin : Xianggang jin bu min zhu yun dong shi](https://banned-books.org/books/ji-jin-xianggang-jin-bu-min-zhu-yun-dong-shi) | Kuangzheng Lin | `9789620402593` |
+| 876 | [Jie fang jun yu wen hua da ge ming](https://banned-books.org/books/jie-fang-jun-yu-wen-hua-da-ge-ming) | Kaiwen Ding | `9781935981879` |
+| 877 | [Tian'an men zhi huo : yi jiu ba jiu Zhongguo min zhu yun dong hua ce](https://banned-books.org/books/tianan-men-zhi-huo-yi-jiu-ba-jiu-zhongguo-min-zhu-yun-dong-hua-ce) | Zhida Li | `9789627420040` |
+| 878 | [Li shi de da bao zha : " Liu si " shi jian quan jing shi lu](https://banned-books.org/books/li-shi-de-da-bao-zha-liu-si-shi-jian-quan-jing-shi-lu) | Wanshu Zhang | `9789882190504` |
+| 879 | [Zhongguo mi bao](https://banned-books.org/books/zhongguo-mi-bao) | "中國密報"雜誌社 (出版社) / "Zhongguo mi bao" za zhi she (Publisher) | `9781936043651` |
+| 880 | [Sui feng qian ru ye](https://banned-books.org/books/sui-feng-qian-ru-ye) | Hua Situ | `9789629920449` |
+| 881 | [Zheng zi zheng que](https://banned-books.org/books/zheng-zi-zheng-que) | Zhiming Peng | `9789629921361` |
+| 882 | [Tian'anmen bu zhen xiang](https://banned-books.org/books/tiananmen-bu-zhen-xiang) | Minsheng Chen | `9780982320389` |
+| 883 | [Dang "Jue qi Zhongguo" yu shang "Tai yang san" : tou shi nian yi shi ji liang an san di xin guan xi](https://banned-books.org/books/dang-jue-qi-zhongguo-yu-shang-tai-yang-san-tou-shi-nian-yi-shi-ji-liang-an-san-di-xin-guan-xi) | Quanzhong Lin | `9789888525294` |
+| 884 | [Zhe ge di guo bi xu fen lie](https://banned-books.org/books/zhe-ge-di-guo-bi-xu-fen-lie) | Yiwu Liao | `9789865794460` |
+| 885 | [Zhongguo qian ju](https://banned-books.org/books/zhongguo-qian-ju) | Changhai Guo | `9789571904139` |
+| 886 | [Jiu qi ju chang](https://banned-books.org/books/jiu-qi-ju-chang) | Zunzi. et al | `9787514601688` |
+| 887 | [Yi zhi qing cai](https://banned-books.org/books/yi-zhi-qing-cai) | Hua Situ | `9789629921170` |
+| 888 | [Wo bu xin Zhongguo mo shi](https://banned-books.org/books/wo-bu-xin-zhongguo-mo-shi) | Donghao Cai | `9787500826767` |
+| 889 | [Zheng zi shen cha](https://banned-books.org/books/zheng-zi-shen-cha) | Zhiming Peng | `9789629921606` |
+| 890 | [Zhong gong zai Xianggang](https://banned-books.org/books/zhong-gong-zai-xianggang) | Guansheng Jiang | `9789882194236` |
+| 891 | [Yi guo liang zhi zhi duo shao](https://banned-books.org/books/yi-guo-liang-zhi-zhi-duo-shao) | Liu, Qingquan., Lai, Qizhi | `9789620413810` |
+| 892 | [Gong min kang ming](https://banned-books.org/books/gong-min-kang-ming) | Kirk, Andrew. | `9789888249473` |
+| 893 | [Beijing xue yun : li shi de jian zheng](https://banned-books.org/books/beijing-xue-yun-li-shi-de-jian-zheng) | 《北京學運》編輯委員會 / "Beijing xue yun" bian ji wei yuan hui | `9787500928935` |
+| 894 | [Zhi zheng Zhong wen : dui zhi huai gui gong wen xue hao Zhong wen zhang fa](https://banned-books.org/books/zhi-zheng-zhong-wen-dui-zhi-huai-gui-gong-wen-xue-hao-zhong-wen-zhang-fa) | Yun Chen | `9789881836397` |
+| 895 | [Wo zai han leng zhong du xing : Wang Dan yu zhong shi](https://banned-books.org/books/wo-zai-han-leng-zhong-du-xing-wang-dan-yu-zhong-shi) | Dan Wang | `9789574440474` |
+| 896 | [Ming zhi hui shu, wo die dou yi ding yao ying](https://banned-books.org/books/ming-zhi-hui-shu-wo-die-dou-yi-ding-yao-ying) | Zhisen Wu | `9789629923877` |
+| 897 | [Fu shou gan wei](https://banned-books.org/books/fu-shou-gan-wei) | Hua Situ | `9789629921576` |
+| 898 | [Guangdong su yu zheng zi kao](https://banned-books.org/books/guangdong-su-yu-zheng-zi-kao) | Zhiming Peng | `9789629922214` |
+| 899 | [Guan shang tong mou : Xianggang gong yi si li de mao dun](https://banned-books.org/books/guan-shang-tong-mou-xianggang-gong-yi-si-li-de-mao-dun) | Goodstadt, Leo F | `9789881550316` |
+| 900 | [Cong Bolin wei qiang dao Tian'an Men : cong Deguo kan Zhongguo de xian dai hua zhi lu](https://banned-books.org/books/cong-bolin-wei-qiang-dao-tianan-men-cong-deguo-kan-zhongguo-de-xian-dai-hua-zhi-lu) | Jie Yu | `9789867178909` |
+| 901 | [Zhongguo gai ge de qi lu](https://banned-books.org/books/zhongguo-gai-ge-de-qi-lu) | Jiaming Zhu | `9789570841282` |
+| 902 | [Niu niu yue yue](https://banned-books.org/books/niu-niu-yue-yue) | Zunzi, Chen, Ye | `9789866629280` |
+| 903 | [You lu Jiang nan](https://banned-books.org/books/you-lu-jiang-nan) | Hua Situ | `9789629922160` |
+| 904 | [Wo men de ri zi wei shen me zhe me nan](https://banned-books.org/books/wo-men-de-ri-zi-wei-shen-me-zhe-me-nan) | Xianping Lang | `9787506039819` |
+| 905 | [23 tiao li fa ri zhi](https://banned-books.org/books/23-tiao-li-fa-ri-zhi) | Aiyi Wu | `9789625777320` |
+| 906 | [Liang ci Tian'anmen shi jian](https://banned-books.org/books/liang-ci-tiananmen-shi-jian) | Xing, Tian. (Editor), Yi, Ye. (Editor) | `9789627414018` |
+| 907 | [Zhongguo de Nan Hai zhan lüe](https://banned-books.org/books/zhongguo-de-nan-hai-zhan-lue) | Guanqun Su | `9789865915612` |
+| 908 | [Gua zhu tai hou](https://banned-books.org/books/gua-zhu-tai-hou) | Zhisen Wu | `9789629923570` |
+| 909 | [Wang Dan hui yi lu : cong liu si dao liu wang](https://banned-books.org/books/wang-dan-hui-yi-lu-cong-liu-si-dao-liu-wang) | Dan Wang | `9789571356525` |
+| 910 | [Bai bai Bali](https://banned-books.org/books/bai-bai-bali) | Zunzi, Chen, Ye | `9789863423522` |
+| 911 | [Shi xue yu chuan tong](https://banned-books.org/books/shi-xue-yu-chuan-tong) | Yingshi Yu | `9787563345021` |
+| 912 | [Yue gang xie hou yu gou chen](https://banned-books.org/books/yue-gang-xie-hou-yu-gou-chen) | Zhiming Peng | `9789629924065` |
+| 913 | [Zi ji de sheng yin](https://banned-books.org/books/zi-ji-de-sheng-yin) | Zhiying Li | `9787538544213` |
+| 914 | [Zi li qiu jian : ming jiu ming, wu ming jiu li ming](https://banned-books.org/books/zi-li-qiu-jian-ming-jiu-ming-wu-ming-jiu-li-ming) | Jiazhen Shao | `9787800984747` |
+| 915 | [Si cheng](https://banned-books.org/books/si-cheng) | Lianshan Han | `9789888207909` |
+| 916 | [Zhongguo xin zhen dang](https://banned-books.org/books/zhongguo-xin-zhen-dang) | Zhongguo yan jiu yuan | `9787010038681` |
+| 917 | [Tian'an Men mang dian](https://banned-books.org/books/tianan-men-mang-dian) | Rijian Bai | `9789625775722` |
+| 918 | [Zhe yi tian, zhong yu lai le](https://banned-books.org/books/zhe-yi-tian-zhong-yu-lai-le) | Zhisen Wu | `9789629922948` |
+| 919 | [Guan yu Zhongguo de 70 ge wen ti](https://banned-books.org/books/guan-yu-zhongguo-de-70-ge-wen-ti) | Dan Wang | `9789868888760` |
+| 920 | [Lao shi pa wen zi](https://banned-books.org/books/lao-shi-pa-wen-zi) | Zhiming Peng | `9789629923921` |
+| 921 | [Xuan ju zhi du de zheng zhi xiao guo : Gang shi bi li dai biao zhi de jing yan](https://banned-books.org/books/xuan-ju-zhi-du-de-zheng-zhi-xiao-guo-gang-shi-bi-li-dai-biao-zhi-de-jing-yan) | Ma, Yue., Cai, Ziqiang Anyu | `9789629370879` |
+| 922 | [Zhonghua zhi xu : zhong yuan, shi jie di guo yu Zhongguo li liang de ben zhi](https://banned-books.org/books/zhonghua-zhi-xu-zhong-yuan-shi-jie-di-guo-yu-zhongguo-li-liang-de-ben-zhi) | Feiling Wang | `9789578654365` |
+| 923 | [Bei xin jiao ji](https://banned-books.org/books/bei-xin-jiao-ji) | Hua Situ | `9789629920289` |
+| 924 | [Zheng hai yi sheng xiao](https://banned-books.org/books/zheng-hai-yi-sheng-xiao) | Jiafu Zheng | `9789888122332` |
+| 925 | [Tian'an men yi jiu ba jiu nian](https://banned-books.org/books/tianan-men-yi-jiu-ba-jiu-nian) | Lian he bao bian ji bu | `9789570901061` |
+| 926 | [Shi zhi zhi cheng : zheng zha qiu cun de Xianggang](https://banned-books.org/books/shi-zhi-zhi-cheng-zheng-zha-qiu-cun-de-xianggang) | Goodstadt, Leo F | `9789888599042` |
+| 927 | [Mao Zedong yu Zhou Enlai](https://banned-books.org/books/mao-zedong-yu-zhou-enlai) | Shiren Xin | `9781940004457` |
+| 928 | [Tian you Xianggang](https://banned-books.org/books/tian-you-xianggang) | Zhisen Wu | `9789629923228` |
+| 929 | [Mo ri xing cun zhe de du bai : Liu Xiaobo de "liu si" hui yi lu](https://banned-books.org/books/mo-ri-xing-cun-zhe-de-du-bai-liu-xiaobo-de-liu-si-hui-yi-lu) | Xiaobo Liu | `9789571370965` |
+| 930 | [Tiao zhan yu zai sheng](https://banned-books.org/books/tiao-zhan-yu-zai-sheng) | Yu, Yingshi. et al | `9787802176874` |
+| 931 | [Xianggang ren 2.0 : shi jian shang wei jie shu, jin hua yi jing wan cheng](https://banned-books.org/books/xianggang-ren-2-0-shi-jian-shang-wei-jie-shu-jin-hua-yi-jing-wan-cheng) | Xing, Fuzeng., Luo, Bingxiang., Yu, Zhenyu. et al | `9789869777858` |
+| 932 | [Gei nian qing ren de shi san xin nian](https://banned-books.org/books/gei-nian-qing-ren-de-shi-san-xin-nian) | Zhiming Peng | `9789579279697` |
+| 933 | [Guo jia de qiu tu : Zhao Ziyang de mi mi lu yin](https://banned-books.org/books/guo-jia-de-qiu-tu-zhao-ziyang-de-mi-mi-lu-yin) | Ziyang Zhao | `9789571350523` |
+| 934 | [Xian fu fu pin : fu yu zhong de pin fa](https://banned-books.org/books/xian-fu-fu-pin-fu-yu-zhong-de-pin-fa) | Baoqiang Xu | `9789628326525` |
+| 935 | [Wo shi ge chi guo ku tou de fu qin : Fei lao Li](https://banned-books.org/books/wo-shi-ge-chi-guo-ku-tou-de-fu-qin-fei-lao-li) | Zhiying Li | `9789625776996` |
+| 936 | [Lan gan pai bian](https://banned-books.org/books/lan-gan-pai-bian) | Hua Situ | `9789629922344` |
+| 937 | [Lai sheng bu zuo Zhongguo ren](https://banned-books.org/books/lai-sheng-bu-zuo-zhongguo-ren) | Zukang Zhong | `9789867178527` |
+| 938 | [Yu wen zi](https://banned-books.org/books/yu-wen-zi) | Zhifeng Huang | `9789570833485` |
+| 939 | [Zhonghua Renmin Gongheguo shi shi wu jiang](https://banned-books.org/books/zhonghua-renmin-gongheguo-shi-shi-wu-jiang) | Dan Wang | `9787801184474` |
+| 940 | [Xin wen yu Xianggang she hui zhen xiang](https://banned-books.org/books/xin-wen-yu-xianggang-she-hui-zhen-xiang) | Tianci Huang | `9789628931996` |
+| 941 | [Te qu guan zhi de tiao zhan](https://banned-books.org/books/te-qu-guan-zhi-de-tiao-zhan) | Ye, Jianmin Ting, Gong | `9789629373146` |
+| 942 | [Ji bian, Zhong Gang he de gui ji](https://banned-books.org/books/ji-bian-zhong-gang-he-de-gui-ji) | Yi Li | `9789629922757` |
+| 943 | [Hei xuan feng](https://banned-books.org/books/hei-xuan-feng) | Liu Huang | `9787805060668` |
+| 944 | [Kang zheng zhe](https://banned-books.org/books/kang-zheng-zhe) | Zhiyuan Xu | `9789578724372` |
+| 945 | [Reverend Insanity](https://banned-books.org/books/reverend-insanity) | Gu Zhen Ren | `9798813904288` |
+| 946 | [Master Masochist](https://banned-books.org/books/master-masochist) | Leopold von Sacher-Masoch | `9780284984487` |
+| 947 | [Where's Poppa?](https://banned-books.org/books/wheres-poppa) | Robert Klane | `9780792802402` |
+| 948 | [Sex and the Over Forties](https://banned-books.org/books/sex-and-the-over-forties) | Robert Chartham | `9780450008283` |
+| 949 | [Master Baiter](https://banned-books.org/books/master-baiter) | Troy Conway | `9798636093008` |
+| 950 | [Fanny](https://banned-books.org/books/fanny) | H. Janson | `9780840391384` |
+| 951 | [As the Naked Wind from the Sea](https://banned-books.org/books/as-the-naked-wind-from-the-sea) | Gustav Sandgren | `9780426038269` |
+| 952 | [XYZ Comics](https://banned-books.org/books/xyz-comics) | Rand Holmes | `9781604430226` |
+| 953 | [The Magic Garden of Stanley Sweetheart](https://banned-books.org/books/the-magic-garden-of-stanley-sweetheart) | Robert T. Westbrook | `9780491002738` |
+| 954 | [Make it Happy: What Sex is all About](https://banned-books.org/books/make-it-happy-what-sex-is-all-about) | Jane Cousins | `9780140107135` |
+| 955 | [Sun Warmed Nudes](https://banned-books.org/books/sun-warmed-nudes) | Andre de Dienes | `9780685092781` |
+| 956 | [The Cradle of Erotica](https://banned-books.org/books/the-cradle-of-erotica) | Allen Edwardes | `9780517217139` |
+| 957 | [Sex and the Single Man](https://banned-books.org/books/sex-and-the-single-man) | Albert Ellis | `9780818402227` |
+| 958 | [The Bikers](https://banned-books.org/books/the-bikers) | Alex R. Stuart | `9780450010262` |
+| 959 | [Coming to Power](https://banned-books.org/books/coming-to-power) | Samois | `9780932870285` |
+| 960 | [Xaviera's Magic Mushrooms](https://banned-books.org/books/xavieras-magic-mushrooms) | Xaviera Hollander | `9780450050640` |
+| 961 | [Erotic Art](https://banned-books.org/books/erotic-art) | Eberhard, Phyllis Kronhausen | `9780517248935` |
+| 962 | [One Last Mad Embrace](https://banned-books.org/books/one-last-mad-embrace) | Jack Trevor Story | `9780722181980` |
+| 963 | [A Secret Diary](https://banned-books.org/books/a-secret-diary) | William Veitch | `9780851270012` |
+| 964 | [Sex Marchers](https://banned-books.org/books/sex-marchers) | Jefferson Poland, Sam Sloan | `9780923891138` |
+| 965 | [Beijing ling gong li](https://banned-books.org/books/beijing-ling-gong-li) | Guanzhong Chen | `9789863447825` |
+| 966 | [Chong gou er er ba : zhan hou Mei Zhong ti zhi, Zhongguo tong zhi mo shi yu Taiwan](https://banned-books.org/books/chong-gou-er-er-ba-zhan-hou-mei-zhong-ti-zhi-zhongguo-tong-zhi-mo-shi-yu-taiwan) | Cuilian Chen | `9789869351874` |
+| 967 | [Teatro Political Dos](https://banned-books.org/books/teatro-political-dos) | Malou Jacob | `9780415061551` |
+| 968 | [Labas: Mga Palabas ng Sentro](https://banned-books.org/books/labas-mga-palabas-ng-sentro) | Reuel Aguilla | `9785006745506` |
+| 969 | [Quran](https://banned-books.org/books/quran) | Unknown | `9781312195424` |
+| 970 | [Looking Backward](https://banned-books.org/books/looking-backward) | Edward Bellamy | `9780312122447` |
+| 971 | [The Dirty Cowboy](https://banned-books.org/books/the-dirty-cowboy) | Amy Timberlake | `9780374317911` |
+| 972 | [King & King](https://banned-books.org/books/king-king) | Linda De Haan, Stern Nijland | `9788484881476` |
+| 973 | [Stuck in the Middle](https://banned-books.org/books/stuck-in-the-middle) | Ariel Schrag | `9780670062218` |
+| 974 | [War and the Labour Movement](https://banned-books.org/books/war-and-the-labour-movement) | Harry Pollitt | `9780751200720` |
+| 975 | [Parisian Frolics](https://banned-books.org/books/parisian-frolics) | Adolphe Belot | `9780394538815` |
+| 976 | [香港人的身份認同和價值觀 ; Xianggang ren de shen fen ren tong he jia zhi guan](https://banned-books.org/books/xianggang-ren-de-shen-fen-ren-tong-he-jia-zhi-guan) | Yongxin Zhou | `9789888366552` |
+| 977 | [廣東雅言 : Liu zhong jing dian ping jin xian dai ren wu. Guo Gong juan](https://banned-books.org/books/liu-zhong-jing-dian-ping-jin-xian-dai-ren-wu-guo-gong-juan) | Yun Chen | `9789629923822` |
+| 978 | [Përbindëshi](https://banned-books.org/books/perbindeshi) | Ismail Kadare | `9789994332168` |
+| 979 | [The Death of Lorca](https://banned-books.org/books/the-death-of-lorca) | Ian Gibson | `9780879553067` |
+| 980 | [Psychology of Sex](https://banned-books.org/books/psychology-of-sex) | Havelock Ellis | `9780156747028` |
+| 981 | [Sheng shi : Zhongguo, 2013 nian](https://banned-books.org/books/sheng-shi-zhongguo-2013-nian) | Guanzhong Chen | `9780193958463` |
+| 982 | [She yun nian dai : Xianggang kang zheng zheng zhi de gui ji](https://banned-books.org/books/she-yun-nian-dai-xianggang-kang-zheng-zheng-zhi-de-gui-ji) | Yuan, Weixi. (Editor), Zheng, Wei. (Editor) | `9789882370661` |
+| 983 | [Shi dai de xing dong zhe : fan xiu li yun dong qun xiang](https://banned-books.org/books/shi-dai-de-xing-dong-zhe-fan-xiu-li-yun-dong-qun-xiang) | Li, Lifeng (Editor) | `9789888747955` |
+| 984 | [Luo ming](https://banned-books.org/books/luo-ming) | Guanzhong Chen | `9781300895886` |
+| 985 | [Death Scenes: A Homicide Detective's Scrapbook](https://banned-books.org/books/death-scenes-a-homicide-detectives-scrapbook) | Katherine Dunn | `9780922915309` |
+| 986 | [Honourable Estate](https://banned-books.org/books/honourable-estate) | Vera Brittain | `9781860497827` |
+| 987 | [Dutch Interior](https://banned-books.org/books/dutch-interior) | Frank O'Connor | `9780856404320` |
+| 988 | [Ecstasy and Me](https://banned-books.org/books/ecstasy-and-me) | Hedy Lamarr | `9782840497554` |
+| 989 | [The Bulpington of Blup](https://banned-books.org/books/the-bulpington-of-blup) | H. G. Wells | `9780755103966` |
+| 990 | [A World of Strangers](https://banned-books.org/books/a-world-of-strangers) | Nadine Gordimer | `9780224012744` |
+| 991 | [The Late Bourgeois World](https://banned-books.org/books/the-late-bourgeois-world) | Nadine Gordimer | `9780140056143` |
+| 992 | [The Stone Country](https://banned-books.org/books/the-stone-country) | Alex La Guma | `9780435901523` |
+| 993 | [Poets to the People: South African Freedom Poems](https://banned-books.org/books/poets-to-the-people-south-african-freedom-poems) | Barry Feinberg | `9780048080219` |
+| 994 | [The Soweto I Love](https://banned-books.org/books/the-soweto-i-love) | Sipho Sepamla | `9780949968906` |
+| 995 | [Pass Me a Meatball, Jones](https://banned-books.org/books/pass-me-a-meatball-jones) | James Matthews | `9780909237035` |
+| 996 | [Africa My Beginning](https://banned-books.org/books/africa-my-beginning) | Ingoapele Madingoane | `9780860361329` |
+| 997 | [Forced Landing: Africa South — Contemporary Writings](https://banned-books.org/books/forced-landing-africa-south-contemporary-writings) | Mothobi Mutloatse | `9780869751091` |
+| 998 | [Red Europe](https://banned-books.org/books/red-europe) | Frank Anstey | `9780665747632` |
+| 999 | [Couples](https://banned-books.org/books/couples) | Anonymous | `9780963749512` |
+| 1000 | [A Different Love](https://banned-books.org/books/a-different-love) | Clay Larkin | `9780932870377` |
+| 1001 | [37 Things I Love](https://banned-books.org/books/37-things-i-love) | Kekla Magoon | `9780805094657` |
+| 1002 | [Parasyte](https://banned-books.org/books/parasyte) | Hitoshi Iwaaki | `9780345496249` |
+| 1003 | [Dog Tags](https://banned-books.org/books/dog-tags) | Alexander London | `9780545477079` |
+| 1004 | [Mysteries of Mankind](https://banned-books.org/books/mysteries-of-mankind) | National Geographic Society | `9780870448645` |
+| 1005 | [Ranma 1/2](https://banned-books.org/books/ranma-1-2) | Rumiko Takahashi | `9781637997307` |
+| 1006 | [Endgame](https://banned-books.org/books/endgame) | Tim Bowler | `9780192763631` |
+| 1007 | [Penthouse](https://banned-books.org/books/penthouse) | Anonymous | `9780012354117` |
 
-## Books not findable in Open Library (65)
+## Books not findable in Open Library (95)
 
 OL doesn't recognise our canonical ISBN. Possible causes: very obscure edition, very recent publication, or ISBN data quality issue.
 
@@ -1004,3 +1972,33 @@ OL doesn't recognise our canonical ISBN. Possible causes: very obscure edition, 
 | 63 | [Don't Toy With Me, Miss Nagatoro, Vol. 7](https://banned-books.org/books/dont-toy-with-me-miss-nagatoro-vol-7) | Nanashi | `9781636990842` |
 | 64 | [Don't Toy With Me, Miss Nagatoro, Vol. 9](https://banned-books.org/books/dont-toy-with-me-miss-nagatoro-vol-9) | Nanashi | `9781636995755` |
 | 65 | [Flame of Recca, Vol. 3](https://banned-books.org/books/flame-of-recca-vol-3) | Nobuyuki Anzai | `9781421563886` |
+| 66 | [The Ancient Greeks](https://banned-books.org/books/the-ancient-greeks) | Virginia Schomp | `9780761400707` |
+| 67 | [The Art of Contemporary China](https://banned-books.org/books/the-art-of-contemporary-china) | Jiehong Jiang | `9787558606441` |
+| 68 | [The Art of Drag](https://banned-books.org/books/the-art-of-drag) | Jake Hall | `9781932852752` |
+| 69 | [Tiziano Vecaellio, known as Titian](https://banned-books.org/books/tiziano-vecaellio-known-as-titian) | Marion Kaminski | `9783833137778` |
+| 70 | [After the Fire](https://banned-books.org/books/after-the-fire) | Will Hill | `9781492669807` |
+| 71 | [Bleach, Vol. 34](https://banned-books.org/books/bleach-vol-34) | Tite Kubo | `9781421548593` |
+| 72 | [Jojo's Bizarre Adventure: Part 1 - Phantom Blood, Vol. 3](https://banned-books.org/books/jojos-bizarre-adventure-part-1-phantom-blood-vol-3) | Hirohiko Araki | `9781421581934` |
+| 73 | [1Q84](https://banned-books.org/books/1q84) | Haruki Murakami | `9782714496010` |
+| 74 | [A Million to One](https://banned-books.org/books/a-million-to-one) | Adiba Jaigirdar | `9781444968910` |
+| 75 | [Alex](https://banned-books.org/books/alex) | Sylvia Aguilar Zeleny | `9781680761344` |
+| 76 | [Northranger: A Modern Graphic Novel Retelling of Jane Austen's Northanger Abbey](https://banned-books.org/books/northranger-a-modern-graphic-novel-retelling-of-jane-austens-northanger-abbey) | Rey Terciero | `9780063007406` |
+| 77 | [The Ojja-Wojja: A Horror-Mystery, or Whatever](https://banned-books.org/books/the-ojja-wojja-a-horror-mystery-or-whatever) | Magdalene Visaggio | `9780062852434` |
+| 78 | [The World that Belongs to Us: An Anthology of Queer Poetry from South Asia](https://banned-books.org/books/the-world-that-belongs-to-us-an-anthology-of-queer-poetry-from-south-asia) | Aditi Angiras | `9789353574581` |
+| 79 | [Aphrodite: Goddess of Love and Beauty](https://banned-books.org/books/aphrodite-goddess-of-love-and-beauty) | Teri Temple | `9781489646323` |
+| 80 | [The Borrow a Boyfriend Club](https://banned-books.org/books/the-borrow-a-boyfriend-club) | Page Powars | `9781444968361` |
+| 81 | [This Book is Feminist: An Intersecting Primer for Next-Gen Changemakers](https://banned-books.org/books/this-book-is-feminist-an-intersecting-primer-for-next-gen-changemakers) | Jamia Wilson | `9780711256408` |
+| 82 | [8 Tiny Reindeer: An Advent Calendar Adventure](https://banned-books.org/books/8-tiny-reindeer-an-advent-calendar-adventure) | Robert Tinkler | `9781525308208` |
+| 83 | [A Boy Called Bat](https://banned-books.org/books/a-boy-called-bat) | Elana K. Arnold | `9781338274561` |
+| 84 | [A Heart So Fierce and Broken](https://banned-books.org/books/a-heart-so-fierce-and-broken) | Brigid Kemmerer | `9781408885093` |
+| 85 | [A Vow So Bold and Deadly](https://banned-books.org/books/a-vow-so-bold-and-deadly) | Brigid Kemmerer | `9781526613844` |
+| 86 | [Amari and the Night Brothers](https://banned-books.org/books/amari-and-the-night-brothers) | Alston B.B. | `9781338832853` |
+| 87 | [Ancient and Classical Art](https://banned-books.org/books/ancient-and-classical-art) | Iain Zaczek | `9780791094709` |
+| 88 | [Angel](https://banned-books.org/books/angel) | James Patterson | `9782013233880` |
+| 89 | [Art Deco: 1910-1939](https://banned-books.org/books/art-deco-1910-1939) | Charlotte Benton | `9782804607319` |
+| 90 | [Una antorcha en las tinieblas](https://banned-books.org/books/una-antorcha-en-las-tinieblas) | Sabaa Tahir | `9788490437452` |
+| 91 | [World Art](https://banned-books.org/books/world-art) | Rachel Bean | `9780791094761` |
+| 92 | [Art of the Story](https://banned-books.org/books/art-of-the-story) | Daniel Halpern | `9780670877478` |
+| 93 | [The Luis Ortega Survival Club](https://banned-books.org/books/the-luis-ortega-survival-club) | Sonora Reyes | `9781460761236` |
+| 94 | [La question du divorce](https://banned-books.org/books/la-question-du-divorce) | Dumas, Alexandre (fils) | `9780980680300` |
+| 95 | [Bei jian de Zhongguo ren](https://banned-books.org/books/bei-jian-de-zhongguo-ren) | Jie Yu | `9787503410369` |
