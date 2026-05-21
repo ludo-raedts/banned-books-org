@@ -22,6 +22,12 @@
  *       mid-flight.
  *   --limit=200 → caps any of the above at 200 books.
  *
+ * Resumability: when --report is given the script also writes a
+ * <report>.state.json sidecar after every book. Re-running picks up
+ * where the previous run was killed (laptop lid closing, session end,
+ * Ctrl-C). Override with --state=path.json to use a custom location,
+ * or pass --state= to opt in without writing a markdown report.
+ *
  * Per book worst case: 1 OL works lookup + 1 OL editions lookup + N
  * Bookshop HEADs (capped at MAX_CANDIDATES). Candidate ranking favors
  * US trade imprints (Harper, Penguin, Vintage, …) and skips clear
@@ -29,7 +35,7 @@
  * conservative to stay below informal rate limits on either side.
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 import { BOOKSHOP_AFFILIATE_ID } from '../src/lib/bookshop'
@@ -39,6 +45,13 @@ const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const MAX = LIMIT_ARG ? parseInt(LIMIT_ARG.split('=')[1], 10) : Infinity
 const REPORT_ARG = process.argv.find(a => a.startsWith('--report='))
 const REPORT_PATH = REPORT_ARG ? REPORT_ARG.split('=')[1] : null
+// State file path. Defaults to <report>.state.json next to the markdown
+// report when --report is given. Use --state=path.json to override, or
+// to enable resumability without writing a markdown report.
+const STATE_ARG = process.argv.find(a => a.startsWith('--state='))
+const STATE_PATH = STATE_ARG
+  ? STATE_ARG.split('=')[1]
+  : (REPORT_PATH ? `${REPORT_PATH}.state.json` : null)
 
 const OL_DELAY_MS = 400
 const BSO_DELAY_MS = 1000
@@ -208,20 +221,43 @@ async function main() {
   console.log(`Books in 'not_found' state without alt-ISBN: ${books.length}`)
   if (books.length === 0) { console.log('Nothing to do.'); return }
 
+  // Resume: load any pre-existing state file and skip books already
+  // processed. State is just `ReportRow[]` serialized to JSON — same
+  // shape we use in memory and write to the markdown report.
+  const reportRows: ReportRow[] = []
+  const processedBookIds = new Set<number>()
+  if (STATE_PATH && existsSync(STATE_PATH)) {
+    try {
+      const raw = readFileSync(STATE_PATH, 'utf8')
+      const prev = JSON.parse(raw) as ReportRow[]
+      for (const r of prev) {
+        reportRows.push(r)
+        processedBookIds.add(r.bookId)
+      }
+      console.log(`Resuming from ${STATE_PATH}: ${reportRows.length} books already processed`)
+    } catch (e) {
+      console.error(`Could not parse ${STATE_PATH}: ${(e as Error).message} — starting fresh`)
+    }
+  }
+
+  const todo = books.filter(b => !processedBookIds.has(b.id))
+  if (processedBookIds.size > 0) {
+    console.log(`Remaining after resume: ${todo.length}\n`)
+  }
+
   // limit logic:
-  //   --apply or --report : full set (capped by --limit if given)
-  //   bare dry-run        : sample 10
-  const isFullRun = APPLY || REPORT_PATH != null
-  const limit = isFullRun ? Math.min(books.length, MAX) : Math.min(10, books.length)
+  //   --apply or --report or --state : full set (capped by --limit if given)
+  //   bare dry-run                   : sample 10
+  const isFullRun = APPLY || REPORT_PATH != null || STATE_PATH != null
+  const limit = isFullRun ? Math.min(todo.length, MAX) : Math.min(10, todo.length)
   console.log(
     `${isFullRun
-      ? `Processing ${limit} of ${books.length}${REPORT_PATH ? ` → report: ${REPORT_PATH}` : ''}…`
+      ? `Processing ${limit} of ${todo.length}${REPORT_PATH ? ` → report: ${REPORT_PATH}` : ''}${STATE_PATH ? ` (state: ${STATE_PATH})` : ''}…`
       : `DRY-RUN — sampling ${limit} books:`}\n`,
   )
 
   let upgraded = 0, stillNotFound = 0, noWork = 0, dbErrors = 0
   let candidatesProbed = 0
-  const reportRows: ReportRow[] = []
 
   function authorOf(b: BookRow): string {
     return (b.book_authors ?? [])
@@ -231,7 +267,7 @@ async function main() {
   }
 
   for (let i = 0; i < limit; i++) {
-    const book = books[i]
+    const book = todo[i]
     process.stdout.write(`  [${i + 1}/${limit}] ${book.title.slice(0, 45).padEnd(45)} `)
 
     const worksKey = await olWorksKeyForIsbn(book.isbn13)
@@ -297,15 +333,21 @@ async function main() {
       })
     }
 
+    // State flush after every book — keeps the resumable cursor exact
+    // even if the script is killed mid-run (e.g. laptop lid closing,
+    // session end). Cheap: a ~2000-row JSON write is <50ms.
+    if (STATE_PATH) writeState(STATE_PATH, reportRows)
+
     // Incremental report flush every 25 rows — keeps useful output even
     // if the script is interrupted partway through a multi-hour run.
     if (REPORT_PATH && (i + 1) % 25 === 0) {
-      writeReport(REPORT_PATH, reportRows, { partial: true, processed: i + 1, total: limit })
+      writeReport(REPORT_PATH, reportRows, { partial: true, processed: reportRows.length, total: books.length })
     }
   }
 
+  if (STATE_PATH) writeState(STATE_PATH, reportRows)
   if (REPORT_PATH) {
-    writeReport(REPORT_PATH, reportRows, { partial: false, processed: limit, total: limit })
+    writeReport(REPORT_PATH, reportRows, { partial: false, processed: reportRows.length, total: books.length })
     console.log(`\nReport written to ${REPORT_PATH}`)
   }
 
@@ -317,6 +359,11 @@ async function main() {
   candidates probed : ${candidatesProbed} total
   ${APPLY ? `\n  DB write errors: ${dbErrors}` : (REPORT_PATH ? '\n  (report-only — no rows written)' : '\n  (dry-run — no rows written)')}
 ──────────────────────────────────────────`)
+}
+
+function writeState(path: string, rows: ReportRow[]) {
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, JSON.stringify(rows, null, 2))
 }
 
 function writeReport(path: string, rows: ReportRow[], meta: { partial: boolean; processed: number; total: number }) {
