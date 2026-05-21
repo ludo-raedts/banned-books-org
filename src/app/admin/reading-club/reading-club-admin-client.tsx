@@ -196,6 +196,7 @@ function CurrentlyChallengedTab({
       challengeCount: null,
       sourceUrl: ALA_DEFAULT_SOURCE_URL,
       publishedAt: null,
+      featured: false,
     }])
   }
 
@@ -219,6 +220,7 @@ function CurrentlyChallengedTab({
       challengeCount: null,
       sourceUrl: ALA_DEFAULT_SOURCE_URL,
       publishedAt: null,
+      featured: false,
     }])
     setManualTitle('')
     setManualAuthor('')
@@ -245,6 +247,7 @@ function CurrentlyChallengedTab({
         challenge_count: p.challengeCount ?? null,
         source_url: p.sourceUrl ?? null,
         discussion_questions: p.discussionQuestions.length > 0 ? p.discussionQuestions : null,
+        featured: p.featured,
       })),
     })
     onChange()
@@ -358,12 +361,24 @@ function CurrentlyChallengedTab({
                 <div className="text-[11px] text-gray-400 mt-1">Published {new Date(p.publishedAt).toLocaleDateString('en-GB')}</div>
               )}
             </div>
-            <button
-              onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))}
-              className="text-xs text-red-600 hover:underline"
-            >
-              Remove
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              <FeaturedToggle
+                checked={p.featured}
+                disabled={p.bookId == null}
+                title={p.bookId == null ? 'Manual entries can’t be featured (no linked book → no cover)' : 'Show this book in the cover strip on /reading-club'}
+                onChange={v => {
+                  const next = [...picks]
+                  next[i] = { ...next[i], featured: v }
+                  setPicks(next)
+                }}
+              />
+              <button
+                onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))}
+                className="text-xs text-red-600 hover:underline"
+              >
+                Remove
+              </button>
+            </div>
           </li>
         ))}
       </ol>
@@ -412,7 +427,7 @@ function BookTrackTab({
     setPicks(data.top10.map((c, i) => ({
       bookId: c.book_id, position: i + 1, title: c.title, authors: c.authors,
       customBlurb: null, discussionQuestions: [], bookSlug: c.slug, coverUrl: null, description: null,
-      countries: c.countries, reasons: c.reasons, banCount: c.banCount, publishedAt: null,
+      countries: c.countries, reasons: c.reasons, banCount: c.banCount, publishedAt: null, featured: false,
     })))
     setAlternates(data.alternates)
   }
@@ -426,6 +441,7 @@ function BookTrackTab({
         position: p.position,
         custom_blurb: p.customBlurb,
         discussion_questions: p.discussionQuestions,
+        featured: p.featured,
       })),
     })
     onChange()
@@ -462,6 +478,7 @@ function BookTrackTab({
       reasons: [],
       banCount: book.banCount,
       publishedAt: null,
+      featured: false,
     }])
   }
 
@@ -526,7 +543,18 @@ function BookTrackTab({
                 className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
               />
             </div>
-            <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-xs text-red-600 hover:underline">Remove</button>
+            <div className="flex flex-col items-end gap-2">
+              <FeaturedToggle
+                checked={p.featured}
+                title="Show this book in the cover strip on /reading-club"
+                onChange={v => {
+                  const next = [...picks]
+                  next[i] = { ...next[i], featured: v }
+                  setPicks(next)
+                }}
+              />
+              <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-xs text-red-600 hover:underline">Remove</button>
+            </div>
           </li>
         ))}
       </ol>
@@ -547,7 +575,7 @@ function BookTrackTab({
                     setPicks([...picks, {
                       bookId: a.book_id, position: picks.length + 1, title: a.title, authors: a.authors,
                       customBlurb: null, discussionQuestions: [], bookSlug: a.slug, coverUrl: null, description: null,
-                      countries: a.countries, reasons: a.reasons, banCount: a.banCount, publishedAt: null,
+                      countries: a.countries, reasons: a.reasons, banCount: a.banCount, publishedAt: null, featured: false,
                     }])
                     setAlternates(alternates.filter(x => x.book_id !== a.book_id))
                   }}
@@ -609,6 +637,7 @@ function ThemePanel({
         position: p.position,
         custom_blurb: p.customBlurb,
         discussion_questions: p.discussionQuestions,
+        featured: p.featured,
       })),
     })
     await call({ action: 'publish_track', track: `theme:${theme.slug}` })
@@ -630,6 +659,15 @@ function ThemePanel({
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-xs font-mono text-gray-500">#{p.position}</span>
                 <span className="text-xs flex-1">{p.title} — {p.authors.join(', ')} {p.banCount > 0 && `(${p.banCount} bans)`}</span>
+                <FeaturedToggle
+                  checked={p.featured}
+                  title="Show this book in the cover strip on /reading-club"
+                  onChange={v => {
+                    const next = [...picks]
+                    next[i] = { ...next[i], featured: v }
+                    setPicks(next)
+                  }}
+                />
                 <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-xs text-red-600 hover:underline">remove</button>
               </div>
               <textarea
@@ -676,6 +714,7 @@ function ThemePanel({
               reasons: [],
               banCount: book.banCount,
               publishedAt: null,
+              featured: false,
             }])
           }}
           excludeIds={picks.map(p => p.bookId).filter((x): x is number => x != null)}
@@ -866,3 +905,39 @@ function GenerateQuestionsBanner({
 // ── Shared input className ──────────────────────────────────────────────────
 
 const inputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800'
+
+// ── Featured toggle ─────────────────────────────────────────────────────────
+//
+// Per-pick checkbox that flips the `featured` flag persisted by the
+// save_track_books / save_currently_challenged_bulk endpoints. The hub page
+// (/reading-club) reads this column to build its cover strip — at most 6
+// books across all four tracks. There’s no in-app cap on how many can be
+// featured per track; the homepage just takes the first 6.
+
+function FeaturedToggle({
+  checked, onChange, disabled, title,
+}: {
+  checked: boolean
+  onChange: (v: boolean) => void
+  disabled?: boolean
+  title?: string
+}) {
+  return (
+    <label
+      title={title}
+      className={`inline-flex items-center gap-1 text-[11px] select-none ${
+        disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300 cursor-pointer'
+      }`}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={e => onChange(e.target.checked)}
+        className="h-3.5 w-3.5 rounded border-gray-300 dark:border-gray-600 text-brand focus:ring-brand"
+      />
+      <span aria-hidden="true">★</span>
+      <span>Featured</span>
+    </label>
+  )
+}

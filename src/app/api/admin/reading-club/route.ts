@@ -101,6 +101,7 @@ export async function POST(req: NextRequest) {
       challenge_count?: number | null
       source_url?: string | null
       discussion_questions?: string[] | null
+      featured?: boolean
     }> | undefined
     if (!Number.isInteger(year) || !Array.isArray(entries)) {
       return NextResponse.json({ error: 'Bad input' }, { status: 400 })
@@ -121,6 +122,7 @@ export async function POST(req: NextRequest) {
         challenge_count: e.challenge_count ?? null,
         source_url: e.source_url ?? null,
         discussion_questions: e.discussion_questions ?? null,
+        featured: !!e.featured,
         published_at: null,
         updated_at: new Date().toISOString(),
       }))
@@ -180,7 +182,7 @@ export async function POST(req: NextRequest) {
     if (!track) return NextResponse.json({ error: 'Missing track' }, { status: 400 })
     const picks = body.picks as Array<{
       book_id: number; position: number; custom_blurb?: string | null;
-      discussion_questions?: string[] | null; pinned?: boolean
+      discussion_questions?: string[] | null; pinned?: boolean; featured?: boolean
     }> | undefined
     if (!Array.isArray(picks)) return NextResponse.json({ error: 'Bad picks' }, { status: 400 })
 
@@ -217,6 +219,7 @@ export async function POST(req: NextRequest) {
         custom_blurb: p.custom_blurb ?? null,
         discussion_questions: p.discussion_questions ?? null,
         ...(table === 'reading_club_international' ? { pinned: !!p.pinned } : {}),
+        featured: !!p.featured,
         published_at: null,
         updated_at: new Date().toISOString(),
       }))

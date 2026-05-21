@@ -52,6 +52,8 @@ export type ReadingClubCard = {
   challengeCount?: number | null
   sourceUrl?: string | null
   publishedAt: string | null
+  // Editor toggle that surfaces a book in the /reading-club hub cover-strip.
+  featured: boolean
 }
 
 // Shared join used wherever we render a track row that points at a real book.
@@ -99,7 +101,7 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
   const supabase = opts?.admin ? adminClient() : serverClient()
   let q = supabase
     .from('reading_club_currently_challenged')
-    .select(`year, position, title, author, challenge_count, discussion_questions, source_url, published_at, ${BOOK_JOIN}`)
+    .select(`year, position, title, author, challenge_count, discussion_questions, source_url, published_at, featured, ${BOOK_JOIN}`)
     .eq('year', year)
     .order('position')
   if (!opts?.admin) q = q.not('published_at', 'is', null)
@@ -113,6 +115,7 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
     discussion_questions: string[] | null
     source_url: string | null
     published_at: string | null
+    featured: boolean
     books: JoinedBook
   }
   return ((data ?? []) as unknown as Row[]).map(r => {
@@ -137,6 +140,7 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
       challengeCount: r.challenge_count,
       sourceUrl: r.source_url,
       publishedAt: r.published_at,
+      featured: !!r.featured,
     }
   })
 }
@@ -147,13 +151,14 @@ export async function getInternationalTrack(opts?: { admin?: boolean }): Promise
   const supabase = opts?.admin ? adminClient() : serverClient()
   let q = supabase
     .from('reading_club_international')
-    .select(`book_id, position, custom_blurb, discussion_questions, pinned, published_at, ${BOOK_JOIN}`)
+    .select(`book_id, position, custom_blurb, discussion_questions, pinned, featured, published_at, ${BOOK_JOIN}`)
     .order('position')
   if (!opts?.admin) q = q.not('published_at', 'is', null)
   const { data } = await q
   return ((data ?? []) as unknown as Array<{
     book_id: number; position: number; custom_blurb: string | null;
-    discussion_questions: string[] | null; pinned: boolean; published_at: string | null;
+    discussion_questions: string[] | null; pinned: boolean; featured: boolean;
+    published_at: string | null;
     books: JoinedBook
   }>).map(r => {
     const proj = projectJoinedBook(r.books)
@@ -174,6 +179,7 @@ export async function getInternationalTrack(opts?: { admin?: boolean }): Promise
       reasons: proj.reasons,
       banCount: proj.banCount,
       publishedAt: r.published_at,
+      featured: !!r.featured,
     }
   })
 }
@@ -184,13 +190,14 @@ export async function getClassicsTrack(opts?: { admin?: boolean }): Promise<Read
   const supabase = opts?.admin ? adminClient() : serverClient()
   let q = supabase
     .from('reading_club_classics')
-    .select(`book_id, position, custom_blurb, discussion_questions, published_at, ${BOOK_JOIN}`)
+    .select(`book_id, position, custom_blurb, discussion_questions, featured, published_at, ${BOOK_JOIN}`)
     .order('position')
   if (!opts?.admin) q = q.not('published_at', 'is', null)
   const { data } = await q
   return ((data ?? []) as unknown as Array<{
     book_id: number; position: number; custom_blurb: string | null;
-    discussion_questions: string[] | null; published_at: string | null;
+    discussion_questions: string[] | null; featured: boolean;
+    published_at: string | null;
     books: JoinedBook
   }>).map(r => {
     const proj = projectJoinedBook(r.books)
@@ -211,6 +218,7 @@ export async function getClassicsTrack(opts?: { admin?: boolean }): Promise<Read
       reasons: proj.reasons,
       banCount: proj.banCount,
       publishedAt: r.published_at,
+      featured: !!r.featured,
     }
   })
 }
@@ -237,14 +245,15 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
   // 1. Admin overrides (if any).
   let q = supabase
     .from('reading_club_theme_books')
-    .select(`book_id, position, custom_blurb, discussion_questions, published_at, ${BOOK_JOIN}`)
+    .select(`book_id, position, custom_blurb, discussion_questions, featured, published_at, ${BOOK_JOIN}`)
     .eq('theme_slug', themeSlug)
     .order('position')
   if (!opts?.admin) q = q.not('published_at', 'is', null)
   const { data: overrideRows } = await q
   const overrides = ((overrideRows ?? []) as unknown as Array<{
     book_id: number; position: number; custom_blurb: string | null;
-    discussion_questions: string[] | null; published_at: string | null;
+    discussion_questions: string[] | null; featured: boolean;
+    published_at: string | null;
     books: JoinedBook
   }>).map(r => {
     const proj = projectJoinedBook(r.books)
@@ -265,6 +274,7 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
       reasons: proj.reasons,
       banCount: proj.banCount,
       publishedAt: r.published_at,
+      featured: !!r.featured,
     } as ReadingClubCard
   })
 
@@ -325,6 +335,7 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
         reasons: proj.reasons,
         banCount: proj.banCount,
         publishedAt: null, // auto-pulled (not via the override table)
+        featured: false,
       } as ReadingClubCard
     })
     .sort((a, b) => b.banCount - a.banCount)
@@ -393,4 +404,124 @@ export async function buildIntlCorpus(): Promise<SuggesterBook[]> {
         inPreviousYears: false,
       }
     })
+}
+
+// ── Featured row for the /reading-club hub ──────────────────────────────────
+//
+// Editor-curated cover strip displayed under the hero on /reading-club. An
+// admin toggles `featured = true` on individual track rows; this helper
+// gathers them across all four tracks, keeps only the ones with a real cover
+// + a navigable detail URL, and caps the lineup so the UI grid stays tidy.
+
+export type FeaturedReadingClubBook = {
+  title: string
+  authors: string[]
+  coverUrl: string
+  href: string
+  trackLabel: string
+}
+
+const FEATURED_BOOK_LIMIT = 6
+
+export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClubBook[]> {
+  const supabase = serverClient()
+
+  // Each track query is independent — fan out in parallel. We over-fetch
+  // slightly (per-track limit = FEATURED_BOOK_LIMIT) so the final union
+  // can still produce 6 even when one track has fewer than its share.
+  const [intlRes, classicsRes, ccRes, themesRes] = await Promise.all([
+    supabase
+      .from('reading_club_international')
+      .select(`book_id, position,
+               books!inner(title, slug, cover_url,
+                           book_authors(authors(display_name)))`)
+      .eq('featured', true)
+      .not('published_at', 'is', null)
+      .not('books.cover_url', 'is', null)
+      .order('position')
+      .limit(FEATURED_BOOK_LIMIT),
+    supabase
+      .from('reading_club_classics')
+      .select(`book_id, position,
+               books!inner(title, slug, cover_url,
+                           book_authors(authors(display_name)))`)
+      .eq('featured', true)
+      .not('published_at', 'is', null)
+      .not('books.cover_url', 'is', null)
+      .order('position')
+      .limit(FEATURED_BOOK_LIMIT),
+    supabase
+      .from('reading_club_currently_challenged')
+      .select(`year, position, title, author,
+               books(title, slug, cover_url,
+                     book_authors(authors(display_name)))`)
+      .eq('featured', true)
+      .not('published_at', 'is', null)
+      .order('year', { ascending: false })
+      .order('position')
+      .limit(FEATURED_BOOK_LIMIT),
+    supabase
+      .from('reading_club_theme_books')
+      .select(`theme_slug, book_id, position,
+               books!inner(title, slug, cover_url,
+                           book_authors(authors(display_name)))`)
+      .eq('featured', true)
+      .not('published_at', 'is', null)
+      .not('books.cover_url', 'is', null)
+      .order('position')
+      .limit(FEATURED_BOOK_LIMIT),
+  ])
+
+  type J = { title: string; slug: string | null; cover_url: string | null;
+             book_authors: { authors: { display_name: string } | null }[] | null } | null
+  const authorsOf = (b: J): string[] =>
+    (b?.book_authors ?? []).map(x => x?.authors?.display_name).filter((s): s is string => !!s)
+
+  const out: FeaturedReadingClubBook[] = []
+
+  for (const r of ((intlRes.data ?? []) as unknown as Array<{ books: J }>)) {
+    const b = r.books
+    if (!b?.slug || !b.cover_url) continue
+    out.push({
+      title: b.title, authors: authorsOf(b), coverUrl: b.cover_url,
+      href: `/reading-club/international/${b.slug}`,
+      trackLabel: 'International',
+    })
+  }
+  for (const r of ((classicsRes.data ?? []) as unknown as Array<{ books: J }>)) {
+    const b = r.books
+    if (!b?.slug || !b.cover_url) continue
+    out.push({
+      title: b.title, authors: authorsOf(b), coverUrl: b.cover_url,
+      href: `/reading-club/classics/${b.slug}`,
+      trackLabel: 'Classics',
+    })
+  }
+  for (const r of ((ccRes.data ?? []) as unknown as Array<{
+    year: number; position: number; title: string; author: string; books: J
+  }>)) {
+    // Currently-challenged rows may not link to a books row; in that case the
+    // detail page can still render from the ALA-row's own title/author, but
+    // there is no cover to show, so we skip those here.
+    const b = r.books
+    if (!b?.cover_url) continue
+    out.push({
+      title: b.title || r.title,
+      authors: authorsOf(b).length > 0 ? authorsOf(b) : (r.author ? [r.author] : []),
+      coverUrl: b.cover_url,
+      href: `/reading-club/currently-challenged/${r.year}/${r.position}`,
+      trackLabel: 'Currently challenged',
+    })
+  }
+  for (const r of ((themesRes.data ?? []) as unknown as Array<{ theme_slug: string; books: J }>)) {
+    const b = r.books
+    if (!b?.slug || !b.cover_url) continue
+    out.push({
+      title: b.title, authors: authorsOf(b), coverUrl: b.cover_url,
+      href: `/reading-club/by-theme/${r.theme_slug}/${b.slug}`,
+      trackLabel: 'By theme',
+    })
+  }
+
+  return out.slice(0, FEATURED_BOOK_LIMIT)
 }

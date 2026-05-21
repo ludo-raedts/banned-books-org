@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import { isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
+import { getFeaturedReadingClubBooks } from '@/lib/reading-club-data'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
@@ -27,12 +29,15 @@ const TRACKS = [
 
 export default async function ReadingClubHubPage() {
   const slugs = REQUIRED_BLOCKS_BY_PAGE['reading-club-hub']
-  const blocks = await getPublishedBlockMap(slugs)
+  const [blocks, featuredBooks, showBBWLink] = await Promise.all([
+    getPublishedBlockMap(slugs),
+    getFeaturedReadingClubBooks(),
+    isBannedBooksWeekPromoActive(),
+  ])
   const intro = blocks.get('reading-club-intro')
   const why = blocks.get('reading-club-why')
   const howToStart = blocks.get('reading-club-how-to-start')
   const universal = blocks.get('reading-club-universal-questions')
-  const showBBWLink = await isBannedBooksWeekPromoActive()
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -99,6 +104,42 @@ export default async function ReadingClubHubPage() {
           )}
         </div>
       </section>
+
+      {/* ── Featured covers strip ─────────────────────────────────── */}
+      {featuredBooks.length > 0 && (
+        <section aria-label="Featured book-club picks" className="bg-white px-6 md:px-9 pb-10 md:pb-14">
+          <div className="max-w-5xl mx-auto">
+            <Eyebrow>Featured · Editor’s picks</Eyebrow>
+            <ul className="mt-4 grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-5 items-start">
+              {featuredBooks.map(book => (
+                <li key={book.href}>
+                  <Link
+                    href={book.href}
+                    className="group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/40 rounded-sm"
+                  >
+                    <span className="relative block aspect-[2/3] w-full overflow-hidden rounded-sm bg-neutral-100 ring-1 ring-neutral-200 shadow-sm transition-all group-hover:ring-oxblood group-hover:shadow-md">
+                      <Image
+                        src={book.coverUrl}
+                        alt={`Cover of ${book.title}`}
+                        fill
+                        sizes="(min-width: 768px) 14vw, 30vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    </span>
+                    <span className="mt-2 text-[10px] uppercase tracking-wider text-neutral-500">{book.trackLabel}</span>
+                    <span className="font-serif text-sm font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-oxblood transition-colors">
+                      {book.title}
+                    </span>
+                    {book.authors.length > 0 && (
+                      <span className="text-xs text-neutral-600 line-clamp-1">{book.authors.join(', ')}</span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* ── Pick a track ──────────────────────────────────────────── */}
       <SectionShell tone="cream" eyebrow="Choose a path">
