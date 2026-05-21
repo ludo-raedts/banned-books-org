@@ -4,6 +4,8 @@ import { getCurrentlyChallenged } from '@/lib/reading-club-data'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import { ALAAttribution } from '@/components/bbw-disclaimer'
 import ReadingClubBookCard from '@/components/reading-club-card'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,41 +32,80 @@ export default async function CurrentlyChallengedPage() {
   const intro = blocks.get('track-currently-challenged-intro')
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
-      <Link href="/reading-club" className="text-sm text-gray-500 hover:underline">
-        ← Reading Club
-      </Link>
-      <h1 className="text-3xl font-bold mt-2 mb-2">Currently Challenged ({yearShown})</h1>
+    <main>
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/reading-club"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← Reading Club
+          </Link>
 
-      <div className="my-5">
-        <ALAAttribution />
-      </div>
+          <Eyebrow>Track · ALA OIF top 10</Eyebrow>
 
-      {intro && (
-        <section className="mb-8 prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: intro }} />
-      )}
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Currently challenged · {yearShown}.
+          </h1>
 
-      {rows.length > 0 ? (
-        <ul className="grid grid-cols-1 gap-4 mb-10">
-          {rows.map(r => (
-            <ReadingClubBookCard
-              key={r.position}
-              card={r}
-              track="currently-challenged"
-              year={yearShown}
-              clubHref={`/reading-club/currently-challenged/${yearShown}/${r.position}`}
+          <div className="mt-6">
+            <ALAAttribution />
+          </div>
+
+          {intro && (
+            <div
+              className="mt-6 prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-h3:mt-4 prose-h3:mb-2 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 max-w-none"
+              dangerouslySetInnerHTML={{ __html: intro }}
             />
-          ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-gray-500 my-10">List for {yearShown} not yet published.</p>
-      )}
+          )}
+        </div>
+      </section>
 
-      <p className="text-xs text-gray-500 mt-10">
-        → <Link href="/reading-club/international" className="hover:underline">International cases</Link>{' · '}
-        <Link href="/reading-club/classics" className="hover:underline">Classics</Link>{' · '}
-        <Link href="/reading-club/by-theme" className="hover:underline">By theme</Link>
-      </p>
+      {/* ── List ──────────────────────────────────────────────────── */}
+      <SectionShell tone="cream" eyebrow={`Ranked · ${rows.length} ${rows.length === 1 ? 'title' : 'titles'}`}>
+        <div className="max-w-3xl mx-auto">
+          {rows.length > 0 ? (
+            <ul className="grid grid-cols-1 gap-4">
+              {rows.map(r => (
+                <ReadingClubBookCard
+                  key={r.position}
+                  card={r}
+                  track="currently-challenged"
+                  year={yearShown}
+                  clubHref={`/reading-club/currently-challenged/${yearShown}/${r.position}`}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-neutral-500">List for {yearShown} not yet published.</p>
+          )}
+        </div>
+      </SectionShell>
+
+      {/* ── Other tracks ──────────────────────────────────────────── */}
+      <SectionShell tone="white" eyebrow="Other tracks">
+        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link href="/reading-club/international" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Worldwide</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              International cases →
+            </p>
+          </Link>
+          <Link href="/reading-club/classics" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Historical</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Banned classics →
+            </p>
+          </Link>
+          <Link href="/reading-club/by-theme" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Curated</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              By theme →
+            </p>
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }

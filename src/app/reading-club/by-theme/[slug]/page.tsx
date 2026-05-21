@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { getThemes, getThemeBooks, THEME_REASON_MAP } from '@/lib/reading-club-data'
 import { getPublishedBlockHtml } from '@/lib/content-blocks'
 import ReadingClubBookCard from '@/components/reading-club-card'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,37 +42,62 @@ export default async function ThemeSubpage({
   if (!theme) notFound()
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
-      <Link href="/reading-club/by-theme" className="text-sm text-gray-500 hover:underline">
-        ← All themes
-      </Link>
-      <h1 className="text-3xl font-bold mt-2 mb-4">{theme.display_name}</h1>
+    <main>
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/reading-club/by-theme"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All themes
+          </Link>
 
-      {intro && (
-        <section className="mb-8 prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: intro }} />
-      )}
+          <Eyebrow>Theme</Eyebrow>
 
-      {books.length > 0 ? (
-        <ul className="grid grid-cols-1 gap-4 mb-10">
-          {books.map(b => (
-            <ReadingClubBookCard
-              key={b.bookId ?? b.position}
-              card={b}
-              showCountries
-              track="by-theme"
-              themeSlug={slug}
-              clubHref={b.bookSlug ? `/reading-club/by-theme/${slug}/${b.bookSlug}` : undefined}
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            {theme.display_name}.
+          </h1>
+
+          {intro && (
+            <div
+              className="mt-6 prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 max-w-none"
+              dangerouslySetInnerHTML={{ __html: intro }}
             />
-          ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-gray-500 my-10">No books match this theme yet.</p>
-      )}
+          )}
+        </div>
+      </section>
 
-      <p className="text-xs text-gray-500 mt-10">
-        → <Link href="/reading-club" className="hover:underline">Reading Club</Link>{' · '}
-        <Link href="/reading-club/by-theme" className="hover:underline">All themes</Link>
-      </p>
+      <SectionShell tone="cream" eyebrow={`${books.length} ${books.length === 1 ? 'title' : 'titles'}`}>
+        <div className="max-w-3xl mx-auto">
+          {books.length > 0 ? (
+            <ul className="grid grid-cols-1 gap-4">
+              {books.map(b => (
+                <ReadingClubBookCard
+                  key={b.bookId ?? b.position}
+                  card={b}
+                  showCountries
+                  track="by-theme"
+                  themeSlug={slug}
+                  clubHref={b.bookSlug ? `/reading-club/by-theme/${slug}/${b.bookSlug}` : undefined}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-neutral-500">No books match this theme yet.</p>
+          )}
+        </div>
+      </SectionShell>
+
+      <SectionShell tone="white">
+        <div className="max-w-3xl mx-auto flex flex-wrap gap-x-5 gap-y-2 text-xs">
+          <Link href="/reading-club" className="text-oxblood hover:underline">
+            ← Reading Club
+          </Link>
+          <Link href="/reading-club/by-theme" className="text-oxblood hover:underline">
+            All themes
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }

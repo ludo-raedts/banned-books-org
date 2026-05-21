@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getThemes } from '@/lib/reading-club-data'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,35 +22,74 @@ export default async function ByThemePage() {
   const intro = blocks.get('track-themes-intro')
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
-      <Link href="/reading-club" className="text-sm text-gray-500 hover:underline">
-        ← Reading Club
-      </Link>
-      <h1 className="text-3xl font-bold mt-2 mb-4">By theme</h1>
+    <main>
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/reading-club"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← Reading Club
+          </Link>
 
-      {intro && (
-        <section className="mb-8 prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: intro }} />
-      )}
+          <Eyebrow>Track · By theme</Eyebrow>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
-        {themes.map(t => (
-          <li key={t.slug}>
-            <Link
-              href={`/reading-club/by-theme/${t.slug}`}
-              className="group block rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
-            >
-              <div className="font-semibold text-sm text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors">{t.display_name}</div>
-              <div className="text-xs text-gray-500 mt-1">→ explore</div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            By theme.
+          </h1>
 
-      <p className="text-xs text-gray-500 mt-10">
-        → <Link href="/reading-club/currently-challenged" className="hover:underline">Currently challenged (US)</Link>{' · '}
-        <Link href="/reading-club/international" className="hover:underline">International cases</Link>{' · '}
-        <Link href="/reading-club/classics" className="hover:underline">Classics</Link>
-      </p>
+          {intro && (
+            <div
+              className="mt-6 prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 max-w-none"
+              dangerouslySetInnerHTML={{ __html: intro }}
+            />
+          )}
+        </div>
+      </section>
+
+      <SectionShell tone="cream" eyebrow={`${themes.length} ${themes.length === 1 ? 'theme' : 'themes'}`}>
+        <div className="max-w-3xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {themes.map(t => (
+              <li key={t.slug}>
+                <Link
+                  href={`/reading-club/by-theme/${t.slug}`}
+                  className="group flex flex-col h-full w-full bg-white border border-neutral-200 hover:border-oxblood rounded-sm p-5 transition-colors"
+                >
+                  <span className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Theme</span>
+                  <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+                    {t.display_name}
+                  </p>
+                  <p className="text-xs text-neutral-500 mt-1">→ Explore</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </SectionShell>
+
+      <SectionShell tone="white" eyebrow="Other tracks">
+        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link href="/reading-club/currently-challenged" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">This year</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Currently challenged →
+            </p>
+          </Link>
+          <Link href="/reading-club/international" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Worldwide</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              International cases →
+            </p>
+          </Link>
+          <Link href="/reading-club/classics" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Historical</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Banned classics →
+            </p>
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }
