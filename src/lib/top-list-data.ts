@@ -32,7 +32,7 @@ export const LANG_NAMES: Record<string, string> = {
 }
 
 export const TOP_LIST_BOOK_SELECT =
-  'id, title, slug, cover_url, original_language, description_book, first_published_year, ' +
+  'id, title, slug, cover_url, cover_status, original_language, description_book, first_published_year, ' +
   'book_authors(authors(display_name)), bans(country_code)'
 
 export type TopListBookRow = {
@@ -40,6 +40,8 @@ export type TopListBookRow = {
   title: string
   slug: string
   cover_url: string | null
+  /** 'valid' | 'rejected_placeholder' | 'manual_override' | null — null means "not audited yet". */
+  cover_status: string | null
   original_language: string | null
   description_book: string | null
   first_published_year: number | null
@@ -55,7 +57,11 @@ export function banContext(b: TopListBookRow): string {
   const total = b.bans.length
   const countries = new Set(b.bans.map(x => x.country_code)).size
   if (total === 0) return ''
-  return `${total} ${total === 1 ? 'ban' : 'bans'} across ${countries} ${countries === 1 ? 'country' : 'countries'}`
+  // Lead with country count — that's the meaningful "global reach" signal.
+  // Append raw ban-event count only when it exceeds country count (mostly US
+  // PEN-style per-district records), where it adds genuine information.
+  const headline = `${countries} ${countries === 1 ? 'country' : 'countries'}`
+  return total > countries ? `${headline} · ${total} bans` : headline
 }
 
 export function langName(code: string | null): string | null {

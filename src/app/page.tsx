@@ -21,6 +21,12 @@ import {
   toBookCard,
 } from '@/lib/top-list-data'
 import type { TopListBook, TopListAuthor } from '@/components/top-list-card'
+import {
+  dayOfYear,
+  hashReasonSlug,
+  selectRotatingBooks,
+  selectWithLanguageDiversity,
+} from '@/lib/homepage-rotation'
 
 import HeroSection from '@/components/home/HeroSection'
 import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
@@ -173,7 +179,9 @@ export default async function HomePage() {
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
     supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(30),
-    supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(100),
+    // 300 instead of 100 so the Non-English rotation pool has enough
+    // language-diverse candidates after the cover-valid + dedup filters.
+    supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
     supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(10),
     supabase.from('countries').select('code, name_en'),
     supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
@@ -203,7 +211,10 @@ export default async function HomePage() {
     .slice(0, 10)
   const bannedAuthorIds = bannedAuthorRows.map(r => Number(r.entity_id))
 
-  // ── Aggregate top-3 books per reason in a single paginated round-trip ─────
+  // ── Aggregate top-N books per reason in a single paginated round-trip ────
+  // We keep a deep ranked list per reason (top 40) instead of top 3 so the
+  // cover-status='valid' filter + cross-section dedup can drop books without
+  // exhausting the pool. The final 3-per-reason pick is done after rotation.
   const reasons = ((reasonsRes.data ?? []) as { id: number; slug: string }[])
   const reasonIdToSlug = new Map(reasons.map(r => [r.id, r.slug]))
   const reasonIds = reasons.map(r => r.id)
@@ -228,13 +239,17 @@ export default async function HomePage() {
       offset += 1000
     }
   }
-  const reasonTopBookIds = new Map<string, number[]>()
+  const REASON_POOL_DEPTH = 40
+  const reasonRankedBookIds = new Map<string, number[]>()
   const reasonAllBookIds = new Set<number>()
   for (const slug of REASON_SLUGS) {
     const m = byReason.get(slug) ?? new Map<number, number>()
-    const top3 = [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => id as number)
-    reasonTopBookIds.set(slug, top3)
-    top3.forEach(id => reasonAllBookIds.add(id))
+    const ranked = [...m.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, REASON_POOL_DEPTH)
+      .map(([id]) => id as number)
+    reasonRankedBookIds.set(slug, ranked)
+    ranked.forEach(id => reasonAllBookIds.add(id))
   }
 
   // ── Single book-details fetch covers every list ──────────────────────────
@@ -263,10 +278,19 @@ export default async function HomePage() {
   )
 
   // ── Shape the lists ──────────────────────────────────────────────────────
+  // Cross-section dedup: a single page render never repeats the same book in
+  // Trending / Rising / Why-books / Non-English. Book-of-the-day is exempt
+  // (it's an independent editorial pick). Order matters — Trending feeds
+  // come first so popular books anchor that slot; Why-books and Non-English
+  // do rotation downstream and accept fewer items if the pool is exhausted.
+  const seed = dayOfYear()
+  const excludeIds = new Set<number>()
+
   const trendingBooks: TopListBook[] = trendingIds
     .map(id => bookById.get(id))
     .filter((b): b is TopListBookRow => !!b)
     .map(b => toBookCard(b, banContext(b)))
+  trendingBooks.forEach(b => excludeIds.add(b.id))
 
   const risingBooks: RisingBook[] = risingRows
     .map((r): RisingBook | null => {
@@ -285,13 +309,7 @@ export default async function HomePage() {
       }
     })
     .filter((x): x is RisingBook => x !== null)
-
-  const nonEnglishBooks: TopListBook[] = topBannedRows
-    .map(r => bookById.get(Number(r.entity_id)))
-    .filter((b): b is TopListBookRow => !!b)
-    .filter(b => isNonLatin(b.original_language))
-    .slice(0, 10)
-    .map(b => toBookCard(b, langContext(b)))
+  risingBooks.forEach(b => excludeIds.add(b.id))
 
   const bannedAuthors: TopListAuthor[] = bannedAuthorRows
     .map((r): TopListAuthor | null => {
@@ -309,15 +327,52 @@ export default async function HomePage() {
     })
     .filter((a): a is TopListAuthor => a !== null)
 
-  const reasonBlocks = REASON_SLUGS.map(slug => ({
-    reasonSlug: slug,
-    reasonLabel: reasonLabel(slug) ?? slug,
-    books: (reasonTopBookIds.get(slug) ?? [])
+  // Why books get banned — per-reason rotation. Each reason rotates from its
+  // own cover-valid top-N pool with a stable per-day seed and per-reason
+  // salt; later reasons in the loop see books already chosen by earlier
+  // reasons in `excludeIds` and skip them.
+  const reasonBlocks = REASON_SLUGS.map(slug => {
+    const rankedIds = reasonRankedBookIds.get(slug) ?? []
+    const pool = rankedIds
       .map(id => bookById.get(id))
       .filter((b): b is TopListBookRow => !!b)
-      .map(b => toBookCard(b, banContext(b))),
-  }))
+      .filter(b => b.cover_status === 'valid')
+    const picked = selectRotatingBooks({
+      pool,
+      count: 3,
+      seed,
+      reasonOffset: hashReasonSlug(slug),
+      excludeIds,
+    })
+    picked.forEach(b => excludeIds.add(b.id))
+    return {
+      reasonSlug: slug,
+      reasonLabel: reasonLabel(slug) ?? slug,
+      books: picked.map(b => toBookCard(b, banContext(b))),
+    }
+  })
   const reasonBlocksWithDesc = withReasonDescriptions(reasonBlocks)
+
+  // Non-English banned books — rotate from a pool of 30, then apply soft
+  // language-diversity (greedy distinct `original_language` first, fill the
+  // rest with what's left). Rotation gives day-to-day variation; diversity
+  // stops the row from being three Russian or three Chinese titles.
+  const nonEnglishPool: TopListBookRow[] = topBannedRows
+    .map(r => bookById.get(Number(r.entity_id)))
+    .filter((b): b is TopListBookRow => !!b)
+    .filter(b => isNonLatin(b.original_language))
+    .filter(b => b.cover_status === 'valid')
+    .slice(0, 30)
+  const nonEnglishRotated = selectRotatingBooks({
+    pool: nonEnglishPool,
+    count: 10,
+    seed,
+    reasonOffset: hashReasonSlug('non-english'),
+    excludeIds,
+  })
+  const nonEnglishPicked = selectWithLanguageDiversity(nonEnglishRotated, 3)
+  nonEnglishPicked.forEach(b => excludeIds.add(b.id))
+  const nonEnglishBooks: TopListBook[] = nonEnglishPicked.map(b => toBookCard(b, langContext(b)))
 
   const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.distinct_books as number]))
   const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
@@ -336,9 +391,9 @@ export default async function HomePage() {
     .filter((b): b is TopListBookRow => !!b)
     .filter(b => !!b.description_book)
     .filter(b => !b.original_language || (LATIN_SCRIPT_LANGS as readonly string[]).includes(b.original_language))
-  const seed = new Date().toISOString().slice(0, 10)
-  const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const pickBookRow = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
+  const bookOfDaySeed = new Date().toISOString().slice(0, 10)
+  const bookOfDaySeedSum = bookOfDaySeed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+  const pickBookRow = pickPool.length > 0 ? pickPool[bookOfDaySeedSum % pickPool.length] : null
 
   // One follow-up fetch to pull the richer fields we need for the new card
   // shape (description_ban, genres, per-ban status + year + reasons). Cheap
