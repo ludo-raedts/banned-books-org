@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { adminClient } from '@/lib/supabase'
 import CopyButton from '@/components/copy-button'
+import SectionShell from '@/components/section/SectionShell'
 
 export const metadata: Metadata = {
   title: 'Press & Media Kit | Banned Books',
@@ -204,274 +205,280 @@ export default async function PressPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
       />
 
-      <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-14">
-        {/* 1. Hero */}
-        <header className="pb-8 border-b border-neutral-200">
-          <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
-            Media kit · For journalists &amp; researchers
-          </p>
-          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-4">
-            Press &amp; Media Kit.
-          </h1>
-          <p className="font-serif text-lg md:text-xl leading-relaxed text-gray-900 max-w-2xl">
-            Everything journalists and researchers need to write about Banned Books: live stats, boilerplate copy in three lengths, founder details, downloadable logos, story angles, and a press contact.
-          </p>
-          <p className="mt-3 text-xs text-neutral-500">
-            Data last updated <strong className="font-medium text-neutral-700">{lastUpdated}</strong>.
-          </p>
-        </header>
-
-        {/* 2. Live stats strip */}
-        <section aria-labelledby="stats-heading">
-          <h2 id="stats-heading" className="text-xl font-semibold mb-4">By the numbers</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            {[
-              { value: bookCount, label: 'Books documented' },
-              { value: banCount, label: 'Ban records' },
-              { value: countryCount, label: 'Countries covered' },
-              { value: `${minYear}–${maxYear}`, label: 'Date range' },
-            ].map(({ value, label }) => (
-              <div
-                key={label}
-                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 px-4 py-5 flex flex-col gap-1"
-              >
-                <span className="text-2xl font-bold tracking-tight">{value}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug">{label}</span>
-              </div>
-            ))}
+      <main>
+        {/* ── Hero ──────────────────────────────────────────────────── */}
+        <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
+              Media kit · For journalists &amp; researchers
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+              Press &amp; Media Kit.
+            </h1>
+            <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900 max-w-2xl">
+              Everything journalists and researchers need to write about Banned Books: live stats, boilerplate copy in three lengths, founder details, downloadable logos, story angles, and a press contact.
+            </p>
+            <p className="mt-3 text-xs text-neutral-500">
+              Data last updated <strong className="font-medium text-neutral-700">{lastUpdated}</strong>.
+            </p>
           </div>
         </section>
 
-        {/* 3. Boilerplates */}
-        <section aria-labelledby="boilerplate-heading">
-          <h2 id="boilerplate-heading" className="text-xl font-semibold mb-4">Boilerplate</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Three lengths, ready to paste. All stats are live as of the timestamp above.
-          </p>
-          <div className="flex flex-col gap-6">
-            {[
-              { len: '50 words', text: boilerplate50 },
-              { len: '100 words', text: boilerplate100 },
-              { len: '250 words', text: boilerplate250 },
-            ].map(({ len, text }) => (
-              <div
-                key={len}
-                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-5"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-medium uppercase tracking-widest text-brand/80 dark:text-brand/70">
-                    {len}
-                  </span>
-                  <CopyButton text={text} label={`${len} boilerplate`} />
-                </div>
-                <p className="text-sm leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                  {text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 4. Founder */}
-        <section aria-labelledby="founder-heading">
-          <h2 id="founder-heading" className="text-xl font-semibold mb-4">Founder</h2>
-          <div className="flex flex-col sm:flex-row gap-6 items-start">
-            <Image
-              src="/ludo.png"
-              alt="Portrait of Ludo Raedts"
-              width={200}
-              height={200}
-              priority
-              className="w-[200px] h-[200px] shrink-0 rounded-xl object-cover"
-            />
-            <div className="flex flex-col gap-3">
-              <div>
-                <p className="text-lg font-semibold leading-tight">Ludo Raedts</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Founder · Groningen, Netherlands</p>
-              </div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                Ludo Raedts is a Dutch entrepreneur based in Groningen. He started Banned Books in April 2026
-                as a solo project, after finding no single structured international reference for
-                book-censorship data. He built one from scratch using open sources, public records, and
-                AI-assisted tooling. The catalogue documents what governments, schools, and libraries have
-                banned — without endorsing the bans or the books — and treats coverage gaps as facts to
-                disclose, not problems to hide.
-              </p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                For Ludo&apos;s personal motivation behind the project, see{' '}
-                <Link href="/about" className="text-brand font-medium hover:underline">
-                  About →
-                </Link>
-                .
-              </p>
-              {/* TODO: Ludo to supply ORCID iD; render as a labelled link once available. */}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. Quotable claims */}
-        <section aria-labelledby="claims-heading">
-          <h2 id="claims-heading" className="text-xl font-semibold mb-4">Quotable claims</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Self-contained sentences suitable for direct citation or AI Overview surfaces.
-          </p>
-          <ul className="flex flex-col gap-3">
-            {quotableClaims.map((claim) => (
-              <li
-                key={claim}
-                className="text-sm leading-relaxed text-gray-800 dark:text-gray-200 border-l-2 border-brand/60 pl-4"
-              >
-                {claim}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* 6. Story angles */}
-        <section aria-labelledby="angles-heading">
-          <h2 id="angles-heading" className="text-xl font-semibold mb-4">Story angles</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Pitch-ready ideas with the catalogue page that supplies the underlying data.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {STORY_ANGLES.map(({ title, body, href, linkLabel }) => (
-              <div
-                key={title}
-                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4 flex flex-col gap-2"
-              >
-                <h3 className="text-sm font-semibold leading-snug">{title}</h3>
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed flex-1">{body}</p>
-                <Link
-                  href={href}
-                  className="text-xs font-medium text-brand hover:underline self-start"
-                >
-                  {linkLabel} →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 7. Logo & brand assets */}
-        <section aria-labelledby="logo-heading">
-          <h2 id="logo-heading" className="text-xl font-semibold mb-4">Logo &amp; brand assets</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Use the wordmark or compact mark when crediting Banned Books. Right-click any preview or use the
-            download link to save the file. Please don’t recolour or distort the marks.
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {LOGO_ASSETS.map(({ file, label, format, description }) => {
-              const isDark = file.includes('main-dark') || file.includes('mono-white')
-              return (
-                <div
-                  key={file}
-                  className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3 flex flex-col gap-2"
-                >
-                  <div
-                    className={`h-24 rounded-md flex items-center justify-center overflow-hidden ${
-                      isDark ? 'bg-gray-900' : 'bg-gray-50 dark:bg-gray-100'
-                    }`}
-                  >
-                    <Image
-                      src={`/brand/${file}`}
-                      alt={label}
-                      width={120}
-                      height={80}
-                      className="max-h-20 w-auto object-contain"
-                      unoptimized={file.endsWith('.svg')}
-                    />
+        {/* ── By the numbers ─────────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="Live data">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="stats-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+              By the numbers
+            </h2>
+            <div className="flex flex-wrap gap-x-10 gap-y-4">
+              {[
+                { value: bookCount, label: 'Books documented' },
+                { value: banCount, label: 'Ban records' },
+                { value: countryCount, label: 'Countries covered' },
+                { value: `${minYear}–${maxYear}`, label: 'Date range' },
+              ].map(({ value, label }) => (
+                <div key={label}>
+                  <div className="font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood tabular-nums">
+                    {value}
                   </div>
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-xs font-semibold leading-tight">{label}</p>
-                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">{description}</p>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[10px] uppercase tracking-widest text-gray-400">{format}</span>
-                      <a
-                        href={`/brand/${file}`}
-                        download
-                        className="text-[11px] font-medium text-brand hover:underline"
-                      >
-                        Download
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="mt-8">
-            <h3 className="text-sm font-semibold mb-3">Brand colours</h3>
-            <div className="flex flex-wrap gap-4">
-              {BRAND_COLORS.map(({ name, hex }) => (
-                <div
-                  key={hex}
-                  className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2"
-                >
-                  <span
-                    className="inline-block w-8 h-8 rounded-md border border-gray-200 dark:border-gray-700"
-                    style={{ backgroundColor: hex }}
-                    aria-hidden
-                  />
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-sm font-medium">{name}</span>
-                    <code className="text-[11px] text-gray-500 dark:text-gray-400">{hex}</code>
+                  <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
+                    {label}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </SectionShell>
 
-        {/* 8. Recent coverage */}
-        <section aria-labelledby="coverage-heading">
-          <h2 id="coverage-heading" className="text-xl font-semibold mb-4">Recent coverage</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            This list will be populated as coverage appears. To suggest a citation, email{' '}
-            <a href="mailto:info@banned-books.org" className="text-brand font-medium hover:underline">
-              info@banned-books.org
-            </a>
-            .
-          </p>
-        </section>
+        {/* ── Boilerplate ────────────────────────────────────────────── */}
+        <SectionShell tone="white" eyebrow="Ready to paste">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="boilerplate-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
+              Boilerplate
+            </h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Three lengths, ready to paste. All stats are live as of the timestamp above.
+            </p>
+            <div className="flex flex-col gap-6">
+              {[
+                { len: '50 words', text: boilerplate50 },
+                { len: '100 words', text: boilerplate100 },
+                { len: '250 words', text: boilerplate250 },
+              ].map(({ len, text }) => (
+                <div key={len} className="border border-neutral-200 bg-white rounded-sm p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-oxblood">
+                      {len}
+                    </span>
+                    <CopyButton text={text} label={`${len} boilerplate`} />
+                  </div>
+                  <p className="text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap">
+                    {text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionShell>
 
-        {/* 9. Contact */}
-        <section aria-labelledby="contact-heading">
-          <h2 id="contact-heading" className="text-xl font-semibold mb-4">Contact</h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
-            <dt className="text-gray-500 dark:text-gray-400">Press inquiries</dt>
-            <dd>
-              <a
-                href="mailto:info@banned-books.org"
-                className="text-brand font-medium hover:underline"
-              >
+        {/* ── Founder ────────────────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="The person behind the project">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="founder-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+              Founder
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <Image
+                src="/ludo.png"
+                alt="Portrait of Ludo Raedts"
+                width={200}
+                height={200}
+                priority
+                className="w-[200px] h-[200px] shrink-0 rounded-sm object-cover"
+              />
+              <div className="flex flex-col gap-3">
+                <div>
+                  <p className="font-serif text-lg font-semibold leading-tight text-gray-900">Ludo Raedts</p>
+                  <p className="text-sm text-neutral-500">Founder · Groningen, Netherlands</p>
+                </div>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Ludo Raedts is a Dutch entrepreneur based in Groningen. He started Banned Books in April 2026 as a solo project, after finding no single structured international reference for book-censorship data. He built one from scratch using open sources, public records, and AI-assisted tooling. The catalogue documents what governments, schools, and libraries have banned — without endorsing the bans or the books — and treats coverage gaps as facts to disclose, not problems to hide.
+                </p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  For Ludo&apos;s personal motivation behind the project, see{' '}
+                  <Link href="/about" className="text-oxblood font-medium hover:underline">
+                    About →
+                  </Link>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </SectionShell>
+
+        {/* ── Quotable claims ───────────────────────────────────────── */}
+        <SectionShell tone="white" eyebrow="For citation">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="claims-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
+              Quotable claims
+            </h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Self-contained sentences suitable for direct citation or AI Overview surfaces.
+            </p>
+            <ul className="flex flex-col gap-3">
+              {quotableClaims.map((claim) => (
+                <li
+                  key={claim}
+                  className="font-serif text-base leading-relaxed text-gray-900 border-l-2 border-oxblood/60 pl-4"
+                >
+                  {claim}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </SectionShell>
+
+        {/* ── Story angles ─────────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="Pitch-ready ideas">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="angles-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
+              Story angles
+            </h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Pitch-ready ideas with the catalogue page that supplies the underlying data.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {STORY_ANGLES.map(({ title, body, href, linkLabel }) => (
+                <div key={title} className="border border-neutral-200 bg-white rounded-sm p-5 flex flex-col gap-2">
+                  <h3 className="font-serif text-base font-semibold leading-snug text-gray-900">{title}</h3>
+                  <p className="text-xs text-neutral-600 leading-relaxed flex-1">{body}</p>
+                  <Link href={href} className="text-xs font-medium text-oxblood hover:underline self-start mt-1">
+                    {linkLabel} →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionShell>
+
+        {/* ── Logo & brand assets ──────────────────────────────────── */}
+        <SectionShell tone="white" eyebrow="Brand assets">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="logo-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
+              Logo &amp; brand assets
+            </h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Use the wordmark or compact mark when crediting Banned Books. Right-click any preview or use the download link to save the file. Please don&rsquo;t recolour or distort the marks.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {LOGO_ASSETS.map(({ file, label, format, description }) => {
+                const isDark = file.includes('main-dark') || file.includes('mono-white')
+                return (
+                  <div key={file} className="border border-neutral-200 bg-white rounded-sm p-3 flex flex-col gap-2">
+                    <div
+                      className={`h-24 rounded-sm flex items-center justify-center overflow-hidden ${
+                        isDark ? 'bg-neutral-900' : 'bg-neutral-50'
+                      }`}
+                    >
+                      <Image
+                        src={`/brand/${file}`}
+                        alt={label}
+                        width={120}
+                        height={80}
+                        className="max-h-20 w-auto object-contain"
+                        unoptimized={file.endsWith('.svg')}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-xs font-semibold leading-tight text-gray-900">{label}</p>
+                      <p className="text-[11px] text-neutral-500 leading-snug">{description}</p>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-[10px] uppercase tracking-widest text-neutral-400">{format}</span>
+                        <a
+                          href={`/brand/${file}`}
+                          download
+                          className="text-[11px] font-medium text-oxblood hover:underline"
+                        >
+                          Download
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="mt-8">
+              <h3 className="font-serif text-base font-semibold mb-3 text-gray-900">Brand colours</h3>
+              <div className="flex flex-wrap gap-4">
+                {BRAND_COLORS.map(({ name, hex }) => (
+                  <div
+                    key={hex}
+                    className="flex items-center gap-3 border border-neutral-200 bg-white rounded-sm px-3 py-2"
+                  >
+                    <span
+                      className="inline-block w-8 h-8 rounded-sm border border-neutral-200"
+                      style={{ backgroundColor: hex }}
+                      aria-hidden
+                    />
+                    <div className="flex flex-col leading-tight">
+                      <span className="text-sm font-medium text-gray-900">{name}</span>
+                      <code className="text-[11px] text-neutral-500">{hex}</code>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </SectionShell>
+
+        {/* ── Recent coverage ──────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="As seen in">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="coverage-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
+              Recent coverage
+            </h2>
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              This list will be populated as coverage appears. To suggest a citation, email{' '}
+              <a href="mailto:info@banned-books.org" className="text-oxblood font-medium hover:underline">
                 info@banned-books.org
-              </a>
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">Response time</dt>
-            <dd className="text-gray-700 dark:text-gray-300">Within 48 hours</dd>
-            <dt className="text-gray-500 dark:text-gray-400">Dataset &amp; licensing</dt>
-            <dd>
-              <Link href="/dataset" className="text-brand font-medium hover:underline">
-                /dataset
-              </Link>
-            </dd>
-            <dt className="text-gray-500 dark:text-gray-400">General inquiries</dt>
-            <dd>
-              <Link href="/about#get-in-touch" className="text-brand font-medium hover:underline">
-                Contact form
-              </Link>
-            </dd>
-          </dl>
-        </section>
+              </a>.
+            </p>
+          </div>
+        </SectionShell>
 
-        {/* 10. Footer note */}
-        <footer className="pt-6 border-t border-gray-200 dark:border-gray-800">
-          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            Banned Books is an independent project. No affiliations with publishers, governments, or
-            advocacy organisations.
-          </p>
-        </footer>
+        {/* ── Contact ──────────────────────────────────────────────── */}
+        <SectionShell tone="white" eyebrow="Get in touch">
+          <div className="max-w-3xl mx-auto">
+            <h2 id="contact-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+              Contact
+            </h2>
+            <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
+              <dt className="text-neutral-500">Press inquiries</dt>
+              <dd>
+                <a href="mailto:info@banned-books.org" className="text-oxblood font-medium hover:underline">
+                  info@banned-books.org
+                </a>
+              </dd>
+              <dt className="text-neutral-500">Response time</dt>
+              <dd className="text-neutral-700">Within 48 hours</dd>
+              <dt className="text-neutral-500">Dataset &amp; licensing</dt>
+              <dd>
+                <Link href="/dataset" className="text-oxblood font-medium hover:underline">
+                  /dataset
+                </Link>
+              </dd>
+              <dt className="text-neutral-500">General inquiries</dt>
+              <dd>
+                <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">
+                  Contact form
+                </Link>
+              </dd>
+            </dl>
+            <p className="mt-10 pt-6 border-t border-neutral-200 text-xs text-neutral-500 leading-relaxed">
+              Banned Books is an independent project. No affiliations with publishers, governments, or advocacy organisations.
+            </p>
+          </div>
+        </SectionShell>
       </main>
     </>
   )

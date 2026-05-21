@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import { isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 // ISR: reading-club page reads content blocks (editor-managed) + a
 // banned-books-week promo flag. Both change at most a few times per
@@ -62,71 +64,95 @@ export default async function ReadingClubHubPage() {
     ],
   }
 
+  // Shared prose styling for the editor-managed content blocks. Mirrors the
+  // article-prose styles used on /methodology and /history so all editorial
+  // copy across the site looks like the same publication.
+  const proseClass =
+    'prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-oxblood/30 prose-h3:mt-6 prose-h3:mb-2 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 max-w-none'
+
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <header className="mb-10 pb-8 border-b border-neutral-200">
-        <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">Reading club · Four tracks</p>
-        <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-3">
-          Reading banned books together.
-        </h1>
-        {showBBWLink && (
-          <p className="text-sm">
-            <Link href="/banned-books-week" className="text-oxblood hover:underline">→ Banned Books Week hub</Link>
-          </p>
-        )}
-      </header>
 
-      {intro && (
-        <section className="mb-10">
-          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: intro }} />
-        </section>
-      )}
-
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Pick a track</h2>
-        {/*
-          items-stretch on the grid keeps every cell the same height; h-full on
-          each Link fills the cell so cards are visually equal regardless of
-          how long the description copy is.
-        */}
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
-          {TRACKS.map(t => (
-            <li key={t.href} className="flex">
-              <Link
-                href={t.href}
-                className="group flex flex-col h-full w-full rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
-              >
-                <div className="font-semibold text-sm text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors">{t.label}</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t.text}</div>
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Eyebrow>Reading club · Four tracks</Eyebrow>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Reading banned books together.
+          </h1>
+          {intro && (
+            <div
+              className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900 prose-p:!my-0 prose-a:text-oxblood"
+              dangerouslySetInnerHTML={{ __html: intro }}
+            />
+          )}
+          {showBBWLink && (
+            <p className="mt-4 text-sm">
+              <Link href="/banned-books-week" className="text-oxblood hover:underline">
+                → Banned Books Week hub
               </Link>
-            </li>
-          ))}
-        </ul>
+            </p>
+          )}
+        </div>
       </section>
 
+      {/* ── Pick a track ──────────────────────────────────────────── */}
+      <SectionShell tone="cream" eyebrow="Choose a path">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+            Pick a track
+          </h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
+            {TRACKS.map(t => (
+              <li key={t.href} className="flex">
+                <Link
+                  href={t.href}
+                  className="group flex flex-col h-full w-full bg-white border border-neutral-200 hover:border-oxblood rounded-sm p-5 transition-colors"
+                >
+                  <span className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Track</span>
+                  <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+                    {t.label}
+                  </p>
+                  <p className="text-xs text-neutral-600 leading-relaxed mt-1.5">{t.text}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </SectionShell>
+
+      {/* ── Why read banned books together ────────────────────────── */}
       {why && (
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Why read banned books together</h2>
-          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: why }} />
-        </section>
+        <SectionShell tone="white" eyebrow="The case for it">
+          <article className={`max-w-3xl mx-auto ${proseClass}`}>
+            <h2 className="!mt-0">Why read banned books together</h2>
+            <div dangerouslySetInnerHTML={{ __html: why }} />
+          </article>
+        </SectionShell>
       )}
 
+      {/* ── How to start ──────────────────────────────────────────── */}
       {howToStart && (
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">How to start</h2>
-          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: howToStart }} />
-        </section>
+        <SectionShell tone="cream" eyebrow="Getting started">
+          <article className={`max-w-3xl mx-auto ${proseClass}`}>
+            <h2 className="!mt-0">How to start</h2>
+            <div dangerouslySetInnerHTML={{ __html: howToStart }} />
+          </article>
+        </SectionShell>
       )}
 
+      {/* ── Universal discussion questions ────────────────────────── */}
       {universal && (
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Discussion questions for any banned book</h2>
-          <div className="prose prose-gray dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: universal }} />
-        </section>
+        <SectionShell tone="white" eyebrow="For any banned book">
+          <article className={`max-w-3xl mx-auto ${proseClass}`}>
+            <h2 className="!mt-0">Discussion questions for any banned book</h2>
+            <div dangerouslySetInnerHTML={{ __html: universal }} />
+          </article>
+        </SectionShell>
       )}
     </main>
   )
