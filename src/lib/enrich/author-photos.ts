@@ -20,6 +20,7 @@
 
 import { adminClient } from '../supabase'
 import { authorLadder } from './_author-ladder'
+import { isAllowedImageUrl } from '../allowed-image-hosts'
 
 const DELAY_MS = 200
 const UA = 'banned-books.org/1.0 (contact@banned-books.org)'
@@ -248,18 +249,62 @@ const NON_PORTRAIT_KEYWORDS = [
   'background', 'hero', 'wallpaper', 'lettering', 'typography',
   'instagram', 'facebook', 'twitter', 'youtube', 'tiktok',
   'icon', 'social',
+  // Book-product keywords. Author sites are mostly populated with images
+  // of their books, not themselves, and those images frequently share the
+  // alt-text/filename slot with the author's name ("Bad Things Happen Here
+  // by Rebecca Barrow paperback.jpg"). Filter aggressively.
+  'paperback', 'hardback', 'hardcover', 'ebook', 'audiobook', 'audiobooks',
+  'wordmark', 'bookcover', 'jacket', 'frontcover',
 ]
 function isObviouslyNotAPortrait(url: string): boolean {
-  const lower = decodeURIComponent(url).toLowerCase()
+  let raw = url
+  try { raw = decodeURIComponent(url) } catch { /* keep raw */ }
+  // Insert a space before each uppercase letter so camelCase inline-concat
+  // filenames like `JadziaLogo2.jpg` become `jadzia logo2.jpg` and the
+  // keyword regexes catch the `logo` boundary.
+  const lower = raw.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase()
   if (/\b97[89]\d{10}\b/.test(lower)) return true // ISBN-13 used as filename
   if (/(^|[^a-z0-9])cover[^a-z0-9]/.test(lower)) return true   // book cover patterns
   for (const kw of NON_PORTRAIT_KEYWORDS) {
-    const re = new RegExp(`(^|[^a-z0-9])${kw}(?=[^a-z0-9]|$)`)
+    // Allow an optional digit suffix (e.g. "header2b", "logo3") because
+    // sites version banners that way and the keyword is still the strong
+    // signal.
+    const re = new RegExp(`(^|[^a-z0-9])${kw}\\d*[a-z]?(?=[^a-z0-9]|$)`)
     if (re.test(lower)) return true
   }
   // Tiny standalone icons (ig.png, fb.svg, x.png on their own as filenames)
   if (/\/(ig|fb|tw|yt|tt|li)\.(png|svg|gif|jpg|jpeg|webp)$/i.test(lower)) return true
+  // (The "X by Author" book-citation pattern requires the author tokens,
+  // so it's applied in the caller — see extractBestAuthorImage. It can't
+  // be checked here without name context, and applying it blindly would
+  // catch "photo_by_PhotographerName" credit suffixes on legitimate
+  // portraits.)
+  // Gravatar default-avatar fallback (d=mm / d=identicon etc) — sites with
+  // JSON-LD Person.image but no actual photo configured fall back to a
+  // generic placeholder, which Gravatar happily serves. Real Gravatar
+  // photos don't include the `d=` default parameter.
+  if (/\/\/(secure\.)?gravatar\.com\/avatar\/[^?]+\?[^#]*\bd=(mm|identicon|monsterid|wavatar|retro|robohash|blank|404)\b/.test(lower)) return true
   return false
+}
+
+// Jetpack image CDN (i0/i1/i2/i3.wp.com) prefixes the source domain to the
+// path, e.g. `i0.wp.com/danwang.co/wp-content/uploads/foo.jpg`. Our path-
+// token scoring would then match the author's name from the source domain
+// even when the real filename is unrelated. Strip the source-domain prefix
+// so we only score against the actual on-disk path.
+function effectivePathForScoring(resolvedUrl: string): string {
+  try {
+    const u = new URL(resolvedUrl)
+    const host = u.hostname.toLowerCase()
+    if (/^i[0-3]\.wp\.com$/.test(host)) {
+      // First path segment is the source hostname; drop it.
+      const stripped = u.pathname.replace(/^\/[^/]+/, '')
+      return decodeURIComponent(stripped).toLowerCase()
+    }
+    return decodeURIComponent(u.pathname).toLowerCase()
+  } catch {
+    return resolvedUrl.toLowerCase()
+  }
 }
 
 const PORTRAIT_HINTS = ['headshot', 'portrait', 'author photo', 'photo of', 'author-photo', 'author_photo', 'profile']
@@ -317,9 +362,18 @@ function extractBestAuthorImage(
     if (!resolved) continue
     if (isObviouslyNotAPortrait(resolved)) continue
     const alt = (attrs.match(/\balt=["']([^"']*)["']/i)?.[1] ?? '').toLowerCase()
-    let pathLower: string
-    try { pathLower = decodeURIComponent(new URL(resolved).pathname).toLowerCase() }
-    catch { pathLower = resolved.toLowerCase() }
+    const pathLower = effectivePathForScoring(resolved)
+    // "X by Author" book-citation pattern: tokens appear AFTER the word
+    // "by" in either alt-text or path. Distinguishes from "photo_by_Y"
+    // credits, where the author tokens appear BEFORE "by" and the
+    // photographer's name is after.
+    const looksLikeBookCitation = (s: string): boolean => {
+      const m = s.match(/[-_+ ]by[-_+ ](.+)$/)
+      if (!m) return false
+      const after = m[1]
+      return tokens.length > 0 && tokens.every(t => after.includes(t))
+    }
+    if (looksLikeBookCitation(pathLower) || looksLikeBookCitation(alt)) continue
 
     let score = 0
     const reasons: string[] = []
@@ -336,7 +390,11 @@ function extractBestAuthorImage(
     // hints aren't enough — the word "photo" / "profile" appears on many
     // theme assets and template stock images.
     if (tokensInAlt + tokensInPath === 0) continue
-    if (score >= 25) candidates.push({ url: resolved, score, reason: reasons.join(', ') })
+    // Threshold 30 = at minimum full-name-in-path OR full-name-in-alt OR
+    // one-token-each-in-alt-and-path plus a portrait hint. Lower scores
+    // (e.g. 25 = single-token in both alt and path) were observed to be a
+    // mix of real hits and book covers / banners.
+    if (score >= 30) candidates.push({ url: resolved, score, reason: reasons.join(', ') })
   }
 
   if (candidates.length === 0) return null
@@ -348,6 +406,20 @@ async function trySite(name: string): Promise<PhotoResult> {
   const wikiTitle = await getWikiTitle(name)
   if (!wikiTitle) return { source: null, url: null, meta: 'site: no Wikipedia match' }
   await sleep(DELAY_MS)
+
+  // Wikipedia search is fuzzy and will happily return "Nancy Farmer" for
+  // a query of "Lois Metzger" if no better page exists. Reject any title
+  // whose tokens don't include the input's surname (last name token). For
+  // single-token names (initials-stripped), skip the check since there's
+  // nothing meaningful to validate against.
+  const inputTokens = nameTokens(name)
+  if (inputTokens.length >= 2) {
+    const surnameToken = inputTokens[inputTokens.length - 1]
+    const titleTokens = nameTokens(wikiTitle)
+    if (!titleTokens.includes(surnameToken)) {
+      return { source: null, url: null, meta: `site: title "${wikiTitle}" missing surname "${surnameToken}"` }
+    }
+  }
 
   const qid = await getQidFromTitle(wikiTitle)
   if (!qid) return { source: null, url: null, meta: `site: ${wikiTitle} no QID` }
@@ -435,6 +507,12 @@ async function tryOpenLibrary(name: string): Promise<PhotoResult> {
 export type EnrichAuthorPhotosOpts = {
   apply: boolean
   limit?: number
+  /**
+   * If set, restrict the run to a single author by slug. Bypasses the
+   * photo_url-IS-NULL gate so it can be re-run for a specific author
+   * (e.g. after a prior null result). Used for targeted gap-fills.
+   */
+  slug?: string
   onProgress?: (msg: string) => void
 }
 
@@ -455,13 +533,21 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
   const supabase = adminClient()
   const limit = opts.limit ?? 50
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('authors')
     .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
-    .is('photo_url', null)
     .not('slug', 'is', null)
     .order('display_name')
     .limit(limit)
+
+  if (opts.slug) {
+    // Targeted mode: bypass the IS NULL filter so we can re-probe a specific author.
+    query = query.eq('slug', opts.slug)
+  } else {
+    query = query.is('photo_url', null)
+  }
+
+  const { data, error } = await query
 
   if (error) throw new Error(`DB read: ${error.message}`)
 
@@ -527,6 +613,17 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
     results.push({ name: author.display_name, source: result.source, url: result.url, meta: result.meta })
 
     if (result.url) {
+      // Final host-allowlist gate before DB write. Anything not on the
+      // ALLOWED_IMAGE_HOSTS list would 500 the next/image renderer, so reject
+      // here rather than poison the column. The `site` source is the main
+      // leak vector (author personal homepages), but check every source for
+      // belt-and-suspenders.
+      if (!isAllowedImageUrl(result.url)) {
+        log(`    ✗ rejected: host not in allowlist (${result.url})`)
+        skipped++
+        await sleep(DELAY_MS)
+        continue
+      }
       if (result.source === 'wikidata') bySource.wikidata++
       if (result.source === 'openlibrary') bySource.openlibrary++
       if (result.source === 'site') bySource.site++

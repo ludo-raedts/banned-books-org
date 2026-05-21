@@ -14,6 +14,8 @@ import {
   banContext,
   toBookCard,
 } from '@/lib/top-list-data'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Trending banned books this week',
@@ -59,39 +61,78 @@ export default async function TrendingBannedBooksPage() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
-      <header className="mb-8 max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
-          Trending banned books this week
-        </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          The {books.length} banned books that drew the most readers on banned-books.org over the
-          last seven days. The list rebuilds itself as new visitors land — a 1989 fatwa novel might
-          sit beside a 2023 school-board removal, depending on what&rsquo;s in the news cycle.
-        </p>
-      </header>
 
-      {books.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">
-          No view data yet — check back once the catalogue has accumulated traffic.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {books.map(book => (
-            <TopListBookCard key={book.id} book={book} />
-          ))}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All books
+          </Link>
+
+          <Eyebrow>Top-list · Updated every 30 minutes</Eyebrow>
+
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+            Trending banned books this week.
+          </h1>
+
+          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            The {books.length} banned books that drew the most readers on banned-books.org over the last seven days. The list rebuilds itself as new visitors land — a 1989 fatwa novel might sit beside a 2023 school-board removal, depending on what&rsquo;s in the news cycle.
+          </p>
         </div>
-      )}
+      </section>
 
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">← Home</Link>
-        <Link href="/rising-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Rising this week →</Link>
-        <Link href="/top-100-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Top 100 banned books →</Link>
-      </div>
+      <SectionShell tone="cream" eyebrow="Last 7 days">
+        {books.length === 0 ? (
+          <p className="text-neutral-500 text-sm">
+            No view data yet — check back once the catalogue has accumulated traffic.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {books.map(book => (
+              <TopListBookCard key={book.id} book={book} />
+            ))}
+          </div>
+        )}
+      </SectionShell>
+
+      <SectionShell tone="white">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link
+            href="/top-100-banned-books"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">All-time</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Top 100 banned books →
+            </p>
+          </Link>
+          <Link
+            href="/most-banned-authors"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">By writer</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Most banned authors →
+            </p>
+          </Link>
+          <Link
+            href="/non-english-banned-books"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">International</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Non-English banned books →
+            </p>
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }

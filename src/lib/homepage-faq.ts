@@ -31,7 +31,7 @@ export function buildHomepageFaq({
 
   items.push({
     q: 'How many books are banned worldwide?',
-    a: `We document ${total.toLocaleString('en')} bans across ${countryCount} countries. The real total is higher — closed societies systematically under-report, and historical bans often go unrecorded. Every entry in our catalogue traces to a verifiable source.`,
+    a: `We document ${total.toLocaleString('en')} books with at least one recorded ban, across ${countryCount} countries. The real total is higher — closed societies systematically under-report, and historical bans often go unrecorded. Every entry in our catalogue traces to a verifiable source.`,
   })
 
   items.push({
@@ -52,7 +52,7 @@ export function buildHomepageFaq({
   if (mostBannedBook) {
     items.push({
       q: 'What is the most banned book in the world?',
-      a: `[${mostBannedBook.title}](/books/${mostBannedBook.slug}) by ${mostBannedBook.author} — ${mostBannedBook.banCount} documented bans across ${mostBannedBook.countryCount} countries. See the [full top 100](/top-100-banned-books) for the rest of the ranking.`,
+      a: `[${mostBannedBook.title}](/books/${mostBannedBook.slug}) by ${mostBannedBook.author} — banned in ${mostBannedBook.countryCount} ${mostBannedBook.countryCount === 1 ? 'country' : 'countries'}${mostBannedBook.banCount > mostBannedBook.countryCount ? ` across ${mostBannedBook.banCount} documented events` : ''}. See the [full top 100](/top-100-banned-books) for the rest of the ranking.`,
     })
   }
 

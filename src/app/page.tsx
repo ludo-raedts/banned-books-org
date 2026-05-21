@@ -178,7 +178,7 @@ export default async function HomePage() {
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
-    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(30),
+    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').limit(30),
     // 300 instead of 100 so the Non-English rotation pool has enough
     // language-diverse candidates after the cover-valid + dedup filters.
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
@@ -206,7 +206,7 @@ export default async function HomePage() {
   const risingIds = risingRows.map(r => Number(r.entity_id))
   const topBannedRows = (topBannedRes.data ?? []) as { entity_id: number; total_bans: number }[]
   const placeholderIds = new Set(((placeholderAuthorsRes.data ?? []) as { id: number }[]).map(a => a.id))
-  const bannedAuthorRows = ((bannedAuthorsRes.data ?? []) as { entity_id: number; total_bans: number; banned_books: number }[])
+  const bannedAuthorRows = ((bannedAuthorsRes.data ?? []) as { entity_id: number; total_bans: number; banned_books: number; granular_events: number; aggregate_events: number }[])
     .filter(r => !placeholderIds.has(Number(r.entity_id)))
     .slice(0, 10)
   const bannedAuthorIds = bannedAuthorRows.map(r => Number(r.entity_id))
@@ -315,14 +315,18 @@ export default async function HomePage() {
     .map((r): TopListAuthor | null => {
       const a = authorById.get(Number(r.entity_id))
       if (!a) return null
-      const totalBansA = Number(r.total_bans)
       const banBooks = Number(r.banned_books)
+      // granular_events (region OR institution set) — discrete documented
+      // events. total_bans would also count Wikipedia/ALA aggregate rows
+      // (1 row = "banned somewhere historically") and inflate the badge.
+      const granular = Number(r.granular_events ?? 0)
+      const eventsTail = granular > 0 ? ` (${granular.toLocaleString('en')} ${granular === 1 ? 'event' : 'events'})` : ''
       return {
         id: a.id,
         display_name: a.display_name,
         slug: a.slug,
         photo_url: a.photo_url,
-        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned (${totalBansA.toLocaleString('en')} ${totalBansA === 1 ? 'event' : 'events'})`,
+        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned${eventsTail}`,
       }
     })
     .filter((a): a is TopListAuthor => a !== null)

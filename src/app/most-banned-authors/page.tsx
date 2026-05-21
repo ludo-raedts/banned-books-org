@@ -8,6 +8,8 @@ import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { TopListAuthorCard } from '@/components/top-list-card'
 import type { TopListAuthor } from '@/components/top-list-card'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Most banned authors of all time',
@@ -16,7 +18,13 @@ export const metadata: Metadata = {
   alternates: { canonical: '/most-banned-authors' },
 }
 
-type AuthorRow = { entity_id: number; total_bans: number; banned_books: number }
+type AuthorRow = {
+  entity_id: number
+  total_bans: number
+  banned_books: number
+  granular_events: number
+  aggregate_events: number
+}
 
 export default async function MostBannedAuthorsPage() {
   const timer = newTimer('authors-destination')
@@ -26,7 +34,7 @@ export default async function MostBannedAuthorsPage() {
     Promise.all([
       supabase
         .from('v_top_banned_authors')
-        .select('entity_id, total_bans, banned_books')
+        .select('entity_id, total_bans, banned_books, granular_events, aggregate_events')
         .limit(100),
       supabase.from('authors').select('id').eq('is_placeholder', true),
     ]),
@@ -52,14 +60,20 @@ export default async function MostBannedAuthorsPage() {
     .map((r): TopListAuthor | null => {
       const a = authorById.get(Number(r.entity_id))
       if (!a) return null
-      const totalBans = Number(r.total_bans)
       const banBooks = Number(r.banned_books)
+      // Use granular_events (PEN per-district + region) for the "events" tail.
+      // total_bans would inflate this by including Wikipedia/ALA aggregate rows
+      // that represent "documented historically" rather than discrete events.
+      const granular = Number(r.granular_events ?? 0)
+      const eventsTail = granular > 0
+        ? ` (${granular.toLocaleString('en')} documented ${granular === 1 ? 'event' : 'events'})`
+        : ''
       return {
         id: a.id,
         display_name: a.display_name,
         slug: a.slug,
         photo_url: a.photo_url,
-        context: `${totalBans.toLocaleString('en')} ${totalBans === 1 ? 'ban' : 'bans'} across ${banBooks} ${banBooks === 1 ? 'book' : 'books'}`,
+        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned${eventsTail}`,
       }
     })
     .filter((a): a is TopListAuthor => a !== null)
@@ -80,38 +94,79 @@ export default async function MostBannedAuthorsPage() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
-      <header className="mb-8 max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
-          Most banned authors of all time
-        </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          The {authors.length} writers censored across the most jurisdictions, ranked by total
-          documented bans. Each name is a constellation of decisions — sometimes one book in many
-          places (Salman Rushdie), sometimes many books in many places (Stephen King). The leaderboard
-          is what authorities, school boards, and courts have actually done with their work.
-        </p>
-      </header>
 
-      {authors.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No author leaderboard data available yet.</p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {authors.map(author => (
-            <TopListAuthorCard key={author.id} author={author} />
-          ))}
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All books
+          </Link>
+
+          <Eyebrow>Top-list · Ranked by distinct titles banned</Eyebrow>
+
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+            Most banned authors of all time.
+          </h1>
+
+          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            The {authors.length} writers censored across the most titles, ranked by the number of distinct books that have been banned somewhere. Each name is a constellation of decisions — sometimes one book in many places (Salman Rushdie), sometimes many books in many places (Stephen King). The leaderboard is what authorities, school boards, and courts have actually done with their work.
+          </p>
         </div>
-      )}
+      </section>
 
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">← Home</Link>
-        <Link href="/top-100-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Top 100 banned books →</Link>
-        <Link href="/stats" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Censorship statistics →</Link>
-      </div>
+      {/* ── The list ──────────────────────────────────────────────────── */}
+      <SectionShell tone="cream" eyebrow="Updated hourly">
+        {authors.length === 0 ? (
+          <p className="text-neutral-500 text-sm">No author leaderboard data available yet.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {authors.map(author => (
+              <TopListAuthorCard key={author.id} author={author} />
+            ))}
+          </div>
+        )}
+      </SectionShell>
+
+      {/* ── Footer nav ────────────────────────────────────────────────── */}
+      <SectionShell tone="white">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link
+            href="/top-100-banned-books"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Companion list</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Top 100 banned books →
+            </p>
+          </Link>
+          <Link
+            href="/trending-banned-books"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">This week</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Trending banned books →
+            </p>
+          </Link>
+          <Link
+            href="/stats"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">By the numbers</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Censorship statistics →
+            </p>
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }

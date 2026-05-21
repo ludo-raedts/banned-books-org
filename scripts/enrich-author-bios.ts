@@ -21,6 +21,7 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { authorLadder } from '../src/lib/enrich/_author-ladder'
+import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 
 const APPLY = process.argv.includes('--apply')
 const PHOTOS_ONLY = process.argv.includes('--photos-only')
@@ -335,7 +336,11 @@ async function main() {
       }
 
       // 2. Fetch page details (extract + photo + categories)
-      const { extract, photo, categories } = await fetchPageDetails(pageId)
+      const { extract, photo: photoRaw, categories } = await fetchPageDetails(pageId)
+      // Gate photo URL through the allowlist — Wikipedia thumbnails are
+      // upload.wikimedia.org so this should be a no-op in practice, but the
+      // guarantee belongs here at the boundary, not in render.
+      const photo = isAllowedImageUrl(photoRaw) ? photoRaw : null
       await sleep(DELAY_MS)
 
       // ── Photos-only branch: only the thumbnail matters ────────────────

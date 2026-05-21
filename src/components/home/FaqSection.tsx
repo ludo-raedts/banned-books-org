@@ -37,7 +37,20 @@ function stripMarkdown(text: string): string {
   return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
 }
 
-export default function FaqSection({ items }: { items: FaqItem[] }) {
+export default function FaqSection({
+  items,
+  // Optional overrides so the same component renders both the homepage FAQ
+  // and per-page FAQs (countries, scopes, reasons) with the same visual
+  // language while still letting each page set its own context line.
+  eyebrow = 'Questions readers ask',
+  title = 'Frequently asked.',
+  tone = 'white',
+}: {
+  items: FaqItem[]
+  eyebrow?: string
+  title?: string
+  tone?: 'white' | 'cream'
+}) {
   if (items.length === 0) return null
 
   const jsonLd = {
@@ -55,11 +68,11 @@ export default function FaqSection({ items }: { items: FaqItem[] }) {
   const ldHtml = JSON.stringify(jsonLd).replace(/</g, '\\u003c')
 
   return (
-    <SectionShell tone="white">
+    <SectionShell tone={tone}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml }} />
-      <Eyebrow>Questions readers ask</Eyebrow>
+      <Eyebrow>{eyebrow}</Eyebrow>
       <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-black/80">
-        Frequently asked.
+        {title}
       </h2>
       <div className="divide-y divide-neutral-200">
         {items.map((item, i) => (

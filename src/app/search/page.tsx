@@ -57,12 +57,12 @@ export default async function SearchPage({
     initialResult,
   ] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('mv_ban_counts').select('country_code, total_bans').gt('total_bans', 0),
+    supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('countries').select('code, name_en'),
     searchBooks({ q, country, reason, scope, activeOnly, offset: 0, limit: 48 }),
   ])
 
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
   const countries: CountryOption[] = (countriesRaw ?? [])
     .filter(c => countMap.has(c.code))
     .sort((a, b) => a.name_en.localeCompare(b.name_en))

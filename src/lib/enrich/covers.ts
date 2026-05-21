@@ -15,6 +15,7 @@
 import { adminClient } from '../supabase'
 import { checkImageUrl } from './_placeholder'
 import { titleLadder } from './_title-ladder'
+import { isAllowedImageUrl } from '../allowed-image-hosts'
 
 const OL_DELAY_MS   = 200
 const GB_DELAY_MS   = 600
@@ -310,6 +311,15 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     }
 
     const nowIso = new Date().toISOString()
+
+    // Final host-allowlist gate before DB write. All three sources (OL,
+    // Google Books, Wikipedia) emit allowlisted hosts, so this should never
+    // reject in practice — but it's the structural guarantee that bad URLs
+    // can't leak into cover_url even if a source upstream changes its CDN.
+    if (coverUrl && !isAllowedImageUrl(coverUrl)) {
+      log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → REJECTED non-allowlisted host: ${coverUrl}`)
+      coverUrl = null
+    }
 
     if (coverUrl) {
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → ${source}`)

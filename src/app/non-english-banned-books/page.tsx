@@ -14,6 +14,8 @@ import {
   langContext,
   toBookCard,
 } from '@/lib/top-list-data'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Banned books not written in English',
@@ -63,41 +65,78 @@ export default async function NonEnglishBannedBooksPage() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
-      <header className="mb-8 max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
-          Banned books not written in English
-        </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          The {books.length} most-banned books originally written in non-Latin-script languages —
-          Russian, Arabic, Chinese, Persian, Hebrew, and others. Most English-language
-          &ldquo;banned books&rdquo; lists stop at the US school-board frontier. This one keeps going:
-          Solzhenitsyn smuggled out of the USSR, El Saadawi imprisoned in Egypt, Li Hongzhi
-          outlawed in China.
-        </p>
-      </header>
 
-      {books.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">
-          No non-English titles in the top-banned ranking yet.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {books.map(book => (
-            <TopListBookCard key={book.id} book={book} />
-          ))}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All books
+          </Link>
+
+          <Eyebrow>Top-list · International</Eyebrow>
+
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+            Banned books not written in English.
+          </h1>
+
+          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            The {books.length} most-banned books originally written in non-Latin-script languages — Russian, Arabic, Chinese, Persian, Hebrew, and others. Most English-language &ldquo;banned books&rdquo; lists stop at the US school-board frontier. This one keeps going: Solzhenitsyn smuggled out of the USSR, El Saadawi imprisoned in Egypt, Li Hongzhi outlawed in China.
+          </p>
         </div>
-      )}
+      </section>
 
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">← Home</Link>
-        <Link href="/countries" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">By country →</Link>
-        <Link href="/top-100-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Top 100 banned books →</Link>
-      </div>
+      <SectionShell tone="cream" eyebrow="Ranked by ban count">
+        {books.length === 0 ? (
+          <p className="text-neutral-500 text-sm">
+            No non-English titles in the top-banned ranking yet.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {books.map(book => (
+              <TopListBookCard key={book.id} book={book} />
+            ))}
+          </div>
+        )}
+      </SectionShell>
+
+      <SectionShell tone="white">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link
+            href="/countries"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">By geography</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Browse countries →
+            </p>
+          </Link>
+          <Link
+            href="/top-100-banned-books"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">All-time</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Top 100 banned books →
+            </p>
+          </Link>
+          <Link
+            href="/banned-classics"
+            className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+          >
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Historical</p>
+            <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
+              Banned classics →
+            </p>
+          </Link>
+        </div>
+      </SectionShell>
     </main>
   )
 }

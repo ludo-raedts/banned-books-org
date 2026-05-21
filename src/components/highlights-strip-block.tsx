@@ -40,10 +40,10 @@ export default async function HighlightsStripBlock() {
       placeholderAuthorsRes,
     ] = await timer.wrap('parallel-7', () =>
       Promise.all([
-        supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(1),
+        supabase.from('v_top_banned_books').select('entity_id, total_bans, granular_events').limit(1),
         supabase.from('v_top_books_this_week').select('entity_id, views').limit(1),
         supabase.from('v_top_books_all_time').select('entity_id, views').limit(1),
-        supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books').limit(10),
+        supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').limit(10),
         supabase.from('v_top_authors_this_week').select('entity_id, views').limit(10),
         supabase.from('v_top_authors_all_time').select('entity_id, views').limit(10),
         supabase.from('authors').select('id').eq('is_placeholder', true),
@@ -54,7 +54,7 @@ export default async function HighlightsStripBlock() {
     const isAuthorOk = (id: number) => !placeholderIds.has(id)
 
     // ── Book IDs (top-1 per slot) ──────────────────────────────────────────
-    const topBannedRow = (topBannedRes.data ?? [])[0] as { entity_id: number; total_bans: number } | undefined
+    const topBannedRow = (topBannedRes.data ?? [])[0] as { entity_id: number; total_bans: number; granular_events: number } | undefined
     const trendingRow = (trendingRes.data ?? [])[0] as { entity_id: number } | undefined
     const allTimeRow = (allTimeRes.data ?? [])[0] as { entity_id: number } | undefined
 
@@ -95,8 +95,14 @@ export default async function HighlightsStripBlock() {
         if (!book) return null
         let context = ''
         if (s.slot === 'most-banned' && topBannedRow) {
+          // Use granular_events from the view (region OR institution set)
+          // so we don't add Wikipedia/ALA aggregate rows into the "bans" count.
+          // The book.bans relation here doesn't include region/institution
+          // columns, so we can't recompute client-side — use the view value.
+          const granular = Number(topBannedRow.granular_events ?? 0)
           const countries = new Set(book.bans.map(x => x.country_code)).size
-          context = `${book.bans.length} ${book.bans.length === 1 ? 'ban' : 'bans'} across ${countries} ${countries === 1 ? 'country' : 'countries'}`
+          const headline = `${countries} ${countries === 1 ? 'country' : 'countries'}`
+          context = granular > countries ? `${headline} · ${granular} bans` : headline
         }
         return { slot: s.slot, book, context }
       })
@@ -116,7 +122,7 @@ export default async function HighlightsStripBlock() {
     }
 
     const bannedAuthor = findAuthor(
-      (bannedAuthorsRes.data ?? []) as { entity_id: number; total_bans: number; banned_books: number }[],
+      (bannedAuthorsRes.data ?? []) as { entity_id: number; total_bans: number; banned_books: number; granular_events: number; aggregate_events: number }[],
     )
     const trendingAuthor = findAuthor(
       (trendingAuthorsRes.data ?? []) as { entity_id: number; views: number }[],
@@ -145,12 +151,15 @@ export default async function HighlightsStripBlock() {
     if (bannedAuthor) {
       const a = authorById.get(Number(bannedAuthor.entity_id))
       if (a) {
-        const totalBans = Number((bannedAuthor as { total_bans: number }).total_bans)
         const banBooks = Number((bannedAuthor as { banned_books: number }).banned_books)
+        // Same rationale as the homepage author badge: use granular_events
+        // (PEN per-district + region) for the events tail, not total_bans
+        // which would mix in aggregate Wikipedia/ALA rows.
+        const granular = Number((bannedAuthor as { granular_events: number }).granular_events ?? 0)
         authorItems.push({
           slot: 'most-banned',
           author: a,
-          context: `${totalBans.toLocaleString('en')} ${totalBans === 1 ? 'ban' : 'bans'} across ${banBooks} ${banBooks === 1 ? 'book' : 'books'}`,
+          context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned${granular > banBooks ? ` (${granular.toLocaleString('en')} events)` : ''}`,
         })
       }
     }

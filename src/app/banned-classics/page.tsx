@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Banned Classic Literature — Works Published Before 1970',

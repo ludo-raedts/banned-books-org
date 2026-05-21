@@ -3,6 +3,7 @@
  * Rate-limited to ~1 req/sec to respect Open Library's API.
  */
 import { adminClient } from '../src/lib/supabase'
+import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 
 const supabase = adminClient()
 
@@ -65,6 +66,12 @@ async function main() {
   for (const book of books as any[]) {
     const author = book.book_authors?.[0]?.authors?.display_name ?? ''
     const coverUrl = await fetchCoverUrl(book.title, author)
+
+    if (coverUrl && !isAllowedImageUrl(coverUrl)) {
+      console.log(`  ✗ ${book.slug}: rejected non-allowlisted host (${coverUrl})`)
+      notFound++
+      continue
+    }
 
     if (coverUrl) {
       const { error } = await supabase.from('books').update({ cover_url: coverUrl }).eq('id', book.id)

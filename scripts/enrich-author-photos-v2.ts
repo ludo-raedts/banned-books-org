@@ -24,6 +24,8 @@ import { enrichAuthorPhotos } from '../src/lib/enrich/author-photos'
 const APPLY = process.argv.includes('--apply')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
+const SLUG_ARG = process.argv.find(a => a.startsWith('--slug='))
+const SLUG = SLUG_ARG ? SLUG_ARG.split('=')[1] : undefined
 
 function csvEscape(v: string | number | null | undefined): string {
   if (v === null || v === undefined) return ''
@@ -33,11 +35,12 @@ function csvEscape(v: string | number | null | undefined): string {
 }
 
 async function main() {
-  console.log(`\n── enrich-author-photos-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}, limit=${LIMIT}) ──\n`)
+  console.log(`\n── enrich-author-photos-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}, limit=${LIMIT}${SLUG ? `, slug=${SLUG}` : ''}) ──\n`)
 
   const result = await enrichAuthorPhotos({
     apply: APPLY,
     limit: LIMIT,
+    slug: SLUG,
     onProgress: msg => console.log(msg),
   })
 

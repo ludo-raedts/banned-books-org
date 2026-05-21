@@ -7,14 +7,23 @@ import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { adminClient } from '@/lib/supabase'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
-import ReasonBadge, { reasonLabel, reasonIcon } from '@/components/reason-badge'
-import GenreBadge from '@/components/genre-badge'
+import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import ReasonControls from '@/components/reason-controls'
-import { Suspense } from 'react'
+import BookCardCompact from '@/components/home/BookCardCompact'
+import SectionShell from '@/components/section/SectionShell'
+import SectionHeader from '@/components/section/SectionHeader'
+import Eyebrow from '@/components/section/Eyebrow'
+import FaqSection from '@/components/home/FaqSection'
+import CitationBlock from '@/components/citation-block'
+import type { FaqItem } from '@/components/faq-accordion'
 
+// Long-form editorial intros per reason — anchored on the reason page so
+// the prose surfaces in both the visible <p> below the hero and the
+// CollectionPage JSON-LD description. Slugs match the `reasons` table.
 const REASON_INTROS: Record<string, string> = {
   lgbtq: 'LGBTQ+ content has become the primary driver of book challenges in American schools since 2020, with the American Library Association reporting it as the most cited reason in its annual challenged books survey. Titles featuring same-sex relationships, transgender characters, or frank depictions of queer identity have been removed from school libraries at record rates. Internationally, the picture is darker still: in dozens of countries, books with LGBTQ+ themes are subject to outright government bans under laws criminalizing "homosexual propaganda" or "immoral content."',
   political: 'Political censorship predates the printing press: Socrates was executed in 399 BCE for his ideas. Books that challenge state authority, document government atrocities, or advocate for dissident ideologies have been burned, banned, and confiscated by governments of every stripe — Communist, Fascist, theocratic, and democratic. The titles in this category include some of the most important works of the 20th century, silenced precisely because they told the truth.',
@@ -141,7 +150,7 @@ export default async function ReasonPage({
         .range(offset, offset + 999)
       if (!data || data.length === 0) break
       for (const bl of data) {
-        const ban = (bl.bans as any)
+        const ban = bl.bans as unknown as { book_id?: number; country_code?: string } | null
         if (!ban) continue
         if (ban.book_id) bookIdSet.add(ban.book_id)
         if (ban.country_code) {
@@ -211,7 +220,16 @@ export default async function ReasonPage({
     books.flatMap(b => b.bans.map(bn => bn.year_started).filter((y): y is number => y != null))
   )].sort((a, b) => b - a)
 
-  // ── Apply filters ─────────────────────────────────────────────────────────────
+  // A book on /reasons/lgbtq can also have non-LGBTQ+ bans (Index Librorum
+  // 1559, sedition 1933, etc.). Filter every per-reason aggregate to only
+  // the bans that actually carry THIS reason — otherwise the lead claims
+  // censorship started in 1559 because some LGBTQ+-tagged book also has
+  // an Index Librorum entry. matchesReason() is shared by totals, country
+  // counts, ranking, and the earliest-year calculation below.
+  const matchesReason = (ban: Book['bans'][number]) =>
+    ban.ban_reason_links.some(l => l.reasons?.slug === slug)
+
+  // ── Apply filters (affects the A–Z catalogue section only) ───────────────────
   const filtered = books.filter(book => {
     let bans = book.bans
     if (filterCountry) bans = bans.filter(b => b.country_code === filterCountry)
@@ -220,7 +238,6 @@ export default async function ReasonPage({
     return bans.length > 0
   })
 
-  // ── Sort ──────────────────────────────────────────────────────────────────────
   const sorted = [...filtered].sort((a, b) => {
     if (filterSort === 'title') return a.title.localeCompare(b.title)
     if (filterSort === 'year') {
@@ -228,18 +245,11 @@ export default async function ReasonPage({
       const bYear = Math.min(...b.bans.map(bn => bn.year_started ?? 9999))
       return aYear - bYear
     }
-    return b.bans.length - a.bans.length
+    // Default: sort by reason-scoped ban count (descending)
+    return b.bans.filter(matchesReason).length - a.bans.filter(matchesReason).length
   })
 
-  // A book on /reasons/lgbtq can also have non-LGBTQ+ bans (Index Librorum
-  // 1559, sedition 1933, etc.). Filter every per-reason aggregate to only
-  // the bans that actually carry THIS reason — otherwise the lead claims
-  // censorship started in 1559 because some LGBTQ+-tagged book also has
-  // an Index Librorum entry. matchesReason() is shared by totals, country
-  // counts, and the earliest-year calculation below.
-  const matchesReason = (ban: Book['bans'][number]) =>
-    ban.ban_reason_links.some(l => l.reasons?.slug === slug)
-
+  // ── Stats ────────────────────────────────────────────────────────────────────
   const totalBans = books.reduce(
     (sum, b) => sum + b.bans.filter(matchesReason).length,
     0,
@@ -252,18 +262,29 @@ export default async function ReasonPage({
     books.flatMap(b => b.bans.filter(matchesReason).map(bn => bn.country_code)),
   )].length
 
-  const intro = REASON_INTROS[slug]
+  // Top-12 most banned for THIS reason (ranked, unfiltered) — anchored
+  // showcase row, parallel to /scope/[slug]'s "Most banned in U.S. schools".
+  const topBookRanking = [...books]
+    .map(b => ({ book: b, count: b.bans.filter(matchesReason).length }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 12)
 
-  // ── Direct-answer lead + CollectionPage + FAQPage JSON-LD ────────────────
-  // Same SEO pattern as book and country detail. The reasonPhrase() helper
-  // gives natural prose — "LGBTQ+ content" stays cased correctly while
-  // "political content" / "sexual content" don't get awkwardly capitalised.
-  // Note: reasonPhrase already includes the noun ("content", "references"
-  // etc.), so prose reads "banned for {phrase}" not "banned for {phrase}
-  // content".
+  // BookCardCompact shape — slim view-model so the homepage rail chrome
+  // (serif title, oxblood hover, 2:3 cover) wraps every card on the page.
+  const topBookCards = topBookRanking.map(({ book, count }) => ({
+    id: book.id,
+    title: book.title,
+    slug: book.slug,
+    cover_url: book.cover_url,
+    author: authorName(book),
+    context: `${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'}`,
+  }))
+  const topBookIdSet = new Set(topBookCards.map(b => b.id))
+
+  // ── Editorial copy ───────────────────────────────────────────────────────────
+  const intro = REASON_INTROS[slug]
   const phrase = reasonPhrase(slug)
   const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
-  // Reason-scoped year extraction (see matchesReason note above).
   const allBanYears = books.flatMap(b =>
     b.bans.filter(matchesReason).map(bn => bn.year_started).filter((y): y is number => y != null),
   )
@@ -281,6 +302,16 @@ export default async function ReasonPage({
     }
   }
 
+  // Hero stats — same shape as /scope/[slug] for cross-page consistency.
+  type Stat = { value: string; label: string }
+  const heroStats: Stat[] = []
+  heroStats.push({ value: bookIds.length.toLocaleString('en'), label: bookIds.length === 1 ? 'Book' : 'Books' })
+  heroStats.push({ value: totalBans.toLocaleString('en'), label: totalBans === 1 ? 'Documented event' : 'Documented events' })
+  if (countries > 0) heroStats.push({ value: countries.toLocaleString('en'), label: countries === 1 ? 'Country' : 'Countries' })
+  if (activeBans > 0) heroStats.push({ value: activeBans.toLocaleString('en'), label: 'Currently active' })
+  if (earliestBanYear) heroStats.push({ value: String(earliestBanYear), label: 'Earliest record' })
+
+  // ── JSON-LD ──────────────────────────────────────────────────────────────────
   const collectionUrl = `https://www.banned-books.org/reasons/${slug}`
   const collectionJsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -303,152 +334,216 @@ export default async function ReasonPage({
     }
   }
 
-  const reasonFaq: { q: string; a: string }[] = []
-  reasonFaq.push({
+  // FAQ — visible AND structured (the FaqSection emits FAQPage JSON-LD
+  // inline, so the page no longer needs a separate <script> for it).
+  const faqItems: FaqItem[] = []
+  faqItems.push({
     q: `How many books have been banned for ${phrase}?`,
-    a: `${bookIds.length} ${bookIds.length === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
+    a: `${bookIds.length.toLocaleString('en')} ${bookIds.length === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
       topCountries.length >= 1 ? ` ${topCountries[0].name_en} has the most documented cases.` : ''
     }`,
   })
   if (topCountries.length >= 2) {
-    reasonFaq.push({
+    faqItems.push({
       q: `Where are ${phrase}-related book bans most common?`,
-      a: `The countries with the most documented ${phrase} bans are ${topCountries.slice(0, 5).map(c => c.name_en).join(', ')}.`,
+      a: `The countries with the most documented ${phrase} bans are ${topCountries.slice(0, 5).map(c => c.name_en).join(', ')}. See [the countries index](/countries) for the full geographic breakdown.`,
     })
   }
   if (earliestBanYear) {
-    reasonFaq.push({
+    faqItems.push({
       q: `When did ${phrase}-based book censorship begin?`,
       a: `The earliest documented ${phrase} ban in this catalogue dates to ${earliestBanYear}.`,
     })
   }
   if (books.length >= 3) {
-    reasonFaq.push({
+    faqItems.push({
       q: `What books have been banned for ${phrase}?`,
-      a: `Notable examples include ${books.slice(0, 5).map(b => b.title).join(', ')}.`,
+      a: `Notable examples include ${topBookRanking.slice(0, 5).map(({ book }) => book.title).join(', ')}.`,
     })
   }
-  const faqJsonLd = reasonFaq.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: reasonFaq.map(it => ({
-      '@type': 'Question',
-      name: it.q,
-      acceptedAnswer: { '@type': 'Answer', text: it.a },
-    })),
-  } : null
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
       />
-      {faqJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
-        />
-      )}
-      <Link href="/reasons" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
-        ← All reasons
-      </Link>
 
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-4xl" aria-hidden="true">{reasonIcon(slug)}</span>
-          <h1 className="text-3xl font-bold tracking-tight">{label}</h1>
-        </div>
-        <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 mt-2 mb-5">
-          <span className="font-medium text-red-500 dark:text-red-400">{books.length} books</span>
-          <span>{totalBans} bans across {countries} countries</span>
-          {activeBans > 0 && <span>{activeBans} currently active</span>}
-        </div>
-        {/* Direct-answer lead — AI-Overview / Featured-Snippet eligible. The
-            editorial REASON_INTROS narrative renders below as supplementary
-            context; this is the data-driven TL;DR. */}
-        {reasonLead && (
-          <p className="mb-4 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
-            {reasonLead}
-          </p>
-        )}
-        {intro && (
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl text-sm">{intro}</p>
-        )}
-      </div>
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/reasons"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All reasons
+          </Link>
 
-      <Suspense>
-        <ReasonControls
-          current={{ country: filterCountry, year: filterYear, active: filterActive, sort: filterSort }}
-          countries={countryOptions}
-          years={availableYears}
-          totalBooks={books.length}
-          filteredBooks={sorted.length}
-        />
-      </Suspense>
+          <Eyebrow>Reason · Banned for {label}</Eyebrow>
 
-      {topCountries.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-            Countries where this reason appears most
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {topCountries.map(c => (
-              <Link
-                key={c.code}
-                href={`/countries/${c.code.toLowerCase()}`}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span aria-hidden="true">{countryFlag(c.code)}</span>
-                <span>{c.name_en}</span>
-                <span className="text-gray-400 dark:text-gray-500 tabular-nums">{c.count}</span>
-              </Link>
-            ))}
+          <div className="flex items-center gap-4">
+            <span className="text-4xl md:text-5xl leading-none" aria-hidden="true">{reasonIcon(slug)}</span>
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+              {sentencePhrase}.
+            </h1>
+          </div>
+
+          <div className="max-w-[820px]">
+            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
+              {heroStats.map(s => (
+                <div key={s.label}>
+                  <div className="not-italic font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood tabular-nums">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {reasonLead && (
+              <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+                {reasonLead}
+              </p>
+            )}
+
+            {intro && (
+              <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-700">
+                {intro}
+              </p>
+            )}
           </div>
         </div>
+      </section>
+
+      {/* ── Most banned for this reason (top 12) ───────────────────────── */}
+      {topBookCards.length > 0 && (
+        <SectionShell tone="cream" eyebrow="Ranked by event count">
+          <SectionHeader
+            title={`Most banned for ${phrase}`}
+            subtitle="Titles affected by the largest number of documented events with this reason cited."
+            accent="oxblood"
+          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            {topBookCards.map(b => (
+              <BookCardCompact key={b.id} book={b} />
+            ))}
+          </div>
+        </SectionShell>
       )}
 
-      {sorted.length === 0 ? (
-        <p className="text-gray-500">No books match the current filters.</p>
-      ) : (
-        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
-          {sorted.map(book => {
-            const activeBanList = book.bans.filter(b => b.status === 'active')
-            const displayBans = activeBanList.length > 0 ? activeBanList : book.bans.slice(0, 4)
-            const banCount = book.bans.length
-            return (
-              <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-row gap-3 items-start sm:flex-col sm:gap-0">
-                {/* Cover */}
-                <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:mb-2 relative overflow-hidden rounded shadow-sm">
-                  {book.cover_url ? (
-                    <Image src={book.cover_url} alt={coverAlt(book.title, authorName(book), book.first_published_year)} fill
-                      className="object-cover" sizes="(max-width: 640px) 60px, 160px" />
-                  ) : (
-                    <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
-                  )}
-                </div>
-                {/* Text */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
-                  <div className="flex flex-wrap gap-0.5 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-                    {displayBans.slice(0, 4).map(b => (
-                      <span key={b.id} title={b.countries?.name_en}>{countryFlag(b.country_code)}</span>
-                    ))}
-                    {banCount > 4 && <span>+{banCount - 4}</span>}
-                  </div>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {book.genres.slice(0, 2).map(g => <GenreBadge key={g} slug={g} />)}
-                    <ReasonBadge slug={slug} />
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
+      {/* ── Where this reason appears most (top countries) ─────────────── */}
+      {topCountries.length > 0 && (
+        <SectionShell tone="white" eyebrow="By geography">
+          <SectionHeader
+            title={`Where ${phrase} bans are documented most`}
+            subtitle="Countries with the highest number of bans citing this reason."
+            accent="black"
+          />
+          <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2">
+            {topCountries.map(c => (
+              <li key={c.code}>
+                <Link
+                  href={`/countries/${c.code.toLowerCase()}`}
+                  className="group flex items-baseline justify-between gap-3 py-3 border-b border-neutral-200 hover:border-oxblood transition-colors"
+                >
+                  <span className="flex items-baseline gap-2 min-w-0">
+                    <span className="text-xl leading-none shrink-0" aria-hidden="true">{countryFlag(c.code)}</span>
+                    <span className="font-serif text-base text-gray-900 group-hover:text-oxblood transition-colors truncate">{c.name_en}</span>
+                  </span>
+                  <span className="text-xs tabular-nums text-neutral-500 shrink-0">{c.count.toLocaleString('en')}</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </SectionShell>
       )}
+
+      {/* ── Filter + Full catalogue (A–Z, gated to non-top-12) ─────────── */}
+      <SectionShell tone="cream" eyebrow="Full catalogue · A–Z">
+        <SectionHeader
+          title="Browse the full catalogue"
+          subtitle={
+            sorted.length === books.length
+              ? `All ${books.length.toLocaleString('en')} titles. Filter by country, year, or status.`
+              : `Showing ${sorted.length.toLocaleString('en')} of ${books.length.toLocaleString('en')} titles after filtering.`
+          }
+          accent="black"
+        />
+        <Suspense>
+          <ReasonControls
+            current={{ country: filterCountry, year: filterYear, active: filterActive, sort: filterSort }}
+            countries={countryOptions}
+            years={availableYears}
+            totalBooks={books.length}
+            filteredBooks={sorted.length}
+          />
+        </Suspense>
+
+        {sorted.length === 0 ? (
+          <p className="text-neutral-500 text-sm">No books match the current filters.</p>
+        ) : (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+            {sorted
+              .filter(b => !topBookIdSet.has(b.id))
+              .slice(0, 100)
+              .map(book => (
+                <Link
+                  key={book.id}
+                  href={`/books/${book.slug}`}
+                  className="group flex flex-col"
+                >
+                  <div className="relative w-full aspect-[2/3] overflow-hidden rounded-sm bg-white border border-neutral-200">
+                    {book.cover_url ? (
+                      <Image
+                        src={book.cover_url}
+                        alt={coverAlt(book.title, authorName(book), book.first_published_year)}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 130px, (min-width: 768px) 16vw, 30vw"
+                      />
+                    ) : (
+                      <BookCoverPlaceholder
+                        title={book.title}
+                        author={authorName(book)}
+                        slug={book.slug}
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    )}
+                  </div>
+                  <h3 className="mt-2 font-serif text-xs font-medium leading-snug text-gray-900 group-hover:text-oxblood line-clamp-2 transition-colors">
+                    {book.title}
+                  </h3>
+                </Link>
+              ))}
+          </div>
+        )}
+        {sorted.length > 100 + topBookIdSet.size && (
+          <p className="mt-4 text-[11px] text-neutral-500">
+            Showing the first 100 of {(sorted.length - topBookIdSet.size).toLocaleString('en')} remaining titles. Use the filters above to narrow down, or [search the full catalogue](/search).
+          </p>
+        )}
+      </SectionShell>
+
+      {/* ── Citation ────────────────────────────────────────────────────── */}
+      <SectionShell tone="white">
+        <CitationBlock
+          entityType="essay"
+          entity={{ title: `Books banned for ${phrase}`, slug }}
+          url={`https://www.banned-books.org/reasons/${slug}`}
+        />
+      </SectionShell>
+
+      {/* ── FAQ ─────────────────────────────────────────────────────────── */}
+      <FaqSection
+        items={faqItems}
+        tone="cream"
+        eyebrow={`About ${phrase} bans`}
+        title="Frequently asked."
+      />
     </main>
   )
 }

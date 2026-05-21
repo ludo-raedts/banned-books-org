@@ -10,9 +10,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
-import GenreBadge from '@/components/genre-badge'
 import CitationBlock from '@/components/citation-block'
-import FaqAccordion from '@/components/faq-accordion'
+import BookCardCompact from '@/components/home/BookCardCompact'
+import SectionShell from '@/components/section/SectionShell'
+import SectionHeader from '@/components/section/SectionHeader'
+import Eyebrow from '@/components/section/Eyebrow'
+import FaqSection from '@/components/home/FaqSection'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
@@ -28,11 +31,11 @@ export async function generateMetadata({
   const supabase = adminClient()
 
   // rows: 1 | fields: [name_en] | reason: page title
-  // rows: 1 (count only) | reason: ban count for description
+  // rows: 1 | fields: [distinct_books] | reason: distinct-book count for description
   // rows: ≤500 | fields: reason slugs | reason: count distinct reasons for description
-  const [{ data: country }, { count: N }, { data: reasonSample }] = await Promise.all([
+  const [{ data: country }, { data: countryMv }, { data: reasonSample }] = await Promise.all([
     supabase.from('countries').select('name_en').eq('code', upperCode).single(),
-    supabase.from('bans').select('*', { count: 'exact', head: true }).eq('country_code', upperCode),
+    supabase.from('mv_ban_counts').select('distinct_books').eq('country_code', upperCode).maybeSingle(),
     supabase
       .from('bans')
       .select('ban_reason_links(reasons(slug))')
@@ -42,7 +45,7 @@ export async function generateMetadata({
 
   if (!country) return {}
 
-  const banCount = N ?? 0
+  const banCount = (countryMv?.distinct_books as number | undefined) ?? 0
   const reasonSet = new Set<string>()
   for (const b of (reasonSample ?? []) as unknown as {
     ban_reason_links: { reasons: { slug: string } | null }[]
@@ -102,12 +105,6 @@ function authorName(book: Book): string {
   return book.book_authors.map((ba) => ba.authors?.display_name).filter(Boolean).join(', ')
 }
 
-function getReasons(book: Book): string[] {
-  return [...new Set(book.bans.flatMap((ban) =>
-    ban.ban_reason_links.map((l) => l.reasons?.slug).filter((s): s is string => !!s)
-  ))]
-}
-
 function countryFlag(code: string): string {
   if (code === 'SU') return '🚩'
   return [...code.toUpperCase()].map((c) =>
@@ -130,9 +127,14 @@ export default async function CountryPage({
 
   if (ce || !country) notFound()
 
-  // rows: 1 (count only) | reason: ban count display
-  const { count: banCount } = await supabase
-    .from('bans').select('*', { count: 'exact', head: true }).eq('country_code', upperCode)
+  // rows: 1 | fields: [distinct_books, total_bans] | reason: header display
+  const { data: countryMv } = await supabase
+    .from('mv_ban_counts')
+    .select('distinct_books, total_bans')
+    .eq('country_code', upperCode)
+    .maybeSingle()
+  const distinctBooks = (countryMv?.distinct_books as number | undefined) ?? 0
+  const totalBanEvents = (countryMv?.total_bans as number | undefined) ?? 0
 
   // rows: ≤100 | fields: book card data | reason: paginated grid; first page only
   const { data, error } = await supabase
@@ -152,7 +154,10 @@ export default async function CountryPage({
 
   if (error) throw error
   const books = (data as unknown as Book[]) ?? []
-  const totalBanCount = banCount ?? 0
+  // Headline metric is distinct books banned. totalBanEvents is the raw ban-record
+  // count (PEN America counts per US school district, so it can be much higher
+  // than distinctBooks for the United States).
+  const totalBanCount = distinctBooks
 
   // ── Related countries: find countries with most book overlap ──────────────────
   // Step 1: collect all book_ids banned in this country + reason frequencies (one paginated loop)
@@ -177,6 +182,50 @@ export default async function CountryPage({
       offset += 1000
     }
   }
+
+  // ── Top-12 most-banned books IN this country (by ban-row count) ─────────
+  // PEN America counts US bans per district, so a single title can have
+  // dozens of rows. That same multiplicity is exactly what makes a "Most
+  // banned in [country]" ranking meaningful here. For countries with no
+  // duplication (everywhere except the US), the count plateau at 1 so we
+  // skip the section instead of displaying an arbitrary alphabetical top.
+  const bookBanCounts = new Map<number, number>()
+  for (const id of allBookIds) bookBanCounts.set(id, (bookBanCounts.get(id) ?? 0) + 1)
+  const topBookByCount = [...bookBanCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12)
+  const showTopBooks = topBookByCount.length > 0 && topBookByCount[0][1] >= 2
+
+  type TopBookRow = {
+    id: number; title: string; slug: string; cover_url: string | null
+    book_authors: { authors: { display_name: string } | null }[]
+  }
+  let topBookCards: Array<{
+    id: number; title: string; slug: string; cover_url: string | null
+    author: string; context: string
+  }> = []
+  if (showTopBooks) {
+    const { data: topRows } = await supabase
+      .from('books')
+      .select('id, title, slug, cover_url, book_authors(authors(display_name))')
+      .in('id', topBookByCount.map(([id]) => id))
+    const rowMap = new Map(((topRows ?? []) as unknown as TopBookRow[]).map(r => [r.id, r]))
+    topBookCards = topBookByCount
+      .map(([id, count]) => {
+        const r = rowMap.get(id)
+        if (!r) return null
+        return {
+          id: r.id,
+          title: r.title,
+          slug: r.slug,
+          cover_url: r.cover_url,
+          author: r.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
+          context: `${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'}`,
+        }
+      })
+      .filter((b): b is NonNullable<typeof b> => b !== null)
+  }
+  const topBookIdSet = new Set(topBookCards.map(b => b.id))
 
   // Top 5 reasons in this country (by ban count)
   const top5ReasonIds = [...reasonIdCounts.entries()]
@@ -350,198 +399,250 @@ export default async function CountryPage({
     notableBookTitles,
   })
 
+  // Hero stats — same shape as /scope/[slug] and /reasons/[slug] for
+  // cross-page visual consistency.
+  type Stat = { value: string; label: string }
+  const heroStats: Stat[] = []
+  heroStats.push({ value: totalBanCount.toLocaleString('en'), label: totalBanCount === 1 ? 'Book' : 'Books' })
+  if (totalBanEvents > totalBanCount) {
+    heroStats.push({ value: totalBanEvents.toLocaleString('en'), label: 'Documented events' })
+  }
+  if (topReasons.length > 0) {
+    heroStats.push({ value: topReasons.length.toLocaleString('en'), label: topReasons.length === 1 ? 'Reason' : 'Reasons' })
+  }
+  if (earliestBanYear && latestBanYear && latestBanYear > earliestBanYear) {
+    heroStats.push({ value: `${earliestBanYear}–${latestBanYear}`, label: 'Span' })
+  } else if (earliestBanYear) {
+    heroStats.push({ value: String(earliestBanYear), label: 'Earliest record' })
+  }
+
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
       />
-      <Link href="/countries" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors">
-        ← All countries
-      </Link>
 
-      {/* Header */}
-      <div className="flex items-start gap-4 mb-8">
-        <span className="text-5xl leading-none" aria-hidden="true">{countryFlag(upperCode)}</span>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{country.name_en}</h1>
-          <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-medium text-red-500 dark:text-red-400">{totalBanCount} banned {totalBanCount === 1 ? 'book' : 'books'}</span>
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/countries"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← All countries
+          </Link>
+
+          <Eyebrow>Country · {country.name_en}</Eyebrow>
+
+          <div className="flex items-center gap-4">
+            <span className="text-5xl md:text-6xl leading-none" aria-hidden="true">{countryFlag(upperCode)}</span>
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+              {country.name_en}.
+            </h1>
+          </div>
+
+          <div className="max-w-[820px]">
+            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
+              {heroStats.map(s => (
+                <div key={s.label}>
+                  <div className="not-italic font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood tabular-nums">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {countryLead && (
+              <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+                {countryLead}
+              </p>
+            )}
+
+            {country.description && (
+              <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-700">
+                {country.description}
+              </p>
+            )}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Direct-answer lead. Editorial country.description (if present)
-          renders below as supplementary context — the lead is the
-          AI-Overview-eligible TL;DR. */}
-      {countryLead && (
-        <p className="mb-6 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
-          {countryLead}
-        </p>
+      {/* ── Most banned in this country (top 12, only if rank-signal exists) ── */}
+      {topBookCards.length > 0 && (
+        <SectionShell tone="cream" eyebrow="Ranked by event count">
+          <SectionHeader
+            title={`Most banned in ${country.name_en}`}
+            subtitle="Titles affected by the largest number of documented events in this jurisdiction."
+            accent="oxblood"
+          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            {topBookCards.map(b => (
+              <BookCardCompact key={b.id} book={b} />
+            ))}
+          </div>
+        </SectionShell>
       )}
 
-      {/* Description */}
-      {country.description && (
-        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-10 max-w-2xl">{country.description}</p>
-      )}
-
-      {/* Most common reasons */}
+      {/* ── Why books are banned (reasons) ───────────────────────────── */}
       {topReasons.length > 0 && (
-        <div className="mb-10">
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-            Most common reasons in {country.name_en}
-          </h2>
-          <div className="flex flex-wrap gap-2">
+        <SectionShell tone={topBookCards.length > 0 ? 'white' : 'cream'} eyebrow="By reason">
+          <SectionHeader
+            title={`Why books are banned in ${country.name_en}`}
+            subtitle="Most frequently cited reasons across the recorded events."
+            accent="black"
+          />
+          <div className="flex flex-wrap gap-3">
             {topReasons.map(r => (
               <Link
                 key={r.slug}
                 href={`/reasons/${r.slug}`}
-                className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+                className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
                 <ReasonBadge slug={r.slug} />
-                <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{r.count}</span>
+                <span className="text-xs text-neutral-500 tabular-nums">{r.count.toLocaleString('en')}</span>
               </Link>
             ))}
           </div>
-        </div>
+        </SectionShell>
       )}
 
-      {/* Timeline */}
+      {/* ── When bans happen (timeline) ──────────────────────────────── */}
       {timeline.length >= 3 && (
-        <div className="mb-10">
-          <h2 className="text-base font-semibold mb-4 text-gray-700 dark:text-gray-300">
-            Bans {useYears ? 'by year' : 'by decade'}
-          </h2>
-          {/* dir=rtl on outer starts scroll at right (newest); dir=ltr on inner keeps order */}
-          <div className="overflow-x-auto pb-1" dir="rtl">
-            <div className="inline-flex items-end gap-1 h-20" dir="ltr">
+        <SectionShell tone="cream" eyebrow={`By time · ${useYears ? 'by year' : 'by decade'}`}>
+          <SectionHeader
+            title={`When bans happen in ${country.name_en}`}
+            subtitle={useYears ? 'One bar per year across the documented range.' : 'One bar per decade across the documented range.'}
+            accent="oxblood"
+          />
+          <div className="overflow-x-auto pb-2">
+            <div className="inline-flex items-end gap-1.5 h-32">
               {timeline.map(t => (
-                <div key={t.key} className="flex flex-col items-center gap-1 shrink-0" style={{ minWidth: useYears ? '1.5rem' : '2.5rem' }}>
+                <div
+                  key={t.key}
+                  className="flex flex-col items-center gap-1.5 shrink-0"
+                  style={{ minWidth: useYears ? '2.25rem' : '3rem' }}
+                >
                   <div
-                    className="rounded-t bg-red-500 dark:bg-red-600"
+                    className="w-full rounded-t bg-oxblood"
                     style={{
-                      width: useYears ? '1rem' : '2rem',
-                      height: `${(t.count / maxTimeline * 64).toFixed(0)}px`,
+                      height: `${((t.count / maxTimeline) * 104).toFixed(0)}px`,
                       minHeight: '2px',
                     }}
-                    title={`${t.key}${useYears ? '' : 's'}: ${t.count}`}
+                    title={`${t.key}${useYears ? '' : 's'}: ${t.count.toLocaleString('en')}`}
                   />
-                  <span className="text-[9px] text-gray-400 dark:text-gray-500 tabular-nums">
+                  <span className="text-[10px] text-neutral-600 tabular-nums">
                     {useYears ? t.key : `${t.key}s`}
                   </span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </SectionShell>
       )}
 
-      {/* Book grid */}
-      {books.length === 0 ? (
-        <p className="text-gray-500">No banned books recorded for this country yet.</p>
-      ) : (
-        <>
-          <h2 className="text-lg font-semibold mb-4">
-            Banned books
-            {totalBanCount > 100 && (
-              <span className="ml-2 text-sm font-normal text-gray-400 dark:text-gray-500">
-                (showing first 100 of {totalBanCount})
-              </span>
-            )}
-          </h2>
-          <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
-            {books.map((book) => {
-              const ban = book.bans[0]
-              return (
-                <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-row gap-3 items-start sm:flex-col sm:gap-0">
-                  {/* Cover */}
-                  <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:mb-2 relative overflow-hidden rounded shadow-sm">
-                    {book.cover_url ? (
-                      <Image
-                        src={book.cover_url}
-                        alt={coverAlt(book.title, authorName(book), book.first_published_year)}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 60px, 160px"
-                      />
-                    ) : (
-                      <BookCoverPlaceholder title={book.title} author={authorName(book)} slug={book.slug} className="absolute inset-0 w-full h-full" />
-                    )}
-                  </div>
-                  {/* Text */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
-                    {book.description && (
-                      <p className="max-sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">{book.description}</p>
-                    )}
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {book.genres.slice(0, 2).map((g) => <GenreBadge key={g} slug={g} />)}
-                      {getReasons(book).slice(0, 2).map((r) => <ReasonBadge key={r} slug={r} />)}
-                    </div>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                      {ban?.scopes?.label_en ?? 'Ban'}
-                      {ban?.year_started ? ` · ${ban.year_started}` : ''}
-                      {ban?.status === 'historical' ? ' · lifted' : ''}
-                    </p>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </>
-      )}
-      <CitationBlock
-        entityType="country"
-        entity={{
-          title: country.name_en,
-          slug: code.toLowerCase(),
-          code: upperCode,
-        }}
-        url={`https://www.banned-books.org/countries/${code.toLowerCase()}`}
-      />
-
-      {/* FAQ — data-driven for every country, plus editorial Q&As (who
-          decides / read / buy) for the top-5 countries that have facts in
-          COUNTRY_FAQ_FACTS. FaqAccordion emits FAQPage JSON-LD inline. */}
-      {countryFaq.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <FaqAccordion
-            title={`Frequently asked questions about ${articulateCountryName(country.name_en)}`}
-            items={countryFaq}
-            defaultOpenCount={2}
+      {/* ── Full catalogue (A–Z, dedup vs the top-12 row) ────────────── */}
+      {books.length > 0 && (
+        <SectionShell tone="white" eyebrow="Full catalogue · A–Z">
+          <SectionHeader
+            title={`All books banned in ${country.name_en}`}
+            subtitle={
+              totalBanCount > 100
+                ? `Showing the first 100 of ${totalBanCount.toLocaleString('en')} alphabetically. Use search to find a specific title.`
+                : `All ${totalBanCount.toLocaleString('en')} titles, alphabetically.`
+            }
+            accent="black"
           />
-        </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+            {books.filter(b => !topBookIdSet.has(b.id)).map((book) => (
+              <Link
+                key={book.id}
+                href={`/books/${book.slug}`}
+                className="group flex flex-col"
+              >
+                <div className="relative w-full aspect-[2/3] overflow-hidden rounded-sm bg-white border border-neutral-200">
+                  {book.cover_url ? (
+                    <Image
+                      src={book.cover_url}
+                      alt={coverAlt(book.title, authorName(book), book.first_published_year)}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 130px, (min-width: 768px) 16vw, 30vw"
+                    />
+                  ) : (
+                    <BookCoverPlaceholder
+                      title={book.title}
+                      author={authorName(book)}
+                      slug={book.slug}
+                      className="absolute inset-0 w-full h-full"
+                    />
+                  )}
+                </div>
+                <h3 className="mt-2 font-serif text-xs font-medium leading-snug text-gray-900 group-hover:text-oxblood line-clamp-2 transition-colors">
+                  {book.title}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        </SectionShell>
       )}
 
-      {/* Related countries */}
+      {/* ── Citation ────────────────────────────────────────────────── */}
+      <SectionShell tone="cream">
+        <CitationBlock
+          entityType="country"
+          entity={{
+            title: country.name_en,
+            slug: code.toLowerCase(),
+            code: upperCode,
+          }}
+          url={`https://www.banned-books.org/countries/${code.toLowerCase()}`}
+        />
+      </SectionShell>
+
+      {/* ── FAQ ──────────────────────────────────────────────────────── */}
+      {countryFaq.length > 0 && (
+        <FaqSection
+          items={countryFaq}
+          tone="white"
+          eyebrow={`About ${articulateCountryName(country.name_en)}`}
+          title="Frequently asked."
+        />
+      )}
+
+      {/* ── Related countries ────────────────────────────────────────── */}
       {relatedCountries.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <h2 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">
-            Countries with similar bans
-          </h2>
-          <div className="flex flex-wrap gap-3">
+        <SectionShell tone="cream" eyebrow="Compare jurisdictions">
+          <SectionHeader
+            title="Countries with similar bans"
+            subtitle="Other jurisdictions that have banned many of the same titles."
+            accent="black"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {relatedCountries.map(rc => (
               <Link
                 key={rc.code}
                 href={`/countries/${rc.code.toLowerCase()}`}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group"
+                className="group flex items-center gap-3 px-4 py-3 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
               >
-                <span className="text-xl leading-none">{countryFlag(rc.code)}</span>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug">
+                <span className="text-2xl leading-none" aria-hidden="true">{countryFlag(rc.code)}</span>
+                <div className="min-w-0">
+                  <p className="font-serif text-base font-medium text-gray-900 group-hover:text-oxblood transition-colors truncate">
                     {rc.name_en}
                   </p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">
-                    {rc.count} {rc.count === 1 ? 'book' : 'books'} in common
+                  <p className="text-xs text-neutral-500">
+                    {rc.count.toLocaleString('en')} {rc.count === 1 ? 'book' : 'books'} in common
                   </p>
                 </div>
               </Link>
             ))}
           </div>
-        </div>
+        </SectionShell>
       )}
     </main>
   )

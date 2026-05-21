@@ -40,15 +40,15 @@ export async function GET() {
     supabase.from('countries').select('code'),
     supabase
       .from('mv_ban_counts')
-      .select('country_code, total_bans')
-      .gt('total_bans', 0),
+      .select('country_code, distinct_books')
+      .gt('distinct_books', 0),
     getBBWConfig(),
   ])
 
   const total = countRes.count ?? 0
   const countMap = new Map(
-    ((banCountsRes.data ?? []) as { country_code: string; total_bans: number }[])
-      .map((r) => [r.country_code, r.total_bans]),
+    ((banCountsRes.data ?? []) as { country_code: string; distinct_books: number }[])
+      .map((r) => [r.country_code, r.distinct_books]),
   )
   const countryCount = (
     (countriesRes.data ?? []) as { code: string }[]

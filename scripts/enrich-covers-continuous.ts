@@ -22,6 +22,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
+import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 
 const ONCE      = process.argv.includes('--once')
 const NO_GOOGLE = process.argv.includes('--no-google')
@@ -338,6 +339,14 @@ async function runLoop() {
       sourcesTried.push('google_search')
       coverUrl = await gbBySearch(book.title, author)
       if (coverUrl) { source = 'GB search ✓'; counters.gbSearch++ }
+    }
+
+    if (coverUrl && !isAllowedImageUrl(coverUrl)) {
+      // Sources (OL / GB) only emit allowlisted hosts, so this is the
+      // structural backstop, not a hot path. Treat as "not found" rather
+      // than poison the cover_url column.
+      coverUrl = null
+      lastBook = `"${book.title.slice(0, 35)}" → REJECTED non-allowlisted host`
     }
 
     if (coverUrl) {

@@ -10,9 +10,9 @@ const DEFUNCT = ['SU', 'CS', 'DD', 'YU']
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = adminClient()
-  const { data: banCounts } = await supabase.from('mv_ban_counts').select('country_code, total_bans')
+  const { data: banCounts } = await supabase.from('mv_ban_counts').select('country_code, distinct_books')
   const { data: countries } = await supabase.from('countries').select('code')
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
+  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
   const activeCount = (countries ?? [])
     .filter(c => !DEFUNCT.includes(c.code) && (countMap.get(c.code) ?? 0) > 0)
     .length
@@ -44,14 +44,16 @@ export default async function CountriesPage({
   const [{ data: countries }, { data: banCounts }, { data: reasonsData }] = await Promise.all([
     // rows: ~90 | reason: country names + codes
     supabase.from('countries').select('code, name_en, description'),
-    // rows: ~90 | reason: materialized view — ban counts per country
-    supabase.from('mv_ban_counts').select('country_code, total_bans, active_bans'),
+    // rows: ~90 | reason: materialized view — distinct banned books per country.
+    // distinct_books is the canonical ranking metric (not total_bans, which is
+    // inflated for the US by PEN America's per-district granularity).
+    supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books'),
     // rows: ~12 | reason: filter pill options
     supabase.from('reasons').select('slug').order('slug'),
   ])
 
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.total_bans as number]))
-  const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.active_bans as number]))
+  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
+  const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
   const availableReasons = (reasonsData ?? []).map(r => r.slug)
 
   // ── Base country list ─────────────────────────────────────────────
@@ -66,10 +68,10 @@ export default async function CountriesPage({
   if (filterReason) {
     const { data: reasonRows } = await supabase
       .from('mv_country_reason_counts')
-      .select('country_code, total_bans, active_bans')
+      .select('country_code, distinct_books, distinct_active_books')
       .eq('reason_slug', filterReason)
-    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, r.total_bans as number]))
-    filteredActiveMap = new Map((reasonRows ?? []).map(r => [r.country_code, r.active_bans as number]))
+    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, r.distinct_books as number]))
+    filteredActiveMap = new Map((reasonRows ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
   }
 
   // ── Merge base with filtered counts, then sort & filter ───────────

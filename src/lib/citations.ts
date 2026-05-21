@@ -2,7 +2,7 @@
 // Pure functions (no React) so they can be unit-tested with a fixed date.
 
 export type CitationFormat = 'apa' | 'mla' | 'chicago'
-export type EntityType = 'book' | 'author' | 'country' | 'essay' | 'methodology'
+export type EntityType = 'book' | 'author' | 'country' | 'essay' | 'methodology' | 'scope'
 
 export type CitationEntity = {
   title: string                  // book title, author display name, country name, essay title, or page title for methodology
@@ -84,6 +84,10 @@ function descriptiveTitle(input: CitationInput, format: CitationFormat): string 
       return titleCase
         ? 'Methodology and Coverage Notes'
         : 'Methodology and coverage notes'
+    case 'scope':
+      return titleCase
+        ? `Book Bans in ${input.entity.title} Settings`
+        : `Book bans in ${input.entity.title.toLowerCase()} settings`
   }
 }
 

@@ -41,6 +41,10 @@ const OFFSET = (() => {
   const a = process.argv.find(x => x.startsWith('--offset='))
   return a ? parseInt(a.split('=')[1], 10) : null
 })()
+const SLUG = (() => {
+  const a = process.argv.find(x => x.startsWith('--slug='))
+  return a ? a.split('=')[1] : null
+})()
 
 function sleep(ms: number) {
   return new Promise(r => setTimeout(r, ms))
@@ -128,6 +132,17 @@ async function findArchiveOrgId(title: string, author: string): Promise<{ id: nu
 }
 
 async function fetchQueue(): Promise<Array<{ id: number; slug: string; title: string; book_authors: any }>> {
+  // Single-slug mode: targeted gap-fill for one book. Bypasses checked_at gate
+  // so it's safe to re-run for a specific book (e.g. after a prior null result).
+  if (SLUG !== null) {
+    const { data, error } = await supabase
+      .from('books')
+      .select('id, slug, title, book_authors(authors(display_name))')
+      .eq('slug', SLUG)
+    if (error) throw new Error(error.message)
+    return (data ?? []) as any
+  }
+
   // Explicit slice mode: caller carved out a specific window, no auto-pagination.
   if (OFFSET !== null) {
     const start = OFFSET

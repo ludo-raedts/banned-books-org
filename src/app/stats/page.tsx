@@ -48,7 +48,6 @@ const REASON_COLORS: Record<string, string> = {
   racial:    'bg-purple-500',
   drugs:     'bg-green-500',
   obscenity: 'bg-rose-500',
-  blasphemy: 'bg-yellow-600',
   moral:     'bg-teal-500',
   language:  'bg-indigo-500',
   other:     'bg-gray-500',
@@ -68,7 +67,7 @@ export default async function StatsPage({
 
   const supabase = adminClient()
 
-  const [{ count: totalBooks }, { count: totalBans }, { data: countriesRaw }] = await Promise.all([
+  const [{ count: totalBooks }, { count: totalBanEvents }, { data: countriesRaw }] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('countries').select('code, name_en'),
@@ -110,15 +109,21 @@ export default async function StatsPage({
 
   const countryMap = new Map((countriesRaw ?? []).map(c => [c.code, c.name_en]))
 
+  // All ranking sections count DISTINCT books, not raw ban records — otherwise
+  // PEN America's per-district granularity inflates US-leaning numbers (one
+  // book × 200 districts = 200 ban records but 1 banned book).
+
   // ── Top countries (unfiltered) ─────────────────────────────────────
-  const countryCounts = new Map<string, number>()
+  const countryBooks = new Map<string, Set<number>>()
   for (const ban of bansRaw) {
-    countryCounts.set(ban.country_code, (countryCounts.get(ban.country_code) ?? 0) + 1)
+    let s = countryBooks.get(ban.country_code)
+    if (!s) { s = new Set(); countryBooks.set(ban.country_code, s) }
+    s.add(ban.book_id)
   }
-  const top5Countries = [...countryCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
+  const top5Countries = [...countryBooks.entries()]
+    .map(([code, books]) => ({ code, name: countryMap.get(code) ?? code, count: books.size }))
+    .sort((a, b) => b.count - a.count)
     .slice(0, 5)
-    .map(([code, count]) => ({ code, name: countryMap.get(code) ?? code, count }))
   const maxCountry = top5Countries[0]?.count ?? 1
 
   // ── Top authors (unfiltered) ───────────────────────────────────────
@@ -134,35 +139,48 @@ export default async function StatsPage({
       authorSlugMap.set(ba.authors.display_name, ba.authors.slug ?? null)
     }
   }
-  const authorCounts = new Map<string, number>()
-  for (const ban of bansRaw) {
-    for (const author of bookAuthorMap.get(ban.book_id) ?? []) {
-      authorCounts.set(author, (authorCounts.get(author) ?? 0) + 1)
+  const authorBooks = new Map<string, Set<number>>()
+  const bannedBookIds = new Set(bansRaw.map(b => b.book_id))
+  for (const bookId of bannedBookIds) {
+    for (const author of bookAuthorMap.get(bookId) ?? []) {
+      let s = authorBooks.get(author)
+      if (!s) { s = new Set(); authorBooks.set(author, s) }
+      s.add(bookId)
     }
   }
-  const topAuthors = [...authorCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .filter(([, count]) => count >= 2)
+  const topAuthors = [...authorBooks.entries()]
+    .map(([name, books]) => ({ name, count: books.size, slug: authorSlugMap.get(name) ?? null }))
+    .filter(a => a.count >= 2)
+    .sort((a, b) => b.count - a.count)
     .slice(0, 15)
-    .map(([name, count]) => ({ name, count, slug: authorSlugMap.get(name) ?? null }))
   const maxAuthor = topAuthors[0]?.count ?? 1
 
   // ── Top reasons (unfiltered) ───────────────────────────────────────
-  const reasonCounts = new Map<string, number>()
+  const reasonBooks = new Map<string, Set<number>>()
   for (const ban of bansRaw) {
     for (const link of ban.ban_reason_links) {
       const slug = link.reasons?.slug
-      if (slug) reasonCounts.set(slug, (reasonCounts.get(slug) ?? 0) + 1)
+      if (!slug) continue
+      let s = reasonBooks.get(slug)
+      if (!s) { s = new Set(); reasonBooks.set(slug, s) }
+      s.add(ban.book_id)
     }
   }
-  const topReasons = [...reasonCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([slug, count]) => ({ slug, count }))
+  const topReasons = [...reasonBooks.entries()]
+    .map(([slug, books]) => ({ slug, count: books.size }))
+    .sort((a, b) => b.count - a.count)
   const maxReason = topReasons[0]?.count ?? 1
 
-  // ── Active vs historical (unfiltered) ─────────────────────────────
-  const activeBans = bansRaw.filter(b => b.status === 'active').length
-  const historicalBans = bansRaw.length - activeBans
+  // ── Currently banned vs all-lifted (unfiltered) ───────────────────
+  // Count distinct books, not ban records. A book is "currently banned" if
+  // it has at least one ban with status='active' anywhere; it's "lifted" if
+  // every recorded ban for it has been overturned.
+  const activeBookIds = new Set<number>()
+  for (const ban of bansRaw) {
+    if (ban.status === 'active') activeBookIds.add(ban.book_id)
+  }
+  const activelyBannedBooks = activeBookIds.size
+  const liftedOnlyBooks = bannedBookIds.size - activelyBannedBooks
 
   // ── Timeline: apply filters, then bucket by decade ─────────────────
   let timelineBans = bansRaw
@@ -204,9 +222,9 @@ export default async function StatsPage({
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString('en')} books</span> and{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBans ?? 0).toLocaleString('en')} bans</span> across{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{countryCounts.size} countries</span> — from
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString('en')} books</span> across{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{countryBooks.size} countries</span>, with{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBanEvents ?? 0).toLocaleString('en')} documented ban events</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-xs mt-3">
@@ -222,9 +240,9 @@ export default async function StatsPage({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {[
           { label: 'Books catalogued',        value: (totalBooks ?? 0).toLocaleString('en') },
-          { label: 'Total bans recorded',     value: (totalBans ?? 0).toLocaleString('en') },
-          { label: 'Countries & territories', value: countryCounts.size.toString() },
-          { label: 'Currently banned',        value: activeBans.toLocaleString('en'), sub: `${historicalBans.toLocaleString('en')} lifted` },
+          { label: 'Ban events documented',   value: (totalBanEvents ?? 0).toLocaleString('en') },
+          { label: 'Countries & territories', value: countryBooks.size.toString() },
+          { label: 'Currently banned',        value: activelyBannedBooks.toLocaleString('en'), sub: `${liftedOnlyBooks.toLocaleString('en')} fully lifted` },
         ].map(stat => (
           <div key={stat.label} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
             <div className="text-3xl font-bold tabular-nums text-brand">{stat.value}</div>
@@ -242,7 +260,7 @@ export default async function StatsPage({
       {/* ── 4. Where bans are concentrated ── */}
       <section className="mb-16">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Where bans are concentrated</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Top 5 countries by total ban count.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Top 5 countries by number of distinct books banned.</p>
         <div className="space-y-2">
           {top5Countries.map((c) => (
             <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group">
@@ -262,7 +280,7 @@ export default async function StatsPage({
           See all countries →
         </Link>
         <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
-          The US dominates this chart because its bans are systematically recorded.{' '}
+          The US dominates this chart because its bans are systematically tracked by PEN America and the ALA.{' '}
           <Link href="/methodology" className="underline hover:text-gray-600 dark:hover:text-gray-300">
             Why the data looks this way →
           </Link>
@@ -299,7 +317,7 @@ export default async function StatsPage({
                   <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
                 )}
                 <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-brand text-white text-xs font-medium tabular-nums">
-                  {a.count} {a.count === 1 ? 'ban' : 'bans'}
+                  {a.count} {a.count === 1 ? 'book' : 'books'}
                 </span>
               </div>
             </div>

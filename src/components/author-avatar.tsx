@@ -15,6 +15,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/)
@@ -41,7 +42,7 @@ export default function AuthorAvatar({
 }) {
   const [failed, setFailed] = useState(false)
 
-  if (photoUrl && !failed) {
+  if (!failed && isAllowedImageUrl(photoUrl)) {
     return (
       <Image
         src={photoUrl}
