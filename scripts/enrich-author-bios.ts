@@ -22,11 +22,14 @@
 import { adminClient } from '../src/lib/supabase'
 import { authorLadder } from '../src/lib/enrich/_author-ladder'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
+import { cleanWikiExtract } from '../src/lib/text/clean-wiki-extract'
 
 const APPLY = process.argv.includes('--apply')
 const PHOTOS_ONLY = process.argv.includes('--photos-only')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
+const IDS_ARG = process.argv.find(a => a.startsWith('--ids='))
+const IDS = IDS_ARG ? IDS_ARG.replace('--ids=', '').split(',').map(s => parseInt(s.trim(), 10)).filter(n => Number.isFinite(n)) : null
 const DELAY_MS = 200
 const WIKI_UA = 'banned-books.org/1.0 (contact@banned-books.org)'
 
@@ -222,12 +225,16 @@ function hasCensorshipContent(fullText: string): boolean {
     .some(kw => lower.includes(kw))
 }
 
-// Strip HTML tags (Wikipedia extracts include some)
+// Strip HTML tags, decode entities, and remove bracketed IPA pronunciation
+// — Wikipedia extracts include all three. `cleanWikiExtract` handles the
+// last two; the tag strip stays here because the extract-API HTML is the
+// only place we see real tags.
 function stripHtml(html: string): string {
-  return html
+  const noTags = html
     .replace(/<[^>]+>/g, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
+  return cleanWikiExtract(noTags)
 }
 
 // ─── Bio construction ─────────────────────────────────────────────────────────
@@ -282,6 +289,8 @@ async function main() {
     .not('slug', 'is', null)
     .order('display_name')
     .limit(LIMIT)
+
+  if (IDS) baseQuery.in('id', IDS)
 
   const { data, error } = PHOTOS_ONLY
     ? await baseQuery.not('bio', 'is', null).is('photo_url', null)
