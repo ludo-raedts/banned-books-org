@@ -157,8 +157,11 @@ export default function ReadingClubAdminClient(props: Props) {
 //   1) Year is part of the PK — every entry belongs to a specific ALA year.
 //   2) Manual entries supported — ALA's list sometimes contains books that
 //      aren't in our books table. Handled via a small "Add manually" form.
-//   3) Three extra ALA fields per row (challenge_count, bookshop_url,
-//      source_url) tucked behind a per-card "ALA metadata" disclosure.
+//   3) Two extra ALA fields per row (challenge_count, source_url) tucked
+//      behind a per-card "ALA metadata" disclosure. Bookshop URL is derived
+//      automatically from the linked book via getBookshopUrl() — no manual
+//      override (the override field was a footgun, see migration
+//      20260521180000_drop_reading_club_bookshop_url_override.sql).
 
 const ALA_DEFAULT_SOURCE_URL = 'https://www.ala.org/bbooks/frequentlychallengedbooks/top10'
 
@@ -191,7 +194,6 @@ function CurrentlyChallengedTab({
       reasons: [],
       banCount: book.banCount,
       challengeCount: null,
-      bookshopUrl: null,
       sourceUrl: ALA_DEFAULT_SOURCE_URL,
       publishedAt: null,
     }])
@@ -215,7 +217,6 @@ function CurrentlyChallengedTab({
       reasons: [],
       banCount: 0,
       challengeCount: null,
-      bookshopUrl: null,
       sourceUrl: ALA_DEFAULT_SOURCE_URL,
       publishedAt: null,
     }])
@@ -242,7 +243,6 @@ function CurrentlyChallengedTab({
         author: p.authors.join(', ') || 'Unknown',
         book_id: p.bookId,
         challenge_count: p.challengeCount ?? null,
-        bookshop_url: p.bookshopUrl ?? null,
         source_url: p.sourceUrl ?? null,
         discussion_questions: p.discussionQuestions.length > 0 ? p.discussionQuestions : null,
       })),
@@ -338,16 +338,6 @@ function CurrentlyChallengedTab({
                       const next = [...picks]
                       const v = e.target.value
                       next[i] = { ...next[i], challengeCount: v ? Number(v) : null }
-                      setPicks(next)
-                    }}
-                    className={inputCls}
-                  />
-                  <input
-                    value={p.bookshopUrl ?? ''}
-                    placeholder="Bookshop URL (optional)"
-                    onChange={e => {
-                      const next = [...picks]
-                      next[i] = { ...next[i], bookshopUrl: e.target.value || null }
                       setPicks(next)
                     }}
                     className={inputCls}

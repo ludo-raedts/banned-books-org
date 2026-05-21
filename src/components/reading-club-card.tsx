@@ -8,8 +8,24 @@ import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/booksho
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import type { ReadingClubCard as Card } from '@/lib/reading-club-data'
 
-export default function ReadingClubBookCard({ card, showCountries }: { card: Card; showCountries?: boolean }) {
-  const bookshopUrl = card.bookshopUrl ?? getBookshopUrl({ isbn13: card.isbn13, bookshopIsbn13: card.bookshopIsbn13, bookshopStatus: card.bookshopStatus })
+export default function ReadingClubBookCard({
+  card,
+  showCountries,
+  clubHref,
+}: {
+  card: Card
+  showCountries?: boolean
+  // When set, the card surfaces a "Book-club guide" link + PDF download.
+  // Each track passes its own URL; auto-pulled by-theme rows without a
+  // curator entry omit it to avoid 404s.
+  clubHref?: string
+}) {
+  // Always go through the canonical helper: per-ISBN deeplink when
+  // bookshop_status='valid', otherwise storefront fallback. Manual URL
+  // overrides on the currently-challenged track were removed because
+  // they shipped stale search URLs that broke when bookshop changed
+  // their search routing (migration 20260521180000).
+  const bookshopUrl = getBookshopUrl({ isbn13: card.isbn13, bookshopIsbn13: card.bookshopIsbn13, bookshopStatus: card.bookshopStatus })
 
   return (
     <li className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
@@ -56,6 +72,20 @@ export default function ReadingClubBookCard({ card, showCountries }: { card: Car
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
+        {clubHref && (
+          <Link href={clubHref} className="text-oxblood font-medium hover:underline">
+            Book-club guide →
+          </Link>
+        )}
+        {clubHref && (
+          <a
+            href={`${clubHref}/pdf`}
+            download
+            className="text-oxblood hover:underline"
+          >
+            Download PDF
+          </a>
+        )}
         {card.bookSlug && (
           <Link href={`/books/${card.bookSlug}`} className="text-brand hover:underline">
             View in our database →

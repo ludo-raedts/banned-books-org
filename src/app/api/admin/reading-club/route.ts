@@ -99,7 +99,6 @@ export async function POST(req: NextRequest) {
       author: string
       book_id?: number | null
       challenge_count?: number | null
-      bookshop_url?: string | null
       source_url?: string | null
       discussion_questions?: string[] | null
     }> | undefined
@@ -120,7 +119,6 @@ export async function POST(req: NextRequest) {
         author: e.author,
         book_id: e.book_id ?? null,
         challenge_count: e.challenge_count ?? null,
-        bookshop_url: e.bookshop_url ?? null,
         source_url: e.source_url ?? null,
         discussion_questions: e.discussion_questions ?? null,
         published_at: null,
@@ -142,7 +140,6 @@ export async function POST(req: NextRequest) {
       author: string
       challenge_count?: number | null
       book_id?: number | null
-      bookshop_url?: string | null
       discussion_questions?: string[] | null
       source_url?: string | null
     } | undefined
@@ -156,7 +153,6 @@ export async function POST(req: NextRequest) {
         author: e.author,
         challenge_count: e.challenge_count ?? null,
         book_id: e.book_id ?? null,
-        bookshop_url: e.bookshop_url ?? null,
         discussion_questions: e.discussion_questions ?? null,
         source_url: e.source_url ?? null,
         updated_at: new Date().toISOString(),

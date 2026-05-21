@@ -50,7 +50,6 @@ export type ReadingClubCard = {
   banCount: number
   // Currently-challenged-only fields:
   challengeCount?: number | null
-  bookshopUrl?: string | null
   sourceUrl?: string | null
   publishedAt: string | null
 }
@@ -100,7 +99,7 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
   const supabase = opts?.admin ? adminClient() : serverClient()
   let q = supabase
     .from('reading_club_currently_challenged')
-    .select(`year, position, title, author, challenge_count, bookshop_url, discussion_questions, source_url, published_at, ${BOOK_JOIN}`)
+    .select(`year, position, title, author, challenge_count, discussion_questions, source_url, published_at, ${BOOK_JOIN}`)
     .eq('year', year)
     .order('position')
   if (!opts?.admin) q = q.not('published_at', 'is', null)
@@ -111,7 +110,6 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
     title: string
     author: string
     challenge_count: number | null
-    bookshop_url: string | null
     discussion_questions: string[] | null
     source_url: string | null
     published_at: string | null
@@ -137,7 +135,6 @@ export async function getCurrentlyChallenged(year: number, opts?: { admin?: bool
       reasons: proj.reasons,
       banCount: proj.banCount,
       challengeCount: r.challenge_count,
-      bookshopUrl: r.bookshop_url,
       sourceUrl: r.source_url,
       publishedAt: r.published_at,
     }
