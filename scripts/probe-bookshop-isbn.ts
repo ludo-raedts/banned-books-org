@@ -45,13 +45,21 @@ type ProbeResult = 'valid' | 'not_found' | 'error'
 async function probe(isbn13: string): Promise<ProbeResult> {
   const url = `https://bookshop.org/a/${BOOKSHOP_AFFILIATE_ID}/${isbn13}`
   try {
-    let res = await fetch(url, { method: 'HEAD', headers: HEADERS, redirect: 'follow' })
+    // redirect:'manual' so we observe bookshop's own signal directly:
+    //   404                  → the ISBN is not in their catalogue
+    //   308 → /p/books/...   → the ISBN IS in their catalogue, redirecting
+    //                          to the canonical product page (with affiliate
+    //                          tag preserved). Following the redirect with
+    //                          HEAD sometimes loops or returns 405 on the
+    //                          target, so we treat any 3xx here as the
+    //                          authoritative "exists" signal.
+    let res = await fetch(url, { method: 'HEAD', headers: HEADERS, redirect: 'manual' })
     // Some hosts reject HEAD with 405; fall back to GET (body discarded).
     if (res.status === 405) {
-      res = await fetch(url, { method: 'GET', headers: HEADERS, redirect: 'follow' })
+      res = await fetch(url, { method: 'GET', headers: HEADERS, redirect: 'manual' })
     }
     if (res.status === 404) return 'not_found'
-    if (res.status >= 200 && res.status < 300) return 'valid'
+    if (res.status >= 200 && res.status < 400) return 'valid'
     return 'error'
   } catch {
     return 'error'
