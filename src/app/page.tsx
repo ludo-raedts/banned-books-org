@@ -65,6 +65,92 @@ const LATIN_SCRIPT_LANGS = [
 
 const REASON_SLUGS = ['lgbtq', 'sexual', 'political', 'religious', 'racial'] as const
 
+type RichBookOfDayRow = {
+  id: number
+  title: string
+  slug: string
+  cover_url: string | null
+  first_published_year: number | null
+  description_book: string | null
+  censorship_summary: string | null
+  genres: string[] | null
+  book_authors: { authors: { display_name: string } | null }[] | null
+  bans:
+    | {
+        country_code: string
+        year_started: number | null
+        status: string | null
+        ban_reason_links: { reasons: { slug: string } | null }[] | null
+      }[]
+    | null
+}
+
+function truncateAtSentence(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text
+  const slice = text.slice(0, maxLen)
+  const lastPeriod = slice.lastIndexOf('. ')
+  if (lastPeriod > maxLen * 0.5) return slice.slice(0, lastPeriod + 1) + '…'
+  return slice.replace(/\s\S*$/, '') + '…'
+}
+
+function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>): BookOfDay {
+  const bans = row.bans ?? []
+  const total = bans.length
+  const countries = new Set(bans.map(b => b.country_code))
+  const active = bans.filter(b => b.status === 'active').length
+
+  const datedBans = bans
+    .filter(b => b.year_started != null)
+    .sort((a, b) => (a.year_started ?? 0) - (b.year_started ?? 0))
+  const firstBan = datedBans[0] ?? bans[0] ?? null
+  const firstCountry = firstBan ? countryNames.get(firstBan.country_code) ?? firstBan.country_code : null
+  const firstYear = firstBan?.year_started ?? null
+
+  const reasonSet = new Set<string>()
+  for (const ban of bans) {
+    for (const link of ban.ban_reason_links ?? []) {
+      if (link.reasons?.slug) reasonSet.add(link.reasons.slug)
+    }
+  }
+
+  let summary = row.censorship_summary
+  if (!summary) {
+    const others = countries.size - 1
+    const banWord = `${total === 1 ? 'ban remains' : 'bans remain'}`
+    if (firstCountry && firstYear && others > 0) {
+      summary = `Banned in ${firstCountry} (${firstYear}) and ${others} other ${others === 1 ? 'country' : 'countries'}. ${active} of ${total} ${banWord} active.`
+    } else if (firstCountry && firstYear) {
+      summary = `Banned in ${firstCountry} (${firstYear}). ${active} of ${total} ${banWord} active.`
+    } else if (firstCountry) {
+      summary = `Banned in ${firstCountry}. ${active} of ${total} ${banWord} active.`
+    } else {
+      summary = `${total} ${total === 1 ? 'recorded ban' : 'recorded bans'}.`
+    }
+  }
+
+  const author = (row.book_authors ?? [])
+    .map(ba => ba.authors?.display_name)
+    .filter((s): s is string => !!s)
+    .join(', ')
+
+  const description = row.description_book ? truncateAtSentence(row.description_book, 500) : null
+
+  return {
+    title: row.title,
+    slug: row.slug,
+    cover_url: row.cover_url,
+    author,
+    year: row.first_published_year,
+    description,
+    genres: row.genres ?? [],
+    summary,
+    reasons: [...reasonSet],
+    banCount: total,
+    countryCount: countries.size,
+    activeCount: active,
+  }
+}
+
 export default async function HomePage() {
   const timer = newTimer('home')
   const supabase = adminClient()
@@ -80,7 +166,9 @@ export default async function HomePage() {
     banCountsRes,
     placeholderAuthorsRes,
     reasonsRes,
-  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
+    bbwConfigRes,
+    rushdieRes,
+  ] = await timer.wrap('parallel-batch-12', () => Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
@@ -91,10 +179,19 @@ export default async function HomePage() {
     supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('authors').select('id').eq('is_placeholder', true),
     supabase.from('reasons').select('id, slug').in('slug', REASON_SLUGS),
+    // bbw_config + the Rushdie quote book power the hero callout. bbw_config
+    // read via adminClient (this supabase var) on purpose — anon hits RLS on
+    // the singleton and silently returns DEFAULTS, which masks an
+    // editor-enabled BBW state.
+    supabase.from('bbw_config').select('enabled, year').eq('id', 1).maybeSingle(),
+    supabase.from('books').select('slug, bans(country_code)').eq('slug', 'the-satanic-verses').maybeSingle(),
   ]))
 
   const total = totalCountRes.count ?? 0
   const totalBans = totalBansRes.count ?? 0
+  const bbwConfig = (bbwConfigRes.data ?? null) as { enabled: boolean; year: number } | null
+  const rushdieRow = (rushdieRes.data ?? null) as { slug: string; bans: { country_code: string }[] } | null
+  const rushdieCountryCount = rushdieRow ? new Set(rushdieRow.bans.map(b => b.country_code)).size : 0
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -224,6 +321,9 @@ export default async function HomePage() {
 
   const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.distinct_books as number]))
   const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
+  const countryNameMap = new Map(
+    ((countriesRes.data ?? []) as { code: string; name_en: string }[]).map(c => [c.code, c.name_en]),
+  )
 
   // Book of the day: pick from the top-100 globally-banned pool (already in
   // bookById from the top-banned rail) so the daily rotation lands on a
@@ -240,18 +340,35 @@ export default async function HomePage() {
   const seedSum = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
   const pickBookRow = pickPool.length > 0 ? pickPool[seedSum % pickPool.length] : null
 
-  const bookOfDay: BookOfDay | null = pickBookRow
-    ? {
-        title: pickBookRow.title,
-        slug: pickBookRow.slug,
-        cover_url: pickBookRow.cover_url,
-        author: authorNameOf(pickBookRow),
-        year: pickBookRow.first_published_year,
-        description: pickBookRow.description_book,
-        banCount: pickBookRow.bans.length,
-        countryCount: new Set(pickBookRow.bans.map(b => b.country_code)).size,
-      }
-    : null
+  // One follow-up fetch to pull the richer fields we need for the new card
+  // shape (censorship_summary, genres, per-ban status + year + reasons).
+  // Cheap because it's a single book by id, and the page is on revalidate=1800.
+  //
+  // The fallback path drops `censorship_summary` from the select — it shields
+  // the homepage during the window between deploy and the
+  // 20260521120000_books_censorship_summary migration being applied. Once the
+  // column exists the primary select returns and editorial summaries surface
+  // automatically.
+  let bookOfDay: BookOfDay | null = null
+  if (pickBookRow) {
+    const richSelect =
+      'id, title, slug, cover_url, first_published_year, description_book, censorship_summary, genres, ' +
+      'book_authors(authors(display_name)), ' +
+      'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))'
+    const richFallbackSelect = richSelect.replace('censorship_summary, ', '')
+
+    const primary = await timer.wrap('book-of-day-rich', () =>
+      supabase.from('books').select(richSelect).eq('id', pickBookRow.id).maybeSingle(),
+    )
+    let richRaw = primary.data
+    if (primary.error) {
+      const fallback = await timer.wrap('book-of-day-fallback', () =>
+        supabase.from('books').select(richFallbackSelect).eq('id', pickBookRow.id).maybeSingle(),
+      )
+      richRaw = fallback.data
+    }
+    if (richRaw) bookOfDay = buildBookOfDay(richRaw as unknown as RichBookOfDayRow, countryNameMap)
+  }
 
   // FAQ: reuse the top-banned signal already in scope. mostBanned is the #1
   // entry from v_top_banned_books, fully hydrated via bookById — no extra
@@ -315,7 +432,20 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }} />
 
-      <HeroSection totalBooks={total} countryCount={countryCount} totalBans={totalBans} />
+      <HeroSection
+        totalBooks={total}
+        countryCount={countryCount}
+        totalBans={totalBans}
+        callout={
+          bbwConfig?.enabled
+            ? { kind: 'bbw', year: bbwConfig.year ?? new Date().getFullYear() }
+            : {
+                kind: 'rushdie',
+                slug: rushdieRow?.slug ?? 'the-satanic-verses',
+                countryCount: rushdieCountryCount,
+              }
+        }
+      />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}
       <HappeningNowSection />
       <TrendingSection books={trendingBooks} />

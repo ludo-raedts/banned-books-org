@@ -5,11 +5,8 @@ export default function FinalCtaSection({ totalBooks }: { totalBooks: number }) 
   return (
     <SectionShell tone="cream">
       <div className="text-center py-4 md:py-8">
-        <p className="font-serif text-2xl md:text-3xl font-medium tracking-tight max-w-xl mx-auto leading-snug text-neutral-900">
-          “What is freedom of expression? Without the freedom to offend, it ceases to exist.”
-        </p>
-        <p className="mt-3 text-sm font-medium text-oxblood">
-          — Salman Rushdie
+        <p className="font-serif text-xl md:text-2xl font-medium tracking-tight max-w-md mx-auto leading-snug text-neutral-900">
+          A documented ban cannot be denied.
         </p>
         <Link
           href="/search"
