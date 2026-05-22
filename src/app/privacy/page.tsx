@@ -58,6 +58,7 @@ export default function PrivacyPage() {
           <li>• We do not link to Amazon, on principle.</li>
           <li>• Outbound links to news sites and affiliate booksellers may be logged by those third parties when you click — that is outside our control.</li>
           <li>• If you contact us, your message is processed by a form provider so we can reply.</li>
+          <li>• If you buy the dataset, payment is handled by Stripe and we store your email address so we can send (and re-send) the download link.</li>
         </ul>
       </section>
 
@@ -120,8 +121,8 @@ export default function PrivacyPage() {
             tells the bookseller the click came from us, which lets them pay a small commission on any
             resulting purchase at no extra cost to you. The affiliate platform — and the bookseller — can
             measure clicks, sessions, and purchases attributed to that tag. We use Bookshop.org affiliate
-            links, which support independent bookstores. We do not run our own click tracking on top of
-            these links.
+            links (which support independent bookstores) and Kobo affiliate links via the Rakuten
+            Advertising network. We do not run our own click tracking on top of these links.
           </p>
           <p>
             <strong>We deliberately do not link to Amazon.</strong> Amazon has itself been involved in book
@@ -155,7 +156,47 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      {/* 6. What we do not use */}
+      {/* 6. Dataset purchases */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Dataset purchases</h2>
+        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+          <p>
+            The catalogue is also available as a paid download at{' '}
+            <Link href="/dataset" className="underline hover:text-gray-900 dark:hover:text-gray-100">/dataset</Link>.
+            When you go through checkout, three third parties are involved alongside our own database:
+          </p>
+          <ul className="flex flex-col gap-2">
+            <li>
+              • <strong>Stripe</strong> handles the payment. You enter your name, email address, billing
+              country, and payment details directly into Stripe&apos;s hosted checkout page. Stripe also
+              processes your IP address for fraud prevention and tax determination, and acts as an
+              independent controller for that payment data under its own privacy notice.
+            </li>
+            <li>
+              • Once Stripe confirms a successful payment, we receive (and store) your{' '}
+              <strong>email address</strong>, the Stripe session ID, and the amount and currency paid.
+              These are written to a <code className="font-mono text-xs">dataset_orders</code> row in our
+              database (<strong>Supabase</strong>) together with a random one-time download token that
+              expires after 30 days.
+            </li>
+            <li>
+              • The download link is delivered to your email through <strong>Resend</strong>, our
+              transactional email provider. Resend processes the message only to deliver it.
+            </li>
+          </ul>
+          <p>
+            We use this data to deliver the dataset, re-send the link if you lose it, and reconcile sales
+            with Stripe. We do not use it for marketing — we do not have a mailing list, and we do not
+            share purchaser email addresses with anyone. Order rows are retained as a record of sale
+            (needed for tax, refund, and licensing purposes); after the 30-day download window has
+            closed you can ask us via the{' '}
+            <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-gray-100">contact form on the about page</Link>{' '}
+            to delete your order record.
+          </p>
+        </div>
+      </section>
+
+      {/* 7. What we do not use */}
       <section>
         <h2 className="text-xl font-semibold mb-4">What we deliberately do not use</h2>
         <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
@@ -177,7 +218,7 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      {/* 7. Your rights */}
+      {/* 8. Your rights */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Your rights</h2>
         <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
@@ -185,7 +226,9 @@ export default function PrivacyPage() {
             Under the EU General Data Protection Regulation and equivalent laws elsewhere, you have the right
             to ask what personal data we hold about you, to ask us to correct or delete it, and to object to
             its processing. Because we do not log identifiers that map to individual visitors, in practice the
-            only data we are likely to hold on you is correspondence you have sent us through the contact form.
+            only data we are likely to hold on you is correspondence you have sent us through the contact form
+            and, if you have bought the dataset, your order record (email address, Stripe session ID, amount,
+            and timestamp).
           </p>
           <p>
             To exercise any of these rights, or to raise a concern, please use the{' '}
@@ -199,7 +242,7 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      {/* 8. Controller & changes */}
+      {/* 9. Controller & changes */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Controller and changes to this policy</h2>
         <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
