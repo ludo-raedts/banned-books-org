@@ -470,6 +470,11 @@ export default async function BookPage({
   )
   const banClusters = clusterBans(sortedBans)
 
+  // Distinct country count across all bans (includes bans with NULL year_started,
+  // unlike timelineRows which filters those). Used for the headline label and
+  // share-text so the displayed "country" count is always semantically correct.
+  const distinctCountries = new Set(book.bans.map(b => b.country_code)).size
+
   // ── Timeline rows: one per country, sorted by earliest ban year ─────────────
   const timelineRows: TimelineRow[] = (() => {
     const byCountry = new Map<string, { name: string; bans: Ban[] }>()
@@ -933,8 +938,10 @@ export default async function BookPage({
             </div>
           )}
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
-            Banned in {book.bans.length}{' '}
-            {book.bans.length === 1 ? 'country' : 'countries'}
+            {book.bans.length} ban{book.bans.length === 1 ? '' : 's'}
+            {' across '}
+            {distinctCountries}{' '}
+            {distinctCountries === 1 ? 'country' : 'countries'}
           </p>
           {readingClubLink && (
             <Link
@@ -954,6 +961,7 @@ export default async function BookPage({
             url={`https://www.banned-books.org/books/${book.slug}`}
             title={book.title}
             banCount={book.bans.length}
+            countryCount={distinctCountries}
           />
         </div>
       </div>

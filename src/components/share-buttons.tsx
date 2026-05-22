@@ -5,13 +5,22 @@ import { useState } from 'react'
 interface ShareButtonsProps {
   url: string
   title: string
+  /** Total number of ban events for this book (typically per-district granular). */
   banCount: number
+  /** Distinct countries those bans span. May be 1 even when banCount is large
+   *  (e.g. 116 US school-district bans across 1 country). */
+  countryCount: number
 }
 
-export default function ShareButtons({ url, title, banCount }: ShareButtonsProps) {
+export default function ShareButtons({ url, title, banCount, countryCount }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
 
-  const text = `"${title}" is banned in ${banCount} ${banCount === 1 ? 'country' : 'countries'}`
+  // When banCount > countryCount we surface both numbers; otherwise the
+  // simpler "is banned in N countries" is accurate (1 event = 1 country).
+  const countryNoun = countryCount === 1 ? 'country' : 'countries'
+  const text = banCount > countryCount
+    ? `"${title}" has been banned ${banCount} times across ${countryCount} ${countryNoun}`
+    : `"${title}" is banned in ${countryCount} ${countryNoun}`
   const twitterHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
   const bskyHref = `https://bsky.app/intent/compose?text=${encodeURIComponent(`${text}\n${url}`)}`
 
