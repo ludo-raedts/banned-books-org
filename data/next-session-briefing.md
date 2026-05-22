@@ -1,32 +1,55 @@
-# Next-session briefing: post-PEN-2024-25 import
+# Next-session briefing: PEN America longitudinal coverage
 
 > Paste this whole file at the start of a fresh Claude Code conversation
-> to bootstrap context. Supersedes the 2026-05-20 post-Kasseler briefing.
+> to bootstrap context. Supersedes earlier post-Kasseler / post-2024-25
+> briefings.
 
-## Status as of 2026-05-20 (PM)
+## Status as of 2026-05-20 (verified against DB the next morning)
 
-**PEN America 2024-25 import is COMPLETE.** 6,674 new bans inserted across
-126 new books at per-district granularity (region=state, institution=district).
-3,949 → ~10,623 US-school bans in DB. Source: `data/pen-2024-25.csv` (6,719 rows,
-10 "Professionally Weeded" skipped, 35 deduped). Importer:
-[scripts/import-pen.ts](../scripts/import-pen.ts). Schema migration that made
-this possible: [20260520112552_bans_unique_per_location.sql](../supabase/migrations/20260520112552_bans_unique_per_location.sql)
-— extended the `bans_unique_per_scope` constraint to include `(region, institution)`
-with `NULLS NOT DISTINCT`.
+### PEN America per-academic-year coverage matrix
 
-**Open follow-ups (not blocking):**
-- `--cleanup-aggregates` pass: the 552 April-seed bans (NULL region/institution)
-  are now stale relative to the granular data. Build a separate script to
-  collapse them or delete those superseded by granular siblings.
-- 2023-24 import: same pipeline works with the 2023-24 Google Sheet
-  (`https://docs.google.com/spreadsheets/d/1slCpqLprPXHM-Wyt-WYJR30-NvbGLialVNR8qTsZFG8/export?format=csv&gid=0`).
-  Has the extra `Initiating Action` column → map to `bans.actor`.
-- 8 files contain stale comments referencing the old `(book_id, country_code, year_started, scope_id)`
-  unique-constraint shape (src/lib/wikipedia/dedup.ts, types.ts, importer.test.ts;
-  scripts/_audit_soft_dupe_bans.ts, _check_ban_dupes.ts, merge-soft-dupe-bans.ts,
-  import-wikipedia-list.ts, src/lib/imports/review-commit.ts). Functionally safe
-  — the SELECT-then-INSERT pattern still works for NULL region/institution callers
-  via NULLS NOT DISTINCT semantics. Worth a sweep at some point.
+US-school book bans total **10,388** in DB across two PEN-sourced ingestion
+paths. The 2024-25 academic year is the only one with per-district
+granularity; everything older is at aggregate level (NULL region, NULL
+institution) and is materially incomplete relative to what PEN published.
+
+| Academic year | Bans in DB | Source | Granularity | Net gap vs PEN's published count |
+|---|---|---|---|---|
+| pre-2021 historical sample | 325 | source 190 | aggregate | n/a — curated sample, no full-year corpus |
+| 2021-22 | 16 | source 190 | aggregate | ~2,500 missing (PEN cited 2,571 instances) |
+| 2022-23 | 6 | source 190 | aggregate | ~3,300 missing (PEN cited 3,362 instances) |
+| 2023 (year ambiguous) | 4 | source 190 | aggregate | — |
+| 2023-24 | 1,149 | source 190 | aggregate | ~8,900 missing (PEN's 2023-24 sheet has 10,048 rows) |
+| 2024-25 | 6,674 + 2,213 overlap | sources 2068 + 190 | **per-district** + aggregate | ~200 short of PEN's published 6,870 — acceptable overlap-count gap |
+
+- **Source 190** (`https://pen.org/book-bans/` — generic landing URL): 3,714 bans across 3,703 books, almost 100% aggregate.
+- **Source 2068** (`https://pen.org/book-bans/pen-america-index-of-school-book-bans-2024-2025/`): 6,674 bans, 3,701 books, all per-district.
+
+### How source 190 was populated (undocumented archaeology — needs follow-up)
+
+The April 24 seed script [scripts/add-pen-america-books.ts](../scripts/add-pen-america-books.ts) docstring says "PEN America's school book ban index (2021-2024)", with `MIN_COUNT=5` and `MAX_BOOKS=600` — so it loads books with ≥5 ban instances, ranked. Books table got ~552 books from that seed run, but only ~345 ban-rows landed on source 190 from the April run itself.
+
+**The bulk of source 190 (3,101 of its 3,714 bans) was added in a single wave on 2026-05-03 that is not documented in any committed script or earlier briefing.** Best guess: a re-run with relaxed thresholds OR an aggregate-level dump from a different PEN report. Worth tracking down (`git log --since=2026-05-02 --until=2026-05-04`, check stash/untracked scripts) before further PEN imports so any granular re-import doesn't fight an opaque legacy state.
+
+### The May 20 per-district 2024-25 import
+
+[scripts/import-pen.ts](../scripts/import-pen.ts) — committed 2026-05-20 (commit `adce1a3`). Processes [data/pen-2024-25.csv](pen-2024-25.csv) (6,239 rows, 10 "Professionally Weeded" skipped, 35 deduped). 6,674 new bans across 126 new books at per-district granularity (region=state, institution=district). Schema migration that unlocked this: [20260520112552_bans_unique_per_location.sql](../supabase/migrations/20260520112552_bans_unique_per_location.sql) — extended `bans_unique_per_scope` to include `(region, institution)` with `NULLS NOT DISTINCT`.
+
+### Open follow-ups — substantial, not blocking
+
+Three PEN per-district reimports are still available. Each is the same multi-hour shape as the May 20 2024-25 run (not "30 min easy" — that earlier framing was wrong; net add per year is thousands of bans + many new books):
+
+1. ~~**PEN 2023-24**~~ — **DONE 2026-05-22**. 10,051 new per-district bans inserted across 2,603 new books + 1,332 new authors via [scripts/import-pen-2023-24.ts](../scripts/import-pen-2023-24.ts) and source 2131 (`https://pen.org/book-bans/pen-america-index-of-school-book-bans-2023-2024/`). Two runs (first run had 5 transient socket-failure batches dropping 500 bans; idempotent re-run recovered them with 0 errors). `bans.actor` populated from PEN's `Initiating Action` column for all 10,051 rows — first time we have this granularity. AY 2023-24 still has 1,149 aggregate-level source-190 bans (year_started=2024, region=NULL) standing alongside the new per-district rows — `--cleanup-aggregates` task (#4 below) collapses those.
+
+2. **PEN 2022-23** — ~3,300 new bans. Sheet has 9 columns, no Secondary Author / Translator: `https://docs.google.com/spreadsheets/d/1a6v7R7pidO7TIwRZTIh9T6c0--QNNVufcUUrDcz2GJM/`.
+
+3. **PEN 2021-22** — ~2,500 new bans. `https://docs.google.com/spreadsheets/d/1hTs_PB7KuTMBtNMESFEGuK-0abzhNxVv4tgpI5-iKe8/`.
+
+4. **`--cleanup-aggregates` pass** — once one or more granular reimports land, the **3,388 aggregate-level source-190 bans** across AY 2021-22 / 2022-23 / 2023-24 / 2024-25 become structurally redundant. Build a script that either collapses each aggregate row onto its granular sibling (merge sources, drop the aggregate row) or marks it `status='superseded'`. The pre-2021 historical sample (325 bans) stays — those have no granular replacement coming.
+
+5. **Identify the May 3 wave** — 3,101 source-190 bans were added 2026-05-03 by a process not in any current script (per follow-up archaeology above). Find the script in git history / stash / untracked files, document it, decide re-run vs sunset.
+
+6. **8 files contain stale comments** referencing the old `(book_id, country_code, year_started, scope_id)` unique-constraint shape (src/lib/wikipedia/dedup.ts, types.ts, importer.test.ts; scripts/_audit_soft_dupe_bans.ts, _check_ban_dupes.ts, merge-soft-dupe-bans.ts, import-wikipedia-list.ts, src/lib/imports/review-commit.ts). Functionally safe — the SELECT-then-INSERT pattern still works for NULL region/institution callers via NULLS NOT DISTINCT semantics. Worth a sweep at some point.
 
 ## What banned-books.org is
 
@@ -51,7 +74,13 @@ No commits. Two findings landed in [data/upstream-sources-inventory.md](upstream
    did write `ban_sources` + `ban_source_links` for all 552 books. The
    `/sources` page already lists PEN America. Inventory updated.
 
-## Where we left off — Airtable PDF dead-end
+## Reference: how 2024-25 was extracted (Airtable HAR workaround)
+
+> This section documents the workaround used to get the 2024-25 CSV.
+> Preserved as reference in case 2024-25 ever needs a fresh pull or a
+> future PEN year switches to the same Airtable distribution. **The
+> 2023-24 / 2022-23 / 2021-22 sheets do NOT need any of this** — they
+> are direct Google Sheets CSV exports.
 
 PEN America publishes the 2024–25 dataset via an Airtable share
 (`https://airtable.com/app65Z4deDTfu09DF/shrYIla3tzPLFbOKL/tblOfbXlidYy2MwhJ?viewControls=on`).
@@ -166,9 +195,9 @@ These three are all publicly downloadable as CSV without auth. **If the
 2024–25 CSV export is blocked, we can still run 2023–24 (a ~20× expansion
 over the April seed's 552 rows) and pick up 2024–25 later.**
 
-## Plan for next session — `scripts/import-pen-america-school-bans.ts`
+## Reusable PEN-import recipe (executed for 2024-25; same shape for 2023-24 / 2022-23 / 2021-22)
 
-Confirmed with Ludo this session:
+The current canonical importer is [scripts/import-pen.ts](../scripts/import-pen.ts) — committed for 2024-25. For older AYs, fork it (or extend with a `--year=YYYY-YY` flag) and swap the CSV path + source URL. Mapping rules are stable across PEN years:
 
 - **Scope**: refresh + backfill (~10K new bans from 2023–24 alone)
 - **Location**: `scripts/` one-off (Legifrance shape: dry-run default,
