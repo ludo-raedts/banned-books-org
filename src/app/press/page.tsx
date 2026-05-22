@@ -166,7 +166,7 @@ export default async function PressPage() {
     `Each record distinguishes formal government bans, institutional restrictions (libraries, schools, prisons), and documented challenges that resulted in removal. Every entry carries a verifiable source: a court judgment, a government decree, a news report, a PEN America export, or an American Library Association challenged-books report. Unsuccessful challenges and informal social pressure are not recorded. ` +
     `The project was started in April 2026 by Ludo Raedts, a Dutch entrepreneur based in Groningen, the Netherlands, working with open data and AI-assisted tooling. ` +
     `Banned Books documents censorship without endorsing either the bans or the books that have been banned. The catalogue deliberately includes morally objectionable titles with extended context rather than excluding them; a catalogue of banned books that omits controversial books is not a catalogue of banned books. ` +
-    `The site is free and non-commercial. A structured dataset (CSV, JSON, SQLite) is available for journalists and researchers. Outbound book links point to Bookshop.org and, where available, Project Gutenberg or the Internet Archive; the project does not link to Amazon. Banned Books receives no funding from publishers, governments, or advocacy organisations.`
+    `The site is free and non-commercial. A structured dataset (CSV, JSON, SQLite) is available for journalists and researchers. Outbound book links point to Bookshop.org and Kobo; the project does not link to Amazon. Banned Books receives no funding from publishers, governments, or advocacy organisations.`
 
   const quotableClaims = [
     `Banned Books is the first international database of book censorship covering governments, schools, and libraries across ${countryCount} countries with ${banCount} citation-backed records.`,
@@ -176,7 +176,7 @@ export default async function PressPage() {
     'Every ban record on banned-books.org links to a verifiable source citation.',
     'Banned Books is independent. It accepts no funding from publishers, governments, or advocacy organisations.',
     `The Banned Books catalogue spans ${minYear} to ${maxYear}, from the Vatican’s Index Librorum Prohibitorum to twenty-first-century school-board removals.`,
-    'Banned Books deliberately does not link to Amazon. Outbound book links point to Bookshop.org, Project Gutenberg, and the Internet Archive.',
+    'Banned Books deliberately does not link to Amazon. Outbound book links point to Bookshop.org, Kobo, and Project Gutenberg.',
   ]
 
   const orgSchema = {
