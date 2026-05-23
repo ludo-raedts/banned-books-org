@@ -1,6 +1,13 @@
 /**
  * Classify ban reasons for bans that currently only have 'other' as their reason.
- * Uses GPT-4o-mini to infer reasons from title + description + author.
+ * Uses GPT-4o-mini to infer reasons from per-event ban context (description,
+ * jurisdiction, action_type) layered with book-level fallback context
+ * (description_ban, censorship_context, book description).
+ *
+ * Ban-event context is the strongest signal — a PEN America district entry
+ * may state "removed for sexual content" explicitly, which is decisive even
+ * when the book's plot description is generic. Book-level context is the
+ * fallback when the ban event has no description of its own.
  *
  * Available reason slugs:
  *   lgbtq, sexual, racial, political, religious, violence, language,
@@ -27,30 +34,51 @@ const VALID_REASONS = new Set([
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
+type ClassifyContext = {
+  title: string
+  author: string
+  bookDescription: string   // books.description_book ?? books.description
+  bookBanContext: string    // books.description_ban ?? books.censorship_context
+  banDescription: string    // bans.description (per-event, strongest signal)
+  actionType: string        // banned | challenged | removed | restricted | blocked
+  region: string
+  institution: string
+  countryCode: string
+  yearStarted: number | null
+}
+
 async function classifyReasons(
   client: OpenAI,
-  title: string,
-  author: string,
-  description: string,
+  ctx: ClassifyContext,
 ): Promise<string[]> {
-  const prompt = `You are helping tag banned books with the reasons they were challenged or banned.
+  const eventMeta = [
+    ctx.actionType,
+    ctx.institution,
+    ctx.region,
+    ctx.countryCode,
+    ctx.yearStarted ? String(ctx.yearStarted) : null,
+  ].filter(Boolean).join(' · ')
 
-Book: "${title}" by ${author || 'unknown'}
-${description ? `Description: ${description.slice(0, 400)}` : ''}
+  const prompt = `You are tagging a single ban event of a book with the reasons it was challenged or banned. PRIORITIZE the ban-event context below — it explains why THIS jurisdiction acted, often more specifically than the book's general theme.
 
-Choose ALL applicable reason slugs from this list (return as comma-separated, lowercase):
-- lgbtq       = LGBTQ+ content or themes
-- sexual      = Sexual content
-- racial      = Race, racism, colonialism, civil rights
-- political   = Political or ideological content
-- religious   = Religious content
+Ban event:
+  ${eventMeta || '(no jurisdiction metadata)'}
+${ctx.banDescription ? `  Ban description: ${ctx.banDescription.slice(0, 600)}\n` : ''}${ctx.bookBanContext ? `  Why this book is commonly banned: ${ctx.bookBanContext.slice(0, 400)}\n` : ''}
+Book: "${ctx.title}" by ${ctx.author || 'unknown'}
+${ctx.bookDescription ? `Plot: ${ctx.bookDescription.slice(0, 400)}\n` : ''}
+Choose ALL applicable reason slugs (comma-separated, lowercase). Prefer SPECIFIC reasons. Use 'other' ONLY as a last resort when none of the specific reasons could plausibly apply.
+- lgbtq       = LGBTQ+ characters, relationships, or themes
+- sexual      = Sexual content, romance, sex education, body topics
+- racial      = Race, racism, colonialism, civil rights, slavery, ethnic conflict
+- political   = Political ideology, government, war, propaganda
+- religious   = Religious content (any tradition, including critique)
 - violence    = Violence or graphic content
 - language    = Offensive language / profanity
 - drugs       = Drug or substance use
-- obscenity   = Obscenity
-- moral       = Immorality or inappropriate values
-- blasphemy   = Blasphemy
-- other       = None of the above / unclear
+- obscenity   = Obscenity (often overlaps with sexual)
+- moral       = Immorality or "inappropriate for age" values
+- blasphemy   = Blasphemy specifically
+- other       = Last resort only
 
 Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
 
@@ -84,17 +112,24 @@ async function main() {
   // Load all bans with paginated query (Supabase caps at 1000/request)
   type BanRow = {
     id: number
+    country_code: string
+    region: string | null
+    institution: string | null
+    action_type: string
+    year_started: number | null
+    description: string | null
     books: {
       id: number; slug: string; title: string
       description_book: string | null; description: string | null
+      description_ban: string | null; censorship_context: string | null
       book_authors: Array<{ authors: { display_name: string } | null }>
     } | null
     ban_reason_links: Array<{ reasons: { id: number; slug: string } | null }>
   }
 
   const SELECT = `
-    id,
-    books(id, slug, title, description_book, description, book_authors(authors(display_name))),
+    id, country_code, region, institution, action_type, year_started, description,
+    books(id, slug, title, description_book, description, description_ban, censorship_context, book_authors(authors(display_name))),
     ban_reason_links(reasons(id, slug))
   `
 
@@ -140,8 +175,18 @@ async function main() {
       const book = ban.books
       if (!book) return { ban, slugs: ['other'] as string[] }
       const author = book.book_authors?.[0]?.authors?.display_name ?? ''
-      const desc = book.description_book ?? book.description ?? ''
-      const slugs = await classifyReasons(openai, book.title, author, desc)
+      const slugs = await classifyReasons(openai, {
+        title: book.title,
+        author,
+        bookDescription: book.description_book ?? book.description ?? '',
+        bookBanContext: book.description_ban ?? book.censorship_context ?? '',
+        banDescription: ban.description ?? '',
+        actionType: ban.action_type ?? '',
+        region: ban.region ?? '',
+        institution: ban.institution ?? '',
+        countryCode: ban.country_code ?? '',
+        yearStarted: ban.year_started,
+      })
       return { ban, book, author, slugs }
     }))
 
