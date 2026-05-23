@@ -197,15 +197,21 @@ const NATIONALITY_MAP: Record<string, string> = {
   'haitian': 'Haiti',
 }
 
+// Category-fragment terms that indicate the page subject is a person who
+// writes/creates. Used both to derive nationality and as a person-signal
+// gate (see hasWriterCategory below).
+const WRITER_CATEGORY_TERMS = [
+  'novelists', 'writers', 'authors', 'poets', 'dramatists', 'playwrights',
+  'journalists', 'essayists', 'screenwriters', 'editors', 'biographers',
+  'memoirists', 'columnists', 'lyricists', 'translators', 'illustrators',
+  'cartoonists', 'mangaka', 'manga artists', 'comics artists',
+  'children\'s writers', 'songwriters',
+]
+
 function extractNationalityFromCategories(categories: string[]): string | null {
-  // Look for categories like "Category:American novelists", "Category:British writers" etc.
-  const writerTerms = [
-    'novelists', 'writers', 'authors', 'poets', 'dramatists', 'playwrights',
-    'journalists', 'essayists', 'screenwriters', 'editors',
-  ]
   for (const cat of categories) {
     const lower = cat.toLowerCase()
-    const hasWriterTerm = writerTerms.some(t => lower.includes(t))
+    const hasWriterTerm = WRITER_CATEGORY_TERMS.some(t => lower.includes(t))
     if (!hasWriterTerm) continue
 
     // Strip "Category:" prefix and lowercase
@@ -217,6 +223,28 @@ function extractNationalityFromCategories(categories: string[]): string | null {
     }
   }
   return null
+}
+
+function hasWriterCategory(categories: string[]): boolean {
+  return categories.some(c => {
+    const lower = c.toLowerCase()
+    return WRITER_CATEGORY_TERMS.some(t => lower.includes(t))
+  })
+}
+
+// Disambiguation-page detector. Wikipedia extracts for disambig pages
+// follow a stable pattern: "X may refer to:" (sometimes "X or Y may refer
+// to:") near the top. Stripping HTML first, then checking the first
+// ~120 chars is enough.
+function isDisambigExtract(html: string): boolean {
+  const text = stripHtml(html).toLowerCase()
+  const head = text.slice(0, 120)
+  if (head.startsWith('may refer to')) return true
+  return /^[^.!?\n]{0,100}\bmay refer to\b/.test(head)
+}
+
+function hasDisambigCategory(categories: string[]): boolean {
+  return categories.some(c => /\bdisambiguation\b/i.test(c))
 }
 
 function hasCensorshipContent(fullText: string): boolean {
@@ -352,6 +380,38 @@ async function main() {
       const photo = isAllowedImageUrl(photoRaw) ? photoRaw : null
       await sleep(DELAY_MS)
 
+      // ── Not-a-person guards (incident 2026-05-23) ────────────────────
+      // Wikipedia search resolves short / ambiguous author names to the
+      // wrong article: "Desert" → geography, "Iona" → island, "Hua"/"Chii"
+      // → disambig pages. Skip the enrichment entirely when the Wikipedia
+      // hit shows none of the person-signals. Both guards run in
+      // photos-only mode too — otherwise we'd save a photo of Rub al Khali.
+      //
+      //   G1  disambig page  — extract starts with "X may refer to" OR
+      //                        a "Disambiguation" category is present
+      //   G2  no person signal — none of {birth year, death year, writer
+      //                        category} fires. We treat the page as a
+      //                        non-biographical article (geography,
+      //                        concept, organization, etc.).
+      const birthYear = extract ? extractYearFromCategories(categories, 'births') : null
+      const deathYear = extract ? extractYearFromCategories(categories, 'deaths') : null
+      const isDisambig = !!extract && (isDisambigExtract(extract) || hasDisambigCategory(categories))
+      const hasPersonSignal =
+        birthYear !== null ||
+        deathYear !== null ||
+        hasWriterCategory(categories)
+
+      if (isDisambig) {
+        console.log(`✗ ${author.display_name} — Wikipedia hit is a disambiguation page (skipping)`)
+        skipped++
+        continue
+      }
+      if (!hasPersonSignal) {
+        console.log(`✗ ${author.display_name} — Wikipedia hit has no person signals (likely a geographic/concept article)`)
+        skipped++
+        continue
+      }
+
       // ── Photos-only branch: only the thumbnail matters ────────────────
       if (PHOTOS_ONLY) {
         if (!photo) {
@@ -378,8 +438,6 @@ async function main() {
       }
 
       // 3. Extract structured data from categories
-      const birthYear = extractYearFromCategories(categories, 'births')
-      const deathYear = extractYearFromCategories(categories, 'deaths')
       const birthCountry = extractNationalityFromCategories(categories)
 
       // 4. Check full article for censorship mentions
