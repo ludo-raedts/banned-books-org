@@ -21,6 +21,7 @@
 import { adminClient } from '../supabase'
 import { authorLadder } from './_author-ladder'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
+import { mirrorImageToStorage } from './mirror-image'
 
 const DELAY_MS = 200
 const UA = 'banned-books.org/1.0 (contact@banned-books.org)'
@@ -508,11 +509,19 @@ export type EnrichAuthorPhotosOpts = {
   apply: boolean
   limit?: number
   /**
-   * If set, restrict the run to a single author by slug. Bypasses the
-   * photo_url-IS-NULL gate so it can be re-run for a specific author
-   * (e.g. after a prior null result). Used for targeted gap-fills.
+   * If set, restrict the run to a single author by slug. Bypasses both the
+   * photo_url-IS-NULL gate and the photo_v2_checked_at-IS-NULL gate so it
+   * can be re-run for a specific author (e.g. after a prior null result).
+   * Used for targeted gap-fills.
    */
   slug?: string
+  /**
+   * If true, include authors whose photo_v2_checked_at is already set —
+   * i.e. re-probe authors that V2 has previously tried and missed. Default
+   * (false) only runs on authors V2 has never seen, so misses are sticky
+   * and the script makes monotonic progress through the backlog.
+   */
+  recheck?: boolean
   onProgress?: (msg: string) => void
 }
 
@@ -533,24 +542,6 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
   const supabase = adminClient()
   const limit = opts.limit ?? 50
 
-  let query = supabase
-    .from('authors')
-    .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
-    .not('slug', 'is', null)
-    .order('display_name')
-    .limit(limit)
-
-  if (opts.slug) {
-    // Targeted mode: bypass the IS NULL filter so we can re-probe a specific author.
-    query = query.eq('slug', opts.slug)
-  } else {
-    query = query.is('photo_url', null)
-  }
-
-  const { data, error } = await query
-
-  if (error) throw new Error(`DB read: ${error.message}`)
-
   type AuthorRow = {
     id: string
     display_name: string
@@ -560,7 +551,38 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
     name_english: string | null
     original_language: string | null
   }
-  const authors = (data ?? []) as AuthorRow[]
+
+  // PostgREST caps a single response at ~1000 rows regardless of .limit(),
+  // so paginate via .range() until either the caller-requested `limit` is
+  // reached or the eligible pool is exhausted. Ordering is required to keep
+  // pages disjoint — see the user-memory note on Supabase pagination.
+  const PAGE_SIZE = 1000
+  const authors: AuthorRow[] = []
+  let from = 0
+  while (authors.length < limit) {
+    const pageSize = Math.min(PAGE_SIZE, limit - authors.length)
+    let q = supabase
+      .from('authors')
+      .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
+      .not('slug', 'is', null)
+      .order('display_name')
+      .range(from, from + pageSize - 1)
+    if (opts.slug) {
+      // Targeted mode: bypass both filters so we can re-probe a specific author.
+      q = q.eq('slug', opts.slug)
+    } else {
+      q = q.is('photo_url', null)
+      // Default: only authors V2 has never tried. --recheck overrides this so
+      // the operator can re-run the full backlog after a sources/scoring change.
+      if (!opts.recheck) q = q.is('photo_v2_checked_at', null)
+    }
+    const { data, error } = await q
+    if (error) throw new Error(`DB read: ${error.message}`)
+    const page = (data ?? []) as AuthorRow[]
+    authors.push(...page)
+    if (page.length < pageSize) break // exhausted
+    from += pageSize
+  }
   log(`Authors without photo: ${authors.length}`)
   if (authors.length === 0) {
     return { totalCandidates: 0, processed: 0, accepted: 0, skipped: 0, bySource: { wikidata: 0, openlibrary: 0, site: 0 }, errors: 0, results: [] }
@@ -612,25 +634,51 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
     log(`  [${i + 1}/${authors.length}] ${symbol} ${author.display_name} (${sourceLabel}) ${result.meta}`)
     results.push({ name: author.display_name, source: result.source, url: result.url, meta: result.meta })
 
+    // Always mark V2 as "checked" once we get here, regardless of hit/miss —
+    // that's what makes misses sticky and lets the default mode skip authors
+    // we've already probed.
+    const nowIso = new Date().toISOString()
+
     if (result.url) {
-      // Final host-allowlist gate before DB write. Anything not on the
-      // ALLOWED_IMAGE_HOSTS list would 500 the next/image renderer, so reject
-      // here rather than poison the column. The `site` source is the main
-      // leak vector (author personal homepages), but check every source for
-      // belt-and-suspenders.
+      // Host gate: if the URL is not on ALLOWED_IMAGE_HOSTS, mirror it to
+      // our Supabase Storage `author-photos` bucket and use the public
+      // Storage URL instead. Wikidata + OpenLibrary URLs pass through as-is
+      // — they already render fine and we want to preserve attribution via
+      // the source URL. Site-bound URLs (Squarespace, Jetpack, individual
+      // author CDNs) get mirrored so they render through our own host and
+      // survive upstream link-rot.
+      let finalUrl = result.url
+      let mirroredNote = ''
       if (!isAllowedImageUrl(result.url)) {
-        log(`    ✗ rejected: host not in allowlist (${result.url})`)
-        skipped++
-        await sleep(DELAY_MS)
-        continue
+        if (opts.apply) {
+          const m = await mirrorImageToStorage(supabase, result.url, author.slug)
+          if (!m.ok) {
+            log(`    ✗ mirror failed: ${m.reason} (${result.url})`)
+            skipped++
+            const { error: ue } = await supabase
+              .from('authors')
+              .update({ photo_v2_checked_at: nowIso })
+              .eq('id', author.id)
+            if (ue) { log(`    ✗ DB write failed (checked_at): ${ue.message}`); errCount++ }
+            await sleep(DELAY_MS)
+            continue
+          }
+          finalUrl = m.publicUrl
+          mirroredNote = ` [mirrored ${m.bytes}B ${m.contentType}]`
+        } else {
+          // Dry-run: don't actually download/upload, but report what would
+          // happen so the CSV is informative.
+          mirroredNote = ' [would mirror]'
+        }
       }
       if (result.source === 'wikidata') bySource.wikidata++
       if (result.source === 'openlibrary') bySource.openlibrary++
       if (result.source === 'site') bySource.site++
+      if (mirroredNote) log(`    ${mirroredNote.trim()}`)
       if (opts.apply) {
         const { error: ue } = await supabase
           .from('authors')
-          .update({ photo_url: result.url })
+          .update({ photo_url: finalUrl, photo_v2_checked_at: nowIso })
           .eq('id', author.id)
           .is('photo_url', null)
         if (ue) { log(`    ✗ DB write failed: ${ue.message}`); errCount++; skipped++; continue }
@@ -638,6 +686,13 @@ export async function enrichAuthorPhotos(opts: EnrichAuthorPhotosOpts): Promise<
       accepted++
     } else {
       skipped++
+      if (opts.apply) {
+        const { error: ue } = await supabase
+          .from('authors')
+          .update({ photo_v2_checked_at: nowIso })
+          .eq('id', author.id)
+        if (ue) { log(`    ✗ DB write failed (checked_at): ${ue.message}`); errCount++ }
+      }
     }
     await sleep(DELAY_MS)
   }

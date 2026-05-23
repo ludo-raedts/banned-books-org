@@ -285,7 +285,10 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply`}</Code>
                 for newly-added books that don&apos;t have them yet.
               </p>
               <Code>{`# Small batch first to inspect output
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50`}</Code>
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
+
+# After the run — list books the AI flagged for a manual tier decision (context/extended)
+npx tsx --env-file=.env.local scripts/_review_backlog.ts`}</Code>
             </li>
           </ol>
         </div>
@@ -656,16 +659,33 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
 
           <Script
             name="enrich-author-photos-v2.ts"
-            what="Second-pass photo backfill — what enrich-author-bios.ts couldn't find via Wikipedia article search. Three sources tried in order: (1) Wikidata (P31=Q5 human + writer-ish P106 → P18 → Commons thumbnail); (2) OpenLibrary /search/authors fallback, HEAD-checked; (3) author personal site — Wikipedia title → QID (gated on P31=Q5 + P106 writer-ish so fuzzy matches don't wire a stranger's portrait) → candidate sites from Wikidata P856 + Wikipedia External Links section (hostname must contain a name token, aggregators/socials/retailers denylisted) → fetched with a desktop Chrome UA → JSON-LD Person.image, plus <img> tags scored by author-name tokens in alt + URL with a non-portrait keyword denylist (logos, banners, ISBN-named book covers). og:image/twitter:image were tried earlier but 4/4 false positives in a sample run — site templates use them for branding — so the site source is precision-over-recall: lower hit rate, near-zero false positives. Logs every attempt to data/photo-enrichment-{ts}.csv for spot-checking."
+            what="Second-pass photo backfill — what enrich-author-bios.ts couldn't find via Wikipedia article search. Three sources tried in order: (1) Wikidata (P31=Q5 human + writer-ish P106 → P18 → Commons thumbnail); (2) OpenLibrary /search/authors fallback, HEAD-checked; (3) author personal site — Wikipedia title → QID (gated on P31=Q5 + P106 writer-ish so fuzzy matches don't wire a stranger's portrait) → candidate sites from Wikidata P856 + Wikipedia External Links section (hostname must contain a name token, aggregators/socials/retailers denylisted) → fetched with a desktop Chrome UA → JSON-LD Person.image, plus <img> tags scored by author-name tokens in alt + URL with a non-portrait keyword denylist (logos, banners, ISBN-named book covers). og:image/twitter:image were tried earlier but 4/4 false positives in a sample run — site templates use them for branding — so the site source is precision-over-recall: lower hit rate, near-zero false positives. Every processed author (hit or miss) gets photo_v2_checked_at stamped so misses are sticky — default mode only touches authors V2 has never seen. Use --recheck after a sources/scoring change to re-probe the whole backlog. Logs every attempt to data/photo-enrichment-{ts}.csv for spot-checking."
             tags={['free']}
-            command={`# Apply on 250 authors (~10 min runtime)
-npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=250`}
+            command={`# Default: only authors V2 has never tried (photo_v2_checked_at IS NULL).
+# Misses are sticky, so each run makes monotonic progress through the backlog.
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --limit=1000
+
+# Re-check everything: re-probe every author still missing a photo,
+# ignoring photo_v2_checked_at. Use after a sources/scoring change.
+npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --recheck --limit=1000`}
             flags={[
-              { flag: '--apply', desc: 'Write photo_url to DB (omit for dry-run)' },
+              { flag: '--apply', desc: 'Write photo_url + photo_v2_checked_at to DB (omit for dry-run)' },
               { flag: '--limit=N', desc: 'Cap at N authors per run (default 50)' },
+              { flag: '--recheck', desc: 'Include authors V2 has already probed (photo_v2_checked_at IS NOT NULL). Default skips them.' },
+              { flag: '--slug=X', desc: 'Re-probe a single author by slug; bypasses both photo_url-IS-NULL and photo_v2_checked_at gates.' },
             ]}
-            writes={<>Only fills empty <code className="font-mono">photo_url</code>.</>}
-            note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields a few % more. Heads-up: the `site` source can return URLs on hosts outside src/lib/allowed-image-hosts.ts (any author's personal CDN); those URLs are stored fine but the Next.js image optimizer will refuse them at render time — the AuthorAvatar component falls back to initials via onError, so the user-visible degradation is graceful. Add common hosts (e.g. squarespace-cdn.com, weebly.com) to the whitelist after a v2 run if you notice many initials where photos should be."
+            writes={
+              <>
+                Only fills empty <code className="font-mono">photo_url</code>. Stamps{' '}
+                <code className="font-mono">photo_v2_checked_at = now()</code> on every author processed (hit or miss)
+                so the next default run skips them. Photos from hosts outside{' '}
+                <code className="font-mono">ALLOWED_IMAGE_HOSTS</code> (Squarespace, Jetpack, individual author CDNs)
+                are downloaded and re-uploaded to the <code className="font-mono">author-photos</code> Supabase
+                Storage bucket; the saved <code className="font-mono">photo_url</code> points at the Storage public
+                URL, so renders are immune to upstream link-rot. Wikidata + OpenLibrary URLs pass through as-is.
+              </>
+            }
+            note="Run AFTER enrich-author-bios.ts --photos-only — that's the cheap easy first sweep. v2 yields a few % more. Mirror is content-type + size + magic-byte gated (5KB–5MB, jpg/png/webp/gif only). Mirrored copies of author personal-site photos rely on fair-use / editorial-context for non-commercial reproduction; if a takedown request comes in, deleting the row + the bucket object is the resolution."
           />
 
           <Script
@@ -712,7 +732,10 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
 npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
 
 # Full catalogue
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000`}
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000
+
+# After a run — list books the AI flagged for a manual tier decision (context/extended)
+npx tsx --env-file=.env.local scripts/_review_backlog.ts`}
             flags={[
               { flag: '--apply', desc: 'Auto-apply low-risk; write review file for high-risk' },
               { flag: '--limit=N', desc: 'Cap at N books (default 100 in apply mode, 3 in dry-run)' },
@@ -727,7 +750,7 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
                 <code className="font-mono">inclusion_rationale</code>. Manual edits via admin survive re-runs.
               </>
             }
-            note="Three outcomes: (1) AUTO-APPLY when warning_level='none' at confidence ≥ medium → rationale written. (2) WRITE + FLAG when 'context'/'extended' at confidence ≥ medium → rationale written at none tier AND logged to data/editorial-review-<ts>.json. (3) REVIEW-ONLY when exclude=true or low confidence → no DB write. Tier upgrades are always manual via admin. Estimated cost: ~€2–€5 for the full ~4.4k catalogue."
+            note="Three outcomes: (1) AUTO-APPLY when warning_level='none' at confidence ≥ medium → rationale written. (2) WRITE + FLAG when 'context'/'extended' at confidence ≥ medium → rationale written at none tier AND logged to data/editorial-review-<ts>.json. (3) REVIEW-ONLY when exclude=true or low confidence → no DB write. Tier upgrades are always manual via admin. To see which books are still waiting for your manual tier decision, run scripts/_review_backlog.ts (read-only, no API calls) — it cross-references all editorial-review JSONs with the current books table. Estimated cost: ~€2–€5 for the full ~4.4k catalogue."
           />
 
           <Script
@@ -757,6 +780,163 @@ npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply -
             }
             note="Cost (50 rows): ~$1–2 with Claude Opus 4.7, ~$0.10 with gpt-4o. Idempotent by default — only fills empty rows."
           />
+        </div>
+
+        {/* Wikipedia ban-enrichment pipeline */}
+        <div id="wiki-enrichment" className={`${cardCls} scroll-mt-4`}>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Wikipedia ban-enrichment — three-step pipeline</h2>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            For each top-ranked book: find its dedicated Wikipedia article, extract
+            ban events with year + institution + actor specifics, and merge them into the{' '}
+            <code className="font-mono">bans</code> table. Idempotent end-to-end; dedup runs on
+            country + scope + year ±1 + institution match. Produces a separate{' '}
+            <code className="font-mono">ban_sources</code> row per book pointing at its Wikipedia page.
+          </p>
+
+          <Script
+            name="1. build-wiki-enrichment-worklist.ts"
+            what="Selects books to enrich (default: top 50 globally + top 10 per ban-reason) and finds each one's Wikipedia article via opensearch + redirect-following + title-similarity-guard + author-intro-validation. Outputs JSON for step 2 and a human-reviewable markdown."
+            tags={['free', 'safe']}
+            command={`# Build / refresh the worklist
+node --env-file=.env.local --import tsx scripts/build-wiki-enrichment-worklist.ts`}
+            writes={
+              <>
+                <code className="font-mono">data/wiki-enrichment-worklist.json</code> +{' '}
+                <code className="font-mono">.md</code>. Reads optional manual URL overrides from{' '}
+                <code className="font-mono">data/wiki-enrichment-overrides.json</code> (keyed by{' '}
+                <code className="font-mono">book_id</code>: <code className="font-mono">{`{ "url": "https://..." }`}</code>{' '}
+                to force a URL, <code className="font-mono">{`{ "url": null }`}</code> to mark as "no article".
+              </>
+            }
+            note="Review the .md before step 2. Anything not marked 'high' confidence is excluded — add an override and rerun."
+          />
+
+          <Script
+            name="2. stage-wiki-enrichment.ts"
+            what="Fetches each high-confidence Wikipedia article, reads current DB-state for the book, and asks GPT-4o-mini for a structured JSON proposal: new bans (with required Wikipedia-quote), updates to existing rows, optional book-level description rewrites. Strict prompt forbids vague 'criticised in X' entries and regressions of existing descriptions."
+            tags={['gpt']}
+            command={`# Stage all high-confidence books
+node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --skip-existing
+
+# Single book or batch
+node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --only=793,6
+node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --limit=10
+node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --dry-llm   # plumbing test, no GPT cost`}
+            flags={[
+              { flag: '--only=<ids>', desc: 'Comma-separated book_ids to process' },
+              { flag: '--limit=N', desc: 'Cap to N books (for incremental runs)' },
+              { flag: '--skip-existing', desc: 'Skip books that already have a staging file' },
+              { flag: '--dry-llm', desc: 'Write placeholder staging files without calling OpenAI' },
+            ]}
+            writes={
+              <>
+                One JSON file per book to <code className="font-mono">data/wiki-enrichment-staging/&lt;slug&gt;.json</code>{' '}
+                plus a <code className="font-mono">_summary.md</code> overview. No DB writes. Requires{' '}
+                <code className="font-mono">OPENAI_API_KEY</code>. Cost ≈ $0.003 per book.
+              </>
+            }
+            note="Spot-check the summary's biggest-yield rows before applying. Edit individual staging files to drop bad proposals."
+          />
+
+          <Script
+            name="3. apply-wiki-enrichment.ts"
+            what="Reads staging files and applies proposed changes. Dedup by country+scope+year ±1 + institution. 'Bare' existing rows (no description) get promoted to updates; subsequent matches at the same row insert as distinct granular events. Description regression-guard prevents shorter overwriting longer. Adds missing countries to the lookup table automatically."
+            tags={['destructive', 'safe']}
+            command={`# Always dry-run first; check the log
+node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts
+less data/wiki-enrichment-applied.log
+
+# Apply once the log looks sane
+node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts --apply
+
+# Single-book apply
+node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts --apply --slug=lady-chatterleys-lover`}
+            flags={[
+              { flag: '--apply', desc: 'Write to DB (without it, prints what would change)' },
+              { flag: '--only=<slugs>', desc: 'Comma-separated slugs (alias: --slug=)' },
+            ]}
+            writes={
+              <>
+                Inserts into <code className="font-mono">bans</code>, <code className="font-mono">ban_sources</code>,{' '}
+                <code className="font-mono">ban_source_links</code>; updates <code className="font-mono">bans</code> and{' '}
+                <code className="font-mono">books.description_ban</code> / <code className="font-mono">censorship_context</code>{' '}
+                where strictly better. Adds missing rows to <code className="font-mono">countries</code>. Full audit log:{' '}
+                <code className="font-mono">data/wiki-enrichment-applied.log</code>.
+              </>
+            }
+          />
+
+          {/* Copy-paste recipe prompt */}
+          <details className="mt-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40">
+            <summary className="cursor-pointer select-none px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+              Recept-prompt voor een nieuwe Claude-sessie
+              <span className="ml-auto text-xs text-gray-500 dark:text-gray-500 font-normal">klik om uit te klappen</span>
+            </summary>
+            <div className="px-4 pb-4">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
+                Plak dit in een nieuwe Claude Code-sessie als startprompt. De prompt is zelf-bevattend — Claude vindt
+                de scripts op naam en weet welke review-gates jij wilt zien voor er DB-writes plaatsvinden.
+              </p>
+              <pre className="bg-gray-950 text-gray-100 text-[11px] leading-relaxed rounded-md px-4 py-3 font-mono whitespace-pre-wrap overflow-x-auto">{`Verrijk de top-gerankte boeken via Wikipedia met de 3-fasen pipeline in deze
+repo. Volg deze volgorde en wacht na elke fase op mijn akkoord voor je verder
+gaat.
+
+1. scripts/build-wiki-enrichment-worklist.ts
+   - Selecteert boeken (default: top 50 globaal uit v_top_banned_books +
+     top 10 per ban-reason, 'other' uitgesloten).
+   - Matcht elk boek tegen zijn Wikipedia-artikel via opensearch +
+     redirect-volging + title-similarity-guard + author-intro-validatie.
+   - Output: data/wiki-enrichment-worklist.json + .md.
+   - Handmatige URL-correcties in data/wiki-enrichment-overrides.json:
+       { "<book_id>": { "url": "https://en.wikipedia.org/wiki/...", "note": "..." } }
+     of   { "<book_id>": { "url": null, "note": "geen artikel" } } om te skippen.
+
+2. scripts/stage-wiki-enrichment.ts
+   - Vereist OPENAI_API_KEY in .env.local. Gebruikt GPT-4o-mini.
+   - Fetcht per high-confidence boek het Wikipedia-artikel, leest huidige
+     DB-bans, en vraagt om gestructureerd JSON: nieuwe bans, updates,
+     book-level rewrites. Elke voorgestelde gebeurtenis MOET een directe
+     Wikipedia-quote met specifieke feiten (jaar, instelling of actor)
+     bevatten — vage "X criticised the book" is verboden.
+   - Output: data/wiki-enrichment-staging/<slug>.json per boek +
+     _summary.md.
+   - Flags: --only=<book_ids>, --limit=N, --skip-existing, --dry-llm.
+
+3. scripts/apply-wiki-enrichment.ts
+   - Dry-run default; --apply schrijft. Idempotent met dedup op
+     country + scope + year ±1 + institution.
+   - Promote-to-update voor bestaande rijen met description=null.
+   - Description-regressie-guard: bestaande tekst wordt nooit ingekort.
+   - Voegt ontbrekende landen aan countries-tabel toe.
+   - Maakt 1 ban_sources rij per Wikipedia-URL + linkt aan alle aangepaste
+     bans. Audit-log: data/wiki-enrichment-applied.log.
+
+Wat ik wil dat je doet:
+- Vraag eerst of ik de default-selectie wil (top 50 + top 10 per reason),
+  of een andere scope (specifieke book_ids, top-N per land, etc.).
+- Draai stap 1 en toon me data/wiki-enrichment-worklist.md. Vul overrides
+  aan voor low/none-confidence rijen. Hertest tot alles 'high' of expliciet
+  'skip' is.
+- Draai stap 2 (kosten ~\$0.003 per boek, ~\$0.30 voor 100 boeken). Toon me
+  het _summary.md zodat ik kan zien waar GPT veel/weinig nieuws vond.
+- Draai stap 3 eerst zonder --apply. Scan de log op 'insert (not promote)'
+  lines en validation-skips. Daarna pas --apply.
+- Geen DDL, geen migraties — alleen data-rijen. Eventuele schema-issues
+  meld je, niet zelf fixen.
+- Verifieer ~5 boeken na apply: open localhost:3000/books/<slug> als dev
+  server draait, of doe een directe DB-query op de bans tabel.
+
+Commands:
+  node --env-file=.env.local --import tsx scripts/build-wiki-enrichment-worklist.ts
+  node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --skip-existing
+  node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts            # dry-run
+  node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts --apply`}</pre>
+            </div>
+          </details>
         </div>
 
         {/* Description quality pipeline */}

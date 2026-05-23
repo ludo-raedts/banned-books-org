@@ -8,9 +8,10 @@
  *   3. Site — Wikipedia title → QID → Wikidata P856 (official website) → JSON-LD Person.image only
  *
  * Usage:
- *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts                  # dry-run, 50 authors
+ *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts                  # dry-run, 50 never-checked authors
  *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --limit=10       # cap at 10
- *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply          # write to DB
+ *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply          # write to DB; only authors V2 has never tried
+ *   npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --recheck  # re-probe every photo-less author (ignores photo_v2_checked_at)
  *
  * Writes a CSV log to data/photo-enrichment-{timestamp}.csv so you can spot-
  * check matches before/after applying. Core logic lives in
@@ -22,6 +23,7 @@ import * as path from 'node:path'
 import { enrichAuthorPhotos } from '../src/lib/enrich/author-photos'
 
 const APPLY = process.argv.includes('--apply')
+const RECHECK = process.argv.includes('--recheck')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
 const SLUG_ARG = process.argv.find(a => a.startsWith('--slug='))
@@ -35,12 +37,14 @@ function csvEscape(v: string | number | null | undefined): string {
 }
 
 async function main() {
-  console.log(`\n── enrich-author-photos-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}, limit=${LIMIT}${SLUG ? `, slug=${SLUG}` : ''}) ──\n`)
+  const mode = SLUG ? `slug=${SLUG}` : (RECHECK ? 'recheck-all' : 'never-checked-only')
+  console.log(`\n── enrich-author-photos-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}, limit=${LIMIT}, ${mode}) ──\n`)
 
   const result = await enrichAuthorPhotos({
     apply: APPLY,
     limit: LIMIT,
     slug: SLUG,
+    recheck: RECHECK,
     onProgress: msg => console.log(msg),
   })
 
