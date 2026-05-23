@@ -154,6 +154,79 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const countryCount = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
   const activeBanCount = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
 
+  // Representative book for the no-bio placeholder: the work this author is
+  // most banned for. Used only when `a.bio` is NULL — see the bio render
+  // below. Tiebreaker is the existing title-asc ordering from the books
+  // query, so output is deterministic.
+  const representativeBook = books.length > 0
+    ? [...books].sort((x, y) => y.bans.length - x.bans.length)[0]
+    : null
+
+  // Placeholder-author explanation. Six rows in `authors` exist as catalogue
+  // aggregators (Anonymous, Unknown, No Further Information, Various Authors)
+  // and their DB `bio` field is mostly corrupt — populated by Wikipedia
+  // enrichment before the disambig/person-signal guards landed (see the
+  // 2026-05-23 incident note in scripts/enrich-author-bios.ts). For these
+  // we render an intentional, hand-written explanation of what the bucket
+  // represents instead of the DB bio. The function returns null for
+  // non-placeholder slugs and for placeholder slugs we don't recognize, so
+  // unrecognized placeholders fall back to the regular `a.bio` path.
+  function placeholderExplanation(displayName: string, bookCount: number): React.ReactNode | null {
+    const lower = displayName.toLowerCase()
+    const works = bookCount === 1 ? 'work' : 'works'
+    const are = bookCount === 1 ? 'is' : 'are'
+    if (lower.includes('anonymous')) {
+      return (
+        <>
+          &ldquo;Anonymous&rdquo; is a catalogue placeholder for works without identifiable
+          authorship. The {bookCount} {works} listed here {are} not by a single person —
+          they include genuinely anonymous publications (often political tracts, samizdat,
+          or erotic literature published to evade prosecution), works credited only to
+          editorial collectives or magazine staff, and historical texts whose authors are
+          simply lost. If you can attribute a specific work below to a known author,
+          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+        </>
+      )
+    }
+    if (lower.includes('various')) {
+      return (
+        <>
+          &ldquo;Various Authors&rdquo; is a catalogue placeholder for compilations,
+          anthologies, and other collaborative works where no single primary author is
+          recorded. If a specific work below should be linked to an individual author,
+          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+        </>
+      )
+    }
+    if (lower.includes('no further information')) {
+      return (
+        <>
+          This entry is a catalogue placeholder for works imported from upstream sources
+          where the author field was missing, unparseable, or explicitly recorded as
+          unavailable. We have not yet matched the {bookCount} {works} listed here to
+          identifiable authors. If you can attribute one, please{' '}
+          <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+        </>
+      )
+    }
+    if (lower.includes('unknown')) {
+      return (
+        <>
+          &ldquo;Unknown&rdquo; is a catalogue placeholder for works whose author we have
+          not been able to identify. Unlike &ldquo;Anonymous&rdquo;, which usually means a
+          work was published without an author by intent, these are cases where authorship
+          may exist but has been lost or never recorded in the sources we use. If you know
+          who wrote one of the {works} below, please{' '}
+          <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+        </>
+      )
+    }
+    return null
+  }
+  const placeholderText = a.is_placeholder === true
+    ? placeholderExplanation(a.display_name, books.length)
+    : null
+
   // ── Timeline rows: one per book that has dated bans, sorted by earliest ban year ──
   const authorTimelineRows: TimelineRow[] = books
     .map((b) => {
@@ -519,9 +592,34 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             <span>{totalBans} bans across {countryCount} {countryCount === 1 ? 'country' : 'countries'}</span>
             {activeBanCount > 0 && <span>{activeBanCount} currently active</span>}
           </div>
-          {a.bio && (
+          {placeholderText ? (
+            // Placeholder-bucket explanation (Anonymous, Unknown, Various
+            // Authors, No Further Information). Rendered in place of the DB
+            // `bio` field, which is mostly corrupt for these rows.
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-1 max-w-2xl">{placeholderText}</p>
+          ) : a.bio ? (
             <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
-          )}
+          ) : !isPlaceholder ? (
+            // No-bio placeholder. Surfaces an explicit "we couldn't find a
+            // bio" note + a route to the contact form, rather than silently
+            // dropping the paragraph. Deliberately NOT written into the
+            // Person JSON-LD `description` (see the `if (a.bio) …` gate
+            // above), so this stays editorial-only and doesn't mislead
+            // crawlers. Contact link points at the `#get-in-touch` section
+            // on /about (no scrapeable mailto on the page).
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mt-1 max-w-2xl italic">
+              We could not find biographical information about {a.display_name}
+              {representativeBook ? (
+                <>, author of <em className="not-italic">{representativeBook.title}</em>,</>
+              ) : ''}{' '}in reliable public sources. If you can help fill this gap, please{' '}
+              <Link
+                href="/about#get-in-touch"
+                className="not-italic underline hover:text-gray-700 dark:hover:text-gray-200"
+              >
+                get in touch
+              </Link>.
+            </p>
+          ) : null}
         </div>
       </div>
 
