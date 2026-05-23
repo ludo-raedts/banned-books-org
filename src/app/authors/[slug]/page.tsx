@@ -171,10 +171,29 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // represents instead of the DB bio. The function returns null for
   // non-placeholder slugs and for placeholder slugs we don't recognize, so
   // unrecognized placeholders fall back to the regular `a.bio` path.
-  function placeholderExplanation(displayName: string, bookCount: number): React.ReactNode | null {
+  function placeholderExplanation(displayName: string, bookCount: number, isFlagged: boolean): React.ReactNode | null {
     const lower = displayName.toLowerCase()
     const works = bookCount === 1 ? 'work' : 'works'
     const are = bookCount === 1 ? 'is' : 'are'
+    // Editorial-collective branch runs regardless of the is_placeholder flag
+    // (those rows aren't flagged in the DB). It's also tighter — anchored
+    // patterns, not loose substring match — so false-positive risk on real
+    // author names is minimal.
+    if (/^(editors of|editorial staff)\b/.test(lower) || /\beditorial staff\b/.test(lower)) {
+      return (
+        <>
+          This is a collective credit, not an individual author — the {works} {are}
+          attributed to an editorial body of a known publication rather than to a single
+          person. Biographies aren&rsquo;t available for editorial collectives, but the
+          works themselves are catalogued below alongside their bans.
+        </>
+      )
+    }
+    // Generic-placeholder branches (Anonymous, Various, No Further Info,
+    // Unknown) use loose substring match, so they're gated on the explicit
+    // is_placeholder flag to avoid catching a real author whose name happens
+    // to contain one of these tokens.
+    if (!isFlagged) return null
     if (lower.includes('anonymous')) {
       return (
         <>
@@ -223,9 +242,11 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     }
     return null
   }
-  const placeholderText = a.is_placeholder === true
-    ? placeholderExplanation(a.display_name, books.length)
-    : null
+  // Placeholder explanation runs for ALL authors, not just is_placeholder=true.
+  // Some catalogue-aggregator rows (editorial-staff credits) aren't flagged in
+  // the DB but should still get a dedicated explanation rather than the
+  // no-bio fallback. The helper itself enforces the right gates per branch.
+  const placeholderText = placeholderExplanation(a.display_name, books.length, a.is_placeholder === true)
 
   // ── Timeline rows: one per book that has dated bans, sorted by earliest ban year ──
   const authorTimelineRows: TimelineRow[] = books
