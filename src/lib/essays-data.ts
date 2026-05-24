@@ -59,6 +59,15 @@ export const ESSAYS: Essay[] = [
     readingTimeMin: 5,
     relatedBookSlugs: ['gender-queer', 'maus', 'fun-home', 'this-one-summer', 'looking-for-alaska', 'the-perks-of-being-a-wallflower'],
   },
+  {
+    slug: 'first-amendment-paradox',
+    href: '/essays/first-amendment-paradox',
+    title: 'The First Amendment paradox: when “free speech” is invoked to remove books from schools',
+    dek: 'The same coalition that loudest invokes “free speech” has built a movement to remove thousands of books from US school libraries. The contradiction is not incidental — it is the argument. A look at how the rhetoric collides with the First Amendment doctrine it claims to uphold.',
+    publishedAt: '2026-05-24',
+    readingTimeMin: 12,
+    relatedBookSlugs: ['slaughterhouse-five', 'gender-queer', 'all-boys-arent-blue', 'beloved', 'the-bluest-eye', 'looking-for-alaska'],
+  },
 ]
 
 export function publishedEssays(): Essay[] {
