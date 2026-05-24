@@ -4,6 +4,7 @@ import { newTimer } from '@/lib/timing'
 import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'
 import SectionShell from '@/components/section/SectionShell'
 import SectionHeader from '@/components/section/SectionHeader'
+import { publishedEssays } from '@/lib/essays-data'
 
 type NewsRow = {
   id: number
@@ -38,18 +39,22 @@ export default async function HappeningNowSection() {
   timer.end()
 
   const items = (data ?? []) as NewsRow[]
-  if (items.length === 0) return null
+  // Latest essay sits beside the 3 news items as a 4th card. Editorial slot
+  // so visitors landing on the homepage see we publish long-form, not only
+  // news passthrough.
+  const latestEssay = publishedEssays()[0]
+  if (items.length === 0 && !latestEssay) return null
 
   return (
     <SectionShell tone="white" eyebrow="Happening now">
       <SectionHeader
         title="Book bans are not history."
-        subtitle="The latest from the wires."
+        subtitle="The latest from the wires, plus our editorial work."
         viewAllHref="/news"
         viewAllLabel="All news"
         accent="black"
       />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
           return (
@@ -77,6 +82,28 @@ export default async function HappeningNowSection() {
             </Link>
           )
         })}
+
+        {latestEssay && (
+          <Link
+            key={latestEssay.slug}
+            href={latestEssay.href}
+            className="hover-lift-card group block bg-brand-light/30 border-t border-r border-b border-neutral-200 rounded-r-sm p-4"
+            style={{ borderLeft: '2px solid var(--color-brand)' }}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-brand mb-1.5">
+              Essay · {latestEssay.readingTimeMin} min read
+            </p>
+            <h3 className="font-serif text-[13px] font-semibold leading-snug text-gray-900 line-clamp-2 mb-1.5 group-hover:text-brand transition-colors">
+              {latestEssay.title}
+            </h3>
+            <p className="text-xs text-gray-700 leading-snug line-clamp-2">
+              {latestEssay.dek}
+            </p>
+            <p className="mt-2 text-[11px] text-gray-500">
+              banned-books.org · {formatNewsDate(latestEssay.publishedAt)}
+            </p>
+          </Link>
+        )}
       </div>
     </SectionShell>
   )
