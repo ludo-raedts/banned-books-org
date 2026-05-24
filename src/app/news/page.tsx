@@ -4,6 +4,9 @@ import { adminClient } from '@/lib/supabase'
 import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 import EssayCard from '@/components/essay-card'
 import { publishedEssays } from '@/lib/essays-data'
+import SectionShell from '@/components/section/SectionShell'
+import SectionHeader from '@/components/section/SectionHeader'
+import Eyebrow from '@/components/section/Eyebrow'
 
 // ISR: news content auto-publishes daily via cron (fetch-news cron at
 // 06:00 UTC = 08:00 Amsterdam in summer, 07:00 in winter). 30-min
@@ -155,47 +158,47 @@ export default async function NewsPage({
   const days = [...byDay.entries()]
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-8">
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-8 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Latest</p>
-        <div className="flex items-baseline justify-between gap-4 mb-2">
-          <h1 className="text-3xl font-bold tracking-tight">News</h1>
-          <a
-            href="/feed.xml"
-            type="application/rss+xml"
-            className="text-xs text-brand/80 hover:text-brand underline underline-offset-2 shrink-0"
+    <main>
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
           >
-            RSS feed
-          </a>
+            ← Home
+          </Link>
+
+          <Eyebrow>Latest · From the wires</Eyebrow>
+
+          <div className="flex items-baseline justify-between gap-4">
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+              News.
+            </h1>
+            <a
+              href="/feed.xml"
+              type="application/rss+xml"
+              className="shrink-0 text-xs font-medium tracking-wide text-gray-700 hover:text-oxblood underline underline-offset-2 transition-colors whitespace-nowrap"
+            >
+              RSS feed ↗
+            </a>
+          </div>
+
+          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            News about book bans, censorship, and literary freedom worldwide.
+            Sourced from PEN America, PEN International, Index on Censorship, Publishers Weekly, Freedom to Read Canada, RSF, HRW, Article 19, China Digital Times, IranWire, Meduza, and Google News.
+          </p>
         </div>
-        <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-          News about book bans, censorship, and literary freedom worldwide.
-          Sourced from PEN America, PEN International, Index on Censorship, Publishers Weekly, Freedom to Read Canada, RSF, HRW, Article 19, China Digital Times, IranWire, Meduza, and Google News.
-        </p>
-      </div>
+      </section>
 
       {essays.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between gap-4 mb-4">
-            <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-              Essays
-            </h2>
-            <div className="flex items-baseline gap-4 shrink-0">
-              <a
-                href="/essays/feed.xml"
-                type="application/rss+xml"
-                className="text-xs text-gray-500 hover:text-brand underline underline-offset-2"
-              >
-                RSS
-              </a>
-              <Link
-                href="/essays"
-                className="text-xs text-gray-500 hover:text-brand underline underline-offset-2"
-              >
-                All essays →
-              </Link>
-            </div>
-          </div>
+        <SectionShell tone="cream" eyebrow="Essays">
+          <SectionHeader
+            title="From the desk."
+            subtitle="Long-form pieces on censorship and what we document."
+            viewAllHref="/essays"
+            viewAllLabel="All essays"
+            accent="oxblood"
+          />
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {essays.map(essay => (
               <li key={essay.slug}>
@@ -203,94 +206,115 @@ export default async function NewsPage({
               </li>
             ))}
           </ul>
-        </section>
+          <p className="mt-5 text-xs text-gray-500">
+            <a
+              href="/essays/feed.xml"
+              type="application/rss+xml"
+              className="hover:text-oxblood underline underline-offset-2"
+            >
+              Essays RSS feed ↗
+            </a>
+          </p>
+        </SectionShell>
       )}
 
-      {days.length === 0 && (
-        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
-      )}
+      <SectionShell tone="white" eyebrow={page === 1 ? 'Latest news' : `News · Page ${page}`}>
+        <SectionHeader
+          title={page === 1 ? 'From the wires.' : `News archive — page ${page}.`}
+          subtitle={
+            totalCount
+              ? `${totalCount.toLocaleString('en-US')} items, grouped by day.`
+              : 'Grouped by day.'
+          }
+          accent="black"
+        />
 
-      {days.map(([day, dayItems]) => (
-        <section key={day} className="mb-10">
-          <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
-            {day !== 'unknown' ? formatDay(day) : '—'}
-          </h2>
-          <div className="flex flex-col gap-6">
-            {dayItems.map(item => {
-              const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
-              return (
-                <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
-                  {item.headline && (
-                    <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
-                      {item.headline}
+        {days.length === 0 && (
+          <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
+        )}
+
+        {days.map(([day, dayItems]) => (
+          <section key={day} className="mb-10 last:mb-0">
+            <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+              {day !== 'unknown' ? formatDay(day) : '—'}
+            </h3>
+            <div className="flex flex-col gap-6">
+              {dayItems.map(item => {
+                const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+                return (
+                  <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                    {item.headline && (
+                      <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
+                        {item.headline}
+                      </p>
+                    )}
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
+                      <a
+                        href={item.source_url}
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        className="hover:underline underline-offset-2"
+                      >
+                        {title}
+                      </a>
+                    </h4>
+                    <OriginalTitleLine
+                      code={item.source_language}
+                      originalTitle={item.original_title}
+                      className="mb-1.5"
+                    />
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {linkify(item.summary, bookRefs, countryRefs)}
                     </p>
-                  )}
-                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
-                    <a
-                      href={item.source_url}
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                      className="hover:underline underline-offset-2"
-                    >
-                      {title}
-                    </a>
-                  </h3>
-                  <OriginalTitleLine
-                    code={item.source_language}
-                    originalTitle={item.original_title}
-                    className="mb-1.5"
-                  />
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {linkify(item.summary, bookRefs, countryRefs)}
-                  </p>
-                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
-                    <a
-                      href={item.source_url}
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                      className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
-                    >
-                      {sourceName}
-                    </a>
-                    <TranslatedBadge code={item.source_language} />
-                  </p>
-                </article>
-              )
-            })}
-          </div>
-        </section>
-      ))}
+                    <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
+                      <a
+                        href={item.source_url}
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
+                      >
+                        {sourceName}
+                      </a>
+                      <TranslatedBadge code={item.source_language} />
+                    </p>
+                  </article>
+                )
+              })}
+            </div>
+          </section>
+        ))}
 
-      {totalPages > 1 && (
-        <nav
-          aria-label="News pagination"
-          className="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6"
-        >
-          {page > 1 ? (
-            <Link
-              href={pageHref(page - 1)}
-              rel="prev"
-              className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              ← Previous
-            </Link>
-          ) : (
-            <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">← Previous</span>
-          )}
-          <span className="text-xs text-gray-500 dark:text-gray-500">Page {page} of {totalPages}</span>
-          {page < totalPages ? (
-            <Link
-              href={pageHref(page + 1)}
-              rel="next"
-              className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              Next →
-            </Link>
-          ) : (
-            <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">Next →</span>
-          )}
-        </nav>
-      )}
+        {totalPages > 1 && (
+          <nav
+            aria-label="News pagination"
+            className="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6"
+          >
+            {page > 1 ? (
+              <Link
+                href={pageHref(page - 1)}
+                rel="prev"
+                className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+              >
+                ← Previous
+              </Link>
+            ) : (
+              <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">← Previous</span>
+            )}
+            <span className="text-xs text-gray-500 dark:text-gray-500">Page {page} of {totalPages}</span>
+            {page < totalPages ? (
+              <Link
+                href={pageHref(page + 1)}
+                rel="next"
+                className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+              >
+                Next →
+              </Link>
+            ) : (
+              <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">Next →</span>
+            )}
+          </nav>
+        )}
+      </SectionShell>
     </main>
   )
 }
