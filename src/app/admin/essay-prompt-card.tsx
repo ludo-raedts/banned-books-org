@@ -66,8 +66,8 @@ Steps for a new essay:
 
 4. Register the essay in the RSS feed so subscribers actually see it. In
    src/app/essays/feed.xml/route.ts, add:
-   - one `import { body as <slugCamelCase>Body } from '@/lib/markdown-pages/<slug>'`
-   - one entry to the ESSAY_BODIES map: `'<slug>': <slugCamelCase>Body,`
+   - one import line: import { body as <slugCamelCase>Body } from '@/lib/markdown-pages/<slug>'
+   - one entry to the ESSAY_BODIES map: '<slug>': <slugCamelCase>Body,
    The main /feed.xml automatically picks up new essays via publishedEssays() — no edit needed there.
 
 5. The hero image is optional. If used, pass { src, alt, caption, eager } to EssayLayout.
