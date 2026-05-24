@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
+import EssayCard from '@/components/essay-card'
+import { publishedEssays } from '@/lib/essays-data'
 
 // ISR: news content auto-publishes daily via cron (fetch-news cron at
 // 06:00 UTC = 08:00 Amsterdam in summer, 07:00 in winter). 30-min
@@ -131,6 +133,11 @@ export default async function NewsPage({
   const countryRefs = (countries ?? []) as CountryRef[]
   const totalPages = Math.max(1, Math.ceil((totalCount ?? 0) / ITEMS_PER_PAGE))
 
+  // Essays strip only renders on page 1 — paginated pages are meant for
+  // deeper news archives, and repeating the same essay strip on every page
+  // would be noise.
+  const essays = page === 1 ? publishedEssays() : []
+
   // Group by UTC date of published_at; fall back to published_week (Monday)
   // for legacy items that pre-date the per-day flow. Insertion order
   // preserves the descending sort from the query.
@@ -165,6 +172,38 @@ export default async function NewsPage({
           Sourced from PEN America, PEN International, Index on Censorship, Publishers Weekly, Freedom to Read Canada, RSF, HRW, Article 19, China Digital Times, IranWire, Meduza, and Google News.
         </p>
       </div>
+
+      {essays.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between gap-4 mb-4">
+            <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+              Essays
+            </h2>
+            <div className="flex items-baseline gap-4 shrink-0">
+              <a
+                href="/essays/feed.xml"
+                type="application/rss+xml"
+                className="text-xs text-gray-500 hover:text-brand underline underline-offset-2"
+              >
+                RSS
+              </a>
+              <Link
+                href="/essays"
+                className="text-xs text-gray-500 hover:text-brand underline underline-offset-2"
+              >
+                All essays →
+              </Link>
+            </div>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {essays.map(essay => (
+              <li key={essay.slug}>
+                <EssayCard essay={essay} compact />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {days.length === 0 && (
         <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
