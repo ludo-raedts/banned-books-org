@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/archiver": "^7.0.0",
     "@types/better-sqlite3": "^7.6.13",
@@ -56,6 +57,7 @@
     "@types/sanitize-html": "^2.13.0",
     "archiver": "^7.0.1",
     "better-sqlite3": "^12.9.0",
+    "googleapis": "^172.0.0",
     "pg": "^8.20.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
