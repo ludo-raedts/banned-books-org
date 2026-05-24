@@ -52,7 +52,7 @@ function buildBanSummary(
   bookTitle: string,
   authorStr: string,
   sortedBans: Ban_[],
-): { lead: string; faqItems: FaqItem[] } | null {
+): { topic: string; complement: string; faqItems: FaqItem[] } | null {
   if (sortedBans.length === 0) return null
 
   const baseTitle = authorStr ? `${bookTitle} by ${authorStr}` : bookTitle
@@ -79,30 +79,41 @@ function buildBanSummary(
   const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map(b => b.year_started!)) : null
   const activeBanCount = sortedBans.filter(b => b.status === 'active').length
 
-  let lead: string
-  if (countries.length === 1 && earliestYear && topReasonPhrase) {
-    lead = `${baseTitle} has been banned in ${countries[0]} since ${earliestYear} for ${topReasonPhrase}.`
-  } else if (countries.length === 1 && topReasonPhrase) {
-    lead = `${baseTitle} has been banned in ${countries[0]} for ${topReasonPhrase}.`
-  } else if (countries.length === 1 && earliestYear) {
-    lead = `${baseTitle} has been banned in ${countries[0]} since ${earliestYear}.`
+  // `topic` = the short headline phrase rendered as a subtitle in the H1
+  // zone. Carries the country+reason match for the "why was X banned" query.
+  // `complement` = the longer red-quote sentence below the hero, carrying
+  // facts the subtitle deliberately omits (year, multi-country roll-up,
+  // mixed active/historical status). The two MUST NOT repeat each other's
+  // headline — see [[reference-gsc-scripts]] and the gsc-ops doc for why
+  // duplication suppresses CTR.
+  let topic: string
+  if (countries.length === 1 && topReasonPhrase) {
+    topic = `Banned in ${countries[0]} for ${topReasonPhrase}`
   } else if (countries.length === 1) {
-    lead = `${baseTitle} has been banned in ${countries[0]}.`
-  } else if (earliestYear && topReasonPhrase) {
-    lead = `${baseTitle} has been banned in ${countries.length} countries since ${earliestYear}, most often for ${topReasonPhrase}.`
-  } else if (earliestYear) {
-    lead = `${baseTitle} has been banned in ${countries.length} countries since ${earliestYear}.`
+    topic = `Banned in ${countries[0]}`
   } else if (topReasonPhrase) {
-    lead = `${baseTitle} has been banned in ${countries.length} countries, most often for ${topReasonPhrase}.`
+    topic = `Banned in ${countries.length} countries for ${topReasonPhrase}`
   } else {
-    lead = `${baseTitle} has been banned in ${countries.length} countries.`
+    topic = `Banned in ${countries.length} countries`
+  }
+
+  const complementParts: string[] = []
+  if (earliestYear) {
+    complementParts.push(
+      countries.length === 1
+        ? `First documented in ${earliestYear}.`
+        : `Earliest documented ban: ${earliestYear}.`,
+    )
   }
   if (countries.length >= 3) {
-    lead += ` Documented bans include ${countries.slice(0, 3).join(', ')}, among others.`
+    complementParts.push(`Documented bans include ${countries.slice(0, 3).join(', ')}, among others.`)
   }
   if (activeBanCount > 0 && sortedBans.length > activeBanCount) {
-    lead += ` ${activeBanCount} ${activeBanCount === 1 ? 'ban remains' : 'bans remain'} active today.`
+    complementParts.push(
+      `${activeBanCount} ${activeBanCount === 1 ? 'ban remains' : 'bans remain'} active today.`,
+    )
   }
+  const complement = complementParts.join(' ')
 
   // FAQ items: prioritise unique-country Q&As (Google ignores duplicate
   // questions across the same FAQPage). Capped at 5 to stay under the
@@ -139,7 +150,7 @@ function buildBanSummary(
     }
   }
 
-  return { lead, faqItems: items }
+  return { topic, complement, faqItems: items }
 }
 
 export async function generateMetadata({
@@ -866,6 +877,11 @@ export default async function BookPage({
             {book.title}
             <QualityCheck status={book.data_quality_status} />
           </h1>
+          {banSummary && (
+            <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
+              {banSummary.topic}
+            </p>
+          )}
           {/* Secondary title: English meaning (for transliterated/non-English titles)
               OR native-script form (for English canonical titles whose original is non-Latin).
               Suppressed when the alt-title equals the canonical title to avoid
@@ -971,14 +987,14 @@ export default async function BookPage({
         entityLabel="book"
       />
 
-      {/* Direct-answer lead paragraph — placed in the first viewport so
-          "Why was {title} banned?" queries find the answer above the fold.
-          This is the same prose surfaced to Google's AI Overview and
-          Featured Snippets; the deeper "Why it was banned" section below
-          still carries the per-ban editorial description. */}
-      {banSummary && (
+      {/* Complement paragraph — facts the H1-zone subtitle (`topic`) leaves
+          out: year of first documented ban, multi-country roll-up, and
+          mixed active/historical status. Skipped entirely when there's
+          nothing to add beyond what `topic` already states, to avoid the
+          duplication that suppresses CTR. */}
+      {banSummary && banSummary.complement && (
         <p className="mb-8 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
-          {banSummary.lead}
+          {banSummary.complement}
         </p>
       )}
 
@@ -1159,7 +1175,18 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Find this book */}
+      {/* Find this book — affiliate CTAs are suppressed for editorially-flagged
+          tiers (context / extended). We don't want to earn affiliate revenue
+          from works like Mein Kampf or The Turner Diaries even though we
+          archive them. Free sources (Gutenberg / Internet Archive) still show.
+          If neither free source is available AND affiliates are suppressed,
+          the whole section is omitted so we don't render an empty amber card. */}
+      {(() => {
+        const affiliatesSuppressed = book.warning_level === 'context' || book.warning_level === 'extended'
+        const hasGutenberg = !!book.gutenberg_id
+        const hasArchive = book.archive_org_status === 'valid' && !!book.archive_org_id
+        if (affiliatesSuppressed && !hasGutenberg && !hasArchive) return null
+        return (
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600 dark:text-amber-400">
@@ -1194,36 +1221,42 @@ export default async function BookPage({
               Read free on the Internet Archive
             </a>
           )}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <TrackedOutboundLink
-              eventName="Bookshop Click"
-              eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null, linkType: getBookshopLinkType(bookshopHref) }}
-              href={bookshopHref}
-              target="_blank"
-              rel={BOOKSHOP_REL}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
-            >
-              Find on Bookshop.org
-            </TrackedOutboundLink>
-            <TrackedOutboundLink
-              eventName="Kobo Click"
-              eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null }}
-              href={koboHref}
-              target="_blank"
-              rel={KOBO_REL}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
-            >
-              Find on Kobo
-            </TrackedOutboundLink>
-          </div>
-          <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
-            Bookshop.org and Kobo links are affiliate links — they support independent bookstores and this project at no extra cost to you.{' '}
-            <Link href="/why-not-amazon" className="underline hover:no-underline">
-              Why we don&apos;t link to Amazon
-            </Link>
-          </p>
+          {!affiliatesSuppressed && (
+            <>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <TrackedOutboundLink
+                  eventName="Bookshop Click"
+                  eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null, linkType: getBookshopLinkType(bookshopHref) }}
+                  href={bookshopHref}
+                  target="_blank"
+                  rel={BOOKSHOP_REL}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
+                >
+                  Find on Bookshop.org
+                </TrackedOutboundLink>
+                <TrackedOutboundLink
+                  eventName="Kobo Click"
+                  eventProperties={{ source: 'book', bookSlug: slug, isbn13: book.isbn13 ?? null }}
+                  href={koboHref}
+                  target="_blank"
+                  rel={KOBO_REL}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+                >
+                  Find on Kobo
+                </TrackedOutboundLink>
+              </div>
+              <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
+                Bookshop.org and Kobo links are affiliate links — they support independent bookstores and this project at no extra cost to you.{' '}
+                <Link href="/why-not-amazon" className="underline hover:no-underline">
+                  Why we don&apos;t link to Amazon
+                </Link>
+              </p>
+            </>
+          )}
         </div>
       </section>
+        )
+      })()}
 
       <CitationBlock
         entityType="book"

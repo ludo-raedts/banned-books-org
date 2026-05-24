@@ -440,7 +440,7 @@ export default async function CountryPage({
           <div className="flex items-center gap-4">
             <span className="text-5xl md:text-6xl leading-none" aria-hidden="true">{countryFlag(upperCode)}</span>
             <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
-              {country.name_en}.
+              Books banned in {country.name_en}.
             </h1>
           </div>
 

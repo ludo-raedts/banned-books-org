@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const title = `Books banned for ${label} – examples and censorship patterns`
+  const title = `Books banned for ${reasonPhrase(slug)} – examples and censorship patterns`
 
   const labelLower = label === 'LGBTQ+' ? 'LGBTQ+' : label.toLowerCase()
   const countryList =
@@ -389,7 +389,7 @@ export default async function ReasonPage({
           <div className="flex items-center gap-4">
             <span className="text-4xl md:text-5xl leading-none" aria-hidden="true">{reasonIcon(slug)}</span>
             <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
-              {sentencePhrase}.
+              Books banned for {phrase}.
             </h1>
           </div>
 
