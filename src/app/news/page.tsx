@@ -157,13 +157,107 @@ export default async function NewsPage({
 
   const days = [...byDay.entries()]
 
+  // Sandwich layout: on page 1 with essays available, the most recent day
+  // sits above the essays interlude and the rest below. Without essays, or
+  // on paginated archive pages, all days render in a single section.
+  const hasInterlude = page === 1 && essays.length > 0 && days.length > 0
+  const [firstDay, ...restDays] = days
+  const earlierItemsCount = restDays.reduce((n, [, items]) => n + items.length, 0)
+
+  function renderDayGroup([day, dayItems]: [string, NewsItem[]]) {
+    return (
+      <section key={day} className="mb-10 last:mb-0">
+        <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+          {day !== 'unknown' ? formatDay(day) : '—'}
+        </h3>
+        <div className="flex flex-col gap-6">
+          {dayItems.map(item => {
+            const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+            return (
+              <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                {item.headline && (
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
+                    {item.headline}
+                  </p>
+                )}
+                <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    className="hover:underline underline-offset-2"
+                  >
+                    {title}
+                  </a>
+                </h4>
+                <OriginalTitleLine
+                  code={item.source_language}
+                  originalTitle={item.original_title}
+                  className="mb-1.5"
+                />
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {linkify(item.summary, bookRefs, countryRefs)}
+                </p>
+                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
+                  >
+                    {sourceName}
+                  </a>
+                  <TranslatedBadge code={item.source_language} />
+                </p>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  function renderPagination() {
+    if (totalPages <= 1) return null
+    return (
+      <nav
+        aria-label="News pagination"
+        className="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6"
+      >
+        {page > 1 ? (
+          <Link
+            href={pageHref(page - 1)}
+            rel="prev"
+            className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+          >
+            ← Previous
+          </Link>
+        ) : (
+          <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">← Previous</span>
+        )}
+        <span className="text-xs text-gray-500 dark:text-gray-500">Page {page} of {totalPages}</span>
+        {page < totalPages ? (
+          <Link
+            href={pageHref(page + 1)}
+            rel="next"
+            className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+          >
+            Next →
+          </Link>
+        ) : (
+          <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">Next →</span>
+        )}
+      </nav>
+    )
+  }
+
   return (
     <main>
-      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+      <section className="relative pt-10 md:pt-12 px-6 md:px-9 pb-8 bg-white">
         <div className="max-w-5xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-5 transition-colors"
           >
             ← Home
           </Link>
@@ -183,138 +277,87 @@ export default async function NewsPage({
             </a>
           </div>
 
-          <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+          <p className="mt-4 max-w-[720px] text-sm leading-relaxed text-gray-700">
             News about book bans, censorship, and literary freedom worldwide.
             Sourced from PEN America, PEN International, Index on Censorship, Publishers Weekly, Freedom to Read Canada, RSF, HRW, Article 19, China Digital Times, IranWire, Meduza, and Google News.
           </p>
         </div>
       </section>
 
-      {essays.length > 0 && (
-        <SectionShell tone="cream" eyebrow="Essays">
-          <SectionHeader
-            title="From the desk."
-            subtitle="Long-form pieces on censorship and what we document."
-            viewAllHref="/essays"
-            viewAllLabel="All essays"
-            accent="oxblood"
-          />
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {essays.map(essay => (
-              <li key={essay.slug}>
-                <EssayCard essay={essay} compact />
-              </li>
-            ))}
-          </ul>
-          <p className="mt-5 text-xs text-gray-500">
-            <a
-              href="/essays/feed.xml"
-              type="application/rss+xml"
-              className="hover:text-oxblood underline underline-offset-2"
-            >
-              Essays RSS feed ↗
-            </a>
-          </p>
+      {days.length === 0 && (
+        <SectionShell tone="cream" eyebrow="Latest">
+          <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
         </SectionShell>
       )}
 
-      <SectionShell tone="white" eyebrow={page === 1 ? 'Latest news' : `News · Page ${page}`}>
-        <SectionHeader
-          title={page === 1 ? 'From the wires.' : `News archive — page ${page}.`}
-          subtitle={
-            totalCount
-              ? `${totalCount.toLocaleString('en-US')} items, grouped by day.`
-              : 'Grouped by day.'
-          }
-          accent="black"
-        />
+      {hasInterlude ? (
+        <>
+          <SectionShell tone="cream" eyebrow="Latest">
+            <SectionHeader
+              title="From the wires."
+              subtitle="The most recent day of news."
+              accent="oxblood"
+            />
+            {renderDayGroup(firstDay)}
+          </SectionShell>
 
-        {days.length === 0 && (
-          <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
-        )}
-
-        {days.map(([day, dayItems]) => (
-          <section key={day} className="mb-10 last:mb-0">
-            <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
-              {day !== 'unknown' ? formatDay(day) : '—'}
-            </h3>
-            <div className="flex flex-col gap-6">
-              {dayItems.map(item => {
-                const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
-                return (
-                  <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
-                    {item.headline && (
-                      <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
-                        {item.headline}
-                      </p>
-                    )}
-                    <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
-                      <a
-                        href={item.source_url}
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
-                        className="hover:underline underline-offset-2"
-                      >
-                        {title}
-                      </a>
-                    </h4>
-                    <OriginalTitleLine
-                      code={item.source_language}
-                      originalTitle={item.original_title}
-                      className="mb-1.5"
-                    />
-                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                      {linkify(item.summary, bookRefs, countryRefs)}
-                    </p>
-                    <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
-                      <a
-                        href={item.source_url}
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
-                        className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
-                      >
-                        {sourceName}
-                      </a>
-                      <TranslatedBadge code={item.source_language} />
-                    </p>
-                  </article>
-                )
-              })}
-            </div>
-          </section>
-        ))}
-
-        {totalPages > 1 && (
-          <nav
-            aria-label="News pagination"
-            className="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6"
-          >
-            {page > 1 ? (
-              <Link
-                href={pageHref(page - 1)}
-                rel="prev"
-                className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+          <SectionShell tone="white" eyebrow="Essays">
+            <SectionHeader
+              title="From the desk."
+              subtitle="Long-form pieces on censorship and what we document."
+              viewAllHref="/essays"
+              viewAllLabel="All essays"
+              accent="black"
+            />
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {essays.map(essay => (
+                <li key={essay.slug}>
+                  <EssayCard essay={essay} compact />
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-xs text-gray-500">
+              <a
+                href="/essays/feed.xml"
+                type="application/rss+xml"
+                className="hover:text-oxblood underline underline-offset-2"
               >
-                ← Previous
-              </Link>
-            ) : (
-              <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">← Previous</span>
-            )}
-            <span className="text-xs text-gray-500 dark:text-gray-500">Page {page} of {totalPages}</span>
-            {page < totalPages ? (
-              <Link
-                href={pageHref(page + 1)}
-                rel="next"
-                className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
-              >
-                Next →
-              </Link>
-            ) : (
-              <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">Next →</span>
-            )}
-          </nav>
-        )}
-      </SectionShell>
+                Essays RSS feed ↗
+              </a>
+            </p>
+          </SectionShell>
+
+          {(restDays.length > 0 || totalPages > 1) && (
+            <SectionShell tone="cream" eyebrow="Earlier">
+              <SectionHeader
+                title="Older days."
+                subtitle={
+                  earlierItemsCount > 0
+                    ? `${earlierItemsCount} more item${earlierItemsCount === 1 ? '' : 's'} on this page.`
+                    : 'Browse the archive.'
+                }
+                accent="oxblood"
+              />
+              {restDays.map(renderDayGroup)}
+              {renderPagination()}
+            </SectionShell>
+          )}
+        </>
+      ) : days.length > 0 ? (
+        <SectionShell tone="cream" eyebrow={page === 1 ? 'Latest' : `News · Page ${page}`}>
+          <SectionHeader
+            title={page === 1 ? 'From the wires.' : `News archive — page ${page}.`}
+            subtitle={
+              totalCount
+                ? `${totalCount.toLocaleString('en-US')} items total, grouped by day.`
+                : 'Grouped by day.'
+            }
+            accent="oxblood"
+          />
+          {days.map(renderDayGroup)}
+          {renderPagination()}
+        </SectionShell>
+      ) : null}
     </main>
   )
 }
