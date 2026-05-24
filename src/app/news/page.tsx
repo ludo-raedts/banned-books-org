@@ -135,8 +135,9 @@ export default async function NewsPage({
 
   // Essays strip only renders on page 1 — paginated pages are meant for
   // deeper news archives, and repeating the same essay strip on every page
-  // would be noise.
-  const essays = page === 1 ? publishedEssays() : []
+  // would be noise. Capped at 3 so the strip stays a single row and doesn't
+  // dominate the news flow; older essays remain reachable via /essays.
+  const essays = page === 1 ? publishedEssays().slice(0, 3) : []
 
   // Group by UTC date of published_at; fall back to published_week (Monday)
   // for legacy items that pre-date the per-day flow. Insertion order
