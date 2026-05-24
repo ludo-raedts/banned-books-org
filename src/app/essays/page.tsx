@@ -9,7 +9,10 @@ export const metadata: Metadata = {
   title: 'Essays',
   description:
     'Long-form pieces on censorship, what we document, and the editorial choices behind this catalogue.',
-  alternates: { canonical: '/essays' },
+  alternates: {
+    canonical: '/essays',
+    types: { 'application/rss+xml': '/essays/feed.xml' },
+  },
 }
 
 export default function EssaysIndexPage() {

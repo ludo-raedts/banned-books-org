@@ -64,23 +64,31 @@ Steps for a new essay:
       and returns markdownResponse(buildMarkdownDocument(frontmatter, body)). Copy from
       src/app/essays/the-grey-zone.md/route.ts and swap the import path.
 
-4. The hero image is optional. If used, pass { src, alt, caption, eager } to EssayLayout.
+4. Register the essay in the RSS feed so subscribers actually see it. In
+   src/app/essays/feed.xml/route.ts, add:
+   - one `import { body as <slugCamelCase>Body } from '@/lib/markdown-pages/<slug>'`
+   - one entry to the ESSAY_BODIES map: `'<slug>': <slugCamelCase>Body,`
+   The main /feed.xml automatically picks up new essays via publishedEssays() — no edit needed there.
+
+5. The hero image is optional. If used, pass { src, alt, caption, eager } to EssayLayout.
    Caption may include attribution links.
 
-5. Do NOT add a sidebar (Happening now / Trending). Essays are a reading flow.
+6. Do NOT add a sidebar (Happening now / Trending). Essays are a reading flow.
    The "Books on this theme" block, citation block, and "More essays" footer are rendered
    automatically by EssayLayout.
 
-6. The sitemap is automatic — it reads from publishedEssays() in essays-data.ts.
+7. The sitemap is automatic — it reads from publishedEssays() in essays-data.ts.
    No edits to sitemap-static-entries.ts. Just flip draft to false.
 
-7. Verify on http://localhost:3000/essays/<slug> before pushing. Check:
+8. Verify on http://localhost:3000/essays/<slug> before pushing. Check:
    - Hero card renders with correct dek and reading time
    - Article body uses Tailwind typography (prose) styles
    - "Books on this theme" shows the curated covers (only if relatedBookSlugs is non-empty)
    - "More essays" shows the other published essays
    - The /essays index page lists the new essay (only after draft is false)
    - /essays/<slug>.md returns clean markdown with frontmatter
+   - /essays/feed.xml contains the new essay (title + full body in content:encoded)
+   - /feed.xml lists the new essay alongside news_items
    - View source: <title> is "<Essay title> | Banned Books" (no doubled suffix)
    - View source: <link rel="alternate" type="text/markdown" ...> is present
    - View source: citation_title / citation_author / citation_publication_date meta tags present
