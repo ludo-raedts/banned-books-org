@@ -183,27 +183,25 @@ export default async function ReasonPage({
     }))
   }
 
-  // Paginate books — .in() with 1000+ IDs needs range pagination
-  // rows: all books for this reason | fields: card + ban data | reason: reason detail grid
+  // Chunk by IDs — `.in('id', [...])` ships every ID in the request URL, and
+  // popular reasons (lgbtq ≈ 2.3k books, political similar) blow past the
+  // PostgREST URL-length cap and the response silently comes back empty.
+  // 500 IDs/chunk keeps the URL well under any nginx/PostgREST default and
+  // each chunk returns ≤ 500 rows, so no per-chunk range pagination needed.
+  const BOOKS_CHUNK = 500
   let books: Book[] = []
-  if (bookIds.length > 0) {
-    let offset = 0
-    while (true) {
-      const { data } = await supabase
-        .from('books')
-        .select(`
-          id, title, slug, cover_url, description, first_published_year, genres,
-          book_authors(authors(display_name)),
-          bans(id, status, country_code, year_started, countries(name_en), ban_reason_links(reasons(slug)))
-        `)
-        .in('id', bookIds)
-        .order('title')
-        .range(offset, offset + 999)
-      if (!data || data.length === 0) break
-      books = books.concat(data as unknown as Book[])
-      if (data.length < 1000) break
-      offset += 1000
-    }
+  for (let i = 0; i < bookIds.length; i += BOOKS_CHUNK) {
+    const chunk = bookIds.slice(i, i + BOOKS_CHUNK)
+    const { data } = await supabase
+      .from('books')
+      .select(`
+        id, title, slug, cover_url, description, first_published_year, genres,
+        book_authors(authors(display_name)),
+        bans(id, status, country_code, year_started, countries(name_en), ban_reason_links(reasons(slug)))
+      `)
+      .in('id', chunk)
+      .order('title')
+    if (data && data.length > 0) books = books.concat(data as unknown as Book[])
   }
 
   // ── Build filter option lists from full unfiltered set ───────────────────────
@@ -465,25 +463,6 @@ export default async function ReasonPage({
         </SectionShell>
       )}
 
-      {/* ── Curated reading list on Bookshop.org ────────────────────────── */}
-      {(() => {
-        const bookshopSlug = getBookshopListForReason(slug)
-        if (!bookshopSlug) return null
-        return (
-          <SectionShell tone="cream" eyebrow="Read these · Buy from a local bookstore">
-            <SectionHeader
-              title="On the shelf at Bookshop.org"
-              subtitle="Our curated list of the most-banned titles in this category. Every purchase supports independent bookstores."
-              accent="oxblood"
-              viewAllHref={bookshopListUrl(bookshopSlug)}
-              viewAllLabel="Open the full list"
-              viewAllExternal
-            />
-            <BookshopListEmbed slug={bookshopSlug} />
-          </SectionShell>
-        )
-      })()}
-
       {/* ── Reading-Club theme deeplink ─────────────────────────────────── */}
       {(() => {
         const theme = getReadingClubThemeForReason(slug)
@@ -568,10 +547,40 @@ export default async function ReasonPage({
         )}
         {sorted.length > 100 + topBookIdSet.size && (
           <p className="mt-4 text-[11px] text-neutral-500">
-            Showing the first 100 of {(sorted.length - topBookIdSet.size).toLocaleString('en')} remaining titles. Use the filters above to narrow down, or [search the full catalogue](/search).
+            Showing the first 100 of {(sorted.length - topBookIdSet.size).toLocaleString('en')} remaining titles. Use the filters above to narrow down, or{' '}
+            <Link href="/search" className="underline hover:text-oxblood">search the full catalogue</Link>.
           </p>
         )}
       </SectionShell>
+
+      {/* ── Bookshop.org reading list (compact, below catalogue) ────────── */}
+      {(() => {
+        const bookshopSlug = getBookshopListForReason(slug)
+        if (!bookshopSlug) return null
+        return (
+          <section className="bg-white px-6 md:px-9 py-8 md:py-10 border-t border-neutral-200">
+            <div className="max-w-5xl mx-auto">
+              <h3 className="font-serif text-lg md:text-xl font-semibold text-gray-900">
+                Want to read some of these?
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                A short, curated list on Bookshop.org — every purchase supports independent bookstores.{' '}
+                <a
+                  href={bookshopListUrl(bookshopSlug)}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-oxblood hover:underline whitespace-nowrap"
+                >
+                  Open the full list ↗
+                </a>
+              </p>
+              <div className="mt-5">
+                <BookshopListEmbed slug={bookshopSlug} />
+              </div>
+            </div>
+          </section>
+        )
+      })()}
 
       {/* ── Citation ────────────────────────────────────────────────────── */}
       <SectionShell tone="white">
