@@ -1,0 +1,311 @@
+[
+  {
+    "case_id": "indiankanoon-1050518",
+    "url": "https://indiankanoon.org/doc/1050518/",
+    "case_title": "M.L.C. Gupta vs Emperor",
+    "ruling_date": "1936-01-20",
+    "court": "Allahabad High Court",
+    "legal_basis": "Section 99-A of CrPC 1898; Section 153A IPC",
+    "ruling_outcome": "forfeiture_upheld",
+    "books": [
+      {
+        "title": "Jat Jati ke Mukammal Halat yani Jat Dar-pan, Part I",
+        "author": "M.L.C. Gupta",
+        "publisher": null,
+        "language": null,
+        "ban_year": null,
+        "state": "Uttar Pradesh"
+      }
+    ],
+    "motif": "The court held that the book promoted hatred and enmity by representing Jats as low, criminal and immoral, and that its objectionable passages were not saved merely because they were mixed with other material.",
+    "uncertainty": "Colonial-era case; the judgment does not give a modern state name, publisher, language, or exact forfeiture-order year. State normalized from Allahabad High Court / United Provinces context."
+  },
+  {
+    "case_id": "indiankanoon-1660250",
+    "url": "https://indiankanoon.org/doc/1660250/",
+    "case_title": "Shiv Ram Dass Udasin vs The Punjab State",
+    "ruling_date": "1954-04-05",
+    "court": "Punjab High Court",
+    "legal_basis": "Section 99-A of CrPC 1898; Section 295A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Gurmat Vichar Suraj",
+        "author": "Shri Shivram Das Udasi",
+        "publisher": null,
+        "language": null,
+        "ban_year": 1952,
+        "state": "Punjab"
+      }
+    ],
+    "motif": "The notification alleged that passages on several pages were punishable under Section 295A IPC.",
+    "uncertainty": "The judgment identifies the author, title and forfeiture order, but not the publisher or language."
+  },
+  {
+    "case_id": "indiankanoon-64688",
+    "url": "https://indiankanoon.org/doc/64688/",
+    "case_title": "Harnam Das vs State Of Uttar Pradesh",
+    "ruling_date": "1961-04-27",
+    "court": "Supreme Court of India",
+    "legal_basis": "Section 99-A of CrPC 1898; Sections 153A and 295A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Sikh Mat Khandan, Part 1",
+        "author": "Harnam Das",
+        "publisher": "Harnam Das",
+        "language": "hi",
+        "ban_year": 1953,
+        "state": "Uttar Pradesh"
+      },
+      {
+        "title": "Bhoomika Nazam Sikh Mat Khandan",
+        "author": "Harnam Das",
+        "publisher": "Harnam Das",
+        "language": "hi",
+        "ban_year": 1953,
+        "state": "Uttar Pradesh"
+      }
+    ],
+    "motif": "The notification said the books were punishable under Sections 153A and 295A IPC, but the Supreme Court held that the order failed to state the grounds required for forfeiture.",
+    "uncertainty": "The Supreme Court text identifies the two titles and publisher-as-appellant; language is recorded from judicial context."
+  },
+  {
+    "case_id": "indiankanoon-1374283",
+    "url": "https://indiankanoon.org/doc/1374283/",
+    "case_title": "Gulam Sarwar Firgar vs State Of Bihar",
+    "ruling_date": "1963-03-14",
+    "court": "Patna High Court",
+    "legal_basis": "Section 99-A of CrPC 1898; Section 153A IPC",
+    "ruling_outcome": "unclear",
+    "books": [
+      {
+        "title": "Nawa-i-Kashmir",
+        "author": "Ghulam Sarwar Figar",
+        "publisher": "Nafi and Company",
+        "language": "ur",
+        "ban_year": 1961,
+        "state": "West Bengal"
+      }
+    ],
+    "motif": "The notification alleged that passages in the Urdu book were deliberately and maliciously intended to promote enmity and hatred between Hindu and Muslim citizens of India.",
+    "uncertainty": "The Patna High Court decision turned on the Bihar republication/jurisdiction issue rather than a full merits review of the West Bengal forfeiture order."
+  },
+  {
+    "case_id": "indiankanoon-726232",
+    "url": "https://indiankanoon.org/doc/726232/",
+    "case_title": "Gopal Vinayak Godse vs The Union Of India And Ors.",
+    "ruling_date": "1969-08-06",
+    "court": "Bombay High Court",
+    "legal_basis": "Section 99-A of CrPC 1898; Section 153A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Gandhi-hatya Ani Mee",
+        "author": "Gopal Vinayak Godse",
+        "publisher": "Asmita Prakashan",
+        "language": "mr",
+        "ban_year": 1967,
+        "state": "Delhi"
+      }
+    ],
+    "motif": "The Delhi notification alleged that the book contained matter promoting feelings of enmity and hatred between Hindus and Muslims.",
+    "uncertainty": "The underlying Section 99-A order was issued by the Delhi Administration and later republished in Maharashtra; state field records the original issuing authority."
+  },
+  {
+    "case_id": "indiankanoon-1645758",
+    "url": "https://indiankanoon.org/doc/1645758/",
+    "case_title": "Ramlal Puri vs State Of Madhya Pradesh",
+    "ruling_date": "1970-12-24",
+    "court": "Madhya Pradesh High Court",
+    "legal_basis": "Section 99-A of CrPC 1898; Section 295A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Agni Pariksha",
+        "author": "Acharya Tulsi",
+        "publisher": "Atmaram and Sons",
+        "language": null,
+        "ban_year": 1970,
+        "state": "Madhya Pradesh"
+      }
+    ],
+    "motif": "The notification alleged that couplets on specified pages were grossly offensive and provocative, and were punishable under Section 295A IPC.",
+    "uncertainty": "The judgment identifies the work as a poetry book and gives the publisher, but does not explicitly state language."
+  },
+  {
+    "case_id": "indiankanoon-478746",
+    "url": "https://indiankanoon.org/doc/478746/",
+    "case_title": "Virendra Bandhu vs State Of Rajasthan",
+    "ruling_date": "1979-11-02",
+    "court": "Rajasthan High Court",
+    "legal_basis": "Section 95 of CrPC; Sections 124A and 153A IPC",
+    "ruling_outcome": "unclear",
+    "books": [
+      {
+        "title": "Kranti Kiyon Aur Kaise",
+        "author": "Virendra Bandhu",
+        "publisher": "Jan Prakashan Samiti",
+        "language": "hi",
+        "ban_year": 1975,
+        "state": "Rajasthan"
+      }
+    ],
+    "motif": "The government order alleged that the booklet contained seditious matter and matter promoting, or intended to incite, enmity and hatred between different classes of Indian citizens.",
+    "uncertainty": "The retrieved text clearly identifies the book and grounds; the final operative outcome was not visible in the extracted passage."
+  },
+  {
+    "case_id": "indiankanoon-1843422",
+    "url": "https://indiankanoon.org/doc/1843422/",
+    "case_title": "Azizul Haq Kausar Naquvi And Anr. vs The State",
+    "ruling_date": "1980-01-21",
+    "court": "Allahabad High Court",
+    "legal_basis": "Section 95 of CrPC; Section 153A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Munaqib-e-Ahle Bait",
+        "author": "Maulana Azizul Haq Kausar Naqvi",
+        "publisher": "Maulvi Inamul Haq Kadri Siraji",
+        "language": "ur",
+        "ban_year": 1977,
+        "state": "Uttar Pradesh"
+      }
+    ],
+    "motif": "The court held that the passages were not likely to disturb public tranquillity and did not amount to an offence under Section 153A IPC.",
+    "uncertainty": "The publisher list is longer in the judgment; only the primary publisher name has been captured."
+  },
+  {
+    "case_id": "indiankanoon-1571445",
+    "url": "https://indiankanoon.org/doc/1571445/",
+    "case_title": "P. Venkateswarlu And Anr. vs The State Of Andhra Pradesh",
+    "ruling_date": "1982-08-10",
+    "court": "Andhra Pradesh High Court",
+    "legal_basis": "Section 95 of CrPC; Sections 124A and 153A IPC",
+    "ruling_outcome": "forfeiture_set_aside",
+    "books": [
+      {
+        "title": "Mareechika",
+        "author": "Vasireddy Seeta Devi",
+        "publisher": "Navajyothi Publications",
+        "language": "te",
+        "ban_year": 1982,
+        "state": "Andhra Pradesh"
+      }
+    ],
+    "motif": "The notification alleged that the Telugu novel tended to excite disaffection towards the Government and armed forces, class hatred and conflict, and violent extremism.",
+    "uncertainty": null
+  },
+  {
+    "case_id": "indiankanoon-1598747",
+    "url": "https://indiankanoon.org/doc/1598747/",
+    "case_title": "Nand Kishore Singh And Etc. vs State Of Bihar And Anr.",
+    "ruling_date": "1984-09-04",
+    "court": "Patna High Court",
+    "legal_basis": "Section 95 of CrPC; Section 295A IPC",
+    "ruling_outcome": "partially_upheld",
+    "books": [
+      {
+        "title": "Vishwa Itihas",
+        "author": "Dhanpati Pandey",
+        "publisher": null,
+        "language": "hi",
+        "ban_year": 1983,
+        "state": "Bihar",
+        "per_book_outcome": "forfeiture_set_aside"
+      },
+      {
+        "title": "Madhyakalin Arab",
+        "author": "Dhanpati Pandey",
+        "publisher": "Janki Prakashan",
+        "language": "hi",
+        "ban_year": 1983,
+        "state": "Bihar",
+        "per_book_outcome": "forfeiture_upheld"
+      }
+    ],
+    "motif": "The challenged passages were alleged to contain derogatory references to Prophet Hazrat Mohammad and to be punishable under Section 295A IPC.",
+    "uncertainty": "The same judgment set aside the order for Vishwa Itihas but dismissed the petition concerning Madhyakalin Arab."
+  },
+  {
+    "case_id": "indiankanoon-685524",
+    "url": "https://indiankanoon.org/doc/685524/",
+    "case_title": "Baragur Ramchandrappa And Others vs State Of Karnataka And Another",
+    "ruling_date": "1998-04-16",
+    "court": "Karnataka High Court",
+    "legal_basis": "Section 95 of CrPC; Section 295A IPC",
+    "ruling_outcome": "forfeiture_upheld",
+    "books": [
+      {
+        "title": "Dharmakarana",
+        "author": "Baragur Ramchandrappa",
+        "publisher": null,
+        "language": null,
+        "ban_year": 1997,
+        "state": "Karnataka"
+      }
+    ],
+    "motif": "The complaints alleged that the novel twisted historical facts about Akkanagamma, described her as born out of wedlock and as a woman of easy virtue, thereby hurting religious feelings and creating public-order problems.",
+    "uncertainty": "Publisher and language were not explicitly readable in the judgment passage used for extraction."
+  },
+  {
+    "case_id": "indiankanoon-1468619",
+    "url": "https://indiankanoon.org/doc/1468619/",
+    "case_title": "R.V. Bhasin vs State Of Maharashtra",
+    "ruling_date": "2010-01-06",
+    "court": "Bombay High Court",
+    "legal_basis": "Section 95 of CrPC; Sections 153A and 295A IPC",
+    "ruling_outcome": "forfeiture_upheld",
+    "books": [
+      {
+        "title": "Islam: A Concept of Political World Invasion",
+        "author": "R.V. Bhasin",
+        "publisher": "National Publications",
+        "language": "en",
+        "ban_year": 2007,
+        "state": "Maharashtra",
+        "existing_book_id": 6282
+      },
+      {
+        "title": "Islam Rajnaitik Vishwa Par Muslim Akraman Ki Avadharana",
+        "author": "R.V. Bhasin",
+        "publisher": "National Publications",
+        "language": "hi",
+        "ban_year": 2007,
+        "state": "Maharashtra"
+      }
+    ],
+    "motif": "The notification alleged derogatory and false remarks about Islam, the Muslim community, Mohammed Paigambar and Muslim priests, likely to create hatred, disharmony and outrage religious feelings.",
+    "uncertainty": "The Hindi book is a translation by Dr. Anil Mishra; original-author kept as R.V. Bhasin."
+  },
+  {
+    "case_id": "indiankanoon-132374311",
+    "url": "https://indiankanoon.org/doc/132374311/",
+    "case_title": "K. Senthil Mallar vs Government of Tamil Nadu",
+    "ruling_date": "2017-10-20",
+    "court": "Madras High Court",
+    "legal_basis": "Section 95 of CrPC; caste/community enmity grounds",
+    "ruling_outcome": "partially_upheld",
+    "books": [
+      {
+        "title": "Meendezhum Pandiyar Varalaru",
+        "author": "K. Senthil Mallar",
+        "publisher": null,
+        "language": "ta",
+        "ban_year": 2013,
+        "state": "Tamil Nadu",
+        "existing_book_id": 6325
+      },
+      {
+        "title": "Venthar Kulathin Iruppidam Ethu?",
+        "author": "K. Senthil Mallar",
+        "publisher": null,
+        "language": "ta",
+        "ban_year": 2015,
+        "state": "Tamil Nadu"
+      }
+    ],
+    "motif": "The court accepted that several portions in both books were abusive against other castes and spread hatred and disharmony, but allowed lifting of the forfeiture after agreed alterations.",
+    "uncertainty": "Forfeiture was conditionally lifted; recording as historical with motif noted."
+  }
+]
