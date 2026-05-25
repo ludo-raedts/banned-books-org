@@ -20,7 +20,7 @@ import { countryFlag as countryFlagShared } from '@/lib/country-flag'
 import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
-import { reasonPhrase } from '@/lib/reason-phrases'
+import { reasonPhrase, BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
 import {
   QualityCheck,
   QualityFlaggedNotice,
@@ -90,17 +90,67 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     .eq('author_id', (author as unknown as { id: number }).id)
 
   const bookIds = (bookLinks ?? []).map((bl: { book_id: number }) => bl.book_id)
+  let bannedBookCount = 0
   let countryCount = 0
+  let earliestYear: number | null = null
+  let topReasonSlug: string | null = null
   if (bookIds.length > 0) {
     const { data: bans } = await supabase
       .from('bans')
-      .select('country_code')
+      .select('book_id, country_code, year_started, ban_reason_links(reasons(slug))')
       .in('book_id', bookIds)
-    countryCount = new Set((bans ?? []).map((b) => b.country_code)).size
+    const banRows = (bans ?? []) as unknown as {
+      book_id: number
+      country_code: string
+      year_started: number | null
+      ban_reason_links: { reasons: { slug: string } | null }[]
+    }[]
+    bannedBookCount = new Set(banRows.map(b => b.book_id)).size
+    countryCount = new Set(banRows.map(b => b.country_code)).size
+    const years = banRows.map(b => b.year_started).filter((y): y is number => y != null)
+    if (years.length > 0) earliestYear = Math.min(...years)
+    const reasonCounts = new Map<string, number>()
+    for (const b of banRows) {
+      for (const link of b.ban_reason_links) {
+        const s = link.reasons?.slug
+        if (s) reasonCounts.set(s, (reasonCounts.get(s) ?? 0) + 1)
+      }
+    }
+    topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   }
+  const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
 
-  const title = author.display_name
-  const description = `${author.display_name}'s books have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}. See the full list.`
+  // Title — pick the most specific candidate that fits the 70-char visible
+  // cap (Google desktop truncates around 70; mobile around 55). Suffix
+  // " | Banned Books" (~16 chars) is appended by the root layout, so leave
+  // ~54 chars of headroom here.
+  const candidateA = `Banned books by ${author.display_name} — censorship history`
+  const candidateB = `Banned books by ${author.display_name}`
+  const candidateC = `${author.display_name} — banned books`
+  const candidateD = author.display_name
+  let title: string
+  if (candidateA.length <= 54) title = candidateA
+  else if (candidateB.length <= 54) title = candidateB
+  else if (candidateC.length <= 54) title = candidateC
+  else title = candidateD
+
+  // Description — concrete stats over boilerplate. Carries the "for {reason}"
+  // and "since {year}" tokens that informational queries like
+  // "books by X banned" match against.
+  let description: string
+  if (bannedBookCount === 0) {
+    description = `${author.display_name} on Banned Books — bio, bibliography, and the censorship history of this author's work.`
+  } else if (earliestYear && topReasonPhrase) {
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}, most often for ${topReasonPhrase}.`
+  } else if (topReasonPhrase) {
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}, most often for ${topReasonPhrase}.`
+  } else if (earliestYear) {
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}.`
+  } else {
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`
+  }
+  if (description.length > 160) description = description.slice(0, 157) + '…'
+
   const canonicalUrl = `https://www.banned-books.org/authors/${slug}`
   return {
     title,
@@ -562,6 +612,17 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             {a.display_name}
             <QualityCheck status={a.data_quality_status} />
           </h1>
+          {/* Topical subtitle — same pattern as the book-detail page. Carries
+              the `[N] banned books in [M] countries` token the H1 omits, so
+              author-name queries combined with "banned books" or country
+              names have something concrete to rank against. Suppressed for
+              authors with no documented bans (e.g. placeholder/anonymous
+              buckets) where the phrase would mislead. */}
+          {books.length > 0 && countryCount > 0 && (
+            <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
+              {books.length} banned {books.length === 1 ? 'book' : 'books'} in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
+            </p>
+          )}
           {/* Secondary name: native-script form (for authors whose original
               writing language is non-English) OR a known English pen name
               when it differs from the canonical display_name. Suppressed
@@ -606,13 +667,19 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           {lifespan && (
             <p className="text-sm text-gray-500 dark:text-gray-400">{lifespan}</p>
           )}
-          <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
-            <span className="font-medium text-red-500 dark:text-red-400">
-              {books.length} {books.length === 1 ? 'book' : 'books'} banned
-            </span>
-            <span>{totalBans} bans across {countryCount} {countryCount === 1 ? 'country' : 'countries'}</span>
-            {activeBanCount > 0 && <span>{activeBanCount} currently active</span>}
-          </div>
+          {/* Supporting stats — distinct-book count already lives in the
+              topical subtitle above (per ban-metric doctrine: rank on
+              distinct books, not raw events). What's surfaced here is the
+              raw-event count and active-vs-historical split, which the
+              subtitle deliberately omits to stay headline-clean. */}
+          {totalBans > 0 && (
+            <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <span>{totalBans} documented {totalBans === 1 ? 'ban event' : 'ban events'}</span>
+              {activeBanCount > 0 && activeBanCount < totalBans && (
+                <span>{activeBanCount} currently active</span>
+              )}
+            </div>
+          )}
           {placeholderText ? (
             // Placeholder-bucket explanation (Anonymous, Unknown, Various
             // Authors, No Further Information). Rendered in place of the DB
