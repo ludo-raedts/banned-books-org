@@ -200,28 +200,59 @@ export async function generateMetadata({
   const topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
   const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
 
-  const candidateA = uniqueCountries.length === 1 && topReasonPhrase
-    ? `${baseTitle} – Banned in ${uniqueCountries[0]} for ${topReasonPhrase}`
-    : null
-  const candidateB = `${baseTitle} – Why it was banned`
-  // Compact value-add suffix for long titles where candidate A and B both
-  // overflow. Always under 70 chars when baseTitle is under 55 — covers
-  // ~95% of catalogue titles. Empirically (GSC 2026-05-16) titles without
-  // any "banned" suffix have ~10× lower CTR at position 4: aztec-inca-maya
-  // (39 chars + " – Why it was banned") → 36% CTR @ pos 2, vs Jilly P
-  // (48 chars, suffix dropped under old 60-char cap) → 0% CTR @ pos 4.
-  const candidateD = `${baseTitle} – banned book`
-  const candidateC = baseTitle
+  // Title-candidate ladder — pick the first that fits the 70-char visible cap.
+  // Strategy: keep the most concrete value-add (the "for {reason}" token,
+  // which the snippet hook relies on) for as long as possible by dropping
+  // author or country first. Vague "Why it was banned" is the last-resort
+  // suffix because GSC data (2026-05-23) shows it correlates with ~0%
+  // CTR even at position 4 (cf. /books/you-don-t-know-everything-jilly-p:
+  // 936 impr @ pos 4 → 0 clicks with the vague suffix).
+  //
+  // Order:
+  //   1. {title} by {author} – Banned in {country} for {reason}     ← richest
+  //   2. {title} by {author} – Banned in {N} countries for {reason} (multi-country)
+  //   3. {title} – Banned in {country} for {reason}                 ← drop author
+  //   4. {title} – Banned in {N} countries for {reason}             (drop author, multi)
+  //   5. {title} by {author} – Banned for {reason}                  ← drop country
+  //   6. {title} – Banned for {reason}                              ← drop both, keep reason (key hook)
+  //   7. {title} by {author} – Banned in {country}                  ← drop reason, single
+  //   8. {title} – Banned in {country}                              ← drop author + reason
+  //   9. {title} by {author} – Why it was banned                    ← vague (fallback)
+  //  10. {title} – Why it was banned
+  //  11. {title} – banned book                                       ← shortest value-add
+  //  12. {title}                                                     ← bare
+  const single = uniqueCountries.length === 1
+  const multi = uniqueCountries.length >= 2
+  const country = single ? uniqueCountries[0] : null
+  const titleCandidates: string[] = []
+  if (single && country && topReasonPhrase) {
+    titleCandidates.push(`${baseTitle} – Banned in ${country} for ${topReasonPhrase}`)
+    titleCandidates.push(`${data.title} – Banned in ${country} for ${topReasonPhrase}`)
+  }
+  if (multi && topReasonPhrase) {
+    titleCandidates.push(`${baseTitle} – Banned in ${uniqueCountries.length} countries for ${topReasonPhrase}`)
+    titleCandidates.push(`${data.title} – Banned in ${uniqueCountries.length} countries for ${topReasonPhrase}`)
+  }
+  if (topReasonPhrase) {
+    titleCandidates.push(`${baseTitle} – Banned for ${topReasonPhrase}`)
+    titleCandidates.push(`${data.title} – Banned for ${topReasonPhrase}`)
+  }
+  if (single && country) {
+    titleCandidates.push(`${baseTitle} – Banned in ${country}`)
+    titleCandidates.push(`${data.title} – Banned in ${country}`)
+  }
+  if (multi) {
+    titleCandidates.push(`${baseTitle} – Banned in ${uniqueCountries.length} countries`)
+    titleCandidates.push(`${data.title} – Banned in ${uniqueCountries.length} countries`)
+  }
+  titleCandidates.push(`${baseTitle} – Why it was banned`)
+  titleCandidates.push(`${data.title} – Why it was banned`)
+  titleCandidates.push(`${baseTitle} – banned book`)
+  titleCandidates.push(`${data.title} – banned book`)
+  titleCandidates.push(baseTitle)
+  titleCandidates.push(data.title)
 
-  // Cap raised from 60 → 70 chars. Google shows ~70 on desktop and ~55 on
-  // mobile; the hard slice() below still kicks in at 70. Better to push
-  // the value-add suffix into the visible-on-desktop range than to drop
-  // it entirely for slightly-longer titles.
-  let title: string
-  if (candidateA && candidateA.length <= 70) title = candidateA
-  else if (candidateB.length <= 70) title = candidateB
-  else if (candidateD.length <= 70) title = candidateD
-  else title = candidateC
+  let title = titleCandidates.find(c => c.length <= 70) ?? data.title
   if (title.length > 70) title = title.slice(0, 67) + '…'
 
   let description: string
