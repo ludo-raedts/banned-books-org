@@ -28,13 +28,12 @@ SELECT "reason_slug", "book_id", "ban_count", "rn"::int AS "rank"
  WHERE "rn" <= 50
 WITH NO DATA;
 
--- Required for REFRESH CONCURRENTLY.
-CREATE UNIQUE INDEX "idx_mv_reason_top_books_pk"
-    ON "public"."mv_reason_top_books" USING "btree" ("reason_slug", "rank");
-
--- The most common query is "give me the top-N for a single slug" — this
--- index covers it cheaply.
-CREATE INDEX "idx_mv_reason_top_books_slug_rank"
+-- Required for REFRESH CONCURRENTLY, and it also covers the "give me the
+-- top-N for a single slug" query path via a btree range scan — no second
+-- non-unique copy needed. IF NOT EXISTS so the migration is safely
+-- re-runnable after a partial apply (first run created the index but
+-- failed later; re-running raised 42P07 otherwise).
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_mv_reason_top_books_pk"
     ON "public"."mv_reason_top_books" USING "btree" ("reason_slug", "rank");
 
 -- Initial load (subsequent refreshes go through the cron).
