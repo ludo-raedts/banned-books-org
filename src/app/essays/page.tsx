@@ -31,9 +31,18 @@ export default function EssaysIndexPage() {
 
           <Eyebrow>Long-form · The catalogue, examined</Eyebrow>
 
-          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
-            Essays.
-          </h1>
+          <div className="flex items-baseline justify-between gap-4">
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
+              Essays.
+            </h1>
+            <a
+              href="/essays/feed.xml"
+              type="application/rss+xml"
+              className="shrink-0 text-xs font-medium tracking-wide text-gray-700 hover:text-oxblood underline underline-offset-2 transition-colors whitespace-nowrap"
+            >
+              RSS feed ↗
+            </a>
+          </div>
 
           <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
             Long-form pieces about censorship — what we document, how the categories blur, and why the choices behind this catalogue are not neutral.
