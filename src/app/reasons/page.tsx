@@ -1,4 +1,9 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate every hour. The page only shows aggregate counts (11 reason
+// rows × distinct slug counts from ban_reason_links). Previously force-dynamic
+// → paginated read of ~6500 ban_reason_links rows on every visit (~325 KB
+// egress per visitor). Hourly revalidation collapses that to one read per
+// hour shared across all visitors and crawlers.
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -46,23 +51,19 @@ const REASON_DESCRIPTIONS: Record<string, string> = {
 export default async function ReasonsPage() {
   const supabase = adminClient()
 
-  // Paginate ban_reason_links — 6500+ rows, PostgREST default cap is 1000
-  // rows: all | fields: [reason slug] | reason: count per reason; skip bans table entirely
+  // Aggregate per-reason totals from the pre-built materialized view rather
+  // than paginating ban_reason_links (~6500 rows, ~325 KB egress) on every
+  // revalidation. mv_country_reason_counts is keyed on (country_code,
+  // reason_slug) so summing total_bans across countries reproduces the same
+  // headline number for ~990 rows (~15 KB). Refreshed by the hourly
+  // refresh_all_materialized_views cron.
   const reasonCounts = new Map<string, number>()
   {
-    let offset = 0
-    while (true) {
-      const { data } = await supabase
-        .from('ban_reason_links')
-        .select('reasons(slug)')
-        .range(offset, offset + 999)
-      if (!data || data.length === 0) break
-      for (const link of data as unknown as Array<{ reasons: { slug: string } | null }>) {
-        const slug = link.reasons?.slug
-        if (slug) reasonCounts.set(slug, (reasonCounts.get(slug) ?? 0) + 1)
-      }
-      if (data.length < 1000) break
-      offset += 1000
+    const { data } = await supabase
+      .from('mv_country_reason_counts')
+      .select('reason_slug, total_bans')
+    for (const row of (data ?? []) as Array<{ reason_slug: string; total_bans: number }>) {
+      reasonCounts.set(row.reason_slug, (reasonCounts.get(row.reason_slug) ?? 0) + row.total_bans)
     }
   }
 

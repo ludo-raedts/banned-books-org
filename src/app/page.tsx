@@ -161,6 +161,8 @@ export default async function HomePage() {
   const timer = newTimer('home')
   const supabase = adminClient()
 
+  const REASON_POOL_DEPTH = 40
+
   const [
     totalCountRes,
     totalBansRes,
@@ -171,7 +173,7 @@ export default async function HomePage() {
     countriesRes,
     banCountsRes,
     placeholderAuthorsRes,
-    reasonsRes,
+    reasonTopBooksRes,
     bbwConfigRes,
     rushdieRes,
   ] = await timer.wrap('parallel-batch-12', () => Promise.all([
@@ -186,7 +188,15 @@ export default async function HomePage() {
     supabase.from('countries').select('code, name_en'),
     supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('authors').select('id').eq('is_placeholder', true),
-    supabase.from('reasons').select('id, slug').in('slug', REASON_SLUGS),
+    // Pre-aggregated top-N book_ids per reason. Replaced a paginated read of
+    // 45k ban_reason_links rows (~3.4 MB) with this ~200-row slice (~3 KB).
+    // Refreshed hourly by refresh_all_materialized_views(); 1h staleness is
+    // fine — homepage's revalidate=1800 dominates.
+    supabase.from('mv_reason_top_books')
+      .select('reason_slug, book_id, rank')
+      .in('reason_slug', REASON_SLUGS)
+      .lte('rank', REASON_POOL_DEPTH)
+      .order('reason_slug').order('rank'),
     // bbw_config + the Rushdie quote book power the hero callout. bbw_config
     // read via adminClient (this supabase var) on purpose — anon hits RLS on
     // the singleton and silently returns DEFAULTS, which masks an
@@ -211,45 +221,19 @@ export default async function HomePage() {
     .slice(0, 10)
   const bannedAuthorIds = bannedAuthorRows.map(r => Number(r.entity_id))
 
-  // ── Aggregate top-N books per reason in a single paginated round-trip ────
-  // We keep a deep ranked list per reason (top 40) instead of top 3 so the
-  // cover-status='valid' filter + cross-section dedup can drop books without
-  // exhausting the pool. The final 3-per-reason pick is done after rotation.
-  const reasons = ((reasonsRes.data ?? []) as { id: number; slug: string }[])
-  const reasonIdToSlug = new Map(reasons.map(r => [r.id, r.slug]))
-  const reasonIds = reasons.map(r => r.id)
-  const byReason = new Map<string, Map<number, number>>()
-  if (reasonIds.length > 0) {
-    let offset = 0
-    while (true) {
-      const { data } = await timer.wrap('ban_reason_links-page', () =>
-        supabase.from('ban_reason_links').select('reason_id, bans(book_id)')
-          .in('reason_id', reasonIds).range(offset, offset + 999),
-      )
-      if (!data || data.length === 0) break
-      for (const link of data as unknown as Array<{ reason_id: number; bans: { book_id: number } | null }>) {
-        const slug = reasonIdToSlug.get(link.reason_id)
-        const bookId = link.bans?.book_id
-        if (!slug || !bookId) continue
-        if (!byReason.has(slug)) byReason.set(slug, new Map())
-        const m = byReason.get(slug)!
-        m.set(bookId, (m.get(bookId) ?? 0) + 1)
-      }
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  }
-  const REASON_POOL_DEPTH = 40
+  // ── Group the pre-ranked rows from mv_reason_top_books by slug ───────────
+  // The MV is partitioned per reason_slug and pre-sorted by rank, so a single
+  // pass groups it into the per-slug ID arrays the rotation logic expects.
+  // We keep up to 40 candidates per reason instead of 3 so the
+  // cover-status='valid' filter + cross-section dedup can drop weak entries
+  // without exhausting the pool. The final 3-per-reason pick is done after
+  // rotation.
   const reasonRankedBookIds = new Map<string, number[]>()
   const reasonAllBookIds = new Set<number>()
-  for (const slug of REASON_SLUGS) {
-    const m = byReason.get(slug) ?? new Map<number, number>()
-    const ranked = [...m.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, REASON_POOL_DEPTH)
-      .map(([id]) => id as number)
-    reasonRankedBookIds.set(slug, ranked)
-    ranked.forEach(id => reasonAllBookIds.add(id))
+  for (const slug of REASON_SLUGS) reasonRankedBookIds.set(slug, [])
+  for (const row of ((reasonTopBooksRes.data ?? []) as Array<{ reason_slug: string; book_id: number; rank: number }>)) {
+    reasonRankedBookIds.get(row.reason_slug)?.push(row.book_id)
+    reasonAllBookIds.add(row.book_id)
   }
 
   // ── Single book-details fetch covers every list ──────────────────────────
