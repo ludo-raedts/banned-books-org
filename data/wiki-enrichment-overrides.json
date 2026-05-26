@@ -12,5 +12,12 @@
   "1067": { "url": null, "note": "Jacob's Room To Choose by Sarah & Ian Hoffman — no dedicated Wikipedia article (2019, picture book)" },
   "3197": { "url": null, "note": "My Shadow is Pink by Scott Stuart — no dedicated Wikipedia article (2020, picture book)" },
   "624": { "url": "https://en.wikipedia.org/wiki/Nawal_El_Saadawi", "note": "no dedicated book article; author page is the canonical source" },
-  "263": { "url": null, "note": "The Truth About Alice by Jennifer Mathieu — no dedicated Wikipedia article" }
+  "263": { "url": null, "note": "The Truth About Alice by Jennifer Mathieu — no dedicated Wikipedia article" },
+
+  "27": { "url": "https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl", "note": "main book article, not the play adaptation" },
+  "6499": { "url": "https://en.wikipedia.org/wiki/Candy_(novel)", "note": "Terry Southern & Mason Hoffenberg novel, not the disambiguation page" },
+  "74": { "url": "https://en.wikipedia.org/wiki/The_Picture_of_Dorian_Gray", "note": "Oscar Wilde novel, not the (play) adaptation" },
+  "600": { "url": "https://en.wikipedia.org/wiki/Fifty_Shades_of_Grey", "note": "first novel of the trilogy, not the series page" },
+  "268": { "url": "https://en.wikipedia.org/wiki/A_Clash_of_Kings", "note": "Martin novel; matcher redirected to the (board game) page" },
+  "755": { "url": null, "note": "Total Abuse by Peter Sotos — no dedicated Wikipedia article" }
 }
