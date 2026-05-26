@@ -1,0 +1,16 @@
+{
+  "_comment": "Manual Wikipedia URL overrides for the enrichment worklist. Add a row { url, note } keyed by book_id whenever the auto-matcher gets it wrong, then rerun build-wiki-enrichment-worklist.ts. Setting url to null marks a book as 'no Wikipedia article'.",
+
+  "7327": { "url": "https://en.wikipedia.org/wiki/Quran", "note": "multi-author work, exact title match" },
+  "579": { "url": "https://en.wikipedia.org/wiki/One_Thousand_and_One_Nights", "note": "multi-author work, exact title match" },
+  "631": { "url": "https://en.wikipedia.org/wiki/Bible", "note": "multi-author work; redirected via 'The Bible'" },
+  "581": { "url": "https://en.wikipedia.org/wiki/The_Protocols_of_the_Elders_of_Zion", "note": "main article, not the 'list of editions' redirect" },
+  "219": { "url": "https://en.wikipedia.org/wiki/Haters_(novel)", "note": "Jesse Andrews novel; matcher already found this but flagged medium" },
+  "186": { "url": "https://en.wikipedia.org/wiki/Drama_(graphic_novel)", "note": "Raina Telgemeier graphic novel" },
+  "194": { "url": "https://en.wikipedia.org/wiki/Identical_(Hopkins_novel)", "note": "Ellen Hopkins novel" },
+
+  "1067": { "url": null, "note": "Jacob's Room To Choose by Sarah & Ian Hoffman — no dedicated Wikipedia article (2019, picture book)" },
+  "3197": { "url": null, "note": "My Shadow is Pink by Scott Stuart — no dedicated Wikipedia article (2020, picture book)" },
+  "624": { "url": "https://en.wikipedia.org/wiki/Nawal_El_Saadawi", "note": "no dedicated book article; author page is the canonical source" },
+  "263": { "url": null, "note": "The Truth About Alice by Jennifer Mathieu — no dedicated Wikipedia article" }
+}
