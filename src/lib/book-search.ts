@@ -45,16 +45,21 @@ async function topIdsForSort(
   supabase: ReturnType<typeof adminClient>,
   sort: BookSort,
 ): Promise<number[]> {
+  // entity_id is the stable tiebreaker — without it, ties on views/total_bans
+  // shuffle between calls, so the server-rendered first page and a client-side
+  // loadMore can return overlapping IDs (duplicate React keys).
   if (sort === 'popular') {
     const { data } = await supabase
       .from('v_top_books_all_time').select('entity_id, views')
       .order('views', { ascending: false })
+      .order('entity_id', { ascending: true })
     return (data ?? []).map(r => Number(r.entity_id))
   }
   if (sort === 'bans') {
     const { data } = await supabase
       .from('v_top_banned_books').select('entity_id, total_bans')
       .order('total_bans', { ascending: false })
+      .order('entity_id', { ascending: true })
     return (data ?? []).map(r => Number(r.entity_id))
   }
   return []

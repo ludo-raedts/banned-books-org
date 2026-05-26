@@ -244,9 +244,13 @@ export default function SearchClient({
     fetch(`/api/books?${apiParams({ ...filters, offset: nextOffset, defaultSort })}`)
       .then(r => r.json())
       .then(({ books, total: t }) => {
-        setDisplayBooks(prev => [...prev, ...(books ?? [])])
+        const incoming: Book[] = books ?? []
+        setDisplayBooks(prev => {
+          const seen = new Set(prev.map(b => b.id))
+          return [...prev, ...incoming.filter(b => !seen.has(b.id))]
+        })
         setTotal(t ?? 0)
-        setNextOffset(prev => prev + (books ?? []).length)
+        setNextOffset(prev => prev + incoming.length)
         setLoadingMore(false)
       })
       .catch(() => setLoadingMore(false))
