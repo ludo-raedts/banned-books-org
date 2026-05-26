@@ -185,7 +185,7 @@ export default async function BannedChildrensBooksPage() {
       </section>
 
       {/* ── Format preview tiles — three sections at a glance ─────────── */}
-      <SectionShell tone="cream" eyebrow="Three sections · click any tile to jump in">
+      <SectionShell tone="cream" eyebrow="By format">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {picture.length > 0 && (
             <FormatTile
