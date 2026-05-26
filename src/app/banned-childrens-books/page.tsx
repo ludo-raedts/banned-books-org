@@ -3,6 +3,7 @@ export const revalidate = 86400
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
@@ -200,10 +201,43 @@ export default async function BannedChildrensBooksPage() {
         </div>
       </section>
 
+      {/* ── Format preview tiles — three sections at a glance ─────────── */}
+      <SectionShell tone="cream" eyebrow="Three sections · click any tile to jump in">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {picture.length > 0 && (
+            <FormatTile
+              anchor="picture-books"
+              label="Picture books"
+              count={picture.length}
+              description="Illustrated books published for younger readers — ages roughly 4 to 8."
+              previewBooks={picture.slice(0, 3)}
+            />
+          )}
+          {middle.length > 0 && (
+            <FormatTile
+              anchor="middle-grade"
+              label="Middle grade"
+              count={middle.length}
+              description="Longer prose for readers roughly 8 to 12, fewer illustrations, age-appropriate themes."
+              previewBooks={middle.slice(0, 3)}
+            />
+          )}
+          {ya.length > 0 && (
+            <FormatTile
+              anchor="young-adult"
+              label="Young adult"
+              count={ya.length}
+              description="Published for readers 12 and up — complex themes around identity, sex, violence, politics."
+              previewBooks={ya.slice(0, 3)}
+            />
+          )}
+        </div>
+      </SectionShell>
+
       {picture.length > 0 && (
         <BookSection
           id="picture-books"
-          tone="cream"
+          tone="white"
           heading="Picture books"
           eyebrow={`Section · ${picture.length} ${picture.length === 1 ? 'work' : 'works'}`}
           books={picture}
@@ -213,7 +247,7 @@ export default async function BannedChildrensBooksPage() {
       {middle.length > 0 && (
         <BookSection
           id="middle-grade"
-          tone="white"
+          tone="cream"
           heading="Middle grade"
           eyebrow={`Section · ${middle.length} ${middle.length === 1 ? 'work' : 'works'}`}
           books={middle}
@@ -223,7 +257,7 @@ export default async function BannedChildrensBooksPage() {
       {ya.length > 0 && (
         <BookSection
           id="young-adult"
-          tone="cream"
+          tone="white"
           heading="Young adult"
           eyebrow={`Section · ${ya.length} ${ya.length === 1 ? 'work' : 'works'}`}
           books={ya}
@@ -260,6 +294,58 @@ export default async function BannedChildrensBooksPage() {
         </p>
       </SectionShell>
     </main>
+  )
+}
+
+// Compact format-bucket teaser shown above the full sections. Three of these
+// render as a row on desktop, stacking on mobile, so a visitor scanning the
+// page sees that the directory has three distinct format sections rather
+// than mistaking the first long list for the whole page. Clicking the tile
+// anchors to the corresponding full-list section below.
+function FormatTile({
+  anchor, label, count, description, previewBooks,
+}: {
+  anchor: string
+  label: string
+  count: number
+  description: string
+  previewBooks: ChildBook[]
+}): ReactNode {
+  return (
+    <a
+      href={`#${anchor}`}
+      className="group block bg-white border border-neutral-200 hover:border-oxblood rounded-sm p-5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/40"
+    >
+      <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">{count} {count === 1 ? 'work' : 'works'}</p>
+      <h3 className="font-serif text-xl font-semibold text-gray-900 group-hover:text-oxblood transition-colors leading-tight">
+        {label}
+      </h3>
+      <p className="mt-2 text-xs text-neutral-600 leading-relaxed">{description}</p>
+
+      {previewBooks.length > 0 && (
+        <div className="mt-4 flex gap-2 items-end">
+          {previewBooks.map(b => (
+            <div key={b.id} className="flex-1 aspect-[2/3] relative bg-neutral-100 rounded-sm overflow-hidden ring-1 ring-neutral-200">
+              {b.cover_url ? (
+                <Image
+                  src={b.cover_url}
+                  alt={coverAlt(b.title, b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '), b.first_published_year ?? undefined)}
+                  fill
+                  sizes="(min-width: 768px) 10vw, 25vw"
+                  className="object-cover"
+                />
+              ) : (
+                <BookCoverPlaceholder title={b.title} slug={b.slug} className="h-full" />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p className="mt-4 text-sm font-medium text-oxblood group-hover:underline">
+        See all {count} {label.toLowerCase()} →
+      </p>
+    </a>
   )
 }
 
