@@ -181,23 +181,6 @@ export default async function BannedChildrensBooksPage() {
             </p>
           </div>
 
-          <nav aria-label="Jump to section" className="mt-6 flex flex-wrap gap-2">
-            {picture.length > 0 && (
-              <a href="#picture-books" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
-                Picture books <span className="ml-1.5 text-neutral-400 tabular-nums">{picture.length}</span>
-              </a>
-            )}
-            {middle.length > 0 && (
-              <a href="#middle-grade" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
-                Middle grade <span className="ml-1.5 text-neutral-400 tabular-nums">{middle.length}</span>
-              </a>
-            )}
-            {ya.length > 0 && (
-              <a href="#young-adult" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
-                Young adult <span className="ml-1.5 text-neutral-400 tabular-nums">{ya.length}</span>
-              </a>
-            )}
-          </nav>
         </div>
       </section>
 
