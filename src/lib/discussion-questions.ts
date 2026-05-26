@@ -89,20 +89,78 @@ Return ONLY a single JSON object with this exact shape, with no surrounding pros
 
 The array must contain 5–10 strings total. The last string is the "big question".`
 
-// STUB — editorial team will deliver the final prompt as a follow-up task.
-// Kept deliberately short so smoke tests can exercise the full pipeline
-// (route → lib → provider → DB write-back) without committing to wording
-// the editorial team hasn't signed off on.
-const BAN_PROMPT_TEMPLATE = `Generate 5–10 discussion questions about the censorship history of the following book — focused on WHY people tried to keep this book out of children's hands, what changed in the surrounding culture that made it controversial, and what a reader today might think about that history.
+// Young-readers book-set prompt. Used when an `audience` is passed to
+// generateDiscussionQuestions — i.e. only by the young-readers track today.
+// The defining constraint: the questions must work for THREE reading
+// situations at once (young reader alone, adult reading with a child,
+// adult re-reading a book they were given as a child). That triangulation
+// is what keeps the questions out of school-comprehension territory and
+// out of academic-book-club territory.
+const YOUNG_READERS_BOOK_TEMPLATE = `Generate 5–10 thoughtful discussion questions about the following book, written for a reading group that may include young readers, the adults reading with them, and the adults who once read the book themselves.
 
 [TITLE] by [AUTHOR][AUDIENCE]
 
+Context:
+The book was published for readers under 18. It has been challenged, restricted, or banned somewhere in the world — but these discussion questions are about the book itself, not its censorship history. A companion set of "About the ban" questions covers that.
+
+Audience for these questions:
+The questions need to work in three reading situations at once:
+- A young reader reading the book alone, thinking about what they read.
+- An adult reading the book with a child, talking through it together.
+- An adult re-reading a book they were given (or loved) as a child.
+The same question should land for all three. Don't write a question that only makes sense for an eight-year-old, and don't write one that only makes sense for a thirty-eight-year-old.
+
 Guidelines:
-- Each question must be about the censorship event, not the book's literary themes.
-- Mix specific (why this book in this place at this time) with general (what does this say about who gets to decide what children read).
-- Avoid yes/no questions and avoid generic "what do you think?" phrasings.
-- One question should be counter-factual: if you had written this book, would you have done anything differently?
-- End with a "big question" about children's literature and censorship more broadly.
+- Each question must feel specific to THIS book — its characters, the language the author chose, the choices the story turns on. Avoid generic "what was your favourite part" filler.
+- Use accessible language. No literary-theory vocabulary ("interrogate", "deconstruct", "subvert"). No "themes of" framing — just say what you mean in plain words.
+- Avoid yes/no constructions. Avoid "do you agree?" framings. Mix open questions with prompts that ask the reader to commit to a view.
+- Vary the modes: emotional, ethical, structural, imaginative, compare-the-book-to-the-reader's-life.
+- The book may have moments that are sad, scary, or morally complex. Don't tiptoe — write questions that take those moments seriously and invite the reader to take them seriously too.
+- Avoid school-style comprehension questions ("what is the climax of the story", "describe the setting"). This is a reading group, not a test.
+- Use the audience hint after the author's name as background context for tone, not as a topic. Don't write questions about the audience category itself.
+
+Modern parallels:
+- Include up to one question that connects the book to something a reader might recognise in the world today — but only if the parallel actually fits the specific book. Force nothing.
+
+End with one "big question" — a single deeper question about the book's central idea, written in plain language a young reader could answer in their own way and an adult could spend an hour on.
+
+Output format:
+Return ONLY a single JSON object with this exact shape, with no surrounding prose, no Markdown, and no code fences:
+
+{"questions": ["question 1", "question 2", "...", "the final big question"]}
+
+The array must contain 5–10 strings total. The last string is the "big question".`
+
+// Ban-set prompt — only used by the young-readers track. Questions focus on
+// the specific censorship event around THIS book: who tried to remove it,
+// when, where, on what grounds, and what the stated reason vs. underlying
+// motive looks like in retrospect. Same three-audience constraint as the
+// book-set: works for a young reader, an adult reading with one, and an
+// adult re-reader.
+const BAN_PROMPT_TEMPLATE = `Generate 5–10 discussion questions about the censorship history of the following book, written for a reading group that may include young readers, the adults reading with them, and the adults who once read the book themselves.
+
+[TITLE] by [AUTHOR][AUDIENCE]
+
+Context:
+The book was written and published for readers under 18. Adults — sometimes parents, sometimes schools, sometimes governments — have tried to keep it from those readers. These questions are about WHY: what was being protected, who decided, and what gets lost when a book disappears from a library shelf.
+
+Audience for these questions:
+The questions need to work in three reading situations at once:
+- A young reader who is themselves the kind of reader the censors said they were trying to protect, asked to think about what that meant.
+- An adult reading the book with a child, who has to decide what to say about the censorship history.
+- An adult re-reading a book they read as a child, wondering in retrospect what was at stake.
+The same question should land for all three.
+
+Guidelines:
+- Each question must be grounded in the specific censorship history of THIS book — who tried to remove it, when, where, on what grounds. Use what you know about the actual ban record; don't invent specifics, but don't shy away from the documented record either.
+- Include one question that holds two things side by side: what the people who challenged the book SAID they were doing (their stated reason) and what they might actually have been protecting (their underlying motive). Treat the gap between those as the interesting thing — don't tell the reader what to conclude.
+- Include one counter-factual: if the book were being written today, would the author change anything? Would the same scene still be the reason to challenge it?
+- Include one question that asks what the young reader the censor said they were protecting would actually have lost if the book had been removed from their school or library.
+- Don't frame the censors as cartoon villains or the writer as a saint. The questions should make the reader do the moral work, not deliver verdicts.
+- Use accessible language. No "intellectual freedom discourse", no "marginalised voices", no academic vocabulary. Plain words.
+- Avoid yes/no constructions and "do you agree" framings. Mix open questions with ones that ask the reader to commit to a view.
+
+End with one "big question" — a deeper question about banning children's books in general, written in plain language a young reader could answer in their own way and an adult could spend an hour on.
 
 Output format:
 Return ONLY a single JSON object with this exact shape, with no surrounding prose, no Markdown, and no code fences:
@@ -129,7 +187,13 @@ export async function generateDiscussionQuestions(
   book: { title: string; author: string; audience?: string | null },
   options?: { provider?: Provider; anthropic?: Anthropic; openai?: OpenAI },
 ): Promise<string[]> {
-  return callQuestionsPrompt(PROMPT_TEMPLATE, book, options)
+  // Audience presence is the implicit signal that this book belongs to the
+  // young-readers track: only that track passes a non-null audience today.
+  // Switch to the audience-aware template so the questions work for both the
+  // young reader and the adult reading with them, not for an academic
+  // book-club voice that misses the actual audience.
+  const template = book.audience?.trim() ? YOUNG_READERS_BOOK_TEMPLATE : PROMPT_TEMPLATE
+  return callQuestionsPrompt(template, book, options)
 }
 
 export async function generateBanDiscussionQuestions(

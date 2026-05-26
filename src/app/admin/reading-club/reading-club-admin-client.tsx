@@ -705,7 +705,8 @@ function YoungReadersTab({
     const existing = setType === 'book' ? p.discussionQuestions : (p.discussionQuestionsBan ?? [])
     if (existing.length > 0) {
       const ok = window.confirm(
-        `This set already has ${existing.length} question${existing.length === 1 ? '' : 's'}. Replace with AI-generated questions?`,
+        `Replace ${existing.length} existing question${existing.length === 1 ? '' : 's'} with a freshly generated set?\n\n` +
+        `The current questions will be lost. Save the row first if you want to keep a copy.`,
       )
       if (!ok) return
     }
@@ -821,9 +822,20 @@ function YoungReadersTab({
                       type="button"
                       onClick={() => generate(i, 'book')}
                       disabled={!p.bookId || genBusy === `${i}:book`}
-                      className="text-[10px] px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+                      title={p.discussionQuestions.length > 0
+                        ? 'Replace the current literary-set questions with a freshly generated set.'
+                        : 'Generate the literary-set questions for this book via the AI pipeline.'}
+                      className={`text-[10px] px-2 py-0.5 rounded border hover:border-gray-400 disabled:opacity-50 ${
+                        p.discussionQuestions.length > 0
+                          ? 'border-amber-400 text-amber-700 dark:text-amber-300'
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     >
-                      {genBusy === `${i}:book` ? 'Generating…' : 'Generate with AI'}
+                      {genBusy === `${i}:book`
+                        ? 'Generating…'
+                        : p.discussionQuestions.length > 0
+                          ? 'Replace with AI'
+                          : 'Generate with AI'}
                     </button>
                   </div>
                   <textarea
@@ -845,9 +857,20 @@ function YoungReadersTab({
                       type="button"
                       onClick={() => generate(i, 'ban')}
                       disabled={!p.bookId || genBusy === `${i}:ban`}
-                      className="text-[10px] px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+                      title={(p.discussionQuestionsBan ?? []).length > 0
+                        ? 'Replace the current censorship-set questions with a freshly generated set.'
+                        : 'Generate the censorship-set questions for this book via the AI pipeline.'}
+                      className={`text-[10px] px-2 py-0.5 rounded border hover:border-gray-400 disabled:opacity-50 ${
+                        (p.discussionQuestionsBan ?? []).length > 0
+                          ? 'border-amber-400 text-amber-700 dark:text-amber-300'
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     >
-                      {genBusy === `${i}:ban` ? 'Generating…' : 'Generate with AI'}
+                      {genBusy === `${i}:ban`
+                        ? 'Generating…'
+                        : (p.discussionQuestionsBan ?? []).length > 0
+                          ? 'Replace with AI'
+                          : 'Generate with AI'}
                     </button>
                   </div>
                   <textarea
