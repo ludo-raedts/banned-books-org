@@ -10,8 +10,15 @@ import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
 import type { Ban, Book, CountryOption } from './book-browser'
 import { coverAlt } from '@/lib/cover-alt'
+import type { BookSort } from '@/lib/book-search'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
+
+const SORT_OPTIONS: { value: BookSort; label: string }[] = [
+  { value: 'popular', label: 'Most popular' },
+  { value: 'bans',    label: 'Most banned'  },
+  { value: 'alpha',   label: 'Title (A–Z)'  },
+]
 
 type Filters = {
   q: string
@@ -19,6 +26,7 @@ type Filters = {
   reason: string
   scope: string
   activeOnly: boolean
+  sort: BookSort
 }
 
 function banLabel(bans: Ban[]): string {
@@ -39,24 +47,26 @@ function getReasons(bans: Ban[]): string[] {
   return [...new Set(bans.flatMap(b => b.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s)))]
 }
 
-function apiParams(opts: Filters & { offset: number }) {
+function apiParams(opts: Filters & { offset: number; defaultSort: BookSort }) {
   const p = new URLSearchParams()
   if (opts.q)          p.set('q', opts.q)
   if (opts.scope)      p.set('scope', opts.scope)
   if (opts.country)    p.set('country', opts.country)
   if (opts.activeOnly) p.set('activeOnly', '1')
   if (opts.reason)     p.set('reason', opts.reason)
+  if (opts.sort !== opts.defaultSort) p.set('sort', opts.sort)
   p.set('offset', String(opts.offset))
   return p.toString()
 }
 
-function urlParams(opts: Filters) {
+function urlParams(opts: Filters & { defaultSort: BookSort }) {
   const p = new URLSearchParams()
   if (opts.q)          p.set('q', opts.q)
   if (opts.country)    p.set('country', opts.country)
   if (opts.reason)     p.set('reason', opts.reason)
   if (opts.scope)      p.set('scope', opts.scope)
   if (opts.activeOnly) p.set('active', '1')
+  if (opts.sort !== opts.defaultSort) p.set('sort', opts.sort)
   return p.toString()
 }
 
@@ -86,12 +96,14 @@ export default function SearchClient({
   totalCount,
   countries,
   initialFilters,
+  defaultSort,
 }: {
   initialBooks: Book[]
   initialTotal: number
   totalCount: number
   countries: CountryOption[]
   initialFilters: Filters
+  defaultSort: BookSort
 }) {
   const router = useRouter()
 
@@ -101,6 +113,7 @@ export default function SearchClient({
   const [reason, setReason] = useState<string | null>(initialFilters.reason || null)
   const [scope, setScope] = useState<string | null>(initialFilters.scope || null)
   const [activeOnly, setActiveOnly] = useState(initialFilters.activeOnly)
+  const [sort, setSort] = useState<BookSort>(initialFilters.sort)
 
   const [displayBooks, setDisplayBooks] = useState<Book[]>(initialBooks)
   const [total, setTotal] = useState(initialTotal)
@@ -193,7 +206,7 @@ export default function SearchClient({
       return
     }
 
-    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly }
+    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly, sort }
 
     if (debouncedQ.trim() && !hasTrackedSearchUsage.current) {
       hasTrackedSearchUsage.current = true
@@ -201,13 +214,13 @@ export default function SearchClient({
     }
 
     // Sync URL (replace, don't push, so back button doesn't get spammed)
-    const qs = urlParams(filters)
+    const qs = urlParams({ ...filters, defaultSort })
     router.replace(qs ? `/search?${qs}` : '/search', { scroll: false })
 
     // Re-fetch
     let cancelled = false
     setLoadingFilter(true)
-    fetch(`/api/books?${apiParams({ ...filters, offset: 0 })}`)
+    fetch(`/api/books?${apiParams({ ...filters, offset: 0, defaultSort })}`)
       .then(r => r.json())
       .then(({ books, total: t }) => {
         if (cancelled) return
@@ -219,16 +232,16 @@ export default function SearchClient({
       .catch(() => { if (!cancelled) setLoadingFilter(false) })
     return () => { cancelled = true }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQ, country, reason, scope, activeOnly])
+  }, [debouncedQ, country, reason, scope, activeOnly, sort])
 
   const hasFilters = !!(debouncedQ || country || reason || scope || activeOnly)
   const hasMore = displayBooks.length < total
 
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore) return
-    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly }
+    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly, sort }
     setLoadingMore(true)
-    fetch(`/api/books?${apiParams({ ...filters, offset: nextOffset })}`)
+    fetch(`/api/books?${apiParams({ ...filters, offset: nextOffset, defaultSort })}`)
       .then(r => r.json())
       .then(({ books, total: t }) => {
         setDisplayBooks(prev => [...prev, ...(books ?? [])])
@@ -237,7 +250,7 @@ export default function SearchClient({
         setLoadingMore(false)
       })
       .catch(() => setLoadingMore(false))
-  }, [loadingMore, hasMore, debouncedQ, country, reason, scope, activeOnly, nextOffset])
+  }, [loadingMore, hasMore, debouncedQ, country, reason, scope, activeOnly, sort, defaultSort, nextOffset])
 
   const sentinelRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -252,7 +265,7 @@ export default function SearchClient({
   }, [loadMore])
 
   function clearAll() {
-    setQ(''); setCountry(''); setReason(null); setScope(null); setActiveOnly(false)
+    setQ(''); setCountry(''); setReason(null); setScope(null); setActiveOnly(false); setSort(defaultSort)
   }
 
   return (
@@ -328,6 +341,24 @@ export default function SearchClient({
       {/* Filters */}
       <div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="relative shrink-0">
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value as BookSort)}
+              aria-label="Sort books"
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+                sort !== defaultSort
+                  ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
+              }`}
+            >
+              {SORT_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>↕ {o.label}</option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
+          </div>
+          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
           <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
           <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>

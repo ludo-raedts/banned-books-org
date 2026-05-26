@@ -9,7 +9,7 @@ export const revalidate = 3600
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
-import { searchBooks } from '@/lib/book-search'
+import { searchBooks, parseBookSort, DEFAULT_BOOK_SORT } from '@/lib/book-search'
 import SearchClient from '@/components/search-client'
 import type { Book, CountryOption } from '@/components/book-browser'
 
@@ -19,6 +19,7 @@ type SearchParams = {
   reason?: string | string[]
   scope?: string | string[]
   active?: string | string[]
+  sort?: string | string[]
 }
 
 function pickFirst(v: string | string[] | undefined): string | undefined {
@@ -47,6 +48,7 @@ export default async function SearchPage({
   const reason  = pickFirst(sp.reason) ?? ''
   const scope   = pickFirst(sp.scope) ?? ''
   const activeOnly = pickFirst(sp.active) === '1'
+  const sort       = parseBookSort(pickFirst(sp.sort))
 
   const supabase = adminClient()
 
@@ -59,7 +61,7 @@ export default async function SearchPage({
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('countries').select('code, name_en'),
-    searchBooks({ q, country, reason, scope, activeOnly, offset: 0, limit: 48 }),
+    searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
   ])
 
   const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
@@ -103,7 +105,8 @@ export default async function SearchPage({
         initialTotal={initialTotal}
         totalCount={totalCount}
         countries={countries}
-        initialFilters={{ q, country, reason, scope, activeOnly }}
+        initialFilters={{ q, country, reason, scope, activeOnly, sort }}
+        defaultSort={DEFAULT_BOOK_SORT}
       />
     </main>
   )
