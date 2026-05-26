@@ -771,8 +771,49 @@ Commands:
             blurb={
               <>
                 Niet voor het vullen van lege velden (dat doet enrich-all), maar voor het opwaarderen van descriptions
-                die wel ingevuld zijn maar filler-heavy of ongegrond. Volgorde: strip → score → rewrite. Elke stap
-                schrijft CSV-backups zodat de hele pipeline reversibel is.
+                die wel ingevuld zijn maar filler-heavy of ongegrond. <strong>Lazy mode:</strong> draai{' '}
+                <code className="font-mono text-xs">clean-descriptions.ts</code> hieronder — wrapper die strip + rewrite
+                automatisch ketent, geen file-paths te plakken. <strong>Handmatig:</strong> draai de sub-scripts
+                (strip / score / rewrite) los wanneer je een tussenstap wilt overslaan of extra controle nodig hebt.
+                Elke stap schrijft CSV-backups zodat de hele pipeline reversibel is.
+              </>
+            }
+          />
+
+          <Script
+            name="clean-descriptions.ts  ← één commando voor de hele pijplijn"
+            what="Wrapper. Draait strip-filler-sentences.ts, pakt automatisch het zojuist geproduceerde data/filler-strip-needs-rewrite-<ts>.csv en voert die als audit-input aan rewrite-descriptions-grounded.ts. Zelfde DB-writes, backups en logs als de twee onderliggende scripts los gedraaid — alleen geen copy-paste van filenames tussen stappen."
+            tags={['safe', 'gpt', 'destructive']}
+            meta={{
+              coverage: <>stap 1 scant alle rijen op filler-patterns; stap 2 verwerkt alleen rijen die ná stripping te kort zijn (<code className="font-mono">description_ban</code> &lt; 60 chars of <code className="font-mono">censorship_context</code> &lt; 80 chars)</>,
+              cadence: 'one-off na content-quality review (richtlijn: per kwartaal of na grote import-batch)',
+              writes: <>stap 1 overschrijft <code className="font-mono">description_ban</code>/<code className="font-mono">censorship_context</code> waar de regex matcht (of zet NULL als de rest te kort is); stap 2 overschrijft die NULL-gemaakte velden met gegronde copy uit web_search</>,
+              output: <>stap 1: <code className="font-mono">data/filler-strip-{'{backup,log,needs-rewrite}'}-&lt;ts&gt;.csv</code>. stap 2: <code className="font-mono">data/description-{'{backup,rewrite}'}-&lt;ts&gt;.csv</code>.</>,
+              idempotent: 'ja — re-runs leveren een nieuwe set timestamped CSVs op; --apply opnieuw draaien is veilig (strip is regex-deterministisch, rewrite is restartable via --skip-log op het sub-script)',
+              cost: <>stap 1 gratis. stap 2 ~$0,01–0,02 per boek via <code className="font-mono">gpt-4.1-mini</code> + web_search — ~$8 voor een volledige sweep van ~570 zwakke boeken bij concurrency 3 (~2 uur runtime).</>,
+            }}
+            command={`# Dry-run — toont strip-samples; rewrite-stap wordt geskipt (heeft --apply nodig)
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts
+
+# Volledig: strip + rewrite in één run
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply
+
+# Alleen strip-filler (geen LLM-cost, geen rewrite)
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --strip-only
+
+# Eén boek door de hele pijplijn
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --slug=defy-me`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf naar DB. Zonder dit draait stap 1 als preview en wordt stap 2 overgeslagen' },
+              { flag: '--strip-only', desc: 'Skip de LLM-rewrite — alleen de gratis regex-strip' },
+              { flag: '--slug=X', desc: 'Eén boek door beide stappen' },
+            ]}
+            note={
+              <>
+                Aanbevolen pad voor 99% van de gevallen. Voor fijn-controle (<code className="font-mono">--include-2</code>,{' '}
+                <code className="font-mono">--concurrency=N</code>, alternatieve audit-CSV uit{' '}
+                <code className="font-mono">score-descriptions.ts</code>, of hervat-runs met{' '}
+                <code className="font-mono">--skip-log</code>) draai je de sub-scripts hieronder los.
               </>
             }
           />
@@ -830,35 +871,35 @@ npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply`}
 
           <Script
             name="3. rewrite-descriptions-grounded.ts"
-            what="Leest een audit CSV en herschrijft alleen zwakke velden (score ≤1) met OpenAI Responses API + built-in web_search tool. Prefereert Wikipedia, ALA, NCAC, PEN America, Marshall Libraries. Backupt oude waardes voor elke DB-write."
+            what="Leest een audit CSV en herschrijft alleen zwakke velden (score ≤1) met de OpenAI Responses API + built-in web_search tool, output afgedwongen via strict json_schema (vóór die patch viel ~67% van de calls om met 'no JSON in output'). Prefereert Wikipedia, ALA, NCAC, PEN America, Marshall Libraries. Backupt oude waardes voor elke DB-write."
             tags={['gpt']}
             meta={{
-              coverage: <>score-driven: rijen met score ≤1 in audit CSV (of ≤2 met --include-2)</>,
-              cadence: 'one-off (na score-run)',
+              coverage: <>score-driven: rijen met score ≤1 in audit CSV (of ≤2 met --include-2). Accepteert zowel <code className="font-mono">description-audit-&lt;ts&gt;.csv</code> uit score-descriptions als <code className="font-mono">filler-strip-needs-rewrite-&lt;ts&gt;.csv</code> uit strip-filler — zelfde header-schema.</>,
+              cadence: 'one-off (na score-run of strip-run)',
               writes: <><strong>Overschrijft</strong> <code className="font-mono">description_ban</code> en/of <code className="font-mono">censorship_context</code></>,
               output: <><code className="font-mono">data/description-backup-&lt;ts&gt;.csv</code> (oude waardes), <code className="font-mono">data/description-rewrite-&lt;ts&gt;.csv</code> (nieuwe + source URLs)</>,
               idempotent: 'ja — --skip-log voor resume',
-              cost: 'GPT-4o',
+              cost: <><code className="font-mono">gpt-4.1-mini</code> + web_search, ~$0,01–0,02 per boek</>,
             }}
-            command={`# Dry-run op 5 zwakke boeken
-npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv
+            command={`# Dry-run op één slug (audit-CSV moet die slug bevatten)
+npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv --slug=the-bluest-eye
 
-# Herschrijf alle zwakke boeken
+# Herschrijf alle zwakke boeken in de audit
 npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv --apply
 
-# Resume van een vorige run
+# Resume na een crash of partial run
 npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=<csv> --apply --skip-log=data/description-rewrite-<prev-ts>.csv`}
             flags={[
-              { flag: '--audit=<csv>', desc: 'Verplicht. Path naar CSV van score-descriptions.ts of flag-filler-rewrites.ts' },
+              { flag: '--audit=<csv>', desc: 'Verplicht. Path naar audit-CSV van score-descriptions.ts of strip-filler-sentences.ts (filler-strip-needs-rewrite-<ts>.csv)' },
               { flag: '--apply', desc: 'Schrijf naar DB' },
               { flag: '--limit=N', desc: 'Cap op N boeken' },
               { flag: '--slug=<slug>', desc: 'Eén boek' },
               { flag: '--include-2', desc: 'Ook score 2 (default: 0–1)' },
-              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4o)' },
+              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4.1-mini)' },
               { flag: '--concurrency=N', desc: 'Parallel calls (default 3)' },
               { flag: '--skip-log=<csv>', desc: 'Resume — skip slugs uit eerdere rewrite-log' },
             ]}
-            note="Inline citations worden automatisch gestript uit output."
+            note="Inline citations worden automatisch gestript uit output. Output is gegarandeerd valide JSON dankzij strict json_schema in de Responses-API call (voorheen viel ~67% van de calls om met free-form prose)."
           />
 
           <Script

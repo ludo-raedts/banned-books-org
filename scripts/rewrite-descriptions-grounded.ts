@@ -170,11 +170,9 @@ ${needBan ? `## description_ban — "Why it was banned"
 - Do not start sentences with "This book", "The book", or "It".
 - Do not hedge with "reportedly" or "allegedly" unless genuinely uncertain about a documented fact.
 - No headers, labels, preamble, or citations in the prose itself.
+- If the documented bans stem from a single batch challenge (one parent / one district challenging hundreds of titles at once, e.g. Elkhorn WI 444-book challenge, Collier County FL 313-book removal), do NOT open with the batch headline. Lead with what made THIS book a target — the specific scene, theme, or content cited — and mention the batch only as the vehicle.
 
-Return ONLY valid JSON. The schema:
-{
-${needBan ? `  "description_ban": "<2-3 sentences>",\n` : ''}${needCtx ? `  "censorship_context": "<2-4 sentences>",\n` : ''}  "source_urls": ["url1", "url2", "..."]
-}`
+Output: a single JSON object matching the provided schema. Populate "description_ban" only if you have specific named content to write; otherwise return null for that field. Same for "censorship_context".`
 }
 
 type Generation = {
@@ -193,12 +191,33 @@ function stripInlineCitations(s: string): string {
 
 async function generate(client: OpenAI, book: Book, needBan: boolean, needCtx: boolean): Promise<Generation | null> {
   try {
-    // Use the Responses API with the built-in web_search tool. Returns text.
+    // Use the Responses API with the built-in web_search tool. Force JSON via
+    // strict json_schema so the model can't return free-form prose (the failure
+    // mode of the 2026-05-26 run: gpt-4.1-mini+web_search returned plain text
+    // for ~67% of calls, regex JSON-extraction fell through, those rows were
+    // dropped).
     const resp = await (client as any).responses.create({
       model: MODEL,
       input: buildPrompt(book, needBan, needCtx),
       tools: [{ type: 'web_search' }],
       max_output_tokens: 2000,
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'rewrite_descriptions',
+          strict: true,
+          schema: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['description_ban', 'censorship_context', 'source_urls'],
+            properties: {
+              description_ban:    { type: ['string', 'null'] },
+              censorship_context: { type: ['string', 'null'] },
+              source_urls:        { type: 'array', items: { type: 'string' } },
+            },
+          },
+        },
+      },
     })
     const text: string = resp.output_text ?? ''
     if (!text) {
