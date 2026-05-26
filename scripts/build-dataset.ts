@@ -37,8 +37,18 @@ const BOOK_COLUMNS = [
   'isbn13', 'openlibrary_work_id', 'gutenberg_id', 'genres',
   'description_book', 'description_ban', 'censorship_context', 'extended_context',
   'warning_level', 'cover_url', 'created_at',
+  // Appended 2026-05-25 — additive, kept at end so existing buyer schemas
+  // parsing earlier snapshots stay compatible.
+  'title_native', 'title_native_script', 'title_transliterated',
+  'title_english_meaningful', 'archive_org_id', 'data_quality_status',
+  'updated_at',
 ] as const
-const AUTHOR_COLUMNS = ['id', 'slug', 'display_name', 'birth_year', 'death_year', 'birth_country', 'bio'] as const
+const AUTHOR_COLUMNS = [
+  'id', 'slug', 'display_name', 'birth_year', 'death_year', 'birth_country', 'bio',
+  // Appended 2026-05-25 — see BOOK_COLUMNS note.
+  'name_native', 'name_transliterated', 'name_english', 'original_language',
+  'is_placeholder', 'data_quality_status', 'updated_at',
+] as const
 const BAN_COLUMNS = [
   'id', 'book_id', 'country_code', 'scope_id', 'action_type', 'status',
   'region', 'institution', 'year_started', 'year_ended', 'actor',
@@ -47,7 +57,11 @@ const BAN_COLUMNS = [
 const COUNTRY_COLUMNS = ['code', 'name_en', 'slug', 'description'] as const
 const REASON_COLUMNS = ['id', 'slug', 'label_en', 'description'] as const
 const SCOPE_COLUMNS = ['id', 'slug', 'label_en'] as const
-const SOURCE_COLUMNS = ['id', 'source_name', 'source_url', 'source_type', 'accessed_at'] as const
+const SOURCE_COLUMNS = [
+  'id', 'source_name', 'source_url', 'source_type', 'accessed_at',
+  // Appended 2026-05-25.
+  'verification_status',
+] as const
 
 async function main() {
   const startedAt = Date.now()
@@ -212,7 +226,16 @@ function buildDenormalisedJson(d: {
   const books = d.books.map((b) => {
     const authors = (authorsByBook.get(String(b.id)) ?? []).map((ba) => {
       const a = authorById.get(String(ba.author_id))
-      return a ? { name: a.display_name, slug: a.slug, role: ba.role } : null
+      return a ? {
+        name: a.display_name,
+        slug: a.slug,
+        role: ba.role,
+        name_native: a.name_native ?? null,
+        name_transliterated: a.name_transliterated ?? null,
+        name_english: a.name_english ?? null,
+        original_language: a.original_language ?? null,
+        is_placeholder: a.is_placeholder === true,
+      } : null
     }).filter(Boolean)
 
     const bans = (bansByBook.get(String(b.id)) ?? []).map((ban) => {
@@ -225,7 +248,13 @@ function buildDenormalisedJson(d: {
       const sources = (sourcesByBan.get(String(ban.id)) ?? [])
         .map((l) => {
           const s = sourceById.get(String(l.source_id))
-          return s ? { name: s.source_name, url: s.source_url, type: s.source_type, locator: l.locator } : null
+          return s ? {
+            name: s.source_name,
+            url: s.source_url,
+            type: s.source_type,
+            locator: l.locator,
+            verification_status: s.verification_status ?? null,
+          } : null
         })
         .filter(Boolean)
       return {
@@ -250,18 +279,24 @@ function buildDenormalisedJson(d: {
       id: b.id,
       slug: b.slug,
       title: b.title,
+      title_native: b.title_native ?? null,
+      title_native_script: b.title_native_script ?? null,
+      title_transliterated: b.title_transliterated ?? null,
+      title_english_meaningful: b.title_english_meaningful ?? null,
       authors,
       original_language: b.original_language,
       first_published_year: b.first_published_year,
       isbn13: b.isbn13,
       openlibrary_work_id: b.openlibrary_work_id,
       gutenberg_id: b.gutenberg_id,
+      archive_org_id: b.archive_org_id ?? null,
       genres: b.genres,
       description: b.description_book,
       description_ban: b.description_ban,
       censorship_context: b.censorship_context,
       extended_context: b.extended_context,
       warning_level: b.warning_level,
+      data_quality_status: b.data_quality_status ?? null,
       cover_url: b.cover_url,
       bans,
     }
@@ -326,11 +361,17 @@ function buildSqlite(path: string, d: {
       first_published_year INTEGER, isbn13 TEXT, openlibrary_work_id TEXT,
       gutenberg_id TEXT, genres TEXT, description_book TEXT, description_ban TEXT,
       censorship_context TEXT, extended_context TEXT, warning_level TEXT,
-      cover_url TEXT, created_at TEXT
+      cover_url TEXT, created_at TEXT,
+      title_native TEXT, title_native_script TEXT, title_transliterated TEXT,
+      title_english_meaningful TEXT, archive_org_id TEXT,
+      data_quality_status TEXT, updated_at TEXT
     );
     CREATE TABLE authors (
       id TEXT PRIMARY KEY, slug TEXT, display_name TEXT,
-      birth_year INTEGER, death_year INTEGER, birth_country TEXT, bio TEXT
+      birth_year INTEGER, death_year INTEGER, birth_country TEXT, bio TEXT,
+      name_native TEXT, name_transliterated TEXT, name_english TEXT,
+      original_language TEXT, is_placeholder INTEGER,
+      data_quality_status TEXT, updated_at TEXT
     );
     CREATE TABLE book_authors (
       book_id TEXT, author_id TEXT, role TEXT,
@@ -360,7 +401,7 @@ function buildSqlite(path: string, d: {
     );
     CREATE TABLE ban_sources (
       id TEXT PRIMARY KEY, source_name TEXT, source_url TEXT,
-      source_type TEXT, accessed_at TEXT
+      source_type TEXT, accessed_at TEXT, verification_status TEXT
     );
     CREATE INDEX idx_bans_book_id ON bans(book_id);
     CREATE INDEX idx_bans_country ON bans(country_code);
@@ -457,6 +498,30 @@ Source:    https://www.banned-books.org
 - \`books.description_ban\` and \`books.censorship_context\` are editorial summaries
   written for the public site; cite as such if quoting.
 - Genres are pipe-separated in CSVs (\`|\`) and arrays in JSON.
+- \`books.title_native\` / \`title_native_script\` / \`title_transliterated\` /
+  \`title_english_meaningful\` hold the multilingual title variants for
+  non-English works (e.g. Solzhenitsyn's *Архипелаг ГУЛАГ* → *Arkhipelag GULAG*
+  → *The Gulag Archipelago*). NULL where the canonical \`title\` already
+  reflects the dominant published form.
+- \`authors.name_native\` / \`name_transliterated\` / \`name_english\` /
+  \`original_language\` mirror the same pattern for author names. \`display_name\`
+  remains the slug-canonical, Anglo-friendly form regardless.
+- \`authors.is_placeholder\` flags generic bucket records ("Anonymous",
+  "Various", "Unknown") that aggregate unrelated books. Filter these out
+  if you're computing per-author statistics.
+- \`books.data_quality_status\` and \`authors.data_quality_status\` are one of
+  \`confident\` (high-confidence canonical-id + descriptions + extra evidence),
+  \`default\` (imported, no hard verification), or \`flagged\` (at least one
+  data-quality problem). Useful for filtering down to the high-confidence
+  subset for academic citation.
+- \`books.archive_org_id\` is the archive.org identifier (path segment after
+  \`/details/\`) when a full-text scan is available; NULL otherwise.
+- \`ban_sources.verification_status\` is one of \`verified\` (URL works and
+  archived), \`pending\` (source exists but archive attempt failed), \`broken\`
+  (URL returns 4xx/5xx), or \`unverified\` (never attempted). NULL on older
+  rows that pre-date the verification pipeline.
+- \`books.updated_at\` and \`authors.updated_at\` bump on every edit, so you
+  can detect what changed between two dataset snapshots.
 
 ## Coverage caveats
 
