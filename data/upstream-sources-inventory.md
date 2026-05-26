@@ -95,6 +95,16 @@ if archived data were recoverable. **Do not re-investigate.**
 - 1,100+ records in Kasseler
 - Norwegian government / national library; likely permissive but needs check
 
+**DIDOC — Dawit Isaak Database of Censorship** — `didoc.dh.gu.se`
+- Pilot academic database, Omeka-S + Linked Open Data; ~160 curated titles (from ~1,200 in the wider Dawit Isaak-biblioteket collection in Malmö)
+- Partners: GRIDH (U. Gothenburg), Lund University, Swedish PEN, Svenska Akademien, Crafoord-stiftelsen
+- Event-model fields (ban type / reason / location) align cleanly with our `reasons` / `scopes` schema
+- Paper: DHNB, https://journals.uio.no/dhnbpub/article/view/13025
+- Per-record permalinks exist (`/item/<id>`); Omeka-S default exposes `/api/items` (JSON-LD) — not verified open yet
+- License: **not stated on site** — must be clarified before any ingest
+- **Outreach sent 2026-05-25** to dawitisaakbiblioteket@malmo.se (+ cc GRIDH) — asking license, access modality, attribution model, scope exclusions
+- Status: **awaiting reply** — re-poke after 2026-06-08 if no response
+
 **ASKI** (Greece junta), **Memoria Provincial Córdoba** (Argentina junta), **Livros Proibidos** (Portugal)
 - All academic / human-rights-archive bodies
 - Each ~700–900 records — bounded, useful Latin-script corpus for jurisdictions where we have ~zero
