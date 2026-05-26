@@ -21,8 +21,15 @@ import Eyebrow from '@/components/section/Eyebrow'
 // the place to go for discussion-group format; this page is the wide
 // catalogue for SEO and discovery.
 
+// Three publishing-format buckets. The directory sorts each book into the
+// most-specific bucket it qualifies for — picture-book wins over middle-grade
+// wins over young-adult — so a book tagged with both `young-adult` (broad)
+// and `middle-grade-fiction` (LLM classifier) lands in the middle-grade
+// section, not the young-adult one.
+const PICTURE_TAGS = ['picture-book'] as const
+const MIDDLE_GRADE_TAGS = ['middle-grade-fiction', 'childrens-literature', 'children'] as const
 const YA_TAGS = ['young-adult', 'young-adult-fiction'] as const
-const KIDS_TAGS = ['children', 'childrens-literature', 'middle-grade-fiction', 'picture-book'] as const
+const ALL_TAGS = [...PICTURE_TAGS, ...MIDDLE_GRADE_TAGS, ...YA_TAGS] as const
 
 export const metadata: Metadata = {
   title: "Banned children's books — picture books, middle grade, young adult",
@@ -52,13 +59,12 @@ function topCountry(bans: ChildBook['bans']): string | null {
   return [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0]
 }
 
-async function fetchChildrensBooks(): Promise<{ kids: ChildBook[]; ya: ChildBook[] }> {
+async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: ChildBook[]; ya: ChildBook[] }> {
   const supabase = adminClient()
   const SELECT =
     'id, title, slug, cover_url, first_published_year, genres, book_authors(authors(display_name)), bans(country_code, countries(name_en))'
 
-  const allTags = [...YA_TAGS, ...KIDS_TAGS]
-  const filter = allTags.map(t => `genres.cs.{${t}}`).join(',')
+  const filter = ALL_TAGS.map(t => `genres.cs.{${t}}`).join(',')
 
   let all: ChildBook[] = []
   let offset = 0
@@ -79,29 +85,31 @@ async function fetchChildrensBooks(): Promise<{ kids: ChildBook[]; ya: ChildBook
   // it doesn't belong here.
   const withBans = all.filter(b => (b.bans?.length ?? 0) >= 1)
 
-  // Bucket by tag presence. A book tagged with any kids-specific tag goes
-  // to the Children's section (more specific), even if it also carries a
-  // young-adult tag. Books tagged only as young-adult land in YA.
-  const kids: ChildBook[] = []
+  // Bucket by most-specific tag. A book tagged with `picture-book` lands
+  // in the picture-book section even if it also carries `young-adult`
+  // (because picture-book is more specific). Same logic for middle-grade
+  // over young-adult.
+  const picture: ChildBook[] = []
+  const middle: ChildBook[] = []
   const ya: ChildBook[] = []
   for (const b of withBans) {
     const g = b.genres ?? []
-    const isKids = KIDS_TAGS.some(t => g.includes(t))
-    const isYA = YA_TAGS.some(t => g.includes(t))
-    if (isKids) kids.push(b)
-    else if (isYA) ya.push(b)
+    if (PICTURE_TAGS.some(t => g.includes(t))) picture.push(b)
+    else if (MIDDLE_GRADE_TAGS.some(t => g.includes(t))) middle.push(b)
+    else if (YA_TAGS.some(t => g.includes(t))) ya.push(b)
   }
 
   const byBans = (a: ChildBook, b: ChildBook) => b.bans.length - a.bans.length
-  kids.sort(byBans)
+  picture.sort(byBans)
+  middle.sort(byBans)
   ya.sort(byBans)
 
-  return { kids, ya }
+  return { picture, middle, ya }
 }
 
 export default async function BannedChildrensBooksPage() {
-  const { kids, ya } = await fetchChildrensBooks()
-  const total = kids.length + ya.length
+  const { picture, middle, ya } = await fetchChildrensBooks()
+  const total = picture.length + middle.length + ya.length
 
   // JSON-LD: ItemList of both buckets, capped per Google's reasonable
   // page-size guidance for ItemList structured data.
@@ -119,7 +127,7 @@ export default async function BannedChildrensBooksPage() {
         '@type': 'ItemList',
         name: "Banned children's and young-adult books",
         numberOfItems: total,
-        itemListElement: [...kids, ...ya].slice(0, 100).map((b, i) => ({
+        itemListElement: [...picture, ...middle, ...ya].slice(0, 100).map((b, i) => ({
           '@type': 'ListItem',
           position: i + 1,
           item: {
@@ -157,10 +165,10 @@ export default async function BannedChildrensBooksPage() {
 
           <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
             Every book on this page was published for readers under 18 and has at least one documented ban or challenge in
-            our catalogue. {total} books across young adult ({ya.length}) and children&rsquo;s — picture books and middle
-            grade combined — ({kids.length}). The audience categories come from publishers and library catalogs; we
-            don&rsquo;t assign age recommendations. We document who tried to keep these books from young readers, where,
-            and on what grounds.
+            our catalogue. {total} books across picture books ({picture.length}), middle grade ({middle.length}), and
+            young adult ({ya.length}). The audience categories come from publishers and library catalogs; we don&rsquo;t
+            assign age recommendations. We document who tried to keep these books from young readers, where, and on what
+            grounds.
           </p>
 
           <div className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 border border-oxblood/30 rounded-sm bg-cream/40">
@@ -173,19 +181,44 @@ export default async function BannedChildrensBooksPage() {
           </div>
 
           <nav aria-label="Jump to section" className="mt-6 flex flex-wrap gap-2">
+            {picture.length > 0 && (
+              <a href="#picture-books" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
+                Picture books <span className="ml-1.5 text-neutral-400 tabular-nums">{picture.length}</span>
+              </a>
+            )}
+            {middle.length > 0 && (
+              <a href="#middle-grade" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
+                Middle grade <span className="ml-1.5 text-neutral-400 tabular-nums">{middle.length}</span>
+              </a>
+            )}
             {ya.length > 0 && (
               <a href="#young-adult" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
                 Young adult <span className="ml-1.5 text-neutral-400 tabular-nums">{ya.length}</span>
               </a>
             )}
-            {kids.length > 0 && (
-              <a href="#childrens" className="text-xs px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:border-oxblood hover:text-oxblood transition-colors">
-                Children&rsquo;s <span className="ml-1.5 text-neutral-400 tabular-nums">{kids.length}</span>
-              </a>
-            )}
           </nav>
         </div>
       </section>
+
+      {picture.length > 0 && (
+        <BookSection
+          id="picture-books"
+          tone="cream"
+          heading="Picture books"
+          eyebrow={`Section · ${picture.length} ${picture.length === 1 ? 'work' : 'works'}`}
+          books={picture}
+        />
+      )}
+
+      {middle.length > 0 && (
+        <BookSection
+          id="middle-grade"
+          tone="white"
+          heading="Middle grade"
+          eyebrow={`Section · ${middle.length} ${middle.length === 1 ? 'work' : 'works'}`}
+          books={middle}
+        />
+      )}
 
       {ya.length > 0 && (
         <BookSection
@@ -197,17 +230,7 @@ export default async function BannedChildrensBooksPage() {
         />
       )}
 
-      {kids.length > 0 && (
-        <BookSection
-          id="childrens"
-          tone="white"
-          heading="Children&rsquo;s books"
-          eyebrow={`Section · ${kids.length} ${kids.length === 1 ? 'work' : 'works'}`}
-          books={kids}
-        />
-      )}
-
-      <SectionShell tone={ya.length > 0 && kids.length > 0 ? 'cream' : 'white'} eyebrow="Related">
+      <SectionShell tone="white" eyebrow="Related">
         <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link href="/reading-club/young-readers" className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm">
             <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Reading club · Curated</p>
@@ -227,11 +250,12 @@ export default async function BannedChildrensBooksPage() {
         </div>
       </SectionShell>
 
-      <SectionShell tone={ya.length > 0 && kids.length > 0 ? 'white' : 'cream'}>
+      <SectionShell tone="cream">
         <p className="text-xs text-neutral-500 leading-relaxed max-w-2xl">
           Includes only works tagged with a children&rsquo;s or young-adult audience genre in our catalogue and with at
-          least one documented ban. Genre tagging is coarser than ideal — picture-book and middle-grade fine tags are
-          sparsely applied. Coverage skews toward English-language sources.{' '}
+          least one documented ban. Format buckets (picture book / middle grade / young adult) are derived from publisher
+          metadata and an automated classifier; some books may sit on the boundary between two buckets. Coverage skews
+          toward English-language sources.{' '}
           <Link href="/methodology" className="text-oxblood hover:underline">Read the methodology →</Link>
         </p>
       </SectionShell>
