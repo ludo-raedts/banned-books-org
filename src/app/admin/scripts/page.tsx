@@ -484,12 +484,13 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
 
           <Script
             name="enrich-ban-descriptions-gpt.ts"
-            what="Genereert per-ban descriptions — waarom dit specifieke boek in dit specifieke land verboden werd. Met --slug of --overwrite herschrijft het ook bestaande description_ban."
+            what="Genereert per-boek de 'waarom is dit boek verboden'-narrative — concreet incident: jaar, instelling, school district, rechter, uitkomst. 2–3 zinnen (min. 60 char). Met --slug of --overwrite herschrijft het ook bestaande description_ban. Let op: ondanks de naam is dit één tekst per boek (books.description_ban), NIET één per ban-event — voor per-event narratives zie bans.description gevuld door apply-wiki-enrichment.ts."
             tags={['gpt', 'destructive']}
             meta={{
-              coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_ban</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows.</>,
+              coverage: <><strong>default:</strong> only-empty <code className="font-mono">books.description_ban</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows.</>,
               cadence: 'na elke import',
-              writes: <><code className="font-mono">description_ban</code> (overschrijft met --slug/--overwrite; geen backup)</>,
+              writes: <><code className="font-mono">books.description_ban</code> — één per boek (overschrijft met --slug/--overwrite; geen backup)</>,
+              output: <>Verschijnt op de boek-detailpagina als rode card <strong>&quot;Why it was banned&quot;</strong> — zie <a href="/books/the-kite-runner" className="text-brand hover:underline">/books/&lt;slug&gt;</a></>,
               idempotent: 'default ja; --overwrite is destructief',
               cost: 'GPT-mini',
             }}
@@ -513,12 +514,13 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --o
 
           <Script
             name="enrich-censorship-context-gpt.ts"
-            what="Genereert bredere censorship-context — politieke / historische achtergrond voor een land's censuur van een boek."
+            what="Genereert per-boek de bredere historisch-politieke achtergrond — patroon van censuur, jurisdicties, formele uitkomsten over meerdere landen. 2–4 zinnen (min. 80 char). Complement op description_ban (concreet incident); dit is het bredere plaatje."
             tags={['gpt']}
             meta={{
-              coverage: <>only-empty <code className="font-mono">censorship_context</code>, alleen op boeken die al een <code className="font-mono">description_book</code> hebben</>,
+              coverage: <>only-empty <code className="font-mono">books.censorship_context</code>, alleen op boeken die al een <code className="font-mono">description_book</code> hebben</>,
               cadence: 'na elke import',
-              writes: <><code className="font-mono">censorship_context</code></>,
+              writes: <><code className="font-mono">books.censorship_context</code> — één per boek</>,
+              output: <>Verschijnt op de boek-detailpagina als grijze card <strong>&quot;Censorship history&quot;</strong>, direct onder de &quot;Why it was banned&quot;-card</>,
               idempotent: 'ja',
               cost: 'GPT-mini',
             }}
@@ -671,7 +673,7 @@ node --env-file=.env.local --import tsx scripts/stage-wiki-enrichment.ts --dry-l
             meta={{
               coverage: <>alle staging files (of --slug voor één)</>,
               cadence: 'one-off per enrichment-batch (na stage stap)',
-              writes: <><code className="font-mono">bans</code> (insert/update), <code className="font-mono">ban_sources</code>, <code className="font-mono">ban_source_links</code>, <code className="font-mono">books.description_ban</code>, <code className="font-mono">books.censorship_context</code>, <code className="font-mono">countries</code> (auto-insert)</>,
+              writes: <><code className="font-mono">bans</code> (insert/update — incl. <code className="font-mono">bans.description</code> per-event narrative met jaar+institution), <code className="font-mono">ban_sources</code>, <code className="font-mono">ban_source_links</code>, <code className="font-mono">books.description_ban</code> + <code className="font-mono">books.censorship_context</code> (alleen als de nieuwe tekst strikt beter is — regression-guard), <code className="font-mono">countries</code> (auto-insert)</>,
               output: <><code className="font-mono">data/wiki-enrichment-applied.log</code> (full audit)</>,
               idempotent: 'ja — dedup + regression-guard maakt re-runs veilig',
               cost: 'gratis',
