@@ -25,7 +25,7 @@ export default function ReadingClubBookCard({
   clubHref?: string
   // Track context for Vercel Analytics — passed through to the PDF
   // download tracker so we can group events by track in the dashboard.
-  track?: 'international' | 'classics' | 'by-theme' | 'currently-challenged'
+  track?: 'international' | 'classics' | 'by-theme' | 'currently-challenged' | 'young-readers'
   themeSlug?: string
   year?: number
 }) {
@@ -45,6 +45,11 @@ export default function ReadingClubBookCard({
           <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100 dark:bg-gray-800" />
         )}
         <div className="flex-1 min-w-0">
+          {track === 'young-readers' && card.audienceAsPublished && (
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+              Audience as published · {card.audienceAsPublished}
+            </p>
+          )}
           <div className="flex items-baseline gap-2">
             <span className="text-xs font-mono text-gray-400">#{card.position}</span>
             {card.bookSlug ? (

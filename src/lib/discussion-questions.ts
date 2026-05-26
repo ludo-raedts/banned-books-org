@@ -1,15 +1,17 @@
 // LLM-backed generator for book-club discussion questions.
 //
-// Pure async function that takes a book identity (title + author), calls a
-// large language model, and returns 5–10 nuanced questions tailored to the
-// specific book. Used by:
+// Two flavours:
 //
-//   • scripts/generate-discussion-questions.ts (CLI batch over Reading Club)
-//   • potentially: a per-book "regenerate" admin button later
+//   • generateDiscussionQuestions — literary questions about THIS specific
+//     book. Used by every reading-club track. Accepts an optional `audience`
+//     hint so the young-readers track can produce questions that work for a
+//     book published for younger readers (which adults may still be reading).
 //
-// The prompt is held verbatim — it was hand-crafted by the editorial team to
-// produce questions that feel specific to each book, varied in style, and not
-// censorship-obsessed. Tweaking the prompt should be deliberate.
+//   • generateBanDiscussionQuestions — censorship-focused questions. Only
+//     used by the young-readers track today, where it sits alongside the
+//     literary set so a reading group can talk about both the book itself
+//     and why people tried to keep it from children. STUB prompt — the
+//     definitive editorial template is delivered separately.
 //
 // Provider auto-detection: prefers Claude Opus 4.7 (best quality on this
 // task) when ANTHROPIC_API_KEY is set, falls back to OpenAI gpt-4o when only
@@ -17,7 +19,7 @@
 //
 // Output contract: an array of strings, with the LAST item being a deeper
 // "big question" inspired by the book. Caller persists the array as-is into
-// reading_club_*.discussion_questions (jsonb).
+// the right jsonb column on the track's reading-club table.
 
 import Anthropic from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
@@ -27,10 +29,13 @@ export type Provider = 'claude' | 'openai'
 const CLAUDE_MODEL = 'claude-opus-4-7'
 const OPENAI_MODEL = process.env.OPENAI_MODEL ?? 'gpt-4o'
 
-// The editorial prompt. Two placeholders: [TITLE] and [AUTHOR].
+// The editorial prompt. Three placeholders: [TITLE], [AUTHOR], [AUDIENCE].
+// The audience block is only inserted when the caller passes one (used by
+// the young-readers track to tell the model the book was published for kids
+// or teens — without forcing every question to be about that fact).
 const PROMPT_TEMPLATE = `Generate 5–10 thoughtful, varied, and emotionally intelligent book club discussion questions for the following book:
 
-[TITLE] by [AUTHOR]
+[TITLE] by [AUTHOR][AUDIENCE]
 
 Context:
 This book has been banned, challenged, censored, or restricted somewhere in the world. However, the discussion questions should not constantly focus on censorship unless that theme is naturally important to the book itself.
@@ -84,6 +89,34 @@ Return ONLY a single JSON object with this exact shape, with no surrounding pros
 
 The array must contain 5–10 strings total. The last string is the "big question".`
 
+// STUB — editorial team will deliver the final prompt as a follow-up task.
+// Kept deliberately short so smoke tests can exercise the full pipeline
+// (route → lib → provider → DB write-back) without committing to wording
+// the editorial team hasn't signed off on.
+const BAN_PROMPT_TEMPLATE = `Generate 5–10 discussion questions about the censorship history of the following book — focused on WHY people tried to keep this book out of children's hands, what changed in the surrounding culture that made it controversial, and what a reader today might think about that history.
+
+[TITLE] by [AUTHOR][AUDIENCE]
+
+Guidelines:
+- Each question must be about the censorship event, not the book's literary themes.
+- Mix specific (why this book in this place at this time) with general (what does this say about who gets to decide what children read).
+- Avoid yes/no questions and avoid generic "what do you think?" phrasings.
+- One question should be counter-factual: if you had written this book, would you have done anything differently?
+- End with a "big question" about children's literature and censorship more broadly.
+
+Output format:
+Return ONLY a single JSON object with this exact shape, with no surrounding prose, no Markdown, and no code fences:
+
+{"questions": ["question 1", "question 2", "...", "the final big question"]}
+
+The array must contain 5–10 strings total. The last string is the "big question".`
+
+function audienceClause(audience: string | null | undefined): string {
+  const a = audience?.trim()
+  if (!a) return ''
+  return ` — published as ${a}`
+}
+
 export function detectProvider(): Provider {
   if (process.env.ANTHROPIC_API_KEY) return 'claude'
   if (process.env.OPENAI_API_KEY) return 'openai'
@@ -93,13 +126,29 @@ export function detectProvider(): Provider {
 }
 
 export async function generateDiscussionQuestions(
-  book: { title: string; author: string },
+  book: { title: string; author: string; audience?: string | null },
+  options?: { provider?: Provider; anthropic?: Anthropic; openai?: OpenAI },
+): Promise<string[]> {
+  return callQuestionsPrompt(PROMPT_TEMPLATE, book, options)
+}
+
+export async function generateBanDiscussionQuestions(
+  book: { title: string; author: string; audience?: string | null },
+  options?: { provider?: Provider; anthropic?: Anthropic; openai?: OpenAI },
+): Promise<string[]> {
+  return callQuestionsPrompt(BAN_PROMPT_TEMPLATE, book, options)
+}
+
+async function callQuestionsPrompt(
+  template: string,
+  book: { title: string; author: string; audience?: string | null },
   options?: { provider?: Provider; anthropic?: Anthropic; openai?: OpenAI },
 ): Promise<string[]> {
   const provider = options?.provider ?? detectProvider()
-  const prompt = PROMPT_TEMPLATE
+  const prompt = template
     .replaceAll('[TITLE]', book.title || 'Untitled')
     .replaceAll('[AUTHOR]', book.author || 'Unknown')
+    .replaceAll('[AUDIENCE]', audienceClause(book.audience))
 
   const answer = provider === 'claude'
     ? await callClaude(prompt, options?.anthropic)

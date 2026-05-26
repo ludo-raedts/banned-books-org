@@ -8,7 +8,14 @@
 
 import { adminClient } from './supabase'
 
-export type RowSource = 'rc_cc' | 'rc_intl' | 'rc_classics' | 'rc_theme'
+export type RowSource = 'rc_cc' | 'rc_intl' | 'rc_classics' | 'rc_theme' | 'rc_young_readers'
+
+// Which question column this row maps to. Defaults to 'book' for legacy
+// tracks (their single `discussion_questions` column carries the literary
+// set). Young-readers rows yield one entry per missing column, one tagged
+// 'book' and one tagged 'ban', so the batch generator can dispatch to the
+// right prompt and write back to the right column.
+export type QuestionSetType = 'book' | 'ban'
 
 export type RowMissingQuestions = {
   source: RowSource
@@ -18,13 +25,17 @@ export type RowMissingQuestions = {
   author: string
   /** True only when --force is in use; otherwise these rows are filtered out. */
   hasExisting: boolean
+  setType: QuestionSetType
+  /** Publisher-recorded audience string (young-readers only). Optional context for the LLM. */
+  audience?: string | null
 }
 
 const TABLE_BY_SOURCE: Record<RowSource, string> = {
-  rc_cc:       'reading_club_currently_challenged',
-  rc_intl:     'reading_club_international',
-  rc_classics: 'reading_club_classics',
-  rc_theme:    'reading_club_theme_books',
+  rc_cc:            'reading_club_currently_challenged',
+  rc_intl:          'reading_club_international',
+  rc_classics:      'reading_club_classics',
+  rc_theme:         'reading_club_theme_books',
+  rc_young_readers: 'reading_club_young_readers',
 }
 
 function isEmpty(value: unknown): boolean {
@@ -67,6 +78,7 @@ export async function findReadingClubRowsMissingQuestions(
       title: r.title,
       author: r.author,
       hasExisting: has,
+      setType: 'book',
     })
   }
 
@@ -86,6 +98,7 @@ export async function findReadingClubRowsMissingQuestions(
       title: r.books.title,
       author: pickAuthor(r.books),
       hasExisting: has,
+      setType: 'book',
     })
   }
 
@@ -104,6 +117,7 @@ export async function findReadingClubRowsMissingQuestions(
       title: r.books.title,
       author: pickAuthor(r.books),
       hasExisting: has,
+      setType: 'book',
     })
   }
 
@@ -123,27 +137,79 @@ export async function findReadingClubRowsMissingQuestions(
       title: r.books.title,
       author: pickAuthor(r.books),
       hasExisting: has,
+      setType: 'book',
     })
+  }
+
+  // ── Young Readers ────────────────────────────────────────────────────────
+  // Two question columns per row — yield one entry per missing set so the
+  // batch generator can dispatch the right prompt and write back to the
+  // right column.
+  const { data: yr } = await supabase
+    .from('reading_club_young_readers')
+    .select(`book_id, discussion_questions_book, discussion_questions_ban,
+             audience_as_published,
+             books(title, book_authors(authors(display_name)))`)
+  type YrRow = {
+    book_id: number
+    discussion_questions_book: unknown
+    discussion_questions_ban: unknown
+    audience_as_published: string | null
+    books: JoinedBook
+  }
+  for (const r of (yr ?? []) as unknown as YrRow[]) {
+    if (!r.books) continue
+    const hasBook = !isEmpty(r.discussion_questions_book)
+    const hasBan  = !isEmpty(r.discussion_questions_ban)
+    if (!hasBook || force) {
+      out.push({
+        source: 'rc_young_readers',
+        scope: { book_id: r.book_id },
+        title: r.books.title,
+        author: pickAuthor(r.books),
+        hasExisting: hasBook,
+        setType: 'book',
+        audience: r.audience_as_published,
+      })
+    }
+    if (!hasBan || force) {
+      out.push({
+        source: 'rc_young_readers',
+        scope: { book_id: r.book_id },
+        title: r.books.title,
+        author: pickAuthor(r.books),
+        hasExisting: hasBan,
+        setType: 'ban',
+        audience: r.audience_as_published,
+      })
+    }
   }
 
   return out
 }
 
 export async function saveDiscussionQuestionsToRow(
-  row: Pick<RowMissingQuestions, 'source' | 'scope'>,
+  row: Pick<RowMissingQuestions, 'source' | 'scope' | 'setType'>,
   questions: string[],
 ): Promise<void> {
   const supabase = adminClient()
   const table = TABLE_BY_SOURCE[row.source]
+
+  // Legacy tracks have a single `discussion_questions` column. Young-readers
+  // has two columns, one per set-type — pick the right one to update.
+  const column = row.source === 'rc_young_readers'
+    ? (row.setType === 'ban' ? 'discussion_questions_ban' : 'discussion_questions_book')
+    : 'discussion_questions'
+
   let q = supabase.from(table).update({
-    discussion_questions: questions,
+    [column]: questions,
     updated_at: new Date().toISOString(),
   })
   for (const [k, v] of Object.entries(row.scope)) {
     q = q.eq(k, v)
   }
   const { error } = await q
-  if (error) throw new Error(`DB update failed for ${table}: ${error.message}`)
+  if (error) throw new Error(`DB update failed for ${table}.${column}: ${error.message}`)
 }
 
 // Lightweight count for the admin UI badge. Doesn't materialize anything —

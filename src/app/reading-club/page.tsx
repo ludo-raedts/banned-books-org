@@ -16,7 +16,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Reading Club — Reading banned books together',
   description:
-    'Read banned books together. Four tracks: Currently Challenged (US), International, Classics, By Theme.',
+    'Read banned books together. Five tracks: Currently Challenged (US), International, Classics, For Young Readers, By Theme.',
   alternates: { canonical: '/reading-club' },
 }
 
@@ -24,6 +24,7 @@ const TRACKS = [
   { href: '/reading-club/currently-challenged', label: 'Currently Challenged (US)', text: 'The ALA OIF annual list, with discussion prompts.' },
   { href: '/reading-club/international',         label: 'International cases',       text: 'Engine-curated set spanning regimes and regions.' },
   { href: '/reading-club/classics',              label: 'Banned classics',           text: 'Books that survived the censors of their era.' },
+  { href: '/reading-club/young-readers',         label: 'For young readers',         text: 'Picture books, middle grade, and YA that adults tried to keep from children.' },
   { href: '/reading-club/by-theme',               label: 'By theme',                  text: 'LGBTQ+, political dissent, religious censorship, race, sexuality.' },
 ] as const
 
@@ -47,7 +48,7 @@ export default async function ReadingClubHubPage() {
         '@id': 'https://www.banned-books.org/reading-club',
         name: 'Reading Club — Reading banned books together',
         description:
-          'Read banned books together. Four tracks: Currently Challenged (US), International, Classics, By Theme. Discussion questions included.',
+          'Read banned books together. Five tracks: Currently Challenged (US), International, Classics, For Young Readers, By Theme. Discussion questions included.',
         url: 'https://www.banned-books.org/reading-club',
         isPartOf: { '@type': 'WebSite', name: 'banned-books.org', url: 'https://www.banned-books.org' },
       },
@@ -85,7 +86,7 @@ export default async function ReadingClubHubPage() {
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-3xl mx-auto">
-          <Eyebrow>Reading club · Four tracks</Eyebrow>
+          <Eyebrow>Reading club · Five tracks</Eyebrow>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
             Reading banned books together.
           </h1>

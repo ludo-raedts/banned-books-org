@@ -15,21 +15,23 @@ type ThemeSummary = {
 
 interface Props {
   currentYear: number
-  /** Number of rows across all four tracks where discussion_questions is empty. */
+  /** Number of rows across all tracks where discussion_questions is empty. */
   missingQuestionCount: number
   currentlyChallenged: ReadingClubCard[]
   international: ReadingClubCard[]
   classics: ReadingClubCard[]
+  youngReaders: ReadingClubCard[]
   themes: ThemeSummary[]
   blockStatus: {
     currentlyChallenged: BlockStatusSummary
     international: BlockStatusSummary
     classics: BlockStatusSummary
+    youngReaders: BlockStatusSummary
     themesIntro: BlockStatusSummary
   }
 }
 
-type TabKey = 'currently-challenged' | 'international' | 'classics' | 'themes'
+type TabKey = 'currently-challenged' | 'international' | 'classics' | 'young-readers' | 'themes'
 
 export default function ReadingClubAdminClient(props: Props) {
   const router = useRouter()
@@ -71,6 +73,7 @@ export default function ReadingClubAdminClient(props: Props) {
           ['currently-challenged', 'Currently Challenged', props.currentlyChallenged.length, 'pick',  props.blockStatus.currentlyChallenged],
           ['international',        'International',        props.international.length,        'pick',  props.blockStatus.international],
           ['classics',             'Classics',             props.classics.length,             'pick',  props.blockStatus.classics],
+          ['young-readers',        'Young Readers',        props.youngReaders.length,         'pick',  props.blockStatus.youngReaders],
           ['themes',               'By Theme',             props.themes.length,               'theme', props.blockStatus.themesIntro],
         ] as const).map(([key, label, count, noun, status]) => {
           const active = tab === key
@@ -133,6 +136,15 @@ export default function ReadingClubAdminClient(props: Props) {
           track="classics"
           rows={props.classics}
           ready={props.blockStatus.classics.ready}
+          call={call}
+          onChange={() => router.refresh()}
+        />
+      )}
+
+      {tab === 'young-readers' && (
+        <YoungReadersTab
+          rows={props.youngReaders}
+          ready={props.blockStatus.youngReaders.ready}
           call={call}
           onChange={() => router.refresh()}
         />
@@ -588,6 +600,279 @@ function BookTrackTab({
           </ul>
         </details>
       )}
+    </div>
+  )
+}
+
+// ── Young Readers tab ──────────────────────────────────────────────────────
+//
+// Books written and published for readers under 18. Same picks list mechanics
+// as BookTrackTab but with two extra editor-managed fields per row:
+//
+//   1. audience_as_published / audience_source_url — the publisher's audience
+//      categorization + a citation. banned-books.org does not assign age
+//      labels itself; we record what the publisher says and link the source.
+//
+//   2. Two parallel discussion-question sets: "About the book" (literary,
+//      same shape as other tracks) and "About the ban" (censorship-focused).
+//      Each set has its own "Generate with AI" button that calls the
+//      /api/admin/generate-discussion-questions inline endpoint and merges
+//      the result into the editor (replacing only when the set is empty,
+//      otherwise confirms with the editor first).
+
+type YoungReadersPick = ReadingClubCard & {
+  audienceAsPublished?: string | null
+  audienceSourceUrl?: string | null
+  discussionQuestionsBan?: string[]
+}
+
+function YoungReadersTab({
+  rows, ready, call, onChange,
+}: {
+  rows: ReadingClubCard[]
+  ready: boolean
+  call: (p: Record<string, unknown>) => Promise<unknown>
+  onChange: () => void
+}) {
+  const [picks, setPicks] = useState<YoungReadersPick[]>(rows as YoungReadersPick[])
+  const [genBusy, setGenBusy] = useState<string | null>(null)
+
+  function update(i: number, patch: Partial<YoungReadersPick>) {
+    const next = [...picks]
+    next[i] = { ...next[i], ...patch }
+    setPicks(next)
+  }
+
+  async function saveDraft() {
+    await call({
+      action: 'save_track_books',
+      track: 'young-readers',
+      picks: picks.map(p => ({
+        book_id: p.bookId,
+        position: p.position,
+        custom_blurb: p.customBlurb,
+        audience_as_published: p.audienceAsPublished ?? null,
+        audience_source_url: p.audienceSourceUrl ?? null,
+        discussion_questions_book: p.discussionQuestions,
+        discussion_questions_ban: p.discussionQuestionsBan ?? [],
+        featured: p.featured,
+      })),
+    })
+    onChange()
+  }
+
+  async function publish() {
+    await saveDraft()
+    await call({ action: 'publish_track', track: 'young-readers' })
+    onChange()
+  }
+
+  function move(idx: number, dir: -1 | 1) {
+    const target = idx + dir
+    if (target < 0 || target >= picks.length) return
+    const next = [...picks]
+    ;[next[idx], next[target]] = [next[target], next[idx]]
+    next.forEach((p, i) => { p.position = i + 1 })
+    setPicks(next)
+  }
+
+  function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {
+    if (picks.some(p => p.bookId === book.id)) return
+    setPicks([...picks, {
+      bookId: book.id,
+      position: picks.length + 1,
+      title: book.title,
+      authors: book.authors,
+      customBlurb: null,
+      discussionQuestions: [],
+      bookSlug: book.slug,
+      coverUrl: null,
+      description: null,
+      countries: [],
+      reasons: [],
+      banCount: book.banCount,
+      publishedAt: null,
+      featured: false,
+      audienceAsPublished: null,
+      audienceSourceUrl: null,
+      discussionQuestionsBan: [],
+    }])
+  }
+
+  async function generate(i: number, setType: 'book' | 'ban') {
+    const p = picks[i]
+    if (!p.bookId) return
+    const existing = setType === 'book' ? p.discussionQuestions : (p.discussionQuestionsBan ?? [])
+    if (existing.length > 0) {
+      const ok = window.confirm(
+        `This set already has ${existing.length} question${existing.length === 1 ? '' : 's'}. Replace with AI-generated questions?`,
+      )
+      if (!ok) return
+    }
+    setGenBusy(`${i}:${setType}`)
+    try {
+      const res = await fetch('/api/admin/generate-discussion-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate_one',
+          track: 'young-readers',
+          book_id: p.bookId,
+          set_type: setType,
+        }),
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({})) as { questions?: string[]; error?: string }
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
+      const questions = data.questions ?? []
+      update(i, setType === 'book'
+        ? { discussionQuestions: questions }
+        : { discussionQuestionsBan: questions })
+    } catch (err) {
+      window.alert(`Generate failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setGenBusy(null)
+    }
+  }
+
+  return (
+    <div>
+      <h2 className="text-lg font-semibold mb-1">Young Readers</h2>
+      <p className="text-xs text-gray-500 mb-4">
+        Books written and published for readers under 18 that adults tried to keep from them. Audience is the publisher’s
+        own categorization (cited, not our age label); discussion questions come in two parallel sets — literary and censorship-focused.
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50">
+          Save draft
+        </button>
+        <button
+          onClick={publish}
+          disabled={!ready || picks.length === 0}
+          title={!ready ? 'Required content blocks not all published' : undefined}
+          className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-sm font-medium disabled:opacity-50 hover:bg-green-700"
+        >
+          Publish
+        </button>
+      </div>
+
+      <BookSearchAdd onAdd={addBook} excludeIds={picks.map(p => p.bookId).filter((x): x is number => x != null)} />
+
+      <ol className="flex flex-col gap-2 mb-6">
+        {picks.length === 0 ? (
+          <li className="text-sm text-gray-500">No picks yet.</li>
+        ) : picks.map((p, i) => (
+          <li key={p.bookId ?? i} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
+            <div className="flex flex-col gap-0.5">
+              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↑</button>
+              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↓</button>
+            </div>
+            <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm">{p.title}</div>
+              <div className="text-xs text-gray-500">{p.authors.join(', ')}{p.banCount ? ` · ${p.banCount} bans` : ''}</div>
+
+              {/* Audience block */}
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[11px] font-medium text-gray-600 dark:text-gray-400 mb-0.5">
+                    Audience as published
+                  </label>
+                  <input
+                    type="text"
+                    value={p.audienceAsPublished ?? ''}
+                    placeholder="Picture book (ages 4-8, per publisher)"
+                    onChange={e => update(i, { audienceAsPublished: e.target.value || null })}
+                    className={inputCls}
+                  />
+                  <p className="text-[10px] text-gray-500 mt-0.5">Publisher’s own category — not banned-books.org.</p>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-gray-600 dark:text-gray-400 mb-0.5">
+                    Audience source URL
+                  </label>
+                  <input
+                    type="url"
+                    value={p.audienceSourceUrl ?? ''}
+                    placeholder="https://publisher.example/book"
+                    onChange={e => update(i, { audienceSourceUrl: e.target.value || null })}
+                    className={inputCls}
+                  />
+                  <p className="text-[10px] text-gray-500 mt-0.5">Publisher page, library catalog, etc.</p>
+                </div>
+              </div>
+
+              <textarea
+                value={p.customBlurb ?? ''}
+                placeholder="Custom blurb (optional) — track-specific framing that overrides the book's standard description"
+                onChange={e => update(i, { customBlurb: e.target.value || null })}
+                rows={2}
+                className="mt-3 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+              />
+
+              {/* Two question sets, side-by-side label, separate textareas */}
+              <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+                      Discussion questions — About the book
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => generate(i, 'book')}
+                      disabled={!p.bookId || genBusy === `${i}:book`}
+                      className="text-[10px] px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+                    >
+                      {genBusy === `${i}:book` ? 'Generating…' : 'Generate with AI'}
+                    </button>
+                  </div>
+                  <textarea
+                    value={(p.discussionQuestions ?? []).join('\n')}
+                    placeholder="Literary discussion questions, one per line"
+                    onChange={e => update(i, {
+                      discussionQuestions: e.target.value.split('\n').map(l => l.trim()).filter(Boolean),
+                    })}
+                    rows={6}
+                    className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                  />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+                      Discussion questions — About the ban
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => generate(i, 'ban')}
+                      disabled={!p.bookId || genBusy === `${i}:ban`}
+                      className="text-[10px] px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+                    >
+                      {genBusy === `${i}:ban` ? 'Generating…' : 'Generate with AI'}
+                    </button>
+                  </div>
+                  <textarea
+                    value={(p.discussionQuestionsBan ?? []).join('\n')}
+                    placeholder="Censorship-focused questions, one per line"
+                    onChange={e => update(i, {
+                      discussionQuestionsBan: e.target.value.split('\n').map(l => l.trim()).filter(Boolean),
+                    })}
+                    rows={6}
+                    className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <FeaturedToggle
+                checked={p.featured}
+                title="Show this book in the cover strip on /reading-club"
+                onChange={v => update(i, { featured: v })}
+              />
+              <button onClick={() => setPicks(picks.filter((_, j) => j !== i).map((p, j) => ({ ...p, position: j + 1 })))} className="text-xs text-red-600 hover:underline">Remove</button>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }

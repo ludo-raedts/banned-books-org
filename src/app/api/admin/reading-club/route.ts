@@ -20,12 +20,13 @@ import { isPageReadyToPublish } from '@/lib/content-blocks'
 // We keep one route handler so the admin client doesn't have to know which
 // table backs which track.
 
-type Track = 'currently-challenged' | 'international' | 'classics' | `theme:${string}`
+type Track = 'currently-challenged' | 'international' | 'classics' | 'young-readers' | `theme:${string}`
 
 const TRACK_TO_PAGE_KEY: Record<string, string> = {
   'currently-challenged': 'reading-club-currently-challenged',
   'international':        'reading-club-international',
   'classics':             'reading-club-classics',
+  'young-readers':        'reading-club-young-readers',
 }
 
 export async function POST(req: NextRequest) {
@@ -182,7 +183,12 @@ export async function POST(req: NextRequest) {
     if (!track) return NextResponse.json({ error: 'Missing track' }, { status: 400 })
     const picks = body.picks as Array<{
       book_id: number; position: number; custom_blurb?: string | null;
-      discussion_questions?: string[] | null; pinned?: boolean; featured?: boolean
+      discussion_questions?: string[] | null; pinned?: boolean; featured?: boolean;
+      // young-readers-only fields, ignored by other tracks.
+      audience_as_published?: string | null;
+      audience_source_url?: string | null;
+      discussion_questions_book?: string[] | null;
+      discussion_questions_ban?: string[] | null;
     }> | undefined
     if (!Array.isArray(picks)) return NextResponse.json({ error: 'Bad picks' }, { status: 400 })
 
@@ -212,12 +218,20 @@ export async function POST(req: NextRequest) {
     if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 })
 
     if (picks.length > 0) {
+      const isYoungReaders = table === 'reading_club_young_readers'
       const rows = picks.map(p => ({
         ...(themeSlug ? { theme_slug: themeSlug } : {}),
         book_id: p.book_id,
         position: p.position,
         custom_blurb: p.custom_blurb ?? null,
-        discussion_questions: p.discussion_questions ?? null,
+        ...(isYoungReaders
+          ? {
+              audience_as_published: p.audience_as_published ?? null,
+              audience_source_url: p.audience_source_url ?? null,
+              discussion_questions_book: p.discussion_questions_book ?? null,
+              discussion_questions_ban: p.discussion_questions_ban ?? null,
+            }
+          : { discussion_questions: p.discussion_questions ?? null }),
         ...(table === 'reading_club_international' ? { pinned: !!p.pinned } : {}),
         featured: !!p.featured,
         published_at: null,
@@ -266,6 +280,7 @@ export async function POST(req: NextRequest) {
       content_type: track.startsWith('theme:') ? 'rc_theme'
         : track === 'currently-challenged' ? 'rc_currently_challenged'
         : track === 'international' ? 'rc_international'
+        : track === 'young-readers' ? 'rc_young_readers'
         : 'rc_classics',
       content_key: track,
       action: 'publish',
@@ -279,6 +294,7 @@ export async function POST(req: NextRequest) {
 function resolveTrackTable(track: Track): { table: string | null; themeSlug: string | null } {
   if (track === 'international') return { table: 'reading_club_international', themeSlug: null }
   if (track === 'classics')      return { table: 'reading_club_classics',      themeSlug: null }
+  if (track === 'young-readers') return { table: 'reading_club_young_readers', themeSlug: null }
   if (track === 'currently-challenged') return { table: 'reading_club_currently_challenged', themeSlug: null }
   if (track.startsWith('theme:')) return { table: 'reading_club_theme_books', themeSlug: track.slice('theme:'.length) }
   return { table: null, themeSlug: null }

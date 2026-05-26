@@ -99,6 +99,14 @@ export type ReadingClubCard = {
   publishedAt: string | null
   // Editor toggle that surfaces a book in the /reading-club hub cover-strip.
   featured: boolean
+  // Young-readers-only fields. The audience block is the publisher's own
+  // categorization (recorded as a fact, not a banned-books.org age label);
+  // the ban-questions set is the track's editorial differentiator alongside
+  // the standard `discussionQuestions` (which carries the literary set on
+  // this track).
+  audienceAsPublished?: string | null
+  audienceSourceUrl?: string | null
+  discussionQuestionsBan?: string[]
 }
 
 // Shared join used wherever we render a track row that points at a real book.
@@ -264,6 +272,61 @@ export async function getClassicsTrack(opts?: { admin?: boolean }): Promise<Read
       banCount: proj.banCount,
       publishedAt: r.published_at,
       featured: !!r.featured,
+    }
+  })
+}
+
+// ── Young Readers ────────────────────────────────────────────────────────────
+//
+// Books written and published for readers under 18 that adults tried to keep
+// from them. Same draft/publish convention as the other curated tracks; same
+// shape as classics, with two track-specific additions: an `audience_as_published`
+// citation (publisher's categorization, not ours) and a second
+// `discussion_questions_ban` set focused on censorship.
+
+export async function getYoungReadersTrack(opts?: { admin?: boolean }): Promise<ReadingClubCard[]> {
+  const supabase = opts?.admin ? adminClient() : serverClient()
+  let q = supabase
+    .from('reading_club_young_readers')
+    .select(`book_id, position, custom_blurb,
+             audience_as_published, audience_source_url,
+             discussion_questions_book, discussion_questions_ban,
+             featured, published_at, ${BOOK_JOIN}`)
+    .order('position')
+  if (!opts?.admin) q = q.not('published_at', 'is', null)
+  const { data } = await q
+  return ((data ?? []) as unknown as Array<{
+    book_id: number; position: number; custom_blurb: string | null;
+    audience_as_published: string | null;
+    audience_source_url: string | null;
+    discussion_questions_book: string[] | null;
+    discussion_questions_ban: string[] | null;
+    featured: boolean;
+    published_at: string | null;
+    books: JoinedBook
+  }>).map(r => {
+    const proj = projectJoinedBook(r.books)
+    return {
+      bookId: r.book_id,
+      position: r.position,
+      title: r.books?.title ?? `Book ${r.book_id}`,
+      authors: proj.authors,
+      isbn13: r.books?.isbn13 ?? null,
+      bookshopIsbn13: r.books?.bookshop_isbn13 ?? null,
+      bookshopStatus: r.books?.bookshop_status ?? null,
+      customBlurb: r.custom_blurb,
+      discussionQuestions: r.discussion_questions_book ?? [],
+      bookSlug: r.books?.slug ?? null,
+      coverUrl: r.books?.cover_url ?? null,
+      description: r.books?.description_book ?? null,
+      countries: proj.countries,
+      reasons: proj.reasons,
+      banCount: proj.banCount,
+      publishedAt: r.published_at,
+      featured: !!r.featured,
+      audienceAsPublished: r.audience_as_published,
+      audienceSourceUrl: r.audience_source_url,
+      discussionQuestionsBan: r.discussion_questions_ban ?? [],
     }
   })
 }
@@ -474,7 +537,7 @@ export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClub
   // Each track query is independent — fan out in parallel. We over-fetch
   // slightly (per-track limit = FEATURED_BOOK_LIMIT) so the final union
   // can still produce 6 even when one track has fewer than its share.
-  const [intlRes, classicsRes, ccRes, themesRes] = await Promise.all([
+  const [intlRes, classicsRes, ccRes, themesRes, yrRes] = await Promise.all([
     supabase
       .from('reading_club_international')
       .select(`book_id, position,
@@ -508,6 +571,16 @@ export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClub
     supabase
       .from('reading_club_theme_books')
       .select(`theme_slug, book_id, position,
+               books!inner(title, slug, cover_url,
+                           book_authors(authors(display_name)))`)
+      .eq('featured', true)
+      .not('published_at', 'is', null)
+      .not('books.cover_url', 'is', null)
+      .order('position')
+      .limit(FEATURED_BOOK_LIMIT),
+    supabase
+      .from('reading_club_young_readers')
+      .select(`book_id, position,
                books!inner(title, slug, cover_url,
                            book_authors(authors(display_name)))`)
       .eq('featured', true)
@@ -567,6 +640,15 @@ export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClub
       trackLabel: 'By theme',
     })
   }
+  for (const r of ((yrRes.data ?? []) as unknown as Array<{ books: J }>)) {
+    const b = r.books
+    if (!b?.slug || !b.cover_url) continue
+    out.push({
+      title: b.title, authors: authorsOf(b), coverUrl: b.cover_url,
+      href: `/reading-club/young-readers/${b.slug}`,
+      trackLabel: 'Young readers',
+    })
+  }
 
   return out.slice(0, FEATURED_BOOK_LIMIT)
 }
@@ -584,7 +666,7 @@ export async function getFeaturedReadingClubBooks(): Promise<FeaturedReadingClub
 // one match is enough.
 
 export type ReadingClubLink = {
-  track: 'international' | 'classics' | 'currently-challenged' | 'by-theme'
+  track: 'international' | 'classics' | 'currently-challenged' | 'by-theme' | 'young-readers'
   trackLabel: string
   href: string
 }
@@ -626,6 +708,23 @@ export async function getReadingClubLinkForBook(
         track: 'classics',
         trackLabel: 'Banned classics',
         href: `/reading-club/classics/${bookSlug}`,
+      }
+    }
+  }
+
+  // Young Readers
+  if (bookSlug) {
+    const { data } = await supabase
+      .from('reading_club_young_readers')
+      .select('book_id, published_at')
+      .eq('book_id', bookId)
+      .not('published_at', 'is', null)
+      .maybeSingle()
+    if (data) {
+      return {
+        track: 'young-readers',
+        trackLabel: 'For young readers',
+        href: `/reading-club/young-readers/${bookSlug}`,
       }
     }
   }

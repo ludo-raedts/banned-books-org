@@ -31,7 +31,7 @@ export type ReadingClubAuthor = {
 }
 
 export type ReadingClubDetail = {
-  track: 'international' | 'classics' | 'by-theme' | 'currently-challenged'
+  track: 'international' | 'classics' | 'by-theme' | 'currently-challenged' | 'young-readers'
   trackLabel: string
   trackHref: string
   themeSlug?: string
@@ -66,6 +66,14 @@ export type ReadingClubDetail = {
   sourceUrl?: string | null
   year?: number
   position?: number
+
+  // Young-Readers-only. `audienceAsPublished` is the publisher's audience
+  // categorization (citation, not our judgement). `discussionQuestionsBan`
+  // is the second question set that distinguishes this track from the
+  // others — it asks why people tried to keep this book from children.
+  audienceAsPublished?: string | null
+  audienceSourceUrl?: string | null
+  discussionQuestionsBan?: string[]
 }
 
 // ── Shared joins ────────────────────────────────────────────────────────────
@@ -411,6 +419,62 @@ export async function getClassicsEntry(
     bans,
     banSummary: buildBanSummary(book, bans),
     universalQuestions,
+  }
+}
+
+export async function getYoungReadersEntry(
+  bookSlug: string,
+  opts?: EntryFetcherOpts,
+): Promise<ReadingClubDetail | null> {
+  const supabase = opts?.admin ? adminClient() : serverClient()
+  const { data: bookRow } = await supabase
+    .from('books')
+    .select('id')
+    .eq('slug', bookSlug)
+    .maybeSingle()
+  if (!bookRow) return null
+
+  let q = supabase
+    .from('reading_club_young_readers')
+    .select(`book_id, custom_blurb,
+             audience_as_published, audience_source_url,
+             discussion_questions_book, discussion_questions_ban,
+             published_at, ${BOOK_DETAIL_JOIN}`)
+    .eq('book_id', bookRow.id)
+  if (!opts?.admin) q = q.not('published_at', 'is', null)
+  const { data } = await q.maybeSingle()
+  if (!data) return null
+
+  type Row = {
+    book_id: number
+    custom_blurb: string | null
+    audience_as_published: string | null
+    audience_source_url: string | null
+    discussion_questions_book: string[] | null
+    discussion_questions_ban: string[] | null
+    published_at: string | null
+    books: JoinedBookDetail
+  }
+  const row = data as unknown as Row
+  const book = projectBook(row.books)
+  const bans = projectBans(row.books)
+  const authorRecords = projectAuthors(row.books)
+  const universalQuestions = await getUniversalQuestions()
+
+  return {
+    track: 'young-readers',
+    trackLabel: 'For young readers',
+    trackHref: '/reading-club/young-readers',
+    book,
+    authorRecords,
+    customBlurb: row.custom_blurb,
+    discussionQuestions: (row.discussion_questions_book ?? []).map(normalizeQuestion),
+    bans,
+    banSummary: buildBanSummary(book, bans),
+    universalQuestions,
+    audienceAsPublished: row.audience_as_published,
+    audienceSourceUrl: row.audience_source_url,
+    discussionQuestionsBan: (row.discussion_questions_ban ?? []).map(normalizeQuestion),
   }
 }
 

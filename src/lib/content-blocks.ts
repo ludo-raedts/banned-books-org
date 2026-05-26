@@ -53,6 +53,7 @@ export const REQUIRED_BLOCKS_BY_PAGE: Record<string, readonly string[]> = {
   'reading-club-international': ['track-international-intro'],
   'reading-club-classics': ['track-classics-intro'],
   'reading-club-themes': ['track-themes-intro'],
+  'reading-club-young-readers': ['track-young-readers-intro'],
   'theme-lgbtq': ['theme-lgbtq-intro'],
   'theme-political-dissent': ['theme-political-dissent-intro'],
   'theme-religious-censorship': ['theme-religious-censorship-intro'],

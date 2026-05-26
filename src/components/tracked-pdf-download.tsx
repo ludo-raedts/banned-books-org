@@ -9,7 +9,7 @@ import { track } from '@vercel/analytics'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 
 type Props = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick'> & {
-  track: 'international' | 'classics' | 'by-theme' | 'currently-challenged'
+  track: 'international' | 'classics' | 'by-theme' | 'currently-challenged' | 'young-readers'
   bookSlug: string | null
   themeSlug?: string | null
   year?: number | null

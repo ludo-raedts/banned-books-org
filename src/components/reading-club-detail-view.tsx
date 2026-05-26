@@ -97,6 +97,32 @@ export default function ReadingClubDetailView({ detail, pageHref }: Props) {
         </div>
       </section>
 
+      {detail.audienceAsPublished && (
+        <SectionShell tone="cream" eyebrow="Audience as published">
+          <div className="max-w-3xl mx-auto">
+            <p className="font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+              {detail.audienceAsPublished}
+            </p>
+            <p className="mt-2 text-xs text-neutral-500">
+              This is the publisher’s own audience categorization, not a banned-books.org age recommendation. What you read with the young reader in your life is your decision.
+              {detail.audienceSourceUrl && (
+                <>
+                  {' '}
+                  <a
+                    href={detail.audienceSourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-oxblood hover:underline"
+                  >
+                    Source
+                  </a>
+                </>
+              )}
+            </p>
+          </div>
+        </SectionShell>
+      )}
+
       {(detail.customBlurb || detail.book.description) && (
         <SectionShell tone="cream" eyebrow="About the book">
           <div className="max-w-3xl mx-auto">
@@ -217,10 +243,37 @@ export default function ReadingClubDetailView({ detail, pageHref }: Props) {
         <SectionShell tone="white" eyebrow="For your reading group">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-5 pb-3 border-b border-oxblood/30">
-              Discussion questions for this book
+              {detail.discussionQuestionsBan && detail.discussionQuestionsBan.length > 0
+                ? 'Discussion questions — about the book'
+                : 'Discussion questions for this book'}
             </h2>
+            {detail.discussionQuestionsBan && detail.discussionQuestionsBan.length > 0 && (
+              <p className="text-sm text-neutral-600 mb-5 leading-relaxed">
+                Two sets, side by side. This first set is about the book itself — the kind of questions you might ask of any
+                novel or picture book in a reading group.
+              </p>
+            )}
             <ol className="list-decimal pl-6 space-y-3 text-base text-gray-800 leading-relaxed marker:text-oxblood marker:font-semibold">
               {detail.discussionQuestions.map((q, i) => (
+                <li key={i}>{q}</li>
+              ))}
+            </ol>
+          </div>
+        </SectionShell>
+      )}
+
+      {detail.discussionQuestionsBan && detail.discussionQuestionsBan.length > 0 && (
+        <SectionShell tone="cream" eyebrow="The censorship history">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-5 pb-3 border-b border-oxblood/30">
+              Discussion questions — about the ban
+            </h2>
+            <p className="text-sm text-neutral-600 mb-5 leading-relaxed">
+              The second set is about the censorship event: who tried to keep this book from young readers, what they
+              were objecting to, and what changed in the surrounding culture to make it controversial in the first place.
+            </p>
+            <ol className="list-decimal pl-6 space-y-3 text-base text-gray-800 leading-relaxed marker:text-oxblood marker:font-semibold">
+              {detail.discussionQuestionsBan.map((q, i) => (
                 <li key={i}>{q}</li>
               ))}
             </ol>
@@ -346,7 +399,11 @@ function SourcesAndAttribution({ detail }: { detail: ReadingClubDetail }) {
 // JSON-LD helper, shared so each route can render the same structured-data
 // surface for SEO without duplicating the Book/FAQPage shape.
 export function buildReadingClubJsonLd(detail: ReadingClubDetail) {
-  const allQuestions = [...detail.discussionQuestions, ...detail.universalQuestions]
+  const allQuestions = [
+    ...detail.discussionQuestions,
+    ...(detail.discussionQuestionsBan ?? []),
+    ...detail.universalQuestions,
+  ]
   return {
     '@context': 'https://schema.org',
     '@graph': [

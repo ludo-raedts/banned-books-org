@@ -44,11 +44,12 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/challenged-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/scope/government`, changefreq: 'weekly', priority: 0.8 },
-    // Reading Club — evergreen, hub + 4 tracks + 5 theme subpages.
+    // Reading Club — evergreen, hub + 5 tracks + 5 theme subpages.
     { loc: `${base}/reading-club`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/reading-club/currently-challenged`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/reading-club/international`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/reading-club/classics`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/reading-club/young-readers`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/reading-club/by-theme`, changefreq: 'monthly', priority: 0.7 },
     ...Object.keys(THEME_REASON_MAP).map<SitemapEntry>(slug => ({
       loc: `${base}/reading-club/by-theme/${slug}`,
