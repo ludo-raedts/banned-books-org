@@ -50,6 +50,15 @@ export default async function YoungReadersTrackPage() {
             Audience labels on each book come from the publisher, not from banned-books.org. We document who tried to keep
             the book from young readers; what to read with your kid is your decision.
           </p>
+
+          <div className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 border border-oxblood/30 rounded-sm bg-cream/40">
+            <p className="text-sm text-gray-800">
+              Looking for the wide catalogue rather than the reading-group format?{' '}
+              <Link href="/banned-childrens-books" className="text-oxblood hover:underline font-medium">
+                → All banned children&rsquo;s books in our database
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
 

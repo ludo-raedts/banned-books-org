@@ -25,7 +25,19 @@ const supabase = createClient(url, key)
 
 const INTRO_HTML = `<p>Books written for children that adults tried to keep from them.</p>
 <p>Each book on this list was made <em>for</em> children — picture books, middle grade, young adult — by the same culture that later tried to remove it from libraries and classrooms. Every challenge claims to protect a child. We document who tried, where, when, and on what grounds. The audience category on each book comes from the publisher, not from us — we don't assign age ranges.</p>
-<p>What you read with the young reader in your life is your decision. This track exists so that decision can be informed by what the book was written to do, and what the people who tried to ban it actually said about why.</p>`
+<p>What you read with the young reader in your life is your decision. This track exists so that decision can be informed by what the book was written to do, and what the people who tried to ban it actually said about why.</p>
+
+<h3>Why no age recommendations?</h3>
+<p>We document who tried to keep these books from young readers — not who should read them. Age suitability is a decision for a specific child, their household, their school, their community. Replacing that judgement with our judgement would reproduce exactly the move we&rsquo;re documenting.</p>
+
+<h3>What does &ldquo;audience as published&rdquo; mean?</h3>
+<p>The publisher&rsquo;s own audience categorization, taken from back-cover copy, library catalogs, or standard publishing-industry categories (picture book, middle grade, young adult). It&rsquo;s a citation, not our recommendation. Where possible we link the source.</p>
+
+<h3>Where can I see specific challenges to a book?</h3>
+<p>Click any book on this page. The detail page shows the documented ban history — country, year, scope (school, public library, government), stated reason, source. The book-club PDF download repeats that record in printable form.</p>
+
+<h3>Why two discussion-question sets per book?</h3>
+<p>One set asks about the book itself — characters, choices, what the author was trying to do. The other asks about the censorship history — who tried to remove it, what they said they were protecting, what gets lost. Use the same set with any reader in your group; we don&rsquo;t separate parent-questions from child-questions.</p>`
 
 type Seed = {
   matchTitle: string
