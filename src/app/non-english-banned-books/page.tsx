@@ -9,7 +9,6 @@ import { newTimer } from '@/lib/timing'
 import { TopListBookCard } from '@/components/top-list-card'
 import {
   TOP_LIST_BOOK_SELECT,
-  LATIN_SCRIPT_LANGS,
   type TopListBookRow,
   langContext,
   toBookCard,
@@ -20,7 +19,7 @@ import Eyebrow from '@/components/section/Eyebrow'
 export const metadata: Metadata = {
   title: 'Banned books not written in English',
   description:
-    'A ranked list of the most-censored books originally written in non-English languages — Russian, Arabic, Chinese, Persian, and beyond. The international half of the censorship catalogue.',
+    'A ranked list of the most-censored books originally written in languages other than English — French, German, Russian, Arabic, Chinese, Persian, and beyond. The international half of the censorship catalogue.',
   alternates: { canonical: '/non-english-banned-books' },
 }
 
@@ -28,17 +27,17 @@ export default async function NonEnglishBannedBooksPage() {
   const timer = newTimer('non-english-destination')
   const supabase = adminClient()
 
-  // Strategy: query `books` directly with a non-Latin language filter, then
+  // Strategy: query `books` directly with a non-English language filter, then
   // sort by ban-count client-side. The global v_top_banned_books view only
-  // surfaces ~10 non-Latin titles in its top 100 (English-language censorship
+  // surfaces ~33 non-English titles in its top 100 (English-language censorship
   // dominates), which is too thin for a destination page. Pulling from books
   // table gives us the full long tail of non-English bans.
-  const { data: booksRaw } = await timer.wrap('books-non-latin', () =>
+  const { data: booksRaw } = await timer.wrap('books-non-english', () =>
     supabase
       .from('books')
       .select(TOP_LIST_BOOK_SELECT)
       .not('original_language', 'is', null)
-      .not('original_language', 'in', `(${LATIN_SCRIPT_LANGS.join(',')})`)
+      .neq('original_language', 'en')
       .limit(1000),
   )
   const candidates = (booksRaw ?? []) as unknown as TopListBookRow[]
@@ -87,7 +86,7 @@ export default async function NonEnglishBannedBooksPage() {
           </h1>
 
           <p className="mt-6 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
-            The {books.length} most-banned books originally written in non-Latin-script languages — Russian, Arabic, Chinese, Persian, Hebrew, and others. Most English-language &ldquo;banned books&rdquo; lists stop at the US school-board frontier. This one keeps going: Solzhenitsyn smuggled out of the USSR, El Saadawi imprisoned in Egypt, Li Hongzhi outlawed in China.
+            The {books.length} most-banned books originally written in languages other than English — French, German, Russian, Arabic, Chinese, Persian, and beyond. Most English-language &ldquo;banned books&rdquo; lists stop at the US school-board frontier. This one keeps going: Solzhenitsyn smuggled out of the USSR, El Saadawi imprisoned in Egypt, Li Hongzhi outlawed in China.
           </p>
         </div>
       </section>

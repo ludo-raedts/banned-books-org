@@ -16,7 +16,7 @@ import {
   type TopListBookRow,
   authorNameOf,
   banContext,
-  isNonLatin,
+  isNonEnglish,
   langContext,
   toBookCard,
 } from '@/lib/top-list-data'
@@ -344,11 +344,14 @@ export default async function HomePage() {
   // Non-English banned books — rotate from a pool of 30, then apply soft
   // language-diversity (greedy distinct `original_language` first, fill the
   // rest with what's left). Rotation gives day-to-day variation; diversity
-  // stops the row from being three Russian or three Chinese titles.
+  // stops the row from being three French or three Russian titles. Filter is
+  // "any non-English" (incl. fr/de/es/…), not just non-Latin script — within
+  // the top-100 banned, non-Latin alone yields just ~6 candidates which
+  // collapses to a 6-day cycle of the same trio.
   const nonEnglishPool: TopListBookRow[] = topBannedRows
     .map(r => bookById.get(Number(r.entity_id)))
     .filter((b): b is TopListBookRow => !!b)
-    .filter(b => isNonLatin(b.original_language))
+    .filter(b => isNonEnglish(b.original_language))
     .filter(b => b.cover_status === 'valid')
     .slice(0, 30)
   const nonEnglishRotated = selectRotatingBooks({

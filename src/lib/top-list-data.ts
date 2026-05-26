@@ -13,6 +13,7 @@ export const LATIN_SCRIPT_LANGS = [
 ] as const
 
 export const LANG_NAMES: Record<string, string> = {
+  // Non-Latin script
   ru: 'Russian', zh: 'Chinese', ja: 'Japanese', ar: 'Arabic', fa: 'Persian',
   he: 'Hebrew', hi: 'Hindi', ko: 'Korean', th: 'Thai', el: 'Greek',
   bn: 'Bengali', ur: 'Urdu', ta: 'Tamil', te: 'Telugu', uk: 'Ukrainian',
@@ -20,6 +21,15 @@ export const LANG_NAMES: Record<string, string> = {
   hy: 'Armenian', ka: 'Georgian', am: 'Amharic', my: 'Burmese',
   km: 'Khmer', lo: 'Lao', si: 'Sinhala', gu: 'Gujarati', pa: 'Punjabi',
   ml: 'Malayalam', kn: 'Kannada', mr: 'Marathi', ne: 'Nepali',
+  // Latin script, non-English — used by the "not written in English" section
+  // for cards like "French · 5 countries" instead of "FR · 5 countries".
+  fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', nl: 'Dutch',
+  pt: 'Portuguese', sv: 'Swedish', da: 'Danish', no: 'Norwegian', fi: 'Finnish',
+  pl: 'Polish', cs: 'Czech', sk: 'Slovak', hu: 'Hungarian', ro: 'Romanian',
+  hr: 'Croatian', sl: 'Slovenian', bs: 'Bosnian', sq: 'Albanian',
+  tr: 'Turkish', id: 'Indonesian', vi: 'Vietnamese', ms: 'Malay',
+  ca: 'Catalan', gl: 'Galician', eu: 'Basque', is: 'Icelandic',
+  la: 'Latin',
   // `sh` is the ISO 639-1 macro-code for Serbo-Croatian (now split into
   // sr/hr/bs); used in the catalogue for Yugoslav-era writers like Đilas
   // and Kiš who pre-date the split.
@@ -89,4 +99,8 @@ export function toBookCard(b: TopListBookRow, context?: string): TopListBook {
 
 export function isNonLatin(code: string | null | undefined): code is string {
   return !!code && !(LATIN_SCRIPT_LANGS as readonly string[]).includes(code)
+}
+
+export function isNonEnglish(code: string | null | undefined): code is string {
+  return !!code && code !== 'en'
 }
