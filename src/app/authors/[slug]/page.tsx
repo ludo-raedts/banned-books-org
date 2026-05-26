@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import PageviewTracker from '@/components/pageview-tracker'
+import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import { getBookshopAuthorUrl, BOOKSHOP_REL } from '@/lib/bookshop'
@@ -531,12 +532,15 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     authorLead = `This page collects ${books.length} ${books.length === 1 ? 'book' : 'books'} in our catalogue without an attributed author. These are separate works by different (unknown or anonymous) writers, grouped here for catalogue navigation only.`
   }
 
+  // Breadcrumb mirrors the visible <Breadcrumb> rendered above the hero.
+  // "Authors" points at /most-banned-authors — the real author directory
+  // (no /authors index route exists).
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home',    item: 'https://www.banned-books.org/' },
-      { '@type': 'ListItem', position: 2, name: 'Authors', item: 'https://www.banned-books.org/authors' },
+      { '@type': 'ListItem', position: 2, name: 'Authors', item: 'https://www.banned-books.org/most-banned-authors' },
       { '@type': 'ListItem', position: 3, name: a.display_name, item: canonicalUrlLd },
     ],
   }
@@ -583,12 +587,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         />
       )}
       <PageviewTracker entityType="author" entityId={a.id} />
-      <Link
-        href="/stats"
-        className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
-      >
-        ← Stats
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Authors', href: '/most-banned-authors' },
+          { label: a.display_name },
+        ]}
+      />
 
       {/* Hero */}
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 pb-8 border-b border-neutral-200">

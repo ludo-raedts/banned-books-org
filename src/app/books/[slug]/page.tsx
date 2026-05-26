@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import PageviewTracker from '@/components/pageview-tracker'
+import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
@@ -818,12 +819,15 @@ export default async function BookPage({
       }
     : null
 
+  // Breadcrumb mirrors the visible <Breadcrumb> rendered above the hero.
+  // The "Books" intermediate points at /search — the real catalogue-browse
+  // page (filters by country, reason, scope). No /books index route exists.
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home',  item: 'https://www.banned-books.org/' },
-      { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://www.banned-books.org/books' },
+      { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://www.banned-books.org/search' },
       { '@type': 'ListItem', position: 3, name: book.title, item: canonicalUrl },
     ],
   }
@@ -871,9 +875,14 @@ export default async function BookPage({
         />
       )}
       <PageviewTracker entityType="book" entityId={book.id} />
-      <Link href="/" className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors">
-        ← All books
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Books', href: '/search' },
+          { label: book.title },
+        ]}
+      />
+
 
       {/* Hero */}
       <div className="flex flex-row gap-4 sm:gap-8 mb-8 sm:mb-10 items-start">
