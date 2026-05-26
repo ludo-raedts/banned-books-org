@@ -9,7 +9,7 @@
 > Live site: <https://www.banned-books.org>
 > Owner: Ludo Raedts (Groningen, NL) — solo project, started April 2026.
 >
-> **Last updated: 2026-05-15** — review-queue gerichte schoonmaak: 1099 → 307 pending via source-level fallbacks, year-extractie uit titel/notes, slug-collision merges en bulk auto-accept. Zie entry "Queue-clearing operatie (2026-05-15)" verderop.
+> **Last updated: 2026-05-22** — homepage v2 live; editorial design language uitgerold; Kobo affiliate weggevallen (Bookshop blijft); reading-club tracks krijgen per-book HTML + PDF; AI-citation surface uitgebouwd (/llms.txt, .md long-form exports, page-author metadata, Dataset JSON-LD); PEN America 2024-25 per-district + nieuwe `mv_book_scope_counts` om district/aggregate ban-events te scheiden; blasphemy samengevoegd in religious; Sprint A Taak 5 (Frankrijk + ZA Literature Police + AU/GB source-debt) gestart. Zie entries onderaan §12.
 
 ---
 
@@ -31,7 +31,7 @@ Editorial mission (in plain English):
 
 Financial model: free public site, monetised via:
 1. A paid downloadable dataset (`/dataset`, $19.99 via Stripe Checkout).
-2. Bookshop.org and Kobo affiliate links from each book page.
+2. Bookshop.org affiliate links from each book page (Kobo affiliate program denied in 2026-05; references scrubbed from the site).
 
 ---
 
@@ -90,7 +90,7 @@ Migration files live in `supabase/migrations/`. As of 2026-05-12:
 | `ban_sources` | Citation per ban — `source_name`, `source_url` (UNIQUE), `source_type`, `accessed_at`, `verification_status` (enum). Sprint A heeft de `[archive pending]`-conventie vervangen door een `verification_status` enum met vier waarden: `verified` (URL werkt + archive geslaagd), `pending` (URL werkt + archive faalde), `unverified` (nooit geverifieerd), `broken` (4xx/5xx). Backfill 2026-05-12: 2 `[archive pending]` → `pending`, 252 NULL → `unverified`. `verified` en `broken` zijn nog ongebruikt; toekomstige verificatie-runs zullen die vullen. |
 | `ban_source_links` | M:N join `bans` ↔ `ban_sources` with `locator` (e.g. page number in source PDF). |
 | `ban_reason_links` | M:N join `bans` ↔ `reasons`. RLS enabled but no public policies (admin-only access). |
-| `reasons` | The taxonomy of "why" — `slug` (e.g. `lgbtq`, `political`, `religious`, `sexual`, `violence`, `racial`, `drugs`, `obscenity`, `blasphemy`, `moral`, `language`, `other`). |
+| `reasons` | The taxonomy of "why" — `slug` (e.g. `lgbtq`, `political`, `religious`, `sexual`, `violence`, `racial`, `drugs`, `obscenity`, `moral`, `language`, `other`). **`blasphemy` werd samengevoegd in `religious` (2026-05-19)** — alle `ban_reason_links` zijn herwezen; slug bestaat niet meer. |
 | `scopes` | Ban scope (`school`, `government`, `prison`, etc.) with display labels. |
 
 ### Pageview / analytics
@@ -105,12 +105,14 @@ Migration files live in `supabase/migrations/`. As of 2026-05-12:
 | `v_top_countries_this_week` / `_last_week` | Visitor country breakdown. |
 | `v_top_referrers_this_week` / `_last_week` | Referrer hostnames. |
 | `v_weekly_totals` | Site-wide weekly visitor / pageview counters. |
-| `mv_ban_counts` | Materialized: bans per country. |
+| `mv_ban_counts` | Materialized: bans per country. Telt **distinct books**, niet raw ban-rows — zie §13 distinct-books doctrine. |
 | `mv_country_reason_counts` | Materialized: bans per (country × reason). |
+| `mv_book_scope_counts` | **Nieuw 2026-05-21.** Per (book × scope) split tussen `district_events` (PEN per-district, institution NOT NULL), `state_events` (region NOT NULL + institution NULL), `aggregate_events` (Wikipedia/ALA/legacy, beide NULL) en `total_events` (backwards-compat sum). Ranking-bron voor `/scope/[slug]`. Reden: PEN 2024-25 schrijft 1 boek × N districts = N rijen, terwijl Wikipedia/ALA per titel aggregeert — sommatie inflated `/scope/school` met +1 op ~94% van US-school boeken en herschudde top-N. |
 | `mv_top_books_rising` / `mv_top_authors_rising` | Materialized rolling 14-day "rising" snapshots; refreshed hourly. |
 | `mv_refresh_log` | Tracks `data_last_changed`, `last_refreshed`, `dataset_built_at`. Triggers on `bans` and `ban_reason_links` keep `data_last_changed` current. |
+| `v_top_banned_books` / `v_top_banned_authors` | Sprint A: extra kolommen `granular_events` + `aggregate_events` aan de staart (CREATE OR REPLACE VIEW kan niet reorderen). Ranking key blijft `distinct_countries` / `banned_books`. |
 | `admin_db_stats()` RPC | Returns DB size + pageviews-table size for the admin "DB usage" gauge. |
-| `refresh_all_materialized_views()` RPC | Refreshes all 4 matviews concurrently. |
+| `refresh_all_materialized_views()` RPC | Refreshes all 5 matviews concurrently (incl. `mv_book_scope_counts`). |
 
 Cleanup cron caps `pageviews` at ~90 days (see §6).
 
@@ -155,6 +157,7 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 - `pgcrypto`, `pg_stat_statements`, `uuid-ossp`, `supabase_vault` — Supabase-managed extensions.
 - Composite `(entity_type, entity_id)` and `(entity_type, viewed_at)` on `pageviews` for the rising/trending widgets.
 - Partial indexes for `cover_url IS NULL`, `description_book IS NULL` (admin enrichment queues).
+- `idx_bans_scope_id` — added 2026-05-21 voor de `/scope/[slug]` sweep tegen `mv_book_scope_counts`.
 - **Known issue**: `idx_pageviews_entity` and `idx_pageviews_entity_type_id` are functionally identical duplicates; one should be dropped in Sprint A. See findings #8.
 - **Fuzzy-match RPCs voor de import-pipeline** (migratie `20260512175331`): `find_book_candidates_by_title(q text, threshold real)` doet `pg_trgm`-similarity tegen `books.title` en returnt de top-10 kandidaten. `find_author_candidates_by_name(q text, threshold real)` doet hetzelfde voor `authors.display_name`. Beide worden aangeroepen door `src/lib/imports/verifier.ts` als de exact slug-lookup mist.
 
@@ -163,6 +166,8 @@ Cleanup cron caps `pageviews` at ~90 days (see §6).
 14 tables have RLS enabled:
 - 12 with public-read SELECT policies (`true` qual, except `news_items` which filters on `status = 'published'`).
 - 2 without policies (`ban_reason_links`, `cover_search_attempts`) — admin-only access via service-role key. Documented with SQL comments in the baseline.
+
+**2026-05-20 anon-lockdown.** Supabase security advisor flagde meerdere anon-leesbare surfaces die alleen via service-role hadden mogen lopen. Anon-access naar de getroffen tabellen/views is gesloten; admin/cron blijven via `adminClient()`. Memory-doctrine: lees singleton config-rijen (`news_config`, `bbw_config`, etc.) altijd via `adminClient()` — anon ziet stille default-fallback.
 
 No fine-grained row-level access yet; this is binary public-or-nobody. Future features (user accounts, submissions) will require more nuanced RLS.
 
@@ -181,6 +186,9 @@ src/
 │   ├── feed.xml/                     # RSS feed of latest news
 │   ├── opengraph-image.tsx + icon.svg + apple-icon.png + favicon.ico
 │   ├── indexnow.txt                  # IndexNow key file
+│   ├── llms.txt/                     # LLM-discoverability index (see §10)
+│   ├── about.md/ + history.md/       # .md long-form prose exports for AI citation
+│   ├── methodology.md/ + data-quality.md/
 │   │
 │   ├── books/[slug]/                 # Per-book page (canonical; rich metadata, schema.org)
 │   ├── authors/[slug]/               # Author bio + their banned books
@@ -190,21 +198,26 @@ src/
 │   ├── search/                       # Full-text search (server) + client interactivity
 │   ├── stats/ + methodology/         # Stats dashboard + "why the US dominates" essay
 │   ├── top-100-banned-books/         # Static-revalidating SEO landing (24h)
+│   ├── most-banned-authors/          # Author-ranked SEO landing
+│   ├── rising-banned-books/          # 14-day rolling rising-list SEO landing
+│   ├── non-english-banned-books/     # Multilingual catalogue SEO landing
 │   ├── banned-classics/              # Pre-1970 SEO landing (24h)
 │   ├── challenged-books/             # School-scope SEO landing
 │   ├── banned-books/[year]/          # Year-archive SEO landings (2022..2026, generateStaticParams)
 │   ├── banned-books-week/ + archive/ # BBW hub + per-year archive
-│   ├── reading-club/                 # Hub
-│   │   ├── currently-challenged/     # ALA OIF list
-│   │   ├── international/            # Engine-curated
-│   │   ├── classics/                 # Manual evergreen
-│   │   └── by-theme/[slug]/          # Five themes
+│   ├── reading-club/                 # Hub (featured cover strip + 4 tracks)
+│   │   ├── currently-challenged/     # ALA OIF list — per-position [year]/[position]/ + /pdf
+│   │   ├── international/            # Engine-curated — per-book [slug]/ + [slug]/pdf
+│   │   ├── classics/                 # Manual evergreen — per-book [slug]/ + [slug]/pdf
+│   │   └── by-theme/[slug]/          # Five themes — per-book [bookSlug]/ + [bookSlug]/pdf
 │   ├── essays/                       # Index + per-essay pages
 │   │   ├── what-we-document/
 │   │   └── forbidden-knowledge-iceberg/
 │   ├── history/                      # Long-form essay (legacy flat URL)
 │   ├── why-not-amazon/               # Essay (legacy flat URL)
-│   ├── about/ + privacy/ + sources/ + dataset/ + reading-list/ + news/
+│   ├── data-quality/                 # Explainer for 3-level record classification
+│   ├── press/                        # Media kit — short factual founder bio, live stats, story angles, Org JSON-LD
+│   ├── about/ + privacy/ + sources/ + dataset/ + reading-list/ + news/  # /about = personal "why I built this" narrative
 │   │
 │   ├── admin/                        # Cookie-gated admin UI (see §8)
 │   │   ├── page.tsx                  # Dashboard (stats, inbox, dataset KPIs, DB gauge)
@@ -341,7 +354,7 @@ External SaaS connected:
 
 | Path | Schedule | What it does |
 |---|---|---|
-| `/api/cron/fetch-news` | `0 8 * * *` (daily 08:00 UTC) | Pulls all RSS feeds, summarises with OpenAI, dedupes via embeddings, inserts as `draft` (or `published` when `news_config.auto_publish=true`). |
+| `/api/cron/fetch-news` | daily **08:00 Amsterdam time** (2026-05-19 shift, was 08:00 UTC) | Pulls all RSS feeds, summarises with OpenAI, dedupes via embeddings, inserts as `draft` (or `published` when `news_config.auto_publish=true`). |
 | `/api/cron/fetch-mail` | `0 * * * *` (hourly) | Connects to Zoho IMAP, replaces the 5 rows in `inbox_preview` so the admin dashboard shows recent inbox at a glance. |
 | `/api/cron/cleanup-pageviews` | `0 3 * * 1` (Mondays 03:00 UTC) | Deletes `pageviews` rows older than 90 days. Caps DB size and keeps the visitor-hash distinct counts meaningful. |
 
@@ -357,21 +370,23 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 
 ### Pages
 
-**Homepage `/`**
+**Homepage `/` — v2 redesign live (2026-05-20)**
+- Hero callout met search bar (vervangt de oude pills) en CTA-quote; eyebrow-typography uniform met de rest van de editorial design language.
 - Live total counts (books × countries) in the H1 sub-line.
+- **Book of the day** — daily-rotating, richer card met `description_ban` als samenvatting; deterministisch per calendar date (`seed = today's ISO`). Daily rotation + cross-section dedup + `cover_status = valid` filter zorgen dat highlights niet herhalen.
 - `BookBrowser` — paged catalogue (initial 48 books, infinite scroll), filters by country, genre, reason, author. Server-rendered first paint.
 - `HighlightsStrip` — three book + three author cards: most-banned, trending (this week), all-time; deduped against each other.
 - `TrendingTabs` — toggles between Trending (all-time pageviews) and Rising (rolling 14-day window).
-- "Book of the day" — deterministic per calendar date (`seed = today's ISO`).
 - Latest 3 news items.
+- Search-bar usage wordt apart getrackt (analytics) zowel op `/` als `/search`.
 
 **Per-book page `/books/{slug}`**
 - Cover (with `BookCoverPlaceholder` fallback), title, author(s), first published year, genres, ISBN.
 - `description_book` (synopsis) and `description_ban` ("why it was banned").
-- Per-ban list grouped by country, with status, year, scope, reasons, and source citations.
+- Per-ban list **geclusterd op `(country, year, scope, source)`** (2026-05-21) zodat PEN per-district entries niet meer N regels herhalen voor dezelfde maatregel; granular count zichtbaar wanneer relevant.
 - Optional `censorship_context` and `extended_context` (for sensitive titles like *Mein Kampf*; `warning_level` = `none` / `context` / `extended`).
-- Affiliate links: Bookshop.org (deep link if probed valid, otherwise storefront), Kobo. **No Amazon links** — see `/why-not-amazon`.
-- Free Project Gutenberg link when available.
+- Affiliate links: Bookshop.org (deep link if probed valid; 308-redirects worden ook als valid behandeld, anders storefront). **Geen Kobo** (affiliate denied 2026-05) en **geen Amazon** — zie `/why-not-amazon`.
+- Free Project Gutenberg link when available; archive.org "Read free"-knop wanneer beschikbaar (separate check in `enrich-all`).
 - Share buttons; tracked outbound links (logged for Bookshop / Kobo / dataset purchase).
 - Schema.org `Book` JSON-LD with `inLanguage` set from `original_language` and `additionalProperty` carrying the record's `data_quality_status` (propertyID `dataQualityStatus`, link to `/data-quality`) so AI-citation crawlers see the provenance signal.
 - `lang="fr"` (or other ISO 639-1) attribute on the h1 when `original_language ≠ 'en'`.
@@ -390,12 +405,16 @@ Footer also surfaces: Challenged books · School bans · Government bans · Sour
 **Scope pages `/scope/school`, `/scope/government`** — books banned in that scope.
 
 **SEO landing pages** (`revalidate = 86400` — 24h ISR):
-- `/top-100-banned-books` — ranked list by ban count.
+- `/top-100-banned-books` — ranked list by `distinct_countries` / `banned_books` (distinct-books metric, niet raw events — zie §13).
+- `/most-banned-authors` — author leaderboard (placeholder-auteurs zoals "Anonymous" / "Various Authors" gefilterd).
+- `/rising-banned-books` — 14-day rolling rising window, gespiegeld van `mv_top_books_rising`.
+- `/non-english-banned-books` — boeken met `original_language ≠ 'en'`; benadrukt Model 3 multilinguale dekking.
 - `/banned-classics` — pre-1970 published books still banned.
 - `/challenged-books` — school-scope challenges.
 - `/banned-books/[year]` — `2022..2026` archives, with `generateStaticParams`.
+- `/scope/school` en `/scope/government` ranken nu via `mv_book_scope_counts` (district vs aggregate split, zie §3 + §13).
 
-**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay. **/data-quality** — explainer for the three-level record classification (confident / default / flagged), the signals behind it, and what flagged-status means for a reader. Linked from every quality indicator on book/author pages and from the methodology page.
+**Stats `/stats`** — interactive charts; **/methodology** — long-form "why the US dominates this data" essay (bevat ook de distinct-books-vs-raw-events uitleg — PEN America 2024-25 telt per district, Wikipedia/ALA per titel; canonical metric = distinct books). **/data-quality** — explainer for the three-level record classification (confident / default / flagged), the signals behind it, and what flagged-status means for a reader. Linked from every quality indicator on book/author pages and from the methodology page.
 
 **Search `/search`** — server-rendered FTS with client filters.
 
@@ -412,7 +431,10 @@ Each essay declares `relatedBookSlugs` in `essays-data.ts`; an `EssayRelatedBook
 - Editorial content blocks (hero subtitle, "what is BBW", "why it matters", "the other side", "what you can do") gate visibility — the page hides each section until its block is `published`.
 
 **Reading Club `/reading-club`**
+- Editor-curated featured cover-strip op de hub.
 - Four tracks: `currently-challenged`, `international`, `classics`, `by-theme/{slug}` (LGBTQ+, political dissent, religious censorship, race & racism, sexuality).
+- Per-book HTML-pagina per track (`/reading-club/{track}/{slug}/`) plus PDF-download (`/{slug}/pdf`) — gratis printbare leesclub-gids.
+- Tracks zijn cross-linked vanuit Reading list en gebruiken de editorial design language uit de homepage v2 rollout.
 - Each book has a custom blurb and (optional) discussion questions stored as JSONB.
 
 **Dataset `/dataset` + `/dataset/success`**
@@ -422,13 +444,18 @@ Each essay declares `relatedBookSlugs` in `essays-data.ts`; an `EssayRelatedBook
 
 **News `/news`** — published items from the pipeline. RSS at `/feed.xml`.
 
-**About / Privacy / Sources** — about page lists current stats live; sources page lists every source used.
+**About / Privacy / Sources** — about page lists current stats live; sources page lists every source used. Founder-narrative is gesplitst (2026-05-19): persoonlijk "why I built this" op `/about`, kort feitelijk bio + media kit op `/press`.
+
+**Press `/press`** — media kit: boilerplate, live stats, logos, story angles, `Organization` JSON-LD. Doel: journalisten en citation-tools krijgen feiten direct, lezers op `/about` krijgen motivatie.
 
 ### Privacy posture
 - No third-party trackers, no sponsored content alongside the catalogue.
 - Visitor IP is never stored; only `sha256(daily_salt ‖ ip ‖ ua)`.
 - Cookies declined automatically (privacy-by-default) — except `admin_session`.
 - AI crawlers (GPTBot, ClaudeBot, OAI-SearchBot, PerplexityBot, etc.) are **welcome** — the project's strategy treats AI traffic as desirable; don't propose blocking them.
+
+### Theme
+- **Light mode wordt site-wide geforceerd** (2026-05-20). `dark:`-variants in Tailwind zijn class-based (niet `prefers-color-scheme`); UI honoreert geen OS dark-mode. Reden: editorial design language is op één lichte palette gekalibreerd.
 
 ---
 
@@ -497,8 +524,9 @@ Last 5 Zoho Mail messages in a card; "Sync now" hits `/api/admin/sync-inbox`; a 
 5. **Free public-domain reading links** — Project Gutenberg where applicable.
 6. **Honest about coverage gaps.** `/methodology` and the About page openly say: the US dominates because the US *counts*, not because the US bans more — Iran/China/Russia/NK ban much more, document much less.
 7. **Engages with counter-arguments seriously.** The BBW "Other side" content block (≥250 words) takes parental-rights / age-appropriateness / curriculum-vs-ban distinctions seriously. This is part of the editorial brief.
-8. **No-Amazon stance** — explained in `/why-not-amazon`. Bookshop and Kobo only.
+8. **No-Amazon stance** — explained in `/why-not-amazon`. Bookshop only (Kobo affiliate program denied 2026-05; geen actieve framing rond Kobo-rejection).
 9. **Independent.** No funding from publishers, governments, advocacy. One-person project + open-source tools.
+10. **AI discovery is desirable, not adversarial.** AI crawlers worden actief verwelkomd; de site publiceert `.md` long-form prose exports, een `/llms.txt` index, en draagt `Banned Books` als page-author/publisher in metadata zodat citation-tools de bron correct toeschrijven. Zie §10 voor de techniek.
 
 **Editorial line.** Documents censorship; doesn't endorse it; doesn't endorse the books either. Includes morally objectionable titles (e.g. *The Turner Diaries*, *The Anarchist Cookbook*, *Mein Kampf*) with extended context and warning labels rather than excluding them.
 
@@ -513,6 +541,13 @@ LLM-driven traffic.
 - `robots.ts` — `User-agent: *`, `Allow: /`, sitemap pointer.
 - `next.config.ts` — `X-Robots-Tag: noindex` on `/_next/image/*` only (transformed images shouldn't be indexed; the canonical book page should).
 - AI crawlers explicitly allowed (project policy).
+
+### AI-citation surface
+- `/llms.txt` — discoverability index voor LLM-crawlers; punt naar de canonieke long-form prose.
+- `.md`-exports van editorial long-form pagina's: `/about.md`, `/history.md`, `/methodology.md`, `/data-quality.md`. Schone markdown zonder UI-chrome, ideaal voor citation-pipelines die Markdown prefereren boven HTML.
+- **`Banned Books` als named page-author/publisher** in metadata + JSON-LD zodat citation-tools de bron correct toeschrijven (i.p.v. anonieme web-content).
+- `Dataset` JSON-LD op `/dataset` voor Google Dataset Search indexing.
+- `Book` / `Person` JSON-LD dragen `additionalProperty[dataQualityStatus]` zodat AI-crawlers het provenance-signaal zien (`confident` / `default` / `flagged`).
 
 ### Sitemaps
 Index at `/sitemap.xml` references five split sitemaps so each stays small:
@@ -588,7 +623,39 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 
 ---
 
-## 12. Achievements to date (snapshot 2026-05-18)
+## 12. Achievements to date (snapshot 2026-05-22)
+
+**Editorial design language + homepage v2 (2026-05-19 → 2026-05-21)** — homepage redesign live (hero callout, search bar i.p.v. pills, richer Book of the day met `description_ban` als samenvatting, daily rotation + cross-section dedup + cover-valid filter). Editorial design language doorgetrokken naar `/reading-club`, `/reading-list`, `/press`, `/dataset`. Site-wide forced light mode (dark-mode variants nu class-based, niet system). Reading list hernoemd en cross-linked vanuit Reading Club.
+
+**Reading Club uitgebreid (2026-05-21)** — Editor-curated featured cover-strip op `/reading-club` hub. Per-book HTML-pagina per track + per-book PDF-download (`/reading-club/{track}/{slug}/pdf` voor classics/international/by-theme, `/{year}/{position}/pdf` voor currently-challenged). Gratis printbare leesclub-gids.
+
+**Press page + founder narrative split (2026-05-19)** — `/press` media kit (boilerplate, live stats, logos, story angles, `Organization` JSON-LD) gescheiden van persoonlijke "why I built this" narrative op `/about`. Journalisten krijgen feiten, lezers motivatie.
+
+**AI-citation surface uitgebouwd (2026-05-19)** — `/llms.txt` index + `.md`-exports voor `/about`, `/history`, `/methodology`, `/data-quality`. `Banned Books` als named page-author/publisher in metadata + JSON-LD. `Dataset` JSON-LD op `/dataset` voor Google Dataset Search.
+
+**District-vs-aggregate ban-event split (2026-05-21)** — PEN America 2024-25 import op school-district granularity (1 boek × N districts = N rijen), naast Wikipedia/ALA per-titel aggregaten. Nieuwe `mv_book_scope_counts` MV splitst `district_events` / `state_events` / `aggregate_events` / `total_events`; `v_top_banned_books` + `v_top_banned_authors` krijgen `granular_events` + `aggregate_events` aan de staart. Verdere doctrine: canonical metric blijft `distinct_books` / `distinct_countries`, niet raw events — anders inflatie van ~+1 op 94% van US-school boeken en top-N shuffle. `/scope/[slug]` consumeert MV.
+
+**Kobo affiliate weggevallen (2026-05-22)** — Kobo wees affiliate-aanvraag af. Alle Kobo CTAs en references gescrubd uit codebase. Bookshop blijft de enige affiliate-partner.
+
+**Bookshop affiliate-laag uitgebouwd (2026-05-21)** — affiliate-lijst per pagina uitgebreid naar 12; embedded op reason- en scope-pages. Cross-reference script resumable via state-file; 308-redirects als valid behandeld; 374 working alt-ISBN's gerapporteerd. Edition-level guard vangt translation/language collisions.
+
+**Book-page bans clustering (2026-05-21)** — per-ban list groept nu op `(country, year, scope, source)` zodat PEN per-district entries niet meer N regels herhalen voor dezelfde maatregel; granular count zichtbaar wanneer relevant.
+
+**Blasphemy → religious taxonomie-merge (2026-05-20)** — `blasphemy` slug uitgefaseerd, alle `ban_reason_links` herwezen naar `religious`. Twaalf reason-slugs i.p.v. dertien.
+
+**147 dupe-books + 39 dupe-bans merged (2026-05-20)** — parenthetical-suffix en ISBN-collision dupes geconsolideerd; soft-duplicate bans op (book, country, scope) samengevoegd. Plus Gaie France Magazine → Gaie France auteur-merge.
+
+**Anon-access lockdown (2026-05-20)** — Supabase security advisor flagde anon-leesbare surfaces; gesloten. Singleton config-rijen (`news_config`, `bbw_config`) lezen alleen nog via `adminClient()`.
+
+**Permanent not_found stamps (2026-05-20)** — ISBN-13 / cover / description enrichment-lookups krijgen permanente `not_found` markering zodat retry-stormen niet de pipeline opvreten; auto-paginate voor Gutenberg + archive.org.
+
+**Authors bio scrubbing (2026-05-21)** — HTML entities en IPA pronunciation gestript uit Wikipedia-bios.
+
+**`/press` Organization JSON-LD + Dataset JSON-LD live** — voor citation-tools en Google Dataset Search.
+
+---
+
+### Earlier achievements (snapshot 2026-05-18)
 
 - **Data-quality classification system (2026-05-18)** — three-level per-record status (`confident` / `default` / `flagged`) on books + authors, computed offline by `scripts/score-data-quality.ts` from canonical-id presence, ban evidence (≥3 landen of ≥5 totaal, of geverifieerde bans), editorial completeness, and author legitimacy. Drives UI indicators (subtle green check, amber "limited verification" notice, footer provenance line — all linking to `/data-quality`), the new `/data-quality` explainer page, and `additionalProperty` on Book + Person JSON-LD for AI-citation surfaces. Initial classification on production: 2545/2861/141 books (confident/default/flagged) and 998/2693/23 authors. Migration `20260518065314_data_quality_status.sql`; admin script reference in `/admin/scripts`.
 - **A working catalogue** with thousands of books and bans across many countries (live counts on `/about` and the homepage).
@@ -673,6 +740,9 @@ SUPABASE_DB_LIMIT_GB          # optional; defaults to 8 (Pro plan)
 - **301/308 redirects via `next.config.ts redirects()`**, niet via middleware.
 - **Manual-source `country_code` = zacht falen.** De verifier returnt `no_match` in plaats van een exception wanneer een bron geen `default_country_code` heeft. De editor lost dit op in de review queue; geen pipeline-blocker.
 - **Pipeline audit-trail blijft intact.** De twee LLM-outputs worden apart bewaard in `import_review_queue` (`pass_a_output`, `pass_b_output`, `pass_a_provider`, `pass_b_provider`). Verification + archive + gate-decision verhuizen naar `agreement_details`. De geconsolideerde `ExtractionResult` draagt een `passes_audit`-veld zodat de audit-trail ook persisteert op `import_jobs.extraction`.
+- **Rank op distinct books / distinct countries, niet raw ban-rows.** PEN America 2024-25 importeert per district (1 boek × N districts = N rijen), Wikipedia/ALA per titel. Sommatie inflated US ~2.6× en herschudt top-N. Canonieke rank-bronnen: `mv_ban_counts.distinct_books`, `v_top_banned_books.distinct_countries`, `mv_book_scope_counts` (district/state/aggregate split). Raw events alleen als ondersteunende copy, nooit als ranking key.
+- **Gate alle `photo_url` / `cover_url` writes door `isAllowedImageUrl()`.** `next/image` 500't op hosts buiten `ALLOWED_IMAGE_HOSTS`. Helper in `src/lib/allowed-image-hosts.ts`; bestaande slechte URLs te scrubben via `scripts/_cleanup-bad-image-hosts.ts`.
+- **Light mode wordt geforceerd**, ook in nieuwe componenten. `dark:` Tailwind-variants alleen class-based, nooit `prefers-color-scheme`. Reden: editorial design language is op één lichte palette gekalibreerd.
 
 ---
 
@@ -693,7 +763,14 @@ Tracked in `docs/sprint-a/step-0-findings.md`:
 
 ## 15. Next sprint — Sprint A (planning)
 
-**Sprint A status na 2026-05-13.** Taken 1, 1.5, 2A, 2B, 3 en de IndexNow delta-feature zijn afgerond. Resterend:
+**Sprint A status na 2026-05-22.** Taken 1, 1.5, 2A, 2B, 3 en de IndexNow delta-feature zijn afgerond. **Taak 5 is inhoudelijk begonnen** terwijl de Legifrance Cloudflare-blok-workaround in uitvoering blijft:
 
-- **Taak 4 — Language admin-filter + backfill.** 334 NULL `title_native` rijen verwerken; 67 fout-geklasseerde `original_language` corrigeren.
-- **Taak 5 — Eerste echte source: Frankrijk.** Legifrance + Joubert-bibliografie. Legifrance is Cloudflare-geblokt voor directe fetches (403 op de pipeline-fetcher tijdens de Taak 3 eindtest); bron-specifieke fetch-strategie nodig — browser-headers, headless browser, of proxy. Plus de eerder gedocumenteerde Wayback-fallback chain (finding #1) en redirect-chain-detectie (finding #3).
+- **Taak 4 — Language admin-filter + backfill.** 334 NULL `title_native` rijen verwerken; 67 fout-geklasseerde `original_language` corrigeren. Status: nog open.
+- **Taak 5 — Eerste echte source: Frankrijk + bredere source-debt backfill.** Voortgang sinds 2026-05-18:
+  - **31 FR arrêtés** geïmporteerd onder Loi du 16 juillet 1949 via Legifrance/JORF (handmatige route — directe pipeline-fetch op Legifrance blijft Cloudflare-403).
+  - **12 ZA bans** uit The Literature Police (apartheid-era).
+  - **AU/GB source-debt backfill** afgerond.
+  - Légifrance + The Literature Police entries toegevoegd aan `sources`-tabel.
+  - LLM reason classifier + Iran default ban-year fallback aan import-review pipeline toegevoegd.
+  - Slug fallback naar transliteratie voor non-Latin titels in import-review.
+  - Bron-specifieke fetch-strategie voor Legifrance (browser-headers / headless / proxy) **blijft openstaan**; tot dan blijft hand-curatie de werkroute. Plus eerder gedocumenteerde Wayback-fallback chain (finding #1) en redirect-chain-detectie (finding #3).
