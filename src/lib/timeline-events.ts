@@ -510,6 +510,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     title: 'A coordinated US school-ban campaign begins',
     summary:
       'PEN America and the American Library Association both document a step-change in challenges: organised groups submit lists of hundreds of titles to school boards across multiple states. Books featuring LGBTQ+ characters or addressing race are disproportionately targeted.',
+    image: {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Moms_for_Liberty_stage_%2853459777751%29.jpg/960px-Moms_for_Liberty_stage_%2853459777751%29.jpg',
+      alt: 'Stage at a Moms for Liberty rally at the Iowa State Capitol — one of the organised groups driving the US school-ban surge documented by PEN America and the ALA',
+      credit: 'Gage Skidmore / Wikimedia Commons (CC BY-SA 2.0)',
+    },
     related: { countryCode: 'us' },
     externalLink: 'https://pen.org/banned-book-list/',
   },
