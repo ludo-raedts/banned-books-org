@@ -1,0 +1,73 @@
+{
+  "source_url": "https://bannedbooks.penbelarus.org/en/soviet-period-1917-1991-en/",
+  "source_name": "PEN Belarus — Soviet period 1917-1991 (curated profiles)",
+  "source_type": "ngo",
+  "entries": [
+    {
+      "title": "In the Clutches of the GPU",
+      "title_variants": ["Siedem lat w szponach G.P.U.", "The Truth about the Soviets"],
+      "author": "Francišak Alachnovič",
+      "author_birth": 1888,
+      "author_death": 1944,
+      "author_status": "killed",
+      "ban_events": [
+        {
+          "year": 1937,
+          "date": "1937-06-03",
+          "type": "glavlit_order_33",
+          "ordinal": 2,
+          "scope": "All books",
+          "status": "historical"
+        }
+      ],
+      "voice_of_book": "Father of Belarusian theatre. Playwright, theatre scholar, actor, director, publicist. One of the first in world literature to describe the horrors of Soviet repression and torture in Bolshevik labour camps. Listed second of 421 entries on Order No. 33 of the BSSR Glavlit (3 June 1937), marked 'All books'."
+    },
+    {
+      "title": "Two Souls",
+      "author": "Maksim Harecki",
+      "author_birth": 1893,
+      "author_death": 1938,
+      "author_status": "executed",
+      "ban_events": [
+        {
+          "year": 1937,
+          "date": "1937-06-03",
+          "type": "glavlit_order_33",
+          "ordinal": 83,
+          "scope": "All books",
+          "status": "historical"
+        }
+      ],
+      "voice_of_book": "Novella bearing witness to the split in Belarusian identity between East and West. Harecki was one of the founders of Belarusian national prose and a key figure in the formation of Belarusian national identity. Listed as #83 of 421 entries on Glavlit Order No. 33 (3 June 1937), marked 'All books'. Author executed during the 1937 Stalinist purges."
+    },
+    {
+      "title": "Selected Works",
+      "author": "Vacłaŭ Łastoŭski",
+      "author_birth": 1883,
+      "author_death": 1938,
+      "author_status": "executed",
+      "publisher": "Biełaruski Knihazbor",
+      "publication_year": 1997,
+      "existing_book_id": 13391,
+      "_dedup_note": "Matches existing book 13391 from modern Extremist import; attach Glavlit 1937 ban to that book rather than creating a duplicate.",
+      "ban_events": [
+        {
+          "year": 1937,
+          "date": "1937-06-03",
+          "type": "glavlit_order_33",
+          "ordinal": 201,
+          "scope": "All books",
+          "status": "historical"
+        },
+        {
+          "year": 2024,
+          "date": "2024-04-30",
+          "type": "extremist_list",
+          "status": "active",
+          "note": "Modern re-ban under Lukashenko regime; also listed 14.10.2024."
+        }
+      ],
+      "voice_of_book": "Author was extraordinary: writer, academic of the Belarusian Academy of Sciences, and Prime Minister of the Belarusian People's Republic. His Short History of Belarus laid the foundations of national historiography. Listed as #201 of 421 on Glavlit Order No. 33 (3 June 1937). Author executed in 1938. Re-banned in modern Belarus by the National List of Extremist Materials (30 April 2024 and 14 October 2024)."
+    }
+  ]
+}
