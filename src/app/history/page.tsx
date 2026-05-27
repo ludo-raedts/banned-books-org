@@ -53,6 +53,13 @@ export default function HistoryPage() {
             <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
               There is something almost paradoxical about banned books. The act of suppressing a text often guarantees its survival. Censorship is less a tool of control than a confession of fear — fear of ideas, of dissent, of readers thinking for themselves.
             </p>
+
+            <Link
+              href="/timeline"
+              className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-oxblood/40 bg-cream/60 text-sm font-medium text-oxblood hover:bg-cream transition-colors"
+            >
+              Browse this as a timeline →
+            </Link>
           </div>
         </section>
 
