@@ -134,6 +134,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     title: 'Savonarola lights the Bonfire of the Vanities in Florence',
     summary:
       'The Dominican friar Girolamo Savonarola directs his followers to burn books, paintings, and manuscripts in the Piazza della Signoria — including works by Boccaccio and Petrarch. A year later, after his fall from power, Savonarola himself is burned in the same square.',
+    image: {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Hanging_and_burning_of_Girolamo_Savonarola_in_Florence.jpg',
+      alt: 'Period engraving of Savonarola hanged and burned on the Piazza della Signoria, Florence, May 1498',
+      credit: 'After Francesco Rosselli, c. 1498 / Wikimedia Commons (public domain)',
+    },
     related: { countryCode: 'it' },
     externalLink: 'https://en.wikipedia.org/wiki/Bonfire_of_the_vanities',
   },
@@ -197,6 +202,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     title: 'Galileo\'s Dialogue is added to the Index after his Inquisition trial',
     summary:
       'The Roman Inquisition convicts Galileo of heresy for defending heliocentrism. His Dialogue Concerning the Two Chief World Systems is placed on the Index, where it remains until 1835.',
+    image: {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Galileo_facing_the_Roman_Inquisition.jpg/960px-Galileo_facing_the_Roman_Inquisition.jpg',
+      alt: 'Galileo Galilei facing the Roman Inquisition, painting by Cristiano Banti, 1857',
+      credit: 'Cristiano Banti, 1857 / Wikimedia Commons (public domain)',
+    },
     related: { authorSlug: 'galileo-galilei' },
     externalLink: 'https://en.wikipedia.org/wiki/Galileo_affair',
   },
@@ -396,6 +406,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     title: 'The KGB seizes a manuscript of The Gulag Archipelago',
     summary:
       'After the KGB interrogates a typist into revealing a hidden copy, Solzhenitsyn authorises publication abroad. He is stripped of Soviet citizenship and expelled in 1974. The book is banned across the USSR until 1989.',
+    image: {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Aleksandr_Solzhenitsyn_1974crop.jpg/960px-Aleksandr_Solzhenitsyn_1974crop.jpg',
+      alt: 'Aleksandr Solzhenitsyn photographed shortly after his expulsion from the Soviet Union, 1974',
+      credit: 'Bert Verhoeff for Anefo, 1974 / Wikimedia Commons (CC0)',
+    },
     related: { bookSlug: 'the-gulag-archipelago', authorSlug: 'aleksandr-solzhenitsyn' },
     externalLink: 'https://en.wikipedia.org/wiki/The_Gulag_Archipelago',
   },
