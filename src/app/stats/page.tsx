@@ -203,6 +203,32 @@ export default async function StatsPage({
   const timelineWithYear = timelineBans.filter(b => b.year_started && b.year_started >= 1000).length
   const timelineWithoutYear = timelineBans.length - timelineWithYear
 
+  // Log scale so small historical eras stay visible next to the 2020s peak.
+  // log10(count + 1) keeps count=1 at 0 and avoids -Infinity for count=0.
+  const TIMELINE_PX = 112
+  const logMax = Math.log10(maxDecade + 1)
+  const logHeight = (count: number) =>
+    Math.max(Math.round((Math.log10(count + 1) / logMax) * TIMELINE_PX), 4)
+
+  // Gridlines at each power of 10 up to (and including) the next one above max.
+  const gridTicks: number[] = []
+  for (let exp = 0; Math.pow(10, exp) <= maxDecade * 10; exp++) {
+    const v = Math.pow(10, exp)
+    if (v <= 1 || v > maxDecade * 1.5) continue
+    gridTicks.push(v)
+  }
+
+  // Color buckets so the log-flattened bars still carry a "much / little" signal.
+  const TIMELINE_BUCKETS = [
+    { max: 10,     label: '< 10',     bar: 'bg-red-200 dark:bg-red-300', swatch: 'bg-red-200 dark:bg-red-300' },
+    { max: 100,    label: '< 100',    bar: 'bg-red-300 dark:bg-red-400', swatch: 'bg-red-300 dark:bg-red-400' },
+    { max: 500,    label: '< 500',    bar: 'bg-red-400 dark:bg-red-500', swatch: 'bg-red-400 dark:bg-red-500' },
+    { max: 1000,   label: '< 1,000',  bar: 'bg-red-500 dark:bg-red-600', swatch: 'bg-red-500 dark:bg-red-600' },
+    { max: 10000,  label: '< 10,000', bar: 'bg-red-700 dark:bg-red-700', swatch: 'bg-red-700 dark:bg-red-700' },
+    { max: Infinity, label: '≥ 10,000', bar: 'bg-red-900 dark:bg-red-800', swatch: 'bg-red-900 dark:bg-red-800' },
+  ] as const
+  const bucketFor = (count: number) => TIMELINE_BUCKETS.find(b => count < b.max) ?? TIMELINE_BUCKETS[TIMELINE_BUCKETS.length - 1]
+
   // ── Filter options (for the timeline filter UI) ────────────────────
   const filterCountryOptions = [...new Set(bansRaw.map(b => b.country_code))]
     .map(code => ({ code, name: countryMap.get(code) ?? code }))
@@ -356,6 +382,7 @@ export default async function StatsPage({
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Bans Through History</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
+          Bars use a <span className="font-medium">logarithmic scale</span> — each gridline is a 10× increase, so earlier eras stay visible alongside the 2020s peak.
           {timelineWithoutYear > 0 && (
             <> {timelineWithoutYear.toLocaleString('en')} bans with no recorded year are excluded.</>
           )}
@@ -375,35 +402,85 @@ export default async function StatsPage({
           </p>
         )}
 
-        <div className="overflow-x-auto pb-1" dir="rtl">
-          <div className="inline-flex items-end gap-1 min-w-max" style={{ height: '9rem' }} dir="ltr">
-            {decades.map((d, i) => {
-              const isOngoing = d.decade === CURRENT_DECADE
-              const barH = Math.max(Math.round(d.count / maxDecade * 112), 4)
-              const labelClass = i % 2 === 0
-                ? 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums'
-                : 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums hidden md:block'
+        <div className="flex items-stretch">
+          {/* Y-axis (sticky, outside the horizontal scroll) */}
+          <div
+            className="relative shrink-0 pr-2 select-none"
+            style={{ width: '3rem', height: `${TIMELINE_PX + 32}px` }}
+            aria-hidden
+          >
+            {gridTicks.map(v => {
+              const y = (Math.log10(v + 1) / logMax) * TIMELINE_PX
               return (
-                <div key={d.decade} className="flex flex-col items-center shrink-0" style={{ width: '2.5rem' }}>
-                  <div className="flex-1 flex items-end relative w-full justify-center">
-                    <div
-                      className={`w-8 rounded-t transition-all ${isOngoing ? 'bg-brand' : 'bg-red-500 dark:bg-red-600'}`}
-                      style={{ height: `${barH}px` }}
-                      title={`${d.decade}s: ${d.count} ban${d.count !== 1 ? 's' : ''}`}
-                    />
-                    {/* Count label anchored just above the bar */}
-                    <span
-                      className="absolute text-[9px] tabular-nums leading-none pointer-events-none select-none text-gray-500 dark:text-gray-400"
-                      style={{ bottom: `${barH + 3}px` }}
-                    >
-                      {d.count}
-                    </span>
-                  </div>
-                  <span className={labelClass}>{d.decade}s</span>
-                </div>
+                <span
+                  key={v}
+                  className="absolute right-2 text-[10px] tabular-nums text-gray-400 dark:text-gray-500 leading-none"
+                  style={{ bottom: `${y + 16}px`, transform: 'translateY(50%)' }}
+                >
+                  {v >= 1000 ? `${v / 1000}k` : v}
+                </span>
               )
             })}
           </div>
+
+          <div className="flex-1 overflow-x-auto pb-1" dir="rtl">
+            <div
+              className="relative inline-flex items-end gap-1 min-w-max"
+              style={{ height: `${TIMELINE_PX + 32}px` }}
+              dir="ltr"
+            >
+              {/* Gridlines spanning the full chart width */}
+              {gridTicks.map(v => {
+                const y = (Math.log10(v + 1) / logMax) * TIMELINE_PX
+                return (
+                  <div
+                    key={v}
+                    className="absolute inset-x-0 border-t border-dashed border-gray-200 dark:border-gray-700 pointer-events-none"
+                    style={{ bottom: `${y + 16}px` }}
+                  />
+                )
+              })}
+
+              {decades.map((d, i) => {
+                const isOngoing = d.decade === CURRENT_DECADE
+                const barH = logHeight(d.count)
+                const labelClass = i % 2 === 0
+                  ? 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums'
+                  : 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums hidden md:block'
+                const bucket = bucketFor(d.count)
+                return (
+                  <div key={d.decade} className="flex flex-col items-center shrink-0 relative z-10" style={{ width: '2.5rem' }}>
+                    <div className="flex-1 flex items-end relative w-full justify-center">
+                      <div
+                        className={`w-8 rounded-t transition-all ${bucket.bar} ${isOngoing ? 'ring-2 ring-brand ring-offset-1 ring-offset-white dark:ring-offset-gray-900' : ''}`}
+                        style={{ height: `${barH}px` }}
+                        title={`${d.decade}s: ${d.count.toLocaleString('en')} ban${d.count !== 1 ? 's' : ''}${isOngoing ? ' (ongoing)' : ''}`}
+                      />
+                      {/* Count label anchored just above the bar */}
+                      <span
+                        className="absolute text-[9px] tabular-nums leading-none pointer-events-none select-none text-gray-500 dark:text-gray-400"
+                        style={{ bottom: `${barH + 3}px` }}
+                      >
+                        {d.count.toLocaleString('en')}
+                      </span>
+                    </div>
+                    <span className={labelClass}>{d.decade}s</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Color-bucket legend */}
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500 dark:text-gray-400">
+          <span className="uppercase tracking-wide text-gray-400 dark:text-gray-500">Bans per decade:</span>
+          {TIMELINE_BUCKETS.map(b => (
+            <span key={b.label} className="inline-flex items-center gap-1">
+              <span className={`inline-block w-3 h-3 rounded-sm ${b.swatch}`} aria-hidden />
+              <span className="tabular-nums">{b.label}</span>
+            </span>
+          ))}
         </div>
       </section>
 
