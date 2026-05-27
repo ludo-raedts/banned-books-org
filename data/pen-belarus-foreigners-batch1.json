@@ -1,0 +1,118 @@
+{
+  "source_url": "https://bannedbooks.penbelarus.org/en/breath-of-freedom-the-wrong-foreigners-en/",
+  "source_name": "PEN Belarus — Breath of Freedom: the 'wrong' foreigners",
+  "source_type": "ngo",
+  "entries": [
+    {
+      "title": "Gulag",
+      "author": "Anne Applebaum",
+      "existing_book_id": 13486,
+      "title_override": "Gulag",
+      "_note": "Existing book stored in ALL-CAPS as 'GULAG' from PEN-BY modern parser; title_override fixes case.",
+      "ban_events": [
+        { "year": 2025, "date": "2025-01-24", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I recount the history of the Soviet system of forced labour camps: from its origins under Lenin to its demise in the 1980s, through mass arrests, repression, and the lives of prisoners in inhumane conditions. Within my pages are documents, testimonies, archives, and literary sources that expose the scale and mechanisms of the totalitarian machine of violence. I was banned for openly revealing the crimes of Soviet power, for drawing parallels with present-day repressions, and for my dangerous call not to forget the truth about the camp system – a mirror of the totalitarian past from which today's regime has never distanced itself."
+    },
+    {
+      "title": "Beartown",
+      "author": "Fredrik Backman",
+      "existing_book_id": 4464,
+      "ban_events": [
+        { "year": 2025, "date": "2025-04-01", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a story about the murder of the soul through bullying. About how hatred is taught to those who refuse to remain silent. I was banned because I showed that violence is not only the work of the perpetrator, but also of those who stand by and say nothing. In Belarus, thousands are hounded for their language, their flag, even for a 'like'. Just as in my pages, aggression has become the norm, cruelty justified as 'patriotism' or 'state interest'. I am destroyed because I expose the psychology of fear – and wherever fear rules, harsh censorship follows."
+    },
+    {
+      "title": "A Little Life",
+      "author": "Hanya Yanagihara",
+      "existing_book_id": 969,
+      "ban_events": [
+        { "year": 2025, "date": "2025-01-24", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a wound from which compassion begins, a novel about the abyss of human suffering. I tell of traumas that strike into the depths of silence, of shame, despair, and love that demands nothing in return. People read me to understand those living at the limits of endurance. But I was banned in Belarus: I revealed themes the regime does not want to see in schools, in families, or in life itself. For power does not want people, only functions; not trauma, but 'happiness by instruction.' I became a mirror of pain – and in it, the censors saw hearts learning compassion and learning solidarity."
+    },
+    {
+      "title": "Goodbye to Berlin",
+      "author": "Christopher Isherwood",
+      "existing_book_id": 13498,
+      "ban_events": [
+        { "year": 2025, "date": "2025-04-01", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a novel about an age when people did not yet realise their world was about to vanish. From the Weimar Republic to the rise of Nazism, I tell of freedom – whose profound value is often unrecognised until it is lost. I was banned because my pages are a document of free life on the edge of catastrophe. I warn: the beautiful, polyphonic, open world can still be strangled by dictatorship."
+    },
+    {
+      "title": "The Secret History",
+      "author": "Donna Tartt",
+      "existing_book_id": 13548,
+      "ban_events": [
+        { "year": 2025, "date": "2025-08-04", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "'The Secret History' is Donna Tartt's debut novel, telling the story of a group of students at an elite college in New England. The main character, Richard Papen, is drawn into a mysterious circle of friends who study under the guidance of an eccentric professor. Together with them, he uncovers dark secrets that lead to tragic events. The novel explores themes of betrayal, murder, and morality, showing how far people are willing to go in the name of their obsessions. 'The Secret History' is a gripping tale about forbidden knowledge and the consequences that come with possessing such secrets. A must-read for fans of psychological literature and thrillers."
+    },
+    {
+      "title": "The Secret Life of Farts and Burps",
+      "author": "Mariona Tolosa Sisteré",
+      "existing_book_id": 13568,
+      "ban_events": [
+        { "year": 2025, "date": "2025-09-30", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "The book The Secret Life of Farts and Burps by Mariona Tolosa Sisteré is a fascinating presentation of what happens in our bodies when we digest food. Why do people and animals fart? How is digestion organized and should you eat so as not to harm your body?"
+    },
+    {
+      "title": "The Wasp Factory",
+      "author": "Iain Banks",
+      "existing_book_id": 13517,
+      "ban_events": [
+        { "year": 2025, "date": "2025-05-29", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a work ranked by critics among the 100 Best Novels of the 20th Century. A literary experiment that breaks the boundaries of norms. I am banned because I deny the reader comfort. I depict the complexities of the human psyche in concentrated form. I show the social monster in its most unattractive aspects. The current regime in Belarus does not tolerate such truth, as it can recognise itself in it. And so, for its servants, it is more convenient if I do not exist."
+    },
+    {
+      "title": "Lullaby",
+      "author": "Chuck Palahniuk",
+      "existing_book_id": 1098,
+      "ban_events": [
+        { "year": 2025, "date": "2025-01-24", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a warning novel about how power over the fate of others can destroy a person – and how a careless word can kill or break a life. If the crime leaves no trace, will you commit it? Temptation and choice at once. In Belarus today, my story is more than relevant. I was banned because I revealed the mechanisms of manipulation and violence. In other words, I hold up a mirror to the practices of the regime's own servants."
+    },
+    {
+      "title": "They Both Die at the End",
+      "author": "Adam Silvera",
+      "existing_book_id": 500,
+      "ban_events": [
+        { "year": 2024, "date": "2024-11-21", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am a confession where love is stronger than fear. Even at the threshold of death, it is possible to live a whole life in a single day. Brief as it is, that day can transform an entire inner world. I teach reflection on mortality not through guilt or division, but through intimacy and meaning. The regime fears me because I bring to Belarus another vision of humanity – one that defies their 'traditional morality'."
+    },
+    {
+      "title": "My Dark Vanessa",
+      "author": "Kate Elizabeth Russell",
+      "existing_book_id": 2644,
+      "ban_events": [
+        { "year": 2024, "date": "2024-11-21", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book (translated from Belarusian): I am the one who appeared 70 years after Nabokov's 'Lolita'. In me, at last, sounded not only the voice of the other side, but also the problem of two-sided power in a relationship. I tell of trauma long denied. I was banned in Belarus because I destroy the familiar scheme of 'guilty and innocent', because I compel listening and doubt, supporting those who suffered. I am dangerous because I show that the right to a voice will eventually be given to those who were forced to remain silent for too long."
+    },
+    {
+      "title": "Why Kids Kill: What's Going On Inside the Mind of a School Shooter",
+      "author": "Peter Langman",
+      "existing_book_id": 13489,
+      "_note": "PEN-BY page uses paraphrased subtitle 'Inside the Minds of School Shooters'; existing book stores the original 2009 Palgrave Macmillan title.",
+      "ban_events": [
+        { "year": 2025, "date": "2025-01-24", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am psychology, not justification. I seek to understand what drives children to violence. I was banned because I do not fit into absolute schemes of 'evil,' but dismantle them – opening space for reflection, dialogue, and prevention. In Belarus today, tragedy is addressed only through punishment. I show instead that such an approach deepens the problem, and that the solution lies in seeking understanding."
+    },
+    {
+      "title": "Middlesex",
+      "author": "Jeffrey Eugenides",
+      "existing_book_id": 9270,
+      "ban_events": [
+        { "year": 2025, "date": "2025-05-29", "type": "wrong_foreigners", "status": "active" }
+      ],
+      "voice_of_book": "Voice of the Book: I am an epic that won my author the Pulitzer Prize. Not only for confronting the subject of hermaphroditism, but for much more: I am about identity that refuses to be trapped in polarities. I was banned because I share human experiences without aggression or judgment. I am the literature of a new ethic, a new world. And that frightens those in Belarus who wish to enforce only one 'correct' image of the traditional person."
+    }
+  ]
+}

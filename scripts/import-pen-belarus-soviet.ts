@@ -43,7 +43,7 @@ const JSON_PATH = INPUT_ARG
 interface BanEvent {
   year: number
   date?: string                                              // optional for tsarist-era estimates
-  type: 'glavlit_order_33' | 'extremist_list' | 'harmful_list' | 'tsarist_suppression'
+  type: 'glavlit_order_33' | 'extremist_list' | 'harmful_list' | 'tsarist_suppression' | 'wrong_foreigners'
   ordinal?: number
   scope?: string
   status: 'historical' | 'active'
@@ -53,6 +53,7 @@ interface BanEvent {
 interface Entry {
   title: string
   title_variants?: string[]
+  title_override?: string             // overwrite books.title (e.g. fix ALL-CAPS)
   author: string
   author_birth?: number
   author_death?: number
@@ -102,7 +103,7 @@ async function main() {
   console.log(`\n── import-pen-belarus-soviet ── (${APPLY ? 'APPLY' : 'DRY-RUN'})\n`)
 
   const input: InputFile = JSON.parse(readFileSync(JSON_PATH, 'utf-8'))
-  console.log(`Loaded ${input.entries.length} curated entries from Soviet-period page.`)
+  console.log(`Loaded ${input.entries.length} curated entries from ${input.source_name}.`)
 
   // Resolve gov scope + political reason
   const { data: scopes } = await supabase.from('scopes').select('id, slug')
@@ -185,6 +186,14 @@ async function main() {
         await supabase.from('book_authors').insert({ book_id: bookId, author_id: authorId })
       }
 
+      // Title override (e.g. fix ALL-CAPS residue from earlier parser)
+      if (e.title_override && ex) {
+        const currentTitle = await supabase.from('books').select('title').eq('id', bookId).single()
+        if (currentTitle.data && (currentTitle.data as { title: string }).title !== e.title_override) {
+          await supabase.from('books').update({ title: e.title_override }).eq('id', bookId)
+        }
+      }
+
       // Update description_book if empty
       const hasDesc = ex && (ex as { description_book?: string }).description_book
       if (!hasDesc) {
@@ -230,7 +239,9 @@ async function main() {
         // Link to Soviet-page source
         const locator = ev.type === 'glavlit_order_33'
           ? `Order No. 33 #${ev.ordinal}`
-          : `${ev.type} ${ev.date}`
+          : ev.type === 'wrong_foreigners'
+            ? `Profile: ${e.author} / ${e.title}`
+            : `${ev.type} ${ev.date}`
         await supabase.from('ban_source_links').insert({
           ban_id: banId, source_id: sourceId, locator,
         }).then(({ error }) => {
