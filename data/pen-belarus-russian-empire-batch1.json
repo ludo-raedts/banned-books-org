@@ -1,0 +1,86 @@
+{
+  "source_url": "https://bannedbooks.penbelarus.org/en/russian-empire-the-1800s-roots-of-prohibition-en/",
+  "source_name": "PEN Belarus — Russian Empire, the 1800s (Roots of prohibition)",
+  "source_type": "ngo",
+  "entries": [
+    {
+      "title": "The Winds Flow…",
+      "author": "Vincent Dunin-Marcinkievič",
+      "author_birth": 1808,
+      "author_death": 1884,
+      "existing_book_id": 13381,
+      "_dedup_note": "Existing modern PEN-BY import book 13381 (title 'The winds are blowing', author parsed wrongly as 'The text of the work'). Reattach proper author + add Tsarist 1861 event.",
+      "ban_events": [
+        {
+          "year": 1861,
+          "type": "tsarist_suppression",
+          "status": "historical",
+          "note": "Tsarist censorship of pre-uprising Belarusian-language literature. Poem written on the eve of the 1863 January Uprising against Russian rule; circulated underground because publication in Belarusian (Latin-script) was banned."
+        }
+      ],
+      "voice_of_book": "A poem written on the eve of the 1863 January Uprising, attributed to Vincent Dunin-Marcinkievič. Breathes with the freedom of the Latin script and the anger of Warsaw in 1861, when Russian occupiers met an unarmed patriotic demonstration with bullets. Suppressed by Tsarist authorities at the time; re-banned by Lukashenko's regime in 2023 as part of Dunin-Marcinkievič's Selected Works compilation."
+    },
+    {
+      "title": "Letters from Beneath the Gallows",
+      "author": "Kastuś Kalinoŭski",
+      "author_birth": 1838,
+      "author_death": 1864,
+      "author_status": "executed",
+      "ban_events": [
+        {
+          "year": 1864,
+          "type": "tsarist_suppression",
+          "status": "historical",
+          "note": "Written and smuggled out during Kalinoŭski's trial before his execution by hanging in March 1864. Suppressed by Russian Imperial authorities."
+        }
+      ],
+      "voice_of_book": "Final words of the leader of the 1863-64 anti-Russian uprising, written from prison before his execution by hanging. Famous line: 'For I tell you from beneath the gallows, my people, that you will only live happily when there is no longer a Muscovite above you.' Suppressed by Tsarist authorities upon discovery."
+    },
+    {
+      "title": "Buračok's Belarusian Stories",
+      "author": "Francišak Bahuševič",
+      "author_birth": 1840,
+      "author_death": 1900,
+      "ban_events": [
+        {
+          "year": 1899,
+          "type": "tsarist_suppression",
+          "status": "historical",
+          "note": "Prepared for publication 1899; blocked by Tsarist censorship and the manuscript subsequently lost. Same fate met his third planned collection, The Belarusian Violin (planned posthumously)."
+        }
+      ],
+      "voice_of_book": "A work in the native Belarusian tongue that never reached the printing press. Prepared for publication in 1899, blocked by Tsarist censorship; authorities hid the manuscript from Belarusians so thoroughly that it was eventually lost altogether. Bahuševič is the foundational figure of modern Belarusian-language literature."
+    },
+    {
+      "title": "The Belarusian Violin",
+      "author": "Ciotka",
+      "author_alt_name": "Ałaiza Paškievič",
+      "author_birth": 1876,
+      "author_death": 1916,
+      "ban_events": [
+        {
+          "year": 1906,
+          "type": "tsarist_suppression",
+          "status": "historical",
+          "note": "Published in Vilnius during Ciotka's revolutionary period. Title borrowed from Bahuševič's earlier banned collection. Confiscated by Tsarist authorities for revolutionary content rejecting autocracy."
+        }
+      ],
+      "voice_of_book": "A collection that resounded in Vilnius when its rebellious author Ciotka (Ałaiza Paškievič) first found her voice. Drew on the traditions of her celebrated predecessor Francišak Bahuševič — the title is borrowed from one of Bahuševič's banned books. Ciotka's poetry was revolutionary, her verses a complete rejection of Tsarist autocracy."
+    },
+    {
+      "title": "The Little Flute (Žalejka)",
+      "author": "Janka Kupała",
+      "author_birth": 1882,
+      "author_death": 1942,
+      "ban_events": [
+        {
+          "year": 1908,
+          "type": "tsarist_suppression",
+          "status": "historical",
+          "note": "Kupała's first major collection. Twice confiscated by Tsarist authorities. Contains the programme-text poem 'And who is going there?' — later translated into 82 languages and served as the unofficial Belarusian national anthem."
+        }
+      ],
+      "voice_of_book": "I am a Belarusian, though I was born in the imperial capital. A poem and ninety-seven verses, among them the programme text for all Belarusian literature: 'And who is going there?'. For years, it served as the unofficial national anthem, translated into eighty-two languages worldwide. The Tsarist authorities twice confiscated the collection."
+    }
+  ]
+}

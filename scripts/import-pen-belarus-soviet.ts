@@ -35,12 +35,15 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 
 const APPLY = process.argv.includes('--apply')
-const JSON_PATH = join(process.cwd(), 'data/pen-belarus-soviet-batch1.json')
+const INPUT_ARG = process.argv.find(a => a.startsWith('--input='))
+const JSON_PATH = INPUT_ARG
+  ? join(process.cwd(), INPUT_ARG.slice('--input='.length))
+  : join(process.cwd(), 'data/pen-belarus-soviet-batch1.json')
 
 interface BanEvent {
   year: number
-  date: string
-  type: 'glavlit_order_33' | 'extremist_list' | 'harmful_list'
+  date?: string                                              // optional for tsarist-era estimates
+  type: 'glavlit_order_33' | 'extremist_list' | 'harmful_list' | 'tsarist_suppression'
   ordinal?: number
   scope?: string
   status: 'historical' | 'active'
@@ -84,7 +87,13 @@ function buildDescription(e: Entry, ev: BanEvent): string {
   if (ev.type === 'extremist_list') {
     return `Added to the National List of Extremist Materials by Lukashenko-era authorities${ev.note ? '. ' + ev.note : '.'}`
   }
-  return `Banned ${ev.date}.`
+  if (ev.type === 'tsarist_suppression') {
+    const authorClause = e.author_status === 'executed'
+      ? ` ${e.author} (${e.author_birth}-${e.author_death}) was executed.`
+      : ''
+    return `Suppressed by Russian Imperial authorities (Tsarist censorship), c. ${ev.year}.${ev.note ? ' ' + ev.note : ''}${authorClause}`
+  }
+  return `Banned ${ev.date ?? `c. ${ev.year}`}.`
 }
 
 const supabase = adminClient()
