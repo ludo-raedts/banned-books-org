@@ -1185,16 +1185,75 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
               deze sectie collapsed tenzij je een nieuwe ban-list / court-ruling / curated source aan het onboarden bent.
             </p>
 
-            <div className="rounded-md border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-3 py-2 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
-              <strong>Twee paden:</strong> gebruik <em>add-scripts</em> voor trusted Latin-script lijsten die direct in{' '}
-              <code className="font-mono text-[11px]">books</code> mogen (PEN, ALA, US state lists). Voor non-Latin
-              scripts, court rulings, of government sources: registreer de source in{' '}
-              <code className="font-mono text-[11px]">src/lib/imports/source-registry.ts</code> en gebruik het Wikipedia/{' '}
-              <code className="font-mono text-[11px]">run-import-job</code>-pad, zodat items eerst via{' '}
-              <a href="/admin/import-review" className="underline hover:no-underline">
-                /admin/import-review
-              </a>{' '}
-              passeren.
+            <div className="rounded-md border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-3 py-3 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+              <p className="font-semibold mb-2">Wanneer welk pad?</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="rounded border border-amber-300/60 dark:border-amber-800/60 bg-white/40 dark:bg-amber-950/20 p-2.5">
+                  <p className="font-semibold mb-1">
+                    Add-script (<code className="font-mono text-[11px]">scripts/add-*.ts</code>)
+                  </p>
+                  <p className="mb-2 text-[11px] opacity-90">
+                    Direct → <code className="font-mono text-[11px]">books</code> +{' '}
+                    <code className="font-mono text-[11px]">bans</code> + sources. Geen LLM, geen review-queue.
+                  </p>
+                  <p className="font-semibold text-[11px]">Kies dit als <em>alles</em> geldt:</p>
+                  <ul className="list-disc list-outside ml-4 text-[11px] leading-snug">
+                    <li>Latin script</li>
+                    <li>
+                      Gestructureerd (CSV/JSON met canonieke velden: <code className="font-mono text-[10px]">title</code>,{' '}
+                      <code className="font-mono text-[10px]">author</code>,{' '}
+                      <code className="font-mono text-[10px]">country</code>,{' '}
+                      <code className="font-mono text-[10px]">year</code>)
+                    </li>
+                    <li>Vertrouwde bron (PEN, ALA, state-list — bron levert al canoniek)</li>
+                    <li>Volume &gt; review-capaciteit</li>
+                  </ul>
+                  <p className="mt-2 text-[11px]">
+                    <span className="opacity-70">Trade-off:</span> snel, maar geen gate-vangnet.
+                  </p>
+                  <p className="mt-1 text-[11px] opacity-80">
+                    Voorbeelden:{' '}
+                    <code className="font-mono text-[10px]">add-pen-america-books.ts</code>,{' '}
+                    <code className="font-mono text-[10px]">add-cdhe-colorado.ts</code>,{' '}
+                    <code className="font-mono text-[10px]">add-ala-2025.ts</code>,{' '}
+                    <code className="font-mono text-[10px]">add-bulk-books.ts</code> (catch-all).
+                  </p>
+                </div>
+
+                <div className="rounded border border-amber-300/60 dark:border-amber-800/60 bg-white/40 dark:bg-amber-950/20 p-2.5">
+                  <p className="font-semibold mb-1">
+                    Queue-pad (<code className="font-mono text-[11px]">run-import-job</code>)
+                  </p>
+                  <p className="mb-2 text-[11px] opacity-90">
+                    Source → 2× LLM → gate → queue. Approve via{' '}
+                    <a href="/admin/import-review" className="underline hover:no-underline">
+                      /admin/import-review
+                    </a>
+                    .
+                  </p>
+                  <p className="font-semibold text-[11px]">Kies dit als <em>één</em> geldt:</p>
+                  <ul className="list-disc list-outside ml-4 text-[11px] leading-snug">
+                    <li>Non-Latin script (Sprint-A doctrine)</li>
+                    <li>High-stakes bron (court ruling, government decree, single-source claim)</li>
+                    <li>Onstructureerd (artikel-URL, persbericht — title/author moet uit prose komen)</li>
+                    <li>
+                      Bulk waarvan je audit-trail wilt (<code className="font-mono text-[10px]">passes_audit</code> per rij)
+                    </li>
+                  </ul>
+                  <p className="mt-2 text-[11px]">
+                    <span className="opacity-70">Trade-off:</span> trager (~$ per rij voor high-stakes tier), maar non-Latin
+                    tiebreaker + fuzzy-match queue actief.
+                  </p>
+                  <p className="mt-1 text-[11px] opacity-80">
+                    Registreer in <code className="font-mono text-[10px]">src/lib/imports/source-registry.ts</code>.
+                    Voorbeelden: Legifrance FR, manual single-URL.
+                  </p>
+                </div>
+              </div>
+              <p className="mt-3 text-[11px] italic">
+                Twijfel? Default naar het queue-pad. Een review-queue van 50 items is goedkoper dan een verkeerde
+                direct-write.
+              </p>
             </div>
 
             <ol className="flex flex-col gap-4 text-sm text-gray-700 dark:text-gray-300 list-decimal list-outside ml-5">
