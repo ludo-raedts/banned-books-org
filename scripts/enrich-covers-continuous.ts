@@ -255,26 +255,53 @@ async function fetchBooksToSearch(loopStart: Date): Promise<{ books: BookRow[]; 
 // ── Display ───────────────────────────────────────────────────────────────────
 
 const counters = { olIsbn: 0, olWorkId: 0, olSearch: 0, gbIsbn: 0, gbSearch: 0, found: 0, failed: 0 }
-let lastBook = ''
 let loopNum = 0
-const startedAt = new Date().toLocaleTimeString()
+const startedAt = Date.now()
 
-function printStatus(totalMissing: number, skippedCount: number, toTry: number, skipListSize: number) {
-  process.stdout.write('\x1b[2J\x1b[H')
-  const line = '═'.repeat(47)
-  console.log(line)
-  console.log('Cover enrichment — running continuously')
-  console.log('Press Ctrl+C to stop')
-  console.log(line)
-  console.log(`Loop #${loopNum} | Started: ${startedAt}`)
-  console.log(`Books without cover: ${totalMissing}`)
-  console.log(`  Already searched (skipping): ${skippedCount}`)
-  console.log(`  New/updated books to try:    ${toTry}`)
-  console.log(`  ✓ Found this loop:           ${counters.found}`)
-  console.log(`  ✗ Added to skip list:        ${counters.failed}`)
-  console.log(`Total in skip list: ${skipListSize}`)
-  if (lastBook) console.log(`Last: ${lastBook}`)
-  console.log(line)
+const fmt = (n: number) => n.toLocaleString('en-US')
+const elapsed = () => {
+  const s = Math.floor((Date.now() - startedAt) / 1000)
+  if (s < 60) return `${s}s`
+  const m = Math.floor(s / 60); const r = s % 60
+  if (m < 60) return `${m}m ${r}s`
+  const h = Math.floor(m / 60); return `${h}h ${m % 60}m`
+}
+const truncTitle = (t: string, n = 50) => t.length > n ? t.slice(0, n - 1) + '…' : t
+
+function printLoopHeader(totalMissing: number, skippedCount: number, toTry: number, skipListSize: number) {
+  const bar = '─'.repeat(60)
+  console.log(`\n${bar}`)
+  console.log(`Loop #${loopNum}  ·  ${new Date().toLocaleTimeString()}  ·  uptime ${elapsed()}`)
+  console.log(`Missing covers: ${fmt(totalMissing)}   ·   Skip list: ${fmt(skipListSize)}`)
+  console.log(`This loop: ${fmt(toTry)} to try, ${fmt(skippedCount)} skipped`)
+  console.log(bar)
+}
+
+function printBookLine(idx: number, total: number, ok: boolean, title: string, detail: string) {
+  const icon = ok ? '✓' : '✗'
+  const pos = `[${String(idx).padStart(String(total).length)}/${total}]`
+  console.log(`${pos} ${icon} "${truncTitle(title)}" → ${detail}`)
+}
+
+function printLoopSummary() {
+  const total = counters.found + counters.failed
+  if (total === 0) { console.log('No books processed this loop.'); return }
+  console.log(
+    `Done: ${counters.found} found, ${counters.failed} failed  ·  ` +
+    `OL isbn ${counters.olIsbn} · OL work ${counters.olWorkId} · OL search ${counters.olSearch} · ` +
+    `GB isbn ${counters.gbIsbn} · GB search ${counters.gbSearch}`,
+  )
+}
+
+async function countdown(seconds: number) {
+  const start = Date.now()
+  const end = start + seconds * 1000
+  while (Date.now() < end) {
+    const left = Math.ceil((end - Date.now()) / 1000)
+    process.stdout.write(`\rNext loop in ${String(left).padStart(2)}s… (Ctrl+C to stop) `)
+    await sleep(Math.min(1000, end - Date.now()))
+  }
+  process.stdout.write('\r\x1b[K') // clear the countdown line
 }
 
 // ── Main loop ─────────────────────────────────────────────────────────────────
@@ -284,20 +311,22 @@ async function runLoop() {
   counters.olIsbn = 0; counters.olWorkId = 0; counters.olSearch = 0
   counters.gbIsbn = 0; counters.gbSearch = 0; counters.found = 0; counters.failed = 0
 
-  const { data: countData } = await supabase
+  const { count: missingCount } = await supabase
     .from('books').select('*', { count: 'exact', head: true }).is('cover_url', null)
-  const totalMissing = (countData as unknown as number | null) ?? 0
+  const totalMissing = missingCount ?? 0
 
-  const { data: skipData } = await supabase
+  const { count: skipCount } = await supabase
     .from('cover_search_attempts').select('*', { count: 'exact', head: true })
-  const skipListSize = (skipData as unknown as number | null) ?? 0
+  const skipListSize = skipCount ?? 0
 
   const loopStart = new Date()
   const { books, skippedCount } = await fetchBooksToSearch(loopStart)
 
-  printStatus(totalMissing as unknown as number, skippedCount, books.length, skipListSize)
+  printLoopHeader(totalMissing, skippedCount, books.length, skipListSize)
 
+  let idx = 0
   for (const book of books) {
+    idx++
     const author = book.author ?? ''
     const sourcesTried: string[] = []
     let coverUrl: string | null = null
@@ -307,21 +336,21 @@ async function runLoop() {
     if (!coverUrl && book.isbn13) {
       sourcesTried.push('ol_isbn')
       coverUrl = await olByIsbn(book.isbn13)
-      if (coverUrl) { source = 'OL ISBN ✓'; counters.olIsbn++ }
+      if (coverUrl) { source = 'OL ISBN'; counters.olIsbn++ }
     }
 
     // 2. OL by work ID
     if (!coverUrl && book.openlibrary_work_id) {
       sourcesTried.push('ol_workid')
       coverUrl = await olByWorkId(book.openlibrary_work_id)
-      if (coverUrl) { source = 'OL work ID ✓'; counters.olWorkId++ }
+      if (coverUrl) { source = 'OL work ID'; counters.olWorkId++ }
     }
 
     // 3. OL search
     if (!coverUrl) {
       sourcesTried.push('ol_search')
       const { coverUrl: url, workId } = await olSearch(book.title, author)
-      if (url) { coverUrl = url; source = 'OL search ✓'; counters.olSearch++ }
+      if (url) { coverUrl = url; source = 'OL search'; counters.olSearch++ }
       if (workId && !book.openlibrary_work_id) {
         await supabase.from('books').update({ openlibrary_work_id: workId }).eq('id', book.id)
       }
@@ -331,56 +360,48 @@ async function runLoop() {
     if (!coverUrl && !NO_GOOGLE && book.isbn13) {
       sourcesTried.push('google_isbn')
       coverUrl = await gbByIsbn(book.isbn13)
-      if (coverUrl) { source = 'GB ISBN ✓'; counters.gbIsbn++ }
+      if (coverUrl) { source = 'GB ISBN'; counters.gbIsbn++ }
     }
 
     // 5. Google Books search
     if (!coverUrl && !NO_GOOGLE) {
       sourcesTried.push('google_search')
       coverUrl = await gbBySearch(book.title, author)
-      if (coverUrl) { source = 'GB search ✓'; counters.gbSearch++ }
+      if (coverUrl) { source = 'GB search'; counters.gbSearch++ }
     }
 
+    let rejectedHost = false
     if (coverUrl && !isAllowedImageUrl(coverUrl)) {
       // Sources (OL / GB) only emit allowlisted hosts, so this is the
       // structural backstop, not a hot path. Treat as "not found" rather
       // than poison the cover_url column.
       coverUrl = null
-      lastBook = `"${book.title.slice(0, 35)}" → REJECTED non-allowlisted host`
+      rejectedHost = true
     }
 
     if (coverUrl) {
       await supabase.from('books').update({ cover_url: coverUrl }).eq('id', book.id)
       await clearFailure(book.id)
       counters.found++
-      lastBook = `"${book.title.slice(0, 35)}" → ${source}`
+      printBookLine(idx, books.length, true, book.title, source)
     } else {
       await supabase.from('cover_search_attempts').upsert(
         { book_id: book.id, last_searched_at: new Date().toISOString(), sources_tried: sourcesTried },
         { onConflict: 'book_id' },
       )
       counters.failed++
-      lastBook = `"${book.title.slice(0, 35)}" → not found`
+      printBookLine(idx, books.length, false, book.title, rejectedHost ? 'rejected (non-allowlisted host)' : 'not found')
     }
-
-    const { data: newSkipData } = await supabase
-      .from('cover_search_attempts').select('*', { count: 'exact', head: true })
-    const newSkipSize = (newSkipData as unknown as number | null) ?? skipListSize
-
-    printStatus(
-      totalMissing as unknown as number,
-      skippedCount,
-      books.length,
-      newSkipSize,
-    )
 
     await sleep(BOOK_DELAY_MS)
   }
 
-  const { data: finalMissing } = await supabase
+  printLoopSummary()
+
+  const { count: finalMissing } = await supabase
     .from('books').select('*', { count: 'exact', head: true }).is('cover_url', null)
 
-  return { stillMissing: (finalMissing as unknown as number | null) ?? 0, processed: books.length }
+  return { stillMissing: finalMissing ?? 0, processed: books.length }
 }
 
 async function main() {
@@ -400,8 +421,7 @@ async function main() {
     const { stillMissing, processed } = await runLoop()
 
     if (stillMissing === 0) {
-      process.stdout.write('\x1b[2J\x1b[H')
-      console.log('All books now have covers. Done.')
+      console.log('\nAll books now have covers. Done.')
       break
     }
 
@@ -410,8 +430,7 @@ async function main() {
       break
     }
 
-    console.log(`\nWaiting ${LOOP_DELAY_S}s before next loop... (Ctrl+C to stop)`)
-    await sleep(LOOP_DELAY_S * 1000)
+    await countdown(LOOP_DELAY_S)
   }
 }
 
