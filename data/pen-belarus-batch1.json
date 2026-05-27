@@ -1,0 +1,4471 @@
+{
+ "sources": {
+  "extremist": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+  "harmful": "https://bannedbooks.penbelarus.org/en/harmful_list_en/"
+ },
+ "entries": [
+  {
+   "list_type": "extremist",
+   "entry_number": 1,
+   "title": "Belarusian Donbass",
+   "authors": [
+    "Kaciaryna Andrejeva",
+    "Ihar Iljaš"
+   ],
+   "decision_date": "2021-03-26",
+   "ban_year": 2021,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Kaciaryna Andrejeva, Ihar Iljaš, \"Belarusian Donbass\" 26.03.2021"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 2,
+   "title": "Military history of Belarus. Heroes. Symbols. Colors",
+   "authors": [
+    "Viktar Lachar"
+   ],
+   "decision_date": "2022-04-18",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Lachar, \"Military history of Belarus. Heroes. Symbols. Colors\" 18.04.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 3,
+   "title": "Belarus at the Crossroads",
+   "authors": [],
+   "decision_date": "2022-05-13",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Belarus at the Crossroads\" . Collection of articles / compiler and editor A. E. Taras 13.05.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 4,
+   "title": "Dogs of Europe",
+   "authors": [
+    "Alhierd Bacharevič"
+   ],
+   "decision_date": "2022-05-17",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alhierd Bacharevič, \"Dogs of Europe\" 17.05.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 5,
+   "title": "Belarusian National Idea",
+   "authors": [
+    "Zmicier Łukašuk",
+    "Maksim Harunoŭ"
+   ],
+   "decision_date": "2022-05-17",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Zmicier Łukašuk, Maksim Harunoŭ, \"Belarusian National Idea\" 17.05.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 6,
+   "title": "Heroes",
+   "authors": [
+    "Konstantin Zalessky"
+   ],
+   "decision_date": "2022-08-03",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Konstantin Zalessky, \"Heroes\" of the Luftwaffe. First Personal Encyclopedia. 03.08.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 7,
+   "title": "A Short Course in the History of Belarus IXX – XXI centuries",
+   "authors": [
+    "Anatol Taras"
+   ],
+   "decision_date": "2022-09-12",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Anatol Taras, \"A Short Course in the History of Belarus IXX – XXI centuries\" . 12.09.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 8,
+   "title": "Agrarian Policy of the Nationalists in Western Belarus: Planning. Transparency. Implementation (1941-1944)",
+   "authors": [
+    "Sviatlana Kazlova"
+   ],
+   "decision_date": "2022-10-07",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Sviatlana Kazlova, \"Agrarian Policy of the Nationalists in Western Belarus: Planning. Transparency. Implementation (1941-1944)\" . 07.10.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 9,
+   "title": "Ballad about a Small Tugboat",
+   "authors": [
+    "Joseph Brodsky"
+   ],
+   "decision_date": "2022-10-18",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Joseph Brodsky, \"Ballad about a Small Tugboat\" (trans. from Rus. by Alesia Alejnik) 18.10.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 10,
+   "title": "Belarus. From Rahnieda to Kaściuška. An illustrated history",
+   "authors": [
+    "Uładzimir Arłoŭ",
+    "Pavieł Tatarnikaŭ"
+   ],
+   "decision_date": "2022-10-18",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Uładzimir Arłoŭ, Pavieł Tatarnikaŭ, \"Belarus. From Rahnieda to Kaściuška. An illustrated history\" in 2 part. Part. 1. 18.10.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 11,
+   "title": "The Unknown War",
+   "authors": [
+    "Otto Skorzeny"
+   ],
+   "decision_date": "2022-11-18",
+   "ban_year": 2022,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Otto Skorzeny, \"The Unknown War\" (trans. From French Vladimir Kovalyonok) 18.11.2022"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 12,
+   "title": "Belarus Above Everything",
+   "authors": [],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Belarus Above Everything\" . About the National Belarusian Idea / compilation, translation, scientific editing A. E. Таras 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 13,
+   "title": "1942 – The Year for Learning",
+   "authors": [
+    "Uładzimir Biešanaŭ"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Uładzimir Biešanaŭ, \"1942 – The Year for Learning\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 14,
+   "title": "The Forgotten Belarus",
+   "authors": [
+    "Vadzim Dzieružynski"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Vadzim Dzieružynski, \"The Forgotten Belarus\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 15,
+   "title": "Records of the Society of Belarusian History Enthusiasts named after Vacłaŭ Łastoŭski. Challenges of the 'Russian world' and Belarus",
+   "authors": [],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Records of the Society of Belarusian History Enthusiasts named after Vacłaŭ Łastoŭski. Challenges of the 'Russian world' and Belarus\" . Release. 6 / contributor and editor A. Ya. 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 16,
+   "title": "The Big Blood. How the USSR won the war of 1941-1945",
+   "authors": [
+    "Siarhiej Zacharevič"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Siarhiej Zacharevič, \"The Big Blood. How the USSR won the war of 1941-1945\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 17,
+   "title": "National and cultural life in Belarus during the war (1941 – 1944)",
+   "authors": [
+    "Leanid Łyč"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Leanid Łyč, \"National and cultural life in Belarus during the war (1941 – 1944)\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 18,
+   "title": "Post-Soviet Transit: Between Democracy and Dictatorship",
+   "authors": [],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Post-Soviet Transit: Between Democracy and Dictatorship\" . Collection of articles / compiler and editor A. E. Taras 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 19,
+   "title": "Problems of humanitarian security in Belarus",
+   "authors": [],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Problems of humanitarian security in Belarus\" . Materials of the scientific-practical conference / ed. A. J. Taras 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 20,
+   "title": "The Shadow of Victory",
+   "authors": [
+    "Viktor Suvorov"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktor Suvorov, \"The Shadow of Victory\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 21,
+   "title": "Pages from the Past",
+   "authors": [
+    "Anatol Taras"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Anatol Taras, \"Pages from the Past\" . Articles on the history of Belarus 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 22,
+   "title": "Transformation of Belarusians' mentality in the 21st century",
+   "authors": [],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Transformation of Belarusians' mentality in the 21st century\" . Materials of the scientific-practical conference / ed. A. J. Taras 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 23,
+   "title": "Who, how and why killed Wilhelm Kube",
+   "authors": [
+    "Oleg Usachov"
+   ],
+   "decision_date": "2023-01-09",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Oleg Usachov, \"Who, how and why killed Wilhelm Kube\" 09.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 24,
+   "title": "The 'freed' and the enslaved",
+   "authors": [
+    "Alaksandr Smalančuk"
+   ],
+   "decision_date": "2023-01-12",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alaksandr Smalančuk, \"The 'freed' and the enslaved\" . The Polish-Belarusian border in 1939-1941 in the documents of Belarusian archives 12.01.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 25,
+   "title": "Mr. A's Last Book",
+   "authors": [
+    "Alhierd Bacharevič"
+   ],
+   "decision_date": "2023-03-14",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alhierd Bacharevič, \"Mr. A's Last Book\" 14.03.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 26,
+   "title": "Odyssey of the BNR Captain",
+   "authors": [
+    "Anatol Hatoŭčyc"
+   ],
+   "decision_date": "2023-03-16",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Anatol Hatoŭčyc, \"Odyssey of the BNR Captain\" 16.03.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 27,
+   "title": "Twenty Years of Slavery",
+   "authors": [
+    "Sergey Syuzev"
+   ],
+   "decision_date": "2023-04-13",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Sergey Syuzev, \"Twenty Years of Slavery\" . Belarus today 13.04.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 28,
+   "title": "History of Poland from ancient times to the present day",
+   "authors": [
+    "Alicja Dybkowska",
+    "Małgorzata Żaryn",
+    "Jan Żaryn"
+   ],
+   "decision_date": "2023-05-25",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alicja Dybkowska, Małgorzata Żaryn, Jan Żaryn, \"History of Poland from ancient times to the present day\" 25.05.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 29,
+   "title": "Polskie pieśni patriotyczne",
+   "authors": [],
+   "decision_date": "2023-05-25",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Polskie pieśni patriotyczne\" (A collection of patriotic songs) 25.05.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 30,
+   "title": "Selected Works ('Belarusian Knihazbor' series)",
+   "authors": [
+    "Lidzija Arabiej ."
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Lidzija Arabiej . \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 31,
+   "title": "Selected Works ('Belarusian Knihazbor' series)",
+   "authors": [
+    "Łarysa Hienijuš"
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Łarysa Hienijuš , \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 32,
+   "title": "Selected Works ('Belarusian Knihazbor' series)",
+   "authors": [
+    "Natalla Arsieńnieva"
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Natalla Arsieńnieva , \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 33,
+   "title": "Selected Works ('Belarusian Knihazbor' series)",
+   "authors": [
+    "Uładzimir Niaklajeŭ"
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Uładzimir Niaklajeŭ , \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 34,
+   "title": "Selected Works ('Belarusian Knihazbor' series)",
+   "authors": [
+    "Preface by Jazep Januškievič of the book Vincent Dunin-Marcinkievič ."
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Preface by Jazep Januškievič of the book Vincent Dunin-Marcinkievič . \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 35,
+   "title": "The winds are blowing",
+   "authors": [
+    "The text of the work"
+   ],
+   "decision_date": "2023-08-15",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "The text of the work \"The winds are blowing\" from the book Vincent Dunin-Marcinkievič . \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 36,
+   "title": "Old grandfather's talk",
+   "authors": [
+    "The text of the work"
+   ],
+   "decision_date": null,
+   "ban_year": null,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "The text of the work \"Old grandfather's talk\" from the book Vincent Dunin-Marcinkievič . \"Selected Works ('Belarusian Knihazbor' series)\" 15.08.2023 – A collection of works. In 2 volumes, Vol. 1. Dramatic works, poetic stories and short stories / Vincent Dunin-Marcinkievič ; contribution with text. prep., prom., transl. and comment. J. Januškievič. – Minsk: Fiction., 2007. – 494 p.: [16] l. ill.; "
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 37,
+   "title": "Bitter Years: The Tragedy of Western Belarus 1944-1954",
+   "authors": [
+    "Alaksandr Tatarenko."
+   ],
+   "decision_date": "2023-12-08",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alaksandr Tatarenko. \"Bitter Years: The Tragedy of Western Belarus 1944-1954\" 08.12.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 38,
+   "title": "I Take Back My Words",
+   "authors": [
+    "Viktar Suvoraŭ"
+   ],
+   "decision_date": "2023-12-29",
+   "ban_year": 2023,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Suvoraŭ, 'I Take Back My Words' . The Second Part of the 'Shadow of Victory' Trilogy.\" 29.12.2023"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 39,
+   "title": "Adolf Hitler",
+   "authors": [
+    "John Toland"
+   ],
+   "decision_date": "2024-01-30",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "John Toland, \"Adolf Hitler\" (Moscow: InterDigest, 1993). 30.01.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 40,
+   "title": "Russia that never existed: mysteries, versions, hypotheses",
+   "authors": [
+    "Aleksandr Bushkov"
+   ],
+   "decision_date": "2024-02-07",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Aleksandr Bushkov, \"Russia that never existed: mysteries, versions, hypotheses\" (Moscow: OLMA-PRESS, 1999). 07.02.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 41,
+   "title": "Military symbols of Belarusians. Banners and uniforms",
+   "authors": [
+    "Viktar Lachar"
+   ],
+   "decision_date": "2024-03-28",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Lachar, \"Military symbols of Belarusians. Banners and uniforms\" (Minsk: Harvest, 2014). 28.03.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 42,
+   "title": "Illegal memory. Western Belarus in documents and facts. 1921-1954",
+   "authors": [
+    "Alaksandr Tatarenko"
+   ],
+   "decision_date": "2024-04-05",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alaksandr Tatarenko, \"Illegal memory. Western Belarus in documents and facts. 1921-1954\" (2006). 05.04.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 43,
+   "title": "Day",
+   "authors": [
+    "Viktar Suvoraŭ"
+   ],
+   "decision_date": "2024-06-07",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Suvoraŭ, \" Day \"M\" . When did World War II start?\" (Inles, 1994). 15.04.2024 and 07.06.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 44,
+   "title": "Icebreaker. Who started World War II?",
+   "authors": [
+    "Viktar Suvoraŭ"
+   ],
+   "decision_date": "2024-06-07",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Suvoraŭ, \" Icebreaker. Who started World War II?\" (New Time, 1992). 15.04.2024 and 07.06.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 45,
+   "title": "Selected Works ('Belarusian Knihazbor' series I. Fiction)",
+   "authors": [
+    "Vacłaŭ Łastoŭski"
+   ],
+   "decision_date": "2024-10-14",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Vacłaŭ Łastoŭski , \"Selected Works ('Belarusian Knihazbor' series I. Fiction)\" (Minsk: Belarusian Knihazbor, 1997) 30.04.2024 and і 14.10.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 46,
+   "title": "Selected Works ('Belarusian Knihazbor' series I. Fiction)",
+   "authors": [
+    "Aleś Pietraškievič"
+   ],
+   "decision_date": "2024-04-30",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Aleś Pietraškievič , \"Selected Works ('Belarusian Knihazbor' series I. Fiction)\" (Minsk: Belarusian science, 2017) 30.04.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 47,
+   "title": "poetic stories and short stories / Vincent Dunin-Marcinkievič. A collection of works. In 2 volumes, volume 1",
+   "authors": [
+    "Foreword by Jazep Januškievič to the book Dramatic works"
+   ],
+   "decision_date": "2024-05-24",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Foreword by Jazep Januškievič to the book Dramatic works, poetic stories and short stories / Vincent Dunin-Marcinkievič. A collection of works. In 2 volumes, volume 1 (Minsk: Fiction, 2007) 24.05.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 48,
+   "title": "Heart of Stone",
+   "authors": [
+    "Pavieł Sieviaryniec"
+   ],
+   "decision_date": "2024-06-20",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Pavieł Sieviaryniec, \"Heart of Stone\" (Minsk, 2018) 20.06.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 49,
+   "title": "I love Belarus: 200 Phenomena of the National Idea",
+   "authors": [
+    "Pavieł Sieviaryniec"
+   ],
+   "decision_date": "2024-06-20",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Pavieł Sieviaryniec, \"I love Belarus: 200 Phenomena of the National Idea\" (Vilnius, 2008) 20.06.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 50,
+   "title": "Biełarusalim. The Second Book. The Heart of Light",
+   "authors": [
+    "Pavieł Sieviaryniec"
+   ],
+   "decision_date": "2024-06-20",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Pavieł Sieviaryniec, \"Biełarusalim. The Second Book. The Heart of Light\" (Dnipro, 2020) 20.06.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 51,
+   "title": "Odyssey of Paleshuk",
+   "authors": [
+    "Pavał Ničyparuk",
+    "Ihar Mielnikaŭ"
+   ],
+   "decision_date": "2024-08-23",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Pavał Ničyparuk, Ihar Mielnikaŭ, \"Odyssey of Paleshuk\" (Minsk, 2017) 23.08.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 52,
+   "title": "Forgotten corps: the history of the Polish army on the territory of Babrujščyna in 1918, 1919–1920",
+   "authors": [
+    "Ihar Mielnikaŭ"
+   ],
+   "decision_date": "2024-08-23",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Ihar Mielnikaŭ, \"Forgotten corps: the history of the Polish army on the territory of Babrujščyna in 1918, 1919–1920\" (Minsk, 2018) 23.08.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 53,
+   "title": "On the",
+   "authors": [
+    "Ihar Mielnikaŭ"
+   ],
+   "decision_date": "2024-08-23",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Ihar Mielnikaŭ, \"On the \"border of civilizations\". Pages of the history of the pre-war Soviet-Polish cordon in Belarus\" (Minsk, 2020) 23.08.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 54,
+   "title": "Combat Awards of the Third Reich",
+   "authors": [
+    "Oleg Kurylyov"
+   ],
+   "decision_date": "2024-12-12",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Oleg Kurylyov, \"Combat Awards of the Third Reich,\" Illustrated Encyclopedia (Moscow: Eksmo, 2006) 12.12.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 55,
+   "title": "Secret Archives of the SS: Western and Eastern Front",
+   "authors": [
+    "Ian Baxter"
+   ],
+   "decision_date": "2024-12-12",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Ian Baxter, \"Secret Archives of the SS: Western and Eastern Front,\" (Moscow: Eksmo, 2005) 12.12.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 56,
+   "title": "The Successor: The Story of Boris Nemtsov and the Country Where He Did Not Become President",
+   "authors": [
+    "Mikhail Fishman"
+   ],
+   "decision_date": "2024-12-17",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Mikhail Fishman, \"The Successor: The Story of Boris Nemtsov and the Country Where He Did Not Become President,\" (Moscow: Corpus (AST), 2022) 17.12.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 57,
+   "title": "Outline of Belarusian History (1795–2002)",
+   "authors": [
+    "Zachar Šybieka"
+   ],
+   "decision_date": "2024-12-27",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Zachar Šybieka, \" Outline of Belarusian History (1795–2002) \" (Minsk: \"Encyclopedics\", 2003) 27.12.2024"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 58,
+   "title": "Secrets of Belarusian History",
+   "authors": [
+    "Vadim Deruzhinsky"
+   ],
+   "decision_date": "2025-01-10",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Vadim Deruzhinsky, \"Secrets of Belarusian History\" (Minsk, 2011) 10.01.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 59,
+   "title": "BNR-100: Celebration of the 100th Anniversary in Belarus and Abroad",
+   "authors": [
+    "Album"
+   ],
+   "decision_date": "2025-01-30",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Album \"BNR-100: Celebration of the 100th Anniversary in Belarus and Abroad\" (\"Inbelkult\", 2019) 30.01.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 60,
+   "title": "The NKVD Executed People in Kurapaty…",
+   "authors": [
+    "Marat Haravy"
+   ],
+   "decision_date": "2025-01-30",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Marat Haravy, \"The NKVD Executed People in Kurapaty…\" (\"Zmicier Kołas\", 2019) 30.01.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 61,
+   "title": "The Worm",
+   "authors": [
+    "Zmicier Daškievič"
+   ],
+   "decision_date": "2025-02-11",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Zmicier Daškievič, \"The Worm\" (Vilnius, Viešoji įstaiga Gudų informacijos centras , 2013) 11.02.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 62,
+   "title": "Ninety-Third",
+   "authors": [
+    "Siarhiej Navumčyk"
+   ],
+   "decision_date": "2025-02-11",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Siarhiej Navumčyk, \"Ninety-Third\" (\"Radio Svaboda\", 2018) 11.02.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 63,
+   "title": "Ninety-Second",
+   "authors": [
+    "Siarhiej Navumčyk"
+   ],
+   "decision_date": "2025-02-11",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Siarhiej Navumčyk, \"Ninety-Second\" (\"Radio Svaboda\", 2017) 11.02.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 64,
+   "title": "Blood and Ashes of Dražna: Stories of a Partisan Crime",
+   "authors": [
+    "Viktar Chursik"
+   ],
+   "decision_date": "2025-03-06",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Viktar Chursik, Blood and Ashes of Dražna: Stories of a Partisan Crime (Minsk: V. Chursik, 2003) 06.03.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 65,
+   "title": "Naša budučynia",
+   "authors": [
+    "Sergei Zakharevich",
+    "Partisans of the USSR: From Myths to Reality (Vilnius"
+   ],
+   "decision_date": "2025-03-06",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Sergei Zakharevich, Partisans of the USSR: From Myths to Reality (Vilnius: \"Naša budučynia\", 2012) 06.03.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 66,
+   "title": "Naša budučynia",
+   "authors": [
+    "Mikhail Pinchuk",
+    "Soviet Partisans: Myths and Reality (Vilnius"
+   ],
+   "decision_date": "2025-03-06",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Mikhail Pinchuk, Soviet Partisans: Myths and Reality (Vilnius: \"Naša budučynia\", 2014) 06.03.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 67,
+   "title": "Pavel Sheremet, Svetlana Kalinkina, The Accidental President (St. Petersburg: Limbus Press, 2004) 18.03.2025* *As well as its copies or other book editions",
+   "authors": [],
+   "decision_date": null,
+   "ban_year": null,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Pavel Sheremet, Svetlana Kalinkina, The Accidental President (St. Petersburg: Limbus Press, 2004) 18.03.2025* *As well as its copies or other book editions"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 68,
+   "title": "Vincuk Viačorka. The Belarusian Journalist's Handbook",
+   "authors": [
+    "Pšemysłaŭ Fienrych"
+   ],
+   "decision_date": "2025-04-04",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Pšemysłaŭ Fienrych, Vincuk Viačorka. The Belarusian Journalist's Handbook (Szczecin: Centrum Szkoleniowe Fundacji Rozwoju Demokracji Lokalnej , 1999) 04.04.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 69,
+   "title": "Leanid; Romanchuk, Yaraslau. Belarus at the Crossroads",
+   "authors": [
+    "Zaiko"
+   ],
+   "decision_date": "2025-04-04",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Zaiko, Leanid; Romanchuk, Yaraslau. Belarus at the Crossroads (Minsk: Mises Center , 2008) 04.04.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 70,
+   "title": "Januškievič",
+   "authors": [
+    "Klok Štučny",
+    "Murder on Makajonka Street (Warsaw"
+   ],
+   "decision_date": "2025-05-23",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Klok Štučny, Murder on Makajonka Street (Warsaw, \"Januškievič\", 2024) 23.05.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 71,
+   "title": "The Ukrainian Night: An Intimate History of Revolution",
+   "authors": [
+    "Marsi Šor"
+   ],
+   "decision_date": "2025-05-23",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Marsi Šor, The Ukrainian Night: An Intimate History of Revolution (Kraków: Gutenberg Publisher , 2024) 23.05.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 72,
+   "title": "Where There Is No Darkness: Radio Svaboda",
+   "authors": [
+    "Alaksandr Łukašuk"
+   ],
+   "decision_date": "2025-05-23",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Alaksandr Łukašuk, Where There Is No Darkness: Radio Svaboda (Prague: Vesna , 2024) 23.05.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 73,
+   "title": "The Idiot Is the Real One… (Minsk–Warsaw–Moscow, KONTRA-PRESS , 2001)",
+   "authors": [],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "The Idiot Is the Real One… (Minsk–Warsaw–Moscow, KONTRA-PRESS , 2001) 29.05.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 74,
+   "title": "Fedor von Bock, I Stood at the Gates of Moscow (Moscow: Yauza-Press , 202 4 (?))",
+   "authors": [],
+   "decision_date": "2025-06-27",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Fedor von Bock, I Stood at the Gates of Moscow (Moscow: Yauza-Press , 202 4 (?)) 27.06.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 75,
+   "title": "Erich von Manstein, Lost Victories (Tsentrpoligraf, 2023(?))",
+   "authors": [],
+   "decision_date": "2025-07-24",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Erich von Manstein, Lost Victories (Tsentrpoligraf, 2023(?)) 24.07.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 76,
+   "title": "Erwin Rommel, Combat Operations in North Africa and on the Western Front in Europe, 1940–1944 (Tsentrpoligraf, 2023)",
+   "authors": [],
+   "decision_date": "2025-07-24",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Erwin Rommel, Combat Operations in North Africa and on the Western Front in Europe, 1940–1944 (Tsentrpoligraf, 2023) 24.07.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 77,
+   "title": "Gene Sharp, From Dictatorship to Democracy (Scriptorium, 2020)",
+   "authors": [],
+   "decision_date": "2025-07-24",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Gene Sharp, From Dictatorship to Democracy (Scriptorium, 2020) 24.07.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 78,
+   "title": "Present, Prospects",
+   "authors": [
+    "Nationalism in the World: Past"
+   ],
+   "decision_date": "2025-07-28",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Nationalism in the World: Past, Present, Prospects (Miensk: Hołas kraju, 2002) 28.07.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 79,
+   "title": "Verbrannte Dorfer. Nationalsozialistische Verbrechen an der landlichen Bevolkerung in Polen und der Sowjetunion im Zweiten Weltkrieg",
+   "authors": [],
+   "decision_date": "2025-07-28",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\" Verbrannte Dorfer. Nationalsozialistische Verbrechen an der landlichen Bevolkerung in Polen und der Sowjetunion im Zweiten Weltkrieg \" (Burned Villages: National Socialist Crimes Against the Rural Population in Poland and the Soviet Union During the Second World War) (\"Metropol\", 2024) 28.07.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 80,
+   "title": "Leanid Łaŭreš, The Ivanoŭskis' Labiodka (Publishing Solutions, 2025)",
+   "authors": [],
+   "decision_date": "2025-08-28",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Leanid Łaŭreš, The Ivanoŭskis' Labiodka (Publishing Solutions, 2025) 28.08.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 81,
+   "title": "Hitler: The Worldview of a Revolutionary",
+   "authors": [
+    "Rainer Zitelmann"
+   ],
+   "decision_date": "2025-09-10",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Rainer Zitelmann, \"Hitler: The Worldview of a Revolutionary\" (Moscow: Socium, 2023(?)) 10.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 82,
+   "title": "The Collapse of Operation Barbarossa",
+   "authors": [
+    "Hermann Hoth"
+   ],
+   "decision_date": "2025-09-10",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Hermann Hoth, \"The Collapse of Operation Barbarossa\" (Moscow: Yauza-Press, 2025) 10.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 83,
+   "title": "The Leningrad",
+   "authors": [
+    "Wilhelm von Leeb",
+    "Franz Halder"
+   ],
+   "decision_date": "2025-09-10",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Wilhelm von Leeb, Franz Halder, \"The Leningrad \"Blitzkrieg\" 1941–1942\" (Moscow: Yauza-Press, 2023) 10.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 84,
+   "title": "Timothy Snyder, On Freedom (Kyiv: Nash Format, 2023(?))",
+   "authors": [],
+   "decision_date": "2025-09-26",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Timothy Snyder, On Freedom (Kyiv: Nash Format, 2023(?)) 26.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 85,
+   "title": "Valancin Akudovič, The Code of Absence (Łohvinaŭ)",
+   "authors": [],
+   "decision_date": "2025-09-26",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Valancin Akudovič, The Code of Absence (Łohvinaŭ) 26.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 86,
+   "title": "Valancin Akudovič, One Must Imagine Sisyphus Happy (Łohvinaŭ)",
+   "authors": [],
+   "decision_date": "2025-09-26",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Valancin Akudovič, One Must Imagine Sisyphus Happy (Łohvinaŭ) 26.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 87,
+   "title": "Valer Hapiejeŭ, Volniery. The Harbinger (Januškievič, 2023)",
+   "authors": [],
+   "decision_date": "2025-09-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Valer Hapiejeŭ, Volniery. The Harbinger (Januškievič, 2023) 29.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 88,
+   "title": "Valer Hapiejeŭ, Volniery. The Endless Day (Januškievič, 2024)",
+   "authors": [],
+   "decision_date": "2025-09-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Valer Hapiejeŭ, Volniery. The Endless Day (Januškievič, 2024) 29.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 89,
+   "title": "Wiking",
+   "authors": [
+    "Douglas E. Nash & Remy Spezzano",
+    "Kampfgruppe Mühlenkamp: 5th SS Panzer Division"
+   ],
+   "decision_date": "2025-09-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Douglas E. Nash & Remy Spezzano, Kampfgruppe Mühlenkamp: 5th SS Panzer Division \"Wiking\", Eastern Poland, July 1944 (2020) 29.09.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 90,
+   "title": "There They Are, and Here We Are: Belarusian Poetry and Poems of Solidarity, Edited and compiled by V. Korkunov. Afterword by U. Verina (Moscow: Nedovolny, 2021) 3.11.2025",
+   "authors": [],
+   "decision_date": null,
+   "ban_year": null,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "There They Are, and Here We Are: Belarusian Poetry and Poems of Solidarity, Edited and compiled by V. Korkunov. Afterword by U. Verina (Moscow: Nedovolny, 2021) 3.11.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 91,
+   "title": "Gutenberg",
+   "authors": [
+    "Sasha Filipenko",
+    "Red Crosses (Kraków"
+   ],
+   "decision_date": "2025-11-13",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Sasha Filipenko , Red Crosses (Kraków: \"Gutenberg\", 2025) 13.11.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 92,
+   "title": "Gutenberg",
+   "authors": [
+    "Sasha Filipenko",
+    "The Elephant (Kraków"
+   ],
+   "decision_date": "2025-11-13",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Sasha Filipenko, The Elephant (Kraków: \"Gutenberg\", 2025) 13.11.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 93,
+   "title": "Heinz Guderian, Panzer Leader (Tsentrpoligraf, 2022 (?))",
+   "authors": [],
+   "decision_date": "2025-11-14",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Heinz Guderian, Panzer Leader (Tsentrpoligraf, 2022 (?)) 14.11.2025"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 94,
+   "title": "Eliash Bart, Dzha: The Legend of the Stolen Heart (Technałohija, 2023)",
+   "authors": [],
+   "decision_date": "2026-02-18",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Eliash Bart, Dzha: The Legend of the Stolen Heart (Technałohija, 2023) 18.02.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 95,
+   "title": "Diaries of an NKVD Officer: A Documentary Exposure of Stalinism, comp., ed., and comment. by A. Zelenkova",
+   "authors": [],
+   "decision_date": "2026-03-06",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Diaries of an NKVD Officer: A Documentary Exposure of Stalinism, comp., ed., and comment. by A. Zelenkova. 06.03.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 96,
+   "title": "Pavel Antipov, To Arrive Somewhere, Do Something, and Leave (Miane Niama, 2025)",
+   "authors": [],
+   "decision_date": "2026-03-13",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Pavel Antipov, To Arrive Somewhere, Do Something, and Leave (Miane Niama, 2025) 13.03.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 97,
+   "title": "Yuri Felshtinsky, Natalia Radina's Belarus. A Journalist Against the Dictator (ISIA Media Verlag, 2025)",
+   "authors": [],
+   "decision_date": "2026-03-13",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Yuri Felshtinsky, Natalia Radina's Belarus. A Journalist Against the Dictator (ISIA Media Verlag, 2025) 13.03.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 98,
+   "title": "Makar, The Last Generation",
+   "authors": [],
+   "decision_date": "2026-04-02",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Makar, The Last Generation 02.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 99,
+   "title": "Kamiła Cień, Next Stop – Death",
+   "authors": [],
+   "decision_date": "2026-04-02",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Kamiła Cień, Next Stop – Death 02.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 100,
+   "title": "Maks Ščur, Where We Are Not",
+   "authors": [],
+   "decision_date": "2026-04-02",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Maks Ščur, Where We Are Not 02.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 101,
+   "title": "Alaksandr Cvikievič, Historical Works. Volume 1",
+   "authors": [],
+   "decision_date": "2026-04-02",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "Alaksandr Cvikievič, Historical Works. Volume 1 02.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 102,
+   "title": "Local Elections in the Contemporary Political History of Belarus",
+   "authors": [],
+   "decision_date": "2026-04-25",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Local Elections in the Contemporary Political History of Belarus (Minsk: Analytical Hub, 2003) 25.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 103,
+   "title": "The Human Rights Situation in Belarus in 2008. Analytical Review (Minsk, 2009)",
+   "authors": [],
+   "decision_date": "2026-04-25",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": true,
+   "raw": "The Human Rights Situation in Belarus in 2008. Analytical Review (Minsk, 2009) 25.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 104,
+   "title": "The Contemporary History of Belarusian Parliamentarism",
+   "authors": [],
+   "decision_date": "2026-04-25",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "The Contemporary History of Belarusian Parliamentarism (Minsk: Analytical Hub, 2005) 25.04.2026"
+  },
+  {
+   "list_type": "extremist",
+   "entry_number": 105,
+   "title": "Collection of Analytical Reports",
+   "authors": [],
+   "decision_date": "2026-04-25",
+   "ban_year": 2026,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Collection of Analytical Reports (Vilnius: Centre for the Support of Publishing Initiatives, 2009) 25.04.2026"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 1,
+   "title": "Outline of Belarusian History (1795–2002",
+   "authors": [
+    "Zachar Šybieka"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "\" Outline of Belarusian History (1795–2002 ) \" – Zachar Šybieka (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 2,
+   "title": "Secrets of Belarusian History",
+   "authors": [
+    "Vadim Deruzhinsky"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "\"Secrets of Belarusian History\" – Vadim Deruzhinsky (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 3,
+   "title": "On the Tablets of Centuries: Historical Works",
+   "authors": [
+    "Kastuś Cvirka"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "\"On the Tablets of Centuries: Historical Works\" – Kastuś Cvirka (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 4,
+   "title": "Summer in a Pioneer Scarf",
+   "authors": [
+    "Elena Malisova",
+    "Katerina Silvanova"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Summer in a Pioneer Scarf\" – Elena Malisova, Katerina Silvanova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 5,
+   "title": "What the Swallow Is Silent About",
+   "authors": [
+    "Elena Malisova",
+    "Katerina Silvanova"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"What the Swallow Is Silent About\" – Elena Malisova, Katerina Silvanova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 6,
+   "title": "The Boy Who Was Raised as a Dog",
+   "authors": [
+    "Bruce Perry",
+    "Maia Szalavitz"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"The Boy Who Was Raised as a Dog\" – Bruce Perry, Maia Szalavitz (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 7,
+   "title": "The Days of Our Lives",
+   "authors": [
+    "Mikita Franco"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Days of Our Lives\" – Mikita Franco (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 8,
+   "title": "Windows to the Yard",
+   "authors": [
+    "Mikita Franco"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Windows to the Yard\" – Mikita Franco (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 9,
+   "title": "They Both Die at the End",
+   "authors": [
+    "Adam Silvera"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"They Both Die at the End\" – Adam Silvera (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 10,
+   "title": "More Happy Than Not",
+   "authors": [
+    "Adam Silvera"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"More Happy Than Not\" – Adam Silvera (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 11,
+   "title": "Resurrect in 40 Days",
+   "authors": [
+    "Medina Mirai"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Resurrect in 40 Days\" – Medina Mirai (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 12,
+   "title": "Schoolonia",
+   "authors": [
+    "Medina Mirai"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Schoolonia\" – Medina Mirai (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 13,
+   "title": "Shards of Our Reality",
+   "authors": [
+    "Medina Mirai"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Shards of Our Reality\" – Medina Mirai (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 14,
+   "title": "Being Miranda: How I Became Myself by Changing Gender",
+   "authors": [
+    "Miranda Zomberg"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Being Miranda: How I Became Myself by Changing Gender\" – Miranda Zomberg (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 15,
+   "title": "Bitches: Sex, Evolution, and Feminism in the Lives of Female Animals",
+   "authors": [
+    "Lucy Cooke"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"Bitches: Sex, Evolution, and Feminism in the Lives of Female Animals\" – Lucy Cooke (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 16,
+   "title": "My Dark Vanessa",
+   "authors": [
+    "Kate Elizabeth Russell"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"My Dark Vanessa\" – Kate Elizabeth Russell (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 17,
+   "title": "HIV-Positive",
+   "authors": [
+    "Karin Garrett"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"HIV-Positive\" – Karin Garrett (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 18,
+   "title": "Confession",
+   "authors": [
+    "Sierra Simone"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Confession\" – Sierra Simone (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 19,
+   "title": "Intimate Rus': Life Without Domostroy, Sin, Love, and Witchcraft",
+   "authors": [
+    "Nadezhda Adamovich",
+    "Natalya Seregina"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Intimate Rus': Life Without Domostroy, Sin, Love, and Witchcraft\" – Nadezhda Adamovich, Natalya Seregina (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 20,
+   "title": "Her Royal Highness",
+   "authors": [
+    "Rachel Hawkins"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Her Royal Highness\" – Rachel Hawkins (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 21,
+   "title": "The Corrupt King",
+   "authors": [
+    "Rina Kate"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"The Corrupt King\" – Rina Kate (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 22,
+   "title": "The Steel Princess",
+   "authors": [
+    "Rina Kate"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"The Steel Princess\" – Rina Kate (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 23,
+   "title": "Hunting Adeline",
+   "authors": [
+    "H. D. Carlton"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Hunting Adeline\" – H. D. Carlton (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 24,
+   "title": "Chasing Adeline",
+   "authors": [
+    "H. D. Carlton"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Chasing Adeline\" – H. D. Carlton (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 25,
+   "title": "The Wicked + The Divine",
+   "authors": [
+    "Kieron Gillen",
+    "Jamie McKelvie"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"The Wicked + The Divine\" – Kieron Gillen, Jamie McKelvie (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 26,
+   "title": "The 120 Days of Sodom",
+   "authors": [
+    "Marquis de Sade"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "\"The 120 Days of Sodom\" – Marquis de Sade (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 27,
+   "title": "Wreck This Everywhere!",
+   "authors": [
+    "Keri Smith"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Canada",
+   "needs_review": false,
+   "raw": "\"Wreck This Everywhere!\" – Keri Smith (Canada)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 28,
+   "title": "Gangsta. Gangsta",
+   "authors": [
+    "Kohske"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Book series \"Gangsta. Gangsta\" – Kohske (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 29,
+   "title": "Jujutsu Kaisen",
+   "authors": [
+    "Gege Akutami"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Book series \"Jujutsu Kaisen\" – Gege Akutami (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 30,
+   "title": "Beastars",
+   "authors": [
+    "Paru Itagaki"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Book series \"Beastars\" – Paru Itagaki (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 31,
+   "title": "Heaven Official's Blessing",
+   "authors": [
+    "Mo Xiang Tong Xiu"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "China",
+   "needs_review": false,
+   "raw": "Book series \"Heaven Official's Blessing\" – Mo Xiang Tong Xiu (China)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 32,
+   "title": "The Founder of Diabolism",
+   "authors": [
+    "Mo Xiang Tong Xiu"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "China",
+   "needs_review": false,
+   "raw": "Book series \"The Founder of Diabolism\" – Mo Xiang Tong Xiu (China)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 33,
+   "title": "Tokyo Ghoul",
+   "authors": [
+    "Sui Ishida"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Book series \"Tokyo Ghoul\" – Sui Ishida (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 34,
+   "title": "Tokyo Ghoul: re",
+   "authors": [
+    "Sui Ishida"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Book series \"Tokyo Ghoul: re\" – Sui Ishida (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 35,
+   "title": "Tokyo Ghoul: zakki",
+   "authors": [
+    "Sui Ishida (Japan) 24.01.2025 (30 items):"
+   ],
+   "decision_date": "2024-11-21",
+   "ban_year": 2024,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Tokyo Ghoul: zakki\" – Sui Ishida (Japan) 24.01.2025 (30 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 36,
+   "title": "Night Bitch",
+   "authors": [
+    "Rachel Yoder"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Night Bitch\" – Rachel Yoder (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 37,
+   "title": "Lullaby",
+   "authors": [
+    "Chuck Palahniuk"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Lullaby\" – Chuck Palahniuk (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 38,
+   "title": "Plush Head",
+   "authors": [
+    "Vlad Raiber"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Plush Head\" – Vlad Raiber (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 39,
+   "title": "Summer Camp",
+   "authors": [
+    "Vlad Raiber"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Summer Camp\" – Vlad Raiber (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 40,
+   "title": "The Infinite Monkeys Theory",
+   "authors": [
+    "Ekaterina Zvontsova"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Infinite Monkeys Theory\" – Ekaterina Zvontsova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 41,
+   "title": "Don't Tell Mom",
+   "authors": [
+    "Sasha Stepanova"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Don't Tell Mom\" – Sasha Stepanova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 42,
+   "title": "The Age of Consent",
+   "authors": [
+    "Elena Krechman"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Age of Consent\" – Elena Krechman (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 43,
+   "title": "Special Meat",
+   "authors": [
+    "Agustina Bazterrica"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Argentina",
+   "needs_review": false,
+   "raw": "\"Special Meat\" – Agustina Bazterrica (Argentina)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 44,
+   "title": "An Extra in His Game",
+   "authors": [
+    "Alyona Filipenko"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"An Extra in His Game\" – Alyona Filipenko (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 45,
+   "title": "My Name Is Death",
+   "authors": [
+    "Elisabeth Helland Larsen",
+    "Marine Schneider"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Norway",
+   "needs_review": false,
+   "raw": "\"My Name Is Death\" – Elisabeth Helland Larsen, Marine Schneider (Norway)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 46,
+   "title": "Made for Me: A Book for Fathers",
+   "authors": [
+    "Zak Bush"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Made for Me: A Book for Fathers\" – Zak Bush (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 47,
+   "title": "The Prince and the Dressmaker",
+   "authors": [
+    "Jen Wang"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"The Prince and the Dressmaker\" – Jen Wang (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 48,
+   "title": "The Seven Husbands of Evelyn Hugo",
+   "authors": [
+    "Taylor Jenkins Reid"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"The Seven Husbands of Evelyn Hugo\" – Taylor Jenkins Reid (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 49,
+   "title": "In the Land of Milky Rivers",
+   "authors": [
+    "Sergey Vereskov"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"In the Land of Milky Rivers\" – Sergey Vereskov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 50,
+   "title": "Call Me by Your Name",
+   "authors": [
+    "André Aciman"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Call Me by Your Name\" – André Aciman (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 51,
+   "title": "Find Me",
+   "authors": [
+    "André Aciman"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Find Me\" – André Aciman (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 52,
+   "title": "Less",
+   "authors": [
+    "Andrew Sean Greer"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Less\" – Andrew Sean Greer (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 53,
+   "title": "GULAG",
+   "authors": [
+    "Anne Applebaum"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"GULAG\" – Anne Applebaum (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 54,
+   "title": "What If It's Us",
+   "authors": [
+    "Adam Silvera",
+    "Becky Albertalli"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"What If It's Us\" – Adam Silvera, Becky Albertalli (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 55,
+   "title": "The Perfect Boyfriend",
+   "authors": [
+    "Alexis Hall"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"The Perfect Boyfriend\" – Alexis Hall (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 56,
+   "title": "The One",
+   "authors": [
+    "Yulia Veresk"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The One\" – Yulia Veresk (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 57,
+   "title": "The Sex-Cult Nun",
+   "authors": [
+    "Faith Jones"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"The Sex-Cult Nun\" – Faith Jones (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 58,
+   "title": "Why Kids Kill: What's Going On Inside the Mind of a School Shooter",
+   "authors": [
+    "Peter Langman"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Why Kids Kill: What's Going On Inside the Mind of a School Shooter\" – Peter Langman (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 59,
+   "title": "Fact: How I Learned Polyamory, Starred in Porn, and Got a Slave",
+   "authors": [
+    "Milana Logunova"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Fact: How I Learned Polyamory, Starred in Porn, and Got a Slave\" – Milana Logunova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 60,
+   "title": "On the Porn Needle: Porn and the Nature of Addiction",
+   "authors": [
+    "Gary Wilson"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"On the Porn Needle: Porn and the Nature of Addiction\" – Gary Wilson (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 61,
+   "title": "To Paradise",
+   "authors": [
+    "Hanya Yanagihara"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"To Paradise\" – Hanya Yanagihara (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 62,
+   "title": "A Little Life",
+   "authors": [
+    "Hanya Yanagihara"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"A Little Life\" – Hanya Yanagihara (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 63,
+   "title": "Heartstopper",
+   "authors": [
+    "Alice Oseman"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"Heartstopper\" – Alice Oseman (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 64,
+   "title": "Someday I'll Choose You",
+   "authors": [
+    "Emma Scott"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Someday I'll Choose You\" – Emma Scott (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 65,
+   "title": "Red, White & Royal Blue",
+   "authors": [
+    "Casey McQuiston (USA) 01.04.2025 (27 items):"
+   ],
+   "decision_date": "2025-01-24",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Red, White & Royal Blue\" – Casey McQuiston (USA) 01.04.2025 (27 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 66,
+   "title": "It's Perfectly Normal: Changing Bodies, Growing Up, Sex, and Sexual Health",
+   "authors": [
+    "Robie Harris"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" It's Perfectly Normal: Changing Bodies, Growing Up, Sex, and Sexual Health\" – Robie Harris (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 67,
+   "title": "Iron Curtain: The Crushing of Eastern Europe, 1945–1956",
+   "authors": [
+    "Anne Applebaum"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" Iron Curtain: The Crushing of Eastern Europe, 1945–1956\" – Anne Applebaum (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 68,
+   "title": "The Virgin Suicides",
+   "authors": [
+    "Jeffrey Eugenides"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The Virgin Suicides\" – Jeffrey Eugenides (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 69,
+   "title": "Giovanni's Room",
+   "authors": [
+    "James Baldwin"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" Giovanni's Room\" – James Baldwin (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 70,
+   "title": "A Single Man",
+   "authors": [
+    "Christopher Isherwood"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\" A Single Man\" – Christopher Isherwood (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 71,
+   "title": "Goodbye to Berlin",
+   "authors": [
+    "Christopher Isherwood"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\" Goodbye to Berlin\" – Christopher Isherwood (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 72,
+   "title": "A Home at the End of the World",
+   "authors": [
+    "Michael Cunningham"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" A Home at the End of the World\" – Michael Cunningham (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 73,
+   "title": "Aristotle and Dante Discover the Secrets of the Universe",
+   "authors": [
+    "Benjamin Alire Sáenz"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" Aristotle and Dante Discover the Secrets of the Universe\" – Benjamin Alire Sáenz (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 74,
+   "title": "Fingersmith",
+   "authors": [
+    "Sarah Waters"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\" Fingersmith\" – Sarah Waters (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 75,
+   "title": "Tipping the Velvet",
+   "authors": [
+    "Sarah Waters"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\" Tipping the Velvet\" – Sarah Waters (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 76,
+   "title": "Lie with Me",
+   "authors": [
+    "Philippe Besson"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "\" Lie with Me\" – Philippe Besson (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 77,
+   "title": "The Heart's Invisible Furies",
+   "authors": [
+    "John Boyne"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Ireland",
+   "needs_review": false,
+   "raw": "\" The Heart's Invisible Furies\" – John Boyne (Ireland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 78,
+   "title": "Sarah",
+   "authors": [
+    "J.T. LeRoy"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" Sarah\" – J.T. LeRoy (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 79,
+   "title": "The Great Believers",
+   "authors": [
+    "Rebecca Makkai"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The Great Believers\" – Rebecca Makkai (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 80,
+   "title": "The Perks of Being a Wallflower",
+   "authors": [
+    "Stephen Chbosky"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The Perks of Being a Wallflower\" – Stephen Chbosky (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 81,
+   "title": "Carmilla",
+   "authors": [
+    "Joseph Sheridan Le Fanu"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Ireland",
+   "needs_review": false,
+   "raw": "\" Carmilla\" – Joseph Sheridan Le Fanu (Ireland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 82,
+   "title": "Coin Locker Babies",
+   "authors": [
+    "Ryu Murakami"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "\"Coin Locker Babies \" – Ryu Murakami (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 83,
+   "title": "Beartown",
+   "authors": [
+    "Fredrik Backman"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Sweden",
+   "needs_review": false,
+   "raw": "\" Beartown\" – Fredrik Backman (Sweden)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 84,
+   "title": "Us Against You",
+   "authors": [
+    "Fredrik Backman"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Sweden",
+   "needs_review": false,
+   "raw": "\" Us Against You\" – Fredrik Backman (Sweden)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 85,
+   "title": "The Winners",
+   "authors": [
+    "Fredrik Backman"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Sweden",
+   "needs_review": false,
+   "raw": "\" The Winners\" – Fredrik Backman (Sweden)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 86,
+   "title": "The Foxhole Court",
+   "authors": [
+    "Nora Sakavic"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The Foxhole Court\" – Nora Sakavic (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 87,
+   "title": "The Raven King",
+   "authors": [
+    "Nora Sakavic"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The Raven King\" – Nora Sakavic (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 88,
+   "title": "The King's Men",
+   "authors": [
+    "Nora Sakavic"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" The King's Men\" – Nora Sakavic (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 89,
+   "title": "Cloud Atlas",
+   "authors": [
+    "David Mitchell"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\" Cloud Atlas\" – David Mitchell (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 90,
+   "title": "Captive Prince series",
+   "authors": [
+    "C.S. Pacat"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "Australia",
+   "needs_review": false,
+   "raw": "\" Captive Prince series \" – C.S. Pacat (Australia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 91,
+   "title": "Boy Erased",
+   "authors": [
+    "Garrard Conley"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\" Boy Erased\" – Garrard Conley (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 92,
+   "title": "The Survivor's Dilemma",
+   "authors": [
+    "Kristina Dvoinykh (Russia) 29.05.2025 (18 items):"
+   ],
+   "decision_date": "2025-04-01",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\" The Survivor's Dilemma\" – Kristina Dvoinykh (Russia) 29.05.2025 (18 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 93,
+   "title": "The Modern Encyclopedia for Girls",
+   "authors": [
+    "Katya Denisova",
+    "Marina Mentusova"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Modern Encyclopedia for Girls\" – Katya Denisova, Marina Mentusova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 94,
+   "title": "The Wasp Factory",
+   "authors": [
+    "Iain Banks"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "\"The Wasp Factory\" – Iain Banks (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 95,
+   "title": "Faces and Masks of Same-Sex Love. Moonlight at Dawn",
+   "authors": [
+    "Igor Kon"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Faces and Masks of Same-Sex Love. Moonlight at Dawn\" – Igor Kon (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 96,
+   "title": "Russian Poker",
+   "authors": [
+    "Felix Razumovsky"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Russian Poker\" – Felix Razumovsky (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 97,
+   "title": "A Frank Conversation about Homosexuality. The Other Side of Tolerance",
+   "authors": [
+    "Richard Cohen"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"A Frank Conversation about Homosexuality. The Other Side of Tolerance\" – Richard Cohen (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 98,
+   "title": "When You Come Back to Me",
+   "authors": [
+    "Emma Scott"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"When You Come Back to Me\" – Emma Scott (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 99,
+   "title": "Three-Day Virgin",
+   "authors": [
+    "Day Lucky"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Three-Day Virgin\" – Day Lucky (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 100,
+   "title": "The Rise of the Dark Moon. Pagan BDSM and the Path of Trials",
+   "authors": [
+    "Raven Kaldera"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"The Rise of the Dark Moon. Pagan BDSM and the Path of Trials\" – Raven Kaldera (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 101,
+   "title": "BDSM-Light: Uninhibited Techniques",
+   "authors": [
+    "Rita Fox"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"BDSM-Light: Uninhibited Techniques\" – Rita Fox (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 102,
+   "title": "BDSM for Professionals: What Else You Can Try",
+   "authors": [
+    "Rita Fox"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"BDSM for Professionals: What Else You Can Try\" – Rita Fox (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 103,
+   "title": "Is BDSM a Perverse Practice or Not? With Eyes Wide Shut",
+   "authors": [
+    "Veronika Larsson"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Is BDSM a Perverse Practice or Not? With Eyes Wide Shut\" – Veronika Larsson (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 104,
+   "title": "Whip for the Innocent. BDSM Stories for Adults",
+   "authors": [
+    "Samantha Jones"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Whip for the Innocent. BDSM Stories for Adults\" – Samantha Jones (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 105,
+   "title": "Passions and Intrigues. Confession of the Innocent. Threesome Sex. BDSM and the Sex Shop. Adult Toys",
+   "authors": [
+    "Samantha Jones"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"Passions and Intrigues. Confession of the Innocent. Threesome Sex. BDSM and the Sex Shop. Adult Toys\" – Samantha Jones (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 106,
+   "title": "The Poetry of BDSM. Stories, Tales, and Poems",
+   "authors": [
+    "Sophie Renard"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Poetry of BDSM. Stories, Tales, and Poems\" – Sophie Renard (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 107,
+   "title": "Demonic Women",
+   "authors": [
+    "Leopold von Sacher-Masoch"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Austria",
+   "needs_review": false,
+   "raw": "\"Demonic Women\" – Leopold von Sacher-Masoch (Austria)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 108,
+   "title": "Hurts So Good: The Science and Culture of Painful Pleasures",
+   "authors": [
+    "Leigh Cowart"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "\"Hurts So Good: The Science and Culture of Painful Pleasures\" – Leigh Cowart (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 109,
+   "title": "The Color of Pain. Silk",
+   "authors": [
+    "Eva Hansen"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "\"The Color of Pain. Silk\" – Eva Hansen (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 110,
+   "title": "Middlesex",
+   "authors": [
+    "Jeffrey Eugenides (USA) 04.08.2025 (31 items):"
+   ],
+   "decision_date": "2025-05-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "\"Middlesex\" – Jeffrey Eugenides (USA) 04.08.2025 (31 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 111,
+   "title": "Blood Cruise",
+   "authors": [
+    "Mats Strandberg"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Sweden",
+   "needs_review": false,
+   "raw": "Blood Cruise – Mats Strandberg (Sweden)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 112,
+   "title": "The Will",
+   "authors": [
+    "Nina Wähä"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Sweden",
+   "needs_review": false,
+   "raw": "The Will – Nina Wähä (Sweden)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 113,
+   "title": "Buttons and Rage: Her Heart. His Revenge",
+   "authors": [
+    "Penelope Sky"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Buttons and Rage: Her Heart. His Revenge – Penelope Sky (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 114,
+   "title": "Buttons and Lace: Her Debt. His Desire",
+   "authors": [
+    "Penelope Sky"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Buttons and Lace: Her Debt. His Desire – Penelope Sky (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 115,
+   "title": "Topaz",
+   "authors": [
+    "Ryū Murakami"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Topaz – Ryū Murakami (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 116,
+   "title": "Ecstasy",
+   "authors": [
+    "Ryū Murakami"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Ecstasy – Ryū Murakami (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 117,
+   "title": "Trust Exercise",
+   "authors": [
+    "Susan Choi"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Trust Exercise – Susan Choi (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 118,
+   "title": "Dirt Town",
+   "authors": [
+    "Hayley Scrivenor"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Australia",
+   "needs_review": false,
+   "raw": "Dirt Town – Hayley Scrivenor (Australia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 119,
+   "title": "Down Among the Sticks and Bones. Every Heart a Doorway",
+   "authors": [
+    "Seanan McGuire"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Down Among the Sticks and Bones. Every Heart a Doorway – Seanan McGuire (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 120,
+   "title": "Every Heart a Doorway",
+   "authors": [
+    "Seanan McGuire"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Every Heart a Doorway – Seanan McGuire (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 121,
+   "title": "Three: A Wicked Bond",
+   "authors": [
+    "Lucky Daye"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Three: A Wicked Bond – Lucky Daye (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 122,
+   "title": "Toy for the Bosses: Updated Edition",
+   "authors": [
+    "Rox Lili"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Toy for the Bosses: Updated Edition – Rox Lili (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 123,
+   "title": "Seduce Me",
+   "authors": [
+    "Lucky Daye"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Seduce Me – Lucky Daye (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 124,
+   "title": "The Ultimate Guide to BDSM: Erotic Role Playing and the World of Kink",
+   "authors": [
+    "Tristan Taormino"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Ultimate Guide to BDSM: Erotic Role Playing and the World of Kink – Tristan Taormino (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 125,
+   "title": "If Mom Is Toxic… How to Break Free from Hostile Relationships",
+   "authors": [
+    "Marina Osborne"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "If Mom Is Toxic… How to Break Free from Hostile Relationships – Marina Osborne (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 126,
+   "title": "In the Land of Milk Rivers",
+   "authors": [
+    "Sergei Vereskov Duplicate of the book under number 49"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "In the Land of Milk Rivers – Sergei Vereskov Duplicate of the book under number 49"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 127,
+   "title": "Dirty Book Club",
+   "authors": [
+    "Lisi Harrison"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Canada, USA",
+   "needs_review": false,
+   "raw": "Dirty Book Club – Lisi Harrison (Canada, USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 128,
+   "title": "The Secret History",
+   "authors": [
+    "Donna Tartt"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Secret History – Donna Tartt (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 129,
+   "title": "The Seed of Desire",
+   "authors": [
+    "Anthony Burgess"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Seed of Desire – Anthony Burgess (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 130,
+   "title": "The Electric Kool-Aid Acid Test",
+   "authors": [
+    "Tom Wolfe"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Electric Kool-Aid Acid Test – Tom Wolfe (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 131,
+   "title": "Invisible Monsters",
+   "authors": [
+    "Chuck Palahniuk"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Invisible Monsters – Chuck Palahniuk (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 132,
+   "title": "Thirty-Three Abominations",
+   "authors": [
+    "Lydia Zinovieva-Annibal"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russian impire",
+   "needs_review": false,
+   "raw": "Thirty-Three Abominations – Lydia Zinovieva-Annibal (Russian impire)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 133,
+   "title": "Bloody Love: The Story of a Girl Who Killed Her Family for a Man Twice Her Age",
+   "authors": [
+    "Howard Clark"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Bloody Love: The Story of a Girl Who Killed Her Family for a Man Twice Her Age – Howard Clark (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 134,
+   "title": "The First Day of Spring",
+   "authors": [
+    "Nancy Tucker"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The First Day of Spring – Nancy Tucker (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 135,
+   "title": "The Scariest Book: The Guardian",
+   "authors": [
+    "All Shades of Fall – Ivan Belov"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "The Scariest Book: The Guardian – All Shades of Fall – Ivan Belov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 136,
+   "title": "Life for Sale",
+   "authors": [
+    "Yukio Mishima"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Life for Sale – Yukio Mishima (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 137,
+   "title": "Marina's Thirtieth Love",
+   "authors": [
+    "Vladimir Sorokin"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Marina's Thirtieth Love – Vladimir Sorokin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 138,
+   "title": "Russian Gothic",
+   "authors": [
+    "Mikhail Bokov"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Russian Gothic – Mikhail Bokov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 139,
+   "title": "Little Thieves",
+   "authors": [
+    "Margaret Owen"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Little Thieves – Margaret Owen (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 140,
+   "title": "East Slavic Urban Legends",
+   "authors": [
+    "Dionizyusz Chubalya"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": "Poland",
+   "needs_review": false,
+   "raw": "East Slavic Urban Legends – Dionizyusz Chubalya (Poland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 141,
+   "title": "There They Are, and Here We Are: Belarusian Poetry and Poems of Solidarity",
+   "authors": [
+    "ed. by V. Korkunov (Russia) 30.09.2025 (32 items):"
+   ],
+   "decision_date": "2025-08-04",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "There They Are, and Here We Are: Belarusian Poetry and Poems of Solidarity – ed. by V. Korkunov (Russia) 30.09.2025 (32 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 142,
+   "title": "Day of the Dead. A Book with Fascinating Tasks",
+   "authors": [
+    "comp. S.A. Stankevich"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "Day of the Dead. A Book with Fascinating Tasks – comp. S.A. Stankevich (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 143,
+   "title": "The Elephant",
+   "authors": [
+    "Sasha Filipenko"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "The Elephant – Sasha Filipenko (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 144,
+   "title": "Red Crosses",
+   "authors": [
+    "Sasha Filipenko"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "Red Crosses – Sasha Filipenko (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 145,
+   "title": "Duck, Death and the Tulip",
+   "authors": [
+    "Wolf Erlbruch"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Germany",
+   "needs_review": false,
+   "raw": "Duck, Death and the Tulip – Wolf Erlbruch (Germany)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 146,
+   "title": "The Little Soldier",
+   "authors": [
+    "Cristina Bellemo"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Italy",
+   "needs_review": false,
+   "raw": "The Little Soldier – Cristina Bellemo (Italy)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 147,
+   "title": "The Little Mole Who Wanted to Know Who Had Done It on His Head",
+   "authors": [
+    "Werner Holzwarth",
+    "Wolf Erlbruch"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Germany",
+   "needs_review": false,
+   "raw": "The Little Mole Who Wanted to Know Who Had Done It on His Head – Werner Holzwarth, Wolf Erlbruch (Germany)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 148,
+   "title": "The Secret Life of Farts and Burps",
+   "authors": [
+    "Mariona Tolosa Sisteré"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Spain",
+   "needs_review": false,
+   "raw": "The Secret Life of Farts and Burps – Mariona Tolosa Sisteré (Spain)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 149,
+   "title": "Marabou Stork Nightmares",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Marabou Stork Nightmares – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 150,
+   "title": "The Sex Lives of Siamese Twins",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Sex Lives of Siamese Twins – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 151,
+   "title": "Trainspotting",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Trainspotting – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 152,
+   "title": "Glue",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Glue – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 153,
+   "title": "Porno",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Porno – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 154,
+   "title": "Stupid Ride",
+   "authors": [
+    ") – Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Ecstasy: Three Tales of Chemical Romance (published in Russian as \"Stupid Ride\") – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 155,
+   "title": "Filth",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Filth – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 156,
+   "title": "Dead Men's Trousers",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Dead Men's Trousers – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 157,
+   "title": "The Acid House",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Acid House – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 158,
+   "title": "Three Stories about Love and Chemistry",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Three Stories about Love and Chemistry – Irvine Welsh (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 159,
+   "title": "18+ . Part One",
+   "authors": [
+    "Natasha Heyden"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "18+ . Part One – Natasha Heyden (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 160,
+   "title": "My Policeman",
+   "authors": [
+    "Bethan Roberts"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "My Policeman – Bethan Roberts (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 161,
+   "title": "The Bastard von Narbe",
+   "authors": [
+    "Natalia Ignatova"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "The Bastard von Narbe – Natalia Ignatova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 162,
+   "title": "The Miseducation of Cameron Post",
+   "authors": [
+    "Emily M. Danforth"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Miseducation of Cameron Post – Emily M. Danforth (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 163,
+   "title": "The Danish Girl",
+   "authors": [
+    "David Ebershoff"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Danish Girl – David Ebershoff (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 164,
+   "title": "Unjustified Cruelty. The Impressionable Should NOT Read",
+   "authors": [
+    "Vl.Yak. Morshenyuk"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Unjustified Cruelty. The Impressionable Should NOT Read – Vl.Yak. Morshenyuk (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 165,
+   "title": "White Path, Black Fate",
+   "authors": [
+    "Leonid Sukhorukov"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Ukraine",
+   "needs_review": false,
+   "raw": "White Path, Black Fate – Leonid Sukhorukov (Ukraine)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 166,
+   "title": "Fear and Loathing in Las Vegas",
+   "authors": [
+    "Hunter S. Thompson"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Fear and Loathing in Las Vegas – Hunter S. Thompson (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 167,
+   "title": "Heroin",
+   "authors": [
+    "Tomasz Piątek"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Poland",
+   "needs_review": false,
+   "raw": "Heroin – Tomasz Piątek (Poland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 168,
+   "title": "0.5",
+   "authors": [
+    "Valery Shpyakin"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "0.5 – Valery Shpyakin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 169,
+   "title": "Naked Lunch",
+   "authors": [
+    "William Burroughs"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Naked Lunch – William Burroughs (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 170,
+   "title": "Wilder Girls",
+   "authors": [
+    "Rory Power"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Wilder Girls – Rory Power (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 171,
+   "title": "Perfectly Preventable Deaths",
+   "authors": [
+    "Deirdre Sullivan"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Ireland",
+   "needs_review": false,
+   "raw": "Perfectly Preventable Deaths – Deirdre Sullivan (Ireland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 172,
+   "title": "Almost Transparent Blue",
+   "authors": [
+    "Ryū Murakami"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "Almost Transparent Blue – Ryū Murakami (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 173,
+   "title": "Karaoke",
+   "authors": [
+    ") – Ryū Murakami (Japan) 29.12.2025 (32 items):"
+   ],
+   "decision_date": "2025-09-30",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "Piercing (published in Russian as \"Karaoke\") – Ryū Murakami (Japan) 29.12.2025 (32 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 174,
+   "title": "Our Neighbours on the Planet: Stories about Wild Animals",
+   "authors": [
+    "Jan Bouvin Jansen",
+    "Lotte Stegmann"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Denmark / Netherlands",
+   "needs_review": false,
+   "raw": "Our Neighbours on the Planet: Stories about Wild Animals — Jan Bouvin Jansen, Lotte Stegmann (Denmark / Netherlands)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 175,
+   "title": "Daddy",
+   "authors": [
+    "Hélène Delforge",
+    "Quentin Gréban"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Belgium",
+   "needs_review": false,
+   "raw": "Daddy — Hélène Delforge, Quentin Gréban (Belgium)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 176,
+   "title": "Where Do Babies Come From?",
+   "authors": [
+    "Katie Daynes"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Where Do Babies Come From? — Katie Daynes (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 177,
+   "title": "Happy Parents",
+   "authors": [
+    "Laetitia Bourget",
+    "Emmanuel Udar"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "Happy Parents — Laetitia Bourget, Emmanuel Udar (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 178,
+   "title": "My Mum",
+   "authors": [
+    "Stéphane Servant",
+    "Emmanuel Udar"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "My Mum — Stéphane Servant, Emmanuel Udar (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 179,
+   "title": "Bees",
+   "authors": [
+    "Piotr Socha"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Poland",
+   "needs_review": false,
+   "raw": "Bees — Piotr Socha (Poland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 180,
+   "title": "Pear Orchard",
+   "authors": [
+    "Nana Ekvtimishvili"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Georgia",
+   "needs_review": false,
+   "raw": "Pear Orchard — Nana Ekvtimishvili (Georgia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 181,
+   "title": "The Belarusian People's Republic of 1918–1920: At the Origins of Belarusian Statehood",
+   "authors": [
+    "Darota Michaluk"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Poland",
+   "needs_review": false,
+   "raw": "The Belarusian People's Republic of 1918–1920: At the Origins of Belarusian Statehood — Darota Michaluk (Poland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 182,
+   "title": "The Child Thief",
+   "authors": [
+    "Gerald Brom"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Child Thief — Gerald Brom (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 183,
+   "title": "A Pile of Bones",
+   "authors": [
+    "J. D. Kirk"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "A Pile of Bones — J. D. Kirk (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 184,
+   "title": "Inside the Killer",
+   "authors": [
+    "Mike Omer"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Israel / USA",
+   "needs_review": false,
+   "raw": "Inside the Killer — Mike Omer (Israel / USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 185,
+   "title": "Alive in the Dark",
+   "authors": [
+    "Mike Omer"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Israel / USA",
+   "needs_review": false,
+   "raw": "Alive in the Dark — Mike Omer (Israel / USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 186,
+   "title": "In the Eyes of the Victim",
+   "authors": [
+    "Mike Omer"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Israel / USA",
+   "needs_review": false,
+   "raw": "In the Eyes of the Victim — Mike Omer (Israel / USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 187,
+   "title": "Twelve",
+   "authors": [
+    "Nick McDonell"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Twelve — Nick McDonell (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 188,
+   "title": "The Scariest Book Ever: Lawlessness",
+   "authors": [
+    "ed. M. S. Parfenov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "The Scariest Book Ever: Lawlessness — ed. M. S. Parfenov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 189,
+   "title": "You Don't Have to Finish Everything",
+   "authors": [
+    "Olga Ovchinnikova"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "You Don't Have to Finish Everything — Olga Ovchinnikova (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 190,
+   "title": "The Participants",
+   "authors": [
+    "Denis Epifantsev"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "The Participants — Denis Epifantsev (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 191,
+   "title": "Unwanted Children",
+   "authors": [
+    "Diney Costelow"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Unwanted Children — Diney Costelow (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 192,
+   "title": "Ziggy Stardust and Me",
+   "authors": [
+    "Brandon James"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Ziggy Stardust and Me — Brandon James (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 193,
+   "title": "Beasts and Beauty: Dangerous Tales",
+   "authors": [
+    "Soman Chainani"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Beasts and Beauty: Dangerous Tales — Soman Chainani (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 194,
+   "title": "Inheritance",
+   "authors": [
+    "Vladimir Sorokin"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Inheritance — Vladimir Sorokin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 195,
+   "title": "Day of the Oprichnik",
+   "authors": [
+    "Vladimir Sorokin"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Day of the Oprichnik — Vladimir Sorokin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 196,
+   "title": "Sugar Kremlin",
+   "authors": [
+    "Vladimir Sorokin"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Sugar Kremlin — Vladimir Sorokin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 197,
+   "title": "Confessions of a Cannibal",
+   "authors": [
+    "David Madsen"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Confessions of a Cannibal — David Madsen (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 198,
+   "title": "BDSM from the Inside",
+   "authors": [
+    "White Incubus"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "BDSM from the Inside — White Incubus (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 199,
+   "title": "Boys vs Girls: Children's Questions about Stereotypes",
+   "authors": [
+    "Stéphanie Duval",
+    "Sandra Laboucarie"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "Boys vs Girls: Children's Questions about Stereotypes — Stéphanie Duval, Sandra Laboucarie (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 200,
+   "title": "Low-Level Flying",
+   "authors": [
+    "Bayan Shiryanov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Low-Level Flying — Bayan Shiryanov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 201,
+   "title": "Mid-Level Flying",
+   "authors": [
+    "Bayan Shiryanov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Mid-Level Flying — Bayan Shiryanov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 202,
+   "title": "High-Level Flying",
+   "authors": [
+    "Bayan Shiryanov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "High-Level Flying — Bayan Shiryanov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 203,
+   "title": "A Novel with Cocaine",
+   "authors": [
+    "M. Ageyev"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia / USSR",
+   "needs_review": false,
+   "raw": "A Novel with Cocaine — M. Ageyev (Russia / USSR)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 204,
+   "title": "The Shamanic Cosmos",
+   "authors": [
+    "Steve Aylett"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Shamanic Cosmos — Steve Aylett (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 205,
+   "title": "Ibiza",
+   "authors": [
+    "Colin Butts"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Ibiza — Colin Butts (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 206,
+   "title": "Ibiza Is a Verb",
+   "authors": [
+    "Colin Butts"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Ibiza Is a Verb — Colin Butts (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 207,
+   "title": "Ibiza All Night Long",
+   "authors": [
+    "Colin Butts"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Ibiza All Night Long — Colin Butts (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 208,
+   "title": "Junkie",
+   "authors": [
+    "William S. Burroughs"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Junkie — William S. Burroughs (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 209,
+   "title": "Yage Letters",
+   "authors": [
+    "William S. Burroughs"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Yage Letters — William S. Burroughs (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 210,
+   "title": "Junkie: Queer",
+   "authors": [
+    "William S. Burroughs",
+    "Allen Ginsberg"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Junkie: Queer — William S. Burroughs, Allen Ginsberg (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 211,
+   "title": "The Narcotic Priest",
+   "authors": [
+    "Nicholas Blincoe"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Narcotic Priest — Nicholas Blincoe (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 212,
+   "title": "Acidheads",
+   "authors": [
+    "Nicholas Blincoe"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Acidheads — Nicholas Blincoe (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 213,
+   "title": "The Beach",
+   "authors": [
+    "Alex Garland"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "The Beach — Alex Garland (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 214,
+   "title": "No",
+   "authors": [
+    "Linor Goralik",
+    "Sergey Kuznetsov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia / Israel",
+   "needs_review": false,
+   "raw": "No — Linor Goralik, Sergey Kuznetsov (Russia / Israel)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 215,
+   "title": "Travel Lamb",
+   "authors": [
+    "Anastasia Gosteva"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Travel Lamb — Anastasia Gosteva (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 216,
+   "title": "Marijuana: The Forbidden Medicine",
+   "authors": [
+    "Lester Grinspoon",
+    "James B. Bakalar"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Marijuana: The Forbidden Medicine — Lester Grinspoon, James B. Bakalar (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 217,
+   "title": "Altered State: The History of Ecstasy and Rave Culture",
+   "authors": [
+    "Colin Matthew"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Altered State: The History of Ecstasy and Rave Culture — Colin Matthew (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 218,
+   "title": "Timothy Leary: The Temptation of the Future",
+   "authors": [
+    "Robert Forte"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Timothy Leary: The Temptation of the Future — Robert Forte (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 219,
+   "title": "Psychoactive Mushrooms",
+   "authors": [
+    "Dmitry Sokolov"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Psychoactive Mushrooms — Dmitry Sokolov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 220,
+   "title": "Storming Heaven: LSD and the American Dream",
+   "authors": [
+    "Jay Stevens"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Storming Heaven: LSD and the American Dream — Jay Stevens (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 221,
+   "title": "Roots of the Grass",
+   "authors": [
+    "Mike Thelwell"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "Jamaica / USA",
+   "needs_review": false,
+   "raw": "Roots of the Grass — Mike Thelwell (Jamaica / USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 222,
+   "title": "Jim Morrison After Death",
+   "authors": [
+    "Mick Farren"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "UK",
+   "needs_review": false,
+   "raw": "Jim Morrison After Death — Mick Farren (UK)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 223,
+   "title": "A Scanner Darkly",
+   "authors": [
+    "Philip K. Dick"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "A Scanner Darkly — Philip K. Dick (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 224,
+   "title": "Let's Go",
+   "authors": [
+    "Richard Hell"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Let's Go — Richard Hell (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 225,
+   "title": "PiHKAL: A Chemical Love Story",
+   "authors": [
+    "Alexander Shulgin",
+    "Ann Shulgin (USA) 26.02.2026 (16 items):"
+   ],
+   "decision_date": "2025-12-29",
+   "ban_year": 2025,
+   "country_of_origin": null,
+   "needs_review": false,
+   "raw": "PiHKAL: A Chemical Love Story — Alexander Shulgin, Ann Shulgin (USA) 26.02.2026 (16 items):"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 226,
+   "title": "A Smile",
+   "authors": [
+    "A Pilgrim of the Soul: Poems",
+    "Translations — Vladimir Khoroshko"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Belarus",
+   "needs_review": false,
+   "raw": "A Smile – A Pilgrim of the Soul: Poems, Translations — Vladimir Khoroshko (Belarus)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 227,
+   "title": "BDSM. Infinite Kindness, Compassion and Mercy",
+   "authors": [
+    "Alexander Chashchin"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "BDSM. Infinite Kindness, Compassion and Mercy — Alexander Chashchin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 228,
+   "title": "Your Mari",
+   "authors": [
+    "Marianna Kramm"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Germany",
+   "needs_review": false,
+   "raw": "Your Mari — Marianna Kramm (Germany)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 229,
+   "title": "Lessons in Sin",
+   "authors": [
+    "Pam Godwin"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Lessons in Sin — Pam Godwin (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 230,
+   "title": "The Cannibal's Diary: The Story of the Japanese Cannibal Who Gained Fame Instead of a Prison Sentence",
+   "authors": [
+    "Issei Sagawa"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Japan",
+   "needs_review": false,
+   "raw": "The Cannibal's Diary: The Story of the Japanese Cannibal Who Gained Fame Instead of a Prison Sentence — Issei Sagawa (Japan)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 231,
+   "title": "Prozac Nation",
+   "authors": [
+    "Elizabeth Wurtzel"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Prozac Nation — Elizabeth Wurtzel (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 232,
+   "title": "Seven Petals",
+   "authors": [
+    "Sergey Kuznetsov"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Seven Petals — Sergey Kuznetsov (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 233,
+   "title": "Amnesia of the Soul",
+   "authors": [
+    "Tatyana Kogan"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Amnesia of the Soul — Tatyana Kogan (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 234,
+   "title": "The Lamp of Methuselah, or The Final Battle of the Chekists with the Freemasons",
+   "authors": [
+    "Victor Pelevin"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "The Lamp of Methuselah, or The Final Battle of the Chekists with the Freemasons — Victor Pelevin (Russia)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 235,
+   "title": "Please Kill Me: The Uncensored Oral History of Punk",
+   "authors": [
+    "Legs McNeil (USA)",
+    "Gillian McCain"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Canada",
+   "needs_review": false,
+   "raw": "Please Kill Me: The Uncensored Oral History of Punk — Legs McNeil (USA), Gillian McCain (Canada)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 236,
+   "title": "The Song of Achilles",
+   "authors": [
+    "Madeline Miller"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "The Song of Achilles — Madeline Miller (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 237,
+   "title": "The Forest of the Dead",
+   "authors": [
+    "Jean-Christophe Grangé"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "France",
+   "needs_review": false,
+   "raw": "The Forest of the Dead — Jean-Christophe Grangé (France)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 238,
+   "title": "Release",
+   "authors": [
+    "Patrick Ness"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "United Kingdom",
+   "needs_review": false,
+   "raw": "Release — Patrick Ness (United Kingdom)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 239,
+   "title": "The Absolutist",
+   "authors": [
+    "John Boyne"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Ireland",
+   "needs_review": false,
+   "raw": "The Absolutist — John Boyne (Ireland)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 240,
+   "title": "Exquisite Corpse",
+   "authors": [
+    "Poppy Z. Brite"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "USA",
+   "needs_review": false,
+   "raw": "Exquisite Corpse — Poppy Z. Brite (USA)"
+  },
+  {
+   "list_type": "harmful",
+   "entry_number": 241,
+   "title": "Fistula",
+   "authors": [
+    "Artyom Serebryakov"
+   ],
+   "decision_date": "2026-02-26",
+   "ban_year": 2026,
+   "country_of_origin": "Russia",
+   "needs_review": false,
+   "raw": "Fistula — Artyom Serebryakov (Russia)"
+  }
+ ]
+}
