@@ -179,7 +179,7 @@ export default function HistoryPage() {
               <em>Mein Kampf</em>
             </Link>{' '}
             was banned or restricted in countries like{' '}
-            <Link href="/countries/germany">Germany</Link> for decades. The intention was
+            <Link href="/countries/de">Germany</Link> for decades. The intention was
             understandable — to prevent the spread of extremist ideology — but it raised an uncomfortable
             question: can a society defend openness by restricting access to ideas?
           </p>
@@ -299,7 +299,7 @@ export default function HistoryPage() {
             discussed, whose stories are valid, and which perspectives are considered acceptable. Even
             more telling: many bans are driven not by widespread public demand, but by organised groups
             and political pressure. You can explore the full US record on our{' '}
-            <Link href="/countries/united-states">United States country page</Link>.
+            <Link href="/countries/us">United States country page</Link>.
           </p>
 
           <h2>Why books get banned (and what that reveals)</h2>
@@ -443,13 +443,13 @@ export default function HistoryPage() {
               📊 Stats
             </Link>
             <Link
-              href="/countries/united-states"
+              href="/countries/us"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
             >
               🇺🇸 US school bans
             </Link>
             <Link
-              href="/countries/germany"
+              href="/countries/de"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
             >
               🇩🇪 Germany
