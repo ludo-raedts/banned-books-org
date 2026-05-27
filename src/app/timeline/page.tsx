@@ -197,9 +197,12 @@ function TimelineEventCard({ event }: { event: TimelineEvent }) {
   const safeImage = event.image && isAllowedImageUrl(event.image.url) ? event.image : null
 
   return (
-    <li className="md:flex md:items-stretch md:gap-x-5">
-      {/* Date column — desktop only. On mobile the date pill sits inside the card (see below). */}
-      <div className="hidden md:block md:w-24 md:flex-shrink-0 md:pt-6 md:text-right">
+    <li className="md:flex md:items-stretch md:gap-x-6">
+      {/* Date column — desktop only. Width fits the longest format we use
+          ("14 February 1989", ~127px at text-xs with the uppercase tracking),
+          with breathing room so the rail-peg doesn't clip the year. On mobile
+          the date pill sits inside the card (see below). */}
+      <div className="hidden md:block md:w-36 md:flex-shrink-0 md:pt-6 md:text-right">
         <span className="text-xs uppercase tracking-[0.12em] font-semibold text-oxblood whitespace-nowrap">
           {event.displayDate}
         </span>
