@@ -141,6 +141,7 @@ export type EnrichCoversOpts = {
   limit?: number
   reset?: boolean
   force?: boolean
+  bookIds?: number[]
   onProgress?: (msg: string) => void
 }
 
@@ -191,6 +192,10 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
 
     if (!opts.force) {
       q = q.or('cover_status.is.null,cover_status.eq.valid')
+    }
+
+    if (opts.bookIds && opts.bookIds.length > 0) {
+      q = q.in('id', opts.bookIds)
     }
 
     const { data, error } = await q

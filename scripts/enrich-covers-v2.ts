@@ -17,6 +17,8 @@
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --limit=100
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --reset
  *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --force
+ *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --book-id=13261        # target one
+ *   npx tsx --env-file=.env.local scripts/enrich-covers-v2.ts --apply --book-id=13261,11239  # comma-list
  *
  * Core logic lives in src/lib/enrich/covers.ts so /api/admin/enrich/run can
  * call it in-process from the UI.
@@ -29,6 +31,10 @@ const RESET = process.argv.includes('--reset')
 const FORCE = process.argv.includes('--force')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = limitArg ? parseInt(limitArg.split('=')[1], 10) : undefined
+const bookIdArg = process.argv.find(a => a.startsWith('--book-id='))
+const BOOK_IDS = bookIdArg
+  ? bookIdArg.split('=')[1].split(',').map(s => parseInt(s.trim(), 10)).filter(n => Number.isFinite(n))
+  : undefined
 
 async function main() {
   console.log(`\n── enrich-covers-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}${FORCE ? ', FORCE' : ''}) ──`)
@@ -40,6 +46,7 @@ async function main() {
     limit: LIMIT,
     reset: RESET,
     force: FORCE,
+    bookIds: BOOK_IDS,
     onProgress: msg => console.log(msg),
   })
   const elapsed = ((Date.now() - start) / 1000).toFixed(1)
