@@ -10,6 +10,7 @@ import GenreBadge from './genre-badge'
 import ReasonBadge, { reasonLabel, reasonIcon } from './reason-badge'
 import type { Ban, Book, CountryOption } from './book-browser'
 import { coverAlt } from '@/lib/cover-alt'
+import { countryFlag } from '@/lib/country-flag'
 import type { BookSort } from '@/lib/book-search'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
@@ -70,6 +71,20 @@ function urlParams(opts: Filters & { defaultSort: BookSort }) {
   return p.toString()
 }
 
+function SuggestionGroupHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-100 dark:border-gray-800 first:border-t-0">
+      {children}
+    </div>
+  )
+}
+
+function suggestionRowClass(isSelected: boolean): string {
+  return `w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
+    isSelected ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800/60'
+  }`
+}
+
 function FilterPill({
   active, onClick, children, color = 'dark',
 }: {
@@ -124,20 +139,53 @@ export default function SearchClient({
   const hasTrackedSearchUsage = useRef(false)
 
   // ── Autocomplete state ──────────────────────────────────────────────────────
-  type Suggestion = { id: number; slug: string; title: string; cover_url: string | null; author: string; banCount: number }
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  // Three result types share a flat keyboard-navigation index (authors → countries → books)
+  // so ArrowUp/Down moves through every visible row regardless of section.
+  type BookSuggestion    = { kind: 'book';    id: number; slug: string; title: string; cover_url: string | null; author: string; banCount: number }
+  type AuthorSuggestion  = { kind: 'author';  id: number; slug: string; display_name: string; photo_url: string | null; bookCount: number }
+  type CountrySuggestion = { kind: 'country'; code: string; name_en: string; banCount: number }
+  type Suggestion = BookSuggestion | AuthorSuggestion | CountrySuggestion
+
+  const [authorSuggestions,  setAuthorSuggestions]  = useState<AuthorSuggestion[]>([])
+  const [countrySuggestions, setCountrySuggestions] = useState<CountrySuggestion[]>([])
+  const [bookSuggestions,    setBookSuggestions]    = useState<BookSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
+  const flatSuggestions: Suggestion[] = [...authorSuggestions, ...countrySuggestions, ...bookSuggestions]
+
   // Autocomplete fetch — 200ms debounce
   useEffect(() => {
-    if (q.length < 2) { setSuggestions([]); setShowSuggestions(false); return }
+    if (q.length < 2) {
+      setAuthorSuggestions([]); setCountrySuggestions([]); setBookSuggestions([])
+      setShowSuggestions(false)
+      return
+    }
     const id = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/books?q=${encodeURIComponent(q)}&limit=5`)
-        const { books } = await res.json()
-        const mapped: Suggestion[] = (books ?? []).map((b: Book) => ({
+        const res = await fetch(`/api/suggest?q=${encodeURIComponent(q)}`)
+        const { authors, countries, books } = await res.json()
+        const mappedAuthors: AuthorSuggestion[] = (authors ?? []).map((a: {
+          id: number; slug: string; display_name: string; photo_url: string | null; bookCount: number
+        }) => ({
+          kind: 'author',
+          id: a.id,
+          slug: a.slug,
+          display_name: a.display_name,
+          photo_url: a.photo_url,
+          bookCount: a.bookCount,
+        }))
+        const mappedCountries: CountrySuggestion[] = (countries ?? []).map((c: {
+          code: string; name_en: string; banCount: number
+        }) => ({
+          kind: 'country',
+          code: c.code,
+          name_en: c.name_en,
+          banCount: c.banCount,
+        }))
+        const mappedBooks: BookSuggestion[] = (books ?? []).map((b: Book) => ({
+          kind: 'book',
           id: b.id,
           slug: b.slug,
           title: b.title,
@@ -145,8 +193,10 @@ export default function SearchClient({
           author: b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
           banCount: b.bans.length,
         }))
-        setSuggestions(mapped)
-        setShowSuggestions(mapped.length > 0)
+        setAuthorSuggestions(mappedAuthors)
+        setCountrySuggestions(mappedCountries)
+        setBookSuggestions(mappedBooks)
+        setShowSuggestions(mappedAuthors.length + mappedCountries.length + mappedBooks.length > 0)
         setSelectedIndex(-1)
       } catch { /* ignore */ }
     }, 200)
@@ -164,25 +214,31 @@ export default function SearchClient({
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  function handleSuggestionSelect(slug: string) {
+  function suggestionHref(s: Suggestion): string {
+    if (s.kind === 'book')    return `/books/${s.slug}`
+    if (s.kind === 'author')  return `/authors/${s.slug}`
+    return `/countries/${s.code}`
+  }
+
+  function handleSuggestionSelect(s: Suggestion) {
     setShowSuggestions(false)
-    router.push(`/books/${slug}`)
+    router.push(suggestionHref(s))
   }
 
   function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (!showSuggestions || suggestions.length === 0) {
+    if (!showSuggestions || flatSuggestions.length === 0) {
       if (e.key === 'Enter') document.getElementById('book-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       return
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setSelectedIndex(i => Math.min(i + 1, suggestions.length - 1))
+      setSelectedIndex(i => Math.min(i + 1, flatSuggestions.length - 1))
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       setSelectedIndex(i => Math.max(i - 1, -1))
     } else if (e.key === 'Enter' && selectedIndex >= 0) {
       e.preventDefault()
-      handleSuggestionSelect(suggestions[selectedIndex].slug)
+      handleSuggestionSelect(flatSuggestions[selectedIndex])
     } else if (e.key === 'Escape') {
       setShowSuggestions(false)
       setSelectedIndex(-1)
@@ -293,13 +349,17 @@ export default function SearchClient({
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
-            onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
+            onFocus={() => { if (flatSuggestions.length > 0) setShowSuggestions(true) }}
             onKeyDown={handleSearchKeyDown}
             className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
           />
           {q && (
             <button
-              onClick={() => { setQ(''); setSuggestions([]); setShowSuggestions(false) }}
+              onClick={() => {
+                setQ('')
+                setAuthorSuggestions([]); setCountrySuggestions([]); setBookSuggestions([])
+                setShowSuggestions(false)
+              }}
               aria-label="Clear search"
               className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
@@ -309,34 +369,90 @@ export default function SearchClient({
             </button>
           )}
 
-          {showSuggestions && suggestions.length > 0 && (
+          {showSuggestions && flatSuggestions.length > 0 && (
             <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden">
-              {suggestions.map((s, i) => (
-                <button
-                  key={s.id}
-                  onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s.slug) }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                    i === selectedIndex
-                      ? 'bg-gray-100 dark:bg-gray-800'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/60'
-                  } ${i > 0 ? 'border-t border-gray-100 dark:border-gray-800' : ''}`}
-                >
-                  <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
-                    {s.cover_url ? (
-                      <Image src={s.cover_url} alt="" width={32} height={44} className="w-full h-full object-cover" sizes="32px" />
-                    ) : (
-                      <BookCoverPlaceholder title={s.title} slug={s.slug} className="h-full" />
+              {authorSuggestions.length > 0 && (
+                <SuggestionGroupHeader>Authors</SuggestionGroupHeader>
+              )}
+              {authorSuggestions.map((s, i) => {
+                const idx = i
+                return (
+                  <button
+                    key={`author-${s.id}`}
+                    onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    className={suggestionRowClass(idx === selectedIndex)}
+                  >
+                    <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                      {s.photo_url ? (
+                        <Image src={s.photo_url} alt="" width={32} height={32} className="w-full h-full object-cover" sizes="32px" />
+                      ) : (
+                        <span aria-hidden className="text-sm text-gray-400">👤</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.display_name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Author</p>
+                    </div>
+                    {s.bookCount > 0 && (
+                      <span className="shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400 tabular-nums">
+                        {s.bookCount} {s.bookCount === 1 ? 'book' : 'books'}
+                      </span>
                     )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.title}</p>
-                    {s.author && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{s.author}</p>}
-                  </div>
-                  <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
-                    {s.banCount} {s.banCount === 1 ? 'ban' : 'bans'}
-                  </span>
-                </button>
-              ))}
+                  </button>
+                )
+              })}
+              {countrySuggestions.length > 0 && (
+                <SuggestionGroupHeader>Countries</SuggestionGroupHeader>
+              )}
+              {countrySuggestions.map((s, i) => {
+                const idx = authorSuggestions.length + i
+                return (
+                  <button
+                    key={`country-${s.code}`}
+                    onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    className={suggestionRowClass(idx === selectedIndex)}
+                  >
+                    <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-lg leading-none" aria-hidden>
+                      {countryFlag(s.code)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.name_en}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Country</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                      {s.banCount} {s.banCount === 1 ? 'book' : 'books'}
+                    </span>
+                  </button>
+                )
+              })}
+              {bookSuggestions.length > 0 && (
+                <SuggestionGroupHeader>Books</SuggestionGroupHeader>
+              )}
+              {bookSuggestions.map((s, i) => {
+                const idx = authorSuggestions.length + countrySuggestions.length + i
+                return (
+                  <button
+                    key={`book-${s.id}`}
+                    onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    className={suggestionRowClass(idx === selectedIndex)}
+                  >
+                    <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      {s.cover_url ? (
+                        <Image src={s.cover_url} alt="" width={32} height={44} className="w-full h-full object-cover" sizes="32px" />
+                      ) : (
+                        <BookCoverPlaceholder title={s.title} slug={s.slug} className="h-full" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.title}</p>
+                      {s.author && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{s.author}</p>}
+                    </div>
+                    <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                      {s.banCount} {s.banCount === 1 ? 'ban' : 'bans'}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           )}
         </div>
