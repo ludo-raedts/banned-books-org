@@ -65,6 +65,7 @@ next-env.d.ts
 /data/description-*.csv
 /data/filler-strip-*.csv
 /data/photo-enrichment-*.csv
+/data/clean-descriptions-top-slugs-*.txt
 
 # resumable-script state — regenerated on every run
 /data/*.state.json

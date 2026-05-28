@@ -785,12 +785,12 @@ Commands:
             what="Wrapper. Draait strip-filler-sentences.ts, pakt automatisch het zojuist geproduceerde data/filler-strip-needs-rewrite-<ts>.csv en voert die als audit-input aan rewrite-descriptions-grounded.ts. Zelfde DB-writes, backups en logs als de twee onderliggende scripts los gedraaid — alleen geen copy-paste van filenames tussen stappen."
             tags={['safe', 'gpt', 'destructive']}
             meta={{
-              coverage: <>stap 1 scant alle rijen op filler-patterns; stap 2 verwerkt alleen rijen die ná stripping te kort zijn (<code className="font-mono">description_ban</code> &lt; 60 chars of <code className="font-mono">censorship_context</code> &lt; 80 chars)</>,
-              cadence: 'one-off na content-quality review (richtlijn: per kwartaal of na grote import-batch)',
+              coverage: <>stap 1 scant alle rijen op filler-patterns (of alleen de slug-set bij <code className="font-mono">--top=N</code> / <code className="font-mono">--slug</code>); stap 2 verwerkt alleen rijen die ná stripping te kort zijn (<code className="font-mono">description_ban</code> &lt; 60 chars of <code className="font-mono">censorship_context</code> &lt; 80 chars)</>,
+              cadence: 'one-off na content-quality review (richtlijn: per kwartaal of na grote import-batch). Met --top=100 ook als af-en-toe sweep over de meest bezochte boeken zonder volledige catalogus-cost.',
               writes: <>stap 1 overschrijft <code className="font-mono">description_ban</code>/<code className="font-mono">censorship_context</code> waar de regex matcht (of zet NULL als de rest te kort is); stap 2 overschrijft die NULL-gemaakte velden met gegronde copy uit web_search</>,
-              output: <>stap 1: <code className="font-mono">data/filler-strip-{'{backup,log,needs-rewrite}'}-&lt;ts&gt;.csv</code>. stap 2: <code className="font-mono">data/description-{'{backup,rewrite}'}-&lt;ts&gt;.csv</code>.</>,
+              output: <>stap 1: <code className="font-mono">data/filler-strip-{'{backup,log,needs-rewrite}'}-&lt;ts&gt;.csv</code>. stap 2: <code className="font-mono">data/description-{'{backup,rewrite}'}-&lt;ts&gt;.csv</code>. Bij <code className="font-mono">--top=N</code> extra: <code className="font-mono">data/clean-descriptions-top-slugs-&lt;ts&gt;.txt</code>.</>,
               idempotent: 'ja — re-runs leveren een nieuwe set timestamped CSVs op; --apply opnieuw draaien is veilig (strip is regex-deterministisch, rewrite is restartable via --skip-log op het sub-script)',
-              cost: <>stap 1 gratis. stap 2 ~$0,01–0,02 per boek via <code className="font-mono">gpt-4.1-mini</code> + web_search — ~$8 voor een volledige sweep van ~570 zwakke boeken bij concurrency 3 (~2 uur runtime).</>,
+              cost: <>stap 1 gratis. stap 2 ~$0,01–0,02 per boek via <code className="font-mono">gpt-4.1-mini</code> + web_search — ~$8 voor een volledige sweep van ~570 zwakke boeken bij concurrency 3 (~2 uur runtime). Met <code className="font-mono">--top=100</code>: max ~$2, doorgaans veel minder omdat de meeste top-100 boeken al schoon zijn.</>,
             }}
             command={`# Dry-run — toont strip-samples; rewrite-stap wordt geskipt (heeft --apply nodig)
 npx tsx --env-file=.env.local scripts/clean-descriptions.ts
@@ -802,11 +802,16 @@ npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply
 npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --strip-only
 
 # Eén boek door de hele pijplijn
-npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --slug=defy-me`}
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --slug=defy-me
+
+# Scope tot de 100 meest geklikte /books/-pagina's (GSC pages-snapshot)
+# Run eerst scripts/gsc-query.ts om de snapshot te verversen (data lagt ~2-3 dagen).
+npx tsx --env-file=.env.local scripts/clean-descriptions.ts --apply --top=100`}
             flags={[
               { flag: '--apply', desc: 'Schrijf naar DB. Zonder dit draait stap 1 als preview en wordt stap 2 overgeslagen' },
               { flag: '--strip-only', desc: 'Skip de LLM-rewrite — alleen de gratis regex-strip' },
               { flag: '--slug=X', desc: 'Eén boek door beide stappen' },
+              { flag: '--top=N', desc: 'Scope hele pijplijn tot de N meest geklikte /books/-slugs uit de nieuwste data/gsc/pages-<datum>.json (clicks gesommeerd over www+non-www). Snapshot >14 dagen oud → waarschuwing, run gaat door. Niet combineerbaar met --slug.' },
             ]}
             note={
               <>

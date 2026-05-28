@@ -20,9 +20,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 
-const APPLY   = process.argv.includes('--apply')
-const slugArg = process.argv.find(a => a.startsWith('--slug='))
-const SLUG    = slugArg?.split('=')[1] ?? null
+const APPLY       = process.argv.includes('--apply')
+const slugArg     = process.argv.find(a => a.startsWith('--slug='))
+const slugsFileArg = process.argv.find(a => a.startsWith('--slugs-file='))
+const SLUG        = slugArg?.split('=')[1] ?? null
+const SLUGS_FILE  = slugsFileArg?.split('=')[1] ?? null
 const MIN_BAN_LEN = 60
 const MIN_CTX_LEN = 80
 
@@ -145,10 +147,31 @@ function csvEscape(v: unknown): string {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
+function loadSlugsFile(p: string): Set<string> {
+  if (!fs.existsSync(p)) {
+    console.error(`--slugs-file not found: ${p}`)
+    process.exit(1)
+  }
+  const slugs = fs.readFileSync(p, 'utf8')
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s && !s.startsWith('#'))
+  if (!slugs.length) {
+    console.error(`--slugs-file is empty: ${p}`)
+    process.exit(1)
+  }
+  return new Set(slugs)
+}
+
 async function main() {
   const all = await fetchAll()
   let target = all
   if (SLUG) target = all.filter(b => b.slug === SLUG)
+  if (SLUGS_FILE) {
+    const slugs = loadSlugsFile(SLUGS_FILE)
+    target = target.filter(b => slugs.has(b.slug))
+    console.log(`  --slugs-file=${SLUGS_FILE} → ${slugs.size} slugs requested, ${target.length} matched in DB`)
+  }
   console.log(`\n── strip-filler-sentences (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
   console.log(`  Scanning ${target.length} books\n`)
 
