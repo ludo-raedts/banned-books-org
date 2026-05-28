@@ -46,12 +46,16 @@ export default async function DatasetPage() {
 
   const minYear = stats.minYear ?? 1900
   const maxYear = stats.maxYear ?? new Date().getUTCFullYear()
+  // Pre-1000 CE bans (e.g. Ovid's Ars Amatoria, 8 AD) render as "8" without
+  // an era marker, which reads like a typo. Tag them "AD" in the prose; the
+  // ISO 8601 temporalCoverage below stays 4-digit-padded for validators.
+  const minYearLabel = minYear < 1000 ? `${minYear} AD` : String(minYear)
   const datasetSchema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
     name: 'Banned Books: International Censorship Database',
     alternateName: 'banned-books.org dataset',
-    description: `A structured, citation-backed dataset of ${stats.books.toLocaleString('en')} books banned, challenged, or restricted across ${stats.countries} countries (${stats.bans.toLocaleString('en')} total ban records, ${minYear}–${maxYear}). Every ban record carries a verifiable source citation. Includes books, authors, bans (with year, scope, status, reasons), source citations, and country dimensions. CSV, JSON, and SQLite formats. International scope; includes defunct states (USSR, East Germany, Czechoslovakia, Yugoslavia).`,
+    description: `A structured, citation-backed dataset of ${stats.books.toLocaleString('en')} books banned, challenged, or restricted across ${stats.countries} countries (${stats.bans.toLocaleString('en')} total ban records, ${minYearLabel}–${maxYear}). Every ban record carries a verifiable source citation. Includes books, authors, bans (with year, scope, status, reasons), source citations, and country dimensions. CSV, JSON, and SQLite formats. International scope; includes defunct states (USSR, East Germany, Czechoslovakia, Yugoslavia).`,
     url: 'https://www.banned-books.org/dataset',
     sameAs: 'https://www.banned-books.org',
     keywords: [
