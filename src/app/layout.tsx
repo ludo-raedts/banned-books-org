@@ -99,6 +99,7 @@ export default function RootLayout({
               <Link href="/scope/school" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">School bans</Link>
               <Link href="/scope/government" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Government bans</Link>
               <Link href="/history" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">History</Link>
+              <Link href="/timeline" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Timeline</Link>
               <Link href="/essays" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Essays</Link>
               <Link href="/sources" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Sources</Link>
               <Link href="/dataset" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Download dataset</Link>
@@ -109,6 +110,7 @@ export default function RootLayout({
               <Link href="/reading-club" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Reading club</Link>
               <Link href="/banned-books-week" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Banned Books Week</Link>
               <Link href="/banned-classics" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Classics</Link>
+              <Link href="/banned-childrens-books" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Children&rsquo;s books</Link>
               <Link href="/privacy" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Privacy</Link>
               <a href="/feed.xml" type="application/rss+xml" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">RSS feed</a>
             </nav>
