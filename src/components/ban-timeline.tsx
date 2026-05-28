@@ -81,6 +81,13 @@ export default function BanTimeline({
   const allBans = rows.flatMap(r => r.bans)
   if (allBans.length < minBansToRender) return null
   if (rows.length === 0) return null
+  // Single-country charts only render when bans span a meaningful period —
+  // otherwise the "timeline" collapses to a vertical stripe and the table
+  // below conveys the same information without the visual noise.
+  if (rows.length === 1) {
+    const starts = allBans.map(b => b.year_started)
+    if (Math.max(...starts) - Math.min(...starts) < 10) return null
+  }
 
   const banStarts = allBans.map(b => b.year_started)
   const banEnds = allBans.map(b => b.year_ended ?? currentYear)
