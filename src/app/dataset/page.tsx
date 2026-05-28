@@ -21,21 +21,20 @@ export const metadata: Metadata = {
 
 async function getStats() {
   const s = adminClient()
-  const [books, bans, sources, countryRowsRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
+  const [books, bans, sources, countriesRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
     s.from('books').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }),
     s.from('ban_sources').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('country_code').neq('country_code', null),
+    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: true }).limit(1).maybeSingle(),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: false }).limit(1).maybeSingle(),
     s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
-  const countries = new Set((countryRowsRes.data ?? []).map((r) => r.country_code)).size
   return {
     books: books.count ?? 0,
     bans: bans.count ?? 0,
     sources: sources.count ?? 0,
-    countries,
+    countries: countriesRes.count ?? 0,
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
     dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,
