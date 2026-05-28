@@ -86,9 +86,9 @@ export default async function DatasetPage() {
       availability: 'https://schema.org/InStock',
     },
     distribution: [
-      { '@type': 'DataDownload', encodingFormat: 'text/csv', name: 'CSV files (books, bans, sources, countries, authors, reasons)' },
-      { '@type': 'DataDownload', encodingFormat: 'application/json', name: 'Single-file JSON dataset' },
-      { '@type': 'DataDownload', encodingFormat: 'application/vnd.sqlite3', name: 'SQLite database' },
+      { '@type': 'DataDownload', encodingFormat: 'text/csv', name: 'CSV files (books, bans, sources, countries, authors, reasons)', contentUrl: 'https://www.banned-books.org/dataset' },
+      { '@type': 'DataDownload', encodingFormat: 'application/json', name: 'Single-file JSON dataset', contentUrl: 'https://www.banned-books.org/dataset' },
+      { '@type': 'DataDownload', encodingFormat: 'application/vnd.sqlite3', name: 'SQLite database', contentUrl: 'https://www.banned-books.org/dataset' },
     ],
     temporalCoverage: `${String(minYear).padStart(4, '0')}/${String(maxYear).padStart(4, '0')}`,
     spatialCoverage: { '@type': 'Place', name: 'Global (worldwide)' },
