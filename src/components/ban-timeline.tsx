@@ -75,7 +75,7 @@ export default function BanTimeline({
   firstPublishedYear,
   firstPublishedLabel = 'First published',
   caption,
-  minBansToRender = 3,
+  minBansToRender = 2,
   currentYear = new Date().getUTCFullYear(),
 }: BanTimelineProps) {
   const allBans = rows.flatMap(r => r.bans)

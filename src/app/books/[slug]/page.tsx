@@ -1068,7 +1068,9 @@ export default async function BookPage({
       {sortedBans.length > 0 && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3">
-            Where {book.title} has been banned
+            {distinctCountries === 1
+              ? `Ban history in ${sortedBans[0].countries?.name_en ?? sortedBans[0].country_code}`
+              : `Where ${book.title} has been banned`}
           </h2>
           <BanTimeline
             rows={timelineRows}
