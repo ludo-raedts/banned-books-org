@@ -76,14 +76,13 @@ export default function RootLayout({
               <NavLink href="/search">Search</NavLink>
               <NavLink href="/dataset">Dataset</NavLink>
               <NavLink href="/countries">Countries</NavLink>
+              <NavLink href="/most-banned-authors">Authors</NavLink>
               <NavLink href="/stats">Stats</NavLink>
               <NavLink href="/reasons">Reasons</NavLink>
               <NavLink href="/history">History</NavLink>
               <NavLink href="/essays">Essays</NavLink>
               <NavLink href="/news">News</NavLink>
-              <NavLink href="/about">About</NavLink>
               <NavLink href="/reading-club">Reading club</NavLink>
-              <NavLink href="/reading-list">Further reading</NavLink>
             </nav>
             <MobileNav />
           </div>
@@ -114,6 +113,7 @@ export default function RootLayout({
                   <li><Link href="/banned-childrens-books" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Children&rsquo;s books</Link></li>
                   <li><Link href="/non-english-banned-books" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Non-English books</Link></li>
                   <li><Link href="/banned-books-week" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Banned Books Week</Link></li>
+                  <li><Link href="/banned-books" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">By year</Link></li>
                 </ul>
               </div>
               <div>

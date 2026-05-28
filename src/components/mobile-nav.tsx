@@ -4,18 +4,35 @@ import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const LINKS = [
-  { href: '/search', label: 'Search' },
-  { href: '/dataset', label: 'Dataset' },
-  { href: '/countries', label: 'Countries' },
-  { href: '/stats', label: 'Stats' },
-  { href: '/reasons', label: 'Reasons' },
-  { href: '/history', label: 'History' },
-  { href: '/essays', label: 'Essays' },
-  { href: '/news', label: 'News' },
-  { href: '/about', label: 'About' },
-  { href: '/reading-club', label: 'Reading club' },
-  { href: '/reading-list', label: 'Further reading' },
+type NavLink = { href: string; label: string }
+type NavSection = { heading: string; links: NavLink[] }
+
+const SECTIONS: NavSection[] = [
+  {
+    heading: 'Browse',
+    links: [
+      { href: '/search', label: 'Search' },
+      { href: '/countries', label: 'Countries' },
+      { href: '/most-banned-authors', label: 'Authors' },
+      { href: '/reasons', label: 'Reasons' },
+    ],
+  },
+  {
+    heading: 'Data',
+    links: [
+      { href: '/dataset', label: 'Dataset' },
+      { href: '/stats', label: 'Stats' },
+    ],
+  },
+  {
+    heading: 'Read',
+    links: [
+      { href: '/history', label: 'History' },
+      { href: '/essays', label: 'Essays' },
+      { href: '/news', label: 'News' },
+      { href: '/reading-club', label: 'Reading club' },
+    ],
+  },
 ]
 
 export default function MobileNav() {
@@ -88,7 +105,27 @@ export default function MobileNav() {
   }, [open])
 
   return (
-    <div className="ml-auto md:hidden">
+    <div className="ml-auto md:hidden flex items-center gap-0.5">
+      <Link
+        href="/search"
+        aria-label="Search"
+        className="inline-flex items-center justify-center w-9 h-9 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <line x1="20" y1="20" x2="16.65" y2="16.65" />
+        </svg>
+      </Link>
       <button
         ref={buttonRef}
         type="button"
@@ -129,25 +166,35 @@ export default function MobileNav() {
           id={menuId}
           className="fixed inset-x-0 top-12 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm shadow-sm animate-fade-in"
         >
-          <nav className="max-w-5xl mx-auto px-4 py-2 flex flex-col">
-            {LINKS.map(link => {
-              const active =
-                pathname === link.href ||
-                pathname.startsWith(link.href + '/')
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-3 py-3 rounded-md text-sm transition-colors ${
-                    active
-                      ? 'text-brand font-medium'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
+          <nav className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-1">
+            {SECTIONS.map((section, idx) => (
+              <div
+                key={section.heading}
+                className={idx > 0 ? 'mt-3 pt-3 border-t border-gray-100 dark:border-gray-900' : ''}
+              >
+                <h2 className="px-3 pb-1 text-[11px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">
+                  {section.heading}
+                </h2>
+                {section.links.map(link => {
+                  const active =
+                    pathname === link.href ||
+                    pathname.startsWith(link.href + '/')
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block px-3 py-2.5 rounded-md text-sm transition-colors ${
+                        active
+                          ? 'text-brand font-medium'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            ))}
           </nav>
         </div>
       )}
