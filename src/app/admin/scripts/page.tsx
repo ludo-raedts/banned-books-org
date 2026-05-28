@@ -975,6 +975,42 @@ npx tsx --env-file=.env.local scripts/audit-covers-for-placeholders.ts --apply -
             ]}
           />
 
+          <Script
+            name="audit-non-person-authors.ts"
+            what="Scant alle authors op display_names die op een organisatie / uitgever / redactie / boektitel lijken in plaats van een persoon. Vijf categorieën: PUBLISHER (Editorial X, Press, Penerbit), ORG_BODY (overheid/partij/comité/instituut), STAFF_TAIL (Editorial Staff, Sidang Pengarang), ANON_GROUP (X et al, and Others), TITLE_LIKE (Atlas/Diccionario/Enciclopedia prefix). Schrijft per-categorie markdown-rapport met book-counts + voorbeelden. Read-only. Heeft een ingebouwde WHITELIST_NAMES set voor false positives (bv. 'Melissa Kantor' — 'Kantor' = office in ID/MS, maar hier achternaam) — voeg toe bij nieuwe false positives."
+            tags={['safe']}
+            meta={{
+              coverage: 'all-rows: alle authors',
+              cadence: 'na elke bulk-import + periodieke sweep',
+              writes: 'geen — read-only',
+              output: <><code className="font-mono">data/non-person-authors-review.md</code> (per-categorie, gesorteerd op book-count)</>,
+              idempotent: 'ja',
+              cost: 'gratis',
+            }}
+            command={`# Re-run de scan
+npx tsx --env-file=.env.local scripts/audit-non-person-authors.ts`}
+            note={<>Pair met <code className="font-mono">cleanup-non-person-authors.ts</code> hieronder voor de daadwerkelijke cleanup. Eerste run (2026-05-28) vond 77 verdachte rijen; cleanup verwijderde 29, hernoemde 11. Patroon van pre-existente <code className="font-mono">enrich-author-bios.ts</code>-mismatches met verkeerde person-bios is de smoking gun.</>}
+          />
+
+          <Script
+            name="cleanup-non-person-authors.ts"
+            what="One-shot cleanup voor non-persoon authors uit het audit-rapport. Drie acties: (1) DELETE — uitgevers, reeks-titels, redactie-staffs, ORG_BODY-titles; (2) RENAME — echte persoon met rank-prefix ('Army Reserve Lt. Col. Anthony Shaffer' → 'Anthony Shaffer'); (3) ANON_GROUP — 'X. et al' → 'X' + verkeerde bio wissen, of merge met bestaande canonical bij slug-collision. IDs zijn hardcoded uit de audit-run; pas DELETE_IDS / RENAME_PLANS / ANON_PLANS aan voor nieuwe runs. Verifieert eerst alle expected display_names voordat het muteert."
+            tags={['destructive']}
+            meta={{
+              coverage: 'flag-driven: hardcoded ID-lijst uit audit-run',
+              cadence: 'one-off na audit-review',
+              writes: <>verwijder <code className="font-mono">book_authors</code>-links + author-rij, of rename <code className="font-mono">display_name</code> + <code className="font-mono">slug</code> + wis bio-velden</>,
+              idempotent: 'nee — IDs verdwijnen na eerste apply (verificatie faalt netjes bij re-run)',
+              cost: 'gratis',
+            }}
+            command={`# Dry-run eerst — toont alle verificatie + samenvatting per actie
+npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts
+
+# Apply
+npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
+            note={<>Werkwijze bij nieuwe audit-run: kopieer het script, vul de drie lijsten met IDs uit de nieuwste <code className="font-mono">data/non-person-authors-review.md</code>, en draai dry-run → apply. De verificatie-stap aborteert als een display_name niet matcht — beschermt tegen accidentele wijzigingen na een ander script al een rij hernoemde.</>}
+          />
+
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             Voor description / ban-description fixes per boek: gebruik{' '}
             <code className="font-mono">enrich-descriptions.ts --slug=X</code>,{' '}
