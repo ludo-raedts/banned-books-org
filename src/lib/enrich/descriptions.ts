@@ -1,3 +1,20 @@
+// ⚠️ DEPRECATED — prefer src/lib/enrich/descriptions-v2.ts for all new work.
+//
+// v1 kept around because /api/admin/enrich/run still imports it. Do not
+// extend this file. v2 has:
+//   - Wikipedia EN + langlinks as primary source (v1 only OL + GB)
+//   - title-fuzz + author-surname cross-check on every accepted source
+//     (v1 had none — produced wrong-book hallucinations)
+//   - LLM "grounded synthesis from ≥2 cited sources", never free-form
+//     generation (v1's GPT fallback caused the 2026-05-28 incident)
+//   - description_source_url / description_source_type recorded per row
+//   - Multi-source cross-confirmation → data_quality_status='confident'
+//
+// 2026-05-28 safety patch retroactively applied to v1:
+//   - Skip rows where data_quality_status='flagged' (so the judge run's
+//     wipes don't get re-hallucinated)
+//   - GPT fallback is opt-in only (--allow-gpt-fallback)
+//
 // Core book-description enrichment logic, callable from either the CLI script
 // (scripts/enrich-descriptions.ts) or the in-process API route
 // (/api/admin/enrich/run). Two passes:
@@ -6,10 +23,10 @@
 //             Source: OL works API → OL search → Google Books
 //
 //   Part B — Fill completely missing descriptions (description_book IS NULL)
-//             Source: OL search → Google Books → GPT-4o-mini fallback
+//             Source: OL search → Google Books → [opt-in] GPT-4o-mini fallback
 //
-// The GPT fallback only fires when OPENAI_API_KEY is set in env. With
-// free-only mode (no key) the script still does useful OL/GB work.
+// The GPT fallback only fires when OPENAI_API_KEY is set AND opts.allowGptFallback
+// is true (or OPENAI_ALLOW_FALLBACK=true in env). Default = OL/GB only.
 
 import OpenAI from 'openai'
 import { franc } from 'franc-min'
@@ -142,6 +159,7 @@ type BookRow = {
   description: string | null
   description_book: string | null
   openlibrary_work_id: string | null
+  data_quality_status: 'confident' | 'default' | 'flagged' | null
   book_authors: Array<{ authors: { display_name: string } | null }>
 }
 
@@ -150,6 +168,13 @@ export type EnrichDescriptionsOpts = {
   limit?: number
   overwrite?: boolean
   slug?: string
+  /**
+   * Opt-in switch for the LLM (gpt-4o-mini) fallback when OpenLibrary and
+   * Google Books both return no description. Default false because
+   * un-grounded LLM text is what the 2026-05-28 judge run cleaned up.
+   * Also enabled by `OPENAI_ALLOW_FALLBACK=true` in env.
+   */
+  allowGptFallback?: boolean
   onProgress?: (msg: string) => void
 }
 
@@ -167,8 +192,17 @@ export type EnrichDescriptionsResult = {
 export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<EnrichDescriptionsResult> {
   const log = opts.onProgress ?? (() => {})
   const supabase = adminClient()
-  const hasGpt = Boolean(process.env.OPENAI_API_KEY)
-  const openai = hasGpt ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null
+  // GPT fallback is now OPT-IN to prevent re-introducing hallucinations.
+  // After the 2026-05-28 judge run wiped CONTRADICTED descriptions, an
+  // un-gated GPT fallback would have re-filled those NULL fields with
+  // fresh LLM output — defeating the entire cleanup. Two opt-in switches:
+  //   - opts.allowGptFallback (programmatic)
+  //   - process.env.OPENAI_ALLOW_FALLBACK === 'true' (CLI/env)
+  const gptAllowed =
+    Boolean(opts.allowGptFallback)
+    || process.env.OPENAI_ALLOW_FALLBACK === 'true'
+  const hasGptKey = Boolean(process.env.OPENAI_API_KEY)
+  const openai = gptAllowed && hasGptKey ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null
 
   const overwriteMode = Boolean(opts.overwrite || opts.slug)
 
@@ -177,7 +211,7 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   while (true) {
     let query = supabase
       .from('books')
-      .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, description, description_book, openlibrary_work_id, book_authors(authors(display_name))')
+      .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, description, description_book, openlibrary_work_id, data_quality_status, book_authors(authors(display_name))')
       .order('id', { ascending: true })
       .range(offset, offset + 999)
     if (opts.slug) {
@@ -194,6 +228,18 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
   }
   all.sort((a, b) => a.title.localeCompare(b.title))
 
+  // Skip rows that the AI-description judge has flagged (2026-05-28).
+  // 'flagged' on a NULL description_book means: judge wiped it because the
+  // source contradicted the AI text. Don't refill it without a verified
+  // source. The --slug and --overwrite paths bypass this — those are
+  // explicit single-book operations the operator has confirmed.
+  let flaggedSkipped = 0
+  if (!opts.slug && !opts.overwrite) {
+    const before = all.length
+    all = all.filter(b => b.data_quality_status !== 'flagged')
+    flaggedSkipped = before - all.length
+  }
+
   // In overwrite/slug mode, skip Part A (which only makes sense when description_book
   // is still NULL and we're salvaging a truncated legacy `description`) and route
   // every fetched row through Part B as a re-fill.
@@ -206,7 +252,8 @@ export async function enrichDescriptions(opts: EnrichDescriptionsOpts): Promise<
 
   log(`Part A — truncated descriptions to repair: ${truncated.length}`)
   log(`Part B — missing descriptions to fill:     ${missing.length}`)
-  log(`GPT fallback: ${hasGpt ? 'enabled' : 'disabled (no OPENAI_API_KEY)'}`)
+  if (flaggedSkipped > 0) log(`Skipped (data_quality_status='flagged'):    ${flaggedSkipped}`)
+  log(`GPT fallback: ${gptAllowed && hasGptKey ? 'enabled (opt-in)' : (gptAllowed ? 'disabled (no OPENAI_API_KEY)' : 'DISABLED — set OPENAI_ALLOW_FALLBACK=true or opts.allowGptFallback to enable')}`)
 
   const samples: EnrichDescriptionsResult['samples'] = []
   let errCount = 0

@@ -207,6 +207,18 @@ function parseRowCells(
     // partial enumeration. These are not actual books; drop them.
     if (/^\+\s*\d+\s+more\b/i.test(segment)) continue
 
+    // Aggregate-count phrases ("19 titles", "6 works", "7 books", "Various
+    // works", "Opera omnia"…) — Wikipedia uses these in the Index Librorum
+    // Works cell as shorthand for "author has N titles on the Index" without
+    // enumerating them. The parser had no guard for this until 2026-05-28,
+    // when boeken 6543 ("19 titles" / Renan), 6634 ("6 titles" / Michelet)
+    // and 6668 ("7 works" / Lamennais) auto-accepted with LLM-hallucinated
+    // descriptions and fabricated ISBNs. We drop these segments — there is
+    // no real title to anchor a book row on. (The "All works[ of X]" case
+    // is intentionally NOT dropped: it gets author-prefixed below as an
+    // explicit aggregate marker.)
+    if (isAggregateCountPlaceholder(segment)) continue
+
     const {
       title,
       title_native,
@@ -216,17 +228,25 @@ function parseRowCells(
       needs_model_3_review,
     } = splitModel3Title(segment)
 
-    // "All works" / "All works of theology" / etc. — Index Librorum
-    // convention where a row's Works cell records that the Catholic Church
-    // banned the author's entire output (or all output on a given subject)
-    // rather than enumerating titles. Prefixing the author's name makes the
-    // title unique per author and disambiguates the resulting books.slug.
+    // "All works" / "All works of theology" / "All plays" / "All love
+    // stories" / etc. — Index Librorum convention where a row's Works
+    // cell records that the Catholic Church banned the author's entire
+    // output (or all output on a given subject) rather than enumerating
+    // titles. Prefixing the author's name makes the title unique per
+    // author and disambiguates the resulting books.slug.
+    //
+    // 2026-05-28 widening: the regex used to be ^all works( of \w+)?$
+    // which let "All plays" (id 6596, Voltaire) and "All love stories"
+    // (id 6663, anonymized) slip through without author-prefix — leaving
+    // bare aggregate titles in the DB. The new pattern accepts any
+    // category noun ("works", "plays", "writings", "love stories",
+    // "novels", "essays", etc.) plus the optional " of X" suffix.
     // Only fires when the section uses multi-title splitting (Index source).
     let finalTitle = title
     if (
       multiTitleSeparator
       && authors.length > 0
-      && /^all works(\s+of\s+\w+)?$/i.test(title)
+      && isAllCategoryAggregate(title)
     ) {
       finalTitle = `${authors[0]} — ${title}`
     }
@@ -252,6 +272,65 @@ function parseRowCells(
   }
   return out
 }
+
+// ----------------------------------------------------------------------------
+// Aggregate-count placeholder detector
+// ----------------------------------------------------------------------------
+//
+// Wikipedia editors sometimes summarise a long list of works as a count
+// phrase ("19 titles", "6 works", "Various writings") instead of enumerating
+// individual titles. When those phrases land in a Works/Title cell, the
+// parser used to pass them through as if they were real book titles —
+// producing book rows whose downstream LLM enrichment would then fabricate
+// plausible-sounding (but entirely fake) synopses and ISBN-13s.
+//
+// This detector mirrors the patterns used by scripts/_audit_wiki_index_
+// aggregate_titles.ts. Keep the two in sync if you add a new pattern.
+//
+// Out of scope on purpose:
+//   - "All works" / "All works of theology" — handled by the author-prefix
+//     branch inside parseRowCells; that produces an explicit aggregate row.
+//   - Real titles that happen to start with a number ("1984", "1Q84").
+export function isAggregateCountPlaceholder(segment: string): boolean {
+  const s = segment.trim()
+  if (s.length === 0) return false
+  return AGGREGATE_PLACEHOLDER_PATTERNS.some(p => p.test(s))
+}
+
+// "All works", "All plays", "All love stories", "All writings of theology"…
+// — Wikipedia Index Librorum phrasing for "the author's entire output [in a
+// category] is banned". Detected separately from isAggregateCountPlaceholder
+// because these rows are intentionally kept (with author-prefix) rather than
+// dropped: they record a real historical fact even though no individual
+// title is given.
+//
+// We deliberately use a closed set of category nouns rather than a generic
+// "All <anything>" pattern, so that real titles starting with "All" (e.g.
+// "All Quiet on the Western Front", "All the King's Men", "All About Eve")
+// are NOT mis-classified as aggregates.
+const ALL_CATEGORY_NOUN =
+  /^all\s+(?:love\s+stories|works|plays|writings|novels|essays|books|poems|stories|sermons|letters|lectures|dialogues|treatises|commentaries|tracts|pamphlets|publications|articles|dramas|comedies|tragedies|memoirs|theology|theological\s+works|philosophical\s+works)(\s+of\s+\w+(?:\s+\w+){0,3})?$/i
+export function isAllCategoryAggregate(title: string): boolean {
+  return ALL_CATEGORY_NOUN.test(title.trim())
+}
+
+const AGGREGATE_PLACEHOLDER_PATTERNS: RegExp[] = [
+  /^\d+\s+titles?$/i,
+  /^\d+\s+works?$/i,
+  /^\d+\s+books?$/i,
+  /^\d+\s+volumes?$/i,
+  /^\d+\s+writings?$/i,
+  /^\d+\s+publications?$/i,
+  /^(various|several|multiple|some|many)\s+works?$/i,
+  /^(his|her|their)\s+works?$/i,
+  /^works?\s+of\s+(him|her|them)$/i,
+  /^opera\s+omnia$/i,
+  /^all\s+(his|her|their)?\s*writings?$/i,
+  /^works?$/i,
+  /^writings?$/i,
+  /^books?$/i,
+  /^(unknown|untitled|n\/?a|tbd|none)$/i,
+]
 
 // ----------------------------------------------------------------------------
 // Model 3 title splitter
