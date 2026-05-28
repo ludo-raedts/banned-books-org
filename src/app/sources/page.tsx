@@ -80,6 +80,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['pen-international.org'],
       },
       {
+        name: 'PEN Belarus',
+        url: 'https://bannedbooks.penbelarus.org',
+        description:
+          'Belarusian PEN centre (operating in exile, funded by Norway and the Human Rights House Foundation) maintains the public catalogue of Lukashenko-era book bans: the Ministry of Information\'s "Extremist Materials" list, the "Harmful to National Interests" list, plus curated profiles for Tsarist-era (1800s), Stalin-era (Glavlit Order No. 33, 1937), and international authors hit by modern bans. Separate organisation from PEN International.',
+        match: ['penbelarus.org'],
+      },
+      {
         name: 'Reporters Without Borders (RSF)',
         url: 'https://rsf.org',
         description:
@@ -191,6 +198,27 @@ const CATEGORIES: readonly Category[] = [
         match: ['legifrance.gouv.fr'],
       },
       {
+        name: 'Malaysian Ministry of Home Affairs — KDN e-PQ register',
+        url: 'https://epq.kdn.gov.my/e-pq/index.php?mod=public',
+        description:
+          'Senarai Perintah Larangan — the official public register of publication-ban orders issued by the Ministry of Home Affairs (Kementerian Dalam Negeri) under the Printing Presses and Publications Act 1984 and its predecessors. ~3,200 entries 1950–present; each ban\'s gazette legal-notice ("L.N. 263", "P.U. (A) 410", etc.) is preserved as the per-row locator.',
+        match: ['epq.kdn.gov.my'],
+      },
+      {
+        name: 'Indian Kanoon — court judgments',
+        url: 'https://indiankanoon.org',
+        description:
+          'Open searchable database of Indian Supreme Court, High Court, and tribunal judgments. Used to source court rulings underlying nationwide and state-level book bans — each citation is a per-document permalink (indiankanoon.org/doc/NNNNN/).',
+        match: ['indiankanoon.org'],
+      },
+      {
+        name: 'UK National Archives',
+        url: 'https://www.nationalarchives.gov.uk',
+        description:
+          'The UK government\'s public records archive. Cited for the legal-history paper trail behind statutory censorship instruments — most prominently the Section 28 origin documents (1986–2003).',
+        match: ['nationalarchives.gov.uk'],
+      },
+      {
         name: 'FYI.org.nz — New Zealand Official Information requests',
         url: 'https://fyi.org.nz',
         description:
@@ -252,6 +280,27 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Argentine human-rights archive consortium. Cited for books prohibited under the 1976–1983 military dictatorship.',
         match: ['memoriaabierta'],
+      },
+      {
+        name: 'Comisión Provincial de la Memoria — Córdoba (APM)',
+        url: 'https://apm.gov.ar',
+        description:
+          'Provincial human-rights archive in Córdoba, Argentina. Publishes the "Biblioteca de Libros Prohibidos" PDF catalogue (1st ed. March 2012) documenting 630+ titles prohibited under the military dictatorship\'s Proceso de Reorganización Nacional (1976–1983). PDF colophon explicitly permits non-commercial reproduction with attribution.',
+        match: ['apm.gov.ar'],
+      },
+      {
+        name: 'Royal Literary Fund — Banned Books Week feature',
+        url: 'https://www.rlf.org.uk',
+        description:
+          'UK writers\' benevolent fund (founded 1790). Their "Banned Books Week" feature profiles RLF-supported writers who faced censorship — used as citation of record for historical UK/Ireland bans on authors like D. H. Lawrence and Angus Wilson where the original gazette is no longer accessible.',
+        match: ['rlf.org.uk'],
+      },
+      {
+        name: 'Universität Innsbruck — Germanistik (DDR-Aufsatz)',
+        url: 'https://webapp.uibk.ac.at/germanistik/histrom/docs/ddraufsatz.html',
+        description:
+          'Academic essay on East-German literature and the Druckgenehmigungsverfahren — the state-level pre-publication permit system that effectively functioned as censorship. Cited for DDR-era ban records alongside Wikipedia "Censorship in East Germany" and archived petersell.de pages.',
+        match: ['uibk.ac.at'],
       },
       {
         name: 'Index Librorum Prohibitorum (Catholic Index, 1559–1966)',
