@@ -1,0 +1,525 @@
+{
+ "_doc": "UK + Ireland book bans, 1727-2025, compiled 2026-05-28 from sources listed per-collection. Each collection has shared ban_defaults (country/scope/year/etc.) that the import script merges into each entry, plus per-entry overrides. The script dedups by (book_id, country_code, scope_id, year_started).",
+ "collections": [
+  {
+   "slug": "lowry-academy-2025",
+   "source": {
+    "name": "Index on Censorship — Greater Manchester school book-banning investigation",
+    "url": "https://www.indexoncensorship.org/2026/03/school-book-banning-escalates-in-the-uk-as-greater-manchester-secondary-school-censors-scores-of-books/",
+    "type": "ngo"
+   },
+   "ban_defaults": {
+    "country_code": "GB",
+    "scope": "school",
+    "action_type": "removed",
+    "status": "active",
+    "year_started": 2025,
+    "year_ended": null,
+    "institution": "Lowry Academy, Salford",
+    "confidence": "reported"
+   },
+   "description_intro": "Removed from the Lowry Academy school library (Salford, Greater Manchester) in November 2025 as part of an AI-generated removal list of ~130-200 titles. The school librarian resigned over the purge; Index on Censorship and other outlets reported the incident in March 2026.",
+   "entries": [
+    {
+     "title": "Men Who Hate Women",
+     "authors": ["Laura Bates"],
+     "first_published_year": 2020,
+     "original_language": "en",
+     "reasons": ["political", "other"],
+     "description_extra": "Stocked by the librarian after safeguarding training on incel culture; trigger for the wider removal."
+    },
+    {
+     "title": "Heartstopper",
+     "authors": ["Alice Oseman"],
+     "first_published_year": 2018,
+     "original_language": "en",
+     "reasons": ["lgbtq"],
+     "description_extra": "Graphic-novel series; multiple volumes targeted."
+    },
+    {
+     "title": "The Black Flamingo",
+     "authors": ["Dean Atta"],
+     "first_published_year": 2019,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "Queerly Autistic",
+     "authors": ["Erin Ekins"],
+     "first_published_year": 2021,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "Pageboy",
+     "authors": ["Elliot Page"],
+     "first_published_year": 2023,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "We Should All Be Feminists",
+     "authors": ["Chimamanda Ngozi Adichie"],
+     "first_published_year": 2014,
+     "original_language": "en",
+     "reasons": ["political"]
+    },
+    {
+     "title": "Why I'm No Longer Talking to White People About Race",
+     "authors": ["Reni Eddo-Lodge"],
+     "first_published_year": 2017,
+     "original_language": "en",
+     "reasons": ["racial", "political"]
+    },
+    {
+     "title": "Nineteen Eighty-Four: The Graphic Novel",
+     "authors": ["George Orwell", "Matyáš Namai"],
+     "first_published_year": 2021,
+     "original_language": "en",
+     "reasons": ["political", "violence"],
+     "description_extra": "Graphic-novel adaptation. AI flagged it for 'themes of torture, violence, sexual coercion'."
+    },
+    {
+     "title": "Twilight",
+     "authors": ["Stephenie Meyer"],
+     "first_published_year": 2005,
+     "original_language": "en",
+     "reasons": ["sexual"],
+     "description_extra": "AI flagged it for 'mature romantic themes, sexual tension, and violence involving vampires'."
+    },
+    {
+     "title": "The Crow",
+     "authors": ["James O'Barr"],
+     "first_published_year": 1989,
+     "original_language": "en",
+     "reasons": ["violence"]
+    },
+    {
+     "title": "The Notebook",
+     "authors": ["Nicholas Sparks"],
+     "first_published_year": 1996,
+     "original_language": "en",
+     "reasons": ["sexual"]
+    },
+    {
+     "title": "Second Innings",
+     "authors": ["Andrew Flintoff"],
+     "first_published_year": 2015,
+     "original_language": "en",
+     "reasons": ["other"],
+     "needs_review": true
+    },
+    {
+     "title": "The Woman in Me",
+     "authors": ["Britney Spears"],
+     "first_published_year": 2023,
+     "original_language": "en",
+     "reasons": ["other"],
+     "needs_review": true
+    },
+    {
+     "title": "I Have No Secrets",
+     "authors": ["Penny Joelson"],
+     "first_published_year": 2017,
+     "original_language": "en",
+     "reasons": ["other"]
+    },
+    {
+     "title": "Becoming",
+     "authors": ["Michelle Obama"],
+     "first_published_year": 2018,
+     "original_language": "en",
+     "reasons": ["political"],
+     "needs_review": true,
+     "description_extra": "LBC referenced 'Michelle Obama's autobiography' without naming the title; Becoming is the only one she has published."
+    }
+   ]
+  },
+  {
+   "slug": "uk-obscenity-blasphemy-secrets",
+   "source": {
+    "name": "Wikipedia — Obscene Publications Act 1959 / Censorship in the United Kingdom / Whitehouse v Lemon / Spycatcher",
+    "url": "https://en.wikipedia.org/wiki/Obscene_Publications_Act_1959",
+    "type": "wiki"
+   },
+   "ban_defaults": {
+    "country_code": "GB",
+    "scope": "government",
+    "action_type": "banned",
+    "status": "historical",
+    "confidence": "verified"
+   },
+   "description_intro": "UK national-level prosecution or injunction under obscenity, blasphemy, or state-secrets law.",
+   "entries": [
+    {
+     "title": "Venus in the Cloister or The Nun in her Smock",
+     "authors": ["Edmund Curll"],
+     "first_published_year": 1724,
+     "original_language": "en",
+     "year_started": 1727,
+     "year_ended": null,
+     "reasons": ["obscenity", "religious"],
+     "description_extra": "First conviction for obscenity in Great Britain (common-law breach of the King's peace). Curll fined and pilloried."
+    },
+    {
+     "title": "The Well of Loneliness",
+     "authors": ["Radclyffe Hall"],
+     "first_published_year": 1928,
+     "original_language": "en",
+     "year_started": 1928,
+     "year_ended": 1949,
+     "status": "rescinded",
+     "reasons": ["obscenity", "lgbtq"],
+     "description_extra": "Declared obscene by Chief Magistrate at Bow Street Magistrates' Court in November 1928 after a campaign led by Sunday Express editor James Douglas and Home Secretary William Joynson-Hicks; copies destroyed. Republished in the UK in 1949."
+    },
+    {
+     "title": "The Rainbow",
+     "authors": ["D. H. Lawrence"],
+     "first_published_year": 1915,
+     "original_language": "en",
+     "year_started": 1915,
+     "year_ended": null,
+     "reasons": ["obscenity", "lgbtq", "sexual"],
+     "description_extra": "Prosecuted under the Obscene Publications Act 1857; magistrate ruled it obscene partly because of a lesbian encounter. Unsold copies destroyed by court order; book burnings reported."
+    },
+    {
+     "title": "Women in Love",
+     "authors": ["D. H. Lawrence"],
+     "first_published_year": 1920,
+     "original_language": "en",
+     "year_started": 1920,
+     "year_ended": 1931,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Effectively unpublishable in the UK for 11 years after publication owing to its depictions of sex and female sexuality."
+    },
+    {
+     "title": "Ulysses",
+     "authors": ["James Joyce"],
+     "first_published_year": 1922,
+     "original_language": "en",
+     "year_started": 1918,
+     "year_ended": 1936,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Banned in the UK after the magazine serialisation (The Egoist, 1918-1920) and book publication (Paris, 1922) were deemed obscene for the 'Nausicaa' chapter. Ban lifted in 1936 after the US ruling of 1933."
+    },
+    {
+     "title": "Lady Chatterley's Lover",
+     "authors": ["D. H. Lawrence"],
+     "first_published_year": 1928,
+     "original_language": "en",
+     "year_started": 1928,
+     "year_ended": 1960,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Effectively unpublishable in unexpurgated form in the UK for 32 years. In 1960 Penguin Books published the full text and was prosecuted under the Obscene Publications Act 1959; the Old Bailey jury returned a not-guilty verdict after a six-day trial — a landmark in British legal and cultural history."
+    },
+    {
+     "title": "Last Exit to Brooklyn",
+     "authors": ["Hubert Selby Jr."],
+     "first_published_year": 1964,
+     "original_language": "en",
+     "year_started": 1966,
+     "year_ended": 1968,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual", "violence"],
+     "description_extra": "Private prosecution brought in 1966; publishers Calder & Boyars convicted, conviction overturned on appeal in 1968."
+    },
+    {
+     "title": "Oz, issue 28 (Schoolkids OZ)",
+     "authors": ["Richard Neville", "Jim Anderson", "Felix Dennis"],
+     "first_published_year": 1970,
+     "original_language": "en",
+     "year_started": 1971,
+     "year_ended": 1971,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Longest obscenity trial in English legal history. Editors initially convicted in 1971; convictions overturned on appeal the same year. Defendants briefly imprisoned and forcibly given prison haircuts before bail."
+    },
+    {
+     "title": "Inside Linda Lovelace",
+     "authors": ["Linda Lovelace"],
+     "first_published_year": 1973,
+     "original_language": "en",
+     "year_started": 1976,
+     "year_ended": 1976,
+     "action_type": "challenged",
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Unsuccessful obscenity prosecution; publisher acquitted. Often credited as the case after which OPA prosecutions for written work fell away."
+    },
+    {
+     "title": "The Love That Dares to Speak Its Name",
+     "authors": ["James Kirkup"],
+     "first_published_year": 1976,
+     "original_language": "en",
+     "year_started": 1977,
+     "year_ended": 2008,
+     "status": "historical",
+     "reasons": ["religious", "lgbtq"],
+     "description_extra": "Poem published in Gay News no. 96 (June 1976). Mary Whitehouse brought a private prosecution for blasphemous libel; Gay News Ltd and editor Denis Lemon convicted at the Old Bailey, 11 July 1977 (Whitehouse v Lemon). Last successful blasphemy prosecution in the UK; the common-law offence was abolished in 2008."
+    },
+    {
+     "title": "Spycatcher",
+     "authors": ["Peter Wright", "Paul Greengrass"],
+     "first_published_year": 1987,
+     "original_language": "en",
+     "year_started": 1985,
+     "year_ended": 1988,
+     "status": "rescinded",
+     "reasons": ["political"],
+     "description_extra": "UK government obtained an injunction against publication in England (but not Scotland) on national-security grounds. House of Lords lifted the injunction in 1988 after the book was freely available abroad. Wright was barred from receiving UK royalties; in 1991 the European Court of Human Rights ruled the press gagging breached the European Convention on Human Rights."
+    }
+   ]
+  },
+  {
+   "slug": "section-28-targeted-1986-2003",
+   "source": {
+    "name": "UK National Archives — The origins of Section 28 / Wikipedia — Section 28",
+    "url": "https://www.nationalarchives.gov.uk/explore-the-collection/stories/origins-section-28/",
+    "type": "government"
+   },
+   "ban_defaults": {
+    "country_code": "GB",
+    "scope": "school",
+    "action_type": "challenged",
+    "status": "historical",
+    "year_started": 1987,
+    "year_ended": 2003,
+    "confidence": "reported"
+   },
+   "description_intro": "Targeted in political campaigns and parliamentary debates around Section 28 of the Local Government Act 1988 (1986-1988 build-up; law in force 1988-2003 in England & Wales, repealed 2000 in Scotland, 2003 in England & Wales). Section 28 forbade local authorities from 'promoting homosexuality' or publishing material 'with the intention of promoting homosexuality', producing widespread de-facto removal and self-censorship of LGBTQ+ titles from UK schools and public libraries.",
+   "entries": [
+    {
+     "title": "Jenny Lives with Eric and Martin",
+     "authors": ["Susanne Bösche"],
+     "first_published_year": 1981,
+     "original_language": "da",
+     "year_started": 1986,
+     "reasons": ["lgbtq"],
+     "description_extra": "Sparked the controversy that led directly to Section 28. A single copy was held at the Inner London Education Authority's Isledon Teachers' Centre for teacher reference; Conservative ministers (notably Kenneth Baker) and tabloids attacked ILEA leader Frances Morrell over its availability. The book's English edition was published by GMP Publishers in 1983 (translated from the Danish original)."
+    },
+    {
+     "title": "The Milkman's on his Way",
+     "authors": ["David Rees"],
+     "first_published_year": 1982,
+     "original_language": "en",
+     "reasons": ["lgbtq"],
+     "description_extra": "Briefed to Prime Minister Margaret Thatcher in 1987 with excerpts annotated as 'obtained from the children section of Haringey library by 15-year-old girl'. Cited repeatedly during the parliamentary debates that produced Section 28."
+    },
+    {
+     "title": "Young, Gay and Proud!",
+     "authors": ["Sasha Alyson"],
+     "first_published_year": 1980,
+     "original_language": "en",
+     "reasons": ["lgbtq"],
+     "description_extra": "Featured in 1987 Conservative Party campaign posters as an example of 'gay propaganda' that Labour councils would put in schools."
+    },
+    {
+     "title": "The Playbook for Kids about Sex",
+     "authors": ["Joani Blank"],
+     "first_published_year": 1980,
+     "original_language": "en",
+     "reasons": ["lgbtq", "sexual"],
+     "description_extra": "Cited by Section 28 supporters during parliamentary debate as inappropriate material."
+    },
+    {
+     "title": "Positive Images: A Resource Guide to Materials about Homosexuality",
+     "authors": ["Susan Hemmings"],
+     "first_published_year": 1986,
+     "original_language": "en",
+     "reasons": ["lgbtq"],
+     "description_extra": "1986 resource guide for teachers and librarians, including lesbian and gay literature. Cited in Parliament as the kind of material Section 28 needed to suppress."
+    }
+   ]
+  },
+  {
+   "slug": "rlf-historical-uk-ireland",
+   "source": {
+    "name": "Royal Literary Fund — Banned Books Week: The RLF writers who faced censorship",
+    "url": "https://www.rlf.org.uk/posts/banned-books-week-the-rlf-writers-who-faced-censorship/",
+    "type": "ngo"
+   },
+   "ban_defaults": {
+    "status": "historical",
+    "confidence": "reported"
+   },
+   "description_intro": "Historical UK/Ireland bans of RLF-supported authors documented by the Royal Literary Fund's 2025 Banned Books Week article (October 2025).",
+   "entries": [
+    {
+     "title": "Sons and Lovers",
+     "authors": ["D. H. Lawrence"],
+     "first_published_year": 1913,
+     "original_language": "en",
+     "country_code": "GB",
+     "scope": "public_library",
+     "action_type": "removed",
+     "year_started": 1913,
+     "year_ended": null,
+     "reasons": ["obscenity", "sexual"],
+     "description_extra": "Removed from UK public-library shelves after publication. Lawrence applied to the RLF for a hardship grant in September 1914."
+    },
+    {
+     "title": "Hemlock and After",
+     "authors": ["Angus Wilson"],
+     "first_published_year": 1952,
+     "original_language": "en",
+     "country_code": "US",
+     "scope": "retail",
+     "action_type": "blocked",
+     "year_started": 1951,
+     "year_ended": null,
+     "reasons": ["lgbtq"],
+     "description_extra": "American publisher William Morrow refused to publish Wilson's first novel because of its frank depiction of a gay protagonist, 15 years before the UK's Sexual Offences Act partially decriminalised male homosexuality. The book eventually found another US publisher."
+    },
+    {
+     "title": "Hemlock and After",
+     "authors": ["Angus Wilson"],
+     "first_published_year": 1952,
+     "original_language": "en",
+     "country_code": "GB",
+     "scope": "public_library",
+     "action_type": "removed",
+     "year_started": 1952,
+     "year_ended": null,
+     "reasons": ["lgbtq"],
+     "description_extra": "'A number of public libraries refused to stock his books in the 1950s' (RLF, 2025). Pattern affected Wilson's wider oeuvre, written when male homosexuality was still criminalised in the UK."
+    },
+    {
+     "title": "The Country Girls",
+     "authors": ["Edna O'Brien"],
+     "first_published_year": 1960,
+     "original_language": "en",
+     "country_code": "IE",
+     "scope": "government",
+     "action_type": "banned",
+     "year_started": 1960,
+     "year_ended": 1989,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual", "moral"],
+     "description_extra": "Banned by the Irish Censorship of Publications Board for 'sexually explicit content' upon publication. Also publicly burned by a local parish priest. The Censorship of Publications Act 1967 lifted bans after 12 years, but in practice the book remained taboo in Ireland until the late 1980s. O'Brien received anonymous hate letters and never returned to live in Ireland."
+    },
+    {
+     "title": "The Lonely Girl",
+     "authors": ["Edna O'Brien"],
+     "first_published_year": 1962,
+     "original_language": "en",
+     "country_code": "IE",
+     "scope": "government",
+     "action_type": "banned",
+     "year_started": 1962,
+     "year_ended": 1989,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual", "moral"],
+     "description_extra": "Second volume of the Country Girls trilogy, banned by the Irish Censorship of Publications Board upon publication."
+    },
+    {
+     "title": "Girls in their Married Bliss",
+     "authors": ["Edna O'Brien"],
+     "first_published_year": 1964,
+     "original_language": "en",
+     "country_code": "IE",
+     "scope": "government",
+     "action_type": "banned",
+     "year_started": 1964,
+     "year_ended": 1989,
+     "status": "rescinded",
+     "reasons": ["obscenity", "sexual", "moral"],
+     "description_extra": "Third volume of the Country Girls trilogy, banned by the Irish Censorship of Publications Board upon publication."
+    },
+    {
+     "title": "The Grass is Singing",
+     "authors": ["Doris Lessing"],
+     "first_published_year": 1950,
+     "original_language": "en",
+     "country_code": "ZA",
+     "scope": "government",
+     "action_type": "banned",
+     "year_started": 1950,
+     "year_ended": 1994,
+     "status": "rescinded",
+     "reasons": ["racial", "political"],
+     "description_extra": "Banned in apartheid-era South Africa (and Southern Rhodesia) for its critical depiction of white-rule racism. Lessing herself was declared a 'prohibited alien' by South Africa in 1956 because of her work and left-wing politics."
+    }
+   ]
+  },
+  {
+   "slug": "uk-school-libraries-2024",
+   "source": {
+    "name": "Index on Censorship — Banned: school librarians shushed over LGBT+ books",
+    "url": "https://www.indexoncensorship.org/2024/08/banned-school-librarians-shushed-over-lgbt-books/",
+    "type": "ngo"
+   },
+   "ban_defaults": {
+    "country_code": "GB",
+    "scope": "school",
+    "action_type": "removed",
+    "status": "active",
+    "year_started": 2024,
+    "year_ended": null,
+    "confidence": "reported"
+   },
+   "description_intro": "Removed or formally challenged in UK secondary-school libraries during the 2023-2024 Index on Censorship survey of UK school librarians, in which 53% of respondents had been asked to remove a book and 56% of those requests led to removal. Predominantly anti-LGBTQ+ challenges driven by parents.",
+   "entries": [
+    {
+     "title": "This Book Is Gay",
+     "authors": ["Juno Dawson"],
+     "first_published_year": 2014,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "Wonderland",
+     "authors": ["Juno Dawson"],
+     "first_published_year": 2020,
+     "original_language": "en",
+     "reasons": ["lgbtq", "drugs"]
+    },
+    {
+     "title": "Julián is a Mermaid",
+     "authors": ["Jessica Love"],
+     "first_published_year": 2018,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "ABC Pride",
+     "authors": ["Louie Stowell", "Elly Barnes", "Amy Phelps"],
+     "first_published_year": 2023,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "His Dark Materials",
+     "authors": ["Philip Pullman"],
+     "first_published_year": 1995,
+     "original_language": "en",
+     "reasons": ["religious"],
+     "description_extra": "Removed without explanation from a private Christian school's library, per Index on Censorship's 2024 survey."
+    },
+    {
+     "title": "She's My Dad!: A Story for Children Who Have a Transgender Parent or Relative",
+     "authors": ["Sarah Savage"],
+     "first_published_year": 2018,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    },
+    {
+     "title": "The Fights That Make Us",
+     "authors": ["Sarah Hagger-Holt"],
+     "first_published_year": 2024,
+     "original_language": "en",
+     "reasons": ["lgbtq"],
+     "description_extra": "Reportedly not placed on shelves by some librarians because of the Pride flag on the cover."
+    },
+    {
+     "title": "Billy's Bravery",
+     "authors": ["Tom Percival"],
+     "first_published_year": 2022,
+     "original_language": "en",
+     "reasons": ["lgbtq"]
+    }
+   ]
+  }
+ ]
+}
