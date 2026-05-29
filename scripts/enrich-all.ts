@@ -13,13 +13,19 @@
  *   3. Cover images (v2)    — title-only / Wikipedia retries with pHash placeholder rejection
  *   4. Gutenberg IDs        — Gutendex API  (slow; skip with --no-gutenberg)
  *   5. archive.org IDs      — Advanced Search API (slow; skip with --no-archive)
- *   6. Descriptions         — Open Library + Google Books
+ *   6. Descriptions (v2)    — Wikipedia + Open Library + Google Books with
+ *                             title-fuzz + author-surname cross-check.
+ *                             Includes grounded LLM synthesis unless --free-only.
  *
  *  GPT (skipped with --free-only, costs API credits):
- *   7. Descriptions (GPT fallback for books OL/GB couldn't find)
- *   8. Ban descriptions
- *   9. Censorship context
- *  10. Ban reason classification
+ *   7. Ban descriptions
+ *   8. Censorship context
+ *   9. Ban reason classification
+ *
+ * History (2026-05-28): the previous step 6 (v1 OL/GB only) + step 7
+ * (free-form GPT fallback) caused widespread hallucination across the
+ * catalogue. They are now collapsed into the single v2 step which
+ * grounds every LLM call on cited sources.
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts
@@ -103,16 +109,24 @@ const steps: Step[] = [
     archive: true,
   },
   {
-    name: 'Book descriptions (OL / Google Books)',
-    script: 'enrich-descriptions.ts',
-    args: APPLY ? ['--apply'] : [],
-    gpt: false,
-  },
-  {
-    name: 'Book descriptions (GPT fallback)',
-    script: 'enrich-descriptions-gpt.ts',
-    args: APPLY ? ['--apply', `--limit=${GPT_LIMIT}`] : [],
-    gpt: true,
+    // ⚠️ 2026-05-28: v2 replaces the previous two-step combo (v1 +
+    // standalone GPT fallback). v2 does:
+    //   - Wikipedia (EN + langlinks) + OpenLibrary + Google Books as
+    //     ground truth, with title-fuzz + author-surname cross-check.
+    //   - LLM-grounded synthesis ONLY when ≥2 sources confirm; never
+    //     free-form generation from the model's training knowledge.
+    //   - Records description_source_url + description_source_type for
+    //     provenance; sets data_quality_status='confident' for cross-
+    //     confirmed rows.
+    //   - Skips rows the judge flagged unless --process-flagged.
+    name: 'Book descriptions (multi-source v2 + grounded LLM)',
+    script: 'enrich-descriptions-v2.ts',
+    args: APPLY
+      ? (FREE_ONLY
+          ? ['--apply', '--concurrency=5']                                  // OL + GB + Wikipedia, no LLM
+          : ['--apply', '--allow-llm', '--concurrency=5'])                  // also enables grounded LLM synthesis
+      : [],
+    gpt: false,                                                             // v2 is safe even with LLM, runs in --free-only too
   },
   {
     name: 'Genres (GPT)',

@@ -417,31 +417,40 @@ npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply --offset=100
           />
 
           <Script
-            name="enrich-descriptions.ts"
-            what="Vult missende book-descriptions. Probeert Open Library → Google Books → GPT-4o-mini fallback. Repareert ook getrunkeerde descriptions (geen sentence-final punctuation). Met --slug of --overwrite herschrijft het ook bestaande description_book — handig om eerdere GPT-drafts te vervangen door OL/GB content na een title-ladder verbetering."
+            name="enrich-descriptions-v2.ts"
+            what="Vult missende book-descriptions met gegronde bronnen: Wikipedia (EN + langlinks) + Open Library + Google Books, met title-fuzz + author-surname cross-check op elke geaccepteerde bron. LLM wordt alleen gebruikt voor 'grounded synthesis' (samenvatten uit aangereikte bron-tekst, nooit free-form generation). Schrijft description_source_url + description_source_type voor provenance. Vervangt de oude enrich-descriptions.ts (v1) — die had GPT free-form fallback en is gedeprecaard 2026-05-28 na een hallucinatie-incident."
             tags={['free', 'gpt', 'destructive']}
             meta={{
-              coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_book</code>. <strong>Met --slug:</strong> single-target (overschrijft). <strong>Met --overwrite:</strong> all-rows (overschrijft).</>,
-              cadence: 'na elke import + na title-ladder verbetering',
-              writes: <><code className="font-mono">books.description_book</code>, <code className="font-mono">books.ai_drafted</code> (true voor GPT, false anders). De originele <code className="font-mono">description</code>-kolom blijft onaangeroerd.</>,
-              idempotent: 'default ja; met --slug/--overwrite destructief (geen backup)',
-              cost: 'gratis + GPT-mini fallback',
+              coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_book</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows. <strong>Met --process-flagged:</strong> ook door judge gewiste rijen meenemen.</>,
+              cadence: 'na elke import + na judge-run',
+              writes: <><code className="font-mono">books.description_book</code>, <code className="font-mono">books.description_source_url</code>, <code className="font-mono">books.description_source_type</code>, <code className="font-mono">books.data_quality_status</code> (confident bij ≥2 bronnen, default bij 1, flagged bij geen), <code className="font-mono">books.ai_drafted</code> (alleen true voor llm_grounded_*).</>,
+              idempotent: 'default ja (alleen NULLs); met --slug/--overwrite destructief',
+              cost: 'gratis + ~$0.001/boek voor LLM synthesis (gpt-4o-mini)',
             }}
-            command={`# Default — alleen boeken met lege description_book
-npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply
+            command={`# Default — alleen NULL description_book, geen LLM
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --concurrency=5
 
-# Herverrijk één specifiek boek (overschrijft)
-npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --slug=the-kite-runner
+# Met grounded LLM synthesis (samenvattingen uit ≥2 cited bronnen)
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --concurrency=5
+
+# Ook door judge gewiste rijen meenemen (na judge-run)
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --process-flagged --concurrency=5
+
+# Eén boek
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --slug=the-kite-runner
 
 # Eerste 50 boeken herverrijken, met overwrite
-npx tsx --env-file=.env.local scripts/enrich-descriptions.ts --apply --overwrite --limit=50`}
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --overwrite --limit=50`}
             flags={[
-              { flag: '--apply', desc: 'Schrijf description_book; zet ai_drafted=true voor GPT-rijen' },
+              { flag: '--apply', desc: 'Schrijf naar DB' },
+              { flag: '--allow-llm', desc: 'Sta grounded LLM synthesis toe (anders alleen letterlijke extracts)' },
+              { flag: '--process-flagged', desc: 'Ook rijen met data_quality_status=flagged meenemen' },
+              { flag: '--concurrency=N', desc: 'N workers parallel (default 1, max ~5)' },
               { flag: '--limit=N', desc: 'Cap op N boeken' },
-              { flag: '--slug=<slug>', desc: 'Eén boek, overschrijft' },
-              { flag: '--overwrite', desc: 'Alle boeken, overschrijft' },
+              { flag: '--slug=<slug>', desc: 'Eén boek, bypasst alle filters' },
+              { flag: '--overwrite', desc: 'Vervangt ook bestaande descriptions' },
             ]}
-            note="Geen backup voor overwrite. Sanity-check met een single --slug eerst; combineer --overwrite met --limit voor staged rollouts."
+            note="V2 vervangt v1 (enrich-descriptions.ts) én de losse GPT-fallback (enrich-descriptions-gpt.ts). Beide zijn gedeprecaard, blijven werken voor backwards compat. Gebruik --slug voor sanity-checks vóór een grote overwrite."
           />
 
           <Script
@@ -1018,7 +1027,7 @@ npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
 
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             Voor description / ban-description fixes per boek: gebruik{' '}
-            <code className="font-mono">enrich-descriptions.ts --slug=X</code>,{' '}
+            <code className="font-mono">enrich-descriptions-v2.ts --apply --allow-llm --slug=X</code>,{' '}
             <code className="font-mono">enrich-ban-descriptions-gpt.ts --slug=X</code>, of{' '}
             <code className="font-mono">enrich-genres-gpt.ts --slug=X</code> uit{' '}
             <a href="#per-field" className="text-brand hover:underline">Per veld verrijken</a>.

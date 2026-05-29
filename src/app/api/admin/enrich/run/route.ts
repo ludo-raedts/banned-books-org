@@ -12,7 +12,7 @@ import { cookies } from 'next/headers'
 import { z } from 'zod'
 import { enrichIsbn } from '@/lib/enrich/isbn'
 import { enrichCovers } from '@/lib/enrich/covers'
-import { enrichDescriptions } from '@/lib/enrich/descriptions'
+import { enrichDescriptionsV2 } from '@/lib/enrich/descriptions-v2'
 import { enrichAuthorPhotos } from '@/lib/enrich/author-photos'
 
 // Up to 300s per Vercel default; Pro+Fluid raises this to 800s.
@@ -85,24 +85,31 @@ export async function POST(req: NextRequest) {
         })
       }
       case 'descriptions': {
-        const r = await enrichDescriptions({ apply, limit, onProgress })
+        // 2026-05-28: switched from v1 (free-form GPT fallback, no grounding)
+        // to v2 (multi-source ladder with title/author cross-check and
+        // grounded LLM synthesis). v2 enables grounded LLM by default in
+        // the UI runner because the API endpoint already validates the
+        // admin session; --free-only mode would require a separate flag.
+        const r = await enrichDescriptionsV2({
+          apply,
+          limit,
+          allowLlm: true,            // grounded LLM synthesis from ≥2 cited sources
+          concurrency: 3,            // modest concurrency for serverless 300s budget
+          onProgress,
+        })
         return NextResponse.json({
           step, apply,
           durationMs: Date.now() - startedAt,
           summary: {
-            truncatedCandidates: r.truncatedCandidates,
-            missingCandidates: r.missingCandidates,
-            processedTruncated: r.processedTruncated,
-            processedMissing: r.processedMissing,
-            partAUpdated: r.partA.updated,
-            partAFailed: r.partA.skipped,
-            partBOl: r.partB.ol,
-            partBGb: r.partB.gb,
-            partBGpt: r.partB.gpt,
-            partBSkipped: r.partB.skipped,
+            candidates: r.candidates,
+            processed: r.processed,
+            filledLiteral: r.filled.literal,
+            filledLlmMulti: r.filled.llm_multi,
+            filledLlmSingle: r.filled.llm_single,
+            skippedNoSource: r.skipped.no_source,
             errors: r.errors,
+            llmCostUsd: r.totalCostUsd,
           },
-          samples: r.samples,
           log: logLines,
         })
       }
