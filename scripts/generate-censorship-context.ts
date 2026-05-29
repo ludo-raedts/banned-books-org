@@ -160,6 +160,7 @@ async function main() {
     .from('books')
     .select(`
       id, title, slug, first_published_year, description_ban,
+      censorship_context_status,
       book_authors(authors(display_name)),
       bans(
         year_started, year_ended, status, action_type, country_code,
@@ -171,7 +172,17 @@ async function main() {
     .eq('ai_drafted', false)
     .is('censorship_context', null)
 
-  const books = allBooks as unknown as BookRow[]
+  // 2026-05-29: skip rows marked 'insufficient_evidence' by the audit.
+  // The template generator was the source of ~9% of the duplicate boilerplate
+  // we just cleaned up; refilling with the same template defeats the cleanup.
+  // Books with status 'narrative_curated' are also skipped (already trusted).
+  const allBooksRaw = allBooks as unknown as Array<BookRow & { censorship_context_status: string | null }>
+  const skippedByStatus = allBooksRaw.filter(b =>
+    b.censorship_context_status === 'insufficient_evidence' || b.censorship_context_status === 'narrative_curated',
+  ).length
+  const books = allBooksRaw.filter(b =>
+    b.censorship_context_status !== 'insufficient_evidence' && b.censorship_context_status !== 'narrative_curated',
+  )
   const qualifying = books
     .filter(b => b.bans.length >= 1)
     .sort((a, b) => b.bans.length - a.bans.length)
@@ -179,6 +190,7 @@ async function main() {
 
   const totalQualifying = books.filter(b => b.bans.length >= 1).length
   console.log(`Qualifying books: ${totalQualifying} total`)
+  if (skippedByStatus > 0) console.log(`Skipped (status=insufficient_evidence/narrative_curated): ${skippedByStatus}`)
   console.log(`Processing: ${qualifying.length} (limit=${LIMIT}, apply=${APPLY})\n`)
 
   let written = 0

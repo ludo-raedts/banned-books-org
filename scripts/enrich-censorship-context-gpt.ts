@@ -119,6 +119,7 @@ async function main() {
     .from('books')
     .select(`
       id, title, slug, first_published_year, description_book,
+      censorship_context_status,
       book_authors(authors(display_name)),
       bans(
         year_started, year_ended, status, action_type, country_code, region, institution, actor, description,
@@ -139,12 +140,21 @@ async function main() {
   const { data, error } = await query
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
-  const all      = (data ?? []) as unknown as BookRow[]
-  const eligible = all.filter(b => b.bans.length > 0)
+  const all      = (data ?? []) as unknown as Array<BookRow & { censorship_context_status: string | null }>
+  // 2026-05-29: skip rows the audit script marked as 'insufficient_evidence'.
+  // Those were either templated boilerplate or redundant with description_ban,
+  // and refilling them defeats the cleanup. --slug bypass remains for manual
+  // single-book operations the operator has confirmed.
+  const audited = SLUG
+    ? all
+    : all.filter(b => b.censorship_context_status !== 'insufficient_evidence' && b.censorship_context_status !== 'narrative_curated')
+  const skippedByStatus = all.length - audited.length
+  const eligible = audited.filter(b => b.bans.length > 0)
   const batch    = eligible.slice(0, LIMIT)
 
   console.log(`\n── enrich-censorship-context-gpt (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
   if (OVERWRITE) console.log('  --overwrite: will replace existing context too')
+  if (skippedByStatus > 0) console.log(`  Skipped (censorship_context_status=insufficient_evidence/narrative_curated): ${skippedByStatus}`)
   console.log(`  Eligible: ${eligible.length}  Processing: ${batch.length}\n`)
 
   let written = 0, skipped = 0, errors = 0
