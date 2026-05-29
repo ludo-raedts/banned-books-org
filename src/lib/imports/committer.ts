@@ -29,6 +29,7 @@
 
 import { Client } from 'pg'
 import { slugify } from './slugify'
+import { canonicaliseAuthorName } from './canonicalise-author-name'
 import type { ExtractionResult, PassesAudit } from './extraction-types'
 import type { VerificationResult } from './verifier'
 import type { GateDecision } from './gate'
@@ -227,7 +228,8 @@ async function upsertAuthor(
   client: Client,
   input: UpsertAuthorInput,
 ): Promise<number> {
-  const slug = slugify(input.display_name)
+  const displayName = canonicaliseAuthorName(input.display_name)
+  const slug = slugify(displayName)
   // INSERT writes everything we know. On slug-conflict (author already
   // exists) we COALESCE-update so a richer import (e.g. one that has a
   // native-script name) fills in nulls without overwriting non-null values
@@ -247,7 +249,7 @@ async function upsertAuthor(
        original_language   = coalesce(authors.original_language,   excluded.original_language)
      returning id`,
     [
-      input.display_name,
+      displayName,
       slug,
       input.birth_year,
       input.name_native,
@@ -259,7 +261,7 @@ async function upsertAuthor(
   if (ins.rows.length > 0) return ins.rows[0].id as number
   const sel = await client.query('select id from authors where slug = $1', [slug])
   if (sel.rows.length === 0) {
-    throw new Error(`committer: author upsert for '${input.display_name}' (slug ${slug}) produced no row`)
+    throw new Error(`committer: author upsert for '${displayName}' (slug ${slug}) produced no row`)
   }
   return sel.rows[0].id as number
 }

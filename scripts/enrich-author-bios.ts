@@ -12,13 +12,24 @@
  * pictures for authors who were enriched before they had a Wikipedia infobox
  * thumbnail, or whose bio was filled manually.
  *
+ * Resumability — authors that we permanently can't enrich (no Wikipedia
+ * page, disambig hit, non-person article, no thumbnail in photos-only)
+ * are cached to `data/enrich-author-bios.state.json` and excluded on the
+ * next run. Without this, every invocation re-tries the same alphabetically-
+ * first names. Pass --retry-skipped to ignore the cache for one run, or
+ * --reset-cache to wipe it.
+ *
  * Usage:
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts                  # dry-run, up to 50
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply          # write to DB
- *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --limit=10       # cap at 10
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts                    # dry-run, up to 50
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --apply            # write to DB
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --limit=10         # cap at 10
  *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --apply
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --retry-skipped    # re-try cached skips
+ *   npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --reset-cache      # wipe skip cache
  */
 
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 import { authorLadder } from '../src/lib/enrich/_author-ladder'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
@@ -26,12 +37,15 @@ import { cleanWikiExtract } from '../src/lib/text/clean-wiki-extract'
 
 const APPLY = process.argv.includes('--apply')
 const PHOTOS_ONLY = process.argv.includes('--photos-only')
+const RETRY_SKIPPED = process.argv.includes('--retry-skipped')
+const RESET_CACHE = process.argv.includes('--reset-cache')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
 const IDS_ARG = process.argv.find(a => a.startsWith('--ids='))
 const IDS = IDS_ARG ? IDS_ARG.replace('--ids=', '').split(',').map(s => parseInt(s.trim(), 10)).filter(n => Number.isFinite(n)) : null
 const DELAY_MS = 200
 const WIKI_UA = 'banned-books.org/1.0 (contact@banned-books.org)'
+const CACHE_PATH = path.resolve(process.cwd(), 'data/enrich-author-bios.state.json')
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -265,6 +279,41 @@ function stripHtml(html: string): string {
   return cleanWikiExtract(noTags)
 }
 
+// ─── Skip cache ───────────────────────────────────────────────────────────────
+// Authors that Wikipedia permanently can't help with (no page, disambig hit,
+// non-person article, no thumbnail in photos-only mode) get pinned here so
+// subsequent runs skip past them instead of re-burning API calls on the same
+// alphabetically-first names. Separate buckets per mode because the skip
+// criteria differ (a "no thumbnail" author is still a valid bio candidate).
+
+type CacheBucket = { skippedIds: number[] }
+type Cache = { bios: CacheBucket; photosOnly: CacheBucket; updatedAt?: string }
+
+function loadCache(): Cache {
+  const empty: Cache = { bios: { skippedIds: [] }, photosOnly: { skippedIds: [] } }
+  if (RESET_CACHE) {
+    try { fs.unlinkSync(CACHE_PATH) } catch { /* no-op */ }
+    return empty
+  }
+  try {
+    const raw = fs.readFileSync(CACHE_PATH, 'utf8')
+    const parsed = JSON.parse(raw) as Partial<Cache>
+    return {
+      bios: { skippedIds: parsed.bios?.skippedIds ?? [] },
+      photosOnly: { skippedIds: parsed.photosOnly?.skippedIds ?? [] },
+      updatedAt: parsed.updatedAt,
+    }
+  } catch {
+    return empty
+  }
+}
+
+function saveCache(cache: Cache): void {
+  cache.updatedAt = new Date().toISOString()
+  fs.mkdirSync(path.dirname(CACHE_PATH), { recursive: true })
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2) + '\n', 'utf8')
+}
+
 // ─── Bio construction ─────────────────────────────────────────────────────────
 
 function buildBio(params: {
@@ -309,23 +358,6 @@ async function main() {
   const mode = PHOTOS_ONLY ? 'photos-only' : 'bios'
   console.log(`\n── enrich-author-bios (${APPLY ? 'APPLY' : 'DRY-RUN'}, mode=${mode}, limit=${LIMIT}) ──\n`)
 
-  const supabase = adminClient()
-
-  const baseQuery = supabase
-    .from('authors')
-    .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
-    .not('slug', 'is', null)
-    .order('display_name')
-    .limit(LIMIT)
-
-  if (IDS) baseQuery.in('id', IDS)
-
-  const { data, error } = PHOTOS_ONLY
-    ? await baseQuery.not('bio', 'is', null).is('photo_url', null)
-    : await baseQuery.is('bio', null)
-
-  if (error) { console.error('DB error:', error.message); process.exit(1) }
-
   type AuthorRow = {
     id: number
     display_name: string
@@ -335,18 +367,74 @@ async function main() {
     name_english: string | null
     original_language: string | null
   }
-  const authors = (data ?? []) as AuthorRow[]
+
+  const cache = loadCache()
+  const bucket = PHOTOS_ONLY ? cache.photosOnly : cache.bios
+  const skipSet = new Set<number>(RETRY_SKIPPED || IDS ? [] : bucket.skippedIds)
+  if (RESET_CACHE) console.log('Cache reset.')
+  else if (RETRY_SKIPPED) console.log(`Cache ignored for this run (${bucket.skippedIds.length} previously-skipped IDs).`)
+  else if (skipSet.size > 0) console.log(`Excluding ${skipSet.size} previously-skipped author(s) from query.`)
+
+  // Flush the cache on Ctrl-C so partial progress isn't lost. Installed
+  // here, before the long loop, so an interrupt mid-run still pins what
+  // we've already learned.
+  process.on('SIGINT', () => { saveCache(cache); console.log('\nInterrupted — cache saved.'); process.exit(130) })
+
+  const supabase = adminClient()
+
+  // Paginate the candidate set client-side so we can filter out cached
+  // skipped IDs without blowing the URL length limit on `.not('id','in',...)`.
+  // Pagination needs a stable order — display_name plus id as tie-breaker
+  // (per the Supabase pagination memory). Stops once we have LIMIT survivors
+  // or the source is exhausted.
+  const PAGE = 1000
+  const authors: AuthorRow[] = []
+  let offset = 0
+  let totalScanned = 0
+  while (authors.length < LIMIT) {
+    let q = supabase
+      .from('authors')
+      .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
+      .not('slug', 'is', null)
+      .order('display_name')
+      .order('id')
+      .range(offset, offset + PAGE - 1)
+
+    q = PHOTOS_ONLY ? q.not('bio', 'is', null).is('photo_url', null) : q.is('bio', null)
+    if (IDS) q = q.in('id', IDS)
+
+    const { data, error } = await q
+    if (error) { console.error('DB error:', error.message); process.exit(1) }
+    const page = (data ?? []) as AuthorRow[]
+    totalScanned += page.length
+    for (const row of page) {
+      if (skipSet.has(row.id)) continue
+      authors.push(row)
+      if (authors.length >= LIMIT) break
+    }
+    if (page.length < PAGE) break
+    offset += PAGE
+  }
 
   const target = PHOTOS_ONLY ? 'with bio but no photo' : 'without bio'
   if (authors.length === 0) {
-    console.log(`No authors ${target} found.`)
+    console.log(`No authors ${target} found (scanned ${totalScanned}).`)
     return
   }
 
-  console.log(`Found ${authors.length} author(s) ${target}.\n`)
+  console.log(`Found ${authors.length} author(s) ${target} (scanned ${totalScanned}).\n`)
 
   let enriched = 0
   let skipped = 0
+  const newlyCachedSkips: number[] = []
+  const SAVE_EVERY = 25
+  const cacheSkip = (authorId: number) => {
+    if (skipSet.has(authorId)) return
+    skipSet.add(authorId)
+    newlyCachedSkips.push(authorId)
+    bucket.skippedIds.push(authorId)
+    if (newlyCachedSkips.length % SAVE_EVERY === 0) saveCache(cache)
+  }
 
   for (const author of authors) {
     try {
@@ -368,6 +456,7 @@ async function main() {
       }
       if (!pageId) {
         console.log(`✗ ${author.display_name} — not found on Wikipedia`)
+        cacheSkip(author.id)
         skipped++
         continue
       }
@@ -403,11 +492,13 @@ async function main() {
 
       if (isDisambig) {
         console.log(`✗ ${author.display_name} — Wikipedia hit is a disambiguation page (skipping)`)
+        cacheSkip(author.id)
         skipped++
         continue
       }
       if (!hasPersonSignal) {
         console.log(`✗ ${author.display_name} — Wikipedia hit has no person signals (likely a geographic/concept article)`)
+        cacheSkip(author.id)
         skipped++
         continue
       }
@@ -416,6 +507,7 @@ async function main() {
       if (PHOTOS_ONLY) {
         if (!photo) {
           console.log(`✗ ${author.display_name} — no Wikipedia thumbnail`)
+          cacheSkip(author.id)
           skipped++
           continue
         }
@@ -433,6 +525,7 @@ async function main() {
 
       if (!extract) {
         console.log(`✗ ${author.display_name} — no extract from Wikipedia`)
+        cacheSkip(author.id)
         skipped++
         continue
       }
@@ -487,9 +580,12 @@ async function main() {
     }
   }
 
+  if (newlyCachedSkips.length > 0) saveCache(cache)
+
   console.log(`\n── Done ──`)
-  console.log(`Enriched : ${enriched}`)
-  console.log(`Skipped  : ${skipped}`)
+  console.log(`Enriched      : ${enriched}`)
+  console.log(`Skipped       : ${skipped}`)
+  console.log(`Cached skips  : +${newlyCachedSkips.length} (total ${bucket.skippedIds.length} for ${mode})`)
   if (!APPLY) console.log(`\nDry-run complete. Re-run with --apply to write to DB.\n`)
 }
 

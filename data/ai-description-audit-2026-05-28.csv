@@ -1,0 +1,101 @@
+id,slug,classification,recall,ai_chars,wiki_chars,unsupported_entities,wiki_url,title
+27,the-diary-of-a-young-girl,RISKY,0.167,696,1204,,https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl,The Diary of a Young Girl
+53,tropic-of-cancer,UNVERIFIABLE,0.000,97,0,,,Tropic of Cancer
+69,the-awakening,RISKY,0.245,599,1203,,https://en.wikipedia.org/wiki/The_Awakening_(Chopin_novel),The Awakening
+86,one-day-in-the-life-of-ivan-denisovich,RISKY,0.333,97,1205,,https://en.wikipedia.org/wiki/One_Day_in_the_Life_of_Ivan_Denisovich,One Day in the Life of Ivan Denisovich
+92,the-stranger,RISKY,0.300,274,1208,,https://en.wikipedia.org/wiki/The_Stranger_(Camus_novel),The Stranger
+94,one-hundred-years-of-solitude,PLAUSIBLE,0.579,440,1211,Nobel Prize | 1982,https://en.wikipedia.org/wiki/One_Hundred_Years_of_Solitude,One Hundred Years of Solitude
+97,the-war-of-the-end-of-the-world,RISKY,0.172,1179,1207,Lion of Natuba | Maria Quadrado,https://en.wikipedia.org/wiki/The_War_of_the_End_of_the_World,The War of the End of the World
+98,burgers-daughter,PLAUSIBLE,0.364,234,1209,,https://en.wikipedia.org/wiki/Burger's_Daughter,Burger's Daughter
+104,to-live-yu-hua,UNVERIFIABLE,0.000,482,0,,,To Live
+152,el-senor-presidente,RISKY,0.091,267,1206,The President,https://en.wikipedia.org/wiki/El_Se%C3%B1or_Presidente,El Señor Presidente
+164,shanghai-baby,RISKY,0.250,259,1206,,https://en.wikipedia.org/wiki/Shanghai_Baby,Shanghai Baby
+314,the-girl-with-the-dragon-tattoo,RISKY,0.099,1634,1208,Mikael Blomkvist | Henrik Vanger | Lisbeth Salander,https://en.wikipedia.org/wiki/The_Girl_with_the_Dragon_Tattoo,The Girl with the Dragon Tattoo
+357,ask-the-passengers,RISKY,0.122,468,1074,,https://en.wikipedia.org/wiki/Ask_the_Passengers,Ask the Passengers
+569,les-miserables,RISKY,0.317,671,1205,Inspector Javert,https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables,Les Misérables
+651,dialogue-galileo,RISKY,0.333,714,1206,,https://en.wikipedia.org/wiki/Dialogue_Concerning_the_Two_Chief_World_Systems,Dialogue Concerning the Two Chief World Systems
+663,book-of-songs-heine,RISKY,0.192,581,1209,Book of Songs,https://en.wikipedia.org/wiki/Book_of_Songs_(Heinrich_Heine),Book of Songs
+667,round-heads-and-pointed-heads,RISKY,0.170,585,1210,,https://en.wikipedia.org/wiki/Round_Heads_and_Pointed_Heads,Round Heads and Pointed Heads
+717,gaibeus,UNVERIFIABLE,0.000,680,0,,,Gaibéus
+732,haji-agha-hedayat,UNVERIFIABLE,0.000,616,0,,,Haji Agha
+828,the-forging-of-a-rebel,UNVERIFIABLE,0.000,586,0,,,The Forging of a Rebel
+920,encyclopedie-diderot,UNVERIFIABLE,0.000,592,0,,,Encyclopédie
+924,the-system-of-nature,RISKY,0.245,589,1210,,https://en.wikipedia.org/wiki/The_System_of_Nature,The System of Nature
+930,cacau-amado,UNVERIFIABLE,0.000,620,0,,,Cacau
+931,suor-amado,UNVERIFIABLE,0.000,569,0,,,Suor
+1006,the-house-of-gold,UNVERIFIABLE,0.000,612,0,,,The House of Gold
+1007,five-nights,RISKY,0.100,549,486,,https://en.wikipedia.org/wiki/Five_Nights,Five Nights
+1008,six-women,UNVERIFIABLE,0.000,563,0,,,Six Women
+1009,the-yoke,UNVERIFIABLE,0.000,549,0,,,The Yoke
+1010,the-interpretation-of-dreams,RISKY,0.209,575,1206,,https://en.wikipedia.org/wiki/The_Interpretation_of_Dreams,The Interpretation of Dreams
+1012,wise-parenthood,UNVERIFIABLE,0.000,596,0,,,Wise Parenthood
+1013,how-to-prevent-pregnancy,UNVERIFIABLE,0.000,516,0,,,How to Prevent Pregnancy
+1014,over-lifes-edge,UNVERIFIABLE,0.000,544,0,,,Over Life's Edge
+1015,sylvias-marriage,UNVERIFIABLE,0.000,577,0,,,Sylvia's Marriage
+1016,la-vie-parisienne,UNVERIFIABLE,0.000,573,0,,,La Vie Parisienne
+1018,safe-marriage,UNVERIFIABLE,0.000,558,0,,,Safe Marriage
+1020,a-handbook-of-marxism,UNVERIFIABLE,0.000,606,0,,,A Handbook of Marxism
+1021,the-hindu-art-of-love,UNVERIFIABLE,0.000,575,0,,,The Hindu Art of Love
+1022,the-black-prophet,UNVERIFIABLE,0.000,603,0,,,The Black Prophet
+1023,soviet-foreign-policy-finland,UNVERIFIABLE,0.000,582,0,,,Soviet Foreign Policy: The Meaning of the War in Finland
+1024,questions-and-answers-on-communism,UNVERIFIABLE,0.000,565,0,,,Questions and Answers on Communism
+1025,truth-and-mr-chamberlain,UNVERIFIABLE,0.000,604,0,,,Truth and Mr Chamberlain
+1026,falsehood-in-war-time,RISKY,0.188,565,1208,,https://en.wikipedia.org/wiki/Falsehood_in_War-Time,Falsehood in War-Time
+1027,marijuana-growers-guide,UNVERIFIABLE,0.000,556,0,,,Marijuana Grower's Guide
+1028,the-joy-of-sex,RISKY,0.122,518,1205,,https://en.wikipedia.org/wiki/The_Joy_of_Sex,The Joy of Sex
+1029,more-joy-of-sex,UNVERIFIABLE,0.000,530,0,,,More Joy of Sex
+1030,intimate-embrace,UNVERIFIABLE,0.000,636,0,,,Intimate Embrace
+1031,snatches-and-lays,UNVERIFIABLE,0.000,517,0,,,Snatches and Lays
+1032,john-and-mimi,UNVERIFIABLE,0.000,485,0,,,John and Mimi
+1033,joy-laurey,UNVERIFIABLE,0.000,476,0,,,Joy
+1036,boobytraps,UNVERIFIABLE,0.000,574,0,,,Boobytraps
+1037,diva-obsexion,UNVERIFIABLE,0.000,629,0,,,Diva Obsexion
+1038,the-great-big-narcotics-cookbook,UNVERIFIABLE,0.000,519,0,,,The Great Big Narcotics Cookbook
+1039,behind-closed-doors-reyes,UNVERIFIABLE,0.000,521,0,,,Behind Closed Doors
+1040,the-seventh-acolyte-reader,UNVERIFIABLE,0.000,542,0,,,The Seventh Acolyte Reader
+1041,holiday-snapshots,UNVERIFIABLE,0.000,469,0,,,Holiday Snapshots
+1043,psilocybin-mushrooms-of-the-world,UNVERIFIABLE,0.000,588,0,,,Psilocybin Mushrooms of the World
+1044,the-big-book-of-buds,UNVERIFIABLE,0.000,560,0,,,The Big Book of Buds
+1045,advanced-techniques-clandestine-manufacture,UNVERIFIABLE,0.000,640,0,,,Advanced Techniques of Clandestine Psychedelic & Amphetamine Manufacture
+1046,the-bargaining-for-israel,UNVERIFIABLE,0.000,558,0,,,The Bargaining for Israel: In the Shadow of Armageddon
+1047,islam-gordon,RISKY,0.087,548,1205,,https://en.wikipedia.org/wiki/Samuel_Gordon_(novelist),Islam
+1048,lifting-the-veil,UNVERIFIABLE,0.000,528,0,,,Lifting the Veil
+1049,a-fundamental-fear,UNVERIFIABLE,0.000,693,0,,,A Fundamental Fear: Eurocentrism and the Emergence of Islamism
+1050,islam-revealed,UNVERIFIABLE,0.000,691,0,,,Islam Revealed: A Christian Arab's View of Islam
+1052,mini-skirts-mothers-and-muslims,UNVERIFIABLE,0.000,527,0,,,"Mini Skirts, Mothers & Muslims"
+1053,the-battle-for-god,RISKY,0.346,609,1207,,https://en.wikipedia.org/wiki/The_Battle_for_God,"The Battle for God: Fundamentalism in Judaism, Christianity and Islam"
+1054,hidden-agendas-leigh,UNVERIFIABLE,0.000,595,0,,,Hidden Agendas
+1055,mengenal-allah-melalui-agama-agama-purba,UNVERIFIABLE,0.000,499,0,,,Mengenal Allah Melalui Agama-Agama Purba: Gautama Buddha Seorang Nabi?
+1056,confessions-a-secret-diary,UNVERIFIABLE,0.000,521,0,,,Confessions: A Secret Diary
+1057,islam-dan-teologi-pembebasan,UNVERIFIABLE,0.000,547,0,,,Islam Dan Teologi Pembebasan
+1058,the-road-to-muhammad,UNVERIFIABLE,0.000,559,0,,,The Road To Muhammad
+1059,mutiara-sastra-ali,UNVERIFIABLE,0.000,534,0,,,Mutiara Sastra Ali: Muhammad Hashem Edisi Surat & Aforisme
+1060,perjalanan-yang-cemerlang,UNVERIFIABLE,0.000,605,0,,,Perjalanan yang Cemerlang 1930–1980
+1061,agama-masa-depan,UNVERIFIABLE,0.000,580,0,,,Agama Masa Depan: Perspektif Filsafat Perennial
+1062,intense-pleasure-leigh,UNVERIFIABLE,0.000,481,0,,,Intense Pleasure
+1063,its-all-about-muhammad,UNVERIFIABLE,0.000,627,0,,,It's All About Muhammad: A Biography of the World's Most Notorious Prophet
+1064,gay-is-ok,UNVERIFIABLE,0.000,509,0,,,Gay is OK!: A Christian Perspective
+1065,rebirth-reformasi,UNVERIFIABLE,0.000,610,0,,,"Rebirth: Reformasi, Resistance and Hope in New Malaysia"
+1066,the-tale-of-steven,UNVERIFIABLE,0.000,490,0,,,The Tale of Steven
+1067,jacobs-room-to-choose,UNVERIFIABLE,0.000,465,0,,,Jacob's Room To Choose
+1068,aku-malaysia,RISKY,0.021,541,1209,,https://en.wikipedia.org/wiki/Anonymous_Animal,Aku
+1069,marx-sang-pendidik-revolusioner,UNVERIFIABLE,0.000,599,0,,,Marx Sang Pendidik Revolusioner
+1070,koleksi-puisi-masturbasi,UNVERIFIABLE,0.000,444,0,,,Koleksi Puisi Masturbasi
+1071,memoir-shamsiah-fakeh,UNVERIFIABLE,0.000,704,0,,,Memoir Shamsiah Fakeh: Dari AWAS ke Rejimen ke-10
+1072,komrad-asi-rejimen-10,UNVERIFIABLE,0.000,564,0,,,Komrad Asi Rejimen 10: Dalam Denyut Nihilisme Sejarah
+1073,politics-for-the-common-people,UNVERIFIABLE,0.000,531,0,,,Politics for the Common People
+1074,politics-of-a-police-state,UNVERIFIABLE,0.000,552,0,,,Politics of a Police State
+1075,handbook-nonviolent-resistance,UNVERIFIABLE,0.000,585,0,,,A Handbook of Non-violent Resistance Techniques
+1076,overview-marine-life-disaster-vietnam,UNVERIFIABLE,0.000,612,0,,,An Overview of Marine Life Disaster in Vietnam
+1077,handbook-support-prisoners-of-conscience,UNVERIFIABLE,0.000,545,0,,,A Handbook of How to Support Prisoners of Conscience
+1078,the-winning-side-huy-duc,UNVERIFIABLE,0.000,537,0,,,The Winning Side
+1079,a-tale-for-2000,UNVERIFIABLE,0.000,523,0,,,A Tale for 2000
+1080,year-501-chomsky,RISKY,0.158,632,1210,United States,https://en.wikipedia.org/wiki/Year_501%3A_The_Conquest_Continues,Year 501: The Conquest Continues
+1081,what-uncle-sam-really-wants,UNVERIFIABLE,0.000,568,0,,,What Uncle Sam Really Wants
+1082,bad-samaritans,PLAUSIBLE,0.458,606,1207,,https://en.wikipedia.org/wiki/Bad_Samaritans_(book),Bad Samaritans: The Myth of Free Trade and the Secret History of Capitalism
+1083,a-spoon-on-earth,UNVERIFIABLE,0.000,548,0,,,A Spoon on Earth
+1084,guerillas-of-the-kingdom-of-samsung,UNVERIFIABLE,0.000,551,0,,,Guerillas of the Kingdom of Samsung
+1085,the-global-trap,RISKY,0.173,571,1208,,https://en.wikipedia.org/wiki/The_Global_Trap,The Global Trap
+1086,auf-der-universitat,UNVERIFIABLE,0.000,537,0,,,Auf der Universität
+1087,slots-shin,UNVERIFIABLE,0.000,524,0,,,Slots
+1088,respect-chavez-perez,UNVERIFIABLE,0.000,588,0,,,Respect: Everything a Guy Needs to Know About Sex

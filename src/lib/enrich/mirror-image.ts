@@ -1,10 +1,9 @@
-// Download a remote image and re-upload it to the `author-photos` Supabase
-// Storage bucket, keyed by author slug. Used by enrichAuthorPhotos when the
-// matched source URL is on a host outside ALLOWED_IMAGE_HOSTS (Squarespace,
-// Jetpack, individual author personal CDNs). The resulting public Storage
-// URL is on our own Supabase host — single allowlist entry, immune to
-// upstream link-rot, and our copy persists even if the source site goes
-// away.
+// Download a remote image and re-upload it to a Supabase Storage bucket,
+// keyed by slug. Defaults to `author-photos` (legacy callers) but accepts a
+// `bucket` arg so cover-mirroring can target `book-covers`. Used when the
+// source URL is on a host outside ALLOWED_IMAGE_HOSTS — the public Storage
+// URL lives on our own Supabase host (single allowlist entry, immune to
+// upstream link-rot, our copy persists even if the source site goes away).
 //
 // Wikidata (Wikimedia Commons) and OpenLibrary URLs are NOT mirrored — they
 // already render fine, are CC-licensed at the source, and we preserve their
@@ -23,8 +22,6 @@ const MAX_BYTES = 5 * 1024 * 1024
 
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
-const BUCKET = 'author-photos'
-
 const EXT_BY_MIME: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/jpg':  'jpg',
@@ -42,11 +39,22 @@ export async function mirrorImageToStorage(
   supabase: SupabaseClient,
   sourceUrl: string,
   slug: string,
+  bucket: string = 'author-photos',
+  refererUrl?: string,
 ): Promise<MirrorResult> {
+  // Some CDNs (Readmoo, Books.com.tw, Shopify-hosted publisher sites) enforce
+  // hotlink protection via Referer. Pass refererUrl when known — the parent
+  // page where the image was found is a safe choice. Fall back to the
+  // image-URL's own origin, which mimics opening the image in a tab.
+  const referer = refererUrl ?? originOf(sourceUrl)
   let res: Response
   try {
     res = await fetch(sourceUrl, {
-      headers: { 'User-Agent': BROWSER_UA, 'Accept': 'image/*' },
+      headers: {
+        'User-Agent': BROWSER_UA,
+        'Accept': 'image/*,*/*;q=0.8',
+        ...(referer ? { 'Referer': referer } : {}),
+      },
       redirect: 'follow',
     })
   } catch (e) {
@@ -70,15 +78,19 @@ export async function mirrorImageToStorage(
   }
 
   const path = `${slug}.${ext}`
-  const { error } = await supabase.storage.from(BUCKET).upload(path, buf, {
+  const { error } = await supabase.storage.from(bucket).upload(path, buf, {
     contentType,
     upsert: true,
     cacheControl: '31536000',
   })
   if (error) return { ok: false, reason: `upload failed: ${error.message}` }
 
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path)
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path)
   return { ok: true, publicUrl: data.publicUrl, bytes: buf.length, contentType }
+}
+
+function originOf(url: string): string | null {
+  try { return new URL(url).origin } catch { return null }
 }
 
 function magicBytesMatch(buf: Buffer, ext: string): boolean {

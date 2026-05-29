@@ -34,10 +34,10 @@ type Stats = {
 
 async function getStats(): Promise<Stats> {
   const s = adminClient()
-  const [booksRes, bansRes, countryRowsRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
+  const [booksRes, bansRes, countriesRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
     s.from('books').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('country_code').neq('country_code', null),
+    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
     s
       .from('bans')
       .select('year_started')
@@ -54,11 +54,10 @@ async function getStats(): Promise<Stats> {
       .maybeSingle(),
     s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
-  const countries = new Set((countryRowsRes.data ?? []).map((r) => r.country_code)).size
   return {
     books: booksRes.count ?? 0,
     bans: bansRes.count ?? 0,
-    countries,
+    countries: countriesRes.count ?? 0,
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
     dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,

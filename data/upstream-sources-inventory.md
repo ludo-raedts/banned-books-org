@@ -124,6 +124,6 @@ if archived data were recoverable. **Do not re-investigate.**
 ## Discarded paths (from session ending 2026-05-20)
 
 - **Direct Kasseler bulk-ingest** — denied by Gassner.
-- **Russia via Wikipedia bulk parser** — `Censorship_in_Russia` has no wikitable, so the existing parser can't handle it. Russia needs its own ingest strategy (FSEM scrape, Russian-Wikipedia parser).
+- ~~**Russia via Wikipedia bulk parser**~~ — initial route was dropped because `Censorship_in_Russia` has no wikitable. **Superseded 2026-05-28** by direct ingest of the Минюст RSS feed at https://minjust.gov.ru/ru/subscription/rss/extremist_materials/ (Federal List of Extremist Materials, 5,467 items, ~498 book-like). 46 recent (≥2022) Минюст entries + 9 hand-curated article cases imported via [scripts/import-russia-bans.ts](../scripts/import-russia-bans.ts); RU bans 34 → 88. Remaining Минюст backlog (~440 items, mostly Jehovah's-Witnesses 2020 mass-bans + older religious tracts) intentionally deferred to keep the dataset balanced toward the journalistic 2022-2026 narrative. Cyrillic→slug transliteration uses an inline BGN/PCGN map in the importer.
 - **Australia / South Africa via dedicated Wikipedia list pages** — both redirect to sections within `List_of_books_banned_by_governments`, which we already imported (May 14).
 - **France via Legifrance pipeline (Cloudflare-bypass)** — superseded by ChatGPT-discovery workflow used 2026-05-19; 31 arrêtés already in DB via [scripts/import-legifrance-json.ts](../scripts/import-legifrance-json.ts).

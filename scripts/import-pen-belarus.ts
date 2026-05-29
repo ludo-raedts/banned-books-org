@@ -34,6 +34,8 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { slugify } from '../src/lib/imports/slugify'
+import { canonicaliseAuthorName } from '../src/lib/imports/canonicalise-author-name'
+import { sanitiseScrapedAuthor } from '../src/lib/imports/sanitise-scraped-author'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -167,8 +169,28 @@ async function loadDB(): Promise<{
   return { govScopeId, politicalReasonId, extremistSourceId, harmfulSourceId }
 }
 
-async function findOrCreateAuthor(displayName: string): Promise<number | null> {
+// Telemetry buckets — surfaced in the summary so a re-import flags the
+// same scraper artefacts that produced the 2026-05-27 cleanup.
+const sanitiserStats: Record<string, number> = {}
+
+async function findOrCreateAuthor(rawName: string): Promise<number | null> {
+  // 1) Defensive cleanup for scraper artefacts (section-header bleed, role
+  //    prefixes, garbage prefixes, reverse pen-names, misplaced book titles).
+  //    See src/lib/imports/sanitise-scraped-author.ts for the patterns.
+  const { cleanName: sanitised, reason } = sanitiseScrapedAuthor(rawName)
+  if (reason) sanitiserStats[reason] = (sanitiserStats[reason] ?? 0) + 1
+  if (sanitised === null) {
+    console.warn(`  ! skipped author '${rawName.slice(0, 80)}' (sanitiser: ${reason})`)
+    return null
+  }
+  // 2) Strip trailing honorifics / academic credentials so credential
+  //    variants of the same person produce the same slug.
+  const displayName = canonicaliseAuthorName(sanitised)
   const slug = slugify(displayName)
+  if (!slug) {
+    console.warn(`  ! skipped author '${rawName.slice(0, 80)}' (empty slug after sanitise+canonicalise)`)
+    return null
+  }
   const ex = authorBySlug.get(slug)
   if (ex) return ex.id
   if (!APPLY) return null
@@ -350,6 +372,13 @@ async function main() {
   console.log(`  authors created:  ${createdAuthors}`)
   console.log(`  bans created:     ${createdBans}`)
   console.log(`  errors:           ${errors}`)
+  const sanitiserEntries = Object.entries(sanitiserStats)
+  if (sanitiserEntries.length > 0) {
+    console.log(`  sanitiser fires:`)
+    for (const [reason, n] of sanitiserEntries.sort((a, b) => b[1] - a[1])) {
+      console.log(`    ${reason.padEnd(28)} ${n}`)
+    }
+  }
 }
 
 main().catch(err => { console.error(err); process.exit(1) })

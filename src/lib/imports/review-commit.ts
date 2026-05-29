@@ -12,6 +12,7 @@
 
 import { Client } from 'pg'
 import { slugify } from './slugify'
+import { canonicaliseAuthorName } from './canonicalise-author-name'
 
 // Pick the first candidate that slugifies to a non-empty string. Non-Latin
 // titles (Hanzi, Cyrillic, Arabic, …) collapse to '' under slugify(), so we
@@ -386,7 +387,8 @@ function normaliseAuthor(a: string | AuthorInput): AuthorInput {
 }
 
 async function upsertAuthor(pg: Client, input: AuthorInput): Promise<number> {
-  const slug = slugify(input.display_name)
+  const displayName = canonicaliseAuthorName(input.display_name)
+  const slug = slugify(displayName)
   if (!slug) {
     throw new Error(`upsertAuthor: slugify produced empty slug for '${input.display_name}'`)
   }
@@ -410,7 +412,7 @@ async function upsertAuthor(pg: Client, input: AuthorInput): Promise<number> {
        original_language   = coalesce(authors.original_language,   excluded.original_language)
      returning id`,
     [
-      input.display_name,
+      displayName,
       slug,
       input.birth_year ?? null,
       input.name_native ?? null,
@@ -422,7 +424,7 @@ async function upsertAuthor(pg: Client, input: AuthorInput): Promise<number> {
   if (ins.rows.length > 0) return ins.rows[0].id as number
   const sel = await pg.query('select id from authors where slug = $1', [slug])
   if (sel.rows.length === 0) {
-    throw new Error(`upsertAuthor: insert+select for '${input.display_name}' (${slug}) produced no row`)
+    throw new Error(`upsertAuthor: insert+select for '${displayName}' (${slug}) produced no row`)
   }
   return sel.rows[0].id as number
 }

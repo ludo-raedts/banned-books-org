@@ -2,30 +2,22 @@
 
 _Gegenereerd 2026-05-28 door `scripts/_audit_misc_comma_authors.ts`._
 
-Author-rijen met komma in display_name: **518**.
+Author-rijen met komma in display_name: **511**.
 
 ## Per categorie
 
 | Categorie | Aantal | Toelichting |
 |---|---:|---|
-| `MULTI_COMMA` | 19 | ≥2 komma's in display_name — vrijwel altijd meerdere personen die als één auteur zijn aangemaakt. |
-| `TWO_FULL_NAMES` | 7 | 1 komma, beide kant heeft ≥2 Capitalized woorden — twee volledige namen aan elkaar geplakt. |
+| `MULTI_COMMA` | 18 | ≥2 komma's in display_name — vrijwel altijd meerdere personen die als één auteur zijn aangemaakt. |
+| `TWO_FULL_NAMES` | 1 | 1 komma, beide kant heeft ≥2 Capitalized woorden — twee volledige namen aan elkaar geplakt. |
 | `SORTED_NAME_COMPLEX` | 12 | "Lastname, Firstname" met extra tokens — mogelijk credentials, mogelijk titel-info, mogelijk fout. |
 | `PEN_AKA` | 0 | aka / pen-name marker — beslissen: één canonical author + alias, of twee aparte rijen? |
 | `CREDENTIAL_TAIL` | 2 | eindigt op legitieme credential (Jr., M.D., III, …) — geen actie nodig. |
 | `REVIEW` | 478 | komma aanwezig maar past in conventie of geen patroon — overgebleven inspectie. |
 
-## MULTI_COMMA (19)
+## MULTI_COMMA (18)
 
 > ≥2 komma's in display_name — vrijwel altijd meerdere personen die als één auteur zijn aangemaakt.
-
-### id=9342 · `Lenin, Vladimir, I.`
-
-- slug: `lenin-vladimir-i` · placeholder=false · boeken: **14** · b.1870 d.1924
-- candidate-parts: `Lenin`, `Vladimir`, `I.`
-- reden: ≥2 komma's → 3 candidate-namen
-- boeken: _Cuadernos filosóficos / Contra el dogmatismo y el sectarismo en el movimiento obrero / Obras completas, Vol. 25_
-- bio: _Vladimir Ilyich Ulyanov (22 April [O.S. 10 April] 1870 – 21 January 1924), better known as Vladimir Lenin, was a Russian revolutionary, poli…_
 
 ### id=9208 · `Cukier, Zulema/Rey, Rosa María/ Tornadú, Beatriz`
 
@@ -154,7 +146,7 @@ Author-rijen met komma in display_name: **518**.
 - reden: ≥2 komma's → 4 candidate-namen
 - boeken: _Realidad económica N° 13, 14, 16, 17 y 18_
 
-## TWO_FULL_NAMES (7)
+## TWO_FULL_NAMES (1)
 
 > 1 komma, beide kant heeft ≥2 Capitalized woorden — twee volledige namen aan elkaar geplakt.
 
@@ -165,49 +157,6 @@ Author-rijen met komma in display_name: **518**.
 - reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
 - boeken: _First Flight / On the Seven Oceans_
 - bio: _The Han Chinese, alternatively Han people, or Chinese people, are an East Asian ethnic group native to Greater China. With a global populati…_
-
-### id=3695 · `Joseph D., II Ketner`
-
-- slug: `joseph-d-ii-ketner` · placeholder=false · boeken: **1** · b.? d.1872
-- candidate-parts: `Joseph D.`, `II Ketner`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _Andy Warhol_
-- bio: _Robert Seldon Duncanson (c. 1821 – December 21, 1872) was a 19th-century American landscapist of European and African ancestry. Inspired by…_
-
-### id=7459 · `Central Film Bureau,Shanghai Film Producers`
-
-- slug: `central-film-bureau-shanghai-film-producers` · placeholder=false · boeken: **1** · b.? d.?
-- candidate-parts: `Central Film Bureau`, `Shanghai Film Producers`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _The Woman Driver_
-
-### id=8395 · `Suroosh Alvi, Gavin Mclnnes`
-
-- slug: `suroosh-alvi-gavin-mclnnes` · placeholder=false · boeken: **1** · b.? d.?
-- candidate-parts: `Suroosh Alvi`, `Gavin Mclnnes`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _The Vice Guide to Sex and Drugs and Rock and Roll_
-
-### id=8512 · `Al-Mustaqeem Mahmod Radhi,Khairul Anam Che Mentri`
-
-- slug: `al-mustaqeem-mahmod-radhi-khairul-anam-che-mentri` · placeholder=false · boeken: **1** · b.? d.?
-- candidate-parts: `Al-Mustaqeem Mahmod Radhi`, `Khairul Anam Che Mentri`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _Islam & Pluralisme_
-
-### id=9133 · `Bidart Campos, Germán J.`
-
-- slug: `bidart-campos-german-j` · placeholder=false · boeken: **1** · b.? d.?
-- candidate-parts: `Bidart Campos`, `Germán J.`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _Poder de policía de moralidad en materia de espectáculos y de publicaciones en la Capital Federal_
-
-### id=9284 · `Gallardo Klarc, María Angélica`
-
-- slug: `gallardo-klarc-maria-angelica` · placeholder=false · boeken: **1** · b.? d.?
-- candidate-parts: `Gallardo Klarc`, `María Angélica`
-- reden: beide kanten hebben ≥2 Capitalized woorden → twee namen
-- boeken: _La praxis del trabajo social en una dimensión científica_
 
 ## SORTED_NAME_COMPLEX (12)
 

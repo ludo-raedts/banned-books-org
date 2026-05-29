@@ -37,6 +37,7 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { slugify } from '../src/lib/imports/slugify'
+import { canonicaliseAuthorName } from '../src/lib/imports/canonicalise-author-name'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -167,7 +168,8 @@ async function loadDB(): Promise<{ govScopeId: number; otherReasonId: number; so
   return { govScopeId, otherReasonId, sourceId }
 }
 
-async function findOrCreateAuthor(displayName: string): Promise<number | null> {
+async function findOrCreateAuthor(rawName: string): Promise<number | null> {
+  const displayName = canonicaliseAuthorName(rawName)
   const slug = slugify(displayName)
   const ex = authorBySlug.get(slug)
   if (ex) return ex.id

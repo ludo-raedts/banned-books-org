@@ -1,0 +1,118 @@
+{
+  "_note": "Hand-curated batch of well-attested Russian book restrictions documented in independent press 2024-2026. Each entry cites a primary article URL and the named state authority (Prosecutor General, regional court, Megamarket LGBT register, publisher-fining decisions). Entries already in the DB (Dorian Gray, Norwegian Wood, Doctor Sleep, It, Decameron, Heartstopper, Giovanni's Room, Call Me By Your Name, Aristotle & Dante, A Little Life, Patriot, Metro 2033, Putin's Russia, etc.) are intentionally omitted.",
+  "source": {
+    "name": "Independent Russian-press reporting (Meduza, The Insider, Moscow Times) 2024-2026",
+    "url": "https://theins.press/en/society/291910",
+    "fetched_at": "2026-05-28"
+  },
+  "entries": [
+    {
+      "title": "Springfield",
+      "authors": ["Sergei Davydov"],
+      "original_language": "ru",
+      "first_published_year": 2021,
+      "ban_year": 2024,
+      "action_type": "banned",
+      "reason_slug": "lgbtq",
+      "authority": "Russian Prosecutor General",
+      "description": "Banned by the Russian Prosecutor General's office; the entire print run was ordered destroyed. The novel, about a gay love story in a Russian provincial town, was prosecuted under the December 2022 expansion of the 'LGBT propaganda' law.",
+      "primary_source_url": "https://theins.press/en/society/291910"
+    },
+    {
+      "title": "Mouse",
+      "authors": ["Ivan Filippov"],
+      "original_language": "ru",
+      "first_published_year": 2023,
+      "ban_year": 2024,
+      "action_type": "banned",
+      "reason_slug": "political",
+      "authority": "Russian Prosecutor General",
+      "description": "Banned by the Russian Prosecutor General's office; the print run was ordered destroyed. The dystopian thriller, set in a Moscow under zombie outbreak, was deemed to discredit Russia's leadership and armed forces.",
+      "primary_source_url": "https://theins.press/en/society/291910"
+    },
+    {
+      "title": "Beartown",
+      "authors": ["Fredrik Backman"],
+      "original_language": "sv",
+      "first_published_year": 2016,
+      "ban_year": 2026,
+      "action_type": "restricted",
+      "reason_slug": "lgbtq",
+      "authority": "Russian court (publisher fined)",
+      "description": "Publisher fined approximately $670 in March 2026 for distributing the novel under Russia's 'LGBT propaganda' law, despite an expert review finding no violations. Distribution restricted.",
+      "primary_source_url": "https://theins.press/en/society/291910"
+    },
+    {
+      "title": "Netochka Nezvanova",
+      "authors": ["Fyodor Dostoevsky"],
+      "original_language": "ru",
+      "first_published_year": 1849,
+      "ban_year": 2024,
+      "action_type": "restricted",
+      "reason_slug": "lgbtq",
+      "authority": "Megamarket / Sber — 'Register of goods containing banned information (LGBT+)'",
+      "description": "Removed from sale by the Russian marketplace Megamarket in February 2024 as part of the leaked 'Register of goods containing banned information (LGBT+)', confirmed by Sber. The list of 250+ titles was compiled as early as December 2022 but became public after journalist Alexander Plyushchev published it on Telegram on 20 February 2024.",
+      "primary_source_url": "https://meduza.io/en/news/2024/02/21/russia-s-sber-confirms-list-of-over-250-books-removed-from-online-marketplace-due-to-lgbt-propaganda-law-including-works-by-dostoevsky-and-stephen-king"
+    },
+    {
+      "title": "Different Seasons",
+      "authors": ["Stephen King"],
+      "original_language": "en",
+      "first_published_year": 1982,
+      "ban_year": 2024,
+      "action_type": "restricted",
+      "reason_slug": "lgbtq",
+      "authority": "Megamarket / Sber — 'Register of goods containing banned information (LGBT+)'",
+      "description": "Removed from sale by Megamarket in February 2024 under the 'LGBT propaganda' law, as part of the leaked register of 250+ titles confirmed by Sber.",
+      "primary_source_url": "https://meduza.io/en/news/2024/02/21/russia-s-sber-confirms-list-of-over-250-books-removed-from-online-marketplace-due-to-lgbt-propaganda-law-including-works-by-dostoevsky-and-stephen-king"
+    },
+    {
+      "title": "The Left Hand of Darkness",
+      "authors": ["Ursula K. Le Guin"],
+      "original_language": "en",
+      "first_published_year": 1969,
+      "ban_year": 2025,
+      "action_type": "restricted",
+      "reason_slug": "lgbtq",
+      "authority": "Publisher Azbuka (under state pressure)",
+      "description": "Withdrawn from sale by Russian publisher Azbuka following police raids and pressure under expanding LGBT-related restrictions. The novel's exploration of androgyny on the planet Gethen was deemed in violation of the 2022 'LGBT propaganda' expansion.",
+      "primary_source_url": "https://meduza.io/en/feature/2026/01/05/a-dark-chapter"
+    },
+    {
+      "title": "Everybody",
+      "authors": ["Olivia Laing"],
+      "original_language": "en",
+      "first_published_year": 2021,
+      "ban_year": 2025,
+      "action_type": "restricted",
+      "reason_slug": "lgbtq",
+      "authority": "Russian court (Ad Marginem fined 800,000 roubles)",
+      "description": "Russian publisher Ad Marginem fined approximately 800,000 roubles for distributing the book, which discusses bodies, sexuality and queer experience. Distribution restricted; independent bookstore Podpisnye Izdaniya removed it as a precaution.",
+      "primary_source_url": "https://meduza.io/en/feature/2026/01/05/a-dark-chapter"
+    },
+    {
+      "title": "The Heritage",
+      "authors": ["Vladimir Sorokin"],
+      "original_language": "ru",
+      "first_published_year": 2024,
+      "ban_year": 2024,
+      "action_type": "banned",
+      "reason_slug": "political",
+      "authority": "Russian state (samizdat-published only via Freedom Letters)",
+      "description": "Could not be legally published or distributed inside Russia following Sorokin's designation as a 'foreign agent' and his outspoken opposition to the war in Ukraine. Released only by exile publisher Freedom Letters as part of the tamizdat tradition.",
+      "primary_source_url": "https://theins.press/en/society/291910"
+    },
+    {
+      "title": "Summer in a Pioneer's Tie",
+      "authors": ["Katerina Silvanova", "Elena Malisova"],
+      "original_language": "ru",
+      "first_published_year": 2021,
+      "ban_year": 2025,
+      "action_type": "banned",
+      "reason_slug": "lgbtq",
+      "authority": "Russian Investigative Committee (criminal case against Popcorn Books / Individuum)",
+      "description": "Criminal investigation launched in 2025 against publishers Popcorn Books and Individuum over the novel's depiction of a teenage same-sex relationship. Three senior managers placed under house arrest. Book formally classified as 'LGBT propaganda' and 'extremism'. (Distinct from the 2022 distribution restriction already recorded.)",
+      "primary_source_url": "https://meduza.io/en/feature/2026/01/05/a-dark-chapter"
+    }
+  ]
+}

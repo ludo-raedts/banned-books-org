@@ -2,15 +2,15 @@
 
 _Gegenereerd 2026-05-28 door `scripts/_audit_metadata_in_titles.ts`._
 
-Totaal boeken met titel-metadata-signaal: **41**.
+Totaal boeken met titel-metadata-signaal: **40**.
 
 ## Per categorie
 
 | Categorie | Aantal | Wat te doen |
 |---|---:|---|
-| `QUOTED_OPEN` | 7 | opent of sluit met losse quote — vrijwel altijd fout. Strip de quote. |
+| `QUOTED_OPEN` | 1 | opent of sluit met losse quote — vrijwel altijd fout. Strip de quote. |
 | `QUOTED_FULL` | 0 | volledig tussen quotes — kan correct zijn (titel-binnen-titel) maar typisch source-artefact. Inspecteer. |
-| `EMBEDDED_QUOTES` | 24 | quotes binnen de titel (≥2 instanties). Typisch transliteratie-marker (Chinese pinyin) of source-paste artefact. |
+| `EMBEDDED_QUOTES` | 29 | quotes binnen de titel (≥2 instanties). Typisch transliteratie-marker (Chinese pinyin) of source-paste artefact. |
 | `BY_AUTHOR_TAIL` | 2 | auteur staat aan het einde van de titel + matcht book_author. Strip "by …" naar het einde. |
 | `PAREN_AUTHOR` | 0 | auteur in haakjes. Strip de haakjes, zet author in book_authors. |
 | `DASH_AUTHOR` | 0 | em-dash + naam aan het einde. Inspecteer of het echt een auteur is. |
@@ -23,46 +23,16 @@ Totaal boeken met titel-metadata-signaal: **41**.
 | `ANGLE_BRACKETS` | 0 | titel bevat haken die niet hoorden — scraper-artefact. |
 | `SOURCE_TAG_PREFIX` | 0 | titel begint met bron-codering (KDN L.N. ###). Strip prefix. |
 
-## QUOTED_OPEN (7)
+## QUOTED_OPEN (1)
 
 > opent of sluit met losse quote — vrijwel altijd fout. Strip de quote.
-
-- **6694** · `tractate-on-idolatry-from-the-mishneh-torah-with-notes-by-dionysius-vossius` · y=? · lang=?
-  - title: "'Tractate on Idolatry from the Mishneh Torah with notes by Dionysius Vossius'"
-  - capture: `'Tractate on Idolatry from the Mishneh T`
-  - author(s): _Maimonides_
-
-- **6784** · `6-4-da-tu-sha-ping-xi` · y=? · lang=zh
-  - title: ""6.4 da tu sha" ping xi"
-  - capture: `"6.4 da tu sha" ping xi`
-  - author(s): _Wengui Liang_
-
-- **6837** · `liang-zhi-yu-yi-guo-de-wei-lai` · y=? · lang=zh
-  - title: ""Liang zhi" yu "yi guo" de wei lai"
-  - capture: `"Liang zhi" yu "yi guo" de wei lai`
-  - author(s): _Yaoting Dai_
-
-- **6860** · `meiguo-zhi-jie-zhongguo-jie-fang-jun-di-yi-ying-pai-meng-yi-yu-qiang-guo-bo-li-xin-de-meng-yan` · y=? · lang=zh
-  - title: ""Meiguo zhi jie Zhongguo?" : jie fang jun di yi ying pai meng yi yu qiang guo bo li xin de meng yan"
-  - capture: `"Meiguo zhi jie Zhongguo?" : jie fang ju`
-  - author(s): _Hongbing Yuan_
-
-- **6928** · `liu-si-shou-nan-zhe-ming-ce` · y=? · lang=zh
-  - title: ""Liu si" shou nan zhe ming ce"
-  - capture: `"Liu si" shou nan zhe ming ce`
-  - author(s): _Zilin Ding_
-
-- **7055** · `wen-ge-zhong-de-zhou-enlai` · y=? · lang=zh
-  - title: ""Wen ge" zhong de Zhou Enlai"
-  - capture: `"Wen ge" zhong de Zhou Enlai`
-  - author(s): _Wusheng Liu_
 
 - **13940** · `saggi-sulla-teoria-della-crisi-dialettica-e-metodica-nel-capitale` · y=? · lang=?
   - title: "Saggi sulla teoría della crisi: dialettica e metodica nel “Capitale”"
   - capture: `si: dialettica e metodica nel “Capitale”`
   - author(s): _Grossman, Henryk_
 
-## EMBEDDED_QUOTES (24)
+## EMBEDDED_QUOTES (29)
 
 > quotes binnen de titel (≥2 instanties). Typisch transliteratie-marker (Chinese pinyin) of source-paste artefact.
 
@@ -111,10 +81,35 @@ Totaal boeken met titel-metadata-signaal: **41**.
   - capture: `Zhonghua Renmin Gongheguo shi. Di 8 juan, Nan yi ji xu de "j`
   - author(s): _Yun Shi; Lim Danhui_
 
+- **6784** · `6-4-da-tu-sha-ping-xi` · y=? · lang=zh
+  - title: ""6.4 da tu sha" ping xi"
+  - capture: `"6.4 da tu sha" ping xi`
+  - author(s): _Wengui Liang_
+
+- **6837** · `liang-zhi-yu-yi-guo-de-wei-lai` · y=? · lang=zh
+  - title: ""Liang zhi" yu "yi guo" de wei lai"
+  - capture: `"Liang zhi" yu "yi guo" de wei lai`
+  - author(s): _Yaoting Dai_
+
+- **6860** · `meiguo-zhi-jie-zhongguo-jie-fang-jun-di-yi-ying-pai-meng-yi-yu-qiang-guo-bo-li-xin-de-meng-yan` · y=? · lang=zh
+  - title: ""Meiguo zhi jie Zhongguo?" : jie fang jun di yi ying pai meng yi yu qiang guo bo li xin de meng yan"
+  - capture: `"Meiguo zhi jie Zhongguo?" : jie fang jun di yi ying pai men`
+  - author(s): _Hongbing Yuan_
+
+- **6928** · `liu-si-shou-nan-zhe-ming-ce` · y=? · lang=zh
+  - title: ""Liu si" shou nan zhe ming ce"
+  - capture: `"Liu si" shou nan zhe ming ce`
+  - author(s): _Zilin Ding_
+
 - **6963** · `xin-si-ren-bang-he-tai-shang-huang-mei-you-jie-su-de-quan-dou` · y=? · lang=zh
   - title: "Xin "si ren bang" he "tai shang huang" : mei you jie su de quan dou"
   - capture: `Xin "si ren bang" he "tai shang huang" : mei you jie su de q`
   - author(s): _Zichang Xie_
+
+- **7055** · `wen-ge-zhong-de-zhou-enlai` · y=? · lang=zh
+  - title: ""Wen ge" zhong de Zhou Enlai"
+  - capture: `"Wen ge" zhong de Zhou Enlai`
+  - author(s): _Wusheng Liu_
 
 - **7072** · `zhongguo-liu-si-zhen-xiang` · y=? · lang=zh
   - title: "Zhongguo "Liu si" zhen xiang"

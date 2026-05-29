@@ -17,6 +17,7 @@ export const ALLOWED_IMAGE_HOSTS = [
   'books.google.co.uk',
   'books.google.de',
   'lh3.googleusercontent.com',
+  'archive.org',
   ...(SUPABASE_STORAGE_HOST ? [SUPABASE_STORAGE_HOST] : []),
 ]
 

@@ -22,22 +22,18 @@ export const metadata: Metadata = {
 
 async function getStats() {
   const s = adminClient()
-  const [books, bans, activeBans, sources] = await Promise.all([
+  const [books, bans, activeBans, sources, countriesRes] = await Promise.all([
     s.from('books').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }).eq('status', 'active'),
     s.from('ban_sources').select('*', { count: 'exact', head: true }),
+    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
   ])
-  const { data: countryRows } = await s
-    .from('bans')
-    .select('country_code')
-    .neq('country_code', null)
-  const countries = new Set((countryRows ?? []).map((r) => r.country_code)).size
 
   return {
     books: books.count ?? 0,
     bans: bans.count ?? 0,
-    countries,
+    countries: countriesRes.count ?? 0,
     activeBans: activeBans.count ?? 0,
     sources: sources.count ?? 0,
     updatedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
