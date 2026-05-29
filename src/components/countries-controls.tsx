@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
-type Current = { sort: string; reason: string; active: boolean }
+type Current = { sort: string; reason: string; active: boolean; era: string }
 
 type Props = {
   reasons: string[]
@@ -20,11 +20,12 @@ export default function CountriesControls({ reasons, current }: Props) {
     if (next.sort && next.sort !== 'volume') p.set('sort', next.sort)
     if (next.reason) p.set('reason', next.reason)
     if (next.active) p.set('active', '1')
+    if (next.era) p.set('era', next.era)
     const qs = p.toString()
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
-  const hasFilter = !!(current.reason || current.active)
+  const hasFilter = !!(current.reason || current.active || current.era)
 
   return (
     <div className="space-y-2 mb-5">
@@ -51,6 +52,28 @@ export default function CountriesControls({ reasons, current }: Props) {
         >
           Alphabetical
         </button>
+      </div>
+
+      {/* Era row */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-12 shrink-0">Era:</span>
+        {([
+          ['', 'All eras'],
+          ['contemporary', 'Contemporary (2000–now)'],
+          ['historical', 'Historical (pre-2000)'],
+        ] as const).map(([value, label]) => (
+          <button
+            key={value || 'all'}
+            onClick={() => update({ era: value })}
+            className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+              current.era === value
+                ? 'bg-brand text-white border-brand'
+                : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Filter row */}
@@ -86,7 +109,7 @@ export default function CountriesControls({ reasons, current }: Props) {
 
         {hasFilter && (
           <button
-            onClick={() => update({ reason: '', active: false })}
+            onClick={() => update({ reason: '', active: false, era: '' })}
             className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
           >
             Clear filters

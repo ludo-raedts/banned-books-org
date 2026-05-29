@@ -33,11 +33,22 @@ function countryFlag(code: string): string {
 export default async function CountriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string; reason?: string; active?: string }>
+  searchParams: Promise<{ sort?: string; reason?: string; active?: string; era?: string }>
 }) {
-  const { sort, reason: filterReason = '', active } = await searchParams
+  const { sort, reason: filterReason = '', active, era = '' } = await searchParams
   const isAlpha = sort === 'alpha'
   const filterActive = active === '1'
+  const eraFilter = era === 'historical' || era === 'contemporary' ? era : ''
+
+  // Pick the era-specific distinct-book column. Historical = bans started
+  // before 2000, Contemporary = 2000 onward; without an era filter we use the
+  // all-time distinct_books. (Eras overlap and exclude NULL-year bans, so the
+  // two never sum to distinct_books — see the migration comment.)
+  type EraRow = { distinct_books: number; distinct_books_historical: number; distinct_books_contemporary: number }
+  const eraCount = (r: EraRow) =>
+    eraFilter === 'historical'   ? r.distinct_books_historical
+    : eraFilter === 'contemporary' ? r.distinct_books_contemporary
+    : r.distinct_books
 
   const supabase = adminClient()
 
@@ -47,12 +58,15 @@ export default async function CountriesPage({
     // rows: ~90 | reason: materialized view — distinct banned books per country.
     // distinct_books is the canonical ranking metric (not total_bans, which is
     // inflated for the US by PEN America's per-district granularity).
-    supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books'),
+    supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary'),
     // rows: ~12 | reason: filter pill options
     supabase.from('reasons').select('slug').order('slug'),
   ])
 
+  // count = all-time distinct_books (stable, drives the intro + "all eras" view);
+  // eraCountMap = the era-specific count used for the displayed ranking.
   const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
+  const eraCountMap = new Map((banCounts ?? []).map(r => [r.country_code, eraCount(r as EraRow)]))
   const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
   const availableReasons = (reasonsData ?? []).map(r => r.slug)
 
@@ -68,18 +82,18 @@ export default async function CountriesPage({
   if (filterReason) {
     const { data: reasonRows } = await supabase
       .from('mv_country_reason_counts')
-      .select('country_code, distinct_books, distinct_active_books')
+      .select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary')
       .eq('reason_slug', filterReason)
-    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, r.distinct_books as number]))
+    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, eraCount(r as EraRow)]))
     filteredActiveMap = new Map((reasonRows ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
   }
 
   // ── Merge base with filtered counts, then sort & filter ───────────
-  const isFiltered = !!(filterReason || filterActive)
+  const isFiltered = !!(filterReason || filterActive || eraFilter)
 
   const merged = base.map(c => ({
     ...c,
-    displayCount:  filteredCountMap  ? (filteredCountMap.get(c.code)  ?? 0) : c.count,
+    displayCount:  filteredCountMap  ? (filteredCountMap.get(c.code)  ?? 0) : (eraCountMap.get(c.code) ?? 0),
     displayActive: filteredActiveMap ? (filteredActiveMap.get(c.code) ?? 0) : c.active,
   }))
 
@@ -128,7 +142,7 @@ export default async function CountriesPage({
       <Suspense>
         <CountriesControls
           reasons={availableReasons}
-          current={{ sort: sort ?? 'volume', reason: filterReason, active: filterActive }}
+          current={{ sort: sort ?? 'volume', reason: filterReason, active: filterActive, era: eraFilter }}
         />
       </Suspense>
 
@@ -156,7 +170,7 @@ export default async function CountriesPage({
               <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400 shrink-0">{c.displayCount}</span>
             </div>
             <span className="w-20 text-right shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">
-              {c.displayActive > 0 ? `${c.displayActive} active` : ''}
+              {!eraFilter && c.displayActive > 0 ? `${c.displayActive} active` : ''}
             </span>
           </Link>
         ))}
