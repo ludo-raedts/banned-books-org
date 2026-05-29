@@ -89,7 +89,7 @@ async function main() {
   let query = supabase
     .from('books')
     .select(`
-      id, title, slug, first_published_year, genres,
+      id, title, slug, first_published_year, genres, data_quality_status,
       book_authors(authors(display_name)),
       bans(country_code, countries(name_en), ban_reason_links(reasons(label_en)))
     `)
@@ -104,11 +104,21 @@ async function main() {
   const { data, error } = await query
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
-  const all   = (data ?? []) as unknown as BookRow[]
+  // 2026-05-29: skip rows where data_quality_status='flagged'. These are
+  // descriptions the judge wiped because they were contradicted by
+  // Wikipedia/OL/GB sources; refilling with free-form GPT is exactly the
+  // anti-pattern this whole cleanup addressed. --slug bypass remains so
+  // an operator can manually re-enrich a single flagged book if they're
+  // sure it was a false positive.
+  const allRaw = (data ?? []) as unknown as Array<BookRow & { data_quality_status: string | null }>
+  const flaggedSkipped = SLUG ? 0 : allRaw.filter(b => b.data_quality_status === 'flagged').length
+  const all = SLUG ? allRaw : allRaw.filter(b => b.data_quality_status !== 'flagged')
   const batch = all.slice(0, LIMIT)
 
   console.log(`\n── enrich-descriptions-gpt (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
+  console.log(`  ⚠️  DEPRECATED — prefer scripts/enrich-descriptions-v2.ts which grounds LLM output on cited sources.`)
   if (OVERWRITE) console.log('  --overwrite: replacing existing description_book too')
+  if (flaggedSkipped > 0) console.log(`  Skipped (data_quality_status=flagged): ${flaggedSkipped}`)
   console.log(`  Missing descriptions: ${all.length}  Processing: ${batch.length}\n`)
 
   let written = 0, unknown = 0, errors = 0
