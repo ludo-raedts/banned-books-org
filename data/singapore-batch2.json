@@ -1,0 +1,68 @@
+{
+  "source_url": "https://www.straitstimes.com/politics/four-books-banned-for-extremist-content",
+  "source_name": "Singapore primary sources — Straits Times / MDDI press releases (UPA bans 2017-2021)",
+  "source_type": "news",
+  "_note": "Six post-2015 UPA bans documented in primary Singapore sources (Straits Times + Ministry of Digital Development and Information press releases). Per-link locator carries the specific article URL for each ban. Compiled via Perplexity research 2026-05-29.",
+  "entries": [
+    {
+      "title": "Book Of Tawheed 1",
+      "author": "Anonymous",
+      "year_started": 2017,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Banned in Singapore in 2017 under the Undesirable Publications Act 1967 for extremist religious content (one of 4 books banned simultaneously).",
+      "source_locator": "https://www.straitstimes.com/politics/four-books-banned-for-extremist-content"
+    },
+    {
+      "title": "Book Of Tawheed",
+      "author": "Anonymous",
+      "year_started": 2017,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Banned in Singapore in 2017 under the Undesirable Publications Act 1967 for extremist religious content (one of 4 books banned simultaneously).",
+      "source_locator": "https://www.straitstimes.com/politics/four-books-banned-for-extremist-content"
+    },
+    {
+      "title": "Encyclopaedia For Fiqh In Islam In Al-Quran And As-Sunnah",
+      "author": "Anonymous",
+      "year_started": 2017,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Banned in Singapore in 2017 under the Undesirable Publications Act 1967 for extremist religious content (one of 4 books banned simultaneously).",
+      "source_locator": "https://www.straitstimes.com/politics/four-books-banned-for-extremist-content"
+    },
+    {
+      "title": "Islamic Guidance For A Muslim",
+      "author": "Anonymous",
+      "year_started": 2017,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Banned in Singapore in 2017 under the Undesirable Publications Act 1967 for extremist religious content (one of 4 books banned simultaneously).",
+      "source_locator": "https://www.straitstimes.com/politics/four-books-banned-for-extremist-content"
+    },
+    {
+      "title": "Understanding the Evil of Innovation",
+      "author": "Anonymous",
+      "year_started": 2020,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Found 'objectionable' by Singapore's Infocomm Media Development Authority (IMDA) in 2020 for denigrating references to Judaism and Christianity.",
+      "source_locator": "https://www.mddi.gov.sg/media-centre/parliamentary-questions/proposal-for-redacted-ver-of-banned-book/"
+    },
+    {
+      "title": "Menyingkap Rahsia Tentera Elit Briged Izzuddin Al-Qassam: Generasi Muda Perindu Syahid",
+      "author": "Anonymous",
+      "year_started": 2021,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Banned in Singapore in 2021 under the Undesirable Publications Act 1967 for extremist content and incitement to violent jihad. Concerns the Izz ad-Din al-Qassam Brigades (military wing of Hamas).",
+      "source_locator": "https://www.mddi.gov.sg/newsroom/prohibition-publication-extremist-content-undesirable-publications-act/"
+    }
+  ]
+}

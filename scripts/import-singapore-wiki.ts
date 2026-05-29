@@ -44,7 +44,12 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 
 const APPLY = process.argv.includes('--apply')
-const JSON_PATH = join(process.cwd(), 'data/singapore-batch1.json')
+const INPUT_ARG = process.argv.find(a => a.startsWith('--input='))
+const JSON_PATH = INPUT_ARG
+  ? join(process.cwd(), INPUT_ARG.slice('--input='.length))
+  : join(process.cwd(), 'data/singapore-batch1.json')
+
+const ANONYMOUS_AUTHOR_ID = 33   // existing 'Anonymous' row
 
 const VALID_REASONS = new Set(['political', 'religious', 'obscenity', 'racial', 'sexual', 'moral', 'other'])
 const VALID_STATUSES = new Set(['active', 'historical', 'rescinded', 'unclear'])
@@ -52,13 +57,14 @@ const VALID_STATUSES = new Set(['active', 'historical', 'rescinded', 'unclear'])
 interface Entry {
   title: string
   title_variants?: string[]
-  author: string
+  author: string                          // "Anonymous" → uses placeholder author id 33
   existing_book_id?: number
   year_started: number
   year_ended: number | null
   status: 'active' | 'historical' | 'rescinded' | 'unclear'
   reason_slug: string
   description: string
+  source_locator?: string                 // per-entry locator override (e.g. specific article URL)
 }
 
 interface InputFile {
@@ -153,25 +159,29 @@ async function main() {
         bookId = (nb as { id: number }).id
         createdBooks++
 
-        // Link authors
-        const authorNames = splitAuthors(e.author)
-        for (const aName of authorNames) {
-          const aSlug = slugify(aName)
-          const { data: ea } = await supabase.from('authors').select('id').eq('slug', aSlug).maybeSingle()
-          let authorId: number
-          if (ea) {
-            authorId = (ea as { id: number }).id
-          } else {
-            const { data: na, error: naErr } = await supabase.from('authors').insert({
-              slug: aSlug,
-              display_name: aName,
-              is_placeholder: false,
-            }).select('id').single()
-            if (naErr) throw naErr
-            authorId = (na as { id: number }).id
-            createdAuthors++
+        // Link authors. Special case: "Anonymous" → use placeholder id 33.
+        if (e.author.trim() === 'Anonymous') {
+          await supabase.from('book_authors').insert({ book_id: bookId, author_id: ANONYMOUS_AUTHOR_ID })
+        } else {
+          const authorNames = splitAuthors(e.author)
+          for (const aName of authorNames) {
+            const aSlug = slugify(aName)
+            const { data: ea } = await supabase.from('authors').select('id').eq('slug', aSlug).maybeSingle()
+            let authorId: number
+            if (ea) {
+              authorId = (ea as { id: number }).id
+            } else {
+              const { data: na, error: naErr } = await supabase.from('authors').insert({
+                slug: aSlug,
+                display_name: aName,
+                is_placeholder: false,
+              }).select('id').single()
+              if (naErr) throw naErr
+              authorId = (na as { id: number }).id
+              createdAuthors++
+            }
+            await supabase.from('book_authors').insert({ book_id: bookId, author_id: authorId })
           }
-          await supabase.from('book_authors').insert({ book_id: bookId, author_id: authorId })
         }
       }
 
@@ -206,10 +216,11 @@ async function main() {
         await supabase.from('ban_reason_links').insert({ ban_id: banId, reason_id: reasonId })
       }
 
+      const locator = e.source_locator ?? `Wikipedia: ${e.author} / ${e.title}`
       await supabase.from('ban_source_links').insert({
         ban_id: banId,
         source_id: sourceId,
-        locator: `Wikipedia: ${e.author} / ${e.title}`,
+        locator,
       }).then(({ error }) => {
         if (error && !error.message.includes('duplicate')) {
           console.error(`  source link warning for ban_${banId}: ${error.message}`)
