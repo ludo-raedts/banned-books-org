@@ -245,7 +245,7 @@ export default async function HomePage() {
 
   const { data: allBooksRaw } = allBookIds.size > 0
     ? await timer.wrap('all-books', () =>
-        supabase.from('books').select(TOP_LIST_BOOK_SELECT).in('id', [...allBookIds]),
+        supabase.from('books').select(TOP_LIST_BOOK_SELECT).eq('is_gated', false).in('id', [...allBookIds]),
         { ids: allBookIds.size })
     : { data: null }
   const allBooks = (allBooksRaw as unknown as TopListBookRow[]) ?? []

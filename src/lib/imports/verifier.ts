@@ -30,6 +30,17 @@ import { slugify } from './slugify'
 import type { ExtractionResult, AuthorRef } from './extraction-types'
 import type { SourceConfig } from './source-registry'
 
+// Thrown when a candidate's slug is on the CSAM-adjacent blocklist (Bucket A).
+// The orchestrator's phase wrapper marks the job 'failed' with this message —
+// no commit, no review-queue row. Distinct class so the failure is recognisable
+// as a deliberate policy block, not a transient pipeline error.
+export class BlockedByPolicyError extends Error {
+  constructor(public readonly slug: string) {
+    super(`blocked by CSAM policy (blocked_works): ${slug}`)
+    this.name = 'BlockedByPolicyError'
+  }
+}
+
 export type DimensionMatch = {
   status: 'exact' | 'fuzzy' | 'no_match'
   // Numeric for books / authors / reasons (bigint PKs); string for countries
@@ -88,6 +99,22 @@ export async function verifyExtraction(
 
   // ----- Book dimension -----------------------------------------------------
   const bookSlug = slugify(extraction.title)
+
+  // CSAM-adjacent policy: refuse re-import of a blocked (Bucket A) slug before
+  // any matching/commit work. This is the reason the blocklist exists — a
+  // silent delete would let the pipeline re-create the work on the next run.
+  const { data: blocked } = await sb
+    .from('blocked_works')
+    .select('slug')
+    .eq('slug', bookSlug)
+    .maybeSingle()
+  if (blocked) {
+    console.warn(
+      `[csam-policy] blocked re-import refused: slug="${bookSlug}" title="${extraction.title}"`,
+    )
+    throw new BlockedByPolicyError(bookSlug)
+  }
+
   const book = await matchBook(
     sb,
     bookSlug,

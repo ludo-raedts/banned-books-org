@@ -34,6 +34,7 @@ export async function GET() {
       .from('books')
       .select('slug, title, updated_at, cover_url')
       .not('slug', 'is', null)
+      .eq('is_gated', false)
       .order('updated_at', { ascending: false })
       .range(offset, offset + 999)
     if (!data || data.length === 0) break

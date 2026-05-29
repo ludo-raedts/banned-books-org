@@ -83,6 +83,7 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
     if (sort === 'alpha') {
       const { data, count, error } = await supabase
         .from('books').select(SELECT, { count: 'exact' })
+        .eq('is_gated', false)
         .order('title')
         .range(offset, offset + limit - 1)
       if (error) return { books: [], total: 0, error: error.message }
@@ -118,7 +119,7 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
     if (pageIds.length === 0) return { books: [], total: totalCount ?? 0 }
 
     const { data: hydrated, error } = await supabase
-      .from('books').select(SELECT).in('id', pageIds)
+      .from('books').select(SELECT).eq('is_gated', false).in('id', pageIds)
     if (error) return { books: [], total: 0, error: error.message }
     const byId = new Map(((hydrated ?? []) as Array<{ id: number }>).map(b => [b.id, b]))
     const ordered = pageIds.map(id => byId.get(id)).filter(Boolean) as unknown[]
@@ -215,7 +216,7 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
   const pageIds = sortedIds.slice(offset, offset + limit)
   if (pageIds.length === 0) return { books: [], total }
 
-  const { data, error } = await supabase.from('books').select(SELECT).in('id', pageIds)
+  const { data, error } = await supabase.from('books').select(SELECT).eq('is_gated', false).in('id', pageIds)
   if (error) return { books: [], total: 0, error: error.message }
   const byId = new Map(((data ?? []) as Array<{ id: number }>).map(b => [b.id, b]))
   const ordered = pageIds.map(id => byId.get(id)).filter(Boolean) as unknown[]

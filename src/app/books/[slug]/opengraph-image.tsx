@@ -24,21 +24,23 @@ export default async function Image({ params }: Params) {
 
   const { data } = await adminClient()
     .from('books')
-    .select('title, cover_url, book_authors(authors(display_name)), bans(country_code)')
+    .select('title, cover_url, is_gated, book_authors(authors(display_name)), bans(country_code)')
     .eq('slug', slug)
     .single()
 
   type BookRow = {
     title: string
     cover_url: string | null
+    is_gated: boolean
     book_authors: Array<{ authors: { display_name: string } | null }>
     bans: Array<{ country_code: string }>
   }
   const book = data as unknown as BookRow | null
 
-  // No book = unbranded fallback (matches what the public 404 path would
-  // hit; better than emitting a half-rendered card).
-  if (!book) {
+  // No book (incl. blocked/deleted slugs) or a gated (Bucket B) book = unbranded
+  // fallback. A gated work shows no cover and no identifying title in social
+  // previews, consistent with the on-page suppression.
+  if (!book || book.is_gated) {
     return new ImageResponse(
       (
         <div style={{

@@ -75,7 +75,7 @@ export default async function RisingWidget({
 
     const [{ data: bookDetails }, { data: authorDetails }] = await timer.wrap('details-parallel', () => Promise.all([
       topBooks.length > 0
-        ? supabase.from('books').select('id, title, slug').in('id', topBooks.map(c => Number(c.entity_id)))
+        ? supabase.from('books').select('id, title, slug').eq('is_gated', false).in('id', topBooks.map(c => Number(c.entity_id)))
         : Promise.resolve({ data: [] as { id: number; title: string; slug: string }[] }),
       topAuthors.length > 0
         ? supabase.from('authors').select('id, display_name, slug').in('id', topAuthors.map(c => Number(c.entity_id)))

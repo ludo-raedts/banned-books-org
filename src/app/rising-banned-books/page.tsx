@@ -34,7 +34,7 @@ export default async function RisingBannedBooksPage() {
 
   const { data: booksRaw } = risingIds.length > 0
     ? await timer.wrap('books', () =>
-        supabase.from('books').select(TOP_LIST_BOOK_SELECT).in('id', risingIds),
+        supabase.from('books').select(TOP_LIST_BOOK_SELECT).eq('is_gated', false).in('id', risingIds),
       )
     : { data: null }
   const bookById = new Map(((booksRaw ?? []) as unknown as TopListBookRow[]).map(b => [b.id, b]))

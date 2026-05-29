@@ -151,7 +151,7 @@ export default async function TrendingWidget({
     const topBookIds = topBookEntries.map(r => Number(r.entity_id))
     if (topBookIds.length > 0) {
       const { data: bookDetails } = await timer.wrap('book-details', () =>
-        supabase.from('books').select('id, title, slug').in('id', topBookIds),
+        supabase.from('books').select('id, title, slug').eq('is_gated', false).in('id', topBookIds),
         { ids: topBookIds.length })
       const bookMap = new Map((bookDetails ?? []).map(b => [b.id, b]))
       const lastWeekRankMap = new Map(

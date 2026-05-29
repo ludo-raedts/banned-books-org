@@ -34,6 +34,7 @@ import {
 } from '@/components/data-quality'
 import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
 import { getReadingClubLinkForBook } from '@/lib/reading-club-data'
+import GateOverlay from '@/components/gate-overlay'
 
 // Programmatically-generated direct-answer summary + FAQ Q&As, used to
 // surface the "why was X banned" answer in the first 200 words of the page
@@ -155,16 +156,60 @@ function buildBanSummary(
   return { topic, complement, faqItems: items }
 }
 
+// Bucket A blocklist (CSAM-adjacent policy §5b / §6). Read server-side via
+// adminClient() because blocked_works has RLS with no public policy — the
+// public page only ever learns *that* a slug is blocked, never title/reason.
+async function isBlockedSlug(slug: string): Promise<boolean> {
+  const { data } = await adminClient()
+    .from('blocked_works')
+    .select('slug')
+    .eq('slug', slug)
+    .maybeSingle()
+  return !!data
+}
+
+// Content-free tombstone (policy §5b). No title-specific detail, no ISBN, no
+// alternative titles, no external links — nothing that helps locate the work.
+function TombstoneNotice() {
+  return (
+    <main className="max-w-2xl mx-auto px-5 py-20">
+      <h1 className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 mb-6">
+        This edition is not included in the archive.
+      </h1>
+      <div className="space-y-4 text-[15px] leading-relaxed text-gray-700">
+        <p>
+          We do not catalogue works for which it is established that their
+          production, or their purpose, is to cause harm to people who cannot
+          protect themselves. This is a deliberate editorial decision, consistent
+          with our inclusion criterion.
+        </p>
+        <p>We document censorship; we do not provide a record of, or a path to, this material.</p>
+      </div>
+    </main>
+  )
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
+
+  // Bucket A (blocklist): a blocked slug is not a catalogue entry. Neutral,
+  // non-identifying metadata + noindex, before any books lookup.
+  if (await isBlockedSlug(slug)) {
+    return {
+      title: 'Not included — Banned Books',
+      robots: { index: false, follow: false },
+      alternates: { canonical: `/books/${slug}` },
+    }
+  }
+
   const { data } = await adminClient()
     .from('books')
     .select(`
-      title, cover_url, first_published_year,
+      title, cover_url, first_published_year, is_gated,
       book_authors(authors(display_name)),
       bans(country_code, countries(name_en), ban_reason_links(reasons(slug)))
     `)
@@ -172,6 +217,16 @@ export async function generateMetadata({
     .single()
 
   if (!data) return {}
+
+  // Bucket B (gated): exclude from indexing entirely. Title is kept neutral
+  // (the work's title is not the harmful content) but no rich OG/snippet hooks.
+  if (data.is_gated) {
+    return {
+      title: `${data.title} — Banned Books`,
+      robots: { index: false, follow: false },
+      alternates: { canonical: `/books/${slug}` },
+    }
+  }
 
   type MetaBan = {
     country_code: string
@@ -372,6 +427,8 @@ type BookDetail = {
   warning_level: WarningLevel | null
   inclusion_rationale: string | null
   extended_context: string | null
+  is_gated: boolean
+  gating_country: string | null
   original_language: string | null
   title_native: string | null
   title_transliterated: string | null
@@ -466,6 +523,13 @@ export default async function BookPage({
   const { slug } = await params
   const supabase = adminClient()
 
+  // Bucket A: a blocked slug renders the content-free tombstone and nothing
+  // else — no catalogue fetch, no ban data, no cover, no CTA. Comes before the
+  // books lookup and before notFound(), so a blocked slug is never a 404.
+  if (await isBlockedSlug(slug)) {
+    return <TombstoneNotice />
+  }
+
   const { data, error } = await supabase
     .from('books')
     .select(`
@@ -474,6 +538,7 @@ export default async function BookPage({
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
       warning_level, inclusion_rationale, extended_context,
+      is_gated, gating_country,
       original_language,
       title_native, title_transliterated, title_english_meaningful,
       created_at, updated_at,
@@ -509,6 +574,12 @@ export default async function BookPage({
 
   const book = data as unknown as BookDetail
   const author = authorName(book)
+
+  // Bucket B (gated): an opaque interstitial covers the record until the reader
+  // continues, and every commercial/free path + the cover is suppressed at
+  // render level (the DB values are kept). noindex + list-exclusion live in
+  // generateMetadata and the sitemap/IndexNow/search/widget queries.
+  const gated = book.is_gated
 
   // Reading-Club badge: rendered next to the title when this book has a
   // published entry in any track (international / classics / by-theme /
@@ -699,6 +770,7 @@ export default async function BookPage({
     const { data: details } = await supabase
       .from('books')
       .select('id, slug, title, cover_url, book_authors(authors(display_name))')
+      .eq('is_gated', false)
       .in('id', allRelatedIds)
     for (const d of (details ?? []) as unknown as {
       id: number; slug: string; title: string; cover_url: string | null
@@ -790,7 +862,7 @@ export default async function BookPage({
   if (book.original_language) bookJsonLd.inLanguage = book.original_language
   if (book.first_published_year) bookJsonLd.datePublished = String(book.first_published_year)
   if (book.description_book) bookJsonLd.description = book.description_book
-  if (book.cover_url) bookJsonLd.image = book.cover_url
+  if (book.cover_url && !gated) bookJsonLd.image = book.cover_url
   if (book.isbn13) bookJsonLd.isbn = book.isbn13
   if (book.genres && book.genres.length > 0) bookJsonLd.genre = book.genres
   // dateModified bumps on every UPDATE via the public.set_updated_at trigger
@@ -863,6 +935,7 @@ export default async function BookPage({
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
+      {gated && <GateOverlay country={book.gating_country} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(bookJsonLd) }}
@@ -894,7 +967,7 @@ export default async function BookPage({
       {/* Hero */}
       <div className="flex flex-row gap-4 sm:gap-8 mb-8 sm:mb-10 items-start">
         <div className="shrink-0">
-          {book.cover_url ? (
+          {book.cover_url && !gated ? (
             <Image
               src={book.cover_url}
               alt={coverAlt(book.title, author, book.first_published_year)}
@@ -1240,6 +1313,9 @@ export default async function BookPage({
           If neither free source is available AND affiliates are suppressed,
           the whole section is omitted so we don't render an empty amber card. */}
       {(() => {
+        // Bucket B: no commercial path and no free-reading path, ever. The whole
+        // section is omitted — affiliate, Gutenberg, and Internet Archive alike.
+        if (gated) return null
         const affiliatesSuppressed = book.warning_level === 'context' || book.warning_level === 'extended'
         const hasGutenberg = !!book.gutenberg_id
         const hasArchive = book.archive_org_status === 'valid' && !!book.archive_org_id

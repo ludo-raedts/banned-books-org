@@ -83,7 +83,7 @@ export default async function HighlightsStripBlock() {
     const bookIds = bookSlots.map(s => s.id)
     const { data: booksRaw } = bookIds.length > 0
       ? await timer.wrap('books', () =>
-          supabase.from('books').select(FULL_SELECT).in('id', bookIds),
+          supabase.from('books').select(FULL_SELECT).eq('is_gated', false).in('id', bookIds),
           { ids: bookIds.length },
         )
       : { data: null }

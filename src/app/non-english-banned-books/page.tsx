@@ -36,6 +36,7 @@ export default async function NonEnglishBannedBooksPage() {
     supabase
       .from('books')
       .select(TOP_LIST_BOOK_SELECT)
+      .eq('is_gated', false)
       .not('original_language', 'is', null)
       .neq('original_language', 'en')
       .limit(1000),

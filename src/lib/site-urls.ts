@@ -7,10 +7,13 @@ async function fetchAllSlugs(table: 'books' | 'authors'): Promise<string[]> {
   const slugs: string[] = []
   let offset = 0
   while (true) {
-    const { data } = await supabase
+    let query = supabase
       .from(table)
       .select('slug')
       .not('slug', 'is', null)
+    // Bucket B (gated) books are excluded from IndexNow / canonical-URL pings.
+    if (table === 'books') query = query.eq('is_gated', false)
+    const { data } = await query
       .order('id', { ascending: true })
       .range(offset, offset + 999)
     if (!data || data.length === 0) break
