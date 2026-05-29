@@ -23,6 +23,7 @@ import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/booksho
 import { getKoboUrl, KOBO_REL } from '@/lib/kobo'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import CitationBlock from '@/components/citation-block'
+import DescriptionSourceAttribution from '@/components/description-source-attribution'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import {
@@ -354,6 +355,11 @@ type BookDetail = {
   description: string | null
   description_book: string | null
   description_ban: string | null
+  description_source_url: string | null
+  description_source_type:
+    | 'wikipedia' | 'wikipedia_translated' | 'openlibrary' | 'google_books'
+    | 'llm_grounded_multi' | 'llm_grounded_single' | 'manual'
+    | null
   censorship_context: string | null
   first_published_year: number | null
   genres: string[]
@@ -464,6 +470,7 @@ export default async function BookPage({
     .from('books')
     .select(`
       id, title, slug, cover_url, description, description_book, description_ban,
+      description_source_url, description_source_type,
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
       warning_level, inclusion_rationale, extended_context,
@@ -1045,6 +1052,15 @@ export default async function BookPage({
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             {book.description_book ?? book.description}
           </p>
+          {/* Source attribution — only when v2 enrichment recorded a source.
+              Legacy `description`-fallback rows have description_source_url = NULL
+              and render no attribution. */}
+          {book.description_book && book.description_source_url && book.description_source_type && (
+            <DescriptionSourceAttribution
+              url={book.description_source_url}
+              type={book.description_source_type}
+            />
+          )}
         </section>
       )}
 
