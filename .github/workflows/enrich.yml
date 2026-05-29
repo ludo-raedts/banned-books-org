@@ -109,12 +109,16 @@ jobs:
                 run_step "Cover images (v2)"  "enrich-covers-v2.ts" ""
                 ;;
               descriptions)
-                # Has built-in GPT fallback; skip if free_only
-                if [ "$FREE_ONLY" = "true" ]; then
-                  echo "» Skipping descriptions (free_only=true, this step uses GPT fallback)"
-                else
-                  run_step "Book descriptions" "enrich-descriptions.ts" ""
-                fi
+                # 2026-05-28: switched from v1 (free-form GPT fallback that
+                # caused the hallucination cleanup) to v2. v2 uses multi-source
+                # grounding (Wikipedia + OL + Google Books) with title-fuzz +
+                # author-surname cross-check. Default-skips rows where
+                # data_quality_status='flagged' so the judge-wiped descriptions
+                # stay empty until v3 grounded re-enrichment kicks in.
+                # In free_only mode LLM synthesis is disabled (literal extracts only).
+                LLM_FLAG="--allow-llm"
+                if [ "$FREE_ONLY" = "true" ]; then LLM_FLAG=""; fi
+                run_step "Book descriptions (v2)" "enrich-descriptions-v2.ts" "--concurrency=5 $LLM_FLAG"
                 ;;
               ban_descriptions)
                 if [ "$FREE_ONLY" = "true" ]; then
