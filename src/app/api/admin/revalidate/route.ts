@@ -88,6 +88,6 @@ export async function POST(request: NextRequest) {
   }
 
   // tag branch
-  revalidateTag(tag as string)
+  revalidateTag(tag as string, 'max')
   return NextResponse.json({ revalidated: true, tag, now: Date.now() })
 }
