@@ -134,6 +134,7 @@ export default function RootLayout({
                   <li><Link href="/timeline" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Timeline</Link></li>
                   <li><Link href="/news" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">News</Link></li>
                   <li><Link href="/reading-club" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Reading club</Link></li>
+                  <li><Link href="/discover" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Pick a banned book</Link></li>
                   <li><Link href="/reading-list" className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Further reading</Link></li>
                 </ul>
               </div>
