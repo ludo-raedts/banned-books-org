@@ -23,6 +23,7 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
+import { verifyGbCover } from '../src/lib/enrich/_placeholder'
 
 const ONCE      = process.argv.includes('--once')
 const NO_GOOGLE = process.argv.includes('--no-google')
@@ -51,14 +52,6 @@ async function isValidOLImage(url: string): Promise<boolean> {
   } catch { return false }
 }
 
-async function isValidGBImage(url: string): Promise<boolean> {
-  try {
-    const res = await fetch(url, { method: 'HEAD' })
-    if (!res.ok) return false
-    const ct = res.headers.get('content-type') ?? ''
-    return ct.startsWith('image/')
-  } catch { return false }
-}
 
 function transformGBUrl(url: string): string {
   return url
@@ -126,7 +119,8 @@ async function gbByIsbn(isbn13: string): Promise<string | null> {
         ?? item.volumeInfo?.imageLinks?.thumbnail
       if (img) {
         const url = transformGBUrl(img)
-        if (await isValidGBImage(url)) return url
+        const verified = await verifyGbCover(url)
+        if (verified) return verified
       }
     }
     return null
@@ -152,7 +146,8 @@ async function gbBySearch(title: string, author: string): Promise<string | null>
         ?? item.volumeInfo?.imageLinks?.thumbnail
       if (img) {
         const url = transformGBUrl(img)
-        if (await isValidGBImage(url)) return url
+        const verified = await verifyGbCover(url)
+        if (verified) return verified
       }
     }
     return null

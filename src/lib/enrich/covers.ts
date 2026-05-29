@@ -13,7 +13,7 @@
 // are skipped unless `force` is true.
 
 import { adminClient } from '../supabase'
-import { checkImageUrl } from './_placeholder'
+import { checkImageUrl, repairGbStrip } from './_placeholder'
 import { titleLadder } from './_title-ladder'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
 
@@ -241,11 +241,14 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     const url = await gbSearch(q)
     if (!url) return null
     const check = await checkImageUrl(url)
-    if (check.ok === false && check.reason === 'placeholder') {
-      tracker.sawPlaceholder = true
+    if (check.ok === false) {
+      if (check.reason === 'placeholder') tracker.sawPlaceholder = true
+      else return url // transient fetch failure — keep prior lenient behaviour
       return null
     }
-    return url
+    // Reject/repair degenerate horizontal strips (top sliver of the cover that
+    // Google returns at zoom=3 for some books). Falls back to zoom=1 or null.
+    return repairGbStrip(url, check.width, check.height)
   }
 
   let found = 0, stillFailed = 0, rejectedPlaceholder = 0, errCount = 0

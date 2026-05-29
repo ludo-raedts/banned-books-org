@@ -25,7 +25,7 @@
  *   npx tsx --env-file=.env.local scripts/enrich-covers-pen-america.ts --apply --limit=20
  */
 import { adminClient } from '../src/lib/supabase'
-import { checkImageUrl } from '../src/lib/enrich/_placeholder'
+import { verifyGbCover } from '../src/lib/enrich/_placeholder'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 
 const APPLY = process.argv.includes('--apply')
@@ -107,15 +107,6 @@ async function gbTitleAuthor(title: string, author: string): Promise<string | nu
   } catch { return null }
 }
 
-async function verifyNotPlaceholder(url: string): Promise<boolean> {
-  // Only GB URLs need pHash verification — OL covers don't share the GB
-  // placeholder. Skip the check for non-GB hosts to keep the run snappy.
-  if (!url.includes('books.google')) return true
-  const check = await checkImageUrl(url)
-  if (check.ok === false && check.reason === 'placeholder') return false
-  return true
-}
-
 async function main() {
   const sb = adminClient()
   const PAGE = 1000
@@ -180,16 +171,14 @@ async function main() {
 
       if (!coverUrl && b.isbn13) {
         const gbUrl = await gbIsbnCover(b.isbn13)
-        if (gbUrl && isAllowedImageUrl(gbUrl) && await verifyNotPlaceholder(gbUrl)) {
-          coverUrl = gbUrl; source = 'GB-ISBN'; foundIsbnGb++
-        }
+        const verified = gbUrl && isAllowedImageUrl(gbUrl) ? await verifyGbCover(gbUrl) : null
+        if (verified) { coverUrl = verified; source = 'GB-ISBN'; foundIsbnGb++ }
       }
 
       if (!coverUrl && b.author) {
         const gbUrl = await gbTitleAuthor(b.title, b.author)
-        if (gbUrl && isAllowedImageUrl(gbUrl) && await verifyNotPlaceholder(gbUrl)) {
-          coverUrl = gbUrl; source = 'GB-title+author'; foundTitleAuthor++
-        }
+        const verified = gbUrl && isAllowedImageUrl(gbUrl) ? await verifyGbCover(gbUrl) : null
+        if (verified) { coverUrl = verified; source = 'GB-title+author'; foundTitleAuthor++ }
       }
     } catch (e) {
       console.log(`  [${i + 1}/${queue.length}] ${b.slug}: ERROR ${e instanceof Error ? e.message : String(e)}`)
