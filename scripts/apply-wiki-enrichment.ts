@@ -41,6 +41,7 @@ function loadEnvLocal() {
 loadEnvLocal()
 
 import { adminClient } from '../src/lib/supabase'
+import { censorshipContextQualityGate } from '../src/lib/censorship-context-quality'
 
 const APPLY = process.argv.includes('--apply')
 const STAGING_DIR = join(process.cwd(), 'data', 'wiki-enrichment-staging')
@@ -481,7 +482,13 @@ async function applyStaged(staged: Staged): Promise<{
     if (staged.book_censorship_context_rewrite) {
       const cur = book?.censorship_context ?? ''
       const newer = staged.book_censorship_context_rewrite
-      if (cur.length < newer.length || hasFactsExistingDoesNotHave(cur, newer)) {
+      // Quality gate (added 2026-05-29): the wiki-staging output is also LLM-derived
+      // and has occasionally produced ungrounded prose. Reject anything that does
+      // not carry a verifiable anchor — see src/lib/censorship-context-quality.ts.
+      const gate = censorshipContextQualityGate(newer)
+      if (!gate.accept) {
+        log(`  skip censorship_context rewrite: quality gate [${gate.bucket}] — ${gate.reasoning}`)
+      } else if (cur.length < newer.length || hasFactsExistingDoesNotHave(cur, newer)) {
         updates.censorship_context = newer
       } else {
         log(`  skip censorship_context rewrite: not strictly longer, no new facts`)

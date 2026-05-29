@@ -2,17 +2,33 @@
  * Generate censorship_context narratives from structured ban data.
  * No AI API required — derives text from DB fields only.
  *
- * Usage:
- *   npx tsx --env-file=.env.local scripts/generate-censorship-context.ts           # dry-run (first 3)
- *   npx tsx --env-file=.env.local scripts/generate-censorship-context.ts --apply   # write all 50
- *   npx tsx --env-file=.env.local scripts/generate-censorship-context.ts --apply --limit=10
+ * ⚠️  DEPRECATED 2026-05-29. The template output of this script was the
+ * origin of the boilerplate that the first ban-vs-context audit
+ * (commit 562cb6a) wiped from 1,082 books. Every paragraph this script
+ * produces contains phrases from HALLUCINATION_TELLS in
+ * src/lib/censorship-context-quality.ts (e.g. "this case reflects",
+ * "broader trend") which means the quality gate would reject 100% of
+ * its output anyway. The script is kept only so the generated phrases
+ * remain greppable for future audits — do NOT run it. Use the grounded
+ * v3 pipeline (TBD, see project_sprint_a_review_gates) instead.
+ *
+ * Running with --apply now hard-aborts unless --force-deprecated is
+ * passed. Anyone passing --force-deprecated owns the consequences.
  */
 
 import { adminClient } from '../src/lib/supabase'
 
 const APPLY = process.argv.includes('--apply')
+const FORCE_DEPRECATED = process.argv.includes('--force-deprecated')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 50 : 3)
+
+if (APPLY && !FORCE_DEPRECATED) {
+  console.error('⚠️  generate-censorship-context.ts is DEPRECATED — its template output is')
+  console.error('   what the 2026-05-29 audit wiped. The quality gate rejects everything')
+  console.error('   it produces. Re-run with --force-deprecated only if you understand why.')
+  process.exit(2)
+}
 
 const supabase = adminClient()
 

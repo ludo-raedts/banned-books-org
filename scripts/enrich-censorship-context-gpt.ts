@@ -12,8 +12,10 @@
  *   npx tsx --env-file=.env.local scripts/enrich-censorship-context-gpt.ts --apply --slug=howl-and-other-poems
  */
 
+import { appendFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { censorshipContextQualityGate } from '../src/lib/censorship-context-quality'
 
 const APPLY    = process.argv.includes('--apply')
 const OVERWRITE = process.argv.includes('--overwrite')
@@ -143,11 +145,19 @@ async function main() {
   const all      = (data ?? []) as unknown as Array<BookRow & { censorship_context_status: string | null }>
   // 2026-05-29: skip rows the audit script marked as 'insufficient_evidence'.
   // Those were either templated boilerplate or redundant with description_ban,
-  // and refilling them defeats the cleanup. --slug bypass remains for manual
-  // single-book operations the operator has confirmed.
+  // and refilling them defeats the cleanup. Also skip 'auto_rejected_…' — a
+  // previous run of this script already tried and the LLM output failed the
+  // quality gate; retrying without a code/prompt change just wastes tokens.
+  // --slug bypass remains for manual single-book operations the operator
+  // has confirmed.
+  const SKIP_STATUSES = new Set([
+    'insufficient_evidence',
+    'narrative_curated',
+    'auto_rejected_low_groundedness',
+  ])
   const audited = SLUG
     ? all
-    : all.filter(b => b.censorship_context_status !== 'insufficient_evidence' && b.censorship_context_status !== 'narrative_curated')
+    : all.filter(b => !SKIP_STATUSES.has(b.censorship_context_status ?? ''))
   const skippedByStatus = all.length - audited.length
   const eligible = audited.filter(b => b.bans.length > 0)
   const batch    = eligible.slice(0, LIMIT)
@@ -157,7 +167,11 @@ async function main() {
   if (skippedByStatus > 0) console.log(`  Skipped (censorship_context_status=insufficient_evidence/narrative_curated): ${skippedByStatus}`)
   console.log(`  Eligible: ${eligible.length}  Processing: ${batch.length}\n`)
 
-  let written = 0, skipped = 0, errors = 0
+  let written = 0, skipped = 0, errors = 0, rejected = 0
+  // Rejected LLM outputs are appended here so we can periodically scan for
+  // patterns the quality gate could be tightened against, and so a future
+  // human curation pass can rescue real-but-narrow content the gate dropped.
+  const REJECT_LOG = `data/censorship-context-rejected-${new Date().toISOString().slice(0, 10)}.jsonl`
 
   for (const book of batch) {
     const author    = book.book_authors[0]?.authors?.display_name ?? ''
@@ -174,20 +188,63 @@ async function main() {
     } else {
       const preview = context.length > 180 ? context.slice(0, 180) + '…' : context
       console.log(`  → ${preview}`)
-      if (APPLY) {
+
+      // ── Quality gate ──────────────────────────────────────────────────
+      // The 2026-05-29 audit found that ~60% of LLM-generated censorship_context
+      // contains invented districts, fabricated complaints, and generic
+      // boilerplate. The shared classifier accepts only outputs anchored to a
+      // named law, court case, statute, oversight org, or specific quantitative
+      // claim. Everything else is logged and discarded — never written to the
+      // live DB. See src/lib/censorship-context-quality.ts.
+      const gate = censorshipContextQualityGate(context)
+      if (!gate.accept) {
+        console.log(`  ✗ rejected by quality gate [${gate.bucket}] — ${gate.reasoning}`)
+        rejected++
+        if (APPLY) {
+          // Persist the verdict so the next run of this script (which
+          // filters on censorship_context_status) skips this book instead
+          // of paying for the same GPT call again and again. Also append
+          // the rejected text to a JSONL file for periodic review.
+          try {
+            appendFileSync(REJECT_LOG, JSON.stringify({
+              ts: new Date().toISOString(),
+              book_id: book.id,
+              slug: book.slug,
+              bucket: gate.bucket,
+              signals: gate.signals,
+              tells: gate.tells,
+              text: context,
+            }) + '\n')
+          } catch (e) {
+            console.error(`  (reject log write failed: ${(e as Error).message})`)
+          }
+          const { error: stErr } = await supabase
+            .from('books')
+            .update({ censorship_context_status: 'auto_rejected_low_groundedness' })
+            .eq('id', book.id)
+          if (stErr) console.error(`  (status update failed: ${stErr.message})`)
+        }
+      } else if (APPLY) {
         const { error: upErr } = await supabase
           .from('books')
-          .update({ censorship_context: context })
+          .update({
+            censorship_context: context,
+            censorship_context_status: 'grounded_auto',
+          })
           .eq('id', book.id)
         if (upErr) { console.error(`  ✗ ${upErr.message}`); errors++ }
-        else       { console.log(`  ✓ written`); written++ }
+        else       { console.log(`  ✓ written (signals: ${gate.signals.join(', ')})`); written++ }
+      } else {
+        console.log(`  ✓ would write (signals: ${gate.signals.join(', ')})`)
+        written++
       }
     }
 
     if (DELAY > 0) await new Promise(r => setTimeout(r, DELAY))
   }
 
-  console.log(`\nDone.  Written: ${written}  Skipped: ${skipped}  Errors: ${errors}`)
+  console.log(`\nDone.  Written: ${written}  Rejected (low groundedness): ${rejected}  Skipped: ${skipped}  Errors: ${errors}`)
+  if (rejected > 0 && APPLY) console.log(`Reject log: ${REJECT_LOG}`)
   if (!APPLY) console.log('DRY-RUN — add --apply to write, or --slug=<slug> to test a specific book.')
 }
 
