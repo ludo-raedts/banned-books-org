@@ -732,7 +732,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
       {/* Find books */}
       {(() => {
-        const koboHref = getKoboUrl(a.display_name)
+        const koboHref = getKoboUrl(a.display_name, `author-${a.slug}`)
         return (
           <section className="mb-10">
             <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">

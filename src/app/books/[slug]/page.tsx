@@ -824,7 +824,7 @@ export default async function BookPage({
   const primaryAuthor = book.book_authors[0]?.authors
 
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
-  const koboHref = getKoboUrl(primaryAuthor ? `${book.title} ${primaryAuthor.display_name}` : book.title)
+  const koboHref = getKoboUrl(primaryAuthor ? `${book.title} ${primaryAuthor.display_name}` : book.title, `book-${book.slug}`)
 
   // ── Schema.org JSON-LD ─────────────────────────────────────────────────────
   // Book + BreadcrumbList, emitted as <script type="application/ld+json">.

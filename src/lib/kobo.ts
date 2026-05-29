@@ -18,25 +18,32 @@ const KOBO_BASE = 'https://www.kobo.com/gb/en'
 // Rakuten's deeplink endpoint wraps any merchant URL in the affiliate cookie
 // drop. Format:
 //   https://click.linksynergy.com/deeplink?id={pubId}&mid={mid}&murl={encoded}
+//   &u1={subId}
 // Works for any Kobo URL (product pages, search results, category browsing),
 // so we don't need per-book offer IDs from the product catalogue feed to ship
 // a credited click. If we later ingest the catalogue feed, deep-linking to
 // the exact product page is a drop-in replacement for the search fallback.
-function wrapAffiliate(koboUrl: string): string {
+//
+// u1 is Rakuten's publisher sub-ID: an opaque label echoed back in the click
+// reports, so we tag each link with its source slug to see which book/author
+// pages actually convert.
+function wrapAffiliate(koboUrl: string, subId?: string): string {
   const params = new URLSearchParams({
     id: KOBO_RAKUTEN_PUB_ID,
     mid: KOBO_RAKUTEN_MID,
     murl: koboUrl,
   })
+  if (subId) params.set('u1', subId)
   return `https://click.linksynergy.com/deeplink?${params.toString()}`
 }
 
 // Search-URL fallback. Kobo's search supports plain `query=` and matches on
 // title + author tokens, which is the best we can do without the catalogue
-// feed mapping ISBN13 → product slug.
-export function getKoboUrl(query: string): string {
+// feed mapping ISBN13 → product slug. `subId` flows into u1 for per-page
+// conversion attribution in the Rakuten dashboard.
+export function getKoboUrl(query: string, subId?: string): string {
   const search = `${KOBO_BASE}/search?query=${encodeURIComponent(query)}`
-  return wrapAffiliate(search)
+  return wrapAffiliate(search, subId)
 }
 
 // rel value for outbound Kobo affiliate links — matches BOOKSHOP_REL: the
