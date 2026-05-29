@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/refresh-views",
       "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/cron/indexnow-delta",
+      "schedule": "0 5 * * *"
     }
   ]
 }
