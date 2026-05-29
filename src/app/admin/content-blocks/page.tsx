@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import AdminBackLink from '@/components/admin-back-link'
 import { REQUIRED_BLOCKS_BY_PAGE, type ContentBlockRow } from '@/lib/content-blocks'
 
 export const dynamic = 'force-dynamic'
@@ -65,7 +66,7 @@ export default async function AdminContentBlocksPage() {
             Editorial markdown for Banned Books Week and the Reading Club. Pages cannot go live until every required block is published.
           </p>
         </div>
-        <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Admin dashboard</a>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
 
       <div className="flex flex-col gap-6">

@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import AdminBackLink from '@/components/admin-back-link'
 import ImportReviewListClient, { type QueueListItem, type QueueStatus } from './list-client'
 
 export const dynamic = 'force-dynamic'
@@ -121,12 +122,7 @@ export default async function ImportReviewPage() {
             {counts.deferred.toLocaleString('en')} deferred
           </p>
         </div>
-        <a
-          href="/admin"
-          className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-        >
-          ← Admin dashboard
-        </a>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
 
       {/* Pipeline-context banner — answers "has this been through GPT yet?" */}

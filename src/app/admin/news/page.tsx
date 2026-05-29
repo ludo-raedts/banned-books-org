@@ -1,5 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import { getNewsConfig } from '@/config/news'
+import AdminBackLink from '@/components/admin-back-link'
 import NewsAdminClient from './news-admin-client'
 
 export const dynamic = 'force-dynamic'
@@ -38,7 +39,7 @@ export default async function AdminNewsPage() {
           <h1 className="text-2xl font-bold">News drafts</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} awaiting review</p>
         </div>
-        <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Admin dashboard</a>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
       <NewsAdminClient
         initialItems={items}

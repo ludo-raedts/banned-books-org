@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import AdminBackLink from '@/components/admin-back-link'
 import AuthorsListClient from './authors-list-client'
 
 export const dynamic = 'force-dynamic'
@@ -37,7 +38,7 @@ export default async function AdminAuthorsPage() {
           <h1 className="text-2xl font-bold">Authors</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{all.length.toLocaleString('en')} authors in catalogue</p>
         </div>
-        <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← Admin dashboard</a>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
       <AuthorsListClient authors={all} />
     </main>

@@ -1,3 +1,4 @@
+import AdminBackLink from '@/components/admin-back-link'
 import {
   Terminal,
   AlertTriangle,
@@ -157,23 +158,17 @@ function SectionHeader({
 export default function ScriptsPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
-      <div className="mb-4">
-        <a
-          href="/admin"
-          className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-        >
-          ← Admin dashboard
-        </a>
-      </div>
-
-      <div className="mb-6">
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-          <a href="/admin" className="hover:text-gray-600 dark:hover:text-gray-300">
-            Admin
-          </a>{' '}
-          / Enrichment &amp; sources
-        </p>
-        <h1 className="text-2xl font-bold">Enrichment &amp; sources</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
+            <a href="/admin" className="hover:text-gray-600 dark:hover:text-gray-300">
+              Admin
+            </a>{' '}
+            / Enrichment &amp; sources
+          </p>
+          <h1 className="text-2xl font-bold">Enrichment &amp; sources</h1>
+        </div>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
 
       {/* Status banner — what this page is for now */}

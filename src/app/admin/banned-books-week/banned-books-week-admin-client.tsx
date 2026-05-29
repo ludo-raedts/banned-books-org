@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import AdminBackLink from '@/components/admin-back-link'
 import type { FeaturedBookRow } from '@/lib/bbw-data'
 
 type RequiredBlockSummary = { slug: string; title: string; status: 'placeholder' | 'draft' | 'published' }
@@ -230,9 +231,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
             Year {year}{year === props.config.year && ' · matches config'}
           </p>
         </div>
-        <Link href="/admin" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-          ← Admin dashboard
-        </Link>
+        <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
 
       {/* Year picker */}

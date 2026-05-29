@@ -1,5 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
+import AdminBackLink from '@/components/admin-back-link'
 import AuthorEditClient from './author-edit-client'
 
 export const dynamic = 'force-dynamic'
@@ -64,10 +65,8 @@ export default async function AdminAuthorEditPage({ params }: { params: Promise<
   return (
     <main className="max-w-3xl mx-auto px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
-        <div>
-          <a href="/admin/authors" className="text-sm text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">← All authors</a>
-          <h1 className="text-2xl font-bold mt-2 leading-snug">{author.display_name}</h1>
-        </div>
+        <h1 className="text-2xl font-bold leading-snug">{author.display_name}</h1>
+        <AdminBackLink href="/admin/authors" label="All authors" />
       </div>
       <AuthorEditClient author={author} />
     </main>

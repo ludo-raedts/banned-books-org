@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import AdminBackLink from '@/components/admin-back-link'
 import type { ContentBlockRow, ContentBlockStatus } from '@/lib/content-blocks'
 
 // Split-pane markdown editor with live preview. The preview HTML is the same
@@ -69,16 +69,14 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
     <main className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-5 flex items-center justify-between flex-wrap gap-3">
         <div>
-          <Link href="/admin/content-blocks" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-            ← Content blocks
-          </Link>
-          <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
+          <h1 className="text-2xl font-bold flex items-center gap-3">
             {block.title}
             <StatusPill status={status} />
           </h1>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">{block.slug}</p>
         </div>
         <div className="text-right text-xs text-gray-500 dark:text-gray-400">
+          <div className="mb-1"><AdminBackLink href="/admin/content-blocks" label="Content blocks" /></div>
           <div>Last edited: {savedAt ? new Date(savedAt).toLocaleString('en-GB') : '—'}</div>
           {block.published_at && <div>Published: {new Date(block.published_at).toLocaleString('en-GB')}</div>}
           <div className="mt-1">{wordCount} words</div>
