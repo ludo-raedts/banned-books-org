@@ -157,7 +157,6 @@ async function main() {
     // Wikipedia-grounded but still LLM-mediated, so apply the same tells/length
     // check before persisting. Clears (result === null) bypass the gate because
     // setting to NULL is always safe — it just removes weak content.
-    let toWrite: string | null = result
     if (result !== null) {
       const gate = descriptionBanQualityGate(result)
       if (!gate.accept) {
@@ -177,6 +176,12 @@ async function main() {
           } catch (e) {
             console.error(`  (reject log write failed: ${(e as Error).message})`)
           }
+          // Persist the rejection so the next pass over this slug skips it.
+          const { error: stErr } = await s
+            .from('books')
+            .update({ description_ban_status: 'auto_rejected_low_quality' })
+            .eq('id', book.id)
+          if (stErr) console.error(`  (status update failed: ${stErr.message})`)
         }
         await sleep(500)
         continue
@@ -184,10 +189,16 @@ async function main() {
     }
 
     if (WRITE) {
-      const newValue = toWrite ? toWrite + '\n\nSource: Wikipedia' : null
+      const newValue = result ? result + '\n\nSource: Wikipedia' : null
+      // Status semantics:
+      //   accept   → description_ban_status = auto_accepted
+      //   clear    → description_ban_status = pending_review (operator may
+      //              decide to re-enrich from another source later)
+      const update: Record<string, string | null> = { description_ban: newValue }
+      update.description_ban_status = newValue ? 'auto_accepted' : 'pending_review'
       const { error: upErr } = await s
         .from('books')
-        .update({ description_ban: newValue })
+        .update(update)
         .eq('id', book.id)
       if (upErr) console.error(`  DB error:`, upErr.message)
       else console.log(`  ✓ Written to DB`)

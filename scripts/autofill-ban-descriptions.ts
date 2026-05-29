@@ -98,7 +98,7 @@ async function main() {
   let query = supabase
     .from('books')
     .select(`
-      id, slug, title, description_ban,
+      id, slug, title, description_ban, description_ban_status,
       book_authors(authors(display_name)),
       bans(year_started, country_code, countries(name_en), ban_reason_links(reasons(slug, label_en)))
     `)
@@ -109,7 +109,13 @@ async function main() {
   const { data: books, error } = await query
   if (error || !books) { console.error('Fetch failed:', error?.message); process.exit(1) }
 
-  const toProcess = books.slice(0, isFinite(limit) ? limit : undefined) as unknown as BookRow[]
+  // Skip books that were either gate-rejected already or are human-curated.
+  const SKIP_STATUSES = new Set(['human_curated', 'auto_rejected_low_quality'])
+  const eligible = (books as unknown as Array<BookRow & { description_ban_status: string | null }>)
+    .filter(b => !SKIP_STATUSES.has(b.description_ban_status ?? ''))
+  const skippedByStatus = books.length - eligible.length
+  if (skippedByStatus > 0) console.log(`Skipped (description_ban_status=human_curated/auto_rejected_low_quality): ${skippedByStatus}`)
+  const toProcess = eligible.slice(0, isFinite(limit) ? limit : undefined) as BookRow[]
 
   console.log(`${dryRun ? '[DRY RUN] ' : ''}Processing ${toProcess.length} books...\n`)
 
@@ -147,6 +153,12 @@ async function main() {
         } catch (e) {
           console.error(`  (reject log write failed: ${(e as Error).message})`)
         }
+        // Persist so the next sweep doesn't retry the same Claude call.
+        const { error: stErr } = await supabase
+          .from('books')
+          .update({ description_ban_status: 'auto_rejected_low_quality' })
+          .eq('id', book.id)
+        if (stErr) console.error(`  (status update failed: ${stErr.message})`)
       }
       await sleep(200)
       continue
@@ -158,7 +170,10 @@ async function main() {
     } else {
       const { error: ue } = await supabase
         .from('books')
-        .update({ description_ban: desc })
+        .update({
+          description_ban: desc,
+          description_ban_status: 'auto_accepted',
+        })
         .eq('id', book.id)
 
       if (ue) {

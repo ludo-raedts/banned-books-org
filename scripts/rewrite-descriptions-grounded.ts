@@ -345,11 +345,14 @@ async function main() {
     // field is gated separately so a partial accept (only ban OR only ctx) still
     // writes the clean half.
     let banGateMsg: string | null = null
+    let banGateRejected = false
     let ctxGateMsg: string | null = null
+    let ctxGateRejected = false
     if (t.needBan && gen.description_ban) {
       const g = descriptionBanQualityGate(gen.description_ban)
       if (!g.accept) {
         banGateMsg = `rejected [${g.bucket}] ${g.reasoning}`
+        banGateRejected = true
         gen.description_ban = undefined
       }
     }
@@ -357,6 +360,7 @@ async function main() {
       const g = censorshipContextQualityGate(gen.censorship_context)
       if (!g.accept) {
         ctxGateMsg = `rejected [${g.bucket}] ${g.reasoning}`
+        ctxGateRejected = true
         gen.censorship_context = undefined
       }
     }
@@ -367,6 +371,15 @@ async function main() {
       skipped++
       const why = [banGateMsg && `ban: ${banGateMsg}`, ctxGateMsg && `ctx: ${ctxGateMsg}`].filter(Boolean).join(' / ') || 'output too short'
       console.log(`[${i}/${batch.length}] ${t.slug}  → SKIP (${why})`)
+      // Still persist the rejection so the next run won't try the same book.
+      // (Skipping this update would mean retrying on every sweep.)
+      if (APPLY && (banGateRejected || ctxGateRejected)) {
+        const statusUpdate: Record<string, string> = {}
+        if (banGateRejected) statusUpdate.description_ban_status = 'auto_rejected_low_quality'
+        if (ctxGateRejected) statusUpdate.censorship_context_status = 'auto_rejected_low_groundedness'
+        const { error: stErr } = await supabase.from('books').update(statusUpdate).eq('id', book.id)
+        if (stErr) console.log(`  (status update failed: ${stErr.message})`)
+      }
       return
     }
     if (banGateMsg) console.log(`[${i}/${batch.length}] ${t.slug}  ban gate: ${banGateMsg}`)
@@ -384,8 +397,21 @@ async function main() {
       fs.appendFileSync(backupPath, [book.slug, book.description_ban ?? '', book.censorship_context ?? ''].map(csvEscape).join(',') + '\n')
 
       const update: Record<string, string> = {}
-      if (wroteBan) update.description_ban = gen.description_ban!
-      if (wroteCtx) update.censorship_context = gen.censorship_context!
+      if (wroteBan) {
+        update.description_ban = gen.description_ban!
+        update.description_ban_status = 'auto_accepted'
+      } else if (banGateRejected) {
+        update.description_ban_status = 'auto_rejected_low_quality'
+      }
+      if (wroteCtx) {
+        update.censorship_context = gen.censorship_context!
+        // No status here — the existing audit pipeline owns the
+        // censorship_context_status vocabulary (grounded_auto / etc),
+        // and this script's rewrites are operator-driven, so we don't
+        // claim 'auto_accepted' for the long-form gate.
+      } else if (ctxGateRejected) {
+        update.censorship_context_status = 'auto_rejected_low_groundedness'
+      }
       const { error } = await supabase.from('books').update(update).eq('id', book.id)
       if (error) { errors++; console.log(`  ✗ DB error: ${error.message}`); return }
       written++

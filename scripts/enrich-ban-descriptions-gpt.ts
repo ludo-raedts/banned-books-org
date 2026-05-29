@@ -129,6 +129,7 @@ async function main() {
     .from('books')
     .select(`
       id, title, slug, first_published_year, description_book,
+      description_ban_status,
       book_authors(authors(display_name)),
       bans(
         year_started, year_ended, status, action_type,
@@ -149,9 +150,19 @@ async function main() {
   const { data, error } = await query
   if (error) { console.error('DB error:', error.message); process.exit(1) }
 
-  const all      = (data ?? []) as unknown as BookRow[]
-  const eligible = all.filter(b => b.bans.length > 0)
+  const all = (data ?? []) as unknown as Array<BookRow & { description_ban_status: string | null }>
+  // Skip books whose previous gate-result we already recorded — re-running
+  // GPT on the same input usually produces the same kind of output, so a
+  // book gate-rejected once is gate-rejected again (waste of tokens), and
+  // human_curated must never be overwritten by an LLM script.
+  const SKIP_STATUSES = new Set(['human_curated', 'auto_rejected_low_quality'])
+  const audited = SLUG
+    ? all
+    : all.filter(b => !SKIP_STATUSES.has(b.description_ban_status ?? ''))
+  const skippedByStatus = all.length - audited.length
+  const eligible = audited.filter(b => b.bans.length > 0)
   const batch    = eligible.slice(0, LIMIT)
+  if (skippedByStatus > 0) console.log(`  Skipped (description_ban_status=human_curated/auto_rejected_low_quality): ${skippedByStatus}`)
 
   console.log(`\n── enrich-ban-descriptions-gpt (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
   if (OVERWRITE) console.log('  --overwrite: replacing existing description_ban too')
@@ -196,11 +207,21 @@ async function main() {
           } catch (e) {
             console.error(`  (reject log write failed: ${(e as Error).message})`)
           }
+          // Persist the rejection so the next sweep skips this book and
+          // doesn't pay for the same GPT call again.
+          const { error: stErr } = await supabase
+            .from('books')
+            .update({ description_ban_status: 'auto_rejected_low_quality' })
+            .eq('id', book.id)
+          if (stErr) console.error(`  (status update failed: ${stErr.message})`)
         }
       } else if (APPLY) {
         const { error: upErr } = await supabase
           .from('books')
-          .update({ description_ban: desc })
+          .update({
+            description_ban: desc,
+            description_ban_status: 'auto_accepted',
+          })
           .eq('id', book.id)
         if (upErr) { console.error(`  ✗ ${upErr.message}`); errors++ }
         else       { console.log(`  ✓ written`); written++ }
