@@ -1,0 +1,319 @@
+{
+  "source_url": "https://en.wikipedia.org/wiki/Federal_List_of_Extremist_Materials",
+  "source_name": "Russia — Federal List of Extremist Materials (FSEM) — Wikipedia overview",
+  "source_type": "wikipedia",
+  "_note": "Curated subset from EN Wikipedia's overview of the FSEM, the Russian Ministry of Justice's list of banned 'extremist materials' (started 2007, ~5,500 entries total, mostly non-book content). This batch covers only entries with identifiable book + author + entry-number. Each entry's locator is the FSEM ordinal No. The Russian original list (minjust.gov.ru) is the upstream source; Wikipedia summarizes it.",
+  "entries": [
+    {
+      "title": "Mein Kampf",
+      "author": "Adolf Hitler",
+      "fsem_no": "604",
+      "reason_slug": "political",
+      "description": "Banned by Russia's Federal List of Extremist Materials (FSEM #604). Hitler's autobiographical political manifesto, first published 1925-26."
+    },
+    {
+      "title": "The Doctrine of Fascism",
+      "author": "Benito Mussolini",
+      "fsem_no": "608, 668",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#608, #668). Mussolini's 1932 codification of fascist ideology."
+    },
+    {
+      "title": "Memoirs 1942-1943",
+      "author": "Benito Mussolini",
+      "fsem_no": "732",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#732)."
+    },
+    {
+      "title": "Third Way: Without Democrats and Communists",
+      "author": "Benito Mussolini",
+      "fsem_no": "2285",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#2285)."
+    },
+    {
+      "title": "The SS Man and the Question of Blood",
+      "author": "Heinrich Himmler",
+      "fsem_no": "767",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#767). Himmler's 1942 essay on SS racial ideology."
+    },
+    {
+      "title": "Diaries of 1945",
+      "author": "Joseph Goebbels",
+      "fsem_no": "795",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#795). Final entries of Goebbels's diary."
+    },
+    {
+      "title": "Michael: A German Destiny in Diary Form",
+      "author": "Joseph Goebbels",
+      "fsem_no": "2385",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#2385). Goebbels's 1929 semi-autobiographical novel."
+    },
+    {
+      "title": "Memoirs",
+      "author": "Alfred Rosenberg",
+      "fsem_no": "1648",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1648). Memoir by the Nazi ideologue executed at Nuremberg."
+    },
+    {
+      "title": "The Myth of the Twentieth Century",
+      "author": "Alfred Rosenberg",
+      "fsem_no": "2532",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#2532). Rosenberg's 1930 racial-ideology treatise."
+    },
+    {
+      "title": "Program and Outlook of the NSDAP",
+      "author": "Gottfried Feder",
+      "fsem_no": "2000",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#2000). Feder's 1932 NSDAP-programme exposition."
+    },
+    {
+      "title": "The International Jew",
+      "author": "Henry Ford",
+      "fsem_no": "459, 2955",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#459, #2955). Ford's 1920 antisemitic pamphlet series."
+    },
+    {
+      "title": "Hitler's Table Talk",
+      "author": "Henry Picker",
+      "fsem_no": "711",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#711). Compiled records of Hitler's wartime monologues."
+    },
+    {
+      "title": "The Last Will of a Russian Fascist",
+      "author": "Konstantin Rodzaevsky",
+      "fsem_no": "861",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#861). 1946 testament by the leader of the Russian Fascist Party in Manchuria."
+    },
+    {
+      "title": "Dezionization",
+      "author": "Valery Yemelyanov",
+      "fsem_no": "970",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#970). Soviet-era antisemitic and anti-Zionist tract."
+    },
+    {
+      "title": "The Myth of the Holocaust: The Truth About the Fate of the Jews in World War II",
+      "author": "Jürgen Graf",
+      "fsem_no": "973",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#973). Holocaust-denial book by Swiss revisionist."
+    },
+    {
+      "title": "The Jewish Question as a Question of Racial Character and Its Harmful Influence on the Existence of Peoples, on Manners and Culture",
+      "author": "Eugen Dühring",
+      "fsem_no": "979, 3329",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#979, #3329). 1881 antisemitic tract by German philosopher; influenced later Nazi racial theory."
+    },
+    {
+      "title": "Das Judenthum in der Musik",
+      "author": "Richard Wagner",
+      "fsem_no": "1204",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1204). Wagner's 1850 antisemitic essay on Jews in music."
+    },
+    {
+      "title": "God's People",
+      "author": "Grigory Klimov",
+      "fsem_no": "1456",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1456). Émigré Soviet author's conspiracist text."
+    },
+    {
+      "title": "Red Kabbalah",
+      "author": "Grigory Klimov",
+      "fsem_no": "1957",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1957)."
+    },
+    {
+      "title": "Protocols of the Soviet Wise Men",
+      "author": "Grigory Klimov",
+      "fsem_no": "1958",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1958)."
+    },
+    {
+      "title": "Skins: Rus' is Awakening",
+      "author": "Dmitry Nesterov",
+      "fsem_no": "1482",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1482). Skinhead-movement novel."
+    },
+    {
+      "title": "Investigation about the murder of Christian babies by Jews and the use of their blood",
+      "author": "Vladimir Dal",
+      "fsem_no": "1494",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1494). 19th-century blood-libel pamphlet; authorship disputed (commonly attributed to Vladimir Dal)."
+    },
+    {
+      "title": "Hitler without lies and myths",
+      "author": "Valentin Prussakov",
+      "fsem_no": "1596",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#1596). Russian-author biography of Hitler."
+    },
+    {
+      "title": "La France juive",
+      "author": "Édouard Drumont",
+      "fsem_no": "1791",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#1791). Drumont's 1886 antisemitic two-volume work; key text of French anti-Dreyfus far-right."
+    },
+    {
+      "title": "Russian Nationalism: Its Friends and Enemies",
+      "author": "Alexander Sevastyanov",
+      "fsem_no": "2138",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#2138)."
+    },
+    {
+      "title": "What do the Jews want from us?",
+      "author": "Alexander Sevastyanov",
+      "fsem_no": "2139",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#2139)."
+    },
+    {
+      "title": "Restruct!",
+      "author": "Maxim Martsinkevich",
+      "fsem_no": "2572",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#2572). Russian neo-Nazi 'Tesak'-figure's manifesto."
+    },
+    {
+      "title": "Jews in history",
+      "author": "Alexey Shmakov",
+      "fsem_no": "2931",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#2931). Early-20th-century antisemitic tract."
+    },
+    {
+      "title": "International Secret Government",
+      "author": "Alexey Shmakov",
+      "fsem_no": "4183",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#4183)."
+    },
+    {
+      "title": "Secret Jewish Teachings. Part X. The Fruits of Wisdom",
+      "author": "Michael Laitman",
+      "fsem_no": "3151",
+      "reason_slug": "religious",
+      "description": "Banned by Russia's FSEM (#3151). Kabbalah-instruction text by Israeli rabbi."
+    },
+    {
+      "title": "The Mystery of the Protocols of Zion",
+      "author": "Oleg Platonov",
+      "fsem_no": "4347",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#4347)."
+    },
+    {
+      "title": "Zion Protocols in World Politics",
+      "author": "Oleg Platonov",
+      "fsem_no": "4413",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#4413)."
+    },
+    {
+      "title": "Russia and the World Evil",
+      "author": "Oleg Platonov",
+      "fsem_no": "5076",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5076)."
+    },
+    {
+      "title": "Ritual Murders",
+      "author": "Oleg Platonov",
+      "fsem_no": "5077",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5077)."
+    },
+    {
+      "title": "Crown of Thorns of Russia",
+      "author": "Oleg Platonov",
+      "fsem_no": "5078",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5078)."
+    },
+    {
+      "title": "The Mystery of Lawlessness",
+      "author": "Oleg Platonov",
+      "fsem_no": "5079",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5079)."
+    },
+    {
+      "title": "Judaism and Freemasonry",
+      "author": "Oleg Platonov",
+      "fsem_no": "5080",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5080)."
+    },
+    {
+      "title": "Soviet genocide in Ukraine",
+      "author": "Raphael Lemkin",
+      "fsem_no": "4413",
+      "reason_slug": "political",
+      "_note": "Note: same FSEM no. 4413 as Platonov's Zion Protocols above — Wikipedia transcription error or duplicate ordinal in the source. Imported with the ordinal as-given.",
+      "description": "Banned by Russia's FSEM (#4413). Lemkin (the jurist who coined 'genocide') wrote this 1953 essay arguing the Holodomor met the criteria of genocide."
+    },
+    {
+      "title": "The Jewish Question Through the Eyes of an American",
+      "author": "David Duke",
+      "fsem_no": "5104",
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM (#5104). US white-supremacist author's antisemitic book."
+    },
+    {
+      "title": "Siege",
+      "author": "James Mason",
+      "fsem_no": null,
+      "reason_slug": "racial",
+      "description": "Banned by Russia's FSEM. Mason's collected essays advocating neo-Nazi accelerationism; influential text in 21st-century far-right terrorism."
+    },
+    {
+      "title": "Blowing Up Russia",
+      "author": "Yuri Felshtinsky and Alexander Litvinenko",
+      "fsem_no": "2791",
+      "reason_slug": "political",
+      "_note": "Multi-author book; both attributions in book_authors.",
+      "description": "Banned by Russia's FSEM (#2791). 2002 investigative book alleging FSB involvement in the 1999 Russian apartment bombings. Co-author Litvinenko was poisoned with polonium-210 in London in 2006."
+    },
+    {
+      "title": "Violence as a method",
+      "author": "Boris Stomakhin",
+      "fsem_no": "5004",
+      "reason_slug": "political",
+      "description": "Banned by Russia's FSEM (#5004). By the Russian dissident journalist repeatedly imprisoned for anti-government writings."
+    },
+    {
+      "title": "The Will",
+      "author": "Ruhollah Khomeini",
+      "fsem_no": "143",
+      "reason_slug": "religious",
+      "description": "Banned by Russia's FSEM (#143). Ayatollah Khomeini's political testament."
+    },
+    {
+      "title": "What is Scientology?",
+      "author": "L. Ron Hubbard",
+      "fsem_no": "1170",
+      "reason_slug": "religious",
+      "_note": "Listed as part of Scientology books no. 1170-1176; also re-listed in 2012 as 'Lectures for the PTS/SP course' (9 audio cassettes + 1 book).",
+      "description": "Banned by Russia's FSEM (#1170-1176). Scientology Church reference text. Hubbard's Scientology writings were originally listed (#632-660), delisted 26 April 2011, then re-added in 2012."
+    }
+  ]
+}
