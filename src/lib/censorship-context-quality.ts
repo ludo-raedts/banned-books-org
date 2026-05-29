@@ -1,27 +1,40 @@
 /**
- * Groundedness classifier for `books.censorship_context`.
+ * Quality classifiers for the two LLM-written ban-narrative fields:
  *
- * The 2026-05-29 audit (scripts/_audit_keep_narrative_groundedness.ts +
- * scripts/_apply_keep_narrative_groundedness.ts) wiped 4,602 rows whose
- * censorship_context contained LLM-padded prose without a verifiable
- * anchor — invented school districts, fabricated parent-teacher complaints,
- * generic "broader trend" framing. The audit confirmed two stable signals:
+ *   books.censorship_context  ("Censorship history" — long, 4–7 sentences)
+ *   books.description_ban     ("Why it was banned"  — short, 1–3 sentences)
  *
- *   1. GROUNDED text reliably contains at least one named law/bill, court
- *      case, statute, oversight body, or specific quantitative claim.
+ * The 2026-05-29 audit wiped 4,602 censorship_context rows whose text
+ * was LLM-padded prose without a verifiable anchor — invented school
+ * districts, fabricated parent-teacher complaints, generic "broader
+ * trend" framing. Two stable signals emerged:
+ *
+ *   1. GROUNDED text reliably contains at least one named law/bill,
+ *      court case, statute, oversight body, or specific quantitative
+ *      claim.
  *   2. HALLUCINATED text reliably contains LLM-padding phrases ("this
- *      reflects", "broader trend", "parent-teacher associations", etc.)
- *      and no such anchor.
+ *      reflects", "broader trend", "parent-teacher associations",
+ *      etc.) and no such anchor.
  *
- * This module exports those rules so they can be used as BOTH:
- *   - a post-hoc audit (the _audit_keep_narrative_groundedness.ts script)
- *   - a pre-write gate (scripts/enrich-censorship-context-gpt.ts and any
- *     future enrichment script must call classifyCensorshipContext() and
- *     refuse to write anything that is not 'GROUNDED').
+ * The two fields have DIFFERENT acceptance thresholds:
  *
- * Updating policy: when widening the grounded regexes, re-run the audit
- * script to confirm THIN bucket size drops without HALLUCINATED dropping
- * too (which would indicate the new pattern matches LLM padding too).
+ *   censorship_context (long)  →  require positive anchor (GROUNDED)
+ *     Long narrative space invites LLM padding. Require evidence of
+ *     real-world referents to publish. False negatives are recoverable
+ *     by human curation; false positives publish hallucinations.
+ *
+ *   description_ban (short)    →  reject only on tells (not on anchor)
+ *     Short summaries of structured ban-data are LEGITIMATELY generic
+ *     ("Removed in U.S. schools for LGBTQ+ content"). Requiring an
+ *     anchor would over-reject paraphrases of PEN data. But the same
+ *     LLM-padding tells are equally invalid in short text — there is
+ *     no place for "broader trend" framing in a one-sentence summary
+ *     of a single ban event.
+ *
+ * Pre-write gate usage (any script generating either field MUST call
+ * its respective gate and refuse to persist text that fails):
+ *   censorshipContextQualityGate(text) → for books.censorship_context
+ *   descriptionBanQualityGate(text)    → for books.description_ban
  */
 
 // ── GROUNDED anchors ────────────────────────────────────────────────────
@@ -121,7 +134,7 @@ export function classifyCensorshipContext(text: string): CensorshipContextClassi
 
 export interface QualityGateResult {
   accept: boolean
-  bucket: CensorshipContextBucket
+  bucket: string
   reasoning: string
   signals: string[]
   tells: string[]
@@ -134,6 +147,87 @@ export function censorshipContextQualityGate(text: string): QualityGateResult {
     bucket: cls.bucket,
     reasoning: cls.reasoning,
     signals: cls.signals,
+    tells: cls.tells,
+  }
+}
+
+// ── description_ban gate ────────────────────────────────────────────────
+// Short-field gate. The 4 LLM writers for description_ban
+// (autofill-ban-descriptions, enrich-ban-descriptions-gpt,
+// rewrite-descriptions-grounded, rewrite-weak-descriptions) all feed the
+// model structured ban-data and ask for 1–3 sentences. Hallucination here
+// looks different from censorship_context: not pages of "broader trend"
+// boilerplate, but spot fabrications — a made-up school district, an
+// invented parent complaint, a reason not in the data.
+//
+// We CANNOT verify whether "Maplewood School District" is real from the
+// text alone, but we CAN reject the LLM-padding phrases that almost always
+// accompany such fabrications. Plus a length sanity check (the existing
+// writers already filter out <60-char responses; we mirror that).
+
+const DESCRIPTION_BAN_MIN_LEN = 40
+
+// Additional tells specific to description_ban. The fields don't all
+// overlap with the censorship_context tells, but these are phrases the
+// gpt-4o-mini / claude-haiku writers produce when bluffing about
+// challenges they have no source for in the structured ban data.
+export const DESCRIPTION_BAN_TELLS: RegExp[] = [
+  /\baccording to (?:available )?records?\b/i,
+  /\bbased on available data\b/i,
+  /\bdocumented in available (?:records?|data)\b/i,
+  /\bthe (?:ban|book'?s? status) (?:has been|is) (?:widely )?reported\b/i,
+  /\b(?:has been|is) part of a (?:broader |wider |larger )?(?:movement|effort|pattern|trend|wave)\b/i,
+  /\b(?:reflecting|reflects) (?:the |a )?(?:broader|wider|growing|ongoing) (?:concern|debate|trend|pattern|movement)\b/i,
+]
+
+export function descriptionBanTells(text: string): string[] {
+  const out: string[] = []
+  for (const re of DESCRIPTION_BAN_TELLS) {
+    const m = text.match(re)
+    if (m) out.push(m[0].slice(0, 50))
+  }
+  return out
+}
+
+export type DescriptionBanBucket = 'CLEAN' | 'HAS_TELL' | 'TOO_SHORT'
+
+export interface DescriptionBanClassification {
+  bucket: DescriptionBanBucket
+  tells: string[]
+  reasoning: string
+}
+
+export function classifyDescriptionBan(text: string): DescriptionBanClassification {
+  const trimmed = text.trim()
+  if (trimmed.length < DESCRIPTION_BAN_MIN_LEN) {
+    return {
+      bucket: 'TOO_SHORT',
+      tells: [],
+      reasoning: `length ${trimmed.length} < ${DESCRIPTION_BAN_MIN_LEN}`,
+    }
+  }
+  // Reuse the censorship-context tells (broader trend, this reflects,
+  // parent-teacher associations, etc.) AND the description-specific ones.
+  const sharedTells = hallucinationTells(trimmed)
+  const ownTells    = descriptionBanTells(trimmed)
+  const allTells    = [...sharedTells, ...ownTells]
+  if (allTells.length > 0) {
+    return {
+      bucket: 'HAS_TELL',
+      tells: allTells,
+      reasoning: `tells: ${allTells.slice(0, 3).join(' | ')}`,
+    }
+  }
+  return { bucket: 'CLEAN', tells: [], reasoning: `clean (len=${trimmed.length})` }
+}
+
+export function descriptionBanQualityGate(text: string): QualityGateResult {
+  const cls = classifyDescriptionBan(text)
+  return {
+    accept: cls.bucket === 'CLEAN',
+    bucket: cls.bucket,
+    reasoning: cls.reasoning,
+    signals: [],
     tells: cls.tells,
   }
 }

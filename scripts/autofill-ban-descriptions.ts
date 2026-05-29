@@ -9,8 +9,10 @@
  *
  * Requires ANTHROPIC_API_KEY in the environment.
  */
+import { appendFileSync } from 'node:fs'
 import Anthropic from '@anthropic-ai/sdk'
 import { adminClient } from '../src/lib/supabase'
+import { descriptionBanQualityGate } from '../src/lib/censorship-context-quality'
 
 const supabase = adminClient()
 const anthropic = new Anthropic()
@@ -111,7 +113,8 @@ async function main() {
 
   console.log(`${dryRun ? '[DRY RUN] ' : ''}Processing ${toProcess.length} books...\n`)
 
-  let written = 0, skipped = 0, failed = 0
+  let written = 0, skipped = 0, failed = 0, rejected = 0
+  const REJECT_LOG = `data/description-ban-rejected-${new Date().toISOString().slice(0, 10)}.jsonl`
 
   for (let i = 0; i < toProcess.length; i++) {
     const book = toProcess[i]
@@ -121,6 +124,30 @@ async function main() {
     if (!desc) {
       process.stdout.write('— skipped\n')
       skipped++
+      await sleep(200)
+      continue
+    }
+
+    // Quality gate (added 2026-05-29 — see src/lib/censorship-context-quality.ts).
+    // Reject Claude output containing LLM-padding tells or too-short responses.
+    const gate = descriptionBanQualityGate(desc)
+    if (!gate.accept) {
+      process.stdout.write(`✗ rejected [${gate.bucket}] — ${gate.reasoning}\n`)
+      rejected++
+      if (!dryRun) {
+        try {
+          appendFileSync(REJECT_LOG, JSON.stringify({
+            ts: new Date().toISOString(),
+            book_id: book.id,
+            slug: book.slug,
+            bucket: gate.bucket,
+            tells: gate.tells,
+            text: desc,
+          }) + '\n')
+        } catch (e) {
+          console.error(`  (reject log write failed: ${(e as Error).message})`)
+        }
+      }
       await sleep(200)
       continue
     }
@@ -146,7 +173,8 @@ async function main() {
     await sleep(300)
   }
 
-  console.log(`\nDone. Written: ${written}  Skipped: ${skipped}  Failed: ${failed}`)
+  console.log(`\nDone. Written: ${written}  Rejected: ${rejected}  Skipped: ${skipped}  Failed: ${failed}`)
+  if (rejected > 0 && !dryRun) console.log(`Reject log: ${REJECT_LOG}`)
 }
 
 main().catch(console.error)

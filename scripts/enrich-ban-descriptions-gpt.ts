@@ -14,8 +14,10 @@
  *   npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --slug=the-kite-runner
  */
 
+import { appendFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { descriptionBanQualityGate } from '../src/lib/censorship-context-quality'
 
 const APPLY     = process.argv.includes('--apply')
 const OVERWRITE = process.argv.includes('--overwrite')
@@ -155,7 +157,8 @@ async function main() {
   if (OVERWRITE) console.log('  --overwrite: replacing existing description_ban too')
   console.log(`  Eligible: ${eligible.length}  Processing: ${batch.length}\n`)
 
-  let written = 0, skipped = 0, errors = 0
+  let written = 0, skipped = 0, errors = 0, rejected = 0
+  const REJECT_LOG = `data/description-ban-rejected-${new Date().toISOString().slice(0, 10)}.jsonl`
 
   for (const book of batch) {
     const author    = book.book_authors[0]?.authors?.display_name ?? ''
@@ -170,20 +173,48 @@ async function main() {
       skipped++
     } else {
       console.log(`  → ${desc.length > 400 ? desc.slice(0, 400) + '…' : desc}`)
-      if (APPLY) {
+
+      // Quality gate (added 2026-05-29 — see src/lib/censorship-context-quality.ts).
+      // Rejects LLM output containing padding tells ("broader trend", "this case
+      // reflects", "parent-teacher associations", etc.) or too-short responses.
+      // Conservative by design: false negatives waste GPT tokens on re-runs, false
+      // positives publish hallucinations to the live site.
+      const gate = descriptionBanQualityGate(desc)
+      if (!gate.accept) {
+        console.log(`  ✗ rejected by quality gate [${gate.bucket}] — ${gate.reasoning}`)
+        rejected++
+        if (APPLY) {
+          try {
+            appendFileSync(REJECT_LOG, JSON.stringify({
+              ts: new Date().toISOString(),
+              book_id: book.id,
+              slug: book.slug,
+              bucket: gate.bucket,
+              tells: gate.tells,
+              text: desc,
+            }) + '\n')
+          } catch (e) {
+            console.error(`  (reject log write failed: ${(e as Error).message})`)
+          }
+        }
+      } else if (APPLY) {
         const { error: upErr } = await supabase
           .from('books')
           .update({ description_ban: desc })
           .eq('id', book.id)
         if (upErr) { console.error(`  ✗ ${upErr.message}`); errors++ }
         else       { console.log(`  ✓ written`); written++ }
+      } else {
+        console.log(`  ✓ would write (clean, len=${desc.length})`)
+        written++
       }
     }
 
     if (DELAY > 0) await new Promise(r => setTimeout(r, DELAY))
   }
 
-  console.log(`\nDone.  Written: ${written}  Skipped: ${skipped}  Errors: ${errors}`)
+  console.log(`\nDone.  Written: ${written}  Rejected: ${rejected}  Skipped: ${skipped}  Errors: ${errors}`)
+  if (rejected > 0 && APPLY) console.log(`Reject log: ${REJECT_LOG}`)
   if (!APPLY) console.log('DRY-RUN — add --apply to write.')
 }
 

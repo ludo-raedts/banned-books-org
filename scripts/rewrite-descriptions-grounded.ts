@@ -22,6 +22,10 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
+import {
+  descriptionBanQualityGate,
+  censorshipContextQualityGate,
+} from '../src/lib/censorship-context-quality'
 
 const APPLY      = process.argv.includes('--apply')
 const INCLUDE_2  = process.argv.includes('--include-2')
@@ -335,9 +339,38 @@ async function main() {
     const gen = await generate(client, book, t.needBan, t.needCtx)
     if (!gen) { errors++; console.log(`[${i}/${batch.length}] ${t.slug}  → ERROR (no usable response)`); return }
 
+    // Quality gates (added 2026-05-29 — see src/lib/censorship-context-quality.ts).
+    // Web-search grounding helps but does not eliminate hallucinations; the model
+    // still pastes in "broader trend" framing and unsourced district names. Each
+    // field is gated separately so a partial accept (only ban OR only ctx) still
+    // writes the clean half.
+    let banGateMsg: string | null = null
+    let ctxGateMsg: string | null = null
+    if (t.needBan && gen.description_ban) {
+      const g = descriptionBanQualityGate(gen.description_ban)
+      if (!g.accept) {
+        banGateMsg = `rejected [${g.bucket}] ${g.reasoning}`
+        gen.description_ban = undefined
+      }
+    }
+    if (t.needCtx && gen.censorship_context) {
+      const g = censorshipContextQualityGate(gen.censorship_context)
+      if (!g.accept) {
+        ctxGateMsg = `rejected [${g.bucket}] ${g.reasoning}`
+        gen.censorship_context = undefined
+      }
+    }
+
     const wroteBan = !!(t.needBan && gen.description_ban)
     const wroteCtx = !!(t.needCtx && gen.censorship_context)
-    if (!wroteBan && !wroteCtx) { skipped++; console.log(`[${i}/${batch.length}] ${t.slug}  → SKIP (output too short)`); return }
+    if (!wroteBan && !wroteCtx) {
+      skipped++
+      const why = [banGateMsg && `ban: ${banGateMsg}`, ctxGateMsg && `ctx: ${ctxGateMsg}`].filter(Boolean).join(' / ') || 'output too short'
+      console.log(`[${i}/${batch.length}] ${t.slug}  → SKIP (${why})`)
+      return
+    }
+    if (banGateMsg) console.log(`[${i}/${batch.length}] ${t.slug}  ban gate: ${banGateMsg}`)
+    if (ctxGateMsg) console.log(`[${i}/${batch.length}] ${t.slug}  ctx gate: ${ctxGateMsg}`)
 
     const banPreview = gen.description_ban ? gen.description_ban.slice(0, 140) : '(unchanged)'
     const ctxPreview = gen.censorship_context ? gen.censorship_context.slice(0, 140) : '(unchanged)'

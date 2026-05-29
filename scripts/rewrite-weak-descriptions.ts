@@ -10,8 +10,10 @@
  *   npx tsx --env-file=.env.local scripts/rewrite-weak-descriptions.ts --write
  */
 
+import { appendFileSync } from 'node:fs'
 import Anthropic from '@anthropic-ai/sdk'
 import { adminClient } from '../src/lib/supabase'
+import { descriptionBanQualityGate } from '../src/lib/censorship-context-quality'
 
 const WRITE = process.argv.includes('--write')
 
@@ -151,8 +153,38 @@ async function main() {
       console.log(`  → New description:\n     ${result}`)
     }
 
+    // Quality gate (added 2026-05-29 — see src/lib/censorship-context-quality.ts).
+    // Wikipedia-grounded but still LLM-mediated, so apply the same tells/length
+    // check before persisting. Clears (result === null) bypass the gate because
+    // setting to NULL is always safe — it just removes weak content.
+    let toWrite: string | null = result
+    if (result !== null) {
+      const gate = descriptionBanQualityGate(result)
+      if (!gate.accept) {
+        console.log(`  ✗ rejected by quality gate [${gate.bucket}] — ${gate.reasoning}`)
+        if (WRITE) {
+          try {
+            appendFileSync(`data/description-ban-rejected-${new Date().toISOString().slice(0, 10)}.jsonl`,
+              JSON.stringify({
+                ts: new Date().toISOString(),
+                book_id: book.id,
+                slug: book.slug,
+                bucket: gate.bucket,
+                tells: gate.tells,
+                source: 'rewrite-weak-descriptions',
+                text: result,
+              }) + '\n')
+          } catch (e) {
+            console.error(`  (reject log write failed: ${(e as Error).message})`)
+          }
+        }
+        await sleep(500)
+        continue
+      }
+    }
+
     if (WRITE) {
-      const newValue = result ? result + '\n\nSource: Wikipedia' : null
+      const newValue = toWrite ? toWrite + '\n\nSource: Wikipedia' : null
       const { error: upErr } = await s
         .from('books')
         .update({ description_ban: newValue })
