@@ -58,6 +58,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
       changefreq: 'monthly',
       priority: 0.6,
     })),
+    // Discover — interactive "pick me a banned book" wheel. Static landing,
+    // dynamic per-spin state lives in the URL (not part of the canonical).
+    { loc: `${base}/discover`, changefreq: 'weekly', priority: 0.7 },
     // Banned Books Week hub — included year-round so search engines know the
     // page exists; gets a higher changefreq when the configured window is live.
     {

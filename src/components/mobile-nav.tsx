@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-type NavLink = { href: string; label: string }
+type NavLink = { href: string; label: string; indented?: boolean }
 type NavSection = { heading: string; links: NavLink[] }
 
 const SECTIONS: NavSection[] = [
@@ -31,6 +31,7 @@ const SECTIONS: NavSection[] = [
       { href: '/essays', label: 'Essays' },
       { href: '/news', label: 'News' },
       { href: '/reading-club', label: 'Reading club' },
+      { href: '/discover', label: 'Pick me a banned book', indented: true },
     ],
   },
 ]
@@ -183,12 +184,21 @@ export default function MobileNav() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`block px-3 py-2.5 rounded-md text-sm transition-colors ${
+                      className={`block py-2 rounded-md transition-colors ${
+                        link.indented
+                          ? 'pl-8 pr-3 text-xs text-gray-500 dark:text-gray-400 hover:text-oxblood'
+                          : 'px-3 text-sm py-2.5'
+                      } ${
                         active
                           ? 'text-brand font-medium'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          : link.indented
+                            ? ''
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >
+                      {link.indented && (
+                        <span aria-hidden="true" className="mr-1.5 text-gray-400">↳</span>
+                      )}
                       {link.label}
                     </Link>
                   )

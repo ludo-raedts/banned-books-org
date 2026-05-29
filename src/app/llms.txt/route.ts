@@ -108,6 +108,7 @@ export async function GET() {
   lines.push(`- [Currently challenged](${BASE}/reading-club/currently-challenged): Today's most-contested titles.`)
   lines.push(`- [International](${BASE}/reading-club/international): Banned literature from outside the English-speaking world.`)
   lines.push(`- [Classics](${BASE}/reading-club/classics): Long-banned works that shaped the canon.`)
+  lines.push(`- [Discover — Pick me a banned book](${BASE}/discover): Interactive wheel that recommends one of the most-banned books in the catalogue, filtered by reason (LGBTQ+, political, religious, …), genre, region of ban, and whether a free reading-club PDF is available.`)
   lines.push('')
 
   lines.push('## News and feed')
