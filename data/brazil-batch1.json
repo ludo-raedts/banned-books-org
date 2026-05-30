@@ -1,0 +1,31 @@
+{
+  "country_code": "BR",
+  "source_url": "https://en.wikipedia.org/wiki/Censorship_under_the_military_dictatorship_in_Brazil",
+  "source_name": "Brazil — Military dictatorship 1964-1985 (Wikipedia + JSTOR + Libcom archives)",
+  "source_type": "wikipedia",
+  "_note": "Two new BR entries from the 1964-1985 military dictatorship era. Wikipedia documents ~140 Brazilian-author books banned during the regime. This batch adds two of the most globally-recognised cases the existing 11-record import missed: Freire's Pedagogy of the Oppressed and Marighella's Mini-Manual.",
+  "entries": [
+    {
+      "title": "Pedagogy of the Oppressed",
+      "title_variants": ["Pedagogia do Oprimido"],
+      "author": "Paulo Freire",
+      "year_started": 1968,
+      "year_ended": 1985,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Paulo Freire's foundational text in critical pedagogy. Freire had been arrested and exiled from Brazil shortly after the April 1964 military coup for his literacy programmes in Recife. He wrote the book in exile in Chile (1967-1968); it was published in Spanish (1968) and English (1970). The book and Freire's earlier educational work were banned in Brazil throughout the military dictatorship; Freire was forbidden from returning. In several other Latin American military dictatorships the book was both burned and banned. Freire was finally able to return to Brazil in 1980 with the political amnesty.",
+      "source_locator": "https://en.wikipedia.org/wiki/Pedagogy_of_the_Oppressed"
+    },
+    {
+      "title": "Mini-Manual of the Urban Guerrilla",
+      "title_variants": ["Minimanual do Guerrilheiro Urbano"],
+      "author": "Carlos Marighella",
+      "year_started": 1969,
+      "year_ended": 1985,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Carlos Marighella's June 1969 guerrilla-warfare manifesto, written as a leader of the Ação Libertadora Nacional (ALN). The text outlines tactics for urban armed resistance against military dictatorships. Marighella was killed by São Paulo police in an ambush on 4 November 1969; the manual itself was banned in Brazil throughout the military regime (1969-1985) and in numerous other countries, and continues to be banned or restricted in some jurisdictions to the present. Cited by both leftist guerrilla movements and counter-insurgency manuals as an influential 20th-century military-tactics text.",
+      "source_locator": "https://files.libcom.org/files/MarighellaManual.pdf"
+    }
+  ]
+}
