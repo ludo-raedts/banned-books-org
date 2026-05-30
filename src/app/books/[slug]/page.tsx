@@ -970,14 +970,14 @@ export default async function BookPage({
 
       {/* Hero */}
       <div className="flex flex-row gap-4 sm:gap-8 mb-8 sm:mb-10 items-start">
-        <div className="shrink-0">
+        <div className="shrink-0 w-[110px] sm:w-[200px]">
           {book.cover_url && !gated ? (
             <Image
               src={book.cover_url}
               alt={coverAlt(book.title, author, book.first_published_year)}
               width={240}
               height={360}
-              className="rounded-lg shadow-md object-cover w-[110px] sm:w-[200px] h-auto"
+              className="rounded-lg shadow-md object-cover w-full h-auto"
               priority
               sizes="(max-width: 640px) 110px, 200px"
             />
@@ -986,7 +986,6 @@ export default async function BookPage({
               title={book.title}
               author={authorName(book)}
               slug={book.slug}
-              className="w-[110px] sm:w-[200px]"
             />
           )}
         </div>
