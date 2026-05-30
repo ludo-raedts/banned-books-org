@@ -1,0 +1,53 @@
+{
+  "country_code": "UA",
+  "source_url": "https://en.wikipedia.org/wiki/Russian_book_ban_in_Ukraine",
+  "source_name": "Ukraine — Tier-1 sources (Wikipedia + BBC + Stanford CISAC + LA Review of Books + Kyiv Independent)",
+  "source_type": "news",
+  "_note": "Four new UA entries covering two distinct repression-eras: (1) Soviet-era suppression of Ukrainian dissident literature (Vasyl Stus); (2) Ukraine's 2015 ban-wave of Russian neo-imperial / nationalist publications (38 titles, Dugin / Limonov / Glazyev) enacted after the 2014 Russian annexation of Crimea and Donbas war start. Existing UA coverage was a single 1847 Shevchenko Kobzar entry — this batch bridges both ends of Ukraine's censorship history.",
+  "entries": [
+    {
+      "title": "Palimpsests",
+      "title_variants": ["Палімпсести"],
+      "author": "Vasyl Stus",
+      "year_started": 1972,
+      "year_ended": 1991,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Vasyl Stus's principal poetry collection, written during his 1972-1979 Soviet imprisonment (Mordovian gulag) and continued during his second sentence (Perm-36 camp 1980-1985) where he died on 4 September 1985 — officially of a heart attack during a hunger strike, widely believed to have been murdered. Stus was one of the most important 20th-century Ukrainian poets and a leading Sixties Generation (Шістдесятники) dissident. No collection of his poetry appeared in Ukraine during his lifetime. Palimpsests was first published in 1986 by the Suchasnist publishing house in New York; first Ukrainian-domestic edition came only after independence in 1991.",
+      "source_locator": "https://lareviewofbooks.org/article/thriving-in-isolation-and-beyond-the-empowering-poetry-of-vasyl-stus"
+    },
+    {
+      "title": "Foundations of Geopolitics",
+      "title_variants": ["Основы геополитики", "The Foundations of Geopolitics: The Geopolitical Future of Russia"],
+      "author": "Alexander Dugin",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "political",
+      "description": "Alexander Dugin's neo-Eurasianist treatise (1997, four editions through 1999), arguing for a Russian-led 'Eurasian' empire absorbing Ukraine, the Caucasus, and Central Asia. Required reading at the Russian Military Academy of the General Staff in the late 1990s. Includes the explicit policy recommendation that 'Ukraine as a state has no geopolitical meaning'. Banned in Ukraine in the 2015 wave of 38 Russian-nationalist titles barred by the State Committee for Television and Radio-broadcasting following Russia's 2014 annexation of Crimea and the start of the Donbas war.",
+      "source_locator": "https://www.bbc.com/news/world-europe-33863697"
+    },
+    {
+      "title": "It's Me, Eddie",
+      "title_variants": ["Это я — Эдичка", "Eto ya — Edichka"],
+      "author": "Eduard Limonov",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "political",
+      "description": "Eduard Limonov's 1979 autobiographical debut novel, written in Russian during his New York émigré period — explicit, scandalous, with strong themes of dispossession and rage. After the USSR's collapse Limonov returned to Russia, founded the ultranationalist National Bolshevik Party (1993), and became a leading Russian-imperialist political figure until his death in 2020. Banned in Ukraine in the 2015 38-book wave under his persona as a 'Russian nationalist' author actively involved in pro-Donbas-separatist agitation in 2014. The novel itself contains no Ukrainian content; the ban targeted Limonov's wider bibliography.",
+      "source_locator": "https://www.bbc.com/news/world-europe-33863697"
+    },
+    {
+      "title": "Genocide: Russia and the New World Order",
+      "title_variants": ["Геноцид. Россия и новый мировой порядок", "Genotsid. Rossiya i novyi mirovoi poryadok"],
+      "author": "Sergei Glazyev",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "political",
+      "description": "Sergei Glazyev's 1997 polemic blaming Yeltsin-era Russian economic decline on a Western conspiracy. Glazyev is a longstanding Putin economic adviser and a leading proponent of the 'Russian World' (Русский мир) ideology of post-Soviet integration. Banned in Ukraine in the 2015 38-book wave of Russian-nationalist publications. Glazyev himself is on EU and US sanctions lists for his role in Russia's annexation of Crimea.",
+      "source_locator": "https://www.bbc.com/news/world-europe-33863697"
+    }
+  ]
+}
