@@ -48,8 +48,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'PEN America',
         url: 'https://pen.org',
         description:
-          'PEN America\'s Index of School Book Bans tracks book removals across US public schools — the most comprehensive single source of US educational censorship data.',
-        match: ['pen.org/book-bans', 'pen.org/banned-books'],
+          'PEN America\'s Index of School Book Bans tracks book removals across US public schools — the most comprehensive single source of US educational censorship data. Per-author and per-case pages (pen.org/individual-case/…, pen.org/press-release/…) document detained writers internationally (Ahmed Naji Egypt, etc.).',
+        match: ['pen.org'],
       },
       {
         name: 'American Library Association — Office for Intellectual Freedom',
@@ -91,6 +91,20 @@ const CATEGORIES: readonly Category[] = [
         url: 'https://rsf.org',
         description:
           'RSF\'s World Press Freedom Index contextualises bans within broader media-freedom rankings. Used as country-level background rather than per-title data.',
+      },
+      {
+        name: 'Human Rights Watch',
+        url: 'https://www.hrw.org',
+        description:
+          'HRW\'s annual World Report and country-specific reports document book bans, author imprisonments, and publishing restrictions across jurisdictions where structured ban registers don\'t exist publicly. Cited per-country-chapter (e.g. /world-report/2024/country-chapters/russia).',
+        match: ['hrw.org'],
+      },
+      {
+        name: 'Amnesty International',
+        url: 'https://www.amnesty.org',
+        description:
+          'Amnesty country pages and Urgent Action releases document specific cases of authors and publishers detained or prosecuted for prohibited works — used as cite-of-record for individual ban events in restrictive jurisdictions.',
+        match: ['amnesty.org'],
       },
     ],
   },
@@ -156,11 +170,46 @@ const CATEGORIES: readonly Category[] = [
         match: ['List_of_authors_and_works_on_the_Index_Librorum'],
       },
       {
+        name: 'Wikipedia — Federal List of Extremist Materials (Russia)',
+        url: 'https://en.wikipedia.org/wiki/Federal_List_of_Extremist_Materials',
+        description:
+          'Wikipedia overview of Russia\'s FSEM (maintained by the Ministry of Justice under the 2002 anti-extremism law, ~5,500 entries by 2024 — mostly pamphlets/videos/audio). Curated subset of identifiable books with authors and FSEM ordinals imported as RU bans (Hitler, Mussolini, Rosenberg, Dugin, Ford, Drumont, Wagner, Klimov, Platonov ×7, Yemelyanov, Khomeini, Hubbard, etc.).',
+        match: ['Federal_List_of_Extremist_Materials'],
+      },
+      {
+        name: 'Wikipedia — Russian book ban in Ukraine',
+        url: 'https://en.wikipedia.org/wiki/Russian_book_ban_in_Ukraine',
+        description:
+          'Wikipedia article documenting Ukraine\'s 2015 ban of 38 Russian-nationalist titles (Dugin, Limonov, Glazyev) and subsequent expansions through 2022-2023 (complete ban on Russian + Belarusian book imports). Cited for the 2015 ban-wave entries.',
+        match: ['Russian_book_ban_in_Ukraine'],
+      },
+      {
+        name: 'Wikipedia — Undesirable Publications Act (Singapore)',
+        url: 'https://en.wikipedia.org/wiki/Undesirable_Publications_Act',
+        description:
+          'Wikipedia article on Singapore\'s UPA 1967 — the statutory basis for Section 5 prohibition orders. Cross-referenced against the main "List of books banned by governments" Singapore section for the 31-entry batch.',
+        match: ['Undesirable_Publications_Act'],
+      },
+      {
         name: 'Wikipedia — book and author articles (per-title citations)',
         url: 'https://en.wikipedia.org/',
         description:
-          'For individually-curated entries, we cite the relevant book\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four). These are manual curation, not bulk-imported.',
+          'For individually-curated entries, we cite the relevant book or author\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four, en.wikipedia.org/wiki/Bohumil_Hrabal). These are manual curation, not bulk-imported.',
         match: ['en.wikipedia.org/wiki/'],
+      },
+      {
+        name: 'Wikisource — Liste Otto (Nazi-era France, 1940–1944)',
+        url: 'https://fr.wikisource.org/wiki/Ouvrages_litt%C3%A9raires_non_d%C3%A9sirables_en_France',
+        description:
+          'Full transcription on French Wikisource of the Liste Otto — the list of books "unwanted in France" issued by the German occupation\'s Propaganda-Staffel beginning September 1940 and revised through 1943. The 3rd edition (May 1943) contains roughly 1,000 named titles and entire bibliographies (Jewish authors, anti-Nazi authors, Communists, dissidents). Imported as the canonical FR-1940-1944 ban list.',
+        match: ['fr.wikisource.org/wiki/ouvrages_litt'],
+      },
+      {
+        name: 'French Wikipedia — Liste de livres censurés en France',
+        url: 'https://fr.wikipedia.org/wiki/Liste_de_livres_censurés_en_France',
+        description:
+          'French Wikipedia\'s catalogue of books censored in France, including the Bibliothèque rose age-restriction decisions, Loi 1949 arrêtés against publications for minors, and the Liste Otto Nazi-occupation entries. Used alongside Légifrance for per-arrêté metadata.',
+        match: ['fr.wikipedia.org/wiki/liste_de_livres'],
       },
     ],
   },
@@ -233,6 +282,34 @@ const CATEGORIES: readonly Category[] = [
         match: ['cdhe.colorado.gov'],
       },
       {
+        name: 'Singapore Ministry of Digital Development and Information (MDDI)',
+        url: 'https://www.mddi.gov.sg',
+        description:
+          'Singapore\'s communications and information ministry (formerly Ministry of Communications and Information; the regulatory parent of IMDA). Cited via parliamentary-question responses and press releases for specific Undesirable Publications Act prohibition orders (2020 Understanding the Evil of Innovation, 2021 Menyingkap Rahsia Tentera Elit Briged Izzuddin Al-Qassam).',
+        match: ['mddi.gov.sg'],
+      },
+      {
+        name: 'French Senate — Compte rendu de séance',
+        url: 'https://www.senat.fr',
+        description:
+          'Sénat de la République française parliamentary records. Cited for the legal-history paper trail behind the Loi n° 49-956 du 16 juillet 1949 sur les publications destinées à la jeunesse — the statutory basis for French Interior Ministry book-ban arrêtés.',
+        match: ['senat.fr'],
+      },
+      {
+        name: 'Oireachtas — Houses of the Oireachtas',
+        url: 'https://www.oireachtas.ie',
+        description:
+          'Ireland\'s parliamentary records (Dáil + Seanad). Cited for the legislative history of the Censorship of Publications Act 1929 and modern Parliamentary Questions about its remaining provisions.',
+        match: ['oireachtas.ie'],
+      },
+      {
+        name: 'Nigerian Legal Information Institute (NigeriaLII)',
+        url: 'https://nigerialii.org',
+        description:
+          'Open access database of Nigerian court judgments (Supreme Court, Court of Appeal). Cited for landmark seditious-publication cases (Nwankwo v State 1985, and earlier 1961 colonial-era judgments).',
+        match: ['nigerialii.org'],
+      },
+      {
         name: 'Ukrainian State Committee for Television and Radio Broadcasting',
         url: 'https://comin.kmu.gov.ua',
         description:
@@ -240,11 +317,11 @@ const CATEGORIES: readonly Category[] = [
         planned: true,
       },
       {
-        name: 'Russian Ministry of Justice — Federal List of Extremist Materials',
-        url: 'https://minjust.gov.ru/extremist-materials',
+        name: 'Russian Ministry of Justice — Federal List of Extremist Materials (direct)',
+        url: 'https://minjust.gov.ru/ru/extremist-materials/',
         description:
-          '5,400+ items prohibited under Federal Law 114-FZ. Planned adapter — filters the master list for book entries (`книга`, `изд.`) and resolves each to its originating court ruling.',
-        planned: true,
+          'Direct citations to Russia\'s official FSEM register (Federal Law 114-FZ). Used selectively per-entry where Wikipedia coverage was incomplete. The full ~5,500-entry crawl remains a future scale-up (most entries are pamphlets/audio rather than books).',
+        match: ['minjust.gov.ru'],
       },
     ],
   },
@@ -289,6 +366,62 @@ const CATEGORIES: readonly Category[] = [
         match: ['apm.gov.ar'],
       },
       {
+        name: 'Václav Havel Library — dissident archive',
+        url: 'https://www.vaclavhavel.cz',
+        description:
+          'Knihovna Václava Havla maintains the curated archive of Czechoslovak dissident publishing under normalization (1968–1989) — Charter 77, Edice Petlice samizdat, Power of the Powerless. Cited for Havel-era Czech bans (Kundera, Hrabal, Vaculík, Havel himself).',
+        match: ['vaclavhavel.cz'],
+      },
+      {
+        name: 'Władysław Szpilman estate',
+        url: 'https://www.szpilman.net/',
+        description:
+          'Official archive of Władysław Szpilman (1911–2000) maintained by his family. Documents the Stalinist suppression of his 1946 Warsaw Ghetto memoir Death of a City and its 1998 restored republication.',
+        match: ['szpilman.net'],
+      },
+      {
+        name: 'The New York Review of Books',
+        url: 'https://www.nybooks.com',
+        description:
+          'NYRB\'s essay archive (1963–present) and the NYRB Classics imprint together form a key source on Cold War-era dissident publishing — first English translations of Michnik, Kundera, Havel, and the historical record of their suppression.',
+        match: ['nybooks.com'],
+      },
+      {
+        name: 'Yale University Press',
+        url: 'https://yalebooks.yale.edu',
+        description:
+          'Yale UP\'s introductions and catalogue pages document the censorship histories of works it republishes in English — used as primary citation for Nasr Hamid Abu Zayd\'s Critique of Religious Discourse (Egypt apostasy ruling 1995) and similar academic-press editions.',
+        match: ['yalebooks.yale.edu'],
+      },
+      {
+        name: 'LA Review of Books',
+        url: 'https://lareviewofbooks.org',
+        description:
+          'Long-form literary essays covering author and book censorship cases — including detailed treatments of Rushdie\'s Shame (banned in Pakistan 1983 by Zia-ul-Haq), Vasyl Stus\'s gulag-written poetry, and other dissident-era works.',
+        match: ['lareviewofbooks.org'],
+      },
+      {
+        name: 'Max Lane — Indonesia studies',
+        url: 'https://maxlaneonline.com',
+        description:
+          'Australian academic specialising in Indonesian politics. Cited for the March 2010 Attorney General book-banning wave (Roosa\'s Pretext for Mass Murder, Lekra Tak Membakar Buku, three religious titles) and its October 2010 nullification by the Indonesian Constitutional Court.',
+        match: ['maxlaneonline.com'],
+      },
+      {
+        name: 'Hungarian Conservative',
+        url: 'https://www.hungarianconservative.com',
+        description:
+          'Hungarian English-language magazine. Used selectively for non-political historical reference (Béla Hamvas\'s communist-era silentium 1948–1989); for contemporary Hungarian press-freedom developments we triangulate against international sources.',
+        match: ['hungarianconservative.com'],
+      },
+      {
+        name: 'Masaryk University — Czechoslovak samizdat studies',
+        url: 'https://is.muni.cz',
+        description:
+          'Brno-based Masaryk University publishes the canonical study materials on Czechoslovak samizdat-era publishing, including the dissident translation work of Tom Stoppard and the Petlice / Edice Expedice editions used for Vaculík, Havel, and Klíma works.',
+        match: ['muni.cz'],
+      },
+      {
         name: 'Royal Literary Fund — Banned Books Week feature',
         url: 'https://www.rlf.org.uk',
         description:
@@ -309,6 +442,34 @@ const CATEGORIES: readonly Category[] = [
           'Holy See\'s catalogue of prohibited books, discontinued in 1966. Imported via the per-author Wikipedia article (above) but cited at the Index level for collective entries.',
         match: ['/Index_Librorum_Prohibitorum'],
       },
+      {
+        name: 'University of Kansas — Spencer Research Library banned-books exhibition (1955, via Wayback)',
+        url: 'https://wayback.archive-it.org/3577/20170328173200id_/http://liblamp.vm.ku.edu/spencer/exhibits/bannedbooks/bannedbooks.html',
+        description:
+          'KU Libraries\' 1955 historical exhibition He who destroyes a good Booke, kills reason it selfe — covering books that survived Fire, Sword and Censors. Per-country pages (England, Germany, Russia, France, Spain, US, Various) captured via Wayback Machine snapshots since the original liblamp.vm.ku.edu URL is no longer live.',
+        match: ['wayback.archive-it.org/3577/'],
+      },
+      {
+        name: 'European Proceedings — academic open-access',
+        url: 'https://www.europeanproceedings.com',
+        description:
+          'Open-access social-sciences conference proceedings (Future Academy). Cited for academic studies on book-censorship history in specific jurisdictions where peer-reviewed coverage is otherwise paywalled.',
+        match: ['europeanproceedings.com'],
+      },
+      {
+        name: 'AFTE — Association for Freedom of Thought and Expression (Egypt)',
+        url: 'https://afteegypt.org',
+        description:
+          'Cairo-based legal NGO defending freedom of expression. AFTE\'s English-language research arm documents Egyptian book confiscations under the Undesirable Publications Act, blasphemy prosecutions, and Cairo Book Fair customs seizures.',
+        match: ['afteegypt.org'],
+      },
+      {
+        name: 'US Congressional Tom Lantos Human Rights Commission',
+        url: 'https://humanrightscommission.house.gov',
+        description:
+          'Bipartisan US Congressional caucus that profiles defenders of free expression detained internationally — used as cite-of-record for Vietnam (Pham Doan Trang), and other Asia/MENA cases where the originating government doesn\'t publish prosecution details.',
+        match: ['humanrightscommission.house.gov'],
+      },
     ],
   },
   {
@@ -322,6 +483,181 @@ const CATEGORIES: readonly Category[] = [
         description:
           'English-language journalism on Hong Kong post-2020 NSL-era library removals and CSD seizures. Cited where official disclosure is absent.',
         match: ['hongkongfp.com'],
+      },
+      {
+        name: 'The Guardian',
+        url: 'https://www.theguardian.com',
+        description:
+          'Used across multiple jurisdictions for book-ban reporting where the original gazette or court ruling isn\'t accessible directly: 2015 Venice mayor children\'s book removals (Italy), Hungary\'s 2021 Wonderland Is for Everyone disclaimer order, Hong Kong 2020 library purges, Poland Mein Kampf publisher case, Ireland Censorship of Publications appeals.',
+        match: ['theguardian.com'],
+      },
+      {
+        name: 'BBC News',
+        url: 'https://www.bbc.com/news',
+        description:
+          'BBC reporting across the global press-freedom beat. Cited for Ukraine\'s 2015 38-book ban of Russian-nationalist titles, Singapore\'s 2015 lifting of 240 publications, and various individual cases across South Asia and the Middle East.',
+        match: ['bbc.com'],
+      },
+      {
+        name: 'The Straits Times (Singapore)',
+        url: 'https://www.straitstimes.com',
+        description:
+          'Singapore\'s flagship English daily. Cited for the Undesirable Publications Act ban cases: 2017 four-book extremist-content ban (Book of Tawheed series, Encyclopaedia for Fiqh, Islamic Guidance for a Muslim) and 2018 three-book ban (Wisdom of Jihad, Things that Nullify One\'s Islaam, What Islam Is All About).',
+        match: ['straitstimes.com'],
+      },
+      {
+        name: 'Channel News Asia (CNA)',
+        url: 'https://www.channelnewsasia.com',
+        description:
+          'Singapore-based regional broadcaster (Mediacorp). Cited for Singapore book bans (Red Lines / Cherian George 2021) and the 2015 MDA lift of 240 previously-prohibited titles.',
+        match: ['channelnewsasia.com'],
+      },
+      {
+        name: 'Daily News Egypt',
+        url: 'https://www.dailynewsegypt.com',
+        description:
+          'Cairo-based English daily. Cited for the assassination of secularist author Faraj Foda (8 June 1992) by Al-Jamaa al-Islamiya and the burning of his books in the lead-up.',
+        match: ['dailynewsegypt.com'],
+      },
+      {
+        name: 'United Press International (UPI)',
+        url: 'https://www.upi.com',
+        description:
+          'UPI archives covering 20th-century international book-ban events. Primary source for the Indonesian Constitutional Court\'s 13 October 2010 ruling (Decision 6-7/PUU-VIII/2010) striking down the Attorney General\'s 1963 PNPS book-banning authority, plus 1994 Kenya opposition-book bans.',
+        match: ['upi.com'],
+      },
+      {
+        name: 'Associated Press',
+        url: 'https://apnews.com',
+        description:
+          'AP wire reports cited as primary source where the originating jurisdiction\'s register is not publicly accessible.',
+        match: ['apnews.com'],
+      },
+      {
+        name: 'The Independent (UK)',
+        url: 'https://www.independent.co.uk',
+        description:
+          'UK national daily; cited for Pope Francis\'s public defence of Piccolo Uovo after Venice\'s 2015 children\'s book ban (Italy) and similar cross-border culture-war stories.',
+        match: ['independent.co.uk'],
+      },
+      {
+        name: 'The New York Times',
+        url: 'https://www.nytimes.com',
+        description:
+          'NYT cultural-affairs reporting cited for high-profile international book-ban cases (Brugnaro Venice 2015, Singapore UPA prosecutions, Russian crackdowns) where the originating gazette is not public.',
+        match: ['nytimes.com'],
+      },
+      {
+        name: 'The Hindu',
+        url: 'https://www.thehindu.com',
+        description:
+          'Chennai-based English daily. Cited for Indian Supreme Court and state-level High Court rulings on book bans not yet indexed by Indian Kanoon.',
+        match: ['thehindu.com'],
+      },
+      {
+        name: 'Korea Times',
+        url: 'https://www.koreatimes.co.kr',
+        description:
+          'South Korean English daily. Cited for the 2008 Ministry of National Defense\'s 23-book military-distribution ban and its 2011 expansion.',
+        match: ['koreatimes.co.kr'],
+      },
+      {
+        name: 'Irish Times',
+        url: 'https://www.irishtimes.com',
+        description:
+          'Cited for historical Irish Censorship of Publications Act cases (Edna O\'Brien, Lee Dunne) and the modern reissue of Ireland\'s first banned book.',
+        match: ['irishtimes.com'],
+      },
+      {
+        name: 'Rediff.com (India)',
+        url: 'https://www.rediff.com',
+        description:
+          'Indian English-language news portal. Cited for Ayesha Siddiqa\'s Military Inc. (Pakistan 2007 launch-suppression case) which Indian press covered when Pakistani outlets were under government pressure.',
+        match: ['rediff.com'],
+      },
+      {
+        name: 'Notes from Poland',
+        url: 'https://notesfrompoland.com',
+        description:
+          'English-language news on Polish politics and culture. Cited for PiS-era curriculum reforms and 2024 reversals affecting school reading lists.',
+        match: ['notesfrompoland.com'],
+      },
+      {
+        name: 'Mada Masr (Egypt)',
+        url: 'https://www.madamasr.com',
+        description:
+          'Independent Cairo-based news outlet (English + Arabic). Cited for the Ahmed Naji court case (The Use of Life, 2015-2018) and other contemporary Egyptian press-freedom developments.',
+        match: ['madamasr.com'],
+      },
+      {
+        name: 'Radio Free Asia',
+        url: 'https://www.rfa.org',
+        description:
+          'US-funded broadcasting service covering Asian countries with restricted press. Cited for Vietnam, China, and Tibet book-ban events not documented in domestic media.',
+        match: ['rfa.org'],
+      },
+      {
+        name: 'Voice of America (regional services)',
+        url: 'https://www.voanews.com',
+        description:
+          'VOA\'s country services (VOA Zimbabwe, VOA Persian, VOA Africa) document book-related press-freedom incidents in jurisdictions with limited independent media. Cited per regional outlet (e.g. voazimbabwe.com).',
+        match: ['voanews.com', 'voazimbabwe.com'],
+      },
+      {
+        name: 'Africanews / AllAfrica / Daily Nation (Kenya) / Daily Monitor (Uganda) / The Punch (Nigeria)',
+        url: 'https://www.africanews.com',
+        description:
+          'Pan-African and per-country English-language reporting. Cited across Kenya, Uganda, Tanzania, Nigeria, Morocco, Zimbabwe, and South Africa ban cases — particularly important where the originating ministry\'s register is not published publicly.',
+        match: ['africanews.com', 'allafrica.com', 'nation.africa', 'monitor.co.ug', 'punchng.com'],
+      },
+      {
+        name: 'Regional press — Middle East & North Africa',
+        url: 'https://raseef22.net',
+        description:
+          'Raseef22 (Arab independent journalism), Morocco World News, The New Arab — cited collectively for MENA book-ban cases where the originating authority hasn\'t published the list itself.',
+        match: ['raseef22.net', 'moroccoworldnews.com', 'newarab.com'],
+      },
+      {
+        name: 'Russian independent press in exile',
+        url: 'https://meduza.io/en',
+        description:
+          'Meduza (Latvia-based), The Moscow Times (in exile since 2022), and The Insider (theins.press) collectively cover post-2022 Russian book bans, school-curriculum reforms targeting LGBT and anti-war content, and the contemporary expansion of the FSEM. All three are designated "undesirable" or "foreign agent" by Russia and operate from outside the country.',
+        match: ['meduza.io', 'themoscowtimes.com', 'theins.press'],
+      },
+      {
+        name: 'The EastAfrican',
+        url: 'https://www.theeastafrican.co.ke',
+        description:
+          'Nairobi-based pan-East-African weekly. Cited for Tanzania, Uganda, and Kenya book-ban events — particularly the 2023 Tanzanian children\'s book restrictions on sex-education content.',
+        match: ['theeastafrican.co.ke'],
+      },
+      {
+        name: 'Uganda / Zimbabwe regional press & NGOs',
+        url: 'https://acme-ug.org',
+        description:
+          'African Centre for Media Excellence (Uganda), Chapter Four Uganda, The Independent (Uganda), Daily Monitor, The Standard (Zimbabwe), VOA Zimbabwe, Brittle Paper (African lit blog), Making Queer History — cluster of regional sources cited per individual case where domestic gazettes don\'t document the ban itself.',
+        match: ['acme-ug.org', 'chapterfouruganda.org', 'independent.co.ug', 'thestandard.co.zw', 'brittlepaper.com', 'makingqueerhistory.com'],
+      },
+      {
+        name: 'Malaysian + South-East Asian press',
+        url: 'https://www.malaymail.com',
+        description:
+          'Malay Mail and Focus Malaysia — cited for Malaysian KDN ban orders where the gazette legal-notice citation is insufficient (modern post-2020 cases with court-of-appeal context).',
+        match: ['malaymail.com', 'focusmalaysia.my'],
+      },
+      {
+        name: 'Tanzanian Affairs / scholarly journals',
+        url: 'https://www.tzaffairs.org',
+        description:
+          'Tanzanian Affairs (UK-based scholarly newsletter), Emerald journals, SJSU ScholarWorks, UNISA Press — academic citations for African and Asian book-censorship history.',
+        match: ['tzaffairs.org', 'emerald.com', 'scholarworks.sjsu.edu', 'unisapressjournals.co.za'],
+      },
+      {
+        name: 'Comic Book Legal Defense Fund (CBLDF)',
+        url: 'https://cbldf.org',
+        description:
+          'US NGO documenting comics/graphic-novel censorship internationally. Cited for the 2015 Venice mayor children\'s book ban (Italy) including the full 49-title list.',
+        match: ['cbldf.org'],
       },
       {
         name: 'Google News — "banned books" feed',
