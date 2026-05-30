@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "note": "Libya sweep. Thin title-specific record. Four retraceable cases; one further lead (an untitled parliamentary exposé by MP Abdelfattah Chelui, banned 2015) was excluded for having no stated title. Author/era-level leads (al-Koni, al-Neihoum, al-Faqih, Hisham Matar's other works) excluded for lack of a title-specific ban source. The Green Book burnings excluded (opposition destruction of regime propaganda, not a government ban).",
+    "source_type": "news"
+  },
+  "entries": [
+    {
+      "title": "Chewing Gum",
+      "authors": ["Mansour Bushnaf"],
+      "first_published_year": 2008,
+      "original_language": "ar",
+      "country_code": "LY",
+      "ban_year": 2008,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Bushnaf's allegorical novel of Libyan life under dictatorship (al-ʿIlka) was banned in Libya the year it appeared under Gaddafi and reportedly remains prohibited. Bushnaf had earlier been jailed twelve years over his play 'When Rats Govern'.",
+      "inclusion_rationale": "Political ban of a dictatorship allegory; documented by Index on Censorship and the publisher, corroborated in academic literature.",
+      "source_url": "https://www.indexoncensorship.org/2017/10/bookselling-in-libya/",
+      "source_name": "Index on Censorship",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "A Sun Shining on Shuttered Windows",
+      "authors": ["Various"],
+      "first_published_year": 2017,
+      "original_language": "ar",
+      "country_code": "LY",
+      "ban_year": 2017,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "obscenity",
+      "ban_status": "active",
+      "description_ban": "Anthology of 24 Libyan writers under 30 (the 'Yellow Book', edited via Khaled Mattawa / Arete Foundation); banned in Libya amid an obscenity/morality backlash, after which contributors were harassed and several fled or went into hiding.",
+      "inclusion_rationale": "Morality-driven ban of a young-writers anthology; documented by The Markaz Review.",
+      "source_url": "https://themarkaz.org/libyas-censored-novelist-mohammed-al-naas-revealed/",
+      "source_name": "The Markaz Review",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "The Spy",
+      "authors": ["Paulo Coelho"],
+      "first_published_year": 2016,
+      "original_language": "pt",
+      "country_code": "LY",
+      "ban_year": 2017,
+      "scope_slug": "customs",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "The Arabic edition was among a truckload of books seized in January 2017 by Al-Marj police in eastern Libya, en route to Benghazi, as allegedly un-Islamic. Coelho publicly protested the seizure of his books.",
+      "inclusion_rationale": "Transit seizure of a title on religious grounds; reported by France 24 Observers.",
+      "source_url": "https://observers.france24.com/en/20170130-outcry-libya-after-police-seize-books-they-consider-islamic",
+      "source_name": "France 24 Observers",
+      "source_type": "news",
+      "needs_review": false
+    },
+    {
+      "title": "Bread on Uncle Milad's Table",
+      "authors": ["Mohammed Alnaas"],
+      "first_published_year": 2021,
+      "original_language": "ar",
+      "country_code": "LY",
+      "ban_year": 2022,
+      "scope_slug": "retail",
+      "action_type": "restricted",
+      "reason_slug": "moral",
+      "ban_status": "active",
+      "description_ban": "Alnaas's IPAF-winning novel on gender and masculinity. The author states there was no official ban order; after the prize, local militias pressured bookstores not to stock it — de facto retail suppression over its 'sensitive' gender theme.",
+      "inclusion_rationale": "Militia-driven retail suppression (no formal order); documented in the author's ArabLit interview (medium confidence).",
+      "source_url": "https://arablit.org/2024/07/01/on-an-award-winning-novel-the-unstable-literary-scene-in-libya/",
+      "source_name": "ArabLit",
+      "source_type": "media",
+      "needs_review": false
+    }
+  ]
+}
