@@ -9,14 +9,14 @@ export default async function AdminSitemapPage() {
   const supabase = adminClient()
 
   const [
-    { data: countryRows },
+    { count: sitemapCountryCount },
     { count: sitemapBookCount },
     { count: sitemapAuthorCount },
     { count: sitemapReasonCount },
     staticEntries,
     { data: lastSubmissionRow },
   ] = await Promise.all([
-    supabase.from('bans').select('country_code').range(0, 9999),
+    supabase.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
     supabase.from('books').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
     supabase.from('authors').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
     supabase.from('reasons').select('*', { count: 'exact', head: true }).not('slug', 'is', null),
@@ -29,8 +29,6 @@ export default async function AdminSitemapPage() {
       .limit(1)
       .maybeSingle(),
   ])
-
-  const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
@@ -46,7 +44,7 @@ export default async function AdminSitemapPage() {
           static: staticEntries.length,
           books: sitemapBookCount ?? 0,
           authors: sitemapAuthorCount ?? 0,
-          countries: countryCount,
+          countries: sitemapCountryCount ?? 0,
           reasons: sitemapReasonCount ?? 0,
         }}
         lastSubmission={
