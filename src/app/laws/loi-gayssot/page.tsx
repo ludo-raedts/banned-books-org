@@ -5,6 +5,7 @@
 // (Volksverhetzung, Comstock Act, Verbotsgesetz) can join here later.
 
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { buildCitationMeta } from '@/lib/citation-meta'
@@ -110,8 +111,15 @@ export default function LoiGayssotPage() {
 
           {HERO && (
             <figure className="my-10 -mx-4 sm:mx-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={HERO.src} alt={HERO.alt} className="w-full sm:rounded-xl object-cover" loading="eager" />
+              <Image
+                src={HERO.src}
+                alt={HERO.alt}
+                width={1600}
+                height={1066}
+                priority
+                sizes="(min-width: 768px) 720px, 100vw"
+                className="w-full h-auto sm:rounded-xl"
+              />
               {(HERO.caption || HERO.credit) && (
                 <figcaption className="text-xs text-neutral-400 mt-2 px-4 sm:px-0">
                   {HERO.caption} {HERO.credit && <span className="text-neutral-400">{HERO.credit}</span>}
