@@ -1,0 +1,29 @@
+{
+  "country_code": "PK",
+  "source_url": "https://lareviewofbooks.org/article/barbarism-in-cultured-soil-rushdies-great-pakistani-novel",
+  "source_name": "Pakistan — Tier-1 sources (LA Review of Books + NYT + Rediff + Linguaculture journal)",
+  "source_type": "news",
+  "_note": "Two well-documented Pakistani censorship cases not yet in DB: Rushdie's Shame (Zia-ul-Haq military government ban 1983) and Siddiqa's Military Inc. (de facto launch ban 2007). Surfaced via Firecrawl Tier-1 search after the Wikipedia/Perplexity pipelines on Iran/Egypt showed Firecrawl direct-search outperforms Perplexity for these jurisdictions.",
+  "entries": [
+    {
+      "title": "Shame",
+      "author": "Salman Rushdie",
+      "year_started": 1983,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Salman Rushdie's 1983 novel, set in 'a country that is not quite Pakistan', satirizing the rivalry between Zulfikar Ali Bhutto and General Muhammad Zia-ul-Haq and the latter's Islamization programme. General Zia-ul-Haq's military government banned the novel in Pakistan in 1983 — a decision that, as commentators noted, drew far more international attention to the book than censors had bargained for. The book was shortlisted for the 1983 Booker Prize and won the French Prix du Meilleur Livre Étranger that year. Pre-dates Rushdie's Satanic Verses (1988) and the global fatwa controversy.",
+      "source_locator": "https://lareviewofbooks.org/article/barbarism-in-cultured-soil-rushdies-great-pakistani-novel"
+    },
+    {
+      "title": "Military Inc.: Inside Pakistan's Military Economy",
+      "author": "Ayesha Siddiqa",
+      "year_started": 2007,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "political",
+      "description": "Ayesha Siddiqa's 2007 study documenting how the Pakistan military has gradually accumulated a vast business empire ('Milbus') controlling significant parts of the country's political, social, and economic resources. The book launch in Islamabad faced what Siddiqa publicly described as a 'virtual ban' — venues cancelled at the last minute under government pressure. Siddiqa, then a Woodrow Wilson International Center scholar, accused the Pakistan government of orchestrating the suppression. Reprinted internationally; remains a touchstone reference on civil-military relations in Pakistan.",
+      "source_locator": "https://imworld.rediff.com/news/2007/jun/01pak1.htm"
+    }
+  ]
+}
