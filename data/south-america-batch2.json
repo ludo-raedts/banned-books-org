@@ -1,0 +1,31 @@
+{
+  "country_code": "UY",
+  "source_url": "https://www.centreforglobaleducation.com/open-veins-latin-america-re-appraisal-50-years",
+  "source_name": "Uruguay — Operation Condor-era bans (Centre for Global Education + Brooklyn Rail)",
+  "source_type": "ngo",
+  "_note": "Two new UY entries documenting the 1973-1985 military dictatorship's systematic suppression of leftist literature. Uruguay's only existing UY ban (1 record) misses the most famous case — Galeano's Open Veins (which we have as a CL ban already, here adding UY as country of origin). Plus Benedetti's La Tregua / The Truce as cited example of his banned oeuvre.",
+  "entries": [
+    {
+      "title": "Open Veins of Latin America",
+      "existing_book_id": 880,
+      "author": "Eduardo Galeano",
+      "year_started": 1973,
+      "year_ended": 1985,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Eduardo Galeano's 1971 history of European-American economic exploitation of Latin America from the conquest through the Cold War. Banned by Uruguay's military dictatorship (1973-1985), along with Argentina and Chile. Galeano himself was imprisoned by the Uruguayan military and forced into exile for eleven years (Argentina 1973-1976, then Spain after the Argentine coup). The book remained the definitive primer on Latin American dependency theory for decades.",
+      "source_locator": "https://www.centreforglobaleducation.com/open-veins-latin-america-re-appraisal-50-years"
+    },
+    {
+      "title": "The Truce",
+      "title_variants": ["La Tregua"],
+      "author": "Mario Benedetti",
+      "year_started": 1973,
+      "year_ended": 1985,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Mario Benedetti's 1960 epistolary novel about a Montevideo office clerk's brief romance — Uruguay's best-known 20th-century novel and an icon of Uruguayan literature, with over a million copies sold worldwide. After the June 1973 coup Benedetti's entire body of work was banned by the Uruguayan military dictatorship; he lived in exile (Argentina, Peru, Cuba, Spain) until the return of civilian government in 1985, when he co-founded Brecha alongside Juan Carlos Onetti and Eduardo Galeano.",
+      "source_locator": "https://brooklynrail.org/2010/07/fiction/mario-benedetti/"
+    }
+  ]
+}

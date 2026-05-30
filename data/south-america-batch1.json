@@ -1,0 +1,31 @@
+{
+  "country_code": "CL",
+  "source_url": "https://en.wikipedia.org/wiki/Book_burnings_in_Chile",
+  "source_name": "Chile — Pinochet-era book burnings (Wikipedia + LA Times + Index on Censorship)",
+  "source_type": "wikipedia",
+  "_note": "Two new CL entries documenting the only major post-1973 book-burning event under Pinochet: Valparaíso customs seized 14,846 copies of García Márquez's Clandestine in Chile on 28 November 1986 and burned them, along with copies of Teodoro Petkoff's political essays. Companion Uruguay batch in south-america-batch2.json.",
+  "entries": [
+    {
+      "title": "Clandestine in Chile: The Adventures of Miguel Littín",
+      "title_variants": ["La aventura de Miguel Littín, clandestino en Chile"],
+      "author": "Gabriel García Márquez",
+      "year_started": 1986,
+      "year_ended": 1990,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Gabriel García Márquez's 1986 reportage built from interviews with Chilean filmmaker Miguel Littín, who returned clandestinely to Chile to shoot a documentary about Pinochet's regime. On 28 November 1986, Chilean customs in Valparaíso seized 14,846 imported copies; military authorities burned them in the only major book-burning event of the Pinochet regime after the immediate post-coup raids of 1973. Pinochet's regime ended in March 1990 with the transition to democracy.",
+      "source_locator": "https://www.latimes.com/archives/la-xpm-1987-01-25-mn-5720-story.html"
+    },
+    {
+      "title": "Political Essays",
+      "title_variants": ["Ensayos políticos"],
+      "author": "Teodoro Petkoff",
+      "year_started": 1986,
+      "year_ended": 1990,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Collection of essays by Venezuelan ex-guerrilla, MAS-party co-founder, and 1983/1988 presidential candidate Teodoro Petkoff (1932-2018). Imported copies seized at Valparaíso customs alongside García Márquez's Clandestine in Chile on 28 November 1986 and burned together by military authorities. Specific edition title not named in the available primary sources; recorded as the generic 'Political Essays'.",
+      "source_locator": "https://en.wikipedia.org/wiki/Book_burnings_in_Chile"
+    }
+  ]
+}
