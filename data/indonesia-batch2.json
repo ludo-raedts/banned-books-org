@@ -1,0 +1,86 @@
+{
+  "country_code": "ID",
+  "source_url": "https://www.upi.com/Top_News/Special/2010/10/15/Indonesia-writes-off-book-banning-law/71181287139500/",
+  "source_name": "UPI + Max Lane — Indonesia 2010 Attorney General book-banning wave + Constitutional Court invalidation",
+  "source_type": "news",
+  "_note": "Seven new ID entries from Perplexity research 2026-05-29. Two Suharto-era Pramoedya non-quartet bans (Gadis Pantai + Korupsi, 1966) and five from the March 2010 Attorney General's book-banning wave that was struck down by the Indonesian Constitutional Court on 13 October 2010 (Decision 6-7/PUU-VIII/2010 — invalidating the 1963 PNPS Law's book-banning provision). The 2010 wave entries are therefore status='rescinded' with year_ended=2010.",
+  "entries": [
+    {
+      "title": "The Girl from the Coast",
+      "title_variants": ["Gadis Pantai"],
+      "author": "Pramoedya Ananta Toer",
+      "year_started": 1966,
+      "year_ended": 1998,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Banned in Indonesia under the Suharto New Order regime (1966 onwards) for being authored by Pramoedya Ananta Toer, who was imprisoned on Buru Island as a suspected PKI sympathizer. The novel was published before his arrest and circulated underground during the New Order. De facto ended with Suharto's fall in 1998.",
+      "source_locator": "https://maxlaneonline.com/2010/02/08/indonesia-book-bannings-spur-struggle-for-political-liberty/"
+    },
+    {
+      "title": "Corruption",
+      "title_variants": ["Korupsi"],
+      "author": "Pramoedya Ananta Toer",
+      "year_started": 1966,
+      "year_ended": 1998,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Banned in Indonesia under the Suharto New Order regime (1966 onwards) along with other works by Pramoedya. The 1954 novel satirized post-independence Indonesian bureaucracy. De facto ended with Suharto's fall in 1998.",
+      "source_locator": "https://maxlaneonline.com/2010/02/08/indonesia-book-bannings-spur-struggle-for-political-liberty/"
+    },
+    {
+      "title": "Pretext for Mass Murder: The September 30th Movement and Suharto's Coup d'État in Indonesia",
+      "title_variants": ["Dalih Pembunuhan Massal: Gerakan 30 September dan Kudeta Soeharto"],
+      "author": "John Roosa",
+      "year_started": 2009,
+      "year_ended": 2010,
+      "status": "rescinded",
+      "reason_slug": "political",
+      "description": "John Roosa's revisionist history of the 30 September 1965 movement and Suharto's subsequent seizure of power. Banned by the Indonesian Attorney General's office in 2009 for offering an alternative account of the 1965-66 mass killings. The ban was nullified on 13 October 2010 when the Constitutional Court (Decision 6-7/PUU-VIII/2010) struck down the 1963 PNPS Law's book-banning provision as unconstitutional.",
+      "source_locator": "https://maxlaneonline.com/2010/02/08/indonesia-book-bannings-spur-struggle-for-political-liberty/"
+    },
+    {
+      "title": "Lekra Doesn't Burn Books: The Silenced Voice of the Cultural Page of Harian Rakjat 1950-1965",
+      "title_variants": ["Lekra Tak Membakar Buku: Suara Senyap Lembar Kebudayaan Harian Rakjat 1950-1965"],
+      "author": "Rhoma Dwi Aria Yuliantri and Muhidin M. Dahlan",
+      "year_started": 2009,
+      "year_ended": 2010,
+      "status": "rescinded",
+      "reason_slug": "political",
+      "description": "Anthology and critical study of the cultural-affairs pages of Harian Rakjat (1950-1965), revisiting the legacy of Lekra (Lembaga Kebudayaan Rakyat) — the left-wing cultural organization vilified after 1965. Banned by the Attorney General in 2009 as part of the same wave that targeted Roosa's Pretext for Mass Murder. Nullified by the Constitutional Court on 13 October 2010.",
+      "source_locator": "https://maxlaneonline.com/2010/02/08/indonesia-book-bannings-spur-struggle-for-political-liberty/"
+    },
+    {
+      "title": "The Voice of the Church for the Oppressed: The Suffering, Bloodshed and Tears of God's People in West Papua Must End",
+      "title_variants": ["Suara Gereja bagi Umat Tertindas: Penderitaan, Tetesan Darah dan Cucuran Air Mata Umat Tuhan di Papua Barat Harus Diakhiri"],
+      "author": "Socratez Sofyan Yoman",
+      "year_started": 2010,
+      "year_ended": 2010,
+      "status": "rescinded",
+      "reason_slug": "political",
+      "description": "Theological/political work by West Papuan church leader Socratez Sofyan Yoman documenting human-rights abuses in West Papua. Banned by the Indonesian Attorney General in March 2010 as one of five titles. Nullified by the Constitutional Court on 13 October 2010 along with the other 2009-2010 ban orders.",
+      "source_locator": "https://www.upi.com/Top_News/Special/2010/10/15/Indonesia-writes-off-book-banning-law/71181287139500/"
+    },
+    {
+      "title": "Six Paths to God",
+      "title_variants": ["Enam Jalan Menuju Tuhan"],
+      "author": "Darmawan",
+      "year_started": 2010,
+      "year_ended": 2010,
+      "status": "rescinded",
+      "reason_slug": "religious",
+      "description": "Religious/philosophical work banned by the Indonesian Attorney General in March 2010 alongside other titles in the 2010 ban wave under the blasphemy/religious-deviance framing. Nullified by the Constitutional Court on 13 October 2010.",
+      "source_locator": "https://www.upi.com/Top_News/Special/2010/10/15/Indonesia-writes-off-book-banning-law/71181287139500/"
+    },
+    {
+      "title": "Unveiling the Mystery of Religious Diversity",
+      "title_variants": ["Mengungkap Misteri Keberagaman Agama"],
+      "author": "Syahruddin Ahmad",
+      "year_started": 2010,
+      "year_ended": 2010,
+      "status": "rescinded",
+      "reason_slug": "religious",
+      "description": "Work on religious pluralism by Syahruddin Ahmad. Banned in March 2010 alongside the four other titles in the Indonesian Attorney General's 2010 wave, on grounds of religious-pluralism heresy. Nullified by the Constitutional Court on 13 October 2010 (Decision 6-7/PUU-VIII/2010) — invalidating the AG's book-banning authority.",
+      "source_locator": "https://www.upi.com/Top_News/Special/2010/10/15/Indonesia-writes-off-book-banning-law/71181287139500/"
+    }
+  ]
+}
