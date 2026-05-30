@@ -562,6 +562,9 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     for (;;) {
       let q = sb.from('books')
         .select('id, slug, title, description_book, openlibrary_work_id, data_quality_status, book_authors(authors(display_name))')
+        // Blanket-works pseudo-books ("Toutes ses œuvres …") are not real
+        // titles — no source will ever resolve, so never enrich them.
+        .eq('is_blanket_works', false)
         .order('id', { ascending: true })
         .range(from, from + 999)
       if (opts.slug) q = q.eq('slug', opts.slug) as typeof q

@@ -187,6 +187,9 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         book_authors!left(authors!left(display_name))
       `)
       .is('cover_url', null)
+      // Blanket-works pseudo-books ("Toutes ses œuvres …") are not real
+      // titles — no cover will ever resolve, so never enrich them.
+      .eq('is_blanket_works', false)
       .order('id')
       .range(from, from + PAGE - 1)
 
