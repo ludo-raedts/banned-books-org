@@ -1,0 +1,31 @@
+{
+  "country_code": "IR",
+  "source_url": "https://www.oneworld.nl/mensenrechten/de-boeken-die-nog-steeds-verboden-zijn/",
+  "source_name": "OneWorld / IR-AN blogspot — Iran banned-books mentions (Perplexity research 2026-05-29)",
+  "source_type": "ngo",
+  "_note": "Two new Iran entries surfaced by a Perplexity research pass that the Wikipedia 'Book censorship in Iran' import missed. Source quality is moderate (secondary aggregators / personal blog), not Iranian primary sources. Reflected in description disclaimers.",
+  "entries": [
+    {
+      "title": "Khosrow and Shirin",
+      "title_variants": ["خسرو و شیرین", "Khosrow o Shirin"],
+      "author": "Nizami Ganjavi",
+      "year_started": 2011,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "moral",
+      "description": "Classical 12th-century Persian narrative poem (~1180 CE) by Nizami Ganjavi, telling the love story of Sasanian king Khosrow II and Armenian princess Shirin. Reportedly removed from Iranian school curriculum and/or its publication permit restricted in 2011 by the Ministry of Culture and Islamic Guidance on moral/sexual grounds. Source is a Dutch-Persian blog post (2011), not an Iranian primary source — verification recommended.",
+      "source_locator": "http://ir-an.blogspot.com/2011/08/perzisch-liefdesverhaal-khosrow-en.html"
+    },
+    {
+      "title": "Zhuan Falun",
+      "title_variants": ["轉法輪", "ژوان فالون", "Turning the Law Wheel"],
+      "author": "Li Hongzhi",
+      "year_started": 2008,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "religious",
+      "description": "Foundational Falun Gong text (1995) by movement founder Li Hongzhi. Reportedly prohibited in Iran in 2008 as part of broader restrictions on minority religious movements. Source is OneWorld (Dutch HR magazine) compiling banned books across jurisdictions — not an Iranian primary source. Iran also bans Bahá'í texts and other minority-religion literature under the same doctrine.",
+      "source_locator": "https://www.oneworld.nl/mensenrechten/de-boeken-die-nog-steeds-verboden-zijn/"
+    }
+  ]
+}

@@ -68,6 +68,7 @@ interface Entry {
 }
 
 interface InputFile {
+  country_code?: string                   // ISO-3166-1 alpha-2; defaults to 'SG' for legacy Singapore batches
   source_url: string
   source_name: string
   source_type: string
@@ -94,7 +95,8 @@ async function main() {
   console.log(`\n── import-singapore-wiki ── (${APPLY ? 'APPLY' : 'DRY-RUN'})\n`)
 
   const input: InputFile = JSON.parse(readFileSync(JSON_PATH, 'utf-8'))
-  console.log(`Loaded ${input.entries.length} curated Singapore entries.`)
+  const countryCode = input.country_code ?? 'SG'
+  console.log(`Loaded ${input.entries.length} curated entries for ${countryCode}.`)
 
   // Validate
   for (const e of input.entries) {
@@ -185,9 +187,9 @@ async function main() {
         }
       }
 
-      // Dedup ban: same book + SG + government + year_started + region/institution NULL
+      // Dedup ban: same book + country + government + year_started + region/institution NULL
       const { data: existingBan } = await supabase.from('bans').select('id')
-        .eq('book_id', bookId).eq('country_code', 'SG').eq('scope_id', govScopeId)
+        .eq('book_id', bookId).eq('country_code', countryCode).eq('scope_id', govScopeId)
         .eq('year_started', e.year_started).is('region', null).is('institution', null)
         .maybeSingle()
       let banId: number
@@ -197,7 +199,7 @@ async function main() {
       } else {
         const { data: nb, error: bErr } = await supabase.from('bans').insert({
           book_id: bookId,
-          country_code: 'SG',
+          country_code: countryCode,
           scope_id: govScopeId,
           action_type: 'banned',
           status: e.status,
