@@ -1,0 +1,40 @@
+{
+  "country_code": "PH",
+  "source_url": "https://www.karapatan.org/media_release/red-tagging-halting-distribution-of-kwf-books-with-anti-marcos-anti-duterte-content-acts-of-idiocy-081222/",
+  "source_name": "Philippines — Tier-1 sources (Karapatan + Bulatlat + Inquirer + Bannedthought)",
+  "source_type": "ngo",
+  "_note": "Three new PH entries. (1+2) Complete the August 2022 KWF-NTF-ELCAC five-book red-tagging incident — the existing 3 entries (Jacob, Cayanes, Aguila) miss Rodriguez and Pagusara. (3) Foundational Marcos-era ban: Joma Sison's Philippine Society and Revolution, the canonical CPP text that triggered systematic anti-communist censorship of all Sison/Amado-Guerrero writings 1971-1986.",
+  "entries": [
+    {
+      "title": "Kalatas",
+      "author": "Rommel Rodriguez",
+      "year_started": 2022,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Filipino-language work published by the Komisyon sa Wikang Filipino (KWF, the Commission on the Filipino Language) and red-tagged in the August 2022 KWF memorandum that halted publication and distribution of five titles deemed 'subversive', 'anti-government', and with 'anti-Marcos, anti-Duterte' content. The memorandum was issued under pressure from NTF-ELCAC (National Task Force to End Local Communist Armed Conflict). Triggered House Resolution 253 condemning the red-tagging.",
+      "source_locator": "https://www.bulatlat.com/2022/08/12/kwf-bans-publication-distribution-of-5-new-books/"
+    },
+    {
+      "title": "May Hadlang ang Umaga",
+      "author": "Don Pagusara",
+      "year_started": 2022,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Filipino-language work by Don Pagusara, published by the Komisyon sa Wikang Filipino (KWF) and red-tagged alongside four other titles in the August 2022 NTF-ELCAC-driven KWF memorandum. The five red-tagged authors (Jacob, Rodriguez, Cayanes, Pagusara, Aguila) and KWF chairperson Dr. Arthur Casanova were publicly defended by Karapatan, the Book Development Association of the Philippines, and the House of Representatives.",
+      "source_locator": "https://newsinfo.inquirer.net/1645809/authors-unbowed-after-govt-purge-of-books"
+    },
+    {
+      "title": "Philippine Society and Revolution",
+      "author": "Jose Maria Sison",
+      "title_variants": ["PSR"],
+      "year_started": 1971,
+      "year_ended": 1986,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Foundational text of the re-established Communist Party of the Philippines (CPP), written by Jose Maria Sison under the pen-name Amado Guerrero in 1969 and first circulated in 1970. Provided the Marxist-Maoist analysis of Philippine class structure that the CPP and its armed wing (NPA) operated on. Banned in 1971 under Marcos's anti-subversion measures and remained prohibited throughout the entire martial law period (1972-1981) and post-EDSA transition until the 1986 People Power revolution lifted the prohibitions. Sison himself was arrested in 1977, tortured, and held in solitary confinement until 1986.",
+      "source_locator": "https://www.bannedthought.net/Philippines/CPP/1970s/PhilippineSocietyAndRevolution-4ed.pdf"
+    }
+  ]
+}
