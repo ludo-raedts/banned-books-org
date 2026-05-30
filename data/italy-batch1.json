@@ -1,0 +1,31 @@
+{
+  "country_code": "IT",
+  "source_url": "https://www.theguardian.com/books/2015/jul/16/italian-authors-venice-mayor-ban-books-children-same-sex-family",
+  "source_name": "Italy — Tier-1 sources (Guardian + NYT + Independent + CBLDF) on the 2015 Venice mayor children's book ban",
+  "source_type": "news",
+  "_note": "Italy post-1948 has strong constitutional press freedoms and few documented book bans. The historical 17 IT bans (Vatican Index pre-1966, Mussolini era, classical works) already cover the main categories. This batch adds the well-documented 2015 Venice case: newly-elected mayor Luigi Brugnaro banned 49 children's books from the city's preschool libraries, citing they 'violated the traditional family'. The case attracted international attention — Pope Francis publicly praised Pardi's Piccolo Uovo after it was banned. Two specific titles imported with full Tier-1 sourcing.",
+  "entries": [
+    {
+      "title": "Little Egg",
+      "title_variants": ["Piccolo Uovo"],
+      "author": "Francesca Pardi",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "moral",
+      "description": "Children's picture book by Francesca Pardi (2011, Lo Stampatello) about a little egg meeting diverse animal families — including same-sex parents — to celebrate family pluralism. In July 2015 newly-elected Venice mayor Luigi Brugnaro removed Piccolo Uovo along with 48 other 'gender books' from the city's preschool libraries, arguing they violated 'the traditional family'. Pope Francis subsequently sent Pardi a letter praising the book — a striking reversal of the religious-conservative framing the ban relied on. Italian PEN and 250+ Italian authors signed a counter-letter asking Brugnaro to also ban their books in solidarity.",
+      "source_locator": "https://www.theguardian.com/world/2015/aug/28/pope-francis-sends-letter-praising-gay-childrens-book"
+    },
+    {
+      "title": "Little Blue and Little Yellow",
+      "title_variants": ["Piccolo blu e piccolo giallo"],
+      "author": "Leo Lionni",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "moral",
+      "description": "Leo Lionni's 1959 classic children's picture book — about two friends, one blue and one yellow, who hug so closely they become green. Widely considered a landmark in children's literature. Included on Venice mayor Luigi Brugnaro's July 2015 list of 49 children's books removed from the city's preschool libraries for allegedly promoting 'gender' content. The Lionni inclusion drew particular ridicule: a 1959 book about colour friendship was caught up in Brugnaro's culture-war campaign.",
+      "source_locator": "https://cbldf.org/2015/07/newly-elected-mayor-of-venice-bans-50-books-from-kindergartens/"
+    }
+  ]
+}
