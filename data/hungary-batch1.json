@@ -1,0 +1,42 @@
+{
+  "country_code": "HU",
+  "source_url": "https://www.theguardian.com/books/2021/jan/20/hungary-orders-lgbt-publisher-to-print-disclaimers-on-childrens-book",
+  "source_name": "Hungary — Tier-1 sources (Guardian + TIME + Hungarian Conservative + EBSCO)",
+  "source_type": "news",
+  "_note": "Three new HU entries via Firecrawl Tier-1 search. Spans the 2020-2024 Orbán anti-LGBT regime (Meseország mindenkié + 2021 'child protection' law) and the Kádár-era (Hamvas under silentium 1948-1989, Konrád suppressed 1977-1989). Existing HU records (Márai, Illyés, Konrád's Case Worker, Déry, Faludy, Orwell, Heartstopper) stay untouched; this batch fills gaps.",
+  "entries": [
+    {
+      "title": "A Fairy Tale for Everyone",
+      "title_variants": ["Meseország mindenkié", "Wonderland Is for Everyone"],
+      "author": "Boldizsár M. Nagy",
+      "year_started": 2020,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "moral",
+      "description": "Hungarian fairy-tale anthology edited by Boldizsár M. Nagy (Labrisz Lesbian Association, 2020). Re-imagined classic tales with LGBT and minority-inclusive characters. Triggered a national political storm: PM Viktor Orbán publicly attacked it as 'homosexual propaganda'; MP Dóra Dúró publicly shredded a copy; a 2021 government decree ordered the publisher to print disclaimers stating the book contains 'behaviour inconsistent with traditional gender roles'. The case directly catalysed Hungary's June 2021 'child-protection law' (Act LXXIX of 2021) prohibiting LGBT content in materials accessible to minors. The European Court of Justice ruled the 2021 law unlawfully discriminatory in 2025.",
+      "source_locator": "https://www.theguardian.com/books/2021/jan/20/hungary-orders-lgbt-publisher-to-print-disclaimers-on-childrens-book"
+    },
+    {
+      "title": "The Carnival",
+      "title_variants": ["Karnevál"],
+      "author": "Béla Hamvas",
+      "year_started": 1948,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Béla Hamvas's three-volume magnum opus, written 1948-1951 during his communist-era silentium. Hamvas (1897-1968), one of Hungary's most original 20th-century philosophers and essayists, was placed under publication ban by the Rákosi/Kádár regimes in 1948 and remained silenced — unable to publish under his name — for the rest of his life. The Carnival circulated in samizdat copies; first official Hungarian publication came in 1985 (under Kádár's late-period liberalisation) and full rehabilitation only after 1989.",
+      "source_locator": "https://www.hungarianconservative.com/articles/culture_society/bela-hamvas-a-hungarian-conservative/"
+    },
+    {
+      "title": "The City Builder",
+      "title_variants": ["A városalapító"],
+      "author": "György Konrád",
+      "year_started": 1977,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "György Konrád's second novel, a stream-of-consciousness study of a disillusioned Hungarian city planner. After the international success of The Case-Worker (1969, already banned in Hungary), Konrád was effectively unable to publish in Hungary; The City Builder appeared in English (Harcourt Brace Jovanovich, 1977) and German first, with no domestic Hungarian edition possible under the Kádár regime. Konrád continued writing samizdat essays through the 1980s and was lifted from the publication-ban list around 1989.",
+      "source_locator": "https://www.ebsco.com/research-starters/literature-and-writing/city-builder-george-konrad"
+    }
+  ]
+}
