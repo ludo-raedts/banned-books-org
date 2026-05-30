@@ -460,8 +460,22 @@ const CATEGORIES: readonly Category[] = [
         name: 'AFTE — Association for Freedom of Thought and Expression (Egypt)',
         url: 'https://afteegypt.org',
         description:
-          'Cairo-based legal NGO defending freedom of expression. AFTE\'s English-language research arm documents Egyptian book confiscations under the Undesirable Publications Act, blasphemy prosecutions, and Cairo Book Fair customs seizures.',
+          'Cairo-based legal NGO defending freedom of expression. AFTE\'s English-language research arm documents Egyptian book confiscations under the Undesirable Publications Act, blasphemy prosecutions, and Cairo Book Fair customs seizures. The 2023 AFTE field report (afteegypt.org/research-en/2023/03/19/33849) catalogues confiscations across multiple Cairo Book Fair editions and individual prosecution cases.',
         match: ['afteegypt.org'],
+      },
+      {
+        name: 'The File Room — Article 19 / Index on Censorship archive',
+        url: 'https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/file.html',
+        description:
+          'Antoni Muntadas\'s 1994 net.art project The File Room — an online crowd-sourced censorship archive originally hosted by Chicago\'s Randolph Street Gallery and now preserved by NTT InterCommunication Center (Tokyo, Japan). Curated in cooperation with Article 19 and Index on Censorship. Cited as historical-archive source for late-20th-century censorship cases that pre-date modern HRW / PEN databases.',
+        match: ['ntticc.or.jp'],
+      },
+      {
+        name: 'Mushakavanhu — None but Ourselves (Rhodesia history)',
+        url: 'https://tinsmush.medium.com/books-rhodesia-forbade-my-parents-to-read-472c6',
+        description:
+          'Zimbabwean writer Tinashe Mushakavanhu\'s essay drawing on Julie Frederikse\'s book "None but Ourselves: Masses vs Media in the Making of Zimbabwe" — cataloguing books banned under the Ian Smith / Rhodesian Front white-minority regime (1965–1980). Used as the per-title cite-of-record for Rhodesia/Zimbabwe ban entries given the very limited primary-source documentation that survives from Salisbury archives.',
+        match: ['tinsmush.medium.com'],
       },
       {
         name: 'US Congressional Tom Lantos Human Rights Commission',
