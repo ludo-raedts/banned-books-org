@@ -1,0 +1,31 @@
+{
+  "country_code": "JP",
+  "source_url": "http://eiga9.altervista.org/articulos/obscenity.html",
+  "source_name": "Japan — Obscenity and Article 175 cases (Eiga9 + Red Circle Authors)",
+  "source_type": "ngo",
+  "_note": "Two new JP entries documenting landmark postwar Article 175 (waisetsu butsu hanpu tō) obscenity prosecutions. The existing 7 JP records cover Imperial-era (Kōtoku Shūsui 1901, Ishikawa Takuboku 1910, Kobayashi Takiji 1929), early postwar (Lady Chatterley 1950), and modern (Barefoot Gen 2013, Little Black Sambo 1899). This batch fills the 1959-1976 Article-175 trial-of-record gap with the two cases that built the postwar Japanese doctrine of obscenity alongside Chatterley.",
+  "entries": [
+    {
+      "title": "The Prosperity of Vice",
+      "title_variants": ["悪徳の栄え", "Akutoku no sakae", "L'Histoire de Juliette ou Les Prospérités du vice"],
+      "author": "Marquis de Sade",
+      "year_started": 1960,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "obscenity",
+      "description": "Tatsuhiko Shibusawa's two-volume abridged Japanese translation (1959-1960) of Sade's L'Histoire de Juliette ou Les Prospérités du vice (1797-1801). Shibusawa and editor Kyoji Ishii were indicted in 1960 under Article 175 of the Japanese Criminal Code (waisetsu butsu hanpu tō — distribution of obscene objects). On 16 October 1962 the Tokyo District Court ruled 14 passages 'offensive' but acquitted on the grounds they were 'too brutal and unreal' to appeal to sexual passion. The Tokyo High Court reversed on 21 November 1963, finding both guilty. The Supreme Court upheld the conviction on 15 October 1969 — a nine-year landmark case that established the doctrine that 'obscene sections render an entire work obscene' and the application of Articles 12/13 (Public Welfare) as constitutional limits on Article 21 (academic freedom). Trial witnesses included Shusaku Endo, Shohei Ooka, and Kenzaburo Oe.",
+      "source_locator": "http://eiga9.altervista.org/articulos/obscenity.html"
+    },
+    {
+      "title": "In the Realm of the Senses",
+      "title_variants": ["愛のコリーダ", "Ai no Korīda", "Ai no Corrida"],
+      "author": "Nagisa Oshima",
+      "year_started": 1976,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "obscenity",
+      "description": "Nagisa Oshima's companion book to his 1976 French-Japanese film Ai no Corrida (In the Realm of the Senses) — essays, film script, and twelve photographs. The book was charged under Article 175 in late July 1976, before the film itself was imported into Japan (the negative had been developed in France to evade Japanese authorities). Oshima later admitted in trial that the book had been a 'scapegoat' for the possible indictment of the film. The original uncensored version of the film has never been released in Japan to this day; the 2000 'Ai no Corrida 2000' edition restored 5 minutes of footage but still contained digital bokashi (masking).",
+      "source_locator": "http://eiga9.altervista.org/articulos/obscenity.html"
+    }
+  ]
+}
