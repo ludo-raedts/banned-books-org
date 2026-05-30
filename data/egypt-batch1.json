@@ -1,0 +1,53 @@
+{
+  "country_code": "EG",
+  "source_url": "https://pen.org/individual-case/ahmed-naji/",
+  "source_name": "Egypt — Tier-1 sources (PEN America + Yale University Press + Daily News Egypt + Ahram Online)",
+  "source_type": "ngo",
+  "_note": "Egypt's Wikipedia section (in the global banned-books list) has only 2 entries and both already in DB. This batch reaches deeper via Firecrawl-search across PEN America, Yale, Daily News Egypt, and Ahram Online to capture four well-documented Egyptian cases the Wikipedia list misses. Per-entry source_locator carries the strongest primary URL for each.",
+  "entries": [
+    {
+      "title": "Metro",
+      "title_variants": ["مترو"],
+      "author": "Magdy El Shafee",
+      "year_started": 2008,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "moral",
+      "description": "Egypt's first adult graphic novel, depicting poverty, corruption, sex, and political dissent in late-Mubarak-era Cairo. Police raided the Cairo publisher in April 2008 and confiscated all copies; both the author and the publisher were prosecuted for 'violating public morals'. They were fined and the book remained off Egyptian shelves for years. Widely cited as a turning point in Egyptian state attempts to police comics.",
+      "source_locator": "https://www.oneworld.nl/mensenrechten/de-boeken-die-nog-steeds-verboden-zijn/"
+    },
+    {
+      "title": "The Use of Life",
+      "title_variants": ["استخدام الحياة", "Istikhdam al-Hayat", "Using Life"],
+      "author": "Ahmed Naji",
+      "year_started": 2015,
+      "year_ended": 2018,
+      "status": "rescinded",
+      "reason_slug": "sexual",
+      "description": "Ahmed Naji's 2014 novel; a sexually explicit excerpt published in state-funded Akhbar al-Adab triggered an Egyptian citizen complaint (the man claimed reading it caused him heart palpitations and lowered blood pressure). Lower court acquittal December 2015; appeals court conviction February 2016 — Naji jailed 2 years for 'violating public modesty' under Article 178 of the Penal Code. After 10 months in prison Naji was temporarily released (Dec 2016); the Court of Cassation overturned the conviction May 2017 and ordered retrial; retrial January 2018 replaced jail with a 20,000 EGP fine and lifted his travel ban. Naji received the PEN/Barbey Freedom to Write Award 2016 while imprisoned.",
+      "source_locator": "https://pen.org/individual-case/ahmed-naji/"
+    },
+    {
+      "title": "Critique of Religious Discourse",
+      "title_variants": ["نقد الخطاب الديني", "Naqd al-Khitab al-Dini"],
+      "author": "Nasr Hamid Abu Zayd",
+      "year_started": 1995,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "religious",
+      "description": "Egyptian Qur'anic scholar Nasr Hamid Abu Zayd's 1992 critical-hermeneutical study of Islamic religious discourse. In 1993 he was denied promotion at Cairo University on charges of apostasy stemming from this book. In 1995 the Cairo Court of Appeals declared him an apostate based on the book's interpretations and forcibly annulled his marriage (a Muslim woman cannot be married to an apostate under hisba doctrine). Abu Zayd fled to the Netherlands and held the Ibn Rushd Chair at Utrecht University until his death in 2010. The book itself was effectively suppressed in Egypt by the apostasy ruling.",
+      "source_locator": "https://yalebooks.yale.edu/book/9780300207125/critique-of-religious-discourse/"
+    },
+    {
+      "title": "The Absent Truth",
+      "title_variants": ["الحقيقة الغائبة", "Al-Haqiqa al-Gha'iba"],
+      "author": "Faraj Foda",
+      "year_started": 1992,
+      "year_ended": null,
+      "status": "historical",
+      "reason_slug": "religious",
+      "description": "Faraj Foda's 1986 secularist critique of political Islam, arguing that the early Islamic caliphate was a political-historical experiment rather than divinely ordained religious model. The book and its author were targeted by Al-Azhar clerics and Islamist movements through the late 1980s; Foda was placed on an Islamist 'apostates' list by Al-Azhar's Front of Ulema in early 1992. On 8 June 1992 Foda was assassinated in front of his Egyptian Society for Enlightenment by Al-Jamaa al-Islamiya gunmen. His books were banned and burned by Islamist activists before and after the assassination.",
+      "source_locator": "https://www.dailynewsegypt.com/2013/06/08/farg-fouda-assassination-of-the-word/"
+    }
+  ]
+}
