@@ -129,9 +129,96 @@ After the Wikipedia + Perplexity sweep, the next investment becomes scraping the
 - **Wikipedia regex misses** — my count for India/Israel/Taiwan/Ukraine/Uzbekistan came up as 0 due to format variation (`_[link](url)_` vs `| _Title`). Manual inspection needed for these.
 - **Yugoslavia successor states**: most legacy Yugoslavia bans don't map cleanly to current country codes (RS/HR/SI/BA/XK). Wikipedia keeps them under "Yugoslavia" (we have 15). Splitting requires editorial judgment per book.
 
+## Lessons from the Iran probe (2026-05-29)
+
+Tried the standard pipeline on Iran (already 54 bans, expected modest growth).
+Three learnings worth carrying forward:
+
+### Learning 1 — Wikipedia comprehensive lists often already imported
+
+Iran's coverage came almost entirely from a one-off Wikipedia bulk-parse of
+[Book censorship in Iran](https://en.wikipedia.org/wiki/Book_censorship_in_Iran).
+36 of 39 Wikipedia entries already in DB. **Check your existing-coverage delta
+BEFORE running the Wikipedia step** — for already-imported countries the
+Perplexity-overlay is the only value-add.
+
+Pre-flight query template:
+```sql
+SELECT bs.source_name, COUNT(*)
+FROM bans b
+JOIN ban_source_links bsl ON bsl.ban_id = b.id
+JOIN ban_sources bs ON bs.id = bsl.source_id
+WHERE b.country_code = 'XX'
+GROUP BY bs.source_name
+ORDER BY 2 DESC;
+```
+
+### Learning 2 — Perplexity is weak on non-Latin-script jurisdictions
+
+Iran Perplexity-pass yielded 6 entries, **4 already in DB**, only 2 genuinely
+new (Khosrow and Shirin + Zhuan Falun). Source quality was poor: blogspot
+posts + secondary Dutch aggregators (oneworld.nl, oba.nl). One source URL
+was literally `banned-books.org` — Perplexity citing our own site back to us.
+
+Reason: Iran's recent bans are documented in Persian-language primary
+sources (Tasnim News, Mehr News, IRNA, plus Persian-language opposition
+media). Perplexity's English-indexed knowledge has weak coverage of these.
+
+**Better source-stack for non-Latin-script jurisdictions:**
+
+| Tier | Source | Coverage |
+|---|---|---|
+| 1 | PEN International cases database (en.pen-international.org/case-list) | All countries, writer-centric |
+| 1 | Article 19 country reports (article19.org/country/{slug}/) | Strong on legal/structural framing |
+| 1 | Index on Censorship country pages (indexoncensorship.org) | Editorially curated cases |
+| 2 | IranWire (`iranwire.com/en/`) — Iran-specific | English archive of Iranian dissident journalism |
+| 2 | Radio Farda (`radiofarda.com`) | Persian + English translations |
+| 2 | RFA / RFE/RL country desks | China, Iran, Cuba, Vietnam, North Korea |
+| 3 | HRW + Amnesty country reports | Annual snapshots |
+| 3 | Reporters Without Borders (RSF) annual reports | Press-freedom-cited cases |
+
+When prompting Perplexity for these jurisdictions, **explicitly require Tier-1
+URLs** ("alleen PEN International / Article 19 / Index on Censorship") and
+exclude blogspots/aggregators/Wikipedia.
+
+### Learning 3 — Non-Latin titles need post-import cleanup
+
+The earlier Wikipedia bulk-parse stored transliterated Persian as primary
+title (e.g. `āyāt-e sheytāni`). Per project doctrine the English meaningful
+translation should be primary; transliteration goes to
+`books.title_transliterated`; `books.title_native_script` records the script
+family. Cleanup script
+([scripts/cleanup-iran-titles.ts](../scripts/cleanup-iran-titles.ts)) is now
+the template for similar fixups on Chinese / Arabic / Cyrillic imports
+(China, Iran, Saudi Arabia, Egypt, Russia historic).
+
+For the four IR records where the canonical English-titled book already
+existed, [scripts/merge-iran-duplicates.ts](../scripts/merge-iran-duplicates.ts)
+demonstrates the safe-merge pattern: reassign bans from obsolete →
+canonical, delete book_authors + obsolete book row, preserve all
+source-link attribution on the ban_id.
+
+### Implication for next-session candidates
+
+- **China** and **Saudi Arabia** should both expect Latin-vs-native title
+  mismatches from any Wikipedia-style import. Plan time for cleanup similar
+  to Iran's. Use the IR cleanup script as template — change `Arabic` →
+  `Han` / `Arabic` / `Cyrillic` as appropriate, refresh the hardcoded
+  translation map.
+- **India, Egypt, Pakistan, Indonesia** mostly publish English-language
+  bans (or English-equivalents readily available), so title cleanup will
+  be lighter.
+- **Wikipedia first, Perplexity only if needed**: for Iran the Wikipedia
+  list already covered nearly everything. The Perplexity step's value is
+  highest for very-recent bans (post-2020) and primary-source attribution
+  — not for finding new titles.
+
 ## Status
 
 - ✅ Singapore proof-of-concept committed (commit `f521c5c`, batch1 + batch2 = 31 + 6 = 37 new bans)
 - ✅ Russia FSEM batch1 committed (commit `8bd8a5d`, 44 entries)
-- ✅ Generic import scripts ready
-- ⏸ Tier-1 sweep deferred to next session (user request: "bereid voor — andere keer doen")
+- ✅ Iran probe + cleanup committed (commit `9dd34ed`, +2 new bans, 31 renames, 4 duplicate merges)
+- ✅ Generic per-country importer ready (`import-singapore-wiki.ts` reads `country_code` from JSON)
+- ✅ Non-Latin title cleanup template ready (`cleanup-iran-titles.ts`)
+- ✅ Safe-merge duplicate template ready (`merge-iran-duplicates.ts`)
+- ⏸ Tier-1 sweep deferred (Iran probe consumed the Tier-1 budget; remaining: China, Saudi Arabia, India, Egypt, Pakistan, Indonesia)
