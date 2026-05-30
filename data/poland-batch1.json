@@ -1,0 +1,31 @@
+{
+  "country_code": "PL",
+  "source_url": "https://www.szpilman.net/",
+  "source_name": "Poland — Tier-1 sources (szpilman.net official + Univ California Press + NYT)",
+  "source_type": "ngo",
+  "_note": "Two new PL entries documenting communist-era (PRL) suppression. The existing 10 PL records already cover the major PRL-era ban-list (Miłosz, Mrożek, Konwicki, Wat, Nowakowski, Grass, Kosiński). This batch adds two well-documented cases the existing import missed: Szpilman's memoir (suppressed 1946 by Stalinist censors, restored 1998) and Michnik's prison essays (banned through the entire 1980s, samizdat-only).",
+  "entries": [
+    {
+      "title": "Death of a City",
+      "title_variants": ["Śmierć miasta", "The Pianist", "Pianista"],
+      "author": "Władysław Szpilman",
+      "year_started": 1946,
+      "year_ended": 1998,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Władysław Szpilman's first-person Holocaust memoir of his survival in the Warsaw Ghetto, escape, and concealment in 'Aryan' Warsaw until liberation. Published in Poland in 1946 as 'Śmierć miasta' and reportedly suppressed by Stalinist authorities shortly after — they objected to portrayals showing the Red Army's slow advance leaving Warsaw to its fate during the 1944 Uprising, and to depictions of Polish collaboration in the Holocaust. Removed from circulation throughout PRL (1946-1989). First republished in restored form in 1998 (Munich, then English-language as 'The Pianist' 1999) — the basis for Roman Polanski's 2002 film.",
+      "source_locator": "http://www.szpilman.net/"
+    },
+    {
+      "title": "Letters from Prison and Other Essays",
+      "title_variants": ["Listy z więzienia"],
+      "author": "Adam Michnik",
+      "year_started": 1980,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Adam Michnik's collected essays — including 'A New Evolutionism' (1976) and letters written from his Białołęka detention during martial law (1981-1984) — published in English by University of California Press in 1985. In PRL Poland the texts circulated only through underground samizdat publishers (especially NOWA — Niezależna Oficyna Wydawnicza), as Michnik himself was a banned author whose works could not appear under his name in state publishing. Lifted with the collapse of communist rule in 1989; Michnik subsequently became editor-in-chief of Gazeta Wyborcza (Poland's largest newspaper).",
+      "source_locator": "https://www.nybooks.com/articles/1985/07/18/letter-from-the-gdansk-prison/"
+    }
+  ]
+}
