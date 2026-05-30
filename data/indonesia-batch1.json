@@ -1,0 +1,18 @@
+{
+  "country_code": "ID",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#Indonesia",
+  "source_name": "Wikipedia — List of books banned by governments (Indonesia section)",
+  "source_type": "wikipedia",
+  "_note": "Wikipedia's Indonesia section is sparse (4 entries; 2 already in DB; 1 categorical 'All Chinese literature 1967' that doesn't fit our book-row model). This batch imports only Interest by Kevin Gaughen. Perplexity overlay is required to substantively expand ID coverage (currently 9 bans for a country with enormous Suharto-era ban history).",
+  "entries": [
+    {
+      "title": "Interest",
+      "author": "Kevin Gaughen",
+      "year_started": 2015,
+      "year_ended": null,
+      "status": "active",
+      "reason_slug": "political",
+      "description": "Banned by the government of Indonesia in 2015 for subversive and/or anti-government themes."
+    }
+  ]
+}
