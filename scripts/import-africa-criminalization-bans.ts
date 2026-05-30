@@ -47,12 +47,17 @@ type Entry = {
   source_name: string
   source_type: string
   needs_review: boolean
+  // When set, attach the ban to this existing book id directly (bypasses slug
+  // resolution). Use for titles whose stored slug differs from slugify(title),
+  // so we add a ban instead of creating a duplicate book.
+  existing_book_id?: number
 }
 
 type Meta = { note?: string; source_type?: string }
 
 const APPLY = process.argv.includes('--apply')
-const FILE = resolve(__dirname, '../data/africa-criminalization-bans.json')
+const fileArg = process.argv.slice(2).find((a) => !a.startsWith('--'))
+const FILE = resolve(__dirname, '..', fileArg ?? 'data/africa-criminalization-bans.json')
 
 async function resolveExistingBook(pg: Client, slug: string): Promise<number | null> {
   const direct = await pg.query<{ id: number }>('select id from books where slug = $1', [slug])
@@ -83,9 +88,11 @@ async function main(): Promise<void> {
       const slug = slugify(e.title)
       if (!slug) throw new Error(`slugify produced empty slug for '${e.title}'`)
 
-      const existingId = await resolveExistingBook(pg, slug)
+      const existingId = e.existing_book_id ?? (await resolveExistingBook(pg, slug))
       const flag = e.needs_review ? ' ⚠needs_review' : ''
-      const where = existingId ? `EXISTS book_${existingId}` : 'NEW book'
+      const where = existingId
+        ? `${e.existing_book_id ? 'PINNED' : 'EXISTS'} book_${existingId}`
+        : 'NEW book'
       console.log(
         `\n${e.title} [${slug}] — ${where}\n   ${e.country_code} ${e.ban_year} ${e.scope_slug}/${e.action_type}/${e.reason_slug}${flag}`,
       )
