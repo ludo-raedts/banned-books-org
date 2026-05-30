@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "note": "Malawi sweep. The Banda-era Censorship Board record is large at author level but thin at retraceable title level. Only three title-specific cases cleared the bar. No Bride Price (Rubadiri), Chief the Honourable Minister (Aluko) and Animal Farm (Orwell, author-level only) could NOT be sourced to a title-specific ban and were excluded. The Second Sex attaches to existing book id 90. For the two HRW-list titles the exact ban year is unknown; 1968 (Censorship Board establishment) is used as a proxy, noted in the description.",
+    "source_type": "ngo"
+  },
+  "entries": [
+    {
+      "title": "Of Chameleons and Gods",
+      "authors": ["Jack Mapanje"],
+      "first_published_year": 1981,
+      "original_language": "en",
+      "country_code": "MW",
+      "ban_year": 1985,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "historical",
+      "description_ban": "This poetry collection, read as a critique of the Banda regime, was withdrawn from circulation and banned from schools and universities by the Ministry of Education and Culture in June 1985 as 'unsuitable'. Mapanje was later detained without charge from 1987 to 1991.",
+      "inclusion_rationale": "Censorship-board ban and author detention; documented by Article 19 / Index on Censorship via The File Room.",
+      "source_url": "https://www.ntticc.or.jp/Archive/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/322mapanje.html",
+      "source_name": "The File Room (Article 19 / Index on Censorship)",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "The Kama Sutra",
+      "authors": ["Vatsyayana"],
+      "first_published_year": null,
+      "original_language": "sa",
+      "country_code": "MW",
+      "ban_year": 1968,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "sexual",
+      "ban_status": "historical",
+      "description_ban": "Named among the titles banned by the Malawi Censorship Board in Human Rights Watch/Africa Watch's report 'Where Silence Rules' (1990). Exact ban year unknown; 1968 (Censorship Board establishment) used as a placeholder.",
+      "inclusion_rationale": "On the Malawi Censorship Board banned list; documented by Human Rights Watch (medium confidence).",
+      "source_url": "https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/325malawi.html",
+      "source_name": "Human Rights Watch, Where Silence Rules (1990)",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "The Second Sex",
+      "authors": ["Simone de Beauvoir"],
+      "first_published_year": 1949,
+      "original_language": "fr",
+      "country_code": "MW",
+      "ban_year": 1968,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "sexual",
+      "ban_status": "historical",
+      "description_ban": "Named explicitly among the titles banned by the Malawi Censorship Board in Human Rights Watch/Africa Watch's report 'Where Silence Rules' (1990). Exact ban year unknown; 1968 (Censorship Board establishment) used as a placeholder.",
+      "inclusion_rationale": "Adds a Malawi ban to an existing book record; on the Malawi Censorship Board banned list per Human Rights Watch.",
+      "source_url": "https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/325malawi.html",
+      "source_name": "Human Rights Watch, Where Silence Rules (1990)",
+      "source_type": "ngo",
+      "existing_book_id": 90,
+      "needs_review": false
+    }
+  ]
+}
