@@ -194,8 +194,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'Wikipedia — book and author articles (per-title citations)',
         url: 'https://en.wikipedia.org/',
         description:
-          'For individually-curated entries, we cite the relevant book or author\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four, en.wikipedia.org/wiki/Bohumil_Hrabal). These are manual curation, not bulk-imported.',
-        match: ['en.wikipedia.org/wiki/'],
+          'For individually-curated entries, we cite the relevant book or author\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four, en.wikipedia.org/wiki/Bohumil_Hrabal). Also includes non-English Wikipedias where the English article doesn\'t exist — Korean Wikipedia (ko.wikipedia.org) for Korean-only titles like 난장이가 쏘아올린 작은 공 (A Small Ball Shot by a Dwarf), etc. These are manual curation, not bulk-imported.',
+        match: ['en.wikipedia.org/wiki/', 'ko.wikipedia.org/wiki/'],
       },
       {
         name: 'Wikisource — Liste Otto (Nazi-era France, 1940–1944)',
@@ -478,6 +478,27 @@ const CATEGORIES: readonly Category[] = [
         match: ['tinsmush.medium.com'],
       },
       {
+        name: 'Karapatan (Philippines)',
+        url: 'https://www.karapatan.org',
+        description:
+          'Karapatan (Alliance for the Advancement of People\'s Rights) is the Philippines\' main human-rights NGO. Cited for the August 2022 KWF / NTF-ELCAC red-tagging incident in which the Komisyon sa Wikang Filipino halted publication and distribution of five titles by Filipino authors (Jacob, Rodriguez, Cayanes, Pagusara, Aguila). Karapatan\'s press releases and case files document Marcos-Duterte era attacks on academic freedom.',
+        match: ['karapatan.org'],
+      },
+      {
+        name: 'Eiga9 — Japanese cinema + Article 175 obscenity history',
+        url: 'http://eiga9.altervista.org/articulos/obscenity.html',
+        description:
+          'Academic site documenting Japanese cinema censorship under Article 175 of the Penal Code. Cited for the landmark postwar obscenity trials: Lady Chatterley\'s Lover (Sei Ito translation, 1950-1957 Supreme Court), Marquis de Sade\'s Histoire de Juliette (Tatsuhiko Shibusawa translation, 1959-1969 Supreme Court), and Nagisa Oshima\'s In the Realm of the Senses book (1976).',
+        match: ['eiga9.altervista.org'],
+      },
+      {
+        name: 'Centre for Global Education — Open Veins of Latin America: A Re-appraisal 50 Years On',
+        url: 'https://www.centreforglobaleducation.com/open-veins-latin-america-re-appraisal-50-years',
+        description:
+          'Belfast-based NGO Centre for Global Education\'s 2021 essay on the 50th anniversary of Eduardo Galeano\'s Open Veins of Latin America (1971). Documents the book\'s ban under the military dictatorships in Argentina, Chile, and Uruguay, and Galeano\'s 11-year exile from Uruguay after his imprisonment there.',
+        match: ['centreforglobaleducation.com'],
+      },
+      {
         name: 'US Congressional Tom Lantos Human Rights Commission',
         url: 'https://humanrightscommission.house.gov',
         description:
@@ -628,8 +649,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'Regional press — Middle East & North Africa',
         url: 'https://raseef22.net',
         description:
-          'Raseef22 (Arab independent journalism), Morocco World News, The New Arab — cited collectively for MENA book-ban cases where the originating authority hasn\'t published the list itself.',
-        match: ['raseef22.net', 'moroccoworldnews.com', 'newarab.com'],
+          'Raseef22 (Arab independent journalism), Morocco World News, The New Arab, The Markaz Review (US-based MENA literary review), ArabLit (Arabic literature in translation), France 24 Observers (citizen-journalism) — cited collectively for MENA book-ban cases where the originating authority hasn\'t published the list itself. Particular use for Libya, Morocco, Lebanon cases.',
+        match: ['raseef22.net', 'moroccoworldnews.com', 'newarab.com', 'themarkaz.org', 'arablit.org', 'observers.france24.com'],
       },
       {
         name: 'Russian independent press in exile',
