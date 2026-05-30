@@ -473,6 +473,24 @@ export default async function CountryPage({
         </div>
       </section>
 
+      {/* ── Legal context: France's Holocaust-denial statute ─────────────── */}
+      {upperCode === 'FR' && (
+        <SectionShell tone="cream" eyebrow="Legal context">
+          <Link
+            href="/laws/loi-gayssot"
+            className="group flex flex-col gap-1 px-5 py-4 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm max-w-2xl"
+          >
+            <span className="font-serif text-lg font-medium text-gray-900 group-hover:text-oxblood transition-colors">
+              The Loi Gayssot — France’s Holocaust-denial law →
+            </span>
+            <span className="text-sm text-neutral-600 leading-relaxed">
+              The 1990 statute under which several books here were banned or prosecuted for
+              Holocaust denial, and why documenting that is not endorsement.
+            </span>
+          </Link>
+        </SectionShell>
+      )}
+
       {/* ── Most banned in this country (top 12, only if rank-signal exists) ── */}
       {topBookCards.length > 0 && (
         <SectionShell tone="cream" eyebrow="Ranked by event count">

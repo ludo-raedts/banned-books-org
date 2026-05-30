@@ -596,6 +596,10 @@ export default async function BookPage({
   // share-text so the displayed "country" count is always semantically correct.
   const distinctCountries = new Set(book.bans.map(b => b.country_code)).size
 
+  // Flagged works banned in France link to the Loi Gayssot explainer — the
+  // statute under which Holocaust-denial titles were banned/prosecuted.
+  const bannedInFrance = book.bans.some(b => b.country_code === 'FR')
+
   // ── Timeline rows: one per country, sorted by earliest ban year ─────────────
   const timelineRows: TimelineRow[] = (() => {
     const byCountry = new Map<string, { name: string; bans: Ban[] }>()
@@ -1291,6 +1295,15 @@ export default async function BookPage({
             <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-2 whitespace-pre-line">
               {book.extended_context}
             </div>
+          )}
+          {bannedInFrance && (
+            <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed mb-2">
+              Banned in France. On the statute behind it, see{' '}
+              <Link href="/laws/loi-gayssot" className="underline hover:no-underline">
+                The Loi Gayssot — France’s Holocaust-denial law
+              </Link>
+              .
+            </p>
           )}
           <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed">
             On why we include works like this — see{' '}
