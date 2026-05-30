@@ -505,6 +505,76 @@ const CATEGORIES: readonly Category[] = [
           'Bipartisan US Congressional caucus that profiles defenders of free expression detained internationally — used as cite-of-record for Vietnam (Pham Doan Trang), and other Asia/MENA cases where the originating government doesn\'t publish prosecution details.',
         match: ['humanrightscommission.house.gov'],
       },
+      {
+        name: 'The Conversation',
+        url: 'https://theconversation.com',
+        description:
+          'Academic-authored journalism. Archie Dick\'s pieces on apartheid-era South African censorship are cited of record for Publications Control Board title bans such as Alex La Guma\'s In the Fog of the Seasons’ End.',
+        match: ['theconversation.com'],
+      },
+      {
+        name: 'The Johannesburg Review of Books',
+        url: 'https://johannesburgreviewofbooks.com',
+        description:
+          'South African literary review, cited for apartheid-era bans of works such as Lauretta Ngcobo\'s Cross of Gold.',
+        match: ['johannesburgreviewofbooks.com'],
+      },
+      {
+        name: 'Africa in Words',
+        url: 'https://africainwords.com',
+        description:
+          'Academic blog on African literature, cited for the banning and appeal of Sipho Sepamla\'s A Ride on the Whirlwind.',
+        match: ['africainwords.com'],
+      },
+      {
+        name: 'Image & Text (SciELO South Africa)',
+        url: 'https://scielo.org.za',
+        description:
+          'Peer-reviewed South African journal on SciELO. Documents the Government Gazette banning (10 May 1968) of Ernest Cole\'s photo-book House of Bondage.',
+        match: ['scielo.org.za'],
+      },
+      {
+        name: 'Taylor & Francis — academic journals',
+        url: 'https://www.tandfonline.com',
+        description:
+          'Scholarly journals (e.g. English Studies in Africa) cited for title-level censorship histories such as the banning of Lewis Nkosi\'s Home and Exile.',
+        match: ['tandfonline.com'],
+      },
+      {
+        name: 'California State University — ScholarWorks',
+        url: 'https://scholarworks.calstate.edu',
+        description:
+          'Open-access theses and dissertations, cited for apartheid literary-censorship scholarship (e.g. the ban on Gordimer\'s Occasion for Loving).',
+        match: ['scholarworks.calstate.edu'],
+      },
+      {
+        name: 'Encyclopaedia Britannica',
+        url: 'https://www.britannica.com',
+        description:
+          'Reference biographies cited for title-level bans where primary records are offline — e.g. Alex La Guma\'s and Jack Cope\'s works prohibited under apartheid.',
+        match: ['britannica.com'],
+      },
+      {
+        name: 'Encyclopedia.com',
+        url: 'https://www.encyclopedia.com',
+        description:
+          'Aggregated reference biographies, cited for apartheid-era title bans such as Sheila Roberts’ He’s My Brother.',
+        match: ['encyclopedia.com'],
+      },
+      {
+        name: 'Helen Suzman Foundation',
+        url: 'https://hsf.org.za',
+        description:
+          'South African liberal think-tank, cited for the apartheid ban on Brian Bunting\'s The Rise of the South African Reich.',
+        match: ['hsf.org.za'],
+      },
+      {
+        name: 'Trevor Huddleston Memorial Centre',
+        url: 'https://www.trevorhuddleston.net',
+        description:
+          'Archive of the anti-apartheid priest Trevor Huddleston, cited for the South African ban on his memoir Naught for Your Comfort (1956).',
+        match: ['trevorhuddleston.net'],
+      },
     ],
   },
   {
@@ -699,6 +769,48 @@ const CATEGORIES: readonly Category[] = [
         url: 'https://news.google.com/rss/search?q=banned+books&hl=en-US&gl=US&ceid=US:en',
         description:
           'Aggregated RSS feed ingested by the news-display pipeline. Surfaces local US reporting on school and library challenges between the structured PEN America updates.',
+      },
+      {
+        name: 'The Washington Post',
+        url: 'https://www.washingtonpost.com',
+        description:
+          'Cited for apartheid-era literary bans, including the Publications Appeal Board ban on Etienne Leroux\'s Magersfontein, O Magersfontein!.',
+        match: ['washingtonpost.com'],
+      },
+      {
+        name: 'Los Angeles Times',
+        url: 'https://www.latimes.com',
+        description:
+          'Cited for Egyptian Al-Azhar book bans (Mohamed Emara\'s The Scientific Report) and the apartheid ban on Mary Benson\'s Mandela biography.',
+        match: ['latimes.com'],
+      },
+      {
+        name: 'Daily Maverick',
+        url: 'https://www.dailymaverick.co.za',
+        description:
+          'South African outlet. Anthony Akerman\'s reporting is cited for the first Afrikaans literary bans — Brink\'s Kennis van die Aand and Breytenbach\'s Skryt — with Government Gazette references.',
+        match: ['dailymaverick.co.za'],
+      },
+      {
+        name: 'Sunday Times (South Africa)',
+        url: 'https://www.timeslive.co.za',
+        description:
+          'South African paper whose books pages are cited for previously-banned titles reissued post-apartheid, e.g. Helen Joseph\'s If This Be Treason.',
+        match: ['sundaytimes.timeslive.co.za'],
+      },
+      {
+        name: 'Christian Science Monitor',
+        url: 'https://www.csmonitor.com',
+        description:
+          'Cited for Al-Azhar / Islamic Research Council book bans in Egypt, such as Gamal al-Banna\'s Responsibility for the Failure of the Islamic State.',
+        match: ['csmonitor.com'],
+      },
+      {
+        name: 'The New Inquiry',
+        url: 'https://thenewinquiry.com',
+        description:
+          'Literary and cultural magazine, cited for the 1966 Egyptian seizure and ban of Sonallah Ibrahim\'s That Smell (Tilka al-Ra’iha).',
+        match: ['thenewinquiry.com'],
       },
     ],
   },
