@@ -1,0 +1,78 @@
+{
+  "country_code": "CZ",
+  "source_url": "https://www.vaclavhavel.cz/en/vaclav-havel/dissident",
+  "source_name": "Czechoslovakia — Tier-1 sources (Václav Havel Library + Wikipedia + LitHub + Full Stop)",
+  "source_type": "ngo",
+  "_note": "Six new CZ entries documenting post-1968 normalization-era publication bans (1968-1989). All four leading Czechoslovak literary dissidents represented: Kundera, Havel, Hrabal (3 works), Vaculík. The existing 3 CZ records (Hitler's Mein Kampf, two All Quiet entries) covered interwar/wartime period — this batch fills the communist normalization gap.",
+  "entries": [
+    {
+      "title": "The Joke",
+      "title_variants": ["Žert"],
+      "author": "Milan Kundera",
+      "year_started": 1968,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Milan Kundera's debut novel (1967) — a darkly comic study of a young Czech communist whose ironic postcard ('Optimism is the opium of the people! Long live Trotsky!') destroys his life. Banned in Czechoslovakia in 1968 after the Warsaw Pact invasion ended the Prague Spring; Kundera fled to Paris where he taught and continued to write. Bans on his entire oeuvre remained in force throughout the normalization period until 1989. Kundera's Czechoslovak citizenship was revoked in 1979; reinstated 2019.",
+      "source_locator": "https://en.wikipedia.org/wiki/The_Joke_(novel)"
+    },
+    {
+      "title": "The Power of the Powerless",
+      "title_variants": ["Moc bezmocných"],
+      "author": "Václav Havel",
+      "existing_book_id": 695,
+      "year_started": 1978,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Václav Havel's landmark essay (October 1978), written for a planned Polish-Czechoslovak dissident anthology. Defines 'living in truth' as resistance to post-totalitarian regimes and introduces the iconic example of the greengrocer who places a 'Workers of the World, Unite!' sign in his window. Banned in Czechoslovakia throughout the normalization period; circulated only in samizdat editions (Petlice, Edice Expedice). Havel was repeatedly imprisoned for his Charter 77 activities. Lifted with the Velvet Revolution in November 1989; Havel became President weeks later.",
+      "source_locator": "https://www.vaclavhavel.cz/en/vaclav-havel/dissident"
+    },
+    {
+      "title": "Closely Observed Trains",
+      "title_variants": ["Ostře sledované vlaky", "Closely Watched Trains"],
+      "author": "Bohumil Hrabal",
+      "year_started": 1970,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Bohumil Hrabal's 1965 novella about a young railwayman in WWII Bohemia. Adapted by Jiří Menzel into the 1966 film that won the Academy Award for Best Foreign Language Film 1968. After the 1968 Warsaw Pact invasion of Czechoslovakia, Hrabal was banned from publishing (1970). Two of his books printed that year — Domácí úkoly (Home Tasks) and Poupata (Buds) — were physically destroyed by authorities after being printed and bound but before distribution. The publication ban was partially lifted in 1975 only after Hrabal gave a politically humiliating interview, but his work continued to circulate primarily through samizdat until 1989.",
+      "source_locator": "https://en.wikipedia.org/wiki/Bohumil_Hrabal"
+    },
+    {
+      "title": "I Served the King of England",
+      "title_variants": ["Obsluhoval jsem anglického krále"],
+      "author": "Bohumil Hrabal",
+      "existing_book_id": 698,
+      "year_started": 1971,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Bohumil Hrabal's picaresque novel about a Czech waiter's rise and fall through pre-WWII Prague, Nazi occupation, and the communist takeover. Written 1971, samizdat publication 1973 via Petlice (Ludvík Vaculík's underground edition); not officially published in Czechoslovakia until 1989. Banned because Hrabal himself was barred from official publication after the 1968 invasion. Adapted by Jiří Menzel into a 2006 film.",
+      "source_locator": "https://en.wikipedia.org/wiki/I_Served_the_King_of_England"
+    },
+    {
+      "title": "Too Loud a Solitude",
+      "title_variants": ["Příliš hlučná samota"],
+      "author": "Bohumil Hrabal",
+      "existing_book_id": 885,
+      "year_started": 1976,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Bohumil Hrabal's short novel (1976) — interior monologue of Haňťa, a wastepaper compactor who has spent 35 years pulping condemned books and rescued literature in the process. Written during Hrabal's publication ban and circulated only as samizdat (in multiple underground editions) until officially published in Czechoslovakia in 1989. Widely regarded as Hrabal's finest work; the central image — a state machinery that destroys books while a small man secretly preserves them — is a direct allegory of Czechoslovak normalization-era censorship.",
+      "source_locator": "https://en.wikipedia.org/wiki/Too_Loud_a_Solitude"
+    },
+    {
+      "title": "A Czech Dreambook",
+      "title_variants": ["Český snář"],
+      "author": "Ludvík Vaculík",
+      "year_started": 1980,
+      "year_ended": 1989,
+      "status": "historical",
+      "reason_slug": "political",
+      "description": "Ludvík Vaculík's diaristic novel covering 1979-1980 in Prague dissident circles. Vaculík was a leading dissident — author of the 'Two Thousand Words' manifesto (June 1968) that the Soviets cited as justification for their August 1968 invasion, founder of the Petlice samizdat imprint in 1972 (which published Hrabal, Havel, Klíma, and many others). All Vaculík's mature work was banned in Czechoslovakia 1972-1989. A Czech Dreambook circulated in Petlice samizdat until publication abroad (Index Toronto, 1983) and finally a legal Czech edition after 1989.",
+      "source_locator": "https://is.muni.cz/el/cus/jaro2020/CJV_EFA/100648863/Translating_Ludvik_Vaculik.pdf"
+    }
+  ]
+}
