@@ -575,6 +575,27 @@ const CATEGORIES: readonly Category[] = [
           'Archive of the anti-apartheid priest Trevor Huddleston, cited for the South African ban on his memoir Naught for Your Comfort (1956).',
         match: ['trevorhuddleston.net'],
       },
+      {
+        name: 'National Museum of Taiwan Literature',
+        url: 'https://tlvm.nmtl.gov.tw',
+        description:
+          'The NMTL\'s virtual-museum exhibitions on White Terror–era censorship name specific titles banned under KMT martial law (works by Lu Xun, Ba Jin, Mao Dun, Chen Yingzhen and others).',
+        match: ['tlvm.nmtl.gov.tw'],
+      },
+      {
+        name: 'The Asia-Pacific Journal: Japan Focus',
+        url: 'https://apjjf.org',
+        description:
+          'Peer-reviewed journal on East Asia, cited for the South Korean ban on Bruce Cumings\'s The Origins of the Korean War under Chun Doo-hwan.',
+        match: ['apjjf.org'],
+      },
+      {
+        name: 'Right Livelihood Foundation',
+        url: 'https://rightlivelihood.org',
+        description:
+          'Laureate profiles document free-expression cases, cited for the lèse-majesté suppression of Sulak Sivaraksa\'s Unmasking Thai Society.',
+        match: ['rightlivelihood.org'],
+      },
     ],
   },
   {
@@ -812,6 +833,83 @@ const CATEGORIES: readonly Category[] = [
           'Literary and cultural magazine, cited for the 1966 Egyptian seizure and ban of Sonallah Ibrahim\'s That Smell (Tilka al-Ra’iha).',
         match: ['thenewinquiry.com'],
       },
+      {
+        name: 'South China Morning Post',
+        url: 'https://www.scmp.com',
+        description:
+          'Hong Kong daily, cited for East Asian book bans including Li Ao\'s prohibited works in Taiwan and the South Korean obscenity case over Ma Kwang-su\'s Happy Sara.',
+        match: ['scmp.com'],
+      },
+      {
+        name: 'Taipei Times',
+        url: 'https://www.taipeitimes.com',
+        description:
+          'Taiwanese English-language daily, cited for White Terror–era book bans (Jin Yong\'s Condor Heroes, Kuo Liang-hui\'s The Locked Heart, and others).',
+        match: ['taipeitimes.com'],
+      },
+      {
+        name: 'The National (UAE)',
+        url: 'https://www.thenationalnews.com',
+        description:
+          'Abu Dhabi-based outlet, cited for Saudi Arabian book-fair confiscations such as Wael Ghonim\'s Revolution 2.0 at the Riyadh International Book Fair.',
+        match: ['thenationalnews.com'],
+      },
+      {
+        name: 'Global Voices',
+        url: 'https://globalvoices.org',
+        description:
+          'International citizen-media network, cited for the 2008 South Korean Ministry of National Defense list of books banned from military barracks.',
+        match: ['globalvoices.org'],
+      },
+      {
+        name: 'Bianet',
+        url: 'https://bianet.org',
+        description:
+          'Turkish independent news outlet, cited for obscenity prosecutions of Turkish editions (Burroughs\'s The Soft Machine, Palahniuk\'s Snuff) and the Satanic Verses translation ban.',
+        match: ['bianet.org'],
+      },
+      {
+        name: 'EurasiaNet',
+        url: 'https://eurasianet.org',
+        description:
+          'Cited for the Turkish obscenity trial of William Burroughs\'s The Soft Machine (Sel Publishing).',
+        match: ['eurasianet.org'],
+      },
+      {
+        name: 'Prachatai English',
+        url: 'https://prachataienglish.com',
+        description:
+          'Thai independent news site, cited for the Royal Gazette ban on Andrew MacGregor Marshall\'s A Kingdom in Crisis.',
+        match: ['prachataienglish.com'],
+      },
+      {
+        name: 'Al-Fanar Media',
+        url: 'https://al-fanarmedia.org',
+        description:
+          'Coverage of Arab higher education and culture, cited for Kuwait\'s language-dependent book bans (Arabic editions of The Forty Rules of Love and 1984).',
+        match: ['al-fanarmedia.org'],
+      },
+      {
+        name: 'Hyperallergic',
+        url: 'https://hyperallergic.com',
+        description:
+          'Arts publication, cited for Kuwait\'s ~4,000-title ban wave (Victor Hugo, Maya Angelou) and the artist installation memorialising it.',
+        match: ['hyperallergic.com'],
+      },
+      {
+        name: 'Document Journal',
+        url: 'https://www.documentjournal.com',
+        description:
+          'Cited for Kuwait\'s ban on a Disney adaptation of The Little Mermaid — the case that drew international attention to Kuwaiti book censorship.',
+        match: ['documentjournal.com'],
+      },
+      {
+        name: 'The New Publishing Standard',
+        url: 'https://thenewpublishingstandard.com',
+        description:
+          'Publishing-industry outlet, cited for the ~1,000 titles barred from the 2018 Kuwait International Book Fair, including Dostoevsky\'s The Brothers Karamazov.',
+        match: ['thenewpublishingstandard.com'],
+      },
     ],
   },
   {
@@ -922,7 +1020,7 @@ export default async function SourcesPage() {
       {CATEGORIES.map(category => (
         <section key={category.heading} className="mb-12">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">{category.heading}</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-5 max-w-3xl leading-relaxed">
+          <p className="text-sm text-gray-600 mb-5 max-w-3xl leading-relaxed">
             {category.blurb}
           </p>
           <div className="flex flex-col gap-4">
@@ -934,24 +1032,24 @@ export default async function SourcesPage() {
                   key={source.name}
                   className={`border rounded-xl p-5 ${
                     isPlanned
-                      ? 'border-dashed border-gray-300 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/30'
-                      : 'border-gray-200 dark:border-gray-800'
+                      ? 'border-dashed border-gray-300 bg-gray-50/50'
+                      : 'border-gray-200'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-4 mb-2 flex-wrap">
                     <h3 className="text-base font-semibold flex items-center gap-2 min-w-0">
-                      <span className={isPlanned ? 'text-gray-500 dark:text-gray-400' : ''}>
+                      <span className={isPlanned ? 'text-gray-500' : ''}>
                         {source.name}
                       </span>
                       {isPlanned && (
-                        <span className="text-[10px] uppercase tracking-wider font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] uppercase tracking-wider font-medium bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
                           planned
                         </span>
                       )}
                     </h3>
                     <div className="flex items-center gap-3 text-xs shrink-0">
                       {banCount > 0 && (
-                        <span className="text-gray-500 dark:text-gray-400 font-medium tabular-nums">
+                        <span className="text-gray-500 font-medium tabular-nums">
                           {banCount.toLocaleString('en-US')} bans
                         </span>
                       )}
@@ -959,13 +1057,13 @@ export default async function SourcesPage() {
                         href={source.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[260px]"
+                        className="text-blue-600 hover:underline truncate max-w-[260px]"
                       >
                         {source.url.replace(/^https?:\/\//, '')}
                       </a>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  <p className="text-sm text-gray-600 leading-relaxed">
                     {source.description}
                   </p>
                 </div>
@@ -982,7 +1080,7 @@ export default async function SourcesPage() {
 
       <div className="mt-2 border rounded-xl p-6 bg-white">
         <h2 className="font-serif text-lg md:text-xl font-semibold mb-3 text-gray-900">Data limitations</h2>
-        <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex flex-col gap-3">
+        <div className="text-sm text-gray-600 leading-relaxed flex flex-col gap-3">
           <p>
             This catalogue is not a neutral global census of book bans — it is a record of what has
             been documented. Coverage is strongest for the United States, where PEN America and the
@@ -999,7 +1097,7 @@ export default async function SourcesPage() {
             Read the full explanation in our{' '}
             <a
               href="/methodology"
-              className="underline hover:text-gray-800 dark:hover:text-gray-200"
+              className="underline hover:text-gray-800"
             >
               methodology essay
             </a>
@@ -1009,12 +1107,12 @@ export default async function SourcesPage() {
       </div>
 
       <div className="mt-10 border-l-4 border-brand pl-5 py-2">
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+        <p className="text-sm text-gray-700 leading-relaxed">
           Want to work with this data yourself? The full catalogue — every book, every ban, every
           source citation — is available as a{' '}
           <Link
             href="/dataset"
-            className="underline font-medium hover:text-gray-900 dark:hover:text-gray-100"
+            className="underline font-medium hover:text-gray-900"
           >
             downloadable dataset
           </Link>{' '}
