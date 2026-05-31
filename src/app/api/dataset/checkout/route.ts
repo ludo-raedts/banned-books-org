@@ -21,11 +21,17 @@ export async function POST(req: NextRequest) {
     allow_promotion_codes: true,
   }
 
-  const session = await stripe.checkout.sessions.create(params)
-
-  if (!session.url) {
-    return Response.json({ error: 'No checkout URL returned' }, { status: 500 })
+  // The Stripe API call can throw (network, rate limit, misconfigured price/key).
+  // Without this the buyer hits Next's bare 500; return a clear error instead.
+  try {
+    const session = await stripe.checkout.sessions.create(params)
+    if (!session.url) {
+      return Response.json({ error: 'No checkout URL returned' }, { status: 500 })
+    }
+    return Response.redirect(session.url, 303)
+  } catch (err) {
+    console.error('[api/dataset/checkout]', err)
+    const message = err instanceof Error ? err.message : 'Checkout could not be started'
+    return Response.json({ error: `Could not start checkout: ${message}` }, { status: 500 })
   }
-
-  return Response.redirect(session.url, 303)
 }
