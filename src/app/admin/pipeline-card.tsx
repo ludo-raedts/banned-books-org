@@ -1,8 +1,11 @@
-import { ArrowRight, Download, ClipboardList, CheckCircle2, Sparkles, Plus } from 'lucide-react'
+import { ArrowRight, Download, ClipboardList, Sparkles, Plus } from 'lucide-react'
 
 interface Props {
   pendingReview: number
-  approvedLast7Days: number
+  // approvedLast7Days is still passed by the dashboard but no longer surfaced:
+  // approvals via the review queue are idle (books now arrive via direct-import
+  // scripts), so the metric would read 0 indefinitely.
+  approvedLast7Days?: number
   needsEnrichment: number
   cardCls: string
 }
@@ -31,7 +34,6 @@ function Arrow() {
 
 export default function PipelineCard({
   pendingReview,
-  approvedLast7Days,
   needsEnrichment,
   cardCls,
 }: Props) {
@@ -39,9 +41,9 @@ export default function PipelineCard({
     <div className={`${cardCls} col-span-full`}>
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className="font-semibold text-gray-900">Import pipeline</h2>
+          <h2 className="font-semibold text-gray-900">How books are added</h2>
           <p className="text-sm text-gray-500 mt-0.5">
-            How a ban record flows from a source into the live catalogue.
+            How a ban record enters the live catalogue today.
           </p>
         </div>
         <a
@@ -53,12 +55,12 @@ export default function PipelineCard({
         </a>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] gap-3 lg:gap-2 mt-1">
-        {/* Step 1 — Ingest */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr] gap-3 lg:gap-2 mt-1">
+        {/* Step 1 — Source */}
         <div className="flex flex-col gap-2 p-3 rounded-lg border border-gray-100 bg-gray-50/40">
-          <PhaseHeader Icon={Download} n={1} label="Ingest" />
+          <PhaseHeader Icon={Download} n={1} label="Source" />
           <p className="text-xs text-gray-500 leading-snug">
-            Source fetcher → 2× LLM verify (Gemini + GPT-4o) → gate decision.
+            Pick a source — a published list, court ruling, or dataset. Each becomes a curated import script.
           </p>
           <a
             href="/admin/scripts#new-source"
@@ -70,50 +72,31 @@ export default function PipelineCard({
 
         <Arrow />
 
-        {/* Step 2 — Review */}
+        {/* Step 2 — Import */}
         <a
-          href="/admin/import-review"
-          className="flex flex-col gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors bg-white relative"
+          href="/admin/scripts#new-source"
+          className="flex flex-col gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors bg-white"
         >
-          {pendingReview > 0 && (
-            <span className="absolute top-2 right-2 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-[11px] font-bold flex items-center justify-center tabular-nums">
-              {pendingReview}
-            </span>
-          )}
-          <PhaseHeader Icon={ClipboardList} n={2} label="Review" />
+          <PhaseHeader Icon={ClipboardList} n={2} label="Import" />
           <p className="text-xs text-gray-500 leading-snug">
-            Items the gate flagged (non-Latin, fuzzy match, disagreement, high-stakes source).
+            Write &amp; run <code className="font-mono text-[11px]">scripts/import-*.ts</code> — writes{' '}
+            <code className="font-mono text-[11px]">books</code> +{' '}
+            <code className="font-mono text-[11px]">bans</code> directly. You vet the data before{' '}
+            <code className="font-mono text-[11px]">--apply</code>: curation is the quality gate.
           </p>
           <p className="text-xs font-medium text-gray-700 mt-auto">
-            {pendingReview.toLocaleString('en')} pending →
+            Script guide →
           </p>
         </a>
 
         <Arrow />
 
-        {/* Step 3 — Approve & commit */}
-        <div className="flex flex-col gap-2 p-3 rounded-lg border border-gray-100 bg-gray-50/40">
-          <PhaseHeader Icon={CheckCircle2} n={3} label="Approve" />
-          <p className="text-xs text-gray-500 leading-snug">
-            Creates <code className="font-mono text-[11px]">books</code> +{' '}
-            <code className="font-mono text-[11px]">bans</code> rows. No GPT enrichment yet — only verified metadata.
-          </p>
-          <p className="text-xs text-gray-500 mt-auto">
-            <span className="font-medium text-gray-700 tabular-nums">
-              {approvedLast7Days.toLocaleString('en')}
-            </span>{' '}
-            approved last 7 days
-          </p>
-        </div>
-
-        <Arrow />
-
-        {/* Step 4 — Enrich */}
+        {/* Step 3 — Enrich */}
         <a
           href="/admin/scripts#after-approval"
           className="flex flex-col gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors bg-white"
         >
-          <PhaseHeader Icon={Sparkles} n={4} label="Enrich" />
+          <PhaseHeader Icon={Sparkles} n={3} label="Enrich" />
           <p className="text-xs text-gray-500 leading-snug">
             Run <code className="font-mono text-[11px]">enrich-all.ts</code> to fill covers, ISBNs, descriptions, ban context, reasons.
           </p>
@@ -124,8 +107,11 @@ export default function PipelineCard({
       </div>
 
       <p className="text-xs text-gray-400 mt-1">
-        Items in the review queue have already been verified by two LLMs (gating only) — descriptions, covers, and
-        reason classifications are filled in step 4, after you approve.
+        The old two-LLM ingest → review → approve queue is idle — books now arrive via curated direct-import scripts, so
+        review happens before commit, not after.{' '}
+        <a href="/admin/import-review" className="text-gray-500 hover:underline">
+          Manual review queue{pendingReview > 0 ? ` (${pendingReview.toLocaleString('en')} pending)` : ''} →
+        </a>
       </p>
     </div>
   )

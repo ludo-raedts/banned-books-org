@@ -1231,137 +1231,52 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
 
           <div className="flex flex-col gap-4 mt-4">
             <p className="text-xs text-gray-500">
-              De originele ingest → review → approve → enrich pipeline. Praktisch grotendeels achter de rug — laat
-              deze sectie collapsed tenzij je een nieuwe ban-list / court-ruling / curated source aan het onboarden bent.
+              Boeken komen in de catalogus via curated direct-import scripts. Pak of schrijf een{' '}
+              <code className="font-mono text-[11px]">scripts/import-*.ts</code> (of{' '}
+              <code className="font-mono text-[11px]">add-*.ts</code>) voor de bron, check de dry-run, dan{' '}
+              <code className="font-mono text-[11px]">--apply</code>. Dat jij de data nakijkt vóór de commit, ís de
+              kwaliteitsgate — er is geen aparte review-stap meer.
             </p>
 
-            <div className="rounded-md border border-amber-200 bg-amber-50/60 px-3 py-3 text-xs text-amber-900 leading-relaxed">
-              <p className="font-semibold mb-2">Wanneer welk pad?</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="rounded border border-amber-300/60 bg-white/40 p-2.5">
-                  <p className="font-semibold mb-1">
-                    Add-script (<code className="font-mono text-[11px]">scripts/add-*.ts</code>)
-                  </p>
-                  <p className="mb-2 text-[11px] opacity-90">
-                    Direct → <code className="font-mono text-[11px]">books</code> +{' '}
-                    <code className="font-mono text-[11px]">bans</code> + sources. Geen LLM, geen review-queue.
-                  </p>
-                  <p className="font-semibold text-[11px]">Kies dit als <em>alles</em> geldt:</p>
-                  <ul className="list-disc list-outside ml-4 text-[11px] leading-snug">
-                    <li>Latin script</li>
-                    <li>
-                      Gestructureerd (CSV/JSON met canonieke velden: <code className="font-mono text-[10px]">title</code>,{' '}
-                      <code className="font-mono text-[10px]">author</code>,{' '}
-                      <code className="font-mono text-[10px]">country</code>,{' '}
-                      <code className="font-mono text-[10px]">year</code>)
-                    </li>
-                    <li>Vertrouwde bron (PEN, ALA, state-list — bron levert al canoniek)</li>
-                    <li>Volume &gt; review-capaciteit</li>
-                  </ul>
-                  <p className="mt-2 text-[11px]">
-                    <span className="opacity-70">Trade-off:</span> snel, maar geen gate-vangnet.
-                  </p>
-                  <p className="mt-1 text-[11px] opacity-80">
-                    Voorbeelden:{' '}
-                    <code className="font-mono text-[10px]">add-pen-america-books.ts</code>,{' '}
-                    <code className="font-mono text-[10px]">add-cdhe-colorado.ts</code>,{' '}
-                    <code className="font-mono text-[10px]">add-ala-2025.ts</code>,{' '}
-                    <code className="font-mono text-[10px]">add-bulk-books.ts</code> (catch-all).
-                  </p>
-                </div>
-
-                <div className="rounded border border-amber-300/60 bg-white/40 p-2.5">
-                  <p className="font-semibold mb-1">
-                    Queue-pad (<code className="font-mono text-[11px]">run-import-job</code>)
-                  </p>
-                  <p className="mb-2 text-[11px] opacity-90">
-                    Source → 2× LLM → gate → queue. Approve via{' '}
-                    <a href="/admin/import-review" className="underline hover:no-underline">
-                      /admin/import-review
-                    </a>
-                    .
-                  </p>
-                  <p className="font-semibold text-[11px]">Kies dit als <em>één</em> geldt:</p>
-                  <ul className="list-disc list-outside ml-4 text-[11px] leading-snug">
-                    <li>Non-Latin script (Sprint-A doctrine)</li>
-                    <li>High-stakes bron (court ruling, government decree, single-source claim)</li>
-                    <li>Onstructureerd (artikel-URL, persbericht — title/author moet uit prose komen)</li>
-                    <li>
-                      Bulk waarvan je audit-trail wilt (<code className="font-mono text-[10px]">passes_audit</code> per rij)
-                    </li>
-                  </ul>
-                  <p className="mt-2 text-[11px]">
-                    <span className="opacity-70">Trade-off:</span> trager (~$ per rij voor high-stakes tier), maar non-Latin
-                    tiebreaker + fuzzy-match queue actief.
-                  </p>
-                  <p className="mt-1 text-[11px] opacity-80">
-                    Registreer in <code className="font-mono text-[10px]">src/lib/imports/source-registry.ts</code>.
-                    Voorbeelden: Legifrance FR, manual single-URL.
-                  </p>
-                </div>
-              </div>
-              <p className="mt-3 text-[11px] italic">
-                Twijfel? Default naar het queue-pad. Een review-queue van 50 items is goedkoper dan een verkeerde
-                direct-write.
+            <div className="rounded-md border border-gray-200 bg-gray-50/60 px-3 py-3 text-xs text-gray-600 leading-relaxed">
+              <p className="font-semibold mb-1 text-gray-700">Legacy: de twee-LLM review-queue (idle)</p>
+              <p className="mb-2">
+                De oude <code className="font-mono text-[11px]">run-import-job</code> → 2× LLM → gate →{' '}
+                <a href="/admin/import-review" className="underline hover:no-underline">/admin/import-review</a>{' '}
+                pijplijn diende om <em>onbewaakte</em> bulk-ingest (vooral Wikipedia-lijsten) te gaten vóór publicatie.
+                Sinds alle nieuwe bronnen handmatig-gecureerd binnenkomen, gebeurt die review al vóór de commit en staat
+                de queue stil. Laat 'm collapsed; staat gepland om gedecommissioned te worden.
+              </p>
+              <p className="opacity-80">
+                Queue-only helper (alleen relevant zolang de queue bestaat):{' '}
+                <code className="font-mono text-[11px]">remap-unmapped-queue.ts</code> re-runt reason-mapping over pending
+                rijen na een vocab-change.
               </p>
             </div>
 
             <ol className="flex flex-col gap-4 text-sm text-gray-700 list-decimal list-outside ml-5">
               <li>
                 <p className="mb-2">
-                  <strong>Ingest.</strong> Kopieer een werkend template en adapteer — elke source heeft zijn eigen
-                  quirks (welke landen, welke reasons mappen netjes, source URLs).
+                  <strong>Source &amp; import.</strong> Kopieer een werkend template en adapteer — elke source heeft
+                  zijn eigen quirks (welke landen, welke reasons mappen netjes, source URLs). Draai altijd eerst de
+                  dry-run, dan pas de write-flag.
                 </p>
                 <Code>{`# Templates die matchen op source shape
-scripts/add-pen-america-books.ts    # large US challenge list
-scripts/add-cdhe-colorado.ts        # state-level US bans
-scripts/add-ala-2025.ts             # ALA top-10 list
-scripts/add-bulk-books.ts           # generic catch-all
+scripts/import-singapore-wiki.ts            # Wikipedia-lijst, curated
+scripts/import-africa-criminalization-bans.ts  # multi-country criminalisation
+scripts/import-pen.ts                        # large US challenge list
+scripts/add-ala-2025.ts                      # ALA top-10 list
+scripts/add-bulk-books.ts                    # generic catch-all
 
-# Run na editen
-npx tsx --env-file=.env.local scripts/add-<your-source>.ts --write`}</Code>
+# Dry-run eerst, dan schrijven met de write-flag
+npx tsx --env-file=.env.local scripts/import-<your-source>.ts
+npx tsx --env-file=.env.local scripts/import-<your-source>.ts --apply`}</Code>
                 <p className="text-xs text-gray-500 mt-2">
-                  Add-scripts gebruiken <code className="font-mono">--write</code>, niet <code className="font-mono">--apply</code>.
-                  Ze maken books, authors, bans, ban-reason links, en source rows in één pass.
-                </p>
-              </li>
-
-              <li>
-                <p className="mb-2">
-                  <strong>Review-queue patch (alleen queue-pad).</strong> Voor de queue-path source kan{' '}
-                  <code className="font-mono">remap-unmapped-queue.ts</code> de pending rijen patchen vóór je approve't,
-                  bv. na een reason-mapper update.
-                </p>
-                <Script
-                  name="remap-unmapped-queue.ts"
-                  what="Re-runt reason mapping over pending queue-rijen die nog de unmapped_reason flag dragen. Twee passes: (1) strikte mapReason() — useful na reason-mapper pattern uitbreiding; pass-1 hits laten de unmapped_reason flag vallen. (2) Brede keyword-heuristiek geport uit reclassify-other-reasons.ts; pass-2 hits zetten een low-confidence slug maar laten de flag staan zodat de operator de gok herkent."
-                  tags={['safe']}
-                  meta={{
-                    coverage: <>flag-driven: <code className="font-mono">status=&apos;pending_review&apos;</code> AND <code className="font-mono">quality_flags</code> bevat <code className="font-mono">&apos;unmapped_reason&apos;</code></>,
-                    cadence: 'na vocab-change (reason-mapper.ts updates)',
-                    writes: <><code className="font-mono">import_review_queue.agreement_details</code> (reason_mapping + soms quality_flags)</>,
-                    idempotent: 'ja',
-                    cost: 'gratis',
-                  }}
-                  command={`# Dry-run — print elke rij die hij zou aanraken
-npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts
-
-# Apply
-npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts --write`}
-                  flags={[
-                    { flag: '--write', desc: 'Persist changes (default: dry-run)' },
-                  ]}
-                />
-              </li>
-
-              <li>
-                <p className="mb-2">
-                  <strong>Approve.</strong> Voor queue-pad: items belanden op{' '}
-                  <a href="/admin/import-review" className="text-brand hover:underline">
-                    /admin/import-review
-                  </a>
-                  . Approve creëert bare <code className="font-mono">books</code> + <code className="font-mono">bans</code>{' '}
-                  rijen — nog geen covers, descriptions, of reason-classificaties.
+                  Scripts schrijven via <code className="font-mono">commitParsedRow()</code> /{' '}
+                  <code className="font-mono">commitNewBanForBook()</code> rechtstreeks naar books, authors, bans,
+                  ban-reason links en source rows — in één pass, idempotent waar het kan. Oudere{' '}
+                  <code className="font-mono">add-*.ts</code> scripts gebruiken <code className="font-mono">--write</code>{' '}
+                  i.p.v. <code className="font-mono">--apply</code>; check de header van het script.
                 </p>
               </li>
 
@@ -1393,10 +1308,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply`}</Code>
                   voor nieuwe boeken die er nog geen hebben.
                 </p>
                 <Code>{`# Kleine batch eerst
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
-
-# Lijst boeken die wachten op een manuele tier-beslissing
-npx tsx --env-file=.env.local scripts/_review_backlog.ts`}</Code>
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50`}</Code>
               </li>
             </ol>
           </div>
