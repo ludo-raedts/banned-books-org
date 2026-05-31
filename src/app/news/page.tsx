@@ -24,7 +24,8 @@ const ITEMS_PER_PAGE = 30
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Book Ban News — Latest Censorship Updates | Banned Books',
-    description: 'Latest news on book bans and censorship worldwide.',
+    description:
+      'Daily-updated coverage of book bans and censorship worldwide: newly challenged titles, school and library removals, legislation, court rulings, and reversals.',
     alternates: { canonical: '/news' },
   }
 }
@@ -74,7 +75,7 @@ function linkify(text: string, books: BookRef[], countries: CountryRef[]): React
   for (const book of books) {
     collect(
       new RegExp(`\\b${escapeRegex(book.title)}\\b`, 'gi'),
-      (match, k) => <Link key={k} href={`/books/${book.slug}`} className="text-gray-900 dark:text-gray-100 underline underline-offset-2 hover:no-underline">{match}</Link>
+      (match, k) => <Link key={k} href={`/books/${book.slug}`} className="text-gray-900 underline underline-offset-2 hover:no-underline">{match}</Link>
     )
   }
 
@@ -82,7 +83,7 @@ function linkify(text: string, books: BookRef[], countries: CountryRef[]): React
     if (country.name_en.length < 4) continue
     collect(
       new RegExp(`\\b${escapeRegex(country.name_en)}\\b`, 'gi'),
-      (match, k) => <Link key={k} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 dark:text-gray-400 underline underline-offset-2 hover:no-underline">{match}</Link>
+      (match, k) => <Link key={k} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 underline underline-offset-2 hover:no-underline">{match}</Link>
     )
   }
 
@@ -167,20 +168,20 @@ export default async function NewsPage({
   function renderDayGroup([day, dayItems]: [string, NewsItem[]]) {
     return (
       <section key={day} className="mb-10 last:mb-0">
-        <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {day !== 'unknown' ? formatDay(day) : '—'}
         </h3>
         <div className="flex flex-col gap-6">
           {dayItems.map(item => {
             const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
             return (
-              <article key={item.id} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+              <article key={item.id} className="border-l-2 border-gray-200 pl-4">
                 {item.headline && (
                   <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
                     {item.headline}
                   </p>
                 )}
-                <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5">
+                <h4 className="text-base font-semibold text-gray-900 leading-snug mb-1.5">
                   <a
                     href={item.source_url}
                     target="_blank"
@@ -195,15 +196,15 @@ export default async function NewsPage({
                   originalTitle={item.original_title}
                   className="mb-1.5"
                 />
-                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                <p className="text-sm text-gray-700 leading-relaxed">
                   {linkify(item.summary, bookRefs, countryRefs)}
                 </p>
-                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2 flex-wrap">
+                <p className="mt-2 text-xs text-gray-400 flex items-center gap-2 flex-wrap">
                   <a
                     href={item.source_url}
                     target="_blank"
                     rel="nofollow noopener noreferrer"
-                    className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors underline underline-offset-2"
+                    className="hover:text-gray-700 transition-colors underline underline-offset-2"
                   >
                     {sourceName}
                   </a>
@@ -222,30 +223,30 @@ export default async function NewsPage({
     return (
       <nav
         aria-label="News pagination"
-        className="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6"
+        className="mt-12 flex items-center justify-between border-t border-gray-200 pt-6"
       >
         {page > 1 ? (
           <Link
             href={pageHref(page - 1)}
             rel="prev"
-            className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+            className="text-sm text-gray-600 hover:text-oxblood transition-colors"
           >
             ← Previous
           </Link>
         ) : (
-          <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">← Previous</span>
+          <span className="text-sm text-gray-300 cursor-default">← Previous</span>
         )}
-        <span className="text-xs text-gray-500 dark:text-gray-500">Page {page} of {totalPages}</span>
+        <span className="text-xs text-gray-500">Page {page} of {totalPages}</span>
         {page < totalPages ? (
           <Link
             href={pageHref(page + 1)}
             rel="next"
-            className="text-sm text-gray-600 hover:text-oxblood dark:text-gray-400 transition-colors"
+            className="text-sm text-gray-600 hover:text-oxblood transition-colors"
           >
             Next →
           </Link>
         ) : (
-          <span className="text-sm text-gray-300 dark:text-gray-600 cursor-default">Next →</span>
+          <span className="text-sm text-gray-300 cursor-default">Next →</span>
         )}
       </nav>
     )
@@ -286,7 +287,7 @@ export default async function NewsPage({
 
       {days.length === 0 && (
         <SectionShell tone="cream" eyebrow="Latest">
-          <p className="text-gray-500 dark:text-gray-400 text-sm py-8">No published news yet — check back soon.</p>
+          <p className="text-gray-500 text-sm py-8">No published news yet — check back soon.</p>
         </SectionShell>
       )}
 

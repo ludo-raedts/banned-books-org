@@ -79,6 +79,23 @@ function getReasons(bans: Ban[]): string[] {
   ))]
 }
 
+// Prebuild the 100 most-banned authors at build time; the long tail is
+// generated + ISR-cached on first visit (dynamicParams defaults to true).
+// Without any generateStaticParams the route renders fully dynamically
+// (no-store, MISS on every request) and revalidate=3600 never engages.
+export async function generateStaticParams() {
+  const sb = adminClient()
+  const { data: top } = await sb
+    .from('v_top_banned_authors')
+    .select('entity_id')
+    .order('total_bans', { ascending: false })
+    .limit(100)
+  const ids = ((top ?? []) as { entity_id: number }[]).map((r) => r.entity_id)
+  if (ids.length === 0) return []
+  const { data } = await sb.from('authors').select('slug').in('id', ids)
+  return ((data ?? []) as { slug: string }[]).map((a) => ({ slug: a.slug }))
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const supabase = adminClient()
@@ -142,13 +159,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (bannedBookCount === 0) {
     description = `${author.display_name} on Banned Books — bio, bibliography, and the censorship history of this author's work.`
   } else if (earliestYear && topReasonPhrase) {
-    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}, most often for ${topReasonPhrase}.`
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}, most often for ${topReasonPhrase}.`
   } else if (topReasonPhrase) {
-    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}, most often for ${topReasonPhrase}.`
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}, most often for ${topReasonPhrase}.`
   } else if (earliestYear) {
-    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}.`
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'} since ${earliestYear}.`
   } else {
-    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} have been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`
+    description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`
   }
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
@@ -254,7 +271,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           or erotic literature published to evade prosecution), works credited only to
           editorial collectives or magazine staff, and historical texts whose authors are
           simply lost. If you can attribute a specific work below to a known author,
-          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900">get in touch</Link>.
         </>
       )
     }
@@ -264,7 +281,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           &ldquo;Various Authors&rdquo; is a catalogue placeholder for compilations,
           anthologies, and other collaborative works where no single primary author is
           recorded. If a specific work below should be linked to an individual author,
-          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+          please <Link href="/about#get-in-touch" className="underline hover:text-gray-900">get in touch</Link>.
         </>
       )
     }
@@ -275,7 +292,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           where the author field was missing, unparseable, or explicitly recorded as
           unavailable. We have not yet matched the {bookCount} {works} listed here to
           identifiable authors. If you can attribute one, please{' '}
-          <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+          <Link href="/about#get-in-touch" className="underline hover:text-gray-900">get in touch</Link>.
         </>
       )
     }
@@ -287,7 +304,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           work was published without an author by intent, these are cases where authorship
           may exist but has been lost or never recorded in the sources we use. If you know
           who wrote one of the {works} below, please{' '}
-          <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-white">get in touch</Link>.
+          <Link href="/about#get-in-touch" className="underline hover:text-gray-900">get in touch</Link>.
         </>
       )
     }
@@ -648,7 +665,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             if (!subtitle) return null
             return (
               <h2
-                className="text-xl font-medium text-gray-700 dark:text-gray-300 leading-snug"
+                className="text-xl font-medium text-gray-700 leading-snug"
                 lang={native ? a.original_language ?? undefined : 'en'}
               >
                 {subtitle}
@@ -665,12 +682,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             (!a.name_native ||
               a.name_transliterated.trim().toLowerCase() !==
                 a.name_native.trim().toLowerCase()) && (
-              <p className="text-sm italic text-gray-500 dark:text-gray-400">
+              <p className="text-sm italic text-gray-500">
                 {a.name_transliterated}
               </p>
             )}
           {lifespan && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">{lifespan}</p>
+            <p className="text-sm text-gray-500">{lifespan}</p>
           )}
           {/* Supporting stats — distinct-book count already lives in the
               topical subtitle above (per ban-metric doctrine: rank on
@@ -678,7 +695,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               raw-event count and active-vs-historical split, which the
               subtitle deliberately omits to stay headline-clean. */}
           {totalBans > 0 && (
-            <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <div className="flex flex-wrap gap-4 text-sm text-gray-500 mt-1">
               <span>{totalBans} documented {totalBans === 1 ? 'ban event' : 'ban events'}</span>
               {activeBanCount > 0 && activeBanCount < totalBans && (
                 <span>{activeBanCount} currently active</span>
@@ -689,9 +706,9 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             // Placeholder-bucket explanation (Anonymous, Unknown, Various
             // Authors, No Further Information). Rendered in place of the DB
             // `bio` field, which is mostly corrupt for these rows.
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-1 max-w-2xl">{placeholderText}</p>
+            <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">{placeholderText}</p>
           ) : a.bio ? (
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
+            <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
           ) : !isPlaceholder ? (
             // No-bio placeholder. Surfaces an explicit "we couldn't find a
             // bio" note + a route to the contact form, rather than silently
@@ -700,14 +717,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             // above), so this stays editorial-only and doesn't mislead
             // crawlers. Contact link points at the `#get-in-touch` section
             // on /about (no scrapeable mailto on the page).
-            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mt-1 max-w-2xl italic">
+            <p className="text-sm text-gray-500 leading-relaxed mt-1 max-w-2xl italic">
               We could not find biographical information about {a.display_name}
               {representativeBook ? (
                 <>, author of <em className="not-italic">{representativeBook.title}</em>,</>
               ) : ''}{' '}in reliable public sources. If you can help fill this gap, please{' '}
               <Link
                 href="/about#get-in-touch"
-                className="not-italic underline hover:text-gray-700 dark:hover:text-gray-200"
+                className="not-italic underline hover:text-gray-700"
               >
                 get in touch
               </Link>.
@@ -725,7 +742,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
           Bio above is editorial about the person; this lead is data-driven
           about the bans, the angle that drives author-name searches. */}
       {authorLead && (
-        <p className="mb-8 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+        <p className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4">
           {authorLead}
         </p>
       )}
@@ -736,12 +753,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         return (
           <section className="mb-10">
             <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600 dark:text-amber-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
               </svg>
               Find books by {a.display_name}
             </h2>
-            <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 p-5 flex flex-col gap-3">
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-5 flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
                 <TrackedOutboundLink
                   eventName="Bookshop Click"
@@ -749,7 +766,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                   href={getBookshopAuthorUrl()}
                   target="_blank"
                   rel={BOOKSHOP_REL}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-sm font-semibold text-white transition-colors shadow-sm"
                 >
                   Find on Bookshop.org
                 </TrackedOutboundLink>
@@ -759,12 +776,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                   href={koboHref}
                   target="_blank"
                   rel={KOBO_REL}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-amber-300 hover:border-amber-500 text-sm font-medium text-gray-700 transition-colors"
                 >
                   Find on Kobo
                 </TrackedOutboundLink>
               </div>
-              <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
+              <p className="text-xs text-amber-800/70 text-center leading-relaxed">
                 Bookshop.org and Kobo links are affiliate links — they support independent bookstores and this project at no extra cost to you.{' '}
                 <Link href="/why-not-amazon" className="underline hover:no-underline">
                   Why we don&apos;t link to Amazon
@@ -789,7 +806,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       )}
 
       {books.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No books recorded for this author yet.</p>
+        <p className="text-gray-500">No books recorded for this author yet.</p>
       ) : (
         <>
         <h2 className="text-lg font-semibold mb-4">
@@ -818,9 +835,9 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                 </div>
                 <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
                 {book.first_published_year && (
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{book.first_published_year}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{book.first_published_year}</p>
                 )}
-                <div className="flex flex-wrap gap-0.5 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
+                <div className="flex flex-wrap gap-0.5 mt-1.5 text-xs text-gray-400">
                   {displayBans.slice(0, 4).map(b => (
                     <span key={b.id} title={b.countries?.name_en ?? b.country_code}>
                       {countryFlag(b.country_code)}
@@ -851,7 +868,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       {/* Last verified — feeds Person.dateModified above. */}
       <div className="mt-6">
         {a.updated_at && (
-          <p className="text-xs text-gray-400 dark:text-gray-500">
+          <p className="text-xs text-gray-400">
             Last verified:{' '}
             <time dateTime={a.updated_at}>
               {new Date(a.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -866,8 +883,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
       {/* Other frequently banned authors */}
       {relatedAuthors.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <h2 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <h2 className="text-base font-semibold text-gray-700 mb-4">
             Other frequently banned authors
           </h2>
           <div className="flex flex-wrap gap-3">
@@ -875,13 +892,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               <Link
                 key={ra.id}
                 href={`/authors/${ra.slug}`}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 hover:border-gray-400 transition-colors group"
               >
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug">
+                  <p className="text-sm font-medium text-gray-900 group-hover:underline leading-snug">
                     {ra.display_name}
                   </p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                  <p className="text-xs text-gray-400">
                     {ra.banCount} {ra.banCount === 1 ? 'ban' : 'bans'}
                   </p>
                 </div>

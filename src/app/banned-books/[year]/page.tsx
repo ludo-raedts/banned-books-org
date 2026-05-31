@@ -34,7 +34,7 @@ export async function generateMetadata({
   const { year } = await params
   return {
     title: `Books Banned in ${year}`,
-    description: `All books with documented bans that started in ${year}, grouped by country.`,
+    description: `Every book with a documented ban that began in ${year}, grouped by country — with the censorship reason, scope, and the full source citations behind each entry.`,
     alternates: { canonical: `/banned-books/${year}` },
   }
 }
@@ -199,11 +199,11 @@ export default async function BannedBooksYearPage({
   if (books.length === 0) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-10">
-        <Link href="/stats" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 inline-block transition-colors">
+        <Link href="/stats" className="text-sm text-gray-500 hover:text-gray-900 mb-8 inline-block transition-colors">
           ← Stats
         </Link>
         <h1 className="text-3xl font-bold tracking-tight mb-4">Books Banned in {year}</h1>
-        <p className="text-gray-500 dark:text-gray-400">No bans with a recorded start year of {year} in our catalogue.</p>
+        <p className="text-gray-500">No bans with a recorded start year of {year} in our catalogue.</p>
         <div className="flex gap-4 mt-6 text-sm">
           {prevYear && <Link href={`/banned-books/${prevYear}`} className="text-brand hover:underline">← {prevYear}</Link>}
           {nextYear && <Link href={`/banned-books/${nextYear}`} className="text-brand hover:underline">{nextYear} →</Link>}
@@ -224,7 +224,7 @@ export default async function BannedBooksYearPage({
           dangerouslySetInnerHTML={{ __html: ldHtml(faqJsonLd) }}
         />
       )}
-      <Link href="/stats" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 inline-block transition-colors">
+      <Link href="/stats" className="text-sm text-gray-500 hover:text-gray-900 mb-8 inline-block transition-colors">
         ← Stats
       </Link>
 
@@ -254,24 +254,24 @@ export default async function BannedBooksYearPage({
 
       {/* Direct-answer lead — AI-Overview eligible TL;DR above the book list. */}
       {yearLead && (
-        <p className="mb-6 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+        <p className="mb-6 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4">
           {yearLead}
         </p>
       )}
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Book list */}
-        <div className="flex-1 min-w-0 divide-y divide-gray-100 dark:divide-gray-800">
+        <div className="flex-1 min-w-0 divide-y divide-gray-100">
           {books.map((book, i) => (
             <Link
               key={book.id}
               href={`/books/${book.slug}`}
-              className="flex items-center gap-4 py-3 group hover:bg-gray-50 dark:hover:bg-gray-900/50 -mx-3 px-3 rounded-lg transition-colors"
+              className="flex items-center gap-4 py-3 group hover:bg-gray-50 -mx-3 px-3 rounded-lg transition-colors"
             >
-              <span className="w-7 shrink-0 text-right text-xs tabular-nums text-gray-400 dark:text-gray-500 font-mono">
+              <span className="w-7 shrink-0 text-right text-xs tabular-nums text-gray-400 font-mono">
                 {i + 1}
               </span>
-              <div className="shrink-0 w-9 h-12 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <div className="shrink-0 w-9 h-12 rounded overflow-hidden bg-gray-100">
                 {book.cover_url ? (
                   <Image
                     src={book.cover_url}
@@ -286,21 +286,21 @@ export default async function BannedBooksYearPage({
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug group-hover:underline truncate">
+                <p className="text-sm font-semibold text-gray-900 leading-snug group-hover:underline truncate">
                   {book.title}
                 </p>
                 {book.author && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{book.author}</p>
+                  <p className="text-xs text-gray-500 truncate">{book.author}</p>
                 )}
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">
+                <p className="text-xs text-gray-400 mt-0.5 truncate">
                   {book.bans.map(b => `${countryFlag(b.countryCode)} ${b.countryName}`).join(' · ')}
                 </p>
               </div>
               <div className="shrink-0 text-right">
-                <span className="text-sm font-bold tabular-nums text-red-500 dark:text-red-400">
+                <span className="text-sm font-bold tabular-nums text-red-500">
                   {book.bans.length}
                 </span>
-                <p className="text-xs text-gray-400 dark:text-gray-500">
+                <p className="text-xs text-gray-400">
                   {book.bans.length === 1 ? 'ban' : 'bans'}
                 </p>
               </div>
@@ -311,21 +311,21 @@ export default async function BannedBooksYearPage({
         {/* Country sidebar */}
         {topCountries.length > 0 && (
           <aside className="lg:w-52 shrink-0">
-            <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
               By country
             </h2>
             <div className="space-y-1.5">
               {topCountries.map(([code, { name, count }]) => (
                 <Link
                   key={code}
-                  href={`/countries/${code}`}
-                  className="flex items-center justify-between gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors group"
+                  href={`/countries/${code.toLowerCase()}`}
+                  className="flex items-center justify-between gap-2 text-sm text-gray-700 hover:text-gray-900 transition-colors group"
                 >
                   <span className="flex items-center gap-1.5 truncate">
                     <span>{countryFlag(code)}</span>
                     <span className="truncate group-hover:underline">{name}</span>
                   </span>
-                  <span className="text-xs tabular-nums text-gray-400 dark:text-gray-500 shrink-0">{count}</span>
+                  <span className="text-xs tabular-nums text-gray-400 shrink-0">{count}</span>
                 </Link>
               ))}
             </div>
