@@ -6,7 +6,7 @@ import TrendingCard, { type TrendingBookRow, type TrendingAuthorRow, type AllTim
 
 export const dynamic = 'force-dynamic'
 
-const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
+const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 export default async function AdminStatsPage() {
   const supabase = adminClient()
@@ -162,7 +162,7 @@ export default async function AdminStatsPage() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-6">
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">banned-books.org</p>
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
         <h1 className="text-2xl font-bold">Admin</h1>
       </div>
 

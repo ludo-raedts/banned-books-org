@@ -28,7 +28,7 @@ export default function CitationCopyButton({ text, label }: Props) {
       type="button"
       onClick={onClick}
       aria-label={`Copy ${label} citation to clipboard`}
-      className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors"
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>

@@ -73,10 +73,10 @@ export default async function RisingBannedBooksPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
       <header className="mb-8 max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-3">
           Rising banned books this week
         </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+        <p className="text-base text-gray-600 leading-relaxed">
           Books gaining the most momentum compared to last week — measured by growth in distinct
           readers, not absolute volume. A title can sit here at +900% while a permanent trending
           favourite at +5% does not. Useful for spotting which censorship stories the news cycle
@@ -85,7 +85,7 @@ export default async function RisingBannedBooksPage() {
       </header>
 
       {books.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-gray-500">
           Not enough comparative view data yet — the rising metric needs at least two consecutive
           weeks of traffic.
         </p>
@@ -97,10 +97,10 @@ export default async function RisingBannedBooksPage() {
         </div>
       )}
 
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">← Home</Link>
-        <Link href="/trending-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Trending this week →</Link>
-        <Link href="/top-100-banned-books" className="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors">Top 100 banned books →</Link>
+      <div className="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <Link href="/" className="text-gray-600 hover:text-brand transition-colors">← Home</Link>
+        <Link href="/trending-banned-books" className="text-gray-600 hover:text-brand transition-colors">Trending this week →</Link>
+        <Link href="/top-100-banned-books" className="text-gray-600 hover:text-brand transition-colors">Top 100 banned books →</Link>
       </div>
     </main>
   )

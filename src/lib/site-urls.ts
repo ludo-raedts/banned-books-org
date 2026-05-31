@@ -41,7 +41,7 @@ export async function getAllCanonicalUrls(): Promise<string[]> {
   const countriesWithBans = new Set((bansRes.data ?? []).map((b) => b.country_code))
   const countryUrls = (countriesRes.data ?? [])
     .filter((c) => countriesWithBans.has(c.code))
-    .map((c) => `${SITEMAP_BASE_URL}/countries/${c.code}`)
+    .map((c) => `${SITEMAP_BASE_URL}/countries/${c.code.toLowerCase()}`)
 
   const reasonUrls = (reasonsRes.data ?? [])
     .filter((r): r is { slug: string } => Boolean(r.slug))

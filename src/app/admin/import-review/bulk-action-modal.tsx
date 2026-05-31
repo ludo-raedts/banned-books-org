@@ -23,7 +23,7 @@ type BulkResult = {
 }
 
 const inputCls =
-  'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
+  'px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
 
 export default function BulkActionModal({
   mode,
@@ -129,10 +129,10 @@ export default function BulkActionModal({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 max-w-xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl border border-gray-200 max-w-xl w-full max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-5 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-5 border-b border-gray-200">
           <h2 className="text-lg font-semibold">
             {mode === 'approve' && `Approve ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
             {mode === 'reject'  && `Reject ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
@@ -140,18 +140,18 @@ export default function BulkActionModal({
             {mode === 'merge'   && `Merge ${selectedIds.length} row${selectedIds.length !== 1 ? 's' : ''}`}
           </h2>
           {mode === 'approve' && !result && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               Apply these settings to every selected row. Title, authors, and year stay as parsed.
             </p>
           )}
           {mode === 'merge' && !result && (
             <div className="mt-1 space-y-1">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-gray-500">
                 Attach a new ban to each row&apos;s suggested existing book. The canonical book row is
                 never overwritten; title variants become slug aliases.
               </p>
               {mergeEligibleIds && mergeEligibleIds.length < selectedIds.length && (
-                <p className="text-xs text-amber-600 dark:text-amber-400">
+                <p className="text-xs text-amber-600">
                   {selectedIds.length - mergeEligibleIds.length} of {selectedIds.length} selected
                   row{selectedIds.length !== 1 ? 's' : ''} have no dedup target and will fail —
                   open those individually to pick a book.
@@ -255,23 +255,23 @@ export default function BulkActionModal({
               />
             </Field>
           ) : (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600">
               Defer {selectedIds.length} row{selectedIds.length !== 1 ? 's' : ''}? They stay in
               the queue under the &quot;Deferred&quot; filter.
             </p>
           )}
 
           {error && (
-            <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>
+            <p className="mt-3 text-sm text-red-600">{error}</p>
           )}
         </div>
 
         {!result && (
-          <div className="p-5 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
+          <div className="p-5 border-t border-gray-200 flex justify-end gap-2">
             <button
               onClick={onClose}
               disabled={busy}
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40"
+              className="px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition-colors disabled:opacity-40"
             >
               Cancel
             </button>
@@ -318,11 +318,11 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="text-sm font-medium text-gray-700">
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
-      {hint && <p className="text-xs text-gray-400 dark:text-gray-500">{hint}</p>}
+      {hint && <p className="text-xs text-gray-400">{hint}</p>}
       {children}
     </div>
   )
@@ -332,23 +332,23 @@ function BulkResultView({ result, onDone }: { result: BulkResult; onDone: () => 
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm">
-        <span className="text-emerald-700 dark:text-emerald-400 font-medium">
+        <span className="text-emerald-700 font-medium">
           {result.succeeded} succeeded
         </span>
         {result.failed > 0 && (
           <>
             {' · '}
-            <span className="text-red-700 dark:text-red-400 font-medium">
+            <span className="text-red-700 font-medium">
               {result.failed} failed
             </span>
           </>
         )}
       </p>
       {result.errors.length > 0 && (
-        <div className="border border-red-200 dark:border-red-900/40 rounded-lg p-3 bg-red-50 dark:bg-red-900/10 max-h-64 overflow-y-auto">
+        <div className="border border-red-200 rounded-lg p-3 bg-red-50 max-h-64 overflow-y-auto">
           <ul className="text-xs space-y-1.5">
             {result.errors.map(e => (
-              <li key={e.id} className="text-red-700 dark:text-red-400">
+              <li key={e.id} className="text-red-700">
                 <span className="font-mono">#{e.id}</span>: {e.message}
               </li>
             ))}
@@ -358,7 +358,7 @@ function BulkResultView({ result, onDone }: { result: BulkResult; onDone: () => 
       <div className="flex justify-end">
         <button
           onClick={onDone}
-          className="px-3 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Done
         </button>

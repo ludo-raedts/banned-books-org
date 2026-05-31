@@ -44,6 +44,13 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/timeline`, changefreq: 'monthly', priority: 0.8 },
     { loc: `${base}/privacy`, changefreq: 'yearly', priority: 0.3 },
     { loc: `${base}/challenged-books`, changefreq: 'weekly', priority: 0.9 },
+    // Catalogue browse/search landing — the "Books" breadcrumb target on every
+    // book page, previously discoverable only via internal links.
+    { loc: `${base}/search`, changefreq: 'weekly', priority: 0.8 },
+    // Laws — long-form Article pages cross-linked from country/book pages.
+    { loc: `${base}/laws/loi-gayssot`, changefreq: 'monthly', priority: 0.7 },
+    // Data-quality HTML page (the .md twin is listed below for AI crawlers).
+    { loc: `${base}/data-quality`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/scope/government`, changefreq: 'weekly', priority: 0.8 },
     // Reading Club — evergreen, hub + 5 tracks + 5 theme subpages.

@@ -58,7 +58,7 @@ export default async function AdminBooksPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Books</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{all.length.toLocaleString('en')} books in catalogue</p>
+          <p className="text-sm text-gray-500 mt-1">{all.length.toLocaleString('en')} books in catalogue</p>
         </div>
         <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>

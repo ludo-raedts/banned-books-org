@@ -76,14 +76,14 @@ export default function HistoryPage() {
             className="w-full sm:rounded-xl object-cover"
             loading="eager"
           />
-          <figcaption className="text-xs text-gray-400 dark:text-gray-500 mt-2 px-4 sm:px-0">
+          <figcaption className="text-xs text-gray-400 mt-2 px-4 sm:px-0">
             Berlin, Opernplatz, 10 May 1933. Nazi students and officials burn thousands of books in a
             public ceremony. Photo:{' '}
             <a
               href="https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_102-14597,_Berlin,_Opernplatz,_B%C3%BCcherverbrennung.jpg"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-gray-600 dark:hover:text-gray-300"
+              className="underline hover:text-gray-600"
             >
               Bundesarchiv / Wikimedia Commons
             </a>{' '}
@@ -161,7 +161,7 @@ export default function HistoryPage() {
 
           {/* Video embed */}
           <div className="not-prose my-8">
-            <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-900">
+            <div className="aspect-video rounded-xl overflow-hidden bg-gray-100">
               <iframe
                 width="100%"
                 height="100%"
@@ -172,7 +172,7 @@ export default function HistoryPage() {
                 className="w-full h-full"
               />
             </div>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+            <p className="text-xs text-gray-400 mt-2">
               Contemporary footage of the 1933 book burnings. These events were public, deliberate, and
               widely supported at the time — a reminder of how quickly the suppression of ideas can be
               normalised.
@@ -412,9 +412,9 @@ export default function HistoryPage() {
                 a: 'Books challenging political authority, questioning religious doctrine, depicting sexuality, or centering marginalised identities have historically faced the most restrictions. Today in the United States, the most challenged books disproportionately feature LGBTQ+ characters or address race — reflecting the political tensions of the moment.',
               },
             ].map(({ q, a }) => (
-              <div key={q} className="border-b border-gray-100 dark:border-gray-800 pb-6 last:border-0 last:pb-0">
+              <div key={q} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                 <h3 className="font-semibold text-base mb-2">{q}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{a}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{a}</p>
               </div>
             ))}
           </div>
@@ -427,37 +427,37 @@ export default function HistoryPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               📕 All books
             </Link>
             <Link
               href="/countries"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               🌍 By country
             </Link>
             <Link
               href="/reasons"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               ⚖️ By reason
             </Link>
             <Link
               href="/stats"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               📊 Stats
             </Link>
             <Link
               href="/countries/us"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               🇺🇸 US school bans
             </Link>
             <Link
               href="/countries/de"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium hover:border-gray-400 transition-colors"
             >
               🇩🇪 Germany
             </Link>

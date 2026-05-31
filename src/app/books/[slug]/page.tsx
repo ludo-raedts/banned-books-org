@@ -189,6 +189,23 @@ function TombstoneNotice() {
   )
 }
 
+// Prebuild the 100 most-banned books at build time; the long tail is
+// generated + ISR-cached on first visit (dynamicParams defaults to true).
+// Without any generateStaticParams the route renders fully dynamically
+// (no-store, MISS on every request) and revalidate=3600 never engages.
+export async function generateStaticParams() {
+  const sb = adminClient()
+  const { data: top } = await sb
+    .from('v_top_banned_books')
+    .select('entity_id')
+    .order('total_bans', { ascending: false })
+    .limit(100)
+  const ids = ((top ?? []) as { entity_id: number }[]).map((r) => r.entity_id)
+  if (ids.length === 0) return []
+  const { data } = await sb.from('books').select('slug').in('id', ids)
+  return ((data ?? []) as { slug: string }[]).map((b) => ({ slug: b.slug }))
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -1028,7 +1045,7 @@ export default async function BookPage({
             if (!subtitle) return null
             return (
               <h2
-                className="text-lg font-medium text-gray-700 dark:text-gray-300 leading-snug"
+                className="text-lg font-medium text-gray-700 leading-snug"
                 lang={english ? 'en' : book.original_language ?? undefined}
               >
                 {subtitle}
@@ -1044,11 +1061,11 @@ export default async function BookPage({
             (!book.title_english_meaningful ||
               book.title_transliterated.trim().toLowerCase() !==
                 book.title_english_meaningful.trim().toLowerCase()) && (
-              <p className="text-sm italic text-gray-500 dark:text-gray-400">
+              <p className="text-sm italic text-gray-500">
                 {book.title_transliterated}
               </p>
             )}
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600">
             {book.book_authors.map((ba, i) => {
               if (!ba.authors) return null
               const { display_name, slug: authorSlug } = ba.authors
@@ -1066,7 +1083,7 @@ export default async function BookPage({
               )
             })}
             {book.first_published_year && (
-              <span className="text-gray-400 dark:text-gray-500"> · {book.first_published_year}</span>
+              <span className="text-gray-400"> · {book.first_published_year}</span>
             )}
           </p>
           {book.genres.length > 0 && (
@@ -1076,7 +1093,7 @@ export default async function BookPage({
               ))}
             </div>
           )}
-          <p className="text-sm font-medium text-red-500 dark:text-red-400">
+          <p className="text-sm font-medium text-red-500">
             {book.bans.length} ban{book.bans.length === 1 ? '' : 's'}
             {' across '}
             {distinctCountries}{' '}
@@ -1116,7 +1133,7 @@ export default async function BookPage({
           nothing to add beyond what `topic` already states, to avoid the
           duplication that suppresses CTR. */}
       {banSummary && banSummary.complement && (
-        <p className="mb-8 text-base text-gray-800 dark:text-gray-200 leading-relaxed border-l-4 border-red-300 dark:border-red-900 pl-4">
+        <p className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4">
           {banSummary.complement}
         </p>
       )}
@@ -1124,8 +1141,8 @@ export default async function BookPage({
       {/* About the book */}
       {(book.description_book ?? book.description) && (
         <section className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">About this book</h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
+          <p className="text-gray-700 leading-relaxed">
             {book.description_book ?? book.description}
           </p>
           {/* Source attribution — only when v2 enrichment recorded a source.
@@ -1142,17 +1159,17 @@ export default async function BookPage({
 
       {/* Why it was banned */}
       {book.description_ban && (
-        <section className="mb-8 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 px-5 py-4">
-          <h2 className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-2">Why it was banned</h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
+        <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
+          <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">Why it was banned</h2>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
         </section>
       )}
 
       {/* Censorship history (AI-generated context) */}
       {book.censorship_context && (
         <section className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Censorship history</h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{book.censorship_context}</p>
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Censorship history</h2>
+          <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
         </section>
       )}
 
@@ -1170,10 +1187,10 @@ export default async function BookPage({
             firstPublishedLabel="Published"
             caption={`${book.title}: ${book.bans.length} bans across ${timelineRows.length} ${timelineRows.length === 1 ? 'country' : 'countries'}.`}
           />
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">
+                <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
                   <tr>
                     <th className="text-left px-3 py-2.5 whitespace-nowrap">Country</th>
                     <th className="text-left px-3 py-2.5 whitespace-nowrap">Year</th>
@@ -1182,7 +1199,7 @@ export default async function BookPage({
                     <th className="text-left px-3 py-2.5 whitespace-nowrap hidden sm:table-cell">Source</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody className="divide-y divide-gray-100">
                   {banClusters.map((c) => {
                     const districtCount = [...c.by_state.values()].reduce((n, list) => n + list.length, 0)
                     const stateCount = c.by_state.size
@@ -1191,26 +1208,26 @@ export default async function BookPage({
                     return (
                       <React.Fragment key={c.key}>
                         <tr className="align-top">
-                          <td className="px-3 py-2.5 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap text-xs sm:text-sm">
+                          <td className="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap text-xs sm:text-sm">
                             <Link
-                              href={`/countries/${c.country_code}`}
+                              href={`/countries/${c.country_code.toLowerCase()}`}
                               className="hover:underline"
                             >
                               {c.country_name}
                             </Link>
                           </td>
-                          <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 whitespace-nowrap text-xs sm:text-sm">
+                          <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap text-xs sm:text-sm">
                             {c.year_started ?? '—'}
                             {c.status === 'historical' && (
-                              <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                              <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-500">
                                 lifted
                               </span>
                             )}
                           </td>
-                          <td className="px-3 py-2.5 text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                          <td className="px-3 py-2.5 text-gray-600 hidden sm:table-cell">
                             {c.scope_label ?? '—'}
                             {c.bans.length > 1 && (
-                              <span className="ml-1 text-[11px] text-gray-500 dark:text-gray-500">
+                              <span className="ml-1 text-[11px] text-gray-500">
                                 · {actionBreakdown(c.action_counts)}
                               </span>
                             )}
@@ -1228,21 +1245,21 @@ export default async function BookPage({
                                 href={c.source.source_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap text-xs"
+                                className="text-blue-600 hover:underline whitespace-nowrap text-xs"
                               >
                                 {c.source.source_name}
                               </a>
                             ) : (
-                              <span className="text-gray-400 dark:text-gray-600">—</span>
+                              <span className="text-gray-400">—</span>
                             )}
                           </td>
                         </tr>
                         {hasLocations && (
-                          <tr className="bg-gray-50/60 dark:bg-gray-800/30">
-                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                          <tr className="bg-gray-50/60">
+                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 leading-relaxed">
                               {c.nation_count > 0 && (
                                 <div>
-                                  <span className="font-medium text-gray-700 dark:text-gray-300">Nationwide / statewide</span>
+                                  <span className="font-medium text-gray-700">Nationwide / statewide</span>
                                   {c.nation_count > 1 && (
                                     <span className="ml-1 text-gray-500">({c.nation_count} actions)</span>
                                   )}
@@ -1250,14 +1267,14 @@ export default async function BookPage({
                               )}
                               {sortedStates.map(([state, districts]) => (
                                 <div key={state}>
-                                  <span className="font-medium text-gray-700 dark:text-gray-300">{state}</span>
+                                  <span className="font-medium text-gray-700">{state}</span>
                                   {districts.length > 0 && (
                                     <span> — {districts.join(', ')}</span>
                                   )}
                                 </div>
                               ))}
                               {!c.nation_count && stateCount > 0 && districtCount > 0 && (
-                                <div className="mt-1 text-[11px] text-gray-500 dark:text-gray-500">
+                                <div className="mt-1 text-[11px] text-gray-500">
                                   {districtCount} district{districtCount === 1 ? '' : 's'} across {stateCount} state{stateCount === 1 ? '' : 's'}
                                 </div>
                               )}
@@ -1265,8 +1282,8 @@ export default async function BookPage({
                           </tr>
                         )}
                         {c.description && (
-                          <tr className="bg-amber-50/50 dark:bg-amber-900/10">
-                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 dark:text-gray-400 italic leading-relaxed">
+                          <tr className="bg-amber-50/50">
+                            <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 italic leading-relaxed">
                               {c.description}
                             </td>
                           </tr>
@@ -1286,17 +1303,17 @@ export default async function BookPage({
           inclusion_rationale is INTERNAL (admin only) and is intentionally not
           rendered here. extended_context is the public essay slot. */}
       {book.warning_level && book.warning_level !== 'none' && (
-        <section className="mb-10 border-t border-gray-200 dark:border-gray-800 pt-5">
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+        <section className="mb-10 border-t border-gray-200 pt-5">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
             Editorial note
           </h2>
           {book.warning_level === 'extended' && book.extended_context && (
-            <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-2 whitespace-pre-line">
+            <div className="prose prose-sm max-w-none text-gray-600 mb-2 whitespace-pre-line">
               {book.extended_context}
             </div>
           )}
           {bannedInFrance && (
-            <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed mb-2">
+            <p className="text-xs text-gray-500 leading-relaxed mb-2">
               Banned in France. On the statute behind it, see{' '}
               <Link href="/laws/loi-gayssot" className="underline hover:no-underline">
                 The Loi Gayssot — France’s Holocaust-denial law
@@ -1304,7 +1321,7 @@ export default async function BookPage({
               .
             </p>
           )}
-          <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed">
+          <p className="text-xs text-gray-500 leading-relaxed">
             On why we include works like this — see{' '}
             <Link href="/essays/what-we-document" className="underline hover:no-underline">
               What we document — and why that is a choice
@@ -1335,18 +1352,18 @@ export default async function BookPage({
         return (
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600 dark:text-amber-400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-amber-600">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
           Find this book
         </h2>
-        <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 p-5 flex flex-col gap-3">
+        <div className="rounded-xl bg-amber-50 border border-amber-200 p-5 flex flex-col gap-3">
           {book.gutenberg_id && (
             <a
               href={`https://www.gutenberg.org/ebooks/${book.gutenberg_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-200 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 border border-emerald-300 hover:bg-emerald-200 text-sm font-semibold text-emerald-800 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
@@ -1359,7 +1376,7 @@ export default async function BookPage({
               href={`https://archive.org/details/${book.archive_org_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-200 dark:hover:bg-emerald-900 text-sm font-semibold text-emerald-800 dark:text-emerald-300 transition-colors"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-100 border border-emerald-300 hover:bg-emerald-200 text-sm font-semibold text-emerald-800 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
@@ -1376,7 +1393,7 @@ export default async function BookPage({
                   href={bookshopHref}
                   target="_blank"
                   rel={BOOKSHOP_REL}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-sm font-semibold text-white transition-colors shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-sm font-semibold text-white transition-colors shadow-sm"
                 >
                   Find on Bookshop.org
                 </TrackedOutboundLink>
@@ -1386,12 +1403,12 @@ export default async function BookPage({
                   href={koboHref}
                   target="_blank"
                   rel={KOBO_REL}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-amber-300 dark:border-amber-900/50 hover:border-amber-500 dark:hover:border-amber-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-amber-300 hover:border-amber-500 text-sm font-medium text-gray-700 transition-colors"
                 >
                   Find on Kobo
                 </TrackedOutboundLink>
               </div>
-              <p className="text-xs text-amber-800/70 dark:text-amber-300/60 text-center leading-relaxed">
+              <p className="text-xs text-amber-800/70 text-center leading-relaxed">
                 Bookshop.org and Kobo links are affiliate links — they support independent bookstores and this project at no extra cost to you.{' '}
                 <Link href="/why-not-amazon" className="underline hover:no-underline">
                   Why we don&apos;t link to Amazon
@@ -1420,7 +1437,7 @@ export default async function BookPage({
           migration 20260515143605, which bumps on every UPDATE via trigger. */}
       <div className="mt-6 mb-10">
         {book.updated_at && (
-          <p className="text-xs text-gray-400 dark:text-gray-500">
+          <p className="text-xs text-gray-400">
             Last verified:{' '}
             <time dateTime={book.updated_at}>
               {new Date(book.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -1444,7 +1461,7 @@ export default async function BookPage({
               {primaryAuthor?.slug && (
                 <Link
                   href={`/authors/${primaryAuthor.slug}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
                 >
                   ✍️ More books by {primaryAuthor.display_name}
                 </Link>
@@ -1452,8 +1469,8 @@ export default async function BookPage({
               {uniqueCountries.map(c => (
                 <Link
                   key={c.code}
-                  href={`/countries/${c.code}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  href={`/countries/${c.code.toLowerCase()}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
                 >
                   🌍 Books banned in {c.name}
                 </Link>
@@ -1462,7 +1479,7 @@ export default async function BookPage({
                 <Link
                   key={rSlug}
                   href={`/reasons/${rSlug}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
                 >
                   More {reasonLabel(rSlug)} bans
                 </Link>
@@ -1472,7 +1489,7 @@ export default async function BookPage({
             {/* Similar books */}
             {similarBooks.length > 0 && (
               <div>
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
                   Books banned for similar reasons
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -1482,7 +1499,7 @@ export default async function BookPage({
                       href={`/books/${sim.slug}`}
                       className="group flex flex-col gap-2"
                     >
-                      <div className="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <div className="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100">
                         {sim.cover_url ? (
                           <Image
                             src={sim.cover_url}
@@ -1495,7 +1512,7 @@ export default async function BookPage({
                           <BookCoverPlaceholder title={sim.title} slug={sim.slug} className="h-full" />
                         )}
                       </div>
-                      <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:underline">
+                      <p className="text-xs font-medium text-gray-800 leading-snug line-clamp-2 group-hover:underline">
                         {sim.title}
                       </p>
                     </Link>
@@ -1509,11 +1526,11 @@ export default async function BookPage({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
                 {primaryCountry && booksInCountry.length > 0 && (
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
+                    <h3 className="text-base font-semibold text-gray-900 mb-3 leading-snug">
                       More books banned in{' '}
                       <Link
                         href={`/countries/${primaryCountry.code.toLowerCase()}`}
-                        className="text-red-600 dark:text-red-400 hover:underline"
+                        className="text-red-600 hover:underline"
                       >
                         {primaryCountry.name}
                       </Link>
@@ -1539,13 +1556,13 @@ export default async function BookPage({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug group-hover:underline line-clamp-2">
+                            <p className="text-sm font-medium text-gray-900 leading-snug group-hover:underline line-clamp-2">
                               {b.title}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+                            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
                               {b.authorName}
                               {b.year != null && (
-                                <span className="text-gray-400 dark:text-gray-500"> · banned {b.year}</span>
+                                <span className="text-gray-400"> · banned {b.year}</span>
                               )}
                             </p>
                             {b.reasons.length > 0 && (
@@ -1562,11 +1579,11 @@ export default async function BookPage({
 
                 {primaryReason && booksForReason.length > 0 && (
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
+                    <h3 className="text-base font-semibold text-gray-900 mb-3 leading-snug">
                       More books banned for{' '}
                       <Link
                         href={`/reasons/${primaryReason.slug}`}
-                        className="text-red-600 dark:text-red-400 hover:underline"
+                        className="text-red-600 hover:underline"
                       >
                         {reasonLabel(primaryReason.slug)}
                       </Link>{' '}
@@ -1593,16 +1610,16 @@ export default async function BookPage({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug group-hover:underline line-clamp-2">
+                            <p className="text-sm font-medium text-gray-900 leading-snug group-hover:underline line-clamp-2">
                               {b.title}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+                            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
                               {b.authorName}
                               {b.year != null && (
-                                <span className="text-gray-400 dark:text-gray-500"> · banned {b.year}</span>
+                                <span className="text-gray-400"> · banned {b.year}</span>
                               )}
                             </p>
-                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                            <p className="text-xs text-gray-400 mt-1">
                               Banned in {b.countryName}
                             </p>
                           </div>
@@ -1622,7 +1639,7 @@ export default async function BookPage({
         <section className="mb-10">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold">Recent news</h2>
-            <Link href="/news" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+            <Link href="/news" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
               All news →
             </Link>
           </div>
@@ -1633,15 +1650,15 @@ export default async function BookPage({
                 href={item.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+                className="group border border-gray-200 rounded-xl px-4 py-3 hover:border-gray-400 transition-colors"
               >
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:underline leading-snug mb-1">
+                <p className="text-sm font-medium text-gray-900 group-hover:underline leading-snug mb-1">
                   {item.title}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-1.5">
+                <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-1.5">
                   {item.summary}
                 </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">
+                <p className="text-xs text-gray-400">
                   {item.source_name}
                   {item.published_at && (
                     <> · {new Date(item.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</>

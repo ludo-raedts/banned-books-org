@@ -65,25 +65,25 @@ function TrendingSection({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1.5">
+      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2 flex items-center gap-1.5">
         <Icon className="w-3.5 h-3.5" aria-hidden />
         <span>{label}</span>
       </p>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-400 dark:text-gray-500 italic">No data yet.</p>
+        <p className="text-sm text-gray-400 italic">No data yet.</p>
       ) : (
         <div className="flex flex-col">
           {items.map(item => (
             <Link
               key={item.entityId}
               href={`/${linkPrefix}/${item.slug}`}
-              className="group flex items-baseline gap-3 py-1 px-2 -mx-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
+              className="group flex items-baseline gap-3 py-1 px-2 -mx-2 rounded-md hover:bg-gray-50 transition-colors"
             >
-              <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums shrink-0 w-5 text-center leading-none">{item.rank}</span>
-              <span className="flex-1 min-w-0 text-sm text-gray-700 dark:text-gray-300 truncate group-hover:text-brand dark:group-hover:text-red-400">
+              <span className="text-xs text-gray-400 tabular-nums shrink-0 w-5 text-center leading-none">{item.rank}</span>
+              <span className="flex-1 min-w-0 text-sm text-gray-700 truncate group-hover:text-brand">
                 {item[nameKey]}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
+              <span className="text-xs text-gray-500 tabular-nums shrink-0">
                 {item.views.toLocaleString('en')}
               </span>
               {showRankChange && (
@@ -122,12 +122,12 @@ export default function TrendingCard({
     <div className={`${cardCls} col-span-full`}>
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-start gap-2">
-          <TrendingUp className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+          <TrendingUp className="w-5 h-5 text-gray-400 mt-0.5" />
           <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="font-semibold text-gray-900">
               {range === 'week' ? 'Trending this week' : 'Trending all time'}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-sm text-gray-500 mt-0.5">
               {range === 'week' ? 'Most visited in the last 7 days.' : 'Most visited since tracking began.'}
             </p>
           </div>
@@ -139,8 +139,8 @@ export default function TrendingCard({
               onClick={() => setRange(r)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 range === r
-                  ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               {r === 'week' ? 'This week' : 'All time'}
@@ -150,7 +150,7 @@ export default function TrendingCard({
       </div>
 
       {isEmpty ? (
-        <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">
+        <p className="text-sm text-gray-400 italic mt-1">
           No data yet. Views appear once the site receives production traffic.
         </p>
       ) : (
@@ -175,7 +175,7 @@ export default function TrendingCard({
       )}
 
       {firstViewDate && (
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-auto">
+        <p className="text-xs text-gray-400 mt-auto">
           Tracking since:{' '}
           {new Date(firstViewDate).toLocaleDateString('en', {
             year: 'numeric', month: 'short', day: 'numeric',

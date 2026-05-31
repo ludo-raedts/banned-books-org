@@ -12,9 +12,9 @@ import type { ContentBlockRow, ContentBlockStatus } from '@/lib/content-blocks'
 
 function StatusPill({ status }: { status: ContentBlockStatus }) {
   const styles: Record<ContentBlockStatus, string> = {
-    placeholder: 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-    draft:       'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200',
-    published:   'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
+    placeholder: 'bg-gray-200 text-gray-700',
+    draft:       'bg-amber-100 text-amber-800',
+    published:   'bg-green-100 text-green-800',
   }
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wide ${styles[status]}`}>
@@ -73,9 +73,9 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
             {block.title}
             <StatusPill status={status} />
           </h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">{block.slug}</p>
+          <p className="text-xs text-gray-500 mt-1 font-mono">{block.slug}</p>
         </div>
-        <div className="text-right text-xs text-gray-500 dark:text-gray-400">
+        <div className="text-right text-xs text-gray-500">
           <div className="mb-1"><AdminBackLink href="/admin/content-blocks" label="Content blocks" /></div>
           <div>Last edited: {savedAt ? new Date(savedAt).toLocaleString('en-GB') : '—'}</div>
           {block.published_at && <div>Published: {new Date(block.published_at).toLocaleString('en-GB')}</div>}
@@ -86,34 +86,34 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
       <details
         open={showBrief}
         onToggle={e => setShowBrief((e.target as HTMLDetailsElement).open)}
-        className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-amber-50/40 dark:bg-amber-950/20 px-4 py-3"
+        className="mb-4 border border-gray-200 rounded-lg bg-amber-50/40 px-4 py-3"
       >
         <summary className="cursor-pointer text-sm font-medium select-none">Editorial brief</summary>
-        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{block.placeholder_brief}</p>
+        <p className="mt-2 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{block.placeholder_brief}</p>
       </details>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Markdown</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">Markdown</label>
           <textarea
             value={markdown}
             onChange={e => setMarkdown(e.target.value)}
             spellCheck={false}
             rows={22}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm font-mono bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-y leading-relaxed"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 resize-y leading-relaxed"
             placeholder={status === 'placeholder' ? 'Write the markdown for this block…' : ''}
           />
-          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 mt-3">Internal notes (not published)</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5 mt-3">Internal notes (not published)</label>
           <textarea
             value={notes}
             onChange={e => setNotes(e.target.value)}
             rows={3}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-y"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 resize-y"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Preview (sanitized HTML — same as public)</label>
-          <div className="w-full min-h-[27rem] border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 bg-white dark:bg-gray-900 prose prose-sm prose-gray dark:prose-invert max-w-none">
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">Preview (sanitized HTML — same as public)</label>
+          <div className="w-full min-h-[27rem] border border-gray-200 rounded-lg px-4 py-3 bg-white prose prose-sm prose-gray max-w-none">
             {previewHtml ? (
               <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
             ) : (
@@ -124,14 +124,14 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
       </div>
 
       {error && (
-        <p className="mt-4 text-red-600 border border-red-200 rounded-lg p-3 bg-red-50 dark:bg-red-950/30 text-sm">{error}</p>
+        <p className="mt-4 text-red-600 border border-red-200 rounded-lg p-3 bg-red-50 text-sm">{error}</p>
       )}
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           onClick={() => call('save_draft')}
           disabled={!!saving || !dirty}
-          className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50 hover:opacity-90"
+          className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50 hover:opacity-90"
         >
           {saving === 'save' ? 'Saving…' : 'Save draft'}
         </button>
@@ -146,12 +146,12 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
           <button
             onClick={() => call('revert_to_draft')}
             disabled={!!saving}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm disabled:opacity-50 hover:border-gray-400"
+            className="px-4 py-2 rounded-lg border border-gray-300 text-sm disabled:opacity-50 hover:border-gray-400"
           >
             {saving === 'revert' ? 'Reverting…' : 'Revert to draft'}
           </button>
         )}
-        {dirty && <span className="text-xs text-amber-700 dark:text-amber-400">Unsaved changes</span>}
+        {dirty && <span className="text-xs text-amber-700">Unsaved changes</span>}
       </div>
     </main>
   )

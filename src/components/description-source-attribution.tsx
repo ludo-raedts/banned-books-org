@@ -33,7 +33,7 @@ export default function DescriptionSourceAttribution({
 }) {
   const label = TYPE_LABEL[type] ?? 'external source'
   return (
-    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+    <p className="mt-2 text-xs text-gray-500">
       Source:{' '}
       <a
         href={url}

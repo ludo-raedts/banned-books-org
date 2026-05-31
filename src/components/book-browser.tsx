@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useId } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -97,12 +97,12 @@ function FilterPill({
 }) {
   const activeClass = color === 'red'
     ? 'bg-red-600 text-white border-red-600'
-    : 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100'
+    : 'bg-gray-900 text-white border-gray-900'
   return (
     <button
       onClick={onClick}
       className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
-        active ? activeClass : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
+        active ? activeClass : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
       }`}
     >
       {children}
@@ -113,20 +113,20 @@ function FilterPill({
 function NewsPanel({ items, compact }: { items: NewsPreview[]; compact?: boolean }) {
   if (!items.length) return null
   return (
-    <div className={compact ? 'bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col' : 'border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden'}>
+    <div className={compact ? 'bg-gray-50 rounded-lg p-4 h-full flex flex-col' : 'border border-gray-200 rounded-lg overflow-hidden'}>
       <div className={compact ? 'mb-3' : 'px-4 pt-4 pb-2'}>
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Happening now</span>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
+        <span className="text-sm font-semibold text-gray-700">Happening now</span>
+        <p className="text-xs text-gray-400 mt-0.5">Book bans are not history.</p>
       </div>
-      <div className={`${compact ? 'flex flex-col flex-1 divide-y divide-gray-100 dark:divide-gray-800' : 'divide-y divide-gray-100 dark:divide-gray-800'}`}>
+      <div className={`${compact ? 'flex flex-col flex-1 divide-y divide-gray-100' : 'divide-y divide-gray-100'}`}>
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
           return (
             <Link key={item.id} href="/news" className={`group/item ${compact ? 'py-2.5 first:pt-0' : 'px-4 py-3'}`}>
-              <p className={`text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-${compact ? 3 : 2} group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors`}>
+              <p className={`text-xs text-gray-700 leading-snug line-clamp-${compact ? 3 : 2} group-hover/item:text-gray-900 transition-colors`}>
                 {item.summary}
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+              <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
                 <span>
                   {sourceName}
                   {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
@@ -137,7 +137,7 @@ function NewsPanel({ items, compact }: { items: NewsPreview[]; compact?: boolean
           )
         })}
       </div>
-      <Link href="/news" className={`${compact ? 'mt-3 text-xs text-right' : 'px-4 py-3 text-sm text-brand font-medium'} text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors block`}>
+      <Link href="/news" className={`${compact ? 'mt-3 text-xs text-right' : 'px-4 py-3 text-sm text-brand font-medium'} text-gray-400 hover:text-gray-700 transition-colors block`}>
         All news →
       </Link>
     </div>
@@ -183,6 +183,9 @@ export default function BookBrowser({
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  // ARIA combobox wiring (see search-client for the matching pattern).
+  const listboxId = useId()
+  const optionId = (i: number) => `${listboxId}-opt-${i}`
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
   // Autocomplete fetch — 200ms debounce
@@ -341,18 +344,21 @@ export default function BookBrowser({
                 role="combobox"
                 aria-expanded={showSuggestions}
                 aria-autocomplete="list"
+                aria-controls={listboxId}
+                aria-activedescendant={selectedIndex >= 0 ? optionId(selectedIndex) : undefined}
+                aria-label="Search books"
                 placeholder={`Search ${totalCount > 0 ? totalCount.toLocaleString('en') + ' ' : ''}banned books…`}
                 value={q}
                 onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
                 onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true) }}
                 onKeyDown={handleSearchKeyDown}
-                className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
+                className={`w-full pl-12 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 text-lg font-medium focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
               />
               {q && (
                 <button
                   onClick={() => { setQ(''); setSuggestions([]); setShowSuggestions(false) }}
                   aria-label="Clear search"
-                  className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -362,18 +368,21 @@ export default function BookBrowser({
 
               {/* Autocomplete dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden">
+                <div role="listbox" id={listboxId} aria-label="Search suggestions" className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
                   {suggestions.map((s, i) => (
                     <button
                       key={s.id}
+                      role="option"
+                      id={optionId(i)}
+                      aria-selected={i === selectedIndex}
                       onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s.slug) }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
                         i === selectedIndex
-                          ? 'bg-gray-100 dark:bg-gray-800'
-                          : 'hover:bg-gray-50 dark:hover:bg-gray-800/60'
-                      } ${i > 0 ? 'border-t border-gray-100 dark:border-gray-800' : ''}`}
+                          ? 'bg-gray-100'
+                          : 'hover:bg-gray-50'
+                      } ${i > 0 ? 'border-t border-gray-100' : ''}`}
                     >
-                      <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100">
                         {s.cover_url ? (
                           <Image src={s.cover_url} alt="" width={32} height={44} className="w-full h-full object-cover" sizes="32px" />
                         ) : (
@@ -381,10 +390,10 @@ export default function BookBrowser({
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.title}</p>
-                        {s.author && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{s.author}</p>}
+                        <p className="text-sm font-semibold text-gray-900 truncate">{s.title}</p>
+                        {s.author && <p className="text-xs text-gray-500 truncate">{s.author}</p>}
                       </div>
-                      <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                      <span className="shrink-0 text-xs font-medium text-red-500 tabular-nums">
                         {s.banCount} {s.banCount === 1 ? 'ban' : 'bans'}
                       </span>
                     </button>
@@ -393,7 +402,7 @@ export default function BookBrowser({
               )}
             </div>
             {q && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-sm text-gray-500 mt-2">
                 {loadingFilter
                   ? <span className="text-gray-400">Searching…</span>
                   : total > 0
@@ -407,10 +416,10 @@ export default function BookBrowser({
           {/* Featured book */}
           {featuredBook && !isSearching && (
             <div>
-              <p className="text-sm font-semibold text-brand-dark dark:text-red-300 mb-2">Book of the day</p>
+              <p className="text-sm font-semibold text-brand-dark mb-2">Book of the day</p>
               <Link
                 href={`/books/${featuredBook.slug}`}
-                className="group block border border-brand/20 dark:border-brand/30 rounded-lg p-5 bg-brand-light dark:bg-brand-dark/20 hover:border-brand/40 dark:hover:border-brand/50 hover:shadow-sm transition-all"
+                className="group block border border-brand/20 rounded-lg p-5 bg-brand-light hover:border-brand/40 hover:shadow-sm transition-all"
               >
                 <div className="flex gap-4">
                   <div className="shrink-0 w-24">
@@ -428,20 +437,20 @@ export default function BookBrowser({
                   </div>
                   <div className="flex flex-col gap-2 min-w-0 flex-1">
                     <div>
-                      <h2 className="text-base font-semibold leading-snug line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:underline">{featuredBook.title}</h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+                      <h2 className="text-base font-semibold leading-snug line-clamp-2 text-gray-900 group-hover:underline">{featuredBook.title}</h2>
+                      <p className="text-sm text-gray-600 mt-0.5">
                         {authorName(featuredBook)}
-                        {featuredBook.first_published_year && <span className="text-gray-400 dark:text-gray-500"> · {featuredBook.first_published_year}</span>}
+                        {featuredBook.first_published_year && <span className="text-gray-400"> · {featuredBook.first_published_year}</span>}
                       </p>
                     </div>
                     {featuredBook.description_book && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2">{featuredBook.description_book}</p>
+                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{featuredBook.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1">
                       {featuredBook.genres.map(slug => <GenreBadge key={slug} slug={slug} />)}
                       {getReasons(featuredBook.bans).map(slug => <ReasonBadge key={slug} slug={slug} />)}
                     </div>
-                    <p className="text-xs font-medium text-brand dark:text-red-400">{banLabel(featuredBook.bans)}</p>
+                    <p className="text-xs font-medium text-brand">{banLabel(featuredBook.bans)}</p>
                   </div>
                 </div>
               </Link>
@@ -455,22 +464,22 @@ export default function BookBrowser({
         {/* News + Trending sidebar — desktop only */}
         {(hasNews || trendingSlot) && !isSearching && (
           <div className="hidden lg:block">
-            <div className="bg-gray-50 dark:bg-gray-900/60 rounded-lg p-4 h-full flex flex-col gap-4">
+            <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col gap-4">
               {hasNews && (
                 <div className="flex flex-col">
                   <div className="mb-3">
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Happening now</span>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Book bans are not history.</p>
+                    <span className="text-sm font-semibold text-gray-700">Happening now</span>
+                    <p className="text-xs text-gray-400 mt-0.5">Book bans are not history.</p>
                   </div>
-                  <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
+                  <div className="flex flex-col divide-y divide-gray-100">
                     {latestNews.map(item => {
                       const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
                       return (
                         <Link key={item.id} href="/news" className="py-2.5 group/item first:pt-0">
-                          <p className="text-xs text-gray-700 dark:text-gray-300 leading-snug line-clamp-3 group-hover/item:text-gray-900 dark:group-hover/item:text-gray-100 transition-colors">
+                          <p className="text-xs text-gray-700 leading-snug line-clamp-3 group-hover/item:text-gray-900 transition-colors">
                             {item.summary}
                           </p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                          <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
                             <span>
                               {sourceName}
                               {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
@@ -481,15 +490,15 @@ export default function BookBrowser({
                       )
                     })}
                   </div>
-                  <Link href="/news" className="mt-3 text-xs text-right text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors block">
+                  <Link href="/news" className="mt-3 text-xs text-right text-gray-400 hover:text-gray-700 transition-colors block">
                     All news →
                   </Link>
                 </div>
               )}
               {trendingSlot && (
-                <div className={hasNews ? 'border-t border-gray-200 dark:border-gray-700 pt-4' : ''}>
+                <div className={hasNews ? 'border-t border-gray-200 pt-4' : ''}>
                   <div className="mb-3">
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trending</span>
+                    <span className="text-sm font-semibold text-gray-700">Trending</span>
                   </div>
                   {trendingSlot}
                 </div>
@@ -502,8 +511,8 @@ export default function BookBrowser({
       {/* ── Mobile news ── */}
       {hasNews && !isSearching && (
         <div className="lg:hidden">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Happening now</h2>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mb-3">Book bans are not history.</p>
+          <h2 className="text-base font-semibold text-gray-900 mb-1">Happening now</h2>
+          <p className="text-sm text-gray-400 mb-3">Book bans are not history.</p>
           <NewsPanel items={latestNews} />
         </div>
       )}
@@ -511,24 +520,24 @@ export default function BookBrowser({
       {/* ── Filters ── */}
       <div>
         <div className="mb-3">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Search the database</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Refine by institution, country, or reason.</p>
+          <h2 className="text-xl font-semibold text-gray-900">Search the database</h2>
+          <p className="text-sm text-gray-500">Refine by institution, country, or reason.</p>
         </div>
         <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
           <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
           <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
           <FilterPill active={scope === 'public_library'} onClick={() => setScope(scope === 'public_library' ? null : 'public_library')}>📚 Libraries</FilterPill>
-          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           <FilterPill active={activeOnly} onClick={() => setActiveOnly(!activeOnly)} color="red">🚫 Currently banned</FilterPill>
           <div className="relative shrink-0">
             <select
               value={country}
               onChange={e => setCountry(e.target.value)}
-              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white cursor-pointer focus:outline-none ${
                 country
-                  ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-gray-200 text-gray-600 hover:border-gray-400'
               }`}
             >
               <option value="">🌍 All countries</option>
@@ -536,7 +545,7 @@ export default function BookBrowser({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
-          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           {FILTER_REASONS.map(slug => (
             <FilterPill key={slug} active={reason === slug} onClick={() => setReason(reason === slug ? null : slug)}>
               <span aria-hidden>{reasonIcon(slug)}</span>{' '}{reasonLabel(slug)}
@@ -545,25 +554,25 @@ export default function BookBrowser({
           {anyFilter && (
             <button
               onClick={clearAll}
-              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors"
             >
               ✕ Clear
             </button>
           )}
         </div>
-        <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
+        <p className="text-sm text-gray-400 mt-2">
           {loadingFilter
             ? <span className="text-gray-400">Searching…</span>
             : anyFilter
-              ? <><span className="font-medium text-gray-700 dark:text-gray-200">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books</>
-              : <><span className="font-medium text-gray-700 dark:text-gray-200">{totalCount.toLocaleString('en')}</span> books</>
+              ? <><span className="font-medium text-gray-700">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books</>
+              : <><span className="font-medium text-gray-700">{totalCount.toLocaleString('en')}</span> books</>
           }
         </p>
       </div>
 
       {/* ── Book grid ── */}
       {!loadingFilter && gridBooks.length === 0 && (
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <p className="text-gray-500 text-sm">
           No books match your filters.{' '}
           <button onClick={clearAll} className="underline">Clear filters</button>
         </p>
@@ -588,15 +597,15 @@ export default function BookBrowser({
                   {/* Text */}
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{authorName(book)}</p>
                     {book.description_book && (
-                      <p className="max-sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
+                      <p className="max-sm:hidden text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {book.genres.slice(0, 2).map(slug => <GenreBadge key={slug} slug={slug} />)}
                       {reasons.slice(0, 2).map(slug => <ReasonBadge key={slug} slug={slug} />)}
                     </div>
-                    <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1">{banLabel(book.bans)}</p>
+                    <p className="text-xs font-medium text-red-500 mt-1">{banLabel(book.bans)}</p>
                   </div>
                 </Link>
               )
@@ -609,10 +618,10 @@ export default function BookBrowser({
         <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-row gap-3 sm:flex-col sm:gap-2 animate-pulse items-start">
-              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded" />
+              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] bg-gray-100 rounded" />
               <div className="flex-1 min-w-0 flex flex-col gap-2 pt-1">
-                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
+                <div className="h-3 bg-gray-100 rounded w-3/4" />
+                <div className="h-3 bg-gray-100 rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -622,16 +631,16 @@ export default function BookBrowser({
       <div ref={sentinelRef} className="h-4" />
 
       {loadingMore && (
-        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">Loading more…</p>
+        <p className="text-sm text-gray-400 text-center py-4">Loading more…</p>
       )}
 
       {!isSearching && !anyFilter && (
-        <div className="mt-4 bg-gray-50 dark:bg-gray-900/60 rounded-xl py-10 px-6 text-center">
+        <div className="mt-4 bg-gray-50 rounded-xl py-10 px-6 text-center">
           <div className="max-w-2xl mx-auto">
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+            <p className="text-gray-600 leading-relaxed mb-3">
               Access to knowledge should not depend on where you live, what you believe, or who is in power.
             </p>
-            <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">
+            <p className="text-gray-500 text-sm leading-relaxed">
               This project documents what is being restricted — and why.
             </p>
           </div>

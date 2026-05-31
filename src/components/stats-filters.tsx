@@ -33,7 +33,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm mb-10">
-      <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0 font-medium uppercase tracking-wide">Filter:</span>
+      <span className="text-xs text-gray-500 shrink-0 font-medium uppercase tracking-wide">Filter:</span>
 
       {/* Active-only toggle */}
       <button
@@ -41,7 +41,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
         className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
           current.active
             ? 'bg-brand text-white border-brand'
-            : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+            : 'border-gray-200 text-gray-600 hover:border-gray-400'
         }`}
       >
         🚫 Active bans only
@@ -51,10 +51,10 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
       <select
         value={current.country}
         onChange={(e) => update({ country: e.target.value })}
-        className={`px-3 py-1 rounded-full text-xs border bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer transition-colors ${
+        className={`px-3 py-1 rounded-full text-xs border bg-white focus:outline-none focus:ring-1 focus:ring-brand cursor-pointer transition-colors ${
           current.country
             ? 'border-brand text-brand font-medium'
-            : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+            : 'border-gray-200 text-gray-600 hover:border-gray-400'
         }`}
       >
         <option value="">All countries</option>
@@ -65,7 +65,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
         ))}
       </select>
 
-      <span className="text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+      <span className="text-gray-200 select-none hidden sm:block">|</span>
 
       {/* Reason pills */}
       {reasons.map((slug) => (
@@ -75,7 +75,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
           className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
             current.reason === slug
               ? 'bg-brand text-white border-brand'
-              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+              : 'border-gray-200 text-gray-600 hover:border-gray-400'
           }`}
         >
           <span aria-hidden>{reasonIcon(slug)}</span> {reasonLabel(slug)}
@@ -86,7 +86,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
       {hasFilter && (
         <button
           onClick={() => router.push(pathname)}
-          className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
+          className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 underline"
         >
           Clear filters
         </button>

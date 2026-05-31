@@ -56,12 +56,15 @@ async function fetchClassics(): Promise<ClassicBook[]> {
   let all: ClassicBook[] = []
   let offset = 0
   while (true) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('books')
       .select(SELECT)
       .lt('first_published_year', 1970)
       .not('first_published_year', 'is', null)
+      // Stable order across pages or .range() skips/dupes past the 1000-row page.
+      .order('id')
       .range(offset, offset + 999)
+    if (error) throw error
     if (!data || data.length === 0) break
     all = all.concat(data as unknown as ClassicBook[])
     if (data.length < 1000) break

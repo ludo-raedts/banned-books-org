@@ -17,7 +17,9 @@ export async function GET() {
 
   const entries: SitemapEntry[] = (rows ?? [])
     .map((r) => ({
-      loc: `${SITEMAP_BASE_URL}/countries/${r.country_code}`,
+      // Lowercase to match the page's self-canonical (/countries/us, not /US),
+      // so sitemap URLs are self-canonical and don't split crawl signals.
+      loc: `${SITEMAP_BASE_URL}/countries/${String(r.country_code).toLowerCase()}`,
       changefreq: 'monthly',
       priority: 0.7,
     }))

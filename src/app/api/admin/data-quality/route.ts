@@ -17,7 +17,9 @@ async function paginatedIds(
   let off = 0
   while (true) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (sb.from(table as any) as any).select(col).range(off, off + 999)
+    // .order(col) gives a stable total order so .range() doesn't skip/dupe ids
+    // past the 1000-row page (col is the unique id column being collected).
+    const { data, error } = await (sb.from(table as any) as any).select(col).order(col).range(off, off + 999)
     if (error) throw new Error(`${table}.${col}: ${error.message}`)
     if (!data?.length) break
     for (const r of data) ids.add((r as any)[col])

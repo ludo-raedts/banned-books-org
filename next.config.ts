@@ -45,6 +45,21 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Baseline security headers on every route. No Content-Security-Policy
+        // yet: the app renders inline JSON-LD <script> and relies on Next's
+        // framework inline scripts, so a strict CSP needs per-request nonce
+        // injection via middleware — tracked separately. X-Frame-Options is the
+        // priority here (the /admin panel must not be frameable → clickjacking).
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()' },
+        ],
+      },
+      {
         source: '/_next/image(.*)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },

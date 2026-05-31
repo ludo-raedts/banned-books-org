@@ -44,7 +44,7 @@ export default async function AdminReadingClubPage() {
       <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold">Reading Club</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Five tracks: Currently Challenged, International, Classics, Young Readers, By Theme.</p>
+          <p className="text-sm text-gray-500 mt-1">Five tracks: Currently Challenged, International, Classics, Young Readers, By Theme.</p>
         </div>
         <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>

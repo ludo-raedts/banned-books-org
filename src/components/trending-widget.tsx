@@ -18,9 +18,9 @@ function RankChange({ thisWeek, lastWeek, compact }: { thisWeek: number; lastWee
     return <span className={`${cls} text-blue-500 font-medium`}>new</span>
   }
   const delta = lastWeek - thisWeek
-  if (delta > 0) return <span className={`${cls} text-emerald-600 dark:text-emerald-400`}>↑{delta}</span>
+  if (delta > 0) return <span className={`${cls} text-emerald-600`}>↑{delta}</span>
   if (delta < 0) return <span className={`${cls} text-red-400`}>↓{Math.abs(delta)}</span>
-  return <span className={`${cls} text-gray-300 dark:text-gray-600`}>—</span>
+  return <span className={`${cls} text-gray-300`}>—</span>
 }
 
 function TrendingListCompact({
@@ -36,18 +36,18 @@ function TrendingListCompact({
 }) {
   return (
     <div>
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
         {label}
       </p>
       <ol className="space-y-1">
         {items.map(item => (
           <li key={item.entityId} className="flex items-baseline gap-1.5 min-w-0">
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums w-3 shrink-0 text-right leading-none mt-px">
+            <span className="text-[10px] text-gray-400 tabular-nums w-3 shrink-0 text-right leading-none mt-px">
               {item.rank}
             </span>
             <Link
               href={`/${pathPrefix}/${item.slug}`}
-              className="flex-1 min-w-0 truncate text-xs text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors"
+              className="flex-1 min-w-0 truncate text-xs text-gray-700 hover:text-brand transition-colors"
             >
               {item.label}
             </Link>
@@ -74,21 +74,21 @@ function TrendingListFull({
 }) {
   return (
     <div>
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3">
+      <p className="text-xs font-medium text-gray-500 mb-3">
         {icon} {label}
       </p>
       {items.length === 0 ? (
-        <p className="text-xs text-gray-400 dark:text-gray-500 italic">No data yet.</p>
+        <p className="text-xs text-gray-400 italic">No data yet.</p>
       ) : (
         <ol className="space-y-1.5">
           {items.map(item => (
             <li key={item.entityId} className="flex items-center gap-2">
-              <span className="w-5 h-5 shrink-0 rounded-full bg-gray-100 dark:bg-gray-800 text-[11px] text-gray-500 dark:text-gray-400 flex items-center justify-center tabular-nums font-medium">
+              <span className="w-5 h-5 shrink-0 rounded-full bg-gray-100 text-[11px] text-gray-500 flex items-center justify-center tabular-nums font-medium">
                 {item.rank}
               </span>
               <Link
                 href={`/${pathPrefix}/${item.slug}`}
-                className="flex-1 min-w-0 truncate text-sm text-gray-800 dark:text-gray-200 hover:underline hover:text-brand dark:hover:text-brand transition-colors"
+                className="flex-1 min-w-0 truncate text-sm text-gray-800 hover:underline hover:text-brand transition-colors"
               >
                 {item.label}
               </Link>
@@ -224,10 +224,10 @@ export default async function TrendingWidget({
     <div>
       {showHeader && (
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl font-semibold text-gray-900">
             {isAllTime ? 'All-time most read' : 'Trending this week'}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          <p className="text-sm text-gray-500 mt-0.5">
             {isAllTime ? 'Most visited since the catalogue launched.' : 'Most visited in the last 7 days.'}
           </p>
         </div>

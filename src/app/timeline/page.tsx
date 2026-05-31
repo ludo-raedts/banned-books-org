@@ -39,7 +39,7 @@ function relatedLinks(e: TimelineEvent): { href: string; label: string }[] {
   const links: { href: string; label: string }[] = []
   if (e.related?.bookSlug) links.push({ href: `/books/${e.related.bookSlug}`, label: 'Book record' })
   if (e.related?.authorSlug) links.push({ href: `/authors/${e.related.authorSlug}`, label: 'Author' })
-  if (e.related?.countryCode) links.push({ href: `/countries/${e.related.countryCode}`, label: 'Country bans' })
+  if (e.related?.countryCode) links.push({ href: `/countries/${e.related.countryCode.toLowerCase()}`, label: 'Country bans' })
   return links
 }
 

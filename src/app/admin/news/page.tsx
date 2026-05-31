@@ -37,7 +37,7 @@ export default async function AdminNewsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">News drafts</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} awaiting review</p>
+          <p className="text-sm text-gray-500 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} awaiting review</p>
         </div>
         <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>

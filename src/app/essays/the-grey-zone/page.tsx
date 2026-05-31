@@ -39,11 +39,11 @@ const jsonLd = {
 }
 
 const proseClasses =
-  'prose prose-gray dark:prose-invert max-w-none ' +
+  'prose prose-gray max-w-none ' +
   'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 dark:prose-a:text-gray-100 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 dark:prose-a:decoration-gray-600 ' +
-  'hover:prose-a:decoration-gray-600 dark:hover:prose-a:decoration-gray-300 ' +
+  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
+  'prose-a:decoration-gray-300 ' +
+  'hover:prose-a:decoration-gray-600 ' +
   'prose-p:leading-relaxed'
 
 export default function TheGreyZonePage() {

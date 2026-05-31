@@ -67,7 +67,7 @@ export default async function BannedBooksHubPage() {
 
       <Link
         href="/stats"
-        className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 inline-block transition-colors"
+        className="text-sm text-gray-500 hover:text-gray-900 mb-8 inline-block transition-colors"
       >
         ← Stats
       </Link>
@@ -76,10 +76,10 @@ export default async function BannedBooksHubPage() {
         <p className="text-sm uppercase tracking-[0.12em] font-semibold text-oxblood mb-3.5">
           By year · {FIRST_YEAR}–{CURRENT_YEAR}
         </p>
-        <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 dark:text-gray-50 mb-4">
+        <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 mb-4">
           Books banned by year.
         </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+        <p className="text-base text-gray-600 leading-relaxed">
           Annual archives of documented book bans, indexed by the year each ban
           began.
           {total > 0 && (
@@ -105,20 +105,20 @@ export default async function BannedBooksHubPage() {
               tabIndex={empty ? -1 : undefined}
               className={`group block px-4 py-3 border rounded-md transition-colors ${
                 empty
-                  ? 'border-gray-100 dark:border-gray-900 text-gray-400 dark:text-gray-600 pointer-events-none'
-                  : 'border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600'
+                  ? 'border-gray-100 text-gray-400 pointer-events-none'
+                  : 'border-gray-200 hover:border-gray-400'
               }`}
             >
               <div
                 className={`font-serif text-2xl font-semibold tabular-nums transition-colors ${
                   empty
                     ? ''
-                    : 'text-gray-900 dark:text-gray-50 group-hover:text-brand'
+                    : 'text-gray-900 group-hover:text-brand'
                 }`}
               >
                 {year}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 tabular-nums">
+              <div className="text-xs text-gray-500 mt-1 tabular-nums">
                 {count.toLocaleString('en-US')} {count === 1 ? 'ban' : 'bans'}
               </div>
             </Link>
@@ -126,11 +126,11 @@ export default async function BannedBooksHubPage() {
         })}
       </div>
 
-      <p className="mt-10 text-xs text-gray-400 dark:text-gray-500 leading-relaxed max-w-2xl">
+      <p className="mt-10 text-xs text-gray-400 leading-relaxed max-w-2xl">
         Each year covers the bans whose <em>start</em> year falls in that
         calendar year. A ban that began in 2018 and remains active still
         appears under 2018. Bans whose start year is unknown are not counted
-        here — see <Link href="/data-quality" className="underline hover:text-gray-600 dark:hover:text-gray-300">data quality</Link> for details.
+        here — see <Link href="/data-quality" className="underline hover:text-gray-600">data quality</Link> for details.
       </p>
     </main>
   )

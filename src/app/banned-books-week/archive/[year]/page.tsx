@@ -48,13 +48,13 @@ export default async function BannedBooksWeekArchivePage({
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
         {featured.map(f => (
-          <li key={f.bookId} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+          <li key={f.bookId} className="border border-gray-200 rounded-lg p-4 bg-white">
             <Link href={`/books/${f.book.slug}`} className="font-semibold text-sm hover:text-brand transition-colors block">
               {f.book.title}
             </Link>
             <div className="text-xs text-gray-500 mt-0.5">{f.book.authors.join(', ')}</div>
             {f.customBlurb && (
-              <p className="text-xs text-gray-700 dark:text-gray-300 mt-2 leading-relaxed">{f.customBlurb}</p>
+              <p className="text-xs text-gray-700 mt-2 leading-relaxed">{f.customBlurb}</p>
             )}
           </li>
         ))}

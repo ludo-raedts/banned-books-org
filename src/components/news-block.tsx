@@ -45,12 +45,12 @@ export default async function NewsBlock() {
     <section>
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Happening now</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Book bans are not history.</p>
+          <h2 className="text-xl font-semibold text-gray-900">Happening now</h2>
+          <p className="text-sm text-gray-500 mt-0.5">Book bans are not history.</p>
         </div>
         <Link
           href="/news"
-          className="shrink-0 text-sm text-gray-500 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors whitespace-nowrap"
+          className="shrink-0 text-sm text-gray-500 hover:text-brand transition-colors whitespace-nowrap"
         >
           All news →
         </Link>
@@ -62,17 +62,17 @@ export default async function NewsBlock() {
             <Link
               key={item.id}
               href="/news"
-              className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
+              className="group block bg-white border border-gray-200 rounded-lg p-4 hover:border-brand/40 hover:bg-gray-50/50 transition-colors"
             >
               {item.headline && (
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug mb-1.5 group-hover:text-brand transition-colors line-clamp-2">
+                <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-1.5 group-hover:text-brand transition-colors line-clamp-2">
                   {item.headline}
                 </h3>
               )}
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug line-clamp-4 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
+              <p className="text-sm text-gray-700 leading-snug line-clamp-4 group-hover:text-gray-900 transition-colors">
                 {item.summary}
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 flex items-center gap-1.5 flex-wrap">
+              <p className="text-xs text-gray-400 mt-2 flex items-center gap-1.5 flex-wrap">
                 <span>
                   {sourceName}
                   {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}

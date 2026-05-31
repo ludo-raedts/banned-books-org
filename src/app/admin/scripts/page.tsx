@@ -18,7 +18,7 @@ import {
 import EnrichRunner from './enrich-runner'
 
 const cardCls =
-  'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-4 bg-white dark:bg-gray-900'
+  'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white'
 
 function Code({ children }: { children: string }) {
   return (
@@ -32,11 +32,11 @@ type TagType = 'free' | 'gpt' | 'claude' | 'destructive' | 'safe'
 
 function Tag({ type }: { type: TagType }) {
   const styles: Record<TagType, string> = {
-    free: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-    gpt: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-    claude: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
-    destructive: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-    safe: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+    free: 'bg-green-100 text-green-700',
+    gpt: 'bg-amber-100 text-amber-700',
+    claude: 'bg-orange-100 text-orange-700',
+    destructive: 'bg-red-100 text-red-700',
+    safe: 'bg-gray-100 text-gray-600',
   }
   const labels: Record<TagType, string> = {
     free: '✓ free APIs',
@@ -71,13 +71,13 @@ function Meta({ meta }: { meta: ScriptMeta }) {
     ['cost', meta.cost],
   ]
   return (
-    <dl className="grid grid-cols-[6.5rem_1fr] gap-x-3 gap-y-1.5 text-xs bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2.5">
+    <dl className="grid grid-cols-[6.5rem_1fr] gap-x-3 gap-y-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md px-3 py-2.5">
       {rows.map(([label, value]) => (
         <div key={label} className="contents">
-          <dt className="font-mono text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[10px] self-start pt-0.5">
+          <dt className="font-mono text-gray-500 uppercase tracking-wider text-[10px] self-start pt-0.5">
             {label}
           </dt>
-          <dd className="text-gray-700 dark:text-gray-300 leading-relaxed">{value}</dd>
+          <dd className="text-gray-700 leading-relaxed">{value}</dd>
         </div>
       ))}
     </dl>
@@ -102,9 +102,9 @@ function Script({
   note?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-3 pt-4 first:pt-0 border-t first:border-0 border-gray-100 dark:border-gray-800">
+    <div className="flex flex-col gap-3 pt-4 first:pt-0 border-t first:border-0 border-gray-100">
       <div className="flex flex-wrap items-start gap-2">
-        <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-100">
+        <span className="font-mono text-sm font-semibold text-gray-900">
           {name}
         </span>
         <div className="flex gap-1.5 flex-wrap">
@@ -113,21 +113,21 @@ function Script({
           ))}
         </div>
       </div>
-      <p className="text-sm text-gray-600 dark:text-gray-400">{what}</p>
+      <p className="text-sm text-gray-600">{what}</p>
       <Meta meta={meta} />
       <Code>{command}</Code>
       {flags && flags.length > 0 && (
         <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs mt-0.5">
           {flags.map((f) => (
             <div key={f.flag} className="contents">
-              <dt className="font-mono text-gray-500 dark:text-gray-400 shrink-0">{f.flag}</dt>
-              <dd className="text-gray-600 dark:text-gray-400">{f.desc}</dd>
+              <dt className="font-mono text-gray-500 shrink-0">{f.flag}</dt>
+              <dd className="text-gray-600">{f.desc}</dd>
             </div>
           ))}
         </dl>
       )}
       {note && (
-        <p className="text-xs text-gray-400 dark:text-gray-500 italic">{note}</p>
+        <p className="text-xs text-gray-400 italic">{note}</p>
       )}
     </div>
   )
@@ -147,10 +147,10 @@ function SectionHeader({
   return (
     <div className="flex flex-col gap-1.5" id={anchor}>
       <div className="flex items-center gap-2">
-        <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
-        <h2 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+        <Icon className="w-5 h-5 text-gray-400 shrink-0" />
+        <h2 className="font-semibold text-gray-900">{title}</h2>
       </div>
-      {blurb && <p className="text-sm text-gray-500 dark:text-gray-400">{blurb}</p>}
+      {blurb && <p className="text-sm text-gray-500">{blurb}</p>}
     </div>
   )
 }
@@ -160,8 +160,8 @@ export default function ScriptsPage() {
     <main className="max-w-3xl mx-auto px-4 py-10">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-            <a href="/admin" className="hover:text-gray-600 dark:hover:text-gray-300">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
+            <a href="/admin" className="hover:text-gray-600">
               Admin
             </a>{' '}
             / Enrichment &amp; sources
@@ -172,7 +172,7 @@ export default function ScriptsPage() {
       </div>
 
       {/* Status banner — what this page is for now */}
-      <div className="mb-8 rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-4 py-3 text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
+      <div className="mb-8 rounded-lg border border-amber-200 bg-amber-50/60 px-4 py-3 text-sm text-amber-900 leading-relaxed">
         <p>
           <strong>Status:</strong> de ingest-pijplijn (ingest → review → approve) is grotendeels afgerond.
           Deze pagina dient nu vooral om bestaande data <strong>door te verrijken</strong>, kwaliteit te{' '}
@@ -186,8 +186,8 @@ export default function ScriptsPage() {
       </div>
 
       {/* Jump-index */}
-      <nav className="mb-8 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40 px-4 py-3 text-xs text-gray-600 dark:text-gray-400">
-        <p className="font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider text-[10px] mb-2">
+      <nav className="mb-8 rounded-lg border border-gray-200 bg-gray-50/60 px-4 py-3 text-xs text-gray-600">
+        <p className="font-semibold text-gray-800 uppercase tracking-wider text-[10px] mb-2">
           Op deze pagina
         </p>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 leading-relaxed">
@@ -230,16 +230,16 @@ export default function ScriptsPage() {
         </ul>
       </nav>
 
-      <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+      <p className="text-xs text-gray-500 mb-6 leading-relaxed">
         Lees het{' '}
-        <code className="text-[11px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">
+        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">
           coverage / cadence / writes / output / idempotent / cost
         </code>{' '}
         blokje boven elk script om te weten of het alle rijen langsloopt of alleen NULL, en waar de output landt. Alle
         commando&apos;s draaien dry-run; voeg{' '}
-        <code className="text-[11px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--apply</code> (of
+        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--apply</code> (of
         {' '}
-        <code className="text-[11px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">--write</code> voor
+        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--write</code> voor
         add-scripts) toe om te schrijven.
       </p>
 
@@ -263,7 +263,7 @@ export default function ScriptsPage() {
           />
           <Script
             name="enrich-all.ts"
-            what="Draait, in volgorde: ISBN → covers v2 (met placeholder-rejection) → Gutenberg IDs → archive.org IDs → descriptions (OL/GB + GPT-fallback) → ban descriptions → censorship context → ban reasons. archive.org wordt eenmalig per boek bevraagd (sticky checked_at). Cover-step rejecteert Google Books placeholders via pHash."
+            what="Draait, in volgorde: ISBN → covers v2 (met placeholder-rejection) → Gutenberg IDs → archive.org IDs → descriptions v2 (Wikipedia + OpenLibrary-by-ISBN + Google Books, grounded; LLM alleen voor synthese uit ≥2 cited bronnen — geen free-form GPT-fallback meer) → genres → ban descriptions → censorship context → ban reasons. archive.org wordt eenmalig per boek bevraagd (sticky checked_at). Cover-step rejecteert Google Books placeholders via pHash."
             tags={['free', 'gpt']}
             meta={{
               coverage: <>fill-only per stap (zie elk per-veld script). Uitzondering: reason-step <strong>vervangt</strong> ban_reason_links voor bans die uitsluitend &apos;other&apos; zijn (DELETE + INSERT).</>,
@@ -313,7 +313,7 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
           />
 
           {/* 3a — Books metadata */}
-          <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mt-2">
+          <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mt-2">
             Books — metadata
           </h3>
 
@@ -413,11 +413,11 @@ npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply --offset=100
 
           <Script
             name="enrich-descriptions-v2.ts"
-            what="Vult missende book-descriptions met gegronde bronnen: Wikipedia (EN + langlinks) + Open Library + Google Books, met title-fuzz + author-surname cross-check op elke geaccepteerde bron. LLM wordt alleen gebruikt voor 'grounded synthesis' (samenvatten uit aangereikte bron-tekst, nooit free-form generation). Schrijft description_source_url + description_source_type voor provenance. Vervangt de oude enrich-descriptions.ts (v1) — die had GPT free-form fallback en is gedeprecaard 2026-05-28 na een hallucinatie-incident."
+            what="Vult missende book-descriptions met gegronde bronnen: Wikipedia (EN + langlinks) + Open Library (by-ISBN eerst — exacte editie → work, sterkste binding; dan work-id; dan title/author search) + Google Books, met title-fuzz + author-surname cross-check op elke geaccepteerde bron. LLM wordt alleen gebruikt voor 'grounded synthesis' (samenvatten uit aangereikte bron-tekst, nooit free-form generation). Schrijft description_source_url + description_source_type voor provenance. Vervangt de oude enrich-descriptions.ts (v1) — die had GPT free-form fallback en is gedeprecaard 2026-05-28 na een hallucinatie-incident."
             tags={['free', 'gpt', 'destructive']}
             meta={{
-              coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_book</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows. <strong>Met --process-flagged:</strong> ook door judge gewiste rijen meenemen.</>,
-              cadence: 'na elke import + na judge-run',
+              coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_book</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows. <strong>Met --process-flagged:</strong> ook door judge gewiste rijen meenemen. <strong>Met --reground-ungrounded:</strong> ISBN-rijen waarvan de synopsis nog géén tracked bron heeft (pre-v2 ongegronde tekst) — overschrijft alleen waar een geverifieerde bron resolvet, backup naar <code className="font-mono">data/description-book-reground-backup-&lt;ts&gt;.csv</code>.</>,
+              cadence: 'na elke import + na judge-run + one-off reground van pre-v2 tekst',
               writes: <><code className="font-mono">books.description_book</code>, <code className="font-mono">books.description_source_url</code>, <code className="font-mono">books.description_source_type</code>, <code className="font-mono">books.data_quality_status</code> (confident bij ≥2 bronnen, default bij 1, flagged bij geen), <code className="font-mono">books.ai_drafted</code> (alleen true voor llm_grounded_*).</>,
               idempotent: 'default ja (alleen NULLs); met --slug/--overwrite destructief',
               cost: 'gratis + ~$0.001/boek voor LLM synthesis (gpt-4o-mini)',
@@ -435,7 +435,11 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-
 npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --slug=the-kite-runner
 
 # Eerste 50 boeken herverrijken, met overwrite
-npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --overwrite --limit=50`}
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-llm --overwrite --limit=50
+
+# Pre-v2 ongegronde synopses her-gronden via ISBN (dry-run eerst!)
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungrounded --limit=40 --concurrency=4
+npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungrounded --apply --allow-llm --concurrency=5`}
             flags={[
               { flag: '--apply', desc: 'Schrijf naar DB' },
               { flag: '--allow-llm', desc: 'Sta grounded LLM synthesis toe (anders alleen letterlijke extracts)' },
@@ -444,8 +448,9 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --allow-
               { flag: '--limit=N', desc: 'Cap op N boeken' },
               { flag: '--slug=<slug>', desc: 'Eén boek, bypasst alle filters' },
               { flag: '--overwrite', desc: 'Vervangt ook bestaande descriptions' },
+              { flag: '--reground-ungrounded', desc: 'Her-gront ISBN-rijen met ongetrackte synopsis; overschrijft alleen bij geverifieerde bron, backupt originelen' },
             ]}
-            note="V2 vervangt v1 (enrich-descriptions.ts) én de losse GPT-fallback (enrich-descriptions-gpt.ts). Beide zijn gedeprecaard, blijven werken voor backwards compat. Gebruik --slug voor sanity-checks vóór een grote overwrite."
+            note="V2 vervangt v1 (enrich-descriptions.ts) én de losse GPT-fallback (enrich-descriptions-gpt.ts). Beide zijn gedeprecaard, blijven werken voor backwards compat. Gebruik --slug voor sanity-checks vóór een grote overwrite. --reground-ungrounded laat rijen waar geen bron resolvet ongemoeid (nooit een gevulde synopsis naar 'flagged' degraderen)."
           />
 
           <Script
@@ -482,7 +487,7 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
           />
 
           {/* 3b — Bans */}
-          <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mt-4">
+          <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mt-4">
             Bans — events &amp; context
           </h3>
 
@@ -553,7 +558,7 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --o
           />
 
           {/* 3c — Authors */}
-          <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mt-4">
+          <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mt-4">
             Authors
           </h3>
 
@@ -698,14 +703,14 @@ node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts --apply
           />
 
           {/* Recept-prompt voor nieuwe Claude-sessie */}
-          <details className="mt-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40">
-            <summary className="cursor-pointer select-none px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <details className="mt-2 rounded-md border border-gray-200 bg-gray-50/60">
+            <summary className="cursor-pointer select-none px-4 py-2.5 text-sm font-medium text-gray-800 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-gray-400" />
               Recept-prompt voor een nieuwe Claude-sessie
-              <span className="ml-auto text-xs text-gray-500 dark:text-gray-500 font-normal">klik om uit te klappen</span>
+              <span className="ml-auto text-xs text-gray-500 font-normal">klik om uit te klappen</span>
             </summary>
             <div className="px-4 pb-4">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
+              <p className="text-xs text-gray-600 mb-2 leading-relaxed">
                 Plak dit in een nieuwe Claude Code-sessie als startprompt. De prompt is zelf-bevattend — Claude vindt
                 de scripts op naam en weet welke review-gates jij wilt zien voor er DB-writes plaatsvinden.
               </p>
@@ -1020,7 +1025,7 @@ npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
             note={<>Werkwijze bij nieuwe audit-run: kopieer het script, vul de drie lijsten met IDs uit de nieuwste <code className="font-mono">data/non-person-authors-review.md</code>, en draai dry-run → apply. De verificatie-stap aborteert als een display_name niet matcht — beschermt tegen accidentele wijzigingen na een ander script al een rij hernoemde.</>}
           />
 
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             Voor description / ban-description fixes per boek: gebruik{' '}
             <code className="font-mono">enrich-descriptions-v2.ts --apply --allow-llm --slug=X</code>,{' '}
             <code className="font-mono">enrich-ban-descriptions-gpt.ts --slug=X</code>, of{' '}
@@ -1136,14 +1141,14 @@ npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply -
           />
 
           <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-2.5">
-            <dt className="text-sm font-mono text-gray-700 dark:text-gray-300">audit-db.ts</dt>
-            <dd className="text-sm text-gray-600 dark:text-gray-400 self-center">full database audit, missing fields, FK checks</dd>
-            <dt className="text-sm font-mono text-gray-700 dark:text-gray-300">check-dupes.ts</dt>
-            <dd className="text-sm text-gray-600 dark:text-gray-400 self-center">duplicate books (same title + author)</dd>
-            <dt className="text-sm font-mono text-gray-700 dark:text-gray-300">check-no-desc.ts</dt>
-            <dd className="text-sm text-gray-600 dark:text-gray-400 self-center">boeken die nog een description missen</dd>
-            <dt className="text-sm font-mono text-gray-700 dark:text-gray-300">check-coverage.ts</dt>
-            <dd className="text-sm text-gray-600 dark:text-gray-400 self-center">ISBN / cover / description / ban-desc coverage %</dd>
+            <dt className="text-sm font-mono text-gray-700">audit-db.ts</dt>
+            <dd className="text-sm text-gray-600 self-center">full database audit, missing fields, FK checks</dd>
+            <dt className="text-sm font-mono text-gray-700">check-dupes.ts</dt>
+            <dd className="text-sm text-gray-600 self-center">duplicate books (same title + author)</dd>
+            <dt className="text-sm font-mono text-gray-700">check-no-desc.ts</dt>
+            <dd className="text-sm text-gray-600 self-center">boeken die nog een description missen</dd>
+            <dt className="text-sm font-mono text-gray-700">check-coverage.ts</dt>
+            <dd className="text-sm text-gray-600 self-center">ISBN / cover / description / ban-desc coverage %</dd>
           </dl>
           <Code>{`npx tsx --env-file=.env.local scripts/audit-db.ts
 npx tsx --env-file=.env.local scripts/check-dupes.ts
@@ -1179,7 +1184,7 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
             icon={FileText}
             title="LLM-facing surfaces (llms.txt + .md exports)"
           />
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-sm text-gray-600 leading-relaxed">
             <a href="/llms.txt" className="font-mono text-xs underline">/llms.txt</a> is een curated plain-text entry
             point voor LLM crawlers (GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot, Google-Extended). Het lijst
             highest-value canonical URLs — methodology, data quality, essays, hub pages — zodat een model één plek
@@ -1187,7 +1192,7 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
             de <code className="font-mono text-xs">/banned-books-week</code> link is gated op{' '}
             <code className="font-mono text-xs">bbw_config.enabled</code>.
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-sm text-gray-600 leading-relaxed">
             Elke long-form essay plus <code className="font-mono text-xs">/methodology</code>,{' '}
             <code className="font-mono text-xs">/data-quality</code>, en <code className="font-mono text-xs">/about</code>{' '}
             heeft een parallel <code className="font-mono text-xs">.md</code> URL (bv.{' '}
@@ -1195,16 +1200,16 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
             serveert als clean markdown met YAML frontmatter — geen JSX, geen nav-chrome. De HTML-page adverteert hem
             via <code className="font-mono text-xs">&lt;link rel=&quot;alternate&quot; type=&quot;text/markdown&quot;&gt;</code>.
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            <strong className="text-gray-800 dark:text-gray-200">Onderhoud:</strong> edit de essay of reference page
+          <p className="text-sm text-gray-600 leading-relaxed">
+            <strong className="text-gray-800">Onderhoud:</strong> edit de essay of reference page
             zoals normaal, en mirror de change in{' '}
             <code className="font-mono text-xs">src/lib/markdown-pages/&lt;slug&gt;.ts</code> zodat de{' '}
             <code className="font-mono text-xs">.md</code>-twin in sync blijft. Bij een nieuwe essay: ook toevoegen aan{' '}
             <code className="font-mono text-xs">src/app/llms.txt/route.ts</code> (description map) en aan{' '}
             <code className="font-mono text-xs">src/lib/sitemap-static-entries.ts</code>.
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            <strong className="text-gray-800 dark:text-gray-200">Regel:</strong>{' '}
+          <p className="text-sm text-gray-600 leading-relaxed">
+            <strong className="text-gray-800">Regel:</strong>{' '}
             <code className="font-mono text-xs">.md</code> exports zijn alleen voor long-form prose. Géén per-book of
             per-author <code className="font-mono text-xs">.md</code> pages — book- en author-detail pages publiceren al
             structured citation via JSON-LD (Book, Person, FAQPage, ItemList, additionalProperty.dataQualityStatus).
@@ -1214,26 +1219,26 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
         {/* 11 — Adding a new source (collapsed) */}
         <details id="new-source" className={`${cardCls} scroll-mt-4 group`}>
           <summary className="cursor-pointer select-none flex items-center gap-2 list-none">
-            <Plus className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" />
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Adding a new source</h2>
-            <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 group-open:hidden">
+            <Plus className="w-5 h-5 text-gray-400 shrink-0" />
+            <h2 className="font-semibold text-gray-900">Adding a new source</h2>
+            <span className="ml-auto text-xs text-gray-500 group-open:hidden">
               klik om uit te klappen
             </span>
-            <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 hidden group-open:inline">
+            <span className="ml-auto text-xs text-gray-500 hidden group-open:inline">
               klik om in te klappen
             </span>
           </summary>
 
           <div className="flex flex-col gap-4 mt-4">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500">
               De originele ingest → review → approve → enrich pipeline. Praktisch grotendeels achter de rug — laat
               deze sectie collapsed tenzij je een nieuwe ban-list / court-ruling / curated source aan het onboarden bent.
             </p>
 
-            <div className="rounded-md border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-3 py-3 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+            <div className="rounded-md border border-amber-200 bg-amber-50/60 px-3 py-3 text-xs text-amber-900 leading-relaxed">
               <p className="font-semibold mb-2">Wanneer welk pad?</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="rounded border border-amber-300/60 dark:border-amber-800/60 bg-white/40 dark:bg-amber-950/20 p-2.5">
+                <div className="rounded border border-amber-300/60 bg-white/40 p-2.5">
                   <p className="font-semibold mb-1">
                     Add-script (<code className="font-mono text-[11px]">scripts/add-*.ts</code>)
                   </p>
@@ -1265,7 +1270,7 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
                   </p>
                 </div>
 
-                <div className="rounded border border-amber-300/60 dark:border-amber-800/60 bg-white/40 dark:bg-amber-950/20 p-2.5">
+                <div className="rounded border border-amber-300/60 bg-white/40 p-2.5">
                   <p className="font-semibold mb-1">
                     Queue-pad (<code className="font-mono text-[11px]">run-import-job</code>)
                   </p>
@@ -1301,7 +1306,7 @@ npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
               </p>
             </div>
 
-            <ol className="flex flex-col gap-4 text-sm text-gray-700 dark:text-gray-300 list-decimal list-outside ml-5">
+            <ol className="flex flex-col gap-4 text-sm text-gray-700 list-decimal list-outside ml-5">
               <li>
                 <p className="mb-2">
                   <strong>Ingest.</strong> Kopieer een werkend template en adapteer — elke source heeft zijn eigen
@@ -1315,7 +1320,7 @@ scripts/add-bulk-books.ts           # generic catch-all
 
 # Run na editen
 npx tsx --env-file=.env.local scripts/add-<your-source>.ts --write`}</Code>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                <p className="text-xs text-gray-500 mt-2">
                   Add-scripts gebruiken <code className="font-mono">--write</code>, niet <code className="font-mono">--apply</code>.
                   Ze maken books, authors, bans, ban-reason links, en source rows in één pass.
                 </p>
@@ -1400,31 +1405,31 @@ npx tsx --env-file=.env.local scripts/_review_backlog.ts`}</Code>
         {/* 12 — Prerequisites */}
         <div id="prereqs" className={`${cardCls} scroll-mt-4`}>
           <SectionHeader icon={Terminal} title="Prerequisites &amp; tag-legend" />
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Zorg dat <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">.env.local</code>{' '}
+          <p className="text-sm text-gray-600">
+            Zorg dat <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">.env.local</code>{' '}
             in de project-root staat met{' '}
-            <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">SUPABASE_SERVICE_ROLE_KEY</code>,
+            <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">SUPABASE_SERVICE_ROLE_KEY</code>,
             (voor GPT scripts){' '}
-            <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">OPENAI_API_KEY</code>, en
+            <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">OPENAI_API_KEY</code>, en
             (voor Claude scripts){' '}
-            <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono">ANTHROPIC_API_KEY</code>.
+            <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">ANTHROPIC_API_KEY</code>.
           </p>
           <div className="flex flex-wrap gap-4 text-xs">
             <span className="flex items-center gap-1.5">
               <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-              <span className="text-gray-600 dark:text-gray-400">Green = free (Open Library, Google Books, Wikipedia)</span>
+              <span className="text-gray-600">Green = free (Open Library, Google Books, Wikipedia)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Hammer className="w-3.5 h-3.5 text-amber-500" />
-              <span className="text-gray-600 dark:text-gray-400">Amber = OpenAI (GPT-4o / 4o-mini)</span>
+              <span className="text-gray-600">Amber = OpenAI (GPT-4o / 4o-mini)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Database className="w-3.5 h-3.5 text-orange-500" />
-              <span className="text-gray-600 dark:text-gray-400">Orange = Anthropic (Claude Opus)</span>
+              <span className="text-gray-600">Orange = Anthropic (Claude Opus)</span>
             </span>
             <span className="flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
-              <span className="text-gray-600 dark:text-gray-400">Red = destructive / overschrijft bestaande data</span>
+              <span className="text-gray-600">Red = destructive / overschrijft bestaande data</span>
             </span>
           </div>
         </div>

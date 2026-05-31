@@ -37,12 +37,12 @@ export default function ReadingClubBookCard({
   const bookshopUrl = getBookshopUrl({ isbn13: card.isbn13, bookshopIsbn13: card.bookshopIsbn13, bookshopStatus: card.bookshopStatus })
 
   return (
-    <li className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+    <li className="border border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex gap-3">
         {card.coverUrl ? (
-          <Image src={card.coverUrl} alt="" width={64} height={96} className="rounded object-cover w-16 h-24 flex-shrink-0 bg-gray-100 dark:bg-gray-800" />
+          <Image src={card.coverUrl} alt="" width={64} height={96} className="rounded object-cover w-16 h-24 flex-shrink-0 bg-gray-100" />
         ) : (
-          <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100 dark:bg-gray-800" />
+          <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100" />
         )}
         <div className="flex-1 min-w-0">
           {track === 'young-readers' && card.audienceAsPublished && (
@@ -67,9 +67,9 @@ export default function ReadingClubBookCard({
             {showCountries && card.countries.length > 0 && ` · ${new Set(card.countries).size} countries`}
           </div>
           {card.customBlurb ? (
-            <p className="text-xs text-gray-700 dark:text-gray-300 mt-2 leading-relaxed">{card.customBlurb}</p>
+            <p className="text-xs text-gray-700 mt-2 leading-relaxed">{card.customBlurb}</p>
           ) : card.description ? (
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 leading-relaxed line-clamp-3">{card.description}</p>
+            <p className="text-xs text-gray-600 mt-2 leading-relaxed line-clamp-3">{card.description}</p>
           ) : null}
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function ReadingClubBookCard({
           <summary className="text-xs font-medium text-gray-500 cursor-pointer">
             {card.discussionQuestions.length} discussion question{card.discussionQuestions.length !== 1 ? 's' : ''}
           </summary>
-          <ul className="mt-1.5 text-xs text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1">
+          <ul className="mt-1.5 text-xs text-gray-600 list-disc pl-5 space-y-1">
             {card.discussionQuestions.map((q, i) => <li key={i}>{q}</li>)}
           </ul>
         </details>
@@ -116,7 +116,7 @@ export default function ReadingClubBookCard({
           href={bookshopUrl}
           target="_blank"
           rel={BOOKSHOP_REL}
-          className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
+          className="text-gray-500 hover:text-gray-700"
         >
           Buy on Bookshop.org
         </TrackedOutboundLink>

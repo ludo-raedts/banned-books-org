@@ -37,7 +37,7 @@ function LoginForm() {
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
-        className="border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2.5 text-sm bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+        className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400"
         autoFocus
         required
       />
@@ -45,7 +45,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+        className="bg-gray-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
       >
         {loading ? 'Signing in…' : 'Sign in'}
       </button>

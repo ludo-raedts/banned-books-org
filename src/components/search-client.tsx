@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useId } from 'react'
 import { track } from '@vercel/analytics'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -73,7 +73,7 @@ function urlParams(opts: Filters & { defaultSort: BookSort }) {
 
 function SuggestionGroupHeader({ children }: { children: React.ReactNode }) {
   return (
-    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-100 dark:border-gray-800 first:border-t-0">
+    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-50 border-t border-gray-100 first:border-t-0">
       {children}
     </div>
   )
@@ -81,7 +81,7 @@ function SuggestionGroupHeader({ children }: { children: React.ReactNode }) {
 
 function suggestionRowClass(isSelected: boolean): string {
   return `w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-    isSelected ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800/60'
+    isSelected ? 'bg-gray-100' : 'hover:bg-gray-50'
   }`
 }
 
@@ -92,12 +92,12 @@ function FilterPill({
 }) {
   const activeClass = color === 'red'
     ? 'bg-red-600 text-white border-red-600'
-    : 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100'
+    : 'bg-gray-900 text-white border-gray-900'
   return (
     <button
       onClick={onClick}
       className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
-        active ? activeClass : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
+        active ? activeClass : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
       }`}
     >
       {children}
@@ -151,6 +151,10 @@ export default function SearchClient({
   const [bookSuggestions,    setBookSuggestions]    = useState<BookSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  // ARIA combobox wiring: the listbox + each option need stable ids so the
+  // input can point aria-activedescendant at the keyboard-highlighted row.
+  const listboxId = useId()
+  const optionId = (i: number) => `${listboxId}-opt-${i}`
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
   const flatSuggestions: Suggestion[] = [...authorSuggestions, ...countrySuggestions, ...bookSuggestions]
@@ -217,7 +221,7 @@ export default function SearchClient({
   function suggestionHref(s: Suggestion): string {
     if (s.kind === 'book')    return `/books/${s.slug}`
     if (s.kind === 'author')  return `/authors/${s.slug}`
-    return `/countries/${s.code}`
+    return `/countries/${s.code.toLowerCase()}`
   }
 
   function handleSuggestionSelect(s: Suggestion) {
@@ -343,6 +347,8 @@ export default function SearchClient({
             role="combobox"
             aria-expanded={showSuggestions}
             aria-autocomplete="list"
+            aria-controls={listboxId}
+            aria-activedescendant={selectedIndex >= 0 ? optionId(selectedIndex) : undefined}
             aria-label="Search books"
             placeholder={`Search ${totalCount > 0 ? totalCount.toLocaleString('en') + ' ' : ''}banned books by title or author…`}
             value={q}
@@ -351,7 +357,7 @@ export default function SearchClient({
             onChange={e => { setQ(e.target.value); setShowSuggestions(false) }}
             onFocus={() => { if (flatSuggestions.length > 0) setShowSuggestions(true) }}
             onKeyDown={handleSearchKeyDown}
-            className={`w-full pl-12 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-brand dark:focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
+            className={`w-full pl-12 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 text-lg font-medium focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/15 transition-all min-h-[68px] shadow-sm hover:shadow-md focus:shadow-md ${q ? 'pr-11' : 'pr-4'}`}
           />
           {q && (
             <button
@@ -361,7 +367,7 @@ export default function SearchClient({
                 setShowSuggestions(false)
               }}
               aria-label="Clear search"
-              className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="absolute inset-y-0 right-3.5 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -370,7 +376,7 @@ export default function SearchClient({
           )}
 
           {showSuggestions && flatSuggestions.length > 0 && (
-            <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden">
+            <div role="listbox" id={listboxId} aria-label="Search suggestions" className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
               {authorSuggestions.length > 0 && (
                 <SuggestionGroupHeader>Authors</SuggestionGroupHeader>
               )}
@@ -380,9 +386,12 @@ export default function SearchClient({
                   <button
                     key={`author-${s.id}`}
                     onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    role="option"
+                    id={optionId(idx)}
+                    aria-selected={idx === selectedIndex}
                     className={suggestionRowClass(idx === selectedIndex)}
                   >
-                    <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                       {s.photo_url ? (
                         <Image src={s.photo_url} alt="" width={32} height={32} className="w-full h-full object-cover" sizes="32px" />
                       ) : (
@@ -390,11 +399,11 @@ export default function SearchClient({
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.display_name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Author</p>
+                      <p className="text-sm font-semibold text-gray-900 truncate">{s.display_name}</p>
+                      <p className="text-xs text-gray-500 truncate">Author</p>
                     </div>
                     {s.bookCount > 0 && (
-                      <span className="shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400 tabular-nums">
+                      <span className="shrink-0 text-xs font-medium text-gray-500 tabular-nums">
                         {s.bookCount} {s.bookCount === 1 ? 'book' : 'books'}
                       </span>
                     )}
@@ -410,16 +419,19 @@ export default function SearchClient({
                   <button
                     key={`country-${s.code}`}
                     onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    role="option"
+                    id={optionId(idx)}
+                    aria-selected={idx === selectedIndex}
                     className={suggestionRowClass(idx === selectedIndex)}
                   >
-                    <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-lg leading-none" aria-hidden>
+                    <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-lg leading-none" aria-hidden>
                       {countryFlag(s.code)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.name_en}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Country</p>
+                      <p className="text-sm font-semibold text-gray-900 truncate">{s.name_en}</p>
+                      <p className="text-xs text-gray-500 truncate">Country</p>
                     </div>
-                    <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                    <span className="shrink-0 text-xs font-medium text-red-500 tabular-nums">
                       {s.banCount} {s.banCount === 1 ? 'book' : 'books'}
                     </span>
                   </button>
@@ -434,9 +446,12 @@ export default function SearchClient({
                   <button
                     key={`book-${s.id}`}
                     onMouseDown={e => { e.preventDefault(); handleSuggestionSelect(s) }}
+                    role="option"
+                    id={optionId(idx)}
+                    aria-selected={idx === selectedIndex}
                     className={suggestionRowClass(idx === selectedIndex)}
                   >
-                    <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <div className="shrink-0 w-8 h-11 rounded overflow-hidden bg-gray-100">
                       {s.cover_url ? (
                         <Image src={s.cover_url} alt="" width={32} height={44} className="w-full h-full object-cover" sizes="32px" />
                       ) : (
@@ -444,10 +459,10 @@ export default function SearchClient({
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{s.title}</p>
-                      {s.author && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{s.author}</p>}
+                      <p className="text-sm font-semibold text-gray-900 truncate">{s.title}</p>
+                      {s.author && <p className="text-xs text-gray-500 truncate">{s.author}</p>}
                     </div>
-                    <span className="shrink-0 text-xs font-medium text-red-500 dark:text-red-400 tabular-nums">
+                    <span className="shrink-0 text-xs font-medium text-red-500 tabular-nums">
                       {s.banCount} {s.banCount === 1 ? 'ban' : 'bans'}
                     </span>
                   </button>
@@ -466,10 +481,10 @@ export default function SearchClient({
               value={sort}
               onChange={e => setSort(e.target.value as BookSort)}
               aria-label="Sort books"
-              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white cursor-pointer focus:outline-none ${
                 sort !== defaultSort
-                  ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-gray-200 text-gray-600 hover:border-gray-400'
               }`}
             >
               {SORT_OPTIONS.map(o => (
@@ -478,22 +493,22 @@ export default function SearchClient({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
-          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
           <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
           <FilterPill active={scope === 'government'} onClick={() => setScope(scope === 'government' ? null : 'government')}>🏛 Governments</FilterPill>
           <FilterPill active={scope === 'public_library'} onClick={() => setScope(scope === 'public_library' ? null : 'public_library')}>📚 Libraries</FilterPill>
-          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           <FilterPill active={activeOnly} onClick={() => setActiveOnly(!activeOnly)} color="red">🚫 Currently banned</FilterPill>
           <div className="relative shrink-0">
             <select
               value={country}
               onChange={e => setCountry(e.target.value)}
               aria-label="Filter by country"
-              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white dark:bg-gray-900 cursor-pointer focus:outline-none ${
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white cursor-pointer focus:outline-none ${
                 country
-                  ? 'border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-gray-200 text-gray-600 hover:border-gray-400'
               }`}
             >
               <option value="">🌍 All countries</option>
@@ -501,7 +516,7 @@ export default function SearchClient({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
-          <span className="self-center text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+          <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           {FILTER_REASONS.map(slug => (
             <FilterPill key={slug} active={reason === slug} onClick={() => setReason(reason === slug ? null : slug)}>
               <span aria-hidden>{reasonIcon(slug)}</span>{' '}{reasonLabel(slug)}
@@ -510,31 +525,31 @@ export default function SearchClient({
           {hasFilters && (
             <button
               onClick={clearAll}
-              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors"
             >
               ✕ Clear
             </button>
           )}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
+        <p className="text-sm text-gray-500 mt-3">
           {loadingFilter
             ? <span className="text-gray-400">Searching…</span>
             : hasFilters
-              ? <><span className="font-medium text-gray-700 dark:text-gray-200">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books match</>
-              : <><span className="font-medium text-gray-700 dark:text-gray-200">{totalCount.toLocaleString('en')}</span> books</>
+              ? <><span className="font-medium text-gray-700">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books match</>
+              : <><span className="font-medium text-gray-700">{totalCount.toLocaleString('en')}</span> books</>
           }
         </p>
       </div>
 
       {/* Empty state */}
       {!loadingFilter && displayBooks.length === 0 && (
-        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40 py-10 px-6 text-center">
-          <p className="text-gray-700 dark:text-gray-300 font-medium mb-1">No books match your search.</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <div className="rounded-xl border border-gray-200 bg-gray-50 py-10 px-6 text-center">
+          <p className="text-gray-700 font-medium mb-1">No books match your search.</p>
+          <p className="text-sm text-gray-500 mb-4">
             Try a different keyword or remove some filters.
           </p>
           {hasFilters && (
-            <button onClick={clearAll} className="text-sm text-brand dark:text-red-400 hover:underline font-medium">
+            <button onClick={clearAll} className="text-sm text-brand hover:underline font-medium">
               Clear all filters
             </button>
           )}
@@ -559,15 +574,15 @@ export default function SearchClient({
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{authorName(book)}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{authorName(book)}</p>
                     {book.description_book && (
-                      <p className="max-sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
+                      <p className="max-sm:hidden text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {book.genres.slice(0, 2).map(slug => <GenreBadge key={slug} slug={slug} />)}
                       {reasons.slice(0, 2).map(slug => <ReasonBadge key={slug} slug={slug} />)}
                     </div>
-                    <p className="text-xs font-medium text-red-500 dark:text-red-400 mt-1">{banLabel(book.bans)}</p>
+                    <p className="text-xs font-medium text-red-500 mt-1">{banLabel(book.bans)}</p>
                   </div>
                 </Link>
               )
@@ -580,10 +595,10 @@ export default function SearchClient({
         <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-row gap-3 sm:flex-col sm:gap-2 animate-pulse items-start">
-              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] bg-gray-100 dark:bg-gray-800 rounded" />
+              <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] bg-gray-100 rounded" />
               <div className="flex-1 min-w-0 flex flex-col gap-2 pt-1">
-                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
+                <div className="h-3 bg-gray-100 rounded w-3/4" />
+                <div className="h-3 bg-gray-100 rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -593,7 +608,7 @@ export default function SearchClient({
       <div ref={sentinelRef} className="h-4" />
 
       {loadingMore && (
-        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">Loading more…</p>
+        <p className="text-sm text-gray-400 text-center py-4">Loading more…</p>
       )}
     </div>
   )

@@ -76,8 +76,8 @@ export function TranslatedBadge({
   if (!isTranslated(code)) return null
   const text = translatedFromLabel(code as string)
   const cls = size === 'compact'
-    ? 'inline-flex items-center px-1 py-0 rounded text-[10px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-    : 'inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+    ? 'inline-flex items-center px-1 py-0 rounded text-[10px] font-medium bg-blue-50 text-blue-700'
+    : 'inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide bg-blue-50 text-blue-700'
   return <span className={cls}>{text}</span>
 }
 
@@ -99,7 +99,7 @@ export function OriginalTitleLine({
   if (!isTranslated(code) || !originalTitle) return null
   const { label } = languageInfo(code)
   return (
-    <p className={`text-xs italic text-gray-500 dark:text-gray-400 ${className ?? ''}`}>
+    <p className={`text-xs italic text-gray-500 ${className ?? ''}`}>
       Original ({label}): {originalTitle}
     </p>
   )

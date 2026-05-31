@@ -28,7 +28,7 @@ export default function CopyButton({ text, label, className }: Props) {
       aria-label={`Copy ${label} to clipboard`}
       className={
         className ??
-        'inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+        'inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors'
       }
     >
       {copied ? 'Copied' : 'Copy'}

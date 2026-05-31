@@ -70,11 +70,14 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
   let all: ChildBook[] = []
   let offset = 0
   while (true) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('books')
       .select(SELECT)
       .or(filter)
+      // Stable order across pages or .range() skips/dupes past the 1000-row page.
+      .order('id')
       .range(offset, offset + 999)
+    if (error) throw error
     if (!data || data.length === 0) break
     all = all.concat(data as unknown as ChildBook[])
     if (data.length < 1000) break

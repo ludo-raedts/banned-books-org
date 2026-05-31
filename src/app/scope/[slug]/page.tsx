@@ -28,6 +28,14 @@ import {
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForScope, bookshopListUrl } from '@/lib/bookshop-lists'
 
+// Prebuild all scope hubs at build time so the route is static + ISR instead
+// of rendered fully dynamically (no-store) on every request.
+export async function generateStaticParams() {
+  const { data } = await adminClient().from('scopes').select('slug')
+  const rows = (data ?? []) as { slug: string }[]
+  return rows.map((s) => ({ slug: s.slug }))
+}
+
 export async function generateMetadata({
   params,
 }: {

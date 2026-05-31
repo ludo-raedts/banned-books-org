@@ -135,7 +135,7 @@ export default function ImportReviewListClient({
   return (
     <div>
       {/* Sticky filter bar */}
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-950 -mx-4 px-4 pt-1 pb-3 mb-4 border-b border-gray-200 dark:border-gray-800">
+      <div className="sticky top-0 z-10 bg-white -mx-4 px-4 pt-1 pb-3 mb-4 border-b border-gray-200">
         <div className="flex flex-wrap items-start gap-3">
           <FilterGroup label="Status">
             {STATUS_OPTIONS.map(opt => {
@@ -189,7 +189,7 @@ export default function ImportReviewListClient({
               {flagFilter.size > 0 && (
                 <button
                   onClick={() => applyFilterChange(() => setFlagFilter(new Set()))}
-                  className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 underline self-center"
+                  className="text-xs text-gray-500 hover:text-gray-700 underline self-center"
                 >
                   clear
                 </button>
@@ -201,7 +201,7 @@ export default function ImportReviewListClient({
 
       {/* Bulk action bar */}
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 mb-3 p-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <div className="flex items-center gap-2 mb-3 p-3 rounded-xl border border-gray-300 bg-gray-50">
           <span className="text-sm font-medium">
             {selected.size} selected
           </span>
@@ -236,13 +236,13 @@ export default function ImportReviewListClient({
           </button>
           <button
             onClick={() => setBulkMode('defer')}
-            className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium hover:bg-gray-100 transition-colors"
           >
             Defer {selected.size}
           </button>
           <button
             onClick={clearSelection}
-            className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+            className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
             Clear
           </button>
@@ -250,21 +250,21 @@ export default function ImportReviewListClient({
       )}
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500">
           No queue entries match these filters.
         </p>
       ) : (
         <>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+          <p className="text-xs text-gray-400 mb-2">
             {filtered.length.toLocaleString('en')} result
             {filtered.length !== 1 ? 's' : ''}
             {totalPages > 1 && ` — page ${page + 1} of ${totalPages}`}
           </p>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs text-gray-500 uppercase tracking-wide">
                   <th className="px-3 py-2 w-10">
                     <input
                       type="checkbox"
@@ -289,7 +289,7 @@ export default function ImportReviewListClient({
                 {visible.map((it, i) => (
                   <tr
                     key={it.id}
-                    className={`border-b last:border-0 border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/30'}`}
+                    className={`border-b last:border-0 border-gray-100 hover:bg-gray-50 transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50'}`}
                   >
                     <td className="px-3 py-2">
                       <input
@@ -307,17 +307,17 @@ export default function ImportReviewListClient({
                         {it.title || <em className="text-gray-400">(no title)</em>}
                       </a>
                     </td>
-                    <td className="px-3 py-2 hidden sm:table-cell text-gray-600 dark:text-gray-400 max-w-[12rem] truncate">
+                    <td className="px-3 py-2 hidden sm:table-cell text-gray-600 max-w-[12rem] truncate">
                       {it.authors.length > 0 ? it.authors.join(', ') : '—'}
                     </td>
-                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500 dark:text-gray-400 text-right tabular-nums">
+                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500 text-right tabular-nums">
                       {it.year ?? '—'}
                     </td>
-                    <td className="px-3 py-2 hidden md:table-cell text-gray-500 dark:text-gray-400">
+                    <td className="px-3 py-2 hidden md:table-cell text-gray-500">
                       <span className="text-xs">
                         {it.section_anchor || '—'}
                         {it.state && (
-                          <span className="text-gray-400 dark:text-gray-500"> · {it.state}</span>
+                          <span className="text-gray-400"> · {it.state}</span>
                         )}
                       </span>
                     </td>
@@ -326,12 +326,12 @@ export default function ImportReviewListClient({
                     </td>
                     <td className="px-3 py-2 hidden lg:table-cell text-xs">
                       {it.dedup_kind && it.dedup_book_id ? (
-                        <span className="text-amber-700 dark:text-amber-400">
+                        <span className="text-amber-700">
                           {it.dedup_kind === 'possible_duplicate' ? '~' : '='}
                           {' '}#{it.dedup_book_id}
                         </span>
                       ) : (
-                        <span className="text-gray-300 dark:text-gray-600">—</span>
+                        <span className="text-gray-300">—</span>
                       )}
                     </td>
                     <td className="px-3 py-2 hidden md:table-cell">
@@ -347,13 +347,13 @@ export default function ImportReviewListClient({
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                           title="Search Google for this title and author (opens new tab)"
-                          className="inline-block px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          className="inline-block px-2 py-1 rounded border border-gray-200 text-xs hover:bg-gray-100 transition-colors"
                         >
                           Google ↗
                         </a>
                         <a
                           href={`/admin/import-review/${it.id}`}
-                          className="inline-block px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          className="inline-block px-2 py-1 rounded border border-gray-200 text-xs hover:bg-gray-100 transition-colors"
                         >
                           Open →
                         </a>
@@ -370,17 +370,17 @@ export default function ImportReviewListClient({
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors"
               >
                 ← Prev
               </button>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-gray-500">
                 {page + 1} / {totalPages}
               </span>
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page === totalPages - 1}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors"
               >
                 Next →
               </button>
@@ -407,7 +407,7 @@ export default function ImportReviewListClient({
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mr-1">
+      <span className="text-xs uppercase tracking-wide text-gray-400 mr-1">
         {label}
       </span>
       {children}
@@ -432,8 +432,8 @@ function FilterPill({
       title={title}
       className={`px-2.5 py-1 rounded-full border text-xs transition-colors ${
         active
-          ? 'border-gray-900 dark:border-gray-100 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 text-gray-600 dark:text-gray-400'
+          ? 'border-gray-900 bg-gray-900 text-white'
+          : 'border-gray-200 hover:bg-gray-50 text-gray-600'
       }`}
     >
       {children}
@@ -455,7 +455,7 @@ function googleSearchUrl(title: string, authors: string[]): string {
 
 function FlagBadges({ flags }: { flags: string[] }) {
   if (flags.length === 0) {
-    return <span className="text-gray-300 dark:text-gray-600 text-xs">—</span>
+    return <span className="text-gray-300 text-xs">—</span>
   }
   const visible = flags.slice(0, 3)
   const overflow = flags.length - visible.length
@@ -465,13 +465,13 @@ function FlagBadges({ flags }: { flags: string[] }) {
         <span
           key={f}
           title={FLAG_TOOLTIPS[f] ?? f}
-          className={`inline-block px-1.5 py-0.5 rounded text-xs ${FLAG_BADGE_CLASS[f] ?? 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+          className={`inline-block px-1.5 py-0.5 rounded text-xs ${FLAG_BADGE_CLASS[f] ?? 'bg-gray-200 text-gray-700'}`}
         >
           {f}
         </span>
       ))}
       {overflow > 0 && (
-        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-gray-200 text-gray-700">
           +{overflow}
         </span>
       )}

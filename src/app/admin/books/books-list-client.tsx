@@ -69,7 +69,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
         placeholder="Search by title or author…"
         value={query}
         onChange={e => handleSearch(e.target.value)}
-        className="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-3"
+        className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-3"
       />
 
       <div className="flex flex-wrap gap-1.5 mb-4 text-xs">
@@ -87,31 +87,31 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
             onClick={() => handleFilter(key)}
             className={`px-2.5 py-1 rounded-full border transition-colors ${
               classFilter === key
-                ? 'border-gray-900 dark:border-gray-100 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-                : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 text-gray-600 dark:text-gray-400'
+                ? 'border-gray-900 bg-gray-900 text-white'
+                : 'border-gray-200 hover:bg-gray-50 text-gray-600'
             }`}
           >
             {label}
           </button>
         ))}
-        <span className="ml-auto text-gray-400 dark:text-gray-500 self-center">
+        <span className="ml-auto text-gray-400 self-center">
           Classification is editorial — not part of data quality.
         </span>
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">No books match your search.</p>
+        <p className="text-sm text-gray-500">No books match your search.</p>
       ) : (
         <>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+          <p className="text-xs text-gray-400 mb-2">
             {filtered.length.toLocaleString('en')} result{filtered.length !== 1 ? 's' : ''}
             {totalPages > 1 && ` — page ${page + 1} of ${totalPages}`}
           </p>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs text-gray-500 uppercase tracking-wide">
                   <th className="px-3 py-2 w-10"></th>
                   <th className="px-3 py-2">Title</th>
                   <th className="px-3 py-2 hidden sm:table-cell">Author</th>
@@ -124,7 +124,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                 {visible.map((book, i) => (
                   <tr
                     key={book.id}
-                    className={`border-b last:border-0 border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/30'}`}
+                    className={`border-b last:border-0 border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50'}`}
                     onClick={() => window.location.href = `/admin/books/${book.slug}`}
                   >
                     <td className="px-3 py-2">
@@ -138,7 +138,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                           unoptimized
                         />
                       ) : (
-                        <div className="w-[27px] h-[40px] rounded bg-gray-200 dark:bg-gray-700" />
+                        <div className="w-[27px] h-[40px] rounded bg-gray-200" />
                       )}
                     </td>
                     <td className="px-3 py-2 font-medium leading-snug">
@@ -150,26 +150,26 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                         {book.title}
                       </Link>
                     </td>
-                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500 dark:text-gray-400">
+                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500">
                       {book.author ?? '—'}
                     </td>
-                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500 dark:text-gray-400 text-right tabular-nums">
+                    <td className="px-3 py-2 hidden sm:table-cell text-gray-500 text-right tabular-nums">
                       {book.first_published_year ?? '—'}
                     </td>
                     <td className="px-3 py-2 hidden md:table-cell">
                       {book.warning_level === 'extended' ? (
-                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400">extended</span>
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-red-100 text-red-700">extended</span>
                       ) : book.warning_level === 'context' ? (
-                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400">context</span>
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-amber-100 text-amber-700">context</span>
                       ) : book.has_rationale ? (
-                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400">none</span>
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-emerald-100 text-emerald-700">none</span>
                       ) : (
-                        <span className="text-gray-300 dark:text-gray-600">—</span>
+                        <span className="text-gray-300">—</span>
                       )}
                     </td>
                     <td className="px-3 py-2 text-right">
                       {book.ai_drafted && (
-                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400">AI</span>
+                        <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-amber-100 text-amber-700">AI</span>
                       )}
                     </td>
                   </tr>
@@ -183,17 +183,17 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors"
               >
                 ← Prev
               </button>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-gray-500">
                 {page + 1} / {totalPages}
               </span>
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page === totalPages - 1}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors"
               >
                 Next →
               </button>

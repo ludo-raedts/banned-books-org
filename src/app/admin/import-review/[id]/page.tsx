@@ -339,7 +339,7 @@ export default async function ImportReviewDetailPage({
       <div className="mb-6">
         <a
           href="/admin/import-review"
-          className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
+          className="text-sm text-gray-500 hover:text-gray-700"
         >
           ← Back to review queue
         </a>

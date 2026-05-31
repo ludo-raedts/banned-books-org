@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Map as MapIcon } from 'lucide-react'
 
-const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
+const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 type LastSubmission = {
   submittedAt: string
@@ -114,10 +114,10 @@ export default function SitemapClient({
 
   return (
     <div className={cardCls}>
-      <MapIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+      <MapIcon className="w-5 h-5 text-gray-400" />
       <div>
-        <h2 className="font-semibold text-gray-900 dark:text-gray-100">Sitemap</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+        <h2 className="font-semibold text-gray-900">Sitemap</h2>
+        <p className="text-sm text-gray-500 mt-0.5">
           Sitemap index split per content type so Google can crawl efficiently.
         </p>
       </div>
@@ -126,11 +126,11 @@ export default function SitemapClient({
           href="/sitemap.xml"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors font-mono"
+          className="text-gray-700 hover:text-brand transition-colors font-mono"
         >
           /sitemap.xml
         </a>
-        <span className="text-gray-400 dark:text-gray-500"> — sitemap index</span>
+        <span className="text-gray-400"> — sitemap index</span>
       </div>
       <dl className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1.5 text-sm mt-1 items-baseline">
         {([
@@ -146,19 +146,19 @@ export default function SitemapClient({
                 href={path}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors font-mono"
+                className="text-gray-700 hover:text-brand transition-colors font-mono"
               >
                 {path}
               </a>
             </dt>
-            <dd className="tabular-nums font-medium text-gray-900 dark:text-gray-100">
+            <dd className="tabular-nums font-medium text-gray-900">
               {count.toLocaleString('en')}
             </dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">{note}</dd>
+            <dd className="text-xs text-gray-500">{note}</dd>
           </div>
         ))}
       </dl>
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+      <p className="text-xs text-gray-400 mt-1">
         Total:{' '}
         <span className="tabular-nums">
           {sitemapTotal.toLocaleString('en')}
@@ -167,9 +167,9 @@ export default function SitemapClient({
         <code>/admin</code>, <code>/api</code>.
       </p>
 
-      <div className="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">IndexNow</h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+      <div className="mt-3 border-t border-gray-200 pt-3">
+        <h3 className="text-sm font-semibold text-gray-900">IndexNow</h3>
+        <p className="text-xs text-gray-500 mt-0.5">
           {lastSubmission
             ? (
               <>
@@ -194,23 +194,23 @@ export default function SitemapClient({
           <button
             onClick={handleIndexNowBulk}
             disabled={indexNowState === 'loading'}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
           >
             {indexNowState === 'loading' ? 'Submitting…' : 'Resubmit all'}
           </button>
         </div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+        <p className="text-xs text-gray-400 mt-1">
           &ldquo;Submit new pages&rdquo; pings books/authors added since the last successful submission, plus any landing pages added to the static sitemap entries since then.
           &ldquo;Resubmit all&rdquo; pings every canonical URL — use sparingly (rate-limited).
         </p>
 
         {deltaMsg && (
-          <p className={`text-xs mt-1 ${deltaState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+          <p className={`text-xs mt-1 ${deltaState === 'error' ? 'text-red-500' : 'text-green-600'}`}>
             {deltaMsg}
           </p>
         )}
         {indexNowMsg && (
-          <p className={`text-xs mt-1 ${indexNowState === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+          <p className={`text-xs mt-1 ${indexNowState === 'error' ? 'text-red-500' : 'text-green-600'}`}>
             {indexNowMsg}
           </p>
         )}

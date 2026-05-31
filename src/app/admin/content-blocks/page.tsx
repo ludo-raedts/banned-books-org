@@ -24,9 +24,9 @@ const PAGE_LABELS: Record<string, string> = {
 
 function StatusPill({ status }: { status: ContentBlockRow['status'] }) {
   const styles: Record<ContentBlockRow['status'], string> = {
-    placeholder: 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-    draft:       'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200',
-    published:   'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200',
+    placeholder: 'bg-gray-200 text-gray-700',
+    draft:       'bg-amber-100 text-amber-800',
+    published:   'bg-green-100 text-green-800',
   }
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${styles[status]}`}>
@@ -62,7 +62,7 @@ export default async function AdminContentBlocksPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Content blocks</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             Editorial markdown for Banned Books Week and the Reading Club. Pages cannot go live until every required block is published.
           </p>
         </div>
@@ -71,14 +71,14 @@ export default async function AdminContentBlocksPage() {
 
       <div className="flex flex-col gap-6">
         {pages.map(page => (
-          <section key={page.pageKey} className="border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-            <header className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <section key={page.pageKey} className="border border-gray-200 rounded-xl bg-white">
+            <header className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
               <h2 className="text-sm font-semibold">{page.label}</h2>
-              <span className={`text-xs ${page.ready ? 'text-green-700 dark:text-green-300' : 'text-gray-500 dark:text-gray-400'}`}>
+              <span className={`text-xs ${page.ready ? 'text-green-700' : 'text-gray-500'}`}>
                 {page.publishedCount} / {page.total} published
               </span>
             </header>
-            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+            <ul className="divide-y divide-gray-100">
               {page.rows.map(row => (
                 <li key={row.slug} className="px-4 py-3 flex items-center gap-3">
                   <Link
@@ -86,7 +86,7 @@ export default async function AdminContentBlocksPage() {
                     className="flex-1 group"
                   >
                     <div className="text-sm font-medium group-hover:text-brand transition-colors">{row.title}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-mono">{row.slug}</div>
+                    <div className="text-xs text-gray-500 mt-0.5 font-mono">{row.slug}</div>
                   </Link>
                   <StatusPill status={row.status} />
                 </li>

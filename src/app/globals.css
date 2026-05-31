@@ -1,11 +1,34 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* Dark mode removed (2026-05-31): it was never wired up (nothing set the .dark
+   class), so all `dark:` utilities were dead code and have been stripped. The
+   site is light-only — color-scheme: light below makes that explicit. Do NOT
+   re-add a `dark` custom-variant without also adding a theme provider/toggle,
+   or `dark:` utilities would silently activate via prefers-color-scheme. */
 
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* A11y: a visible focus indicator for keyboard users on every interactive
+   element. Many controls previously used `focus:outline-none` with no
+   replacement, leaving keyboard navigation invisible (WCAG 2.4.7). */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respect users who prefer reduced motion (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @theme inline {

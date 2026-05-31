@@ -106,7 +106,7 @@ export default async function BannedBooksWeekPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {isPreview && (
-        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 text-xs text-amber-800 dark:text-amber-200">
+        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-800">
           Preview mode — showing all content (incl. drafts and placeholders).
         </div>
       )}
@@ -116,7 +116,7 @@ export default async function BannedBooksWeekPage({
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">Banned Books Week</h1>
         {heroSubtitle && (
           <div
-            className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed prose prose-gray dark:prose-invert max-w-none"
+            className="text-lg text-gray-600 leading-relaxed prose prose-gray max-w-none"
             dangerouslySetInnerHTML={{ __html: heroSubtitle }}
           />
         )}
@@ -130,7 +130,7 @@ export default async function BannedBooksWeekPage({
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">What is Banned Books Week</h2>
           <div
-            className="prose prose-gray dark:prose-invert max-w-none"
+            className="prose prose-gray max-w-none"
             dangerouslySetInnerHTML={{ __html: whatIs }}
           />
         </section>
@@ -141,7 +141,7 @@ export default async function BannedBooksWeekPage({
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Why it still matters</h2>
           <div
-            className="prose prose-gray dark:prose-invert max-w-none mb-6"
+            className="prose prose-gray max-w-none mb-6"
             dangerouslySetInnerHTML={{ __html: whyMatters }}
           />
           <div className="grid grid-cols-3 gap-4 not-prose">
@@ -160,7 +160,7 @@ export default async function BannedBooksWeekPage({
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">The other side</h2>
           <div
-            className="prose prose-gray dark:prose-invert max-w-none"
+            className="prose prose-gray max-w-none"
             dangerouslySetInnerHTML={{ __html: otherSide }}
           />
         </section>
@@ -181,7 +181,7 @@ export default async function BannedBooksWeekPage({
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Reading and discussing banned books</h2>
           <div
-            className="prose prose-gray dark:prose-invert max-w-none mb-5"
+            className="prose prose-gray max-w-none mb-5"
             dangerouslySetInnerHTML={{ __html: readingIntro }}
           />
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose">
@@ -189,10 +189,10 @@ export default async function BannedBooksWeekPage({
               <li key={t.href}>
                 <Link
                   href={t.href}
-                  className="group block rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors"
+                  className="group block rounded-lg border border-gray-200 p-4 hover:border-brand/40 hover:bg-gray-50/50 transition-colors"
                 >
-                  <div className="font-semibold text-sm text-gray-900 dark:text-gray-100 group-hover:text-brand dark:group-hover:text-brand transition-colors">{t.label}</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t.text}</div>
+                  <div className="font-semibold text-sm text-gray-900 group-hover:text-brand transition-colors">{t.label}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t.text}</div>
                 </Link>
               </li>
             ))}
@@ -205,7 +205,7 @@ export default async function BannedBooksWeekPage({
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">What you can do</h2>
           <div
-            className="prose prose-gray dark:prose-invert max-w-none"
+            className="prose prose-gray max-w-none"
             dangerouslySetInnerHTML={{ __html: whatYouCanDo }}
           />
         </section>
@@ -222,9 +222,9 @@ export default async function BannedBooksWeekPage({
 
 function Stat({ number, label }: { number: string; label: string }) {
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 text-center">
+    <div className="border border-gray-200 rounded-lg p-3 bg-white text-center">
       <div className="text-xl font-bold text-brand">{number}</div>
-      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</div>
+      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
     </div>
   )
 }
@@ -232,29 +232,29 @@ function Stat({ number, label }: { number: string; label: string }) {
 function FeaturedBookCard({ row }: { row: FeaturedBookRow }) {
   const b = row.book
   return (
-    <li className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 flex gap-3">
+    <li className="border border-gray-200 rounded-lg p-4 bg-white flex gap-3">
       {b.cover_url ? (
         <Image
           src={b.cover_url}
           alt=""
           width={64}
           height={96}
-          className="rounded object-cover w-16 h-24 flex-shrink-0 bg-gray-100 dark:bg-gray-800"
+          className="rounded object-cover w-16 h-24 flex-shrink-0 bg-gray-100"
         />
       ) : (
-        <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100 dark:bg-gray-800" />
+        <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100" />
       )}
       <div className="flex-1 min-w-0">
         <Link href={`/books/${b.slug}`} className="font-semibold text-sm hover:text-brand transition-colors block">
           {b.title}
         </Link>
-        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <div className="text-xs text-gray-500 mt-0.5">
           {b.authors.join(', ')}
         </div>
         {row.customBlurb ? (
-          <p className="text-xs text-gray-700 dark:text-gray-300 mt-2 leading-relaxed">{row.customBlurb}</p>
+          <p className="text-xs text-gray-700 mt-2 leading-relaxed">{row.customBlurb}</p>
         ) : b.description_book ? (
-          <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 leading-relaxed line-clamp-3">{b.description_book}</p>
+          <p className="text-xs text-gray-600 mt-2 leading-relaxed line-clamp-3">{b.description_book}</p>
         ) : null}
         {b.reasons.length > 0 && (
           <p className="text-[11px] text-gray-500 mt-2">

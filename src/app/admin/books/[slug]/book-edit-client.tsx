@@ -10,8 +10,8 @@ type ImgStatus = 'idle' | 'loading' | 'loaded' | 'error'
 function Field({ label, hint, children }: { label: React.ReactNode; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
-      {hint && <p className="text-xs text-gray-400 dark:text-gray-500">{hint}</p>}
+      <label className="text-sm font-medium text-gray-700">{label}</label>
+      {hint && <p className="text-xs text-gray-400">{hint}</p>}
       {children}
     </div>
   )
@@ -21,7 +21,7 @@ function getHostname(url: string): string | null {
   try { return new URL(url).hostname } catch { return null }
 }
 
-const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
+const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
 const textareaCls = `${inputCls} resize-y`
 
 export default function BookEditClient({ book }: { book: BookEditData }) {
@@ -115,7 +115,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
   return (
     <div className="flex flex-col gap-6">
       {/* Edit form */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-5">
+      <div className="border border-gray-200 rounded-xl p-6 flex flex-col gap-5">
         <Field label="Title" hint="The book's display title">
           <input type="text" value={title} onChange={e => setTitle(e.target.value)} className={inputCls} />
         </Field>
@@ -139,17 +139,17 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
                 placeholder="https://…"
               />
               {coverUrl && imgStatus === 'loaded' && (
-                <p className="text-xs text-green-600 dark:text-green-400">✓ Image loaded</p>
+                <p className="text-xs text-green-600">✓ Image loaded</p>
               )}
               {coverUrl && imgStatus === 'error' && (
-                <p className="text-xs text-red-600 dark:text-red-400">⚠ Image failed to load — this URL may not work on the site</p>
+                <p className="text-xs text-red-600">⚠ Image failed to load — this URL may not work on the site</p>
               )}
             </div>
             {/* Preview using plain <img> so any hostname works */}
-            <div className={`shrink-0 w-[54px] h-[80px] rounded overflow-hidden border bg-gray-100 dark:bg-gray-800 ${
-              imgStatus === 'loaded' ? 'border-green-400 dark:border-green-600' :
-              imgStatus === 'error'  ? 'border-red-400 dark:border-red-600' :
-              'border-gray-200 dark:border-gray-700'
+            <div className={`shrink-0 w-[54px] h-[80px] rounded overflow-hidden border bg-gray-100 ${
+              imgStatus === 'loaded' ? 'border-green-400' :
+              imgStatus === 'error'  ? 'border-red-400' :
+              'border-gray-200'
             }`}>
               {coverUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -178,13 +178,13 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
           <textarea rows={8} value={censorshipContext} onChange={e => setCensorshipContext(e.target.value)} className={textareaCls} />
         </Field>
 
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-5 flex flex-col gap-5">
+        <div className="border-t border-gray-200 pt-5 flex flex-col gap-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
               Editorial classification
             </h2>
             {!book.inclusion_rationale && warningLevel === 'none' && (
-              <span className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+              <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500">
                 Unclassified
               </span>
             )}
@@ -206,7 +206,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
             label={
               <span className="flex items-center gap-2">
                 Inclusion rationale
-                <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-200 text-gray-600">
                   Internal
                 </span>
               </span>
@@ -226,7 +226,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
               label={
                 <span className="flex items-center gap-2">
                   Extended context
-                  <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400">
+                  <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
                     Public
                   </span>
                 </span>
@@ -241,7 +241,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
                 placeholder="TODO — redactioneel essay nog te schrijven"
               />
               {!extendedContext.trim() && (
-                <p className="text-xs text-amber-600 dark:text-amber-400">
+                <p className="text-xs text-amber-600">
                   ⚠ This book is marked <code>extended</code> but the contextual essay is empty.
                 </p>
               )}
@@ -250,25 +250,25 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
 
           {/* Public preview — what readers will see on /books/<slug> */}
           {warningLevel !== 'none' && (
-            <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/10 p-4">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-700 dark:text-emerald-400 mb-2">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50/40 p-4">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-700 mb-2">
                 Public preview — readers see this on the book page
               </p>
-              <div className="border-t border-gray-200 dark:border-gray-800 pt-3">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              <div className="border-t border-gray-200 pt-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
                   Editorial note
                 </p>
                 {warningLevel === 'extended' && extendedContext.trim() && (
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 whitespace-pre-line">
+                  <p className="text-sm text-gray-700 mb-2 whitespace-pre-line">
                     {extendedContext.trim()}
                   </p>
                 )}
                 {warningLevel === 'extended' && !extendedContext.trim() && (
-                  <p className="text-xs text-gray-400 dark:text-gray-500 italic mb-2">
+                  <p className="text-xs text-gray-400 italic mb-2">
                     (no extended context yet — only the essay links below will render)
                   </p>
                 )}
-                <p className="text-xs text-gray-500 dark:text-gray-500">
+                <p className="text-xs text-gray-500">
                   On why we include works like this — see{' '}
                   <span className="underline">What we document — and why that is a choice</span>
                   {' '}and{' '}
@@ -278,7 +278,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
             </div>
           )}
           {warningLevel === 'none' && (inclusionRationale.trim() || extendedContext.trim()) && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 italic">
+            <p className="text-xs text-gray-400 italic">
               At <code>none</code> tier no public editorial note renders. The internal rationale stays in our records.
             </p>
           )}
@@ -290,16 +290,16 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
               type="checkbox"
               checked={aiDrafted}
               onChange={e => setAiDrafted(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 accent-gray-700"
+              className="w-4 h-4 rounded border-gray-300 accent-gray-700"
             />
-            <span className="text-sm text-gray-600 dark:text-gray-400">Mark as AI-drafted</span>
+            <span className="text-sm text-gray-600">Mark as AI-drafted</span>
           </label>
         </Field>
 
         {/* Unknown hostname warning */}
         {showHostWarning && hostname && (
-          <div className="rounded-lg border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 p-4 flex flex-col gap-3">
-            <p className="text-sm text-amber-800 dark:text-amber-300">
+          <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 flex flex-col gap-3">
+            <p className="text-sm text-amber-800">
               ⚠ <strong>{hostname}</strong> is not in the Next.js image allowlist. The cover may not display correctly on the site.
             </p>
             <div className="flex gap-2">
@@ -312,7 +312,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
               </button>
               <button
                 onClick={() => setShowHostWarning(false)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
@@ -322,7 +322,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
 
         {/* Host added notice */}
         {hostAdded && (
-          <p className="text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg px-3 py-2">
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             ✓ <strong>{hostname}</strong> added to <code>src/lib/allowed-image-hosts.ts</code> — remember to push to GitHub to apply the config change.
           </p>
         )}
@@ -333,33 +333,33 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
             <button
               onClick={handleSaveClick}
               disabled={saveState === 'saving'}
-              className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {saveState === 'saving' ? 'Saving…' : 'Save changes'}
             </button>
             {saveState === 'saved' && (
-              <span className="text-sm text-green-600 dark:text-green-400">Saved ✓</span>
+              <span className="text-sm text-green-600">Saved ✓</span>
             )}
             {saveState === 'error' && (
-              <span className="text-sm text-red-600 dark:text-red-400">{errorMsg}</span>
+              <span className="text-sm text-red-600">{errorMsg}</span>
             )}
           </div>
         )}
       </div>
 
       {/* Read-only info */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Read-only info</h2>
+      <div className="border border-gray-200 rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Read-only info</h2>
         <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
-          <dt className="text-gray-500 dark:text-gray-400">Slug</dt>
+          <dt className="text-gray-500">Slug</dt>
           <dd className="font-mono text-xs break-all">{book.slug}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">ISBN-13</dt>
+          <dt className="text-gray-500">ISBN-13</dt>
           <dd className="font-mono text-xs">{book.isbn13 ?? '—'}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">OpenLibrary ID</dt>
+          <dt className="text-gray-500">OpenLibrary ID</dt>
           <dd className="font-mono text-xs">{book.openlibrary_work_id ?? '—'}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">Bans</dt>
+          <dt className="text-gray-500">Bans</dt>
           <dd>{book.ban_count}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">Countries</dt>
+          <dt className="text-gray-500">Countries</dt>
           <dd className="text-xs">{book.ban_countries || '—'}</dd>
         </dl>
       </div>

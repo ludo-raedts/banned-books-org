@@ -5,14 +5,14 @@
 export function BBWDisclaimer({ variant }: { variant: 'short' | 'full' }) {
   if (variant === 'short') {
     return (
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-gray-500">
         Independent. Not affiliated with the BBW Coalition or ALA.
       </p>
     )
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600 leading-relaxed">
       <p>
         banned-books.org is an independent platform documenting book censorship
         worldwide. We are not affiliated with the Banned Books Week Coalition,
@@ -44,7 +44,7 @@ export function BBWDisclaimer({ variant }: { variant: 'short' | 'full' }) {
 
 export function ALAAttribution() {
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600 leading-relaxed">
       <p>
         Compiled from the American Library Association&apos;s Office for
         Intellectual Freedom annual Most Challenged Books list. The list is

@@ -48,8 +48,8 @@ export default function DataQualityPage() {
         </p>
 
         <div className="not-prose space-y-4 my-6">
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/40 dark:bg-emerald-950/20 p-5">
-            <p className="flex items-center gap-2 font-semibold text-emerald-800 dark:text-emerald-300 mb-1.5">
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50/40 p-5">
+            <p className="flex items-center gap-2 font-semibold text-emerald-800 mb-1.5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -66,7 +66,7 @@ export default function DataQualityPage() {
               </svg>
               High-confidence record
             </p>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-gray-700 leading-relaxed">
               The work is well-attested: we have a canonical external
               identifier (OpenLibrary, ISBN, or Project Gutenberg), full
               editorial descriptions, and at least one further signal —
@@ -76,11 +76,11 @@ export default function DataQualityPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40 p-5">
-            <p className="font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-5">
+            <p className="font-semibold text-gray-700 mb-1.5">
               Automated import — not individually verified
             </p>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-gray-700 leading-relaxed">
               The default state for most entries. The record was created
               from an automated import pipeline and nothing in our
               quality checks raised a problem — but no one has manually
@@ -90,11 +90,11 @@ export default function DataQualityPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border-l-4 border-amber-500 bg-amber-50 dark:border-amber-600 dark:bg-amber-950/30 p-5">
-            <p className="font-semibold text-amber-800 dark:text-amber-300 mb-1.5">
+          <div className="rounded-lg border-l-4 border-amber-500 bg-amber-50 p-5">
+            <p className="font-semibold text-amber-800 mb-1.5">
               Limited verification
             </p>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-gray-700 leading-relaxed">
               At least one quality signal failed: the cover is a
               placeholder, the entry was AI-drafted without a description,
               no source citations are linked to its bans, or the author
@@ -204,14 +204,14 @@ export default function DataQualityPage() {
             href="https://github.com/ludo-raedts/banned-books-org/issues"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-red-700 dark:text-red-400 underline hover:text-red-900"
+            className="text-red-700 underline hover:text-red-900"
           >
             open an issue on GitHub
           </a>{' '}
           or use the contact form on the{' '}
           <Link
             href="/about"
-            className="text-red-700 dark:text-red-400 underline hover:text-red-900"
+            className="text-red-700 underline hover:text-red-900"
           >
             About page
           </Link>

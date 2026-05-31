@@ -34,11 +34,11 @@ function SectionHeader({ title, subtitle, viewAllHref, viewAllLabel }: SectionPr
   return (
     <div className="mb-4 flex items-end justify-between gap-4">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="text-xl font-semibold text-gray-900">
           {title}
         </h2>
         {subtitle && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          <p className="text-sm text-gray-500 mt-0.5">
             {subtitle}
           </p>
         )}
@@ -46,7 +46,7 @@ function SectionHeader({ title, subtitle, viewAllHref, viewAllLabel }: SectionPr
       {viewAllHref && (
         <Link
           href={viewAllHref}
-          className="shrink-0 text-sm text-gray-500 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors whitespace-nowrap"
+          className="shrink-0 text-sm text-gray-500 hover:text-brand transition-colors whitespace-nowrap"
         >
           {viewAllLabel ?? 'View all'} →
         </Link>
@@ -133,7 +133,7 @@ export function TopListByReasonSection({
           <div key={block.reasonSlug} className="min-w-0">
             <Link
               href={`/reasons/${block.reasonSlug}`}
-              className="block mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:text-brand dark:hover:text-brand transition-colors"
+              className="block mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-brand transition-colors"
             >
               {block.reasonLabel} →
             </Link>

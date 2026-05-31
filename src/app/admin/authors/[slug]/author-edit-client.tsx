@@ -8,14 +8,14 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
-      {hint && <p className="text-xs text-gray-400 dark:text-gray-500">{hint}</p>}
+      <label className="text-sm font-medium text-gray-700">{label}</label>
+      {hint && <p className="text-xs text-gray-400">{hint}</p>}
       {children}
     </div>
   )
 }
 
-const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
+const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
 const textareaCls = `${inputCls} resize-y`
 
 export default function AuthorEditClient({ author }: { author: AuthorEditData }) {
@@ -60,7 +60,7 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
   return (
     <div className="flex flex-col gap-6">
       {/* Edit form */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-5">
+      <div className="border border-gray-200 rounded-xl p-6 flex flex-col gap-5">
         <Field label="Display name" hint="The author's full public name">
           <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} />
         </Field>
@@ -99,9 +99,9 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
             <img
               src={photoUrl}
               alt="Author photo preview"
-              className="w-20 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+              className="w-20 h-20 rounded-lg object-cover border border-gray-200"
             />
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Photo preview</p>
+            <p className="text-xs text-gray-400 mt-1">Photo preview</p>
           </div>
         )}
 
@@ -110,34 +110,34 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
           <button
             onClick={handleSave}
             disabled={saveState === 'saving'}
-            className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+            className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             {saveState === 'saving' ? 'Saving…' : 'Save changes'}
           </button>
           {saveState === 'saved' && (
-            <span className="text-sm text-green-600 dark:text-green-400">Saved ✓</span>
+            <span className="text-sm text-green-600">Saved ✓</span>
           )}
           {saveState === 'error' && (
-            <span className="text-sm text-red-600 dark:text-red-400">{errorMsg}</span>
+            <span className="text-sm text-red-600">{errorMsg}</span>
           )}
         </div>
       </div>
 
       {/* Read-only info */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Read-only info</h2>
+      <div className="border border-gray-200 rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Read-only info</h2>
         <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
-          <dt className="text-gray-500 dark:text-gray-400">Slug</dt>
+          <dt className="text-gray-500">Slug</dt>
           <dd className="font-mono text-xs break-all">{author.slug}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">Bans</dt>
+          <dt className="text-gray-500">Bans</dt>
           <dd>{author.ban_count}</dd>
-          <dt className="text-gray-500 dark:text-gray-400">Public page</dt>
+          <dt className="text-gray-500">Public page</dt>
           <dd>
             <a
               href={`/authors/${author.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline text-xs"
+              className="text-blue-600 hover:underline text-xs"
             >
               /authors/{author.slug} ↗
             </a>

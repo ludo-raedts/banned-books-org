@@ -194,7 +194,7 @@ function eventLinkLines(event: TimelineEvent): string[] {
   const lines: string[] = []
   if (event.related?.bookSlug) lines.push(`Book: ${SITE_URL}/books/${event.related.bookSlug}`)
   if (event.related?.authorSlug) lines.push(`Author: ${SITE_URL}/authors/${event.related.authorSlug}`)
-  if (event.related?.countryCode) lines.push(`Country: ${SITE_URL}/countries/${event.related.countryCode}`)
+  if (event.related?.countryCode) lines.push(`Country: ${SITE_URL}/countries/${event.related.countryCode.toLowerCase()}`)
   return lines
 }
 

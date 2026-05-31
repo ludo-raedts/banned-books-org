@@ -21,10 +21,10 @@ const pill = (active: boolean) =>
   `px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
     active
       ? 'bg-brand text-white border-brand'
-      : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+      : 'border-gray-200 text-gray-600 hover:border-gray-400'
   }`
 
-const select = 'text-xs border border-gray-200 dark:border-gray-700 rounded-full px-3 py-1 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 transition-colors'
+const select = 'text-xs border border-gray-200 rounded-full px-3 py-1 bg-white text-gray-700 focus:outline-none focus:border-gray-400 transition-colors'
 
 export default function ReasonControls({ current, countries, years, totalBooks, filteredBooks }: Props) {
   const router = useRouter()
@@ -48,7 +48,7 @@ export default function ReasonControls({ current, countries, years, totalBooks, 
     <div className="space-y-2 mb-6">
       {/* Sort */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-10 shrink-0">Sort:</span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide font-medium w-10 shrink-0">Sort:</span>
         {[
           { value: 'bans', label: 'Ban count' },
           { value: 'title', label: 'Title' },
@@ -62,7 +62,7 @@ export default function ReasonControls({ current, countries, years, totalBooks, 
 
       {/* Filters */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-10 shrink-0">Filter:</span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide font-medium w-10 shrink-0">Filter:</span>
 
         {/* Country dropdown */}
         <select
@@ -96,7 +96,7 @@ export default function ReasonControls({ current, countries, years, totalBooks, 
         {hasFilter && (
           <button
             onClick={() => update({ country: '', year: '', active: false })}
-            className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
+            className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 underline"
           >
             Clear filters
           </button>

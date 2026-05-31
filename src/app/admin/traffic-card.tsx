@@ -27,14 +27,14 @@ function ViewDelta({ thisWeek, lastWeek }: { thisWeek: number; lastWeek: number 
   const base = 'text-[10px] font-medium shrink-0 w-8 text-left leading-none'
   if (lastWeek === null) return <span className={`${base} text-blue-500`}>new</span>
   const delta = thisWeek - lastWeek
-  if (delta > 0) return <span className={`${base} text-emerald-600 dark:text-emerald-400`}>↑</span>
+  if (delta > 0) return <span className={`${base} text-emerald-600`}>↑</span>
   if (delta < 0) return <span className={`${base} text-red-400`}>↓</span>
   return <span className={base} aria-hidden />
 }
 
 function MiniBar({ value, max, color }: { value: number; max: number; color: 'red' | 'blue' }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0
-  const bg = color === 'red' ? 'bg-red-200 dark:bg-red-900/40' : 'bg-blue-200 dark:bg-blue-900/40'
+  const bg = color === 'red' ? 'bg-red-200' : 'bg-blue-200'
   const fill = color === 'red' ? 'bg-red-600' : 'bg-blue-600'
   return (
     <div className={`flex-1 h-1.5 rounded-full ${bg} min-w-[40px]`}>
@@ -88,8 +88,8 @@ export default function TrafficCard({
     <div className={`${cardCls} col-span-full`}>
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Traffic</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          <h2 className="font-semibold text-gray-900">Traffic</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
             Unique visitors per day by country and referrer.
           </p>
         </div>
@@ -100,8 +100,8 @@ export default function TrafficCard({
               onClick={() => setWeek(w)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 week === w
-                  ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               {w === 'this' ? 'This week' : 'Last week'}
@@ -110,22 +110,22 @@ export default function TrafficCard({
         </div>
       </div>
 
-      <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 dark:border-gray-800 py-4 -mx-2 px-2">
-        <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 tabular-nums leading-none">
+      <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 py-4 -mx-2 px-2">
+        <span className="text-3xl font-bold text-gray-900 tabular-nums leading-none">
           {totalViews.toLocaleString('en')}
         </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">visitors</span>
-        <span className="text-xs text-gray-400 dark:text-gray-500 tabular-nums">
+        <span className="text-sm text-gray-500">visitors</span>
+        <span className="text-xs text-gray-400 tabular-nums">
           · {totalPageviews.toLocaleString('en')} pageviews
         </span>
         {totalPct !== null && (
           <span className={`text-xs font-medium tabular-nums ${
-            totalPct > 0 ? 'text-emerald-600 dark:text-emerald-400' :
+            totalPct > 0 ? 'text-emerald-600' :
             totalPct < 0 ? 'text-red-500' :
             'text-gray-400'
           }`}>
             {totalPct > 0 ? `↑ ${totalPct}%` : totalPct < 0 ? `↓ ${Math.abs(totalPct)}%` : '→ 0%'}
-            <span className="text-gray-400 dark:text-gray-500 font-normal ml-1">
+            <span className="text-gray-400 font-normal ml-1">
               vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString('en')})
             </span>
           </span>
@@ -133,20 +133,20 @@ export default function TrafficCard({
       </div>
 
       {isEmpty ? (
-        <p className="text-sm text-gray-400 dark:text-gray-500 italic text-center py-8">
+        <p className="text-sm text-gray-400 italic text-center py-8">
           No traffic data yet for this period.
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-2">
           <div>
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">By country</p>
+            <p className="text-sm font-medium text-gray-700 mb-3">By country</p>
             <div className="flex flex-col gap-2">
               {countries.map(row => (
                 <div key={row.country ?? '__null__'} className="flex items-center gap-2 min-w-0">
                   <span className="text-base w-5 shrink-0 text-center leading-none">
                     {row.country ? flagEmoji(row.country) : '🌐'}
                   </span>
-                  <span className="text-xs text-gray-700 dark:text-gray-300 w-28 shrink-0 truncate">
+                  <span className="text-xs text-gray-700 w-28 shrink-0 truncate">
                     {row.country ?? 'Direct / unknown'}
                   </span>
                   <MiniBar
@@ -154,7 +154,7 @@ export default function TrafficCard({
                     max={maxCountryViews}
                     color="red"
                   />
-                  <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-right shrink-0 tabular-nums">
+                  <span className="text-xs text-gray-500 w-12 text-right shrink-0 tabular-nums">
                     {row.views.toLocaleString('en')}
                   </span>
                   <ViewDelta
@@ -170,7 +170,7 @@ export default function TrafficCard({
           </div>
 
           <div>
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">By referrer</p>
+            <p className="text-sm font-medium text-gray-700 mb-3">By referrer</p>
             <div className="flex flex-col gap-2">
               {referrers.map(row => {
                 const host = row.referrer_host ?? ''
@@ -184,11 +184,11 @@ export default function TrafficCard({
                       alt=""
                       onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                     />
-                    <span className="text-xs text-gray-700 dark:text-gray-300 w-[140px] truncate shrink-0">
+                    <span className="text-xs text-gray-700 w-[140px] truncate shrink-0">
                       {label}
                     </span>
                     <MiniBar value={row.views} max={maxReferrerViews} color="blue" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-right shrink-0 tabular-nums">
+                    <span className="text-xs text-gray-500 w-12 text-right shrink-0 tabular-nums">
                       {row.views.toLocaleString('en')}
                     </span>
                     <ViewDelta
@@ -202,7 +202,7 @@ export default function TrafficCard({
                 )
               })}
               {directViews > 0 && (
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-xs text-gray-400 mt-1">
                   Direct / no referrer — {directViews.toLocaleString('en')} views
                 </p>
               )}

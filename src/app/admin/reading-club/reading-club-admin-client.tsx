@@ -68,7 +68,7 @@ export default function ReadingClubAdminClient(props: Props) {
         onDone={() => router.refresh()}
       />
 
-      <div className="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-800 mb-6">
+      <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-6">
         {([
           ['currently-challenged', 'Currently Challenged', props.currentlyChallenged.length, 'pick',  props.blockStatus.currentlyChallenged],
           ['international',        'International',        props.international.length,        'pick',  props.blockStatus.international],
@@ -86,8 +86,8 @@ export default function ReadingClubAdminClient(props: Props) {
               onClick={() => setTab(key)}
               className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
                 active
-                  ? 'border-brand text-gray-900 dark:text-gray-100'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                  ? 'border-brand text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-800'
               }`}
               title={status.ready ? 'Intro content block is published' : `Intro block not yet published (${status.published}/${status.total})`}
             >
@@ -102,8 +102,8 @@ export default function ReadingClubAdminClient(props: Props) {
       {(busy || msg || error) && (
         <div className="mb-4 text-xs">
           {busy && <span className="text-gray-500">Working… ({busy})</span>}
-          {msg && <span className="text-green-700 dark:text-green-400">{msg}</span>}
-          {error && <span className="text-red-600 dark:text-red-400">{error}</span>}
+          {msg && <span className="text-green-700">{msg}</span>}
+          {error && <span className="text-red-600">{error}</span>}
         </div>
       )}
 
@@ -280,7 +280,7 @@ function CurrentlyChallengedTab({
       <p className="text-xs text-gray-500 mb-4">Manual entry from the ALA OIF annual list. Up to 12 entries to handle ties.</p>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50">
+        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50">
           Save draft
         </button>
         <button
@@ -296,8 +296,8 @@ function CurrentlyChallengedTab({
 
       <BookSearchAdd onAdd={addBook} excludeIds={excludeIds} />
 
-      <details className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/50">
-        <summary className="text-xs font-medium cursor-pointer text-gray-600 dark:text-gray-400">
+      <details className="mb-4 border border-gray-200 rounded-lg p-3 bg-gray-50">
+        <summary className="text-xs font-medium cursor-pointer text-gray-600">
           Add manually (book not in our database)
         </summary>
         <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -307,7 +307,7 @@ function CurrentlyChallengedTab({
         <button
           onClick={addManual}
           disabled={!manualTitle.trim() || !manualAuthor.trim()}
-          className="mt-2 px-3 py-1 rounded text-xs border border-gray-300 dark:border-gray-600 hover:border-gray-400 disabled:opacity-50"
+          className="mt-2 px-3 py-1 rounded text-xs border border-gray-300 hover:border-gray-400 disabled:opacity-50"
         >
           Add manual entry
         </button>
@@ -317,14 +317,14 @@ function CurrentlyChallengedTab({
         {picks.length === 0 ? (
           <li className="text-sm text-gray-500">No entries yet for {year}.</li>
         ) : picks.map((p, i) => (
-          <li key={p.bookId ?? `manual-${i}`} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
+          <li key={p.bookId ?? `manual-${i}`} className="border border-gray-200 rounded-lg p-3 bg-white flex items-start gap-3">
             <div className="flex flex-col gap-0.5">
-              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↑</button>
-              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↓</button>
+              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↑</button>
+              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↓</button>
             </div>
             <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-sm">{p.title}{p.bookId == null && <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-700 dark:text-amber-400">manual</span>}</div>
+              <div className="font-medium text-sm">{p.title}{p.bookId == null && <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-700">manual</span>}</div>
               <div className="text-xs text-gray-500">
                 {p.authors.join(', ')}
                 {p.challengeCount != null && ` · ${p.challengeCount} ALA challenges`}
@@ -340,7 +340,7 @@ function CurrentlyChallengedTab({
                   setPicks(next)
                 }}
                 rows={3}
-                className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                className="mt-2 w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
               <details className="mt-2">
                 <summary className="text-xs text-gray-500 cursor-pointer">ALA metadata (challenge count, bookshop URL, source URL)</summary>
@@ -499,11 +499,11 @@ function BookTrackTab({
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
       <div className="flex flex-wrap gap-2 mb-4">
         {showSuggester && (
-          <button onClick={suggest} className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm hover:border-gray-400">
+          <button onClick={suggest} className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm hover:border-gray-400">
             Generate suggestions
           </button>
         )}
-        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50">
+        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50">
           Save draft
         </button>
         <button
@@ -522,10 +522,10 @@ function BookTrackTab({
         {picks.length === 0 ? (
           <li className="text-sm text-gray-500">No picks yet.</li>
         ) : picks.map((p, i) => (
-          <li key={p.bookId ?? i} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
+          <li key={p.bookId ?? i} className="border border-gray-200 rounded-lg p-3 bg-white flex items-start gap-3">
             <div className="flex flex-col gap-0.5">
-              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↑</button>
-              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↓</button>
+              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↑</button>
+              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↓</button>
             </div>
             <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
             <div className="flex-1">
@@ -540,7 +540,7 @@ function BookTrackTab({
                   setPicks(next)
                 }}
                 rows={2}
-                className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                className="mt-2 w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
               <textarea
                 value={(p.discussionQuestions ?? []).join('\n')}
@@ -552,7 +552,7 @@ function BookTrackTab({
                   setPicks(next)
                 }}
                 rows={3}
-                className="mt-2 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                className="mt-2 w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
             </div>
             <div className="flex flex-col items-end gap-2">
@@ -572,7 +572,7 @@ function BookTrackTab({
       </ol>
 
       {alternates.length > 0 && (
-        <details className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/50">
+        <details className="border border-gray-200 rounded-lg p-3 bg-gray-50">
           <summary className="text-sm font-medium cursor-pointer">Alternates ({alternates.length})</summary>
           <ul className="mt-2 flex flex-col gap-1.5">
             {alternates.map(a => (
@@ -591,7 +591,7 @@ function BookTrackTab({
                     }])
                     setAlternates(alternates.filter(x => x.book_id !== a.book_id))
                   }}
-                  className="px-2 py-0.5 rounded border border-gray-300 dark:border-gray-600 hover:border-gray-400"
+                  className="px-2 py-0.5 rounded border border-gray-300 hover:border-gray-400"
                 >
                   Promote
                 </button>
@@ -744,7 +744,7 @@ function YoungReadersTab({
         own categorization (cited, not our age label); discussion questions come in two parallel sets — literary and censorship-focused.
       </p>
       <div className="flex flex-wrap gap-2 mb-4">
-        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50">
+        <button onClick={saveDraft} disabled={picks.length === 0} className="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50">
           Save draft
         </button>
         <button
@@ -763,10 +763,10 @@ function YoungReadersTab({
         {picks.length === 0 ? (
           <li className="text-sm text-gray-500">No picks yet.</li>
         ) : picks.map((p, i) => (
-          <li key={p.bookId ?? i} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900 flex items-start gap-3">
+          <li key={p.bookId ?? i} className="border border-gray-200 rounded-lg p-3 bg-white flex items-start gap-3">
             <div className="flex flex-col gap-0.5">
-              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↑</button>
-              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-30">↓</button>
+              <button onClick={() => move(i, -1)} disabled={i === 0} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↑</button>
+              <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↓</button>
             </div>
             <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
             <div className="flex-1 min-w-0">
@@ -776,7 +776,7 @@ function YoungReadersTab({
               {/* Audience block */}
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-600 dark:text-gray-400 mb-0.5">
+                  <label className="block text-[11px] font-medium text-gray-600 mb-0.5">
                     Audience as published
                   </label>
                   <input
@@ -789,7 +789,7 @@ function YoungReadersTab({
                   <p className="text-[10px] text-gray-500 mt-0.5">Publisher’s own category — not banned-books.org.</p>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-600 dark:text-gray-400 mb-0.5">
+                  <label className="block text-[11px] font-medium text-gray-600 mb-0.5">
                     Audience source URL
                   </label>
                   <input
@@ -808,14 +808,14 @@ function YoungReadersTab({
                 placeholder="Custom blurb (optional) — track-specific framing that overrides the book's standard description"
                 onChange={e => update(i, { customBlurb: e.target.value || null })}
                 rows={2}
-                className="mt-3 w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                className="mt-3 w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
 
               {/* Two question sets, side-by-side label, separate textareas */}
               <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+                    <label className="text-[11px] font-medium text-gray-600">
                       Discussion questions — About the book
                     </label>
                     <button
@@ -827,8 +827,8 @@ function YoungReadersTab({
                         : 'Generate the literary-set questions for this book via the AI pipeline.'}
                       className={`text-[10px] px-2 py-0.5 rounded border hover:border-gray-400 disabled:opacity-50 ${
                         p.discussionQuestions.length > 0
-                          ? 'border-amber-400 text-amber-700 dark:text-amber-300'
-                          : 'border-gray-300 dark:border-gray-600'
+                          ? 'border-amber-400 text-amber-700'
+                          : 'border-gray-300'
                       }`}
                     >
                       {genBusy === `${i}:book`
@@ -845,12 +845,12 @@ function YoungReadersTab({
                       discussionQuestions: e.target.value.split('\n').map(l => l.trim()).filter(Boolean),
                     })}
                     rows={6}
-                    className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                    className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
                   />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+                    <label className="text-[11px] font-medium text-gray-600">
                       Discussion questions — About the ban
                     </label>
                     <button
@@ -862,8 +862,8 @@ function YoungReadersTab({
                         : 'Generate the censorship-set questions for this book via the AI pipeline.'}
                       className={`text-[10px] px-2 py-0.5 rounded border hover:border-gray-400 disabled:opacity-50 ${
                         (p.discussionQuestionsBan ?? []).length > 0
-                          ? 'border-amber-400 text-amber-700 dark:text-amber-300'
-                          : 'border-gray-300 dark:border-gray-600'
+                          ? 'border-amber-400 text-amber-700'
+                          : 'border-gray-300'
                       }`}
                     >
                       {genBusy === `${i}:ban`
@@ -880,7 +880,7 @@ function YoungReadersTab({
                       discussionQuestionsBan: e.target.value.split('\n').map(l => l.trim()).filter(Boolean),
                     })}
                     rows={6}
-                    className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                    className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
                   />
                 </div>
               </div>
@@ -953,17 +953,17 @@ function ThemePanel({
   }
 
   return (
-    <details className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900">
+    <details className="border border-gray-200 rounded-lg bg-white">
       <summary className="px-4 py-3 cursor-pointer flex items-center justify-between">
         <span className="font-medium text-sm">{theme.displayName}</span>
         <span className="text-xs text-gray-500">{picks.length} books{blockReady ? ' · intro published' : ' · intro pending'}</span>
       </summary>
-      <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="px-4 py-3 border-t border-gray-200">
         <ol className="flex flex-col gap-2 mb-3">
           {picks.length === 0 ? (
             <li className="text-xs text-gray-500">No books for this theme yet.</li>
           ) : picks.slice(0, 12).map((p, i) => (
-            <li key={p.bookId ?? i} className="border border-gray-100 dark:border-gray-800 rounded p-2">
+            <li key={p.bookId ?? i} className="border border-gray-100 rounded p-2">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-xs font-mono text-gray-500">#{p.position}</span>
                 <span className="text-xs flex-1">{p.title} — {p.authors.join(', ')} {p.banCount > 0 && `(${p.banCount} bans)`}</span>
@@ -987,7 +987,7 @@ function ThemePanel({
                   setPicks(next)
                 }}
                 rows={2}
-                className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y mb-1.5"
+                className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y mb-1.5"
               />
               <textarea
                 value={(p.discussionQuestions ?? []).join('\n')}
@@ -999,7 +999,7 @@ function ThemePanel({
                   setPicks(next)
                 }}
                 rows={3}
-                className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 resize-y"
+                className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
             </li>
           ))}
@@ -1094,10 +1094,10 @@ function BookSearchAdd({
         onChange={e => { setQ(e.target.value); setOpen(true) }}
         onFocus={() => setOpen(true)}
         placeholder="Add a book — type at least 2 characters of the title…"
-        className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400"
+        className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400"
       />
       {open && q.trim().length >= 2 && (
-        <div className="absolute left-0 right-0 mt-1 z-20 max-h-72 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-lg">
+        <div className="absolute left-0 right-0 mt-1 z-20 max-h-72 overflow-auto border border-gray-200 rounded-lg bg-white shadow-lg">
           {loading && <div className="px-3 py-2 text-xs text-gray-500">Searching…</div>}
           {!loading && filtered.length === 0 && (
             <div className="px-3 py-2 text-xs text-gray-500">No matches{results.length > 0 ? ' (already added)' : ''}.</div>
@@ -1107,7 +1107,7 @@ function BookSearchAdd({
               key={r.id}
               type="button"
               onClick={() => { onAdd(r); setQ(''); setResults([]); setOpen(false) }}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 border-b last:border-b-0 border-gray-100 dark:border-gray-800"
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b last:border-b-0 border-gray-100"
             >
               <div className="font-medium">{r.title}</div>
               <div className="text-xs text-gray-500">
@@ -1178,8 +1178,8 @@ function GenerateQuestionsBanner({
   const cls = 'mb-5 rounded-lg border px-4 py-3 flex flex-wrap items-center gap-3 text-sm'
   if (state === 'done' && result) {
     return (
-      <div className={`${cls} border-green-200 dark:border-green-900/50 bg-green-50 dark:bg-green-950/30`}>
-        <span className="text-green-800 dark:text-green-200">
+      <div className={`${cls} border-green-200 bg-green-50`}>
+        <span className="text-green-800">
           ✓ Generated questions for {result.success} book{result.success === 1 ? '' : 's'} via {result.provider}.
           {result.failed > 0 && ` (${result.failed} failed — see admin logs.)`}
         </span>
@@ -1188,21 +1188,21 @@ function GenerateQuestionsBanner({
   }
   if (state === 'error') {
     return (
-      <div className={`${cls} border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30`}>
-        <span className="text-red-800 dark:text-red-200 flex-1">Failed: {error}</span>
+      <div className={`${cls} border-red-200 bg-red-50`}>
+        <span className="text-red-800 flex-1">Failed: {error}</span>
         <button onClick={() => setState('idle')} className="text-xs underline">Dismiss</button>
       </div>
     )
   }
   return (
-    <div className={`${cls} border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30`}>
-      <span className="text-amber-900 dark:text-amber-200 flex-1">
+    <div className={`${cls} border-amber-200 bg-amber-50`}>
+      <span className="text-amber-900 flex-1">
         {count} book{count === 1 ? '' : 's'} across all tracks {count === 1 ? 'is' : 'are'} missing discussion questions.
       </span>
       <button
         onClick={run}
         disabled={state === 'running'}
-        className="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-white text-xs font-medium disabled:opacity-50"
+        className="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-800 text-white text-xs font-medium disabled:opacity-50"
       >
         {state === 'running' ? `Generating ${count}…` : `Generate questions for ${count}`}
       </button>
@@ -1212,7 +1212,7 @@ function GenerateQuestionsBanner({
 
 // ── Shared input className ──────────────────────────────────────────────────
 
-const inputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800'
+const inputCls = 'w-full border border-gray-300 rounded px-2 py-1 text-sm bg-white'
 
 // ── Featured toggle ─────────────────────────────────────────────────────────
 //
@@ -1234,7 +1234,7 @@ function FeaturedToggle({
     <label
       title={title}
       className={`inline-flex items-center gap-1 text-[11px] select-none ${
-        disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300 cursor-pointer'
+        disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 cursor-pointer'
       }`}
     >
       <input
@@ -1242,7 +1242,7 @@ function FeaturedToggle({
         checked={checked}
         disabled={disabled}
         onChange={e => onChange(e.target.checked)}
-        className="h-3.5 w-3.5 rounded border-gray-300 dark:border-gray-600 text-brand focus:ring-brand"
+        className="h-3.5 w-3.5 rounded border-gray-300 text-brand focus:ring-brand"
       />
       <span aria-hidden="true">★</span>
       <span>Featured</span>

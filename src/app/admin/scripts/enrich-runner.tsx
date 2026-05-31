@@ -130,19 +130,19 @@ export default function EnrichRunner() {
   }
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-5 bg-white dark:bg-gray-900">
+    <div className="border border-gray-200 rounded-xl p-6 flex flex-col gap-5 bg-white">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Run enrichment</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          <h2 className="font-semibold text-gray-900">Run enrichment</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
             Trigger scripts from the browser. GitHub Actions is the workhorse; in-browser runs are bounded by the
             300s function timeout and only available for steps that have been refactored as importable modules.
           </p>
         </div>
       </div>
 
-      <details className="text-xs text-gray-500 dark:text-gray-400">
-        <summary className="cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
+      <details className="text-xs text-gray-500">
+        <summary className="cursor-pointer hover:text-gray-700">
           One-time setup for production (Vercel + GitHub)
         </summary>
         <div className="mt-2 pl-4 space-y-1 leading-relaxed">
@@ -176,7 +176,7 @@ export default function EnrichRunner() {
 
       {/* Steps */}
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+        <legend className="text-xs uppercase tracking-widest text-gray-500 mb-1">
           Steps
         </legend>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1.5">
@@ -188,7 +188,7 @@ export default function EnrichRunner() {
                 className={`flex items-start gap-2 p-2 rounded-md cursor-pointer transition-colors ${
                   disabledByFree
                     ? 'opacity-40 cursor-not-allowed'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                    : 'hover:bg-gray-50'
                 }`}
               >
                 <input
@@ -199,18 +199,18 @@ export default function EnrichRunner() {
                   className="mt-0.5 shrink-0"
                 />
                 <span className="text-sm min-w-0 flex-1">
-                  <span className="font-medium text-gray-800 dark:text-gray-200">{s.label}</span>
+                  <span className="font-medium text-gray-800">{s.label}</span>
                   {s.paid && (
-                    <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-medium">
+                    <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-medium">
                       $
                     </span>
                   )}
                   {s.inProcess && (
-                    <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">
+                    <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium">
                       browser-ready
                     </span>
                   )}
-                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.description}</span>
+                  <span className="block text-xs text-gray-500 mt-0.5">{s.description}</span>
                 </span>
               </label>
             )
@@ -219,9 +219,9 @@ export default function EnrichRunner() {
       </fieldset>
 
       {/* Flags */}
-      <fieldset className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-gray-100 dark:border-gray-800">
+      <fieldset className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-gray-100">
         <label className="flex flex-col gap-1">
-          <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">Mode</span>
+          <span className="text-xs uppercase tracking-widest text-gray-500">Mode</span>
           <span className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -232,7 +232,7 @@ export default function EnrichRunner() {
           </span>
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">Cost guard</span>
+          <span className="text-xs uppercase tracking-widest text-gray-500">Cost guard</span>
           <span className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -243,7 +243,7 @@ export default function EnrichRunner() {
           </span>
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">
+          <span className="text-xs uppercase tracking-widest text-gray-500">
             Batch limit ({gptLimit})
           </span>
           <input
@@ -255,14 +255,14 @@ export default function EnrichRunner() {
             onChange={e => setGptLimit(parseInt(e.target.value, 10))}
             className="accent-brand"
           />
-          <span className="text-[11px] text-gray-400 dark:text-gray-500">
+          <span className="text-[11px] text-gray-400">
             Caps each step at N books. Applies to in-browser runs and GPT-using GitHub steps.
           </span>
         </label>
       </fieldset>
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-gray-100 dark:border-gray-800">
+      <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-gray-100">
         <button
           type="button"
           onClick={handleRunInBrowser}
@@ -286,7 +286,7 @@ export default function EnrichRunner() {
           type="button"
           onClick={handleDispatchToGitHub}
           disabled={busy !== null || selectedSteps.size === 0}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {busy === 'github'
             ? <Loader2 className="w-4 h-4 animate-spin" />
@@ -294,7 +294,7 @@ export default function EnrichRunner() {
           Dispatch to GitHub Actions
         </button>
 
-        <p className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+        <p className="text-xs text-gray-400 ml-auto">
           {selectedSteps.size === 0
             ? 'Select at least one step.'
             : `${selectedSteps.size} step${selectedSteps.size === 1 ? '' : 's'} selected.`}
@@ -303,14 +303,14 @@ export default function EnrichRunner() {
 
       {/* Result */}
       {error && (
-        <div className="flex items-start gap-2 px-3 py-2 rounded-md border border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-950/30 text-sm text-red-800 dark:text-red-300">
+        <div className="flex items-start gap-2 px-3 py-2 rounded-md border border-red-200 bg-red-50/60 text-sm text-red-800">
           <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {dispatchResult && (
-        <div className="flex flex-col gap-2 px-4 py-3 rounded-md border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-950/30 text-sm text-emerald-900 dark:text-emerald-200">
+        <div className="flex flex-col gap-2 px-4 py-3 rounded-md border border-emerald-200 bg-emerald-50/60 text-sm text-emerald-900">
           <p className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span className="font-medium">{dispatchResult.message}</span>
@@ -334,7 +334,7 @@ export default function EnrichRunner() {
       )}
 
       {runResult && (
-        <div className="flex flex-col gap-3 px-4 py-3 rounded-md border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-950/30 text-sm text-emerald-900 dark:text-emerald-200">
+        <div className="flex flex-col gap-3 px-4 py-3 rounded-md border border-emerald-200 bg-emerald-50/60 text-sm text-emerald-900">
           <p className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span className="font-medium">
@@ -344,7 +344,7 @@ export default function EnrichRunner() {
           <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
             {Object.entries(runResult.summary).map(([k, v]) => (
               <div key={k} className="contents">
-                <dt className="text-emerald-800/80 dark:text-emerald-300/80">{k}</dt>
+                <dt className="text-emerald-800/80">{k}</dt>
                 <dd className="tabular-nums font-medium">{v}</dd>
               </div>
             ))}
@@ -352,7 +352,7 @@ export default function EnrichRunner() {
           {runResult.log.length > 0 && (
             <details className="text-xs">
               <summary className="cursor-pointer hover:underline">Log ({runResult.log.length} lines)</summary>
-              <pre className="mt-1 max-h-64 overflow-auto bg-emerald-100/50 dark:bg-emerald-950/40 rounded p-2 font-mono text-[11px] leading-relaxed">
+              <pre className="mt-1 max-h-64 overflow-auto bg-emerald-100/50 rounded p-2 font-mono text-[11px] leading-relaxed">
                 {runResult.log.join('\n')}
               </pre>
             </details>

@@ -80,19 +80,19 @@ export default function FaqAccordion({
     <section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml }} />
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+        <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
         {subtitle && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
         )}
       </div>
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+      <div className="border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-200 bg-white">
         {items.map((item, i) => (
           <details key={i} open={i < defaultOpenCount} className="group">
-            <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer select-none list-none font-medium text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-colors">
+            <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer select-none list-none font-medium text-sm text-gray-900 hover:bg-gray-50 transition-colors">
               {item.q}
               <span className="shrink-0 text-gray-400 group-open:rotate-180 transition-transform">▾</span>
             </summary>
-            <div className="px-5 pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            <div className="px-5 pb-4 text-sm text-gray-600 leading-relaxed">
               {renderAnswer(item.a)}
             </div>
           </details>

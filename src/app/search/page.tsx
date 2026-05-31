@@ -77,19 +77,19 @@ export default async function SearchPage({
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <header className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-3">
           Search the database of {totalCount.toLocaleString('en')} banned books
         </h1>
-        <p className="text-base text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
+        <p className="text-base text-gray-600 max-w-3xl leading-relaxed">
           Find books banned, restricted, or removed by governments, schools, and libraries worldwide.
           Search by title or author, then narrow by country, reason, or institution. Every entry is
           sourced from public records.
         </p>
       </header>
 
-      <aside className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-        <p className="text-sm text-gray-700 dark:text-gray-300 flex-1 leading-snug">
-          <span className="font-semibold text-gray-900 dark:text-gray-100">Need every book in one file?</span>
+      <aside className="mb-6 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        <p className="text-sm text-gray-700 flex-1 leading-snug">
+          <span className="font-semibold text-gray-900">Need every book in one file?</span>
           {' '}Download the complete catalogue as CSV, JSON, or SQLite.
         </p>
         <Link

@@ -1,7 +1,7 @@
 import { Cloud, Network, BarChart3 } from 'lucide-react'
 import { getCloudflareSnapshot } from '@/lib/cloudflare-analytics'
 
-const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
+const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 function flagEmoji(code: string | null) {
   if (!code || code.length !== 2) return '🌐'
@@ -26,10 +26,10 @@ function compactNumber(n: number): string {
 type Verdict = { tone: 'good' | 'info' | 'warn' | 'alert'; message: string }
 
 const TONE_CLS: Record<Verdict['tone'], { text: string; dot: string }> = {
-  good:  { text: 'text-emerald-700 dark:text-emerald-400', dot: 'bg-emerald-500' },
-  info:  { text: 'text-gray-500 dark:text-gray-400',       dot: 'bg-gray-400' },
-  warn:  { text: 'text-amber-700 dark:text-amber-400',     dot: 'bg-amber-500' },
-  alert: { text: 'text-red-600 dark:text-red-400',         dot: 'bg-red-500' },
+  good:  { text: 'text-emerald-700', dot: 'bg-emerald-500' },
+  info:  { text: 'text-gray-500',       dot: 'bg-gray-400' },
+  warn:  { text: 'text-amber-700',     dot: 'bg-amber-500' },
+  alert: { text: 'text-red-600',         dot: 'bg-red-500' },
 }
 
 function VerdictLine({ verdict }: { verdict: Verdict }) {
@@ -63,23 +63,23 @@ type Direction = 'up-good' | 'up-bad' | 'neutral'
 
 function Delta({ current, previous, direction = 'neutral' }: { current: number; previous: number; direction?: Direction }) {
   if (previous === 0 && current === 0) {
-    return <span className="text-[11px] text-gray-400 dark:text-gray-500">— vs prev 24h</span>
+    return <span className="text-[11px] text-gray-400">— vs prev 24h</span>
   }
   if (previous === 0) {
-    return <span className="text-[11px] text-blue-500 dark:text-blue-400">new vs prev 24h</span>
+    return <span className="text-[11px] text-blue-500">new vs prev 24h</span>
   }
   const pct = Math.round(((current - previous) / previous) * 100)
   if (pct === 0) {
-    return <span className="text-[11px] text-gray-400 dark:text-gray-500">→ 0% vs prev 24h</span>
+    return <span className="text-[11px] text-gray-400">→ 0% vs prev 24h</span>
   }
   const up = pct > 0
   const arrow = up ? '↑' : '↓'
-  let cls = 'text-gray-500 dark:text-gray-400'
-  if (direction === 'up-good') cls = up ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'
-  else if (direction === 'up-bad') cls = up ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'
+  let cls = 'text-gray-500'
+  if (direction === 'up-good') cls = up ? 'text-emerald-600' : 'text-red-500'
+  else if (direction === 'up-bad') cls = up ? 'text-amber-600' : 'text-emerald-600'
   return (
     <span className={`text-[11px] tabular-nums ${cls}`}>
-      {arrow} {Math.abs(pct)}% <span className="text-gray-400 dark:text-gray-500 font-normal">vs prev 24h</span>
+      {arrow} {Math.abs(pct)}% <span className="text-gray-400 font-normal">vs prev 24h</span>
     </span>
   )
 }
@@ -96,12 +96,12 @@ function Metric({ label, tooltip, value, valueClassName, current, previous, dire
   return (
     <div>
       <dt
-        className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-help"
+        className="text-xs text-gray-500 uppercase tracking-wider cursor-help"
         title={tooltip}
       >
         {label}
       </dt>
-      <dd className={`text-2xl font-bold tabular-nums leading-tight ${valueClassName ?? 'text-gray-900 dark:text-gray-100'}`}>
+      <dd className={`text-2xl font-bold tabular-nums leading-tight ${valueClassName ?? 'text-gray-900'}`}>
         {value}
       </dd>
       <Delta current={current} previous={previous} direction={direction} />
@@ -115,10 +115,10 @@ export default async function CloudflareCards() {
   if (!snapshot) {
     return (
       <div className={`${cardCls} col-span-full`}>
-        <Cloud className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <Cloud className="w-5 h-5 text-gray-400" />
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Cloudflare</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          <h2 className="font-semibold text-gray-900">Cloudflare</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
             Set <code>CLOUDFLARE_API_TOKEN</code> and <code>CLOUDFLARE_ZONE_ID</code> to see traffic, threats, and top IPs here.
           </p>
         </div>
@@ -153,10 +153,10 @@ export default async function CloudflareCards() {
     <>
       {/* Card 1 — 24h health */}
       <div className={cardCls}>
-        <Cloud className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <Cloud className="w-5 h-5 text-gray-400" />
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Cloudflare — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Edge requests, cache, and threats. Hover labels for explanations.</p>
+          <h2 className="font-semibold text-gray-900">Cloudflare — 24h</h2>
+          <p className="text-sm text-gray-500 mt-0.5">Edge requests, cache, and threats. Hover labels for explanations.</p>
         </div>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm mt-1">
           <Metric
@@ -187,7 +187,7 @@ export default async function CloudflareCards() {
             label="Threats"
             tooltip="Requests CF auto-blocked (bots, exploits, WAF rules). <100/day is background noise. >1000/day suggests an active attack."
             value={compactNumber(totals.threats)}
-            valueClassName={totals.threats > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
+            valueClassName={totals.threats > 0 ? 'text-amber-600' : undefined}
             current={totals.threats}
             previous={prevTotals.threats}
             direction="up-bad"
@@ -198,13 +198,13 @@ export default async function CloudflareCards() {
 
       {/* Card 2 — Top IPs */}
       <div className={cardCls}>
-        <Network className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <Network className="w-5 h-5 text-gray-400" />
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Top IPs — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">High‑volume sources. 🤖 = known bot · 🏠 = home · 🏢 = work.</p>
+          <h2 className="font-semibold text-gray-900">Top IPs — 24h</h2>
+          <p className="text-sm text-gray-500 mt-0.5">High‑volume sources. 🤖 = known bot · 🏠 = home · 🏢 = work.</p>
         </div>
         {topIPs.length === 0 ? (
-          <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">No traffic in the last 24h.</p>
+          <p className="text-sm text-gray-400 italic mt-1">No traffic in the last 24h.</p>
         ) : (
           <ul className="flex flex-col gap-2 text-sm mt-1">
             {topIPs.map(row => (
@@ -212,14 +212,14 @@ export default async function CloudflareCards() {
                 <span className="text-base shrink-0 leading-none">{flagEmoji(row.country)}</span>
                 {row.bot ? (
                   <span
-                    className="text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0 flex items-baseline gap-1"
+                    className="text-xs text-gray-700 truncate flex-1 min-w-0 flex items-baseline gap-1"
                     title={row.clientIP}
                   >
                     <span aria-hidden>🤖</span>
                     <span className="truncate">{row.bot}</span>
                   </span>
                 ) : (
-                  <span className="font-mono text-xs text-gray-700 dark:text-gray-300 truncate flex-1 min-w-0" title={row.clientIP}>
+                  <span className="font-mono text-xs text-gray-700 truncate flex-1 min-w-0" title={row.clientIP}>
                     {row.clientIP}
                   </span>
                 )}
@@ -229,7 +229,7 @@ export default async function CloudflareCards() {
                 {row.tag === 'work' && (
                   <span className="text-xs shrink-0" title="Work IP">🏢</span>
                 )}
-                <span className="text-xs text-gray-700 dark:text-gray-300 tabular-nums shrink-0">
+                <span className="text-xs text-gray-700 tabular-nums shrink-0">
                   {compactNumber(row.requests)}
                 </span>
               </li>
@@ -240,16 +240,16 @@ export default async function CloudflareCards() {
 
       {/* Card 3 — Status code distribution */}
       <div className={cardCls}>
-        <BarChart3 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <BarChart3 className="w-5 h-5 text-gray-400" />
         <div>
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Status codes — 24h</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">5xx = server broke · 4xx = client errors / 404s.</p>
+          <h2 className="font-semibold text-gray-900">Status codes — 24h</h2>
+          <p className="text-sm text-gray-500 mt-0.5">5xx = server broke · 4xx = client errors / 404s.</p>
         </div>
         {statusTotal === 0 ? (
-          <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">No requests in the last 24h.</p>
+          <p className="text-sm text-gray-400 italic mt-1">No requests in the last 24h.</p>
         ) : (
           <div className="flex flex-col gap-2 mt-1">
-            <div className="flex h-2 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800">
+            <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
               {statusRows.map(r => r.pct > 0 && (
                 <div key={r.label} className={r.color} style={{ width: `${r.pct}%` }} title={`${r.label}: ${r.value.toLocaleString('en')}`} />
               ))}
@@ -259,12 +259,12 @@ export default async function CloudflareCards() {
                 <div key={r.label} className="contents">
                   <dt className="flex items-center gap-1.5 cursor-help" title={r.tooltip}>
                     <span className={`w-2 h-2 rounded-sm ${r.color}`} />
-                    <span className="text-gray-600 dark:text-gray-400">{r.label}</span>
+                    <span className="text-gray-600">{r.label}</span>
                   </dt>
-                  <dd className="text-gray-400 dark:text-gray-500 tabular-nums text-right">
+                  <dd className="text-gray-400 tabular-nums text-right">
                     {r.pct.toFixed(1)}%
                   </dd>
-                  <dd className="text-gray-700 dark:text-gray-300 tabular-nums text-right">
+                  <dd className="text-gray-700 tabular-nums text-right">
                     {compactNumber(r.value)}
                   </dd>
                   <dd className="text-right shrink-0">
@@ -274,7 +274,7 @@ export default async function CloudflareCards() {
               ))}
             </dl>
             {prevStatusTotal === 0 && (
-              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-[11px] text-gray-400 mt-1">
                 No prior 24h data yet — deltas will populate after 48h.
               </p>
             )}

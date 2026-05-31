@@ -34,10 +34,15 @@ async function fetchTop100(): Promise<RankedBook[]> {
   let all: BookRow[] = []
   let offset = 0
   while (true) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('books')
       .select(SELECT)
+      // Stable order across pages — without it .range() skips/dupes rows past
+      // 1000 and corrupts the ranking on this flagship page.
+      .order('id')
       .range(offset, offset + 999)
+    // Throw rather than render a partial/empty ranking on a transient error.
+    if (error) throw error
     if (!data || data.length === 0) break
     all = all.concat(data as unknown as BookRow[])
     if (data.length < 1000) break

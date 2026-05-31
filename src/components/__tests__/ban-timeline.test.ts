@@ -115,13 +115,20 @@ describe('BanTimeline', () => {
   })
 
   it('respects a custom minBansToRender threshold', () => {
-    const oneBan: TimelineRow[] = [
+    // Two bans across two countries — avoids the single-row span guard, so the
+    // threshold is the only thing gating render. Renders under the default
+    // threshold of 2, but is suppressed when the caller demands 3.
+    const twoBans: TimelineRow[] = [
       {
         key: 'US', label: 'United States',
         bans: [{ id: 1, year_started: 2020, year_ended: null, status: 'active', action_type: 'banned' }],
       },
+      {
+        key: 'CA', label: 'Canada',
+        bans: [{ id: 2, year_started: 2021, year_ended: null, status: 'active', action_type: 'banned' }],
+      },
     ]
-    expect(render({ rows: oneBan, currentYear: 2026 })).toBe('')
-    expect(render({ rows: oneBan, minBansToRender: 1, currentYear: 2026 })).not.toBe('')
+    expect(render({ rows: twoBans, currentYear: 2026 })).not.toBe('')
+    expect(render({ rows: twoBans, minBansToRender: 3, currentYear: 2026 })).toBe('')
   })
 })

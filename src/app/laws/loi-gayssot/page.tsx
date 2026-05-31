@@ -53,7 +53,7 @@ const HERO: Hero | null = {
 }
 
 const proseClasses =
-  'prose prose-gray dark:prose-invert max-w-none ' +
+  'prose prose-gray max-w-none ' +
   'prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight ' +
   'prose-a:text-oxblood prose-a:underline prose-a:underline-offset-2 ' +
   'prose-a:decoration-oxblood/30 hover:prose-a:decoration-oxblood ' +
@@ -84,14 +84,14 @@ export default function LoiGayssotPage() {
           ← Books banned in France
         </Link>
 
-        <header className="bg-brand-light dark:bg-brand/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <header className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
           <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">
             Legal context · France
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl font-semibold tracking-tight leading-tight mb-4">
             {TITLE}
           </h1>
-          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-base text-gray-700 leading-relaxed">
             {DEK}
           </p>
         </header>
@@ -180,8 +180,8 @@ export default function LoiGayssotPage() {
         </article>
 
         {/* ── Books in the archive banned under this regime ───────────────── */}
-        <section className="mt-12 border-t border-neutral-200 dark:border-neutral-800 pt-6">
-          <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-1">
+        <section className="mt-12 border-t border-neutral-200 pt-6">
+          <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">
             Books in this archive tied to the Gayssot Act
           </h2>
           <p className="text-sm text-neutral-500 mb-5">
@@ -193,9 +193,9 @@ export default function LoiGayssotPage() {
               <li key={b.slug}>
                 <Link
                   href={`/books/${b.slug}`}
-                  className="group flex flex-col px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-oxblood transition-colors rounded-sm"
+                  className="group flex flex-col px-4 py-3 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
                 >
-                  <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-oxblood transition-colors">
+                  <span className="font-serif text-base font-medium text-gray-900 group-hover:text-oxblood transition-colors">
                     {b.title}
                   </span>
                   <span className="text-xs text-neutral-500">{b.author}</span>

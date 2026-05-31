@@ -33,7 +33,7 @@ export default async function AdminSitemapPage() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-6">
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">banned-books.org</p>
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
         <h1 className="text-2xl font-bold">Admin</h1>
       </div>
 

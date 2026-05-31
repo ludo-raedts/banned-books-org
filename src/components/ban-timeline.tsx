@@ -120,29 +120,29 @@ export default function BanTimeline({
     <figure
       role="group"
       aria-labelledby={titleId}
-      className="not-prose mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden"
+      className="not-prose mb-6 rounded-xl border border-gray-200 bg-white overflow-hidden"
     >
       <h3 id={titleId} className="sr-only">
         Ban timeline
       </h3>
       <div className="grid grid-cols-[max-content_minmax(0,1fr)] max-h-[800px] overflow-y-auto">
         {/* Header — label column spacer */}
-        <div className="bg-gray-50 dark:bg-gray-800/50 border-b border-r border-gray-200 dark:border-gray-700 sticky top-0 z-20" style={{ height: AXIS_H }} />
+        <div className="bg-gray-50 border-b border-r border-gray-200 sticky top-0 z-20" style={{ height: AXIS_H }} />
         {/* Header — axis spacer (the axis itself is drawn inside the main SVG, but we keep the column visually separated) */}
-        <div className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10" style={{ height: AXIS_H }} />
+        <div className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10" style={{ height: AXIS_H }} />
 
         {/* Labels column — leading spacer aligns label[0] with bar[0] (SVG has internal axis of AXIS_H) */}
-        <div className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <div className="border-r border-gray-200 bg-white">
           <div style={{ height: AXIS_H }} aria-hidden="true" />
           {rows.map((row) => {
             const inner = (
               <span className="flex items-center gap-2 truncate">
                 {row.flag && <span aria-hidden="true" className="text-[14px] leading-none shrink-0">{row.flag}</span>}
-                <span className="truncate text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">
+                <span className="truncate text-xs sm:text-sm font-medium text-gray-800">
                   {row.label}
                 </span>
                 {row.sublabel && (
-                  <span className="text-[10px] text-gray-400 dark:text-gray-500 shrink-0 hidden sm:inline">
+                  <span className="text-[10px] text-gray-400 shrink-0 hidden sm:inline">
                     {row.sublabel}
                   </span>
                 )}
@@ -151,7 +151,7 @@ export default function BanTimeline({
             return (
               <div
                 key={row.key}
-                className="flex items-center px-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+                className="flex items-center px-3 border-b border-gray-100 last:border-b-0"
                 style={{ height: ROW_H, paddingLeft: LABEL_PAD_X, paddingRight: LABEL_PAD_X }}
               >
                 {row.href ? (
@@ -187,7 +187,7 @@ export default function BanTimeline({
             </defs>
 
             {/* Axis: ticks + decade gridlines */}
-            <g className="text-gray-300 dark:text-gray-700">
+            <g className="text-gray-300">
               {decades.map((y) => (
                 <line
                   key={`grid-${y}`}
@@ -201,7 +201,7 @@ export default function BanTimeline({
                 />
               ))}
             </g>
-            <g className="text-gray-500 dark:text-gray-400" fontSize="10">
+            <g className="text-gray-500" fontSize="10">
               {ticks.map((y) => (
                 <text
                   key={`tick-${y}`}
@@ -222,7 +222,7 @@ export default function BanTimeline({
               const fpXPos = x(firstPublishedYear)
               const { textAnchor, xOffset } = edgeAnchor(fpXPos, VIEW_W, fpText.length * 5.5)
               return (
-                <g className="text-amber-600 dark:text-amber-400">
+                <g className="text-amber-600">
                   <line
                     x1={fpXPos}
                     x2={fpXPos}
@@ -251,7 +251,7 @@ export default function BanTimeline({
               const todayXPos = x(currentYear)
               const { textAnchor, xOffset } = edgeAnchor(todayXPos, VIEW_W, 'Today'.length * 5.5)
               return (
-                <g className="text-gray-400 dark:text-gray-500">
+                <g className="text-gray-400">
                   <line
                     x1={todayXPos}
                     x2={todayXPos}
@@ -288,7 +288,7 @@ export default function BanTimeline({
                       x2={VIEW_W}
                       y1={yTop}
                       y2={yTop}
-                      className="text-gray-100 dark:text-gray-800"
+                      className="text-gray-100"
                       stroke="currentColor"
                       strokeWidth="0.5"
                     />
@@ -304,8 +304,8 @@ export default function BanTimeline({
 
                     const isActive = ban.status === 'active'
                     const colorClass = isActive
-                      ? 'text-red-500 dark:text-red-400'
-                      : 'text-gray-400 dark:text-gray-500'
+                      ? 'text-red-500'
+                      : 'text-gray-400'
                     const action = ban.action_type
                     const endLabel = ban.year_ended ?? 'present'
                     const titleText = `${row.label} — ${action} ${start}–${endLabel}, status: ${ban.status}`
@@ -351,27 +351,27 @@ export default function BanTimeline({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-2 text-[11px] text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-800/30">
-        <span className="font-medium text-gray-600 dark:text-gray-300 mr-1">Status:</span>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-2 text-[11px] text-gray-500 border-t border-gray-200 bg-gray-50/60">
+        <span className="font-medium text-gray-600 mr-1">Status:</span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-red-500 dark:bg-red-400" /> active
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-red-500" /> active
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-400 dark:bg-gray-500" /> historical
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-400" /> historical
         </span>
-        <span className="hidden sm:inline-block w-px h-3 bg-gray-300 dark:bg-gray-700" aria-hidden="true" />
-        <span className="font-medium text-gray-600 dark:text-gray-300 mr-1">Action:</span>
+        <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
+        <span className="font-medium text-gray-600 mr-1">Action:</span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-500 dark:bg-gray-400" /> banned
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-500" /> banned
         </span>
-        <span className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+        <span className="inline-flex items-center gap-1.5 text-gray-500">
           <svg width="14" height="10" aria-hidden="true" className="overflow-visible">
             <rect width="14" height="10" fill={`url(#${stripeId})`} stroke="currentColor" strokeWidth="0.5" />
           </svg>
           restricted
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm border-[1.5px] border-gray-500 dark:border-gray-400" />
+          <span className="inline-block w-3 h-2.5 rounded-sm border-[1.5px] border-gray-500" />
           challenged
         </span>
       </div>

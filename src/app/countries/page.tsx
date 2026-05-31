@@ -113,27 +113,27 @@ export default async function CountriesPage({
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Catalogue</p>
+      <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Catalogue</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Books Banned by Country</h1>
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+        <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
           {base.filter(c => !DEFUNCT.includes(c.code)).length} countries with documented book bans — from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 
       {/* Context banner */}
-      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl px-5 py-4 mb-6 text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
+      <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 mb-6 text-sm text-amber-900 leading-relaxed">
         <strong>Note on coverage:</strong> The United States appears first because US bans are
         systematically tracked by PEN America and the ALA. Bans in authoritarian states are
         far more common but often undocumented.{' '}
-        <Link href="/methodology" className="underline hover:text-amber-700 dark:hover:text-amber-100">
+        <Link href="/methodology" className="underline hover:text-amber-700">
           Read more about how this data is collected →
         </Link>
       </div>
 
-      <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
+      <p className="text-xs text-gray-400 mb-6">
         Looking for the most-banned titles?{' '}
-        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 transition-colors">
           See the 100 most banned books →
         </Link>
       </p>
@@ -155,21 +155,21 @@ export default async function CountriesPage({
       {/* Country list */}
       <div className="space-y-1.5 mb-12">
         {activeCountries.map((c, i) => (
-          <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-2 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
+          <Link key={c.code} href={`/countries/${c.code.toLowerCase()}`} className="flex items-center gap-2 group py-1 rounded-lg hover:bg-gray-50 px-2 -mx-2 transition-colors">
             {isAlpha
               ? <span className="w-6 shrink-0" />
-              : <span className="w-6 text-right text-xs text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+              : <span className="w-6 text-right text-xs text-gray-400 tabular-nums shrink-0">{i + 1}</span>
             }
             <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
-            <span className="w-44 shrink-0 text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:underline truncate">{c.name_en}</span>
+            <span className="w-44 shrink-0 text-sm font-medium text-gray-800 group-hover:underline truncate">{c.name_en}</span>
             <div className="flex-1 flex items-center gap-2 min-w-0">
               <div
-                className="h-4 rounded bg-red-400 dark:bg-red-600 shrink-0"
+                className="h-4 rounded bg-red-400 shrink-0"
                 style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, maxWidth: 'calc(100% - 2.5rem)', minWidth: '3px' }}
               />
-              <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400 shrink-0">{c.displayCount}</span>
+              <span className="text-xs tabular-nums text-gray-500 shrink-0">{c.displayCount}</span>
             </div>
-            <span className="w-20 text-right shrink-0 text-xs text-red-500 dark:text-red-400 tabular-nums">
+            <span className="w-20 text-right shrink-0 text-xs text-red-500 tabular-nums">
               {!eraFilter && c.displayActive > 0 ? `${c.displayActive} active` : ''}
             </span>
           </Link>
@@ -178,21 +178,21 @@ export default async function CountriesPage({
 
       {historicalCountries.length > 0 && (
         <>
-          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
             Defunct states
           </h2>
           <div className="space-y-1.5 mb-10">
             {historicalCountries.map(c => (
-              <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 px-2 -mx-2 transition-colors">
+              <Link key={c.code} href={`/countries/${c.code.toLowerCase()}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 px-2 -mx-2 transition-colors">
                 <span className="w-6 shrink-0" />
                 <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
-                <span className="w-44 shrink-0 text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:underline truncate">{c.name_en}</span>
+                <span className="w-44 shrink-0 text-sm font-medium text-gray-500 group-hover:underline truncate">{c.name_en}</span>
                 <div className="flex-1 flex items-center gap-2 min-w-0">
                   <div
-                    className="h-4 rounded bg-gray-400 dark:bg-gray-600 shrink-0"
+                    className="h-4 rounded bg-gray-400 shrink-0"
                     style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
                   />
-                  <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.displayCount}</span>
+                  <span className="text-xs tabular-nums text-gray-500">{c.displayCount}</span>
                 </div>
               </Link>
             ))}
@@ -200,7 +200,7 @@ export default async function CountriesPage({
         </>
       )}
 
-      <div className="text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 pt-6">
+      <div className="text-sm text-gray-500 border-t border-gray-200 pt-6">
         <p>
           Coverage is uneven: well-documented democracies like the United States appear to have more bans
           because their censorship attempts are systematically recorded. Bans in closed authoritarian states

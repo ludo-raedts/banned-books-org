@@ -39,8 +39,8 @@ function OriginalSummaryDetails({ item }: { item: NewsItem }) {
   if ((item.source_language ?? 'en').toLowerCase().slice(0, 2) === 'en') return null
   const { label } = languageInfo(item.source_language)
   return (
-    <details className="text-xs text-gray-500 dark:text-gray-400">
-      <summary className="cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200">
+    <details className="text-xs text-gray-500">
+      <summary className="cursor-pointer select-none hover:text-gray-700">
         Show original summary ({label})
       </summary>
       <p className="mt-2 leading-relaxed whitespace-pre-wrap italic">{item.original_summary}</p>
@@ -53,7 +53,7 @@ function formatDate(iso: string | null) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-const editInputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400'
+const editInputCls = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400'
 
 function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: number) => void; onPatch: (patch: Partial<NewsItem>) => void }) {
   const [editing, setEditing] = useState(false)
@@ -77,7 +77,7 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
 
   const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
+    <div className="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 bg-white">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {item.headline && !editing && (
@@ -98,7 +98,7 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
             originalTitle={item.original_title}
             className="mt-0.5"
           />
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+          <p className="text-xs text-gray-400 mt-1 flex items-center gap-2 flex-wrap">
             <span>{sourceName} · {formatDate(item.published_at)}</span>
             <TranslatedBadge code={item.source_language} />
           </p>
@@ -128,7 +128,7 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
           </label>
         </div>
       ) : (
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
+        <p className="text-sm text-gray-600 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
 
       <OriginalSummaryDetails item={item} />
@@ -153,18 +153,18 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
             <button
               onClick={() => { call('update_text', { headline, summary }); setEditing(false) }}
               disabled={!!loading}
-              className="px-3 py-1.5 rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 text-xs font-medium disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-gray-800 text-white text-xs font-medium disabled:opacity-50"
             >
               Save edit
             </button>
-            <button onClick={() => setEditing(false)} className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs">
+            <button onClick={() => setEditing(false)} className="px-3 py-1.5 rounded-lg border border-gray-300 text-xs">
               Cancel
             </button>
           </>
         ) : (
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs hover:border-gray-400"
+            className="px-3 py-1.5 rounded-lg border border-gray-300 text-xs hover:border-gray-400"
           >
             Edit
           </button>
@@ -263,7 +263,7 @@ export default function NewsAdminClient({
         <button
           onClick={fetchNow}
           disabled={fetching || rejectingAll}
-          className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50 hover:opacity-90"
+          className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50 hover:opacity-90"
         >
           {fetching ? 'Fetching…' : 'Fetch news now'}
         </button>
@@ -277,12 +277,12 @@ export default function NewsAdminClient({
           </button>
         )}
         {availableLangs.length > 1 && (
-          <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 ml-auto">
+          <label className="flex items-center gap-2 text-xs text-gray-500 ml-auto">
             <span>Language</span>
             <select
               value={langFilter}
               onChange={e => setLangFilter(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-xs bg-white dark:bg-gray-800"
+              className="border border-gray-300 rounded px-2 py-1 text-xs bg-white"
             >
               <option value="all">All languages</option>
               {availableLangs.map(code => {
@@ -292,11 +292,11 @@ export default function NewsAdminClient({
             </select>
           </label>
         )}
-        {fetchMsg && <span className="text-sm text-gray-600 dark:text-gray-400">{fetchMsg}</span>}
+        {fetchMsg && <span className="text-sm text-gray-600">{fetchMsg}</span>}
       </div>
 
       {filteredItems.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400 text-sm py-8">
+        <p className="text-gray-500 text-sm py-8">
           {items.length === 0 ? 'No drafts — run the fetch-news script to populate.' : 'No drafts in this language.'}
         </p>
       ) : (
@@ -306,10 +306,10 @@ export default function NewsAdminClient({
       )}
 
       {published.length > 0 && (
-        <section className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-3">
+        <section className="mt-10 pt-6 border-t border-gray-200 flex flex-col gap-3">
           <div>
             <h2 className="text-lg font-semibold">Recent published</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               Last {published.length} item{published.length !== 1 ? 's' : ''} on the public news page.
               Auto-published items are flagged so you can spot them quickly.
             </p>
@@ -348,7 +348,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
 
   const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col gap-3 bg-white dark:bg-gray-900">
+    <div className="border border-gray-200 rounded-xl p-4 flex flex-col gap-3 bg-white">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {item.headline && !editing && (
@@ -366,7 +366,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
               {title}
             </a>
             {item.auto_published && (
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide bg-amber-100 text-amber-800">
                 Auto
               </span>
             )}
@@ -376,7 +376,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
             originalTitle={item.original_title}
             className="mt-0.5"
           />
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+          <p className="text-xs text-gray-400 mt-1 flex items-center gap-2 flex-wrap">
             <span>{sourceName} · {formatDate(item.published_at)}</span>
             <TranslatedBadge code={item.source_language} />
           </p>
@@ -406,7 +406,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
           </label>
         </div>
       ) : (
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
+        <p className="text-sm text-gray-600 leading-relaxed">{summary || <em className="text-gray-400">No summary</em>}</p>
       )}
 
       <OriginalSummaryDetails item={item} />
@@ -424,18 +424,18 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
             <button
               onClick={() => { call('update_text', { headline, summary }); setEditing(false) }}
               disabled={!!loading}
-              className="px-3 py-1.5 rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 text-xs font-medium disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-gray-800 text-white text-xs font-medium disabled:opacity-50"
             >
               Save edit
             </button>
-            <button onClick={() => setEditing(false)} className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs">
+            <button onClick={() => setEditing(false)} className="px-3 py-1.5 rounded-lg border border-gray-300 text-xs">
               Cancel
             </button>
           </>
         ) : (
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-xs hover:border-gray-400"
+            className="px-3 py-1.5 rounded-lg border border-gray-300 text-xs hover:border-gray-400"
           >
             Edit
           </button>
@@ -499,10 +499,10 @@ function NewsConfigCard({ initial, onSave }: { initial: NewsConfig; onSave: () =
     if (ok) setMsg('Saved.')
   }
 
-  const inputCls = 'border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 disabled:opacity-50'
+  const inputCls = 'border border-gray-300 rounded px-2 py-1 text-sm bg-white disabled:opacity-50'
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+    <div className="border border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
         <div>
           <div className="text-[11px] uppercase tracking-wide text-gray-500">Auto-publish</div>
@@ -549,12 +549,12 @@ function NewsConfigCard({ initial, onSave }: { initial: NewsConfig; onSave: () =
         <button
           onClick={saveTuning}
           disabled={!dirty || busy}
-          className="px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium disabled:opacity-50"
+          className="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm font-medium disabled:opacity-50"
         >
           {busy ? 'Saving…' : 'Save dedup settings'}
         </button>
-        {msg && <span className="text-xs text-green-700 dark:text-green-400">{msg}</span>}
-        {error && <span className="text-xs text-red-600 dark:text-red-400">{error}</span>}
+        {msg && <span className="text-xs text-green-700">{msg}</span>}
+        {error && <span className="text-xs text-red-600">{error}</span>}
       </div>
     </div>
   )
@@ -578,10 +578,10 @@ function ToggleSwitch({
       onClick={() => onChange(!checked)}
       className="inline-flex items-center gap-2 group disabled:opacity-50"
     >
-      <span className={`text-xs font-medium ${checked ? 'text-green-700 dark:text-green-400' : 'text-gray-500'}`}>
+      <span className={`text-xs font-medium ${checked ? 'text-green-700' : 'text-gray-500'}`}>
         {checked ? labelOn : labelOff}
       </span>
-      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-700'}`}>
+      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300'}`}>
         <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : ''}`} />
       </span>
     </button>

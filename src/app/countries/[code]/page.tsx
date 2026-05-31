@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import CitationBlock from '@/components/citation-block'
@@ -20,6 +20,17 @@ import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
+
+// Prebuild every country hub at build time. Without a generateStaticParams the
+// route renders fully dynamically in production (cache-control: no-store,
+// x-vercel-cache: MISS on every request), so revalidate=3600 never takes
+// effect. Returning params flips it to static + ISR so it's edge-cached.
+// Canonical URLs are lowercase (see canonical below), so emit lowercase codes.
+export async function generateStaticParams() {
+  const { data } = await adminClient().from('countries').select('code')
+  const rows = (data ?? []) as { code: string }[]
+  return rows.map((c) => ({ code: c.code.toLowerCase() }))
+}
 
 export async function generateMetadata({
   params,
@@ -118,26 +129,20 @@ export default async function CountryPage({
   params: Promise<{ code: string }>
 }) {
   const { code } = await params
+  const lowerCode = code.toLowerCase()
+  // Canonical country URLs are lowercase. Redirect any other casing (e.g.
+  // /countries/US, which Google indexed alongside /countries/us) so duplicate
+  // casings collapse to one URL instead of splitting crawl/link signals.
+  if (code !== lowerCode) permanentRedirect(`/countries/${lowerCode}`)
   const upperCode = code.toUpperCase()
   const supabase = adminClient()
 
-  // rows: 1 | fields: [code, name_en, slug, description] | reason: country header + description
-  const { data: country, error: ce } = await supabase
-    .from('countries').select('code, name_en, slug, description').eq('code', upperCode).single()
-
-  if (ce || !country) notFound()
-
-  // rows: 1 | fields: [distinct_books, total_bans] | reason: header display
-  const { data: countryMv } = await supabase
-    .from('mv_ban_counts')
-    .select('distinct_books, total_bans')
-    .eq('country_code', upperCode)
-    .maybeSingle()
-  const distinctBooks = (countryMv?.distinct_books as number | undefined) ?? 0
-  const totalBanEvents = (countryMv?.total_bans as number | undefined) ?? 0
-
-  // rows: ≤100 | fields: book card data | reason: paginated grid; first page only
-  const { data, error } = await supabase
+  // These reads are all independent (each keys only off upperCode), so run
+  // them together instead of in series: the country header, the MV counts, the
+  // first page of the books grid, and the full ban-id sweep used for the
+  // related-countries / top-books sections. Collapses ~4 sequential round-trips
+  // (the sweep alone paginates every ban row for the country) into one await.
+  const booksGridQuery = supabase
     .from('books')
     .select(`
       id, title, slug, cover_url, description, first_published_year, genres,
@@ -152,36 +157,58 @@ export default async function CountryPage({
     .order('title')
     .range(0, 99)
 
-  if (error) throw error
-  const books = (data as unknown as Book[]) ?? []
-  // Headline metric is distinct books banned. totalBanEvents is the raw ban-record
-  // count (PEN America counts per US school district, so it can be much higher
-  // than distinctBooks for the United States).
-  const totalBanCount = distinctBooks
-
-  // ── Related countries: find countries with most book overlap ──────────────────
-  // Step 1: collect all book_ids banned in this country + reason frequencies (one paginated loop)
-  let allBookIds: number[] = []
-  const reasonIdCounts = new Map<number, number>()
-  {
+  // Paginated sweep of every ban for this country → book_ids + reason freqs.
+  async function loadBanSweep() {
+    const ids: number[] = []
+    const reasonCounts = new Map<number, number>()
     let offset = 0
     while (true) {
       const { data: idRows } = await supabase
         .from('bans')
         .select('book_id, ban_reason_links(reason_id)')
         .eq('country_code', upperCode)
+        // Stable order or .range() skips rows past 1000 and undercounts.
+        .order('id')
         .range(offset, offset + 999)
       if (!idRows || idRows.length === 0) break
       for (const row of idRows as unknown as { book_id: number; ban_reason_links: { reason_id: number }[] }[]) {
-        allBookIds.push(row.book_id)
+        ids.push(row.book_id)
         for (const link of row.ban_reason_links ?? []) {
-          reasonIdCounts.set(link.reason_id, (reasonIdCounts.get(link.reason_id) ?? 0) + 1)
+          reasonCounts.set(link.reason_id, (reasonCounts.get(link.reason_id) ?? 0) + 1)
         }
       }
       if (idRows.length < 1000) break
       offset += 1000
     }
+    return { ids, reasonCounts }
   }
+
+  const [
+    { data: country, error: ce },
+    { data: countryMv },
+    { data, error },
+    banSweep,
+  ] = await Promise.all([
+    supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).single(),
+    supabase.from('mv_ban_counts').select('distinct_books, total_bans').eq('country_code', upperCode).maybeSingle(),
+    booksGridQuery,
+    loadBanSweep(),
+  ])
+
+  if (ce || !country) notFound()
+  if (error) throw error
+
+  const distinctBooks = (countryMv?.distinct_books as number | undefined) ?? 0
+  const totalBanEvents = (countryMv?.total_bans as number | undefined) ?? 0
+  const books = (data as unknown as Book[]) ?? []
+  // Headline metric is distinct books banned. totalBanEvents is the raw ban-record
+  // count (PEN America counts per US school district, so it can be much higher
+  // than distinctBooks for the United States).
+  const totalBanCount = distinctBooks
+
+  // book_ids banned here + reason frequencies, from the parallel sweep above.
+  const allBookIds: number[] = banSweep.ids
+  const reasonIdCounts = banSweep.reasonCounts
 
   // ── Top-12 most-banned books IN this country (by ban-row count) ─────────
   // PEN America counts US bans per district, so a single title can have
@@ -331,7 +358,7 @@ export default async function CountryPage({
     }
   }
 
-  const collectionUrl = `https://www.banned-books.org/countries/${upperCode}`
+  const collectionUrl = `https://www.banned-books.org/countries/${lowerCode}`
   const collectionJsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',

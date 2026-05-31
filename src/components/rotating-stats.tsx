@@ -53,16 +53,16 @@ export default function RotatingStats({ stats }: { stats: StatCard[] }) {
             <Link
               key={i}
               href={stat.href}
-              className="min-h-[120px] flex flex-col bg-brand-light dark:bg-brand-dark/20 border border-brand/20 dark:border-brand/10 rounded-lg p-5 hover:shadow-sm transition-shadow"
+              className="min-h-[120px] flex flex-col bg-brand-light border border-brand/20 rounded-lg p-5 hover:shadow-sm transition-shadow"
             >
               <p
                 title={stat.fullTitle || stat.largeText}
-                className="text-lg font-bold text-brand-dark dark:text-red-300 leading-snug line-clamp-2"
+                className="text-lg font-bold text-brand-dark leading-snug line-clamp-2"
               >
                 {stat.largeText}
               </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{stat.sub}</p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 mt-1">{stat.label}</p>
+              <p className="text-xs text-gray-400 mt-1">{stat.sub}</p>
             </Link>
           ))}
         </div>
@@ -84,7 +84,7 @@ export default function RotatingStats({ stats }: { stats: StatCard[] }) {
               key={i}
               onClick={() => goToSet(i)}
               className={`w-2 h-2 rounded-full transition-colors ${
-                i === activeSet ? 'bg-brand' : 'bg-gray-300 dark:bg-gray-600'
+                i === activeSet ? 'bg-brand' : 'bg-gray-300'
               }`}
               aria-label={`Show stats set ${i + 1}`}
             />

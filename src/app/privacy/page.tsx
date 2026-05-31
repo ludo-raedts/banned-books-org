@@ -38,21 +38,21 @@ export default function PrivacyPage() {
     <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-14">
 
       {/* Header */}
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Privacy</p>
+      <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Privacy</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Privacy policy</h1>
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+        <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
           Banned Books is an editorial catalogue. We do not sell anything, we do not run advertising, and we do not
           want to know who you are. This page documents the small amount of data we do process, why, and the
           deliberate choices we have made about what <em>not</em> to use.
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">Last updated: {LAST_UPDATED}</p>
+        <p className="text-xs text-gray-500 mt-4">Last updated: {LAST_UPDATED}</p>
       </div>
 
       {/* 1. The short version */}
       <section>
         <h2 className="text-xl font-semibold mb-4">The short version</h2>
-        <ul className="flex flex-col gap-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+        <ul className="flex flex-col gap-3 text-sm text-gray-700 leading-relaxed">
           <li>• We log basic, anonymous pageview data so we know which entries are read.</li>
           <li>• We do not set tracking cookies, fingerprint visitors, run ads, or load any third-party trackers.</li>
           <li>• We do not link to Amazon, on principle.</li>
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       {/* 2. What we collect when you visit */}
       <section>
         <h2 className="text-xl font-semibold mb-4">What we collect when you visit a page</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             For each pageview on a book or author page we record a small log entry in our database
             (<strong>Supabase</strong>) containing the path
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
       {/* 3. Cookies */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Cookies</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             We do not set advertising or analytics cookies. We do not use a cookie banner because we do not
             place anything that requires consent under the ePrivacy Directive.
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
       {/* 4. Outbound links */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Outbound links and affiliate links</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             The catalogue links extensively to outside sources: news organisations, government records, civil
             society reports, library associations, and online booksellers. When you click such a link, the
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
             to a retailer that participates in the very behaviour this catalogue documents.
           </p>
           <p>
-            For public-domain works we link to <Link href="https://www.gutenberg.org" className="underline hover:text-gray-900 dark:hover:text-gray-100">Project Gutenberg</Link>,
+            For public-domain works we link to <Link href="https://www.gutenberg.org" className="underline hover:text-gray-900">Project Gutenberg</Link>,
             which is non-commercial. For news and source citations we link to the original publishers; those
             sites have their own privacy practices and many of them do run advertising trackers. We have
             no influence on what they collect once you leave our domain.
@@ -141,9 +141,9 @@ export default function PrivacyPage() {
       {/* 5. Contact form */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Contact form</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
-            The contact form on the <Link href="/about" className="underline hover:text-gray-900 dark:hover:text-gray-100">about page</Link> is
+            The contact form on the <Link href="/about" className="underline hover:text-gray-900">about page</Link> is
             handled by <strong>Formspree</strong>. When you submit the form, your name, optional organisation,
             email address, and message are transmitted to Formspree, which forwards them to us by email. We use
             this data only to respond to your message and to follow up if needed. We do not add you to a
@@ -159,10 +159,10 @@ export default function PrivacyPage() {
       {/* 6. Dataset purchases */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Dataset purchases</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             The catalogue is also available as a paid download at{' '}
-            <Link href="/dataset" className="underline hover:text-gray-900 dark:hover:text-gray-100">/dataset</Link>.
+            <Link href="/dataset" className="underline hover:text-gray-900">/dataset</Link>.
             When you go through checkout, three third parties are involved alongside our own database:
           </p>
           <ul className="flex flex-col gap-2">
@@ -190,7 +190,7 @@ export default function PrivacyPage() {
             share purchaser email addresses with anyone. Order rows are retained as a record of sale
             (needed for tax, refund, and licensing purposes); after the 30-day download window has
             closed you can ask us via the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-gray-100">contact form on the about page</Link>{' '}
+            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>{' '}
             to delete your order record.
           </p>
         </div>
@@ -199,7 +199,7 @@ export default function PrivacyPage() {
       {/* 7. What we do not use */}
       <section>
         <h2 className="text-xl font-semibold mb-4">What we deliberately do not use</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             Privacy matters to this project. The following are <em>not</em> present anywhere on this site:
           </p>
@@ -221,7 +221,7 @@ export default function PrivacyPage() {
       {/* 8. Your rights */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Your rights</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             Under the EU General Data Protection Regulation and equivalent laws elsewhere, you have the right
             to ask what personal data we hold about you, to ask us to correct or delete it, and to object to
@@ -232,10 +232,10 @@ export default function PrivacyPage() {
           </p>
           <p>
             To exercise any of these rights, or to raise a concern, please use the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-gray-100">contact form on the about page</Link>.
+            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>.
             If you are not satisfied with our response you have the right to complain to your local data
             protection authority — for visitors in the Netherlands, the{' '}
-            <Link href="https://autoriteitpersoonsgegevens.nl" className="underline hover:text-gray-900 dark:hover:text-gray-100">
+            <Link href="https://autoriteitpersoonsgegevens.nl" className="underline hover:text-gray-900">
               Autoriteit Persoonsgegevens
             </Link>.
           </p>
@@ -245,12 +245,12 @@ export default function PrivacyPage() {
       {/* 9. Controller & changes */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Controller and changes to this policy</h2>
-        <div className="text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-4 text-sm">
+        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
           <p>
             Banned Books is a personal project run by Ludo Raedts, based in Groningen, the Netherlands. For the
             purposes of data protection law, the controller of any personal data processed via this site is
             Ludo Raedts. To get in touch, use the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900 dark:hover:text-gray-100">contact form on the about page</Link>.
+            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>.
           </p>
           <p>
             We will update this page if our practices change. Material changes will be reflected in the

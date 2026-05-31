@@ -44,26 +44,26 @@ function pct(count: number, total: number): number {
 function priorityFor(p: number) {
   if (p >= 30) return {
     border: 'border-l-4 border-red-500',
-    badge: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    badge: 'bg-red-100 text-red-700',
     label: 'Critical',
   }
   if (p >= 10) return {
     border: 'border-l-4 border-orange-400',
-    badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
+    badge: 'bg-orange-100 text-orange-700',
     label: 'Needs attention',
   }
   return {
     border: 'border-l-4 border-green-400',
-    badge: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+    badge: 'bg-green-100 text-green-700',
     label: 'Good',
   }
 }
 
 function healthLabel(score: number) {
-  if (score >= 90) return { text: 'Excellent', cls: 'text-green-600 dark:text-green-400' }
-  if (score >= 70) return { text: 'Good', cls: 'text-blue-600 dark:text-blue-400' }
-  if (score >= 50) return { text: 'Fair', cls: 'text-orange-500 dark:text-orange-400' }
-  return { text: 'Poor', cls: 'text-red-600 dark:text-red-400' }
+  if (score >= 90) return { text: 'Excellent', cls: 'text-green-600' }
+  if (score >= 70) return { text: 'Good', cls: 'text-blue-600' }
+  if (score >= 50) return { text: 'Fair', cls: 'text-orange-500' }
+  return { text: 'Poor', cls: 'text-red-600' }
 }
 
 function downloadCsv(rows: DetailData['rows'], metricKey: string, detailType: DetailData['type']) {
@@ -104,19 +104,19 @@ function BanDetailTable({ rows, metric }: { rows: BanDetailRow[]; metric: string
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
+          <tr className="border-b border-gray-200">
             {['Book title', 'Author', 'Country', 'Year', 'Edit'].map(h => (
-              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500 dark:text-gray-400">{h}</th>
+              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {rows.map(r => (
-            <tr key={r.ban_id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <tr key={r.ban_id} className="border-b border-gray-100 hover:bg-gray-50">
               <td className="py-2 px-3 font-medium">{r.book_title}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">{r.author || '—'}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">{r.country_code}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">{r.year_started ?? '—'}</td>
+              <td className="py-2 px-3 text-gray-500">{r.author || '—'}</td>
+              <td className="py-2 px-3 text-gray-500">{r.country_code}</td>
+              <td className="py-2 px-3 text-gray-500">{r.year_started ?? '—'}</td>
               <td className="py-2 px-3">
                 {r.book_slug && (
                   <a href={`/admin/books/${r.book_slug}`} className="text-brand hover:underline">Edit →</a>
@@ -135,19 +135,19 @@ function BookDetailTable({ rows }: { rows: BookDetailRow[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
+          <tr className="border-b border-gray-200">
             {['Title', 'Author', 'Bans', 'Added', 'Edit'].map(h => (
-              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500 dark:text-gray-400">{h}</th>
+              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {rows.map(r => (
-            <tr key={r.book_id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <tr key={r.book_id} className="border-b border-gray-100 hover:bg-gray-50">
               <td className="py-2 px-3 font-medium">{r.title}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">{r.author || '—'}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400 tabular-nums">{r.ban_count}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">
+              <td className="py-2 px-3 text-gray-500">{r.author || '—'}</td>
+              <td className="py-2 px-3 text-gray-500 tabular-nums">{r.ban_count}</td>
+              <td className="py-2 px-3 text-gray-500">
                 {r.created_at ? new Date(r.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '—'}
               </td>
               <td className="py-2 px-3">
@@ -166,19 +166,19 @@ function DupDetailTable({ rows }: { rows: DupDetailRow[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
+          <tr className="border-b border-gray-200">
             {['Title', 'Author', 'Count', 'First added', 'View'].map(h => (
-              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500 dark:text-gray-400">{h}</th>
+              <th key={h} className="text-left py-2 px-3 font-medium text-gray-500">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={i} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
               <td className="py-2 px-3 font-medium">{r.title}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">{r.author || '—'}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400 tabular-nums">{r.count}</td>
-              <td className="py-2 px-3 text-gray-500 dark:text-gray-400">
+              <td className="py-2 px-3 text-gray-500">{r.author || '—'}</td>
+              <td className="py-2 px-3 text-gray-500 tabular-nums">{r.count}</td>
+              <td className="py-2 px-3 text-gray-500">
                 {r.first_created_at ? new Date(r.first_created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '—'}
               </td>
               <td className="py-2 px-3">
@@ -234,16 +234,16 @@ export default function DataQualityCard() {
     }
   }
 
-  const cardCls = 'border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col gap-3 bg-white dark:bg-gray-900'
+  const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
   if (loading) {
     return (
       <div className={`${cardCls} col-span-full`}>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Data Quality</h2>
+          <ShieldCheck className="w-5 h-5 text-gray-400" />
+          <h2 className="font-semibold text-gray-900">Data Quality</h2>
         </div>
-        <p className="text-sm text-gray-400 dark:text-gray-500 animate-pulse">Loading quality metrics…</p>
+        <p className="text-sm text-gray-400 animate-pulse">Loading quality metrics…</p>
       </div>
     )
   }
@@ -252,8 +252,8 @@ export default function DataQualityCard() {
     return (
       <div className={`${cardCls} col-span-full`}>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Data Quality</h2>
+          <ShieldCheck className="w-5 h-5 text-gray-400" />
+          <h2 className="font-semibold text-gray-900">Data Quality</h2>
         </div>
         <p className="text-sm text-red-500">{err ?? 'Unknown error'}</p>
         <button onClick={fetchCounts} className="text-sm text-brand hover:underline w-fit">Retry</button>
@@ -277,10 +277,10 @@ export default function DataQualityCard() {
     const isActive = activeMetric === m.key
     const priority = priorityFor(p)
     const border = info
-      ? 'border-l-4 border-gray-300 dark:border-gray-600'
+      ? 'border-l-4 border-gray-300'
       : priority.border
     const badgeCls = info
-      ? 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+      ? 'bg-gray-100 text-gray-600'
       : priority.badge
     const badgeLabel = info ? 'Informational' : priority.label
 
@@ -289,28 +289,28 @@ export default function DataQualityCard() {
         <button
           onClick={() => handleMetricClick(m.key)}
           className={`w-full text-left pl-3 pr-4 py-2.5 rounded-lg ${border}
-            bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800
+            bg-gray-50 hover:bg-gray-100
             transition-colors flex items-center justify-between gap-4
-            ${isActive ? 'ring-1 ring-inset ring-gray-300 dark:ring-gray-600' : ''}`}
+            ${isActive ? 'ring-1 ring-inset ring-gray-300' : ''}`}
         >
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-200 min-w-0 truncate">{m.label}</span>
+          <span className="text-sm font-medium text-gray-800 min-w-0 truncate">{m.label}</span>
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm tabular-nums text-gray-600 dark:text-gray-300">
+            <span className="text-sm tabular-nums text-gray-600">
               {m.count.toLocaleString('en')}
-              <span className="text-gray-400 dark:text-gray-500 ml-1">({p}%)</span>
+              <span className="text-gray-400 ml-1">({p}%)</span>
             </span>
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeCls}`}>
               {badgeLabel}
             </span>
-            <span className="text-gray-400 dark:text-gray-500 text-xs">{isActive ? '▲' : '▼'}</span>
+            <span className="text-gray-400 text-xs">{isActive ? '▲' : '▼'}</span>
           </div>
         </button>
 
         {/* Inline detail panel */}
         {isActive && (
-          <div className="mt-1 mb-1 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+          <div className="mt-1 mb-1 border border-gray-200 rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+              <span className="text-xs font-medium text-gray-600">
                 {detailLoading ? 'Loading…' : detail ? `Showing ${(detail.rows as unknown[]).length} of ${detail.total}` : ''}
               </span>
               {detail && (detail.rows as unknown[]).length > 0 && (
@@ -325,10 +325,10 @@ export default function DataQualityCard() {
 
             <div className="p-2">
               {detailLoading && (
-                <p className="text-xs text-gray-400 dark:text-gray-500 p-3 animate-pulse">Loading detail…</p>
+                <p className="text-xs text-gray-400 p-3 animate-pulse">Loading detail…</p>
               )}
               {!detailLoading && detail && (detail.rows as unknown[]).length === 0 && (
-                <p className="text-xs text-gray-400 dark:text-gray-500 p-3">No records found.</p>
+                <p className="text-xs text-gray-400 p-3">No records found.</p>
               )}
               {!detailLoading && detail && (detail.rows as unknown[]).length > 0 && (
                 <>
@@ -355,12 +355,12 @@ export default function DataQualityCard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Data Quality</h2>
+          <ShieldCheck className="w-5 h-5 text-gray-400" />
+          <h2 className="font-semibold text-gray-900">Data Quality</h2>
         </div>
         <button
           onClick={() => { setActiveMetric(null); setDetail(null); fetchCounts() }}
-          className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh
@@ -369,7 +369,7 @@ export default function DataQualityCard() {
 
       {/* Health score */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-500 dark:text-gray-400">Data health:</span>
+        <span className="text-sm text-gray-500">Data health:</span>
         <span className={`text-sm font-bold tabular-nums ${health.cls}`}>{healthScore}%</span>
         <span className={`text-sm font-medium ${health.cls}`}>— {health.text}</span>
       </div>
@@ -379,8 +379,8 @@ export default function DataQualityCard() {
         {sortedScoring.map(m => renderMetricRow(m, false))}
 
         {informationalMetrics.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-2 px-1">
+          <div className="mt-3 pt-3 border-t border-gray-200">
+            <p className="text-xs text-gray-400 mb-2 px-1">
               Informational — not counted in data health score
             </p>
             {informationalMetrics.map(m => renderMetricRow(m, true))}

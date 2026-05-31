@@ -117,10 +117,10 @@ export default function EssayPromptCard({ cardCls }: { cardCls: string }) {
 
   return (
     <div className={cardCls}>
-      <PenLine className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+      <PenLine className="w-5 h-5 text-gray-400" />
       <div>
-        <h2 className="font-semibold text-gray-900 dark:text-gray-100">Author a new essay</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+        <h2 className="font-semibold text-gray-900">Author a new essay</h2>
+        <p className="text-sm text-gray-500 mt-0.5">
           Copy this prompt into a fresh Claude Code session to add a new essay using the standard template.
         </p>
       </div>
@@ -132,17 +132,17 @@ export default function EssayPromptCard({ cardCls }: { cardCls: string }) {
           {copied ? 'Copied!' : 'Copy prompt'}
         </button>
         <details className="mt-2 group">
-          <summary className="cursor-pointer text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors select-none">
+          <summary className="cursor-pointer text-xs text-gray-500 hover:text-gray-700 transition-colors select-none">
             Show prompt
           </summary>
-          <pre className="mt-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 text-[11px] leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono overflow-auto max-h-96">
+          <pre className="mt-2 p-3 rounded-lg bg-gray-50 border border-gray-200 text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap font-mono overflow-auto max-h-96">
             {PROMPT}
           </pre>
         </details>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+        <p className="text-xs text-gray-400 mt-1">
           Reference files:{' '}
-          <code className="text-gray-600 dark:text-gray-400">src/components/essay-layout.tsx</code>{' '}·{' '}
-          <code className="text-gray-600 dark:text-gray-400">src/lib/essays-data.ts</code>
+          <code className="text-gray-600">src/components/essay-layout.tsx</code>{' '}·{' '}
+          <code className="text-gray-600">src/lib/essays-data.ts</code>
         </p>
       </div>
     </div>

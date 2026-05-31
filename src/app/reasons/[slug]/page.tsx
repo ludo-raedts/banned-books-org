@@ -59,6 +59,19 @@ function countryFlag(code: string): string {
   ).join('')
 }
 
+// Prebuild all reason hubs. NOTE: this route is still rendered dynamically
+// (no-store) today because the page awaits searchParams for server-side
+// country/year/active/sort filtering — that opts the whole route out of
+// static rendering, so these params don't take effect yet. Once the filtering
+// moves client-side (same refactor as the /countries list), the route becomes
+// static + ISR and these prebuilt params start caching. Kept now so that
+// refactor is a one-line change.
+export async function generateStaticParams() {
+  const { data } = await adminClient().from('reasons').select('slug')
+  const rows = (data ?? []) as { slug: string }[]
+  return rows.map((r) => ({ slug: r.slug }))
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const label = reasonLabel(slug)
@@ -150,6 +163,9 @@ export default async function ReasonPage({
         .from('ban_reason_links')
         .select('bans(book_id, country_code)')
         .eq('reason_id', reason.id)
+        // Stable order across pages (ban_id is unique for a fixed reason_id);
+        // without it .range() can skip rows past 1000 and undercount books.
+        .order('ban_id')
         .range(offset, offset + 999)
       if (!data || data.length === 0) break
       for (const bl of data) {

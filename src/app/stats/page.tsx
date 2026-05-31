@@ -79,10 +79,18 @@ export default async function StatsPage({
   {
     let offset = 0
     while (true) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('bans')
         .select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))')
+        // Stable total order is required or .range() pagination skips/dupes
+        // rows once the table exceeds the 1000-row page size — which inflates
+        // the decade histogram below. Order by the PK.
+        .order('id')
         .range(offset, offset + 999)
+      // Throw rather than swallow: on a transient DB error this page would
+      // otherwise publish wrong/zero stats. Throwing lets ISR keep serving the
+      // last good render (stale-while-revalidate) instead.
+      if (error) throw error
       if (!data || data.length === 0) break
       bansRaw = bansRaw.concat(data as unknown as BanRow[])
       if (data.length < 1000) break
@@ -96,10 +104,15 @@ export default async function StatsPage({
   {
     let offset = 0
     while (true) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('book_authors')
         .select('book_id, authors(display_name, slug, is_placeholder)')
+        // Composite PK (book_id, author_id) — order by both for a deterministic
+        // total order across pages, else the authors leaderboard mis-counts.
+        .order('book_id')
+        .order('author_id')
         .range(offset, offset + 999)
+      if (error) throw error
       if (!data || data.length === 0) break
       bookAuthorsRaw = bookAuthorsRaw.concat(data as unknown as BARow[])
       if (data.length < 1000) break
@@ -220,12 +233,12 @@ export default async function StatsPage({
 
   // Color buckets so the log-flattened bars still carry a "much / little" signal.
   const TIMELINE_BUCKETS = [
-    { max: 10,     label: '< 10',     bar: 'bg-red-200 dark:bg-red-300', swatch: 'bg-red-200 dark:bg-red-300' },
-    { max: 100,    label: '< 100',    bar: 'bg-red-300 dark:bg-red-400', swatch: 'bg-red-300 dark:bg-red-400' },
-    { max: 500,    label: '< 500',    bar: 'bg-red-400 dark:bg-red-500', swatch: 'bg-red-400 dark:bg-red-500' },
-    { max: 1000,   label: '< 1,000',  bar: 'bg-red-500 dark:bg-red-600', swatch: 'bg-red-500 dark:bg-red-600' },
-    { max: 10000,  label: '< 10,000', bar: 'bg-red-700 dark:bg-red-700', swatch: 'bg-red-700 dark:bg-red-700' },
-    { max: Infinity, label: '≥ 10,000', bar: 'bg-red-900 dark:bg-red-800', swatch: 'bg-red-900 dark:bg-red-800' },
+    { max: 10,     label: '< 10',     bar: 'bg-red-200', swatch: 'bg-red-200' },
+    { max: 100,    label: '< 100',    bar: 'bg-red-300', swatch: 'bg-red-300' },
+    { max: 500,    label: '< 500',    bar: 'bg-red-400', swatch: 'bg-red-400' },
+    { max: 1000,   label: '< 1,000',  bar: 'bg-red-500', swatch: 'bg-red-500' },
+    { max: 10000,  label: '< 10,000', bar: 'bg-red-700', swatch: 'bg-red-700' },
+    { max: Infinity, label: '≥ 10,000', bar: 'bg-red-900', swatch: 'bg-red-900' },
   ] as const
   const bucketFor = (count: number) => TIMELINE_BUCKETS.find(b => count < b.max) ?? TIMELINE_BUCKETS[TIMELINE_BUCKETS.length - 1]
 
@@ -242,20 +255,20 @@ export default async function StatsPage({
     <main className="max-w-5xl mx-auto px-4 py-10">
 
       {/* ── 1. Hero ── */}
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Data</p>
+      <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Data</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Censorship by the numbers</h1>
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+        <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBooks ?? 0).toLocaleString('en')} books</span> across{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{countryBooks.size} countries</span>, with{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{(totalBanEvents ?? 0).toLocaleString('en')} documented ban events</span> — from
+          <span className="font-semibold text-gray-900">{(totalBooks ?? 0).toLocaleString('en')} books</span> across{' '}
+          <span className="font-semibold text-gray-900">{countryBooks.size} countries</span>, with{' '}
+          <span className="font-semibold text-gray-900">{(totalBanEvents ?? 0).toLocaleString('en')} documented ban events</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed text-xs mt-3">
+        <p className="text-gray-600 max-w-2xl leading-relaxed text-xs mt-3">
           Want to run your own analysis? The full catalogue is available as a{' '}
-          <Link href="/dataset" className="underline font-medium hover:text-gray-800 dark:hover:text-gray-200">
+          <Link href="/dataset" className="underline font-medium hover:text-gray-800">
             downloadable dataset
           </Link>
           {' '}(CSV, JSON, SQLite).
@@ -270,10 +283,10 @@ export default async function StatsPage({
           { label: 'Countries & territories', value: countryBooks.size.toString() },
           { label: 'Currently banned',        value: activelyBannedBooks.toLocaleString('en'), sub: `${liftedOnlyBooks.toLocaleString('en')} fully lifted` },
         ].map(stat => (
-          <div key={stat.label} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+          <div key={stat.label} className="border border-gray-200 rounded-xl p-4">
             <div className="text-3xl font-bold tabular-nums text-brand">{stat.value}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{stat.label}</div>
-            {stat.sub && <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{stat.sub}</div>}
+            <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
+            {stat.sub && <div className="text-xs text-gray-400 mt-0.5">{stat.sub}</div>}
           </div>
         ))}
       </div>
@@ -285,29 +298,29 @@ export default async function StatsPage({
 
       {/* ── 4. Where bans are concentrated ── */}
       <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Where bans are concentrated</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Top 5 countries by number of distinct books banned.</p>
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">Where bans are concentrated</h2>
+        <p className="text-sm text-gray-500 mb-6">Top 5 countries by number of distinct books banned.</p>
         <div className="space-y-2">
           {top5Countries.map((c) => (
-            <Link key={c.code} href={`/countries/${c.code}`} className="flex items-center gap-3 group">
+            <Link key={c.code} href={`/countries/${c.code.toLowerCase()}`} className="flex items-center gap-3 group">
               <span className="text-base leading-none shrink-0 w-6">{countryFlag(c.code)}</span>
-              <span className="w-32 shrink-0 text-sm text-gray-700 dark:text-gray-300 group-hover:underline truncate">{c.name}</span>
+              <span className="w-32 shrink-0 text-sm text-gray-700 group-hover:underline truncate">{c.name}</span>
               <div className="flex-1 flex items-center gap-2 min-w-0">
                 <div
                   className="h-4 rounded bg-brand transition-all shrink-0"
                   style={{ width: `${(c.count / maxCountry * 100).toFixed(1)}%`, minWidth: '4px' }}
                 />
-                <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">{c.count}</span>
+                <span className="text-xs tabular-nums text-gray-500">{c.count}</span>
               </div>
             </Link>
           ))}
         </div>
-        <Link href="/countries" className="inline-block mt-4 text-sm text-gray-500 dark:text-gray-400 hover:underline">
+        <Link href="/countries" className="inline-block mt-4 text-sm text-gray-500 hover:underline">
           See all countries →
         </Link>
-        <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-3 text-xs text-gray-400">
           The US dominates this chart because its bans are systematically tracked by PEN America and the ALA.{' '}
-          <Link href="/methodology" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+          <Link href="/methodology" className="underline hover:text-gray-600">
             Why the data looks this way →
           </Link>
         </p>
@@ -315,32 +328,32 @@ export default async function StatsPage({
 
       {/* ── 5. Authors ── */}
       <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">The Authors They Wanted Silenced</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">The Authors They Wanted Silenced</h2>
+        <p className="text-sm text-gray-500 mb-6">
           Authors whose work has been repeatedly challenged or banned across institutions and borders.
         </p>
-        <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+        <div className="border border-gray-200 rounded-xl overflow-hidden">
           {topAuthors.map((a, i) => (
             <div
               key={a.name}
-              className="relative group border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+              className="relative group border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
             >
               <div
                 className="absolute inset-y-0 left-0 rounded-r-sm pointer-events-none bg-brand"
                 style={{ width: `${(a.count / maxAuthor * 100).toFixed(1)}%`, opacity: 0.08 }}
               />
               <div className="relative z-10 flex items-center gap-3 py-3 px-4">
-                <span className="w-8 text-right text-sm text-gray-400 dark:text-gray-600 tabular-nums shrink-0">{i + 1}</span>
+                <span className="w-8 text-right text-sm text-gray-400 tabular-nums shrink-0">{i + 1}</span>
                 {a.slug ? (
                   <Link
                     href={`/authors/${a.slug}`}
-                    className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 hover:underline flex items-center gap-1"
+                    className="flex-1 text-sm font-medium text-gray-800 hover:underline flex items-center gap-1"
                   >
                     {a.name}
                     <span className="opacity-0 group-hover:opacity-60 transition-opacity text-xs">→</span>
                   </Link>
                 ) : (
-                  <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{a.name}</span>
+                  <span className="flex-1 text-sm font-medium text-gray-800">{a.name}</span>
                 )}
                 <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-brand text-white text-xs font-medium tabular-nums">
                   {a.count} {a.count === 1 ? 'book' : 'books'}
@@ -354,23 +367,23 @@ export default async function StatsPage({
       {/* ── 6. Why Books Get Banned ── */}
       <section className="mb-16">
         <div className="flex items-baseline justify-between mb-1">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Why Books Get Banned</h2>
-          <Link href="/reasons" className="text-sm text-gray-500 dark:text-gray-400 hover:underline">All reasons →</Link>
+          <h2 className="text-xl font-semibold text-gray-900">Why Books Get Banned</h2>
+          <Link href="/reasons" className="text-sm text-gray-500 hover:underline">All reasons →</Link>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <p className="text-sm text-gray-500 mb-6">
           The stated reasons for banning a book reveal as much about the censor as the censored.
         </p>
         <div className="space-y-3">
           {topReasons.map(r => (
             <Link key={r.slug} href={`/reasons/${r.slug}`} className="flex items-center gap-3 group">
               <span className="text-lg leading-none shrink-0 w-7">{reasonIcon(r.slug)}</span>
-              <span className="w-28 shrink-0 text-sm text-gray-700 dark:text-gray-300 group-hover:underline">{reasonLabel(r.slug)}</span>
+              <span className="w-28 shrink-0 text-sm text-gray-700 group-hover:underline">{reasonLabel(r.slug)}</span>
               <div className="flex-1 flex items-center gap-2 min-w-0">
                 <div
                   className={`h-5 rounded shrink-0 ${REASON_COLORS[r.slug] ?? 'bg-gray-400'}`}
                   style={{ width: `${(r.count / maxReason * 100).toFixed(1)}%`, minWidth: '4px' }}
                 />
-                <span className="text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300">{r.count}</span>
+                <span className="text-sm font-medium tabular-nums text-gray-700">{r.count}</span>
               </div>
             </Link>
           ))}
@@ -379,8 +392,8 @@ export default async function StatsPage({
 
       {/* ── 7. Bans Through History (timeline) ── */}
       <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Bans Through History</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">Bans Through History</h2>
+        <p className="text-sm text-gray-500 mb-4">
           From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
           Bars use a <span className="font-medium">logarithmic scale</span> — each gridline is a 10× increase, so earlier eras stay visible alongside the 2020s peak.
           {timelineWithoutYear > 0 && (
@@ -414,7 +427,7 @@ export default async function StatsPage({
               return (
                 <span
                   key={v}
-                  className="absolute right-2 text-[10px] tabular-nums text-gray-400 dark:text-gray-500 leading-none"
+                  className="absolute right-2 text-[10px] tabular-nums text-gray-400 leading-none"
                   style={{ bottom: `${y + 16}px`, transform: 'translateY(50%)' }}
                 >
                   {v >= 1000 ? `${v / 1000}k` : v}
@@ -435,7 +448,7 @@ export default async function StatsPage({
                 return (
                   <div
                     key={v}
-                    className="absolute inset-x-0 border-t border-dashed border-gray-200 dark:border-gray-700 pointer-events-none"
+                    className="absolute inset-x-0 border-t border-dashed border-gray-200 pointer-events-none"
                     style={{ bottom: `${y + 16}px` }}
                   />
                 )
@@ -445,20 +458,20 @@ export default async function StatsPage({
                 const isOngoing = d.decade === CURRENT_DECADE
                 const barH = logHeight(d.count)
                 const labelClass = i % 2 === 0
-                  ? 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums'
-                  : 'text-[10px] text-gray-400 dark:text-gray-500 tabular-nums hidden md:block'
+                  ? 'text-[10px] text-gray-400 tabular-nums'
+                  : 'text-[10px] text-gray-400 tabular-nums hidden md:block'
                 const bucket = bucketFor(d.count)
                 return (
                   <div key={d.decade} className="flex flex-col items-center shrink-0 relative z-10" style={{ width: '2.5rem' }}>
                     <div className="flex-1 flex items-end relative w-full justify-center">
                       <div
-                        className={`w-8 rounded-t transition-all ${bucket.bar} ${isOngoing ? 'ring-2 ring-brand ring-offset-1 ring-offset-white dark:ring-offset-gray-900' : ''}`}
+                        className={`w-8 rounded-t transition-all ${bucket.bar} ${isOngoing ? 'ring-2 ring-brand ring-offset-1 ring-offset-white' : ''}`}
                         style={{ height: `${barH}px` }}
                         title={`${d.decade}s: ${d.count.toLocaleString('en')} ban${d.count !== 1 ? 's' : ''}${isOngoing ? ' (ongoing)' : ''}`}
                       />
                       {/* Count label anchored just above the bar */}
                       <span
-                        className="absolute text-[9px] tabular-nums leading-none pointer-events-none select-none text-gray-500 dark:text-gray-400"
+                        className="absolute text-[9px] tabular-nums leading-none pointer-events-none select-none text-gray-500"
                         style={{ bottom: `${barH + 3}px` }}
                       >
                         {d.count.toLocaleString('en')}
@@ -473,8 +486,8 @@ export default async function StatsPage({
         </div>
 
         {/* Color-bucket legend */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500 dark:text-gray-400">
-          <span className="uppercase tracking-wide text-gray-400 dark:text-gray-500">Bans per decade:</span>
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500">
+          <span className="uppercase tracking-wide text-gray-400">Bans per decade:</span>
           {TIMELINE_BUCKETS.map(b => (
             <span key={b.label} className="inline-flex items-center gap-1">
               <span className={`inline-block w-3 h-3 rounded-sm ${b.swatch}`} aria-hidden />
@@ -486,8 +499,8 @@ export default async function StatsPage({
 
       {/* ── 8. Browse by year ── */}
       <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Browse by Year</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">All documented bans that started in a given year.</p>
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">Browse by Year</h2>
+        <p className="text-sm text-gray-500 mb-4">All documented bans that started in a given year.</p>
         <div className="flex flex-wrap gap-2">
           {Array.from({ length: CURRENT_DECADE + 10 - 2015 + 1 }, (_, i) => 2015 + i)
             .filter(y => y <= new Date().getFullYear())
@@ -496,7 +509,7 @@ export default async function StatsPage({
               <Link
                 key={y}
                 href={`/banned-books/${y}`}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-brand hover:text-brand dark:hover:border-brand dark:hover:text-brand transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand hover:text-brand transition-colors"
               >
                 {y}
               </Link>
@@ -506,15 +519,15 @@ export default async function StatsPage({
       </section>
 
       {/* ── 9. Dataset CTA ── */}
-      <section className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-6 sm:p-8">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 dark:text-brand/60 mb-3">Full dataset</p>
+      <section className="mb-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Full dataset</p>
         <h2 className="text-xl font-semibold tracking-tight mb-2">Run your own analysis</h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-5 max-w-3xl">
+        <p className="text-sm text-gray-700 leading-relaxed mb-5 max-w-3xl">
           These charts only scratch the surface. The complete catalogue — every banned, challenged, and
           restricted book, with country, year, reason, and source citation — is available as a structured
           dataset in CSV, JSON, and SQLite. Use it to answer questions this page does not.
         </p>
-        <ul className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-2 mb-5">
+        <ul className="text-sm text-gray-700 leading-relaxed flex flex-col gap-2 mb-5">
           <li>📊 <strong>Research &amp; journalism</strong> — quantify trends, find under-reported regions, write data-driven stories.</li>
           <li>🎓 <strong>Academic work</strong> — cite stable, dated snapshots in papers on intellectual freedom or media studies.</li>
           <li>🛠️ <strong>Building tools</strong> — power dashboards, classroom resources, or comparison sites.</li>
@@ -533,15 +546,15 @@ export default async function StatsPage({
       </section>
 
       {/* ── 10. Closing disclaimer ── */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+      <div className="border border-gray-200 rounded-xl p-6 text-center">
+        <p className="text-gray-600 text-sm mb-4">
           These statistics represent only what has been documented. The true scale of literary censorship —
           especially in closed societies — will never be fully known.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline">Browse all books →</Link>
-          <Link href="/countries" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline">Explore by country →</Link>
-          <Link href="/reasons" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline">Explore by reason →</Link>
+          <Link href="/" className="text-sm font-medium text-gray-700 hover:underline">Browse all books →</Link>
+          <Link href="/countries" className="text-sm font-medium text-gray-700 hover:underline">Explore by country →</Link>
+          <Link href="/reasons" className="text-sm font-medium text-gray-700 hover:underline">Explore by reason →</Link>
         </div>
       </div>
     </main>

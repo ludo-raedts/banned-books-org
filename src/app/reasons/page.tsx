@@ -21,17 +21,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const REASON_COLORS: Record<string, string> = {
-  lgbtq:     'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border-pink-200 dark:border-pink-800',
-  political: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
-  religious: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
-  sexual:    'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
-  violence:  'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800',
-  racial:    'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
-  drugs:     'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
-  obscenity: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
-  moral:     'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
-  language:  'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
-  other:     'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700',
+  lgbtq:     'bg-pink-100 text-pink-700 border-pink-200',
+  political: 'bg-blue-100 text-blue-700 border-blue-200',
+  religious: 'bg-amber-100 text-amber-700 border-amber-200',
+  sexual:    'bg-red-100 text-red-700 border-red-200',
+  violence:  'bg-orange-100 text-orange-700 border-orange-200',
+  racial:    'bg-purple-100 text-purple-700 border-purple-200',
+  drugs:     'bg-green-100 text-green-700 border-green-200',
+  obscenity: 'bg-rose-100 text-rose-700 border-rose-200',
+  moral:     'bg-teal-100 text-teal-700 border-teal-200',
+  language:  'bg-indigo-100 text-indigo-700 border-indigo-200',
+  other:     'bg-gray-100 text-gray-600 border-gray-200',
 }
 
 const REASON_DESCRIPTIONS: Record<string, string> = {
@@ -79,10 +79,10 @@ export default async function ReasonsPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="bg-brand-light dark:bg-brand-dark/10 border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
+      <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
         <h1 className="text-3xl font-bold tracking-tight mb-1">Why Books Are Banned</h1>
-        <p className="text-sm text-brand/70 dark:text-brand/60 mb-2">{reasons.length} documented reasons</p>
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed text-sm">
+        <p className="text-sm text-brand/70 mb-2">{reasons.length} documented reasons</p>
+        <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
           Every ban has an official justification. The stated reason — obscenity, religious offence,
           political subversion — tells us what the authorities wanted to protect. The book itself
           tells us what they were afraid of.
@@ -113,11 +113,11 @@ export default async function ReasonsPage() {
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-gray-400 dark:text-gray-500">
+      <p className="mt-6 text-xs text-gray-400">
         Note: a single ban can be recorded with multiple reasons. Percentages are calculated from the total number of reason assignments, not total bans.
       </p>
-      <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
-        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+      <p className="mt-3 text-xs text-gray-400">
+        <Link href="/top-100-banned-books" className="underline hover:text-gray-600 transition-colors">
           See the 100 most banned books →
         </Link>
       </p>

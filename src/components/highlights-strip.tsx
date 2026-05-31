@@ -20,19 +20,19 @@ export type AuthorHighlightItem = {
 }
 
 const BOOK_SLOT_META: Record<HighlightSlot, { label: string; classes: string }> = {
-  'most-banned': { label: 'Most banned',         classes: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
-  'trending':    { label: 'Trending this week',  classes: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' },
-  'all-time':    { label: 'All-time most read',  classes: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },
+  'most-banned': { label: 'Most banned',         classes: 'bg-red-100 text-red-700' },
+  'trending':    { label: 'Trending this week',  classes: 'bg-emerald-100 text-emerald-700' },
+  'all-time':    { label: 'All-time most read',  classes: 'bg-blue-100 text-blue-700' },
 }
 
 const AUTHOR_SLOT_META: Record<HighlightSlot, { label: string; classes: string }> = {
-  'most-banned': { label: 'Most banned author',           classes: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
-  'trending':    { label: 'Trending author this week',    classes: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' },
-  'all-time':    { label: 'All-time most read author',    classes: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },
+  'most-banned': { label: 'Most banned author',           classes: 'bg-red-100 text-red-700' },
+  'trending':    { label: 'Trending author this week',    classes: 'bg-emerald-100 text-emerald-700' },
+  'all-time':    { label: 'All-time most read author',    classes: 'bg-blue-100 text-blue-700' },
 }
 
 const ROW_CLASSES = 'flex gap-3 overflow-x-auto -mx-4 px-4 pb-2 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory sm:snap-none'
-const CARD_CLASSES = 'group shrink-0 w-[78%] sm:w-auto snap-start flex flex-col bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-brand/40 dark:hover:border-brand/40 hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors'
+const CARD_CLASSES = 'group shrink-0 w-[78%] sm:w-auto snap-start flex flex-col bg-white border border-gray-200 rounded-lg p-4 hover:border-brand/40 hover:bg-gray-50/50 transition-colors'
 
 function bookAuthorName(book: Book): string {
   return book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
@@ -54,8 +54,8 @@ export default function HighlightsStrip({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">Highlights</h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <h2 className="text-xl font-semibold text-gray-900 mb-1">Highlights</h2>
+      <p className="text-sm text-gray-500 mb-4">
         The books readers come back to — and the authors authorities most want to silence.
       </p>
 
@@ -89,14 +89,14 @@ export default function HighlightsStrip({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">
+                    <h3 className="text-sm font-semibold leading-snug text-gray-900 line-clamp-2 group-hover:text-brand transition-colors">
                       {item.book.title}
                     </h3>
                     {author && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{author}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{author}</p>
                     )}
                     {item.context && (
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2 leading-snug">
+                      <p className="text-xs text-gray-600 mt-1.5 line-clamp-2 leading-snug">
                         {item.context}
                       </p>
                     )}
@@ -123,16 +123,16 @@ export default function HighlightsStrip({
                       name={item.author.display_name}
                       photoUrl={item.author.photo_url}
                       className="w-16 h-16 rounded-full object-cover shadow-sm"
-                      initialsClassName="w-16 h-16 rounded-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-red-300 flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm"
+                      initialsClassName="w-16 h-16 rounded-full bg-brand/10 text-brand flex items-center justify-center text-lg font-semibold tracking-tight shadow-sm"
                       sizes="64px"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-brand dark:group-hover:text-brand transition-colors">
+                    <h3 className="text-sm font-semibold leading-snug text-gray-900 line-clamp-2 group-hover:text-brand transition-colors">
                       {item.author.display_name}
                     </h3>
                     {item.context && (
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2 leading-snug">
+                      <p className="text-xs text-gray-600 mt-1.5 line-clamp-2 leading-snug">
                         {item.context}
                       </p>
                     )}

@@ -103,7 +103,7 @@ type Props = {
 }
 
 const inputCls =
-  'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 w-full'
+  'px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 w-full'
 
 const textareaCls = `${inputCls} resize-y`
 
@@ -342,7 +342,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
         <h1 className="text-2xl font-bold leading-tight">
           {data.parsed.title || <em className="text-gray-400">(no title)</em>}
         </h1>
-        <span className="text-sm px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+        <span className="text-sm px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
           {data.source_slug}
         </span>
         <span className={`text-sm px-2 py-0.5 rounded-full ${STATUS_BADGE_CLASS[data.status]}`}>
@@ -353,15 +353,15 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           title="Search Google for this title and author (opens new tab)"
-          className="text-sm px-2 py-0.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="text-sm px-2 py-0.5 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors"
         >
           Google ↗
         </a>
       </header>
 
       {isPending && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-          <span className="uppercase tracking-widest text-gray-400 dark:text-gray-500 mr-2">Step 2 of 4</span>
+        <p className="text-xs text-gray-500 mb-6 leading-relaxed">
+          <span className="uppercase tracking-widest text-gray-400 mr-2">Step 2 of 4</span>
           The fields below are what two LLMs extracted from the source — not enriched content. Confirm the metadata
           and approve to commit; covers, descriptions and reason classifications are filled by{' '}
           <a href="/admin/scripts#after-approval" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>{' '}
@@ -380,8 +380,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Left: parsed data (read-only) */}
-        <section className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/30">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <section className="border border-gray-200 rounded-xl p-5 flex flex-col gap-4 bg-gray-50/50">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             As parsed
           </h2>
           <ReadOnlyField label="Title">{data.parsed.title || '—'}</ReadOnlyField>
@@ -402,7 +402,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           <ReadOnlyField label="Section">
             {data.section_anchor || '—'}
             {data.parsed.state && (
-              <span className="text-gray-500 dark:text-gray-400"> · {data.parsed.state}</span>
+              <span className="text-gray-500"> · {data.parsed.state}</span>
             )}
           </ReadOnlyField>
           <ReadOnlyField label="Notes">
@@ -411,16 +411,16 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
             </p>
           </ReadOnlyField>
 
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700 space-y-2">
+          <div className="pt-2 border-t border-gray-200 space-y-2">
             <div className="flex flex-wrap gap-1.5">
               {data.quality_flags.length === 0 ? (
-                <span className="text-xs text-gray-400 dark:text-gray-500">No quality flags</span>
+                <span className="text-xs text-gray-400">No quality flags</span>
               ) : (
                 data.quality_flags.map(f => (
                   <span
                     key={f}
                     title={FLAG_TOOLTIPS[f] ?? f}
-                    className={`inline-block px-1.5 py-0.5 rounded text-xs ${FLAG_BADGE_CLASS[f] ?? 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+                    className={`inline-block px-1.5 py-0.5 rounded text-xs ${FLAG_BADGE_CLASS[f] ?? 'bg-gray-200 text-gray-700'}`}
                   >
                     {f}
                   </span>
@@ -433,7 +433,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                   href={data.source_url}
                   target="_blank"
                   rel="nofollow noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline break-all"
+                  className="text-blue-600 hover:underline break-all"
                 >
                   {data.source_url}
                 </a>
@@ -445,8 +445,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
         </section>
 
         {/* Right: editable form */}
-        <section className="border border-gray-200 dark:border-gray-700 rounded-xl p-5 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <section className="border border-gray-200 rounded-xl p-5 flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             Edit & commit
           </h2>
 
@@ -539,7 +539,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                   {isPending && authors.length > 1 && (
                     <button
                       onClick={() => removeAuthor(i)}
-                      className="px-2 rounded-lg border border-gray-200 dark:border-gray-700 text-xs hover:bg-gray-100 dark:hover:bg-gray-800"
+                      className="px-2 rounded-lg border border-gray-200 text-xs hover:bg-gray-100"
                       aria-label="Remove author"
                     >
                       ✕
@@ -550,7 +550,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
               {isPending && (
                 <button
                   onClick={addAuthor}
-                  className="self-start px-2 py-1 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900"
+                  className="self-start px-2 py-1 rounded-lg border border-dashed border-gray-300 text-xs text-gray-600 hover:bg-gray-50"
                 >
                   + Add author
                 </button>
@@ -668,11 +668,11 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           </FormField>
 
           {error && (
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <p className="text-sm text-red-600">{error}</p>
           )}
 
           {isPending && (
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
               <button
                 onClick={handleApprove}
                 disabled={!!busy}
@@ -683,14 +683,14 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
               <button
                 onClick={() => setRejectModal(true)}
                 disabled={!!busy}
-                className="px-3 py-2 rounded-lg border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-40"
+                className="px-3 py-2 rounded-lg border border-red-300 text-red-700 text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-40"
               >
                 Reject
               </button>
               <button
                 onClick={handleDefer}
                 disabled={!!busy}
-                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40"
+                className="px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition-colors disabled:opacity-40"
               >
                 {busy === 'defer' ? 'Deferring…' : 'Defer for later'}
               </button>
@@ -708,8 +708,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           )}
 
           {!isPending && data.approved_book_id && (
-            <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-950/30 px-4 py-3 space-y-2">
-              <p className="text-sm text-emerald-800 dark:text-emerald-300">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 px-4 py-3 space-y-2">
+              <p className="text-sm text-emerald-800">
                 Approved to{' '}
                 <a
                   href={`/admin/books/${data.approved_book_id}`}
@@ -720,7 +720,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                 {data.reviewed_at && ` on ${formatDate(data.reviewed_at)}`}
                 {data.reviewed_by && ` by ${data.reviewed_by}`}.
               </p>
-              <p className="text-xs text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
+              <p className="text-xs text-emerald-800/80 leading-relaxed">
                 <strong>Next step:</strong> the book has no cover, description, ban context, or reason classification
                 yet. Run{' '}
                 <a href="/admin/scripts#after-approval" className="font-mono underline hover:no-underline">
@@ -732,8 +732,8 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           )}
 
           {mergeResult && (
-            <div className="rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/30 px-4 py-3 space-y-2">
-              <p className="text-sm text-amber-900 dark:text-amber-200">
+            <div className="rounded-lg border border-amber-200 bg-amber-50/60 px-4 py-3 space-y-2">
+              <p className="text-sm text-amber-900">
                 Merged into{' '}
                 <a
                   href={`/admin/books/${mergeResult.book_id}`}
@@ -747,12 +747,12 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
                   : <>existing ban <code className="font-mono text-xs">#{mergeResult.ban_id}</code> reused (idempotent)</>}.
               </p>
               {mergeResult.enriched_fields.length > 0 && (
-                <p className="text-xs text-amber-900/80 dark:text-amber-200/80">
+                <p className="text-xs text-amber-900/80">
                   Enriched empty fields: {mergeResult.enriched_fields.join(', ')}.
                 </p>
               )}
               {mergeResult.aliases_added.length > 0 && (
-                <p className="text-xs text-amber-900/80 dark:text-amber-200/80">
+                <p className="text-xs text-amber-900/80">
                   Added slug aliases:{' '}
                   {mergeResult.aliases_added.map((s, i) => (
                     <span key={s}>
@@ -765,7 +765,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
               <p className="text-xs">
                 <button
                   onClick={() => router.push('/admin/import-review')}
-                  className="underline text-amber-900 dark:text-amber-200 hover:no-underline"
+                  className="underline text-amber-900 hover:no-underline"
                 >
                   ← Back to review queue
                 </button>
@@ -834,8 +834,8 @@ function formatDate(iso: string): string {
 function ReadOnlyField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">{label}</span>
-      <div className="text-sm text-gray-700 dark:text-gray-300">{children}</div>
+      <span className="text-xs uppercase tracking-wide text-gray-400">{label}</span>
+      <div className="text-sm text-gray-700">{children}</div>
     </div>
   )
 }
@@ -847,10 +847,10 @@ function LlmPrefillBanner({
 }) {
   const tone =
     meta.confidence === 'high'
-      ? 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-100'
+      ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
       : meta.confidence === 'medium'
-        ? 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-100'
-        : 'bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-100'
+        ? 'bg-amber-50 border-amber-200 text-amber-900'
+        : 'bg-rose-50 border-rose-200 text-rose-900'
   return (
     <div className={`rounded-lg border px-3 py-2 text-xs leading-relaxed ${tone}`}>
       <div className="font-semibold uppercase tracking-wide text-[10px] mb-1">
@@ -882,11 +882,11 @@ function FormField({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="text-sm font-medium text-gray-700">
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
-      {hint && <p className="text-xs text-gray-400 dark:text-gray-500">{hint}</p>}
+      {hint && <p className="text-xs text-gray-400">{hint}</p>}
       {children}
     </div>
   )
@@ -911,8 +911,8 @@ function ExistingBookPanel({
         : 'Existing match'
   const tone =
     dedupKind === 'duplicate'
-      ? 'border-emerald-300 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20'
-      : 'border-amber-300 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20'
+      ? 'border-emerald-300 bg-emerald-50/60'
+      : 'border-amber-300 bg-amber-50/60'
 
   // Banner-level summary of what's already in the DB for this book, so the
   // editor can see at a glance whether THIS row would create a new ban
@@ -941,16 +941,16 @@ function ExistingBookPanel({
           {kindLabel}
         </span>
         {similarity !== null && (
-          <span className="text-xs text-gray-600 dark:text-gray-300">
+          <span className="text-xs text-gray-600">
             similarity {similarity.toFixed(2)}
           </span>
         )}
-        <span className="text-xs text-gray-500 dark:text-gray-400">·</span>
-        <span className="text-xs text-gray-600 dark:text-gray-300">
+        <span className="text-xs text-gray-500">·</span>
+        <span className="text-xs text-gray-600">
           {banCountriesSummary}
         </span>
         {titlesIdentical && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
             Titles match after normalization
           </span>
         )}
@@ -964,10 +964,10 @@ function ExistingBookPanel({
             <img
               src={book.cover_url}
               alt={`Cover of ${book.title}`}
-              className="w-[140px] h-[210px] object-cover rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
+              className="w-[140px] h-[210px] object-cover rounded-lg border border-gray-200 bg-gray-100"
             />
           ) : (
-            <div className="w-[140px] h-[210px] flex items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-xs text-gray-400">
+            <div className="w-[140px] h-[210px] flex items-center justify-center rounded-lg border border-dashed border-gray-300 text-xs text-gray-400">
               no cover
             </div>
           )}
@@ -975,7 +975,7 @@ function ExistingBookPanel({
             href={`/books/${book.slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs underline text-gray-600 dark:text-gray-400 hover:no-underline"
+            className="text-xs underline text-gray-600 hover:no-underline"
           >
             View public page ↗
           </a>
@@ -983,7 +983,7 @@ function ExistingBookPanel({
             href={`/admin/books/${book.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs underline text-gray-600 dark:text-gray-400 hover:no-underline"
+            className="text-xs underline text-gray-600 hover:no-underline"
           >
             Edit in admin ↗
           </a>
@@ -992,26 +992,26 @@ function ExistingBookPanel({
         {/* Book facts */}
         <div className="flex flex-col gap-3 min-w-0">
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-0.5">
+            <div className="text-xs uppercase tracking-wide text-gray-400 mb-0.5">
               Title
             </div>
             <div className="text-base font-semibold leading-tight break-words">
               {book.title}
             </div>
             {book.title_native && (
-              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <div className="text-sm text-gray-600 mt-1">
                 <span className="text-[10px] uppercase tracking-wide mr-1">native</span>
                 {book.title_native}
               </div>
             )}
             {book.title_transliterated && (
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-gray-600">
                 <span className="text-[10px] uppercase tracking-wide mr-1">translit</span>
                 {book.title_transliterated}
               </div>
             )}
             {book.title_english_meaningful && (
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-gray-600">
                 <span className="text-[10px] uppercase tracking-wide mr-1">english</span>
                 {book.title_english_meaningful}
               </div>
@@ -1020,7 +1020,7 @@ function ExistingBookPanel({
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              <div className="text-xs uppercase tracking-wide text-gray-400">
                 Authors
               </div>
               <div>
@@ -1030,19 +1030,19 @@ function ExistingBookPanel({
               </div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              <div className="text-xs uppercase tracking-wide text-gray-400">
                 First published
               </div>
               <div>{book.first_published_year ?? <em className="text-gray-400">—</em>}</div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              <div className="text-xs uppercase tracking-wide text-gray-400">
                 Language
               </div>
               <div>{book.original_language ?? <em className="text-gray-400">—</em>}</div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              <div className="text-xs uppercase tracking-wide text-gray-400">
                 ISBN-13
               </div>
               <div className="font-mono text-xs">
@@ -1053,14 +1053,14 @@ function ExistingBookPanel({
 
           {book.genres.length > 0 && (
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+              <div className="text-xs uppercase tracking-wide text-gray-400 mb-1">
                 Genres
               </div>
               <div className="flex flex-wrap gap-1">
                 {book.genres.map(g => (
                   <span
                     key={g}
-                    className="text-xs px-1.5 py-0.5 rounded bg-white/60 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700"
+                    className="text-xs px-1.5 py-0.5 rounded bg-white/60 border border-gray-200"
                   >
                     {g}
                   </span>
@@ -1071,10 +1071,10 @@ function ExistingBookPanel({
 
           {(book.description_book ?? book.description) && (
             <details className="text-xs">
-              <summary className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              <summary className="cursor-pointer text-gray-500 hover:text-gray-700">
                 Description {book.ai_drafted ? <em>(AI-drafted)</em> : null}
               </summary>
-              <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 whitespace-pre-wrap leading-relaxed text-gray-700">
                 {book.description_book ?? book.description}
               </p>
             </details>
@@ -1082,14 +1082,14 @@ function ExistingBookPanel({
 
           {book.slug_aliases.length > 0 && (
             <details className="text-xs">
-              <summary className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              <summary className="cursor-pointer text-gray-500 hover:text-gray-700">
                 {book.slug_aliases.length} slug alias{book.slug_aliases.length === 1 ? '' : 'es'}
               </summary>
               <ul className="mt-1 space-y-0.5">
                 {book.slug_aliases.map(a => (
-                  <li key={a.slug} className="font-mono text-[11px] text-gray-600 dark:text-gray-400">
+                  <li key={a.slug} className="font-mono text-[11px] text-gray-600">
                     /books/{a.slug}{' '}
-                    <span className="text-gray-400 dark:text-gray-500">[{a.source}]</span>
+                    <span className="text-gray-400">[{a.source}]</span>
                   </li>
                 ))}
               </ul>
@@ -1099,11 +1099,11 @@ function ExistingBookPanel({
 
         {/* Existing bans */}
         <div className="flex flex-col gap-2 min-w-0">
-          <div className="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">
+          <div className="text-xs uppercase tracking-wide text-gray-400">
             Existing bans on this book
           </div>
           {book.existing_bans.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+            <p className="text-sm text-gray-500 italic">
               No bans recorded yet.
             </p>
           ) : (
@@ -1111,35 +1111,35 @@ function ExistingBookPanel({
               {book.existing_bans.map(b => (
                 <li
                   key={b.id}
-                  className="text-xs rounded border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 px-2 py-1.5"
+                  className="text-xs rounded border border-gray-200 bg-white/60 px-2 py-1.5"
                 >
                   <div className="flex flex-wrap items-baseline gap-1.5">
                     <span className="font-semibold">{b.country_code}</span>
-                    <span className="text-gray-500 dark:text-gray-400">·</span>
+                    <span className="text-gray-500">·</span>
                     <span>
                       {b.year_started ?? '?'}
                       {b.year_ended ? `–${b.year_ended}` : ''}
                     </span>
-                    <span className="text-gray-500 dark:text-gray-400">·</span>
+                    <span className="text-gray-500">·</span>
                     <span>{b.action_type}</span>
                     {b.scope_slug && (
                       <>
-                        <span className="text-gray-500 dark:text-gray-400">·</span>
+                        <span className="text-gray-500">·</span>
                         <span>{b.scope_label ?? b.scope_slug}</span>
                       </>
                     )}
                     <span
                       className={`ml-auto text-[10px] px-1.5 py-0.5 rounded ${
                         b.status === 'active'
-                          ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-gray-100 text-gray-600'
                       }`}
                     >
                       {b.status}
                     </span>
                   </div>
                   {(b.region || b.institution) && (
-                    <div className="mt-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+                    <div className="mt-0.5 text-[11px] text-gray-500">
                       {[b.region, b.institution].filter(Boolean).join(' · ')}
                     </div>
                   )}
@@ -1151,7 +1151,7 @@ function ExistingBookPanel({
                           href={s.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="underline text-blue-600 dark:text-blue-400 truncate max-w-[200px]"
+                          className="underline text-blue-600 truncate max-w-[200px]"
                           title={s.name}
                         >
                           {s.name}
@@ -1202,14 +1202,14 @@ function RejectModal({
       onClick={onCancel}
     >
       <div
-        className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 max-w-md w-full"
+        className="bg-white rounded-2xl border border-gray-200 max-w-md w-full"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-5 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-5 border-b border-gray-200">
           <h3 className="text-lg font-semibold">Reject this row</h3>
         </div>
         <div className="p-5">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="text-sm font-medium text-gray-700">
             Reason (optional)
           </label>
           <textarea
@@ -1220,11 +1220,11 @@ function RejectModal({
             className={`${inputCls} resize-y mt-1`}
           />
         </div>
-        <div className="p-5 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
+        <div className="p-5 border-t border-gray-200 flex justify-end gap-2">
           <button
             onClick={onCancel}
             disabled={busy}
-            className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40"
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition-colors disabled:opacity-40"
           >
             Cancel
           </button>

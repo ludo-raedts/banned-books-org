@@ -25,15 +25,23 @@
  *
  * Source ladder, in priority order:
  *   1. English Wikipedia full article (first 5000 chars)
- *   2. Non-English Wikipedia → translated to English via LLM grounding
- *   3. OpenLibrary Works API description
- *   4. Google Books volume description
+ *   2. OpenLibrary — by ISBN first (exact edition → work, the strongest
+ *      binding), then by openlibrary_work_id, then title/author search
+ *   3. Google Books volume description
+ *   4. Non-English Wikipedia → translated to English via LLM grounding
+ *
+ * Reground mode (regroundUngrounded): targets ISBN-bearing rows whose
+ * synopsis was filled before provenance tracking existed
+ * (description_source_type IS NULL) and re-sources them, overwriting only
+ * when a verified source resolves and backing up the originals first.
  *
  * For LLM synthesis we use gpt-4o-mini (cheap, ~$0.001 per book) with
  * temperature=0 and a strict "only facts from the provided sources"
  * system prompt.
  */
 import OpenAI from 'openai'
+import fs from 'node:fs'
+import path from 'node:path'
 import { adminClient } from '../supabase'
 
 type SourceType =
@@ -65,6 +73,14 @@ export type EnrichDescriptionsV2Opts = {
    * intended way to refill them.
    */
   processFlagged?: boolean
+  /**
+   * Re-ground mode: target ISBN-bearing rows whose description_book is set but
+   * has NO tracked source (description_source_type IS NULL) — i.e. the
+   * pre-v2 ungrounded synopses. Implies overwrite, but SAFELY: a row is only
+   * touched when a verified source resolves. Rows where no source resolves keep
+   * their existing text untouched (no flagging, no nulling).
+   */
+  regroundUngrounded?: boolean
   /**
    * Number of books processed concurrently. Defaults to 1 (sequential).
    * Each worker does its own Wikipedia/OL/GB lookups, so concurrency=5
@@ -290,6 +306,55 @@ async function olSearch(title: string, author: string): Promise<SourceExtract | 
   } catch { return null }
 }
 
+/**
+ * Resolve a description from an exact ISBN: /isbn/<isbn>.json → works[0] →
+ * /works/<id>.json. The ISBN binds the *edition*, but edition-level blurbs are
+ * often localized translations, so we PREFER the work-level description (the
+ * canonical, usually-English synopsis) and only fall back to the edition blurb.
+ *
+ * Reliability gate (measured 2026-05-31): even with an exact ISBN, OL can return
+ * the wrong book when our isbn13 is wrong or OL's edition→work mapping is junk
+ * ("De la France" → Don Quijote). So the resolved text MUST still mention the
+ * author surname or a title-head token. If it can't be verified, we return null
+ * and let the rest of the ladder (Wikipedia / title-search) try instead, rather
+ * than publish unverifiable text. This costs us some correct-but-non-Latin-script
+ * editions, which the Wikipedia langlink path is better suited to anyway.
+ */
+async function olByIsbn(isbn: string, title: string, author: string): Promise<SourceExtract | null> {
+  try {
+    const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`, { headers: UA, redirect: 'follow' })
+    if (!res.ok) return null
+    const edition = await res.json() as Record<string, unknown>
+
+    // Work-level description first (canonical), then edition-level fallback.
+    let text: string | null = null
+    let url = `https://openlibrary.org/isbn/${isbn}`
+    const works = edition.works as Array<{ key?: string }> | undefined
+    const workKey = works?.[0]?.key   // "/works/OL...W"
+    if (workKey) {
+      await sleep(OL_DELAY_MS)
+      const wr = await fetch(`https://openlibrary.org${workKey}.json`, { headers: UA })
+      if (wr.ok) {
+        const work = await wr.json() as Record<string, unknown>
+        const wDesc = extractOlDesc(work)
+        if (wDesc && wDesc.length >= MIN_DESC_CHARS) { text = wDesc; url = `https://openlibrary.org${workKey}` }
+      }
+    }
+    if (!text) {
+      const eDesc = extractOlDesc(edition)
+      if (eDesc && eDesc.length >= MIN_DESC_CHARS) text = eDesc
+    }
+    if (!text) return null
+
+    // Hard relevance gate — see doc comment. No lenient short-text exception
+    // here (unlike olWorks): the ISBN already told us which edition, so a
+    // missing author/title is a real signal something is off.
+    if (!sourceMatches(`${text} ${title} ${author}`, title, author)) return null
+
+    return { type: 'openlibrary', url, text, pageLang: 'en' }
+  } catch { return null }
+}
+
 // ──────────────────────────────────────────────────────────────────────
 // Google Books
 // ──────────────────────────────────────────────────────────────────────
@@ -388,7 +453,9 @@ type BookRow = {
   id: number
   slug: string
   title: string
+  isbn13: string | null
   description_book: string | null
+  description_source_type: string | null
   openlibrary_work_id: string | null
   data_quality_status: string | null
   book_authors: Array<{ authors: { display_name: string } | null }>
@@ -419,9 +486,14 @@ async function enrichOne(
   const wikiEn = await resolveWikipedia(row.title, author, 'en')
   if (wikiEn) collected.push(wikiEn)
 
-  // 2. OpenLibrary (if we have a work id, prefer it; else search)
+  // 2. OpenLibrary. ISBN is the strongest binding (exact edition → work), so
+  //    try it first; fall back to work-id, then title/author search.
   let ol: SourceExtract | null = null
-  if (row.openlibrary_work_id) {
+  if (row.isbn13) {
+    ol = await olByIsbn(row.isbn13, row.title, author)
+    await sleep(OL_DELAY_MS)
+  }
+  if (!ol && row.openlibrary_work_id) {
     ol = await olWorks(row.openlibrary_work_id, row.title, author)
     await sleep(OL_DELAY_MS)
   }
@@ -561,13 +633,17 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     let from = 0
     for (;;) {
       let q = sb.from('books')
-        .select('id, slug, title, description_book, openlibrary_work_id, data_quality_status, book_authors(authors(display_name))')
+        .select('id, slug, title, isbn13, description_book, description_source_type, openlibrary_work_id, data_quality_status, book_authors(authors(display_name))')
         // Blanket-works pseudo-books ("Toutes ses œuvres …") are not real
         // titles — no source will ever resolve, so never enrich them.
         .eq('is_blanket_works', false)
         .order('id', { ascending: true })
         .range(from, from + 999)
       if (opts.slug) q = q.eq('slug', opts.slug) as typeof q
+      else if (opts.regroundUngrounded) {
+        // Pre-v2 ungrounded synopses on ISBN-bearing rows.
+        q = q.not('isbn13', 'is', null).is('description_source_type', null) as typeof q
+      }
       else if (!opts.overwrite) q = q.is('description_book', null) as typeof q
       const { data, error } = await q
       if (error) throw new Error(`DB read: ${error.message}`)
@@ -578,8 +654,8 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     }
   }
 
-  // Filter by status (unless --slug or --overwrite explicitly bypass).
-  if (!opts.slug && !opts.overwrite) {
+  // Filter by status (unless --slug / --overwrite / --reground bypass).
+  if (!opts.slug && !opts.overwrite && !opts.regroundUngrounded) {
     if (!opts.processFlagged) {
       candidates = candidates.filter(b => b.data_quality_status !== 'flagged')
     }
@@ -601,6 +677,21 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     totalCostUsd: 0,
   }
 
+  // Reground overwrites existing text → back up originals first (reversible
+  // via re-import). One CSV per run, appended as rows are overwritten.
+  let backupPath: string | null = null
+  const csvEscape = (v: unknown) => {
+    const s = v == null ? '' : String(v)
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+  }
+  if (opts.apply && opts.regroundUngrounded) {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+    backupPath = path.resolve('data', `description-book-reground-backup-${stamp}.csv`)
+    fs.mkdirSync(path.dirname(backupPath), { recursive: true })
+    fs.writeFileSync(backupPath, ['slug', 'description_book_old', 'description_source_type_old'].join(',') + '\n')
+    log(`Backup: ${backupPath}`)
+  }
+
   async function processOne(row: BookRow): Promise<void> {
     try {
       const r = await enrichOne(openai, row, opts)
@@ -616,6 +707,9 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
       log(`  [${result.processed}/${candidates.length}] ${row.title.slice(0, 50)} → ${verdict}`)
 
       if (opts.apply && r.description_book) {
+        if (backupPath) {
+          fs.appendFileSync(backupPath, [row.slug, row.description_book ?? '', row.description_source_type ?? ''].map(csvEscape).join(',') + '\n')
+        }
         const upd: Record<string, unknown> = {
           description_book: r.description_book,
           description_source_url: r.description_source_url,
@@ -626,8 +720,11 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
         }
         const { error: ue } = await sb.from('books').update(upd).eq('id', row.id)
         if (ue) { log(`    ✗ DB write: ${ue.message}`); result.errors++ }
-      } else if (opts.apply && r.data_quality_status === 'flagged' && !r.description_book) {
+      } else if (opts.apply && r.data_quality_status === 'flagged' && !r.description_book && !opts.regroundUngrounded) {
         // Make sure the status reflects "still no source" even on retry.
+        // SKIP in reground mode: these rows already carry usable (if untracked)
+        // text — a failed re-ground must leave them exactly as they were, never
+        // demote a populated synopsis to 'flagged'.
         await sb.from('books').update({
           data_quality_status: 'flagged',
           data_quality_evaluated_at: new Date().toISOString(),

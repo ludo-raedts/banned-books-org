@@ -31,13 +31,13 @@ export default function CountriesControls({ reasons, current }: Props) {
     <div className="space-y-2 mb-5">
       {/* Sort row */}
       <div className="flex items-center gap-2">
-        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-12 shrink-0">Sort:</span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide font-medium w-12 shrink-0">Sort:</span>
         <button
           onClick={() => update({ sort: 'volume' })}
           className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
             current.sort !== 'alpha'
               ? 'bg-brand text-white border-brand'
-              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+              : 'border-gray-200 text-gray-600 hover:border-gray-400'
           }`}
         >
           By volume
@@ -47,7 +47,7 @@ export default function CountriesControls({ reasons, current }: Props) {
           className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
             current.sort === 'alpha'
               ? 'bg-brand text-white border-brand'
-              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+              : 'border-gray-200 text-gray-600 hover:border-gray-400'
           }`}
         >
           Alphabetical
@@ -56,7 +56,7 @@ export default function CountriesControls({ reasons, current }: Props) {
 
       {/* Era row */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-12 shrink-0">Era:</span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide font-medium w-12 shrink-0">Era:</span>
         {([
           ['', 'All eras'],
           ['contemporary', 'Contemporary (2000–now)'],
@@ -68,7 +68,7 @@ export default function CountriesControls({ reasons, current }: Props) {
             className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
               current.era === value
                 ? 'bg-brand text-white border-brand'
-                : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+                : 'border-gray-200 text-gray-600 hover:border-gray-400'
             }`}
           >
             {label}
@@ -78,20 +78,20 @@ export default function CountriesControls({ reasons, current }: Props) {
 
       {/* Filter row */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium w-12 shrink-0">Filter:</span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide font-medium w-12 shrink-0">Filter:</span>
 
         <button
           onClick={() => update({ active: !current.active })}
           className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
             current.active
               ? 'bg-brand text-white border-brand'
-              : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+              : 'border-gray-200 text-gray-600 hover:border-gray-400'
           }`}
         >
           🚫 Active bans only
         </button>
 
-        <span className="text-gray-200 dark:text-gray-700 select-none hidden sm:block">|</span>
+        <span className="text-gray-200 select-none hidden sm:block">|</span>
 
         {reasons.map((slug) => (
           <button
@@ -100,7 +100,7 @@ export default function CountriesControls({ reasons, current }: Props) {
             className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
               current.reason === slug
                 ? 'bg-brand text-white border-brand'
-                : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+                : 'border-gray-200 text-gray-600 hover:border-gray-400'
             }`}
           >
             <span aria-hidden>{reasonIcon(slug)}</span> {reasonLabel(slug)}
@@ -110,7 +110,7 @@ export default function CountriesControls({ reasons, current }: Props) {
         {hasFilter && (
           <button
             onClick={() => update({ reason: '', active: false, era: '' })}
-            className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
+            className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 underline"
           >
             Clear filters
           </button>

@@ -110,7 +110,7 @@ export default function MobileNav() {
       <Link
         href="/search"
         aria-label="Search"
-        className="inline-flex items-center justify-center w-9 h-9 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="inline-flex items-center justify-center w-9 h-9 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
       >
         <svg
           viewBox="0 0 24 24"
@@ -134,7 +134,7 @@ export default function MobileNav() {
         aria-controls={menuId}
         aria-label={open ? 'Close navigation' : 'Open navigation'}
         onClick={() => setOpen(o => !o)}
-        className="inline-flex items-center justify-center w-9 h-9 -mr-1 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="inline-flex items-center justify-center w-9 h-9 -mr-1 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
       >
         <svg
           viewBox="0 0 24 24"
@@ -165,15 +165,15 @@ export default function MobileNav() {
         <div
           ref={menuRef}
           id={menuId}
-          className="fixed inset-x-0 top-12 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm shadow-sm animate-fade-in"
+          className="fixed inset-x-0 top-12 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm animate-fade-in"
         >
           <nav className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-1">
             {SECTIONS.map((section, idx) => (
               <div
                 key={section.heading}
-                className={idx > 0 ? 'mt-3 pt-3 border-t border-gray-100 dark:border-gray-900' : ''}
+                className={idx > 0 ? 'mt-3 pt-3 border-t border-gray-100' : ''}
               >
-                <h2 className="px-3 pb-1 text-[11px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">
+                <h2 className="px-3 pb-1 text-[11px] uppercase tracking-wider font-semibold text-gray-500">
                   {section.heading}
                 </h2>
                 {section.links.map(link => {
@@ -186,14 +186,14 @@ export default function MobileNav() {
                       href={link.href}
                       className={`block py-2 rounded-md transition-colors ${
                         link.indented
-                          ? 'pl-8 pr-3 text-xs text-gray-500 dark:text-gray-400 hover:text-oxblood'
+                          ? 'pl-8 pr-3 text-xs text-gray-500 hover:text-oxblood'
                           : 'px-3 text-sm py-2.5'
                       } ${
                         active
                           ? 'text-brand font-medium'
                           : link.indented
                             ? ''
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                            : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >
                       {link.indented && (
