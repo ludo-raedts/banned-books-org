@@ -6,6 +6,14 @@
  *   pnpm tsx scripts/gsc-diagnose.ts --days=90
  *   pnpm tsx scripts/gsc-diagnose.ts --query=deenie     # filter to queries containing "deenie"
  *   pnpm tsx scripts/gsc-diagnose.ts --page=/books/deenie
+ *   pnpm tsx scripts/gsc-diagnose.ts --exclude-bots     # daily breakdown, organic-only (drops templated bot queries)
+ *   pnpm tsx scripts/gsc-diagnose.ts --only-bots        # daily breakdown, templated bot queries only
+ *
+ * "Templated/bot" queries are machine-generated lookups of the form
+ *   "<title>" <author> challenged banned   (and word-order permutations).
+ * No human phrases searches this way; it's automated/AI tooling enumerating
+ * banned-book status. High volume, ~0 CTR — it pollutes impression/CTR trends,
+ * so we label and optionally exclude it.
  */
 import { promises as fs } from 'fs'
 import path from 'path'
@@ -53,25 +61,47 @@ function arg(name: string, fallback?: string) {
   const a = process.argv.slice(2).find(x => x.startsWith(`--${name}=`))
   return a ? a.split('=').slice(1).join('=') : fallback
 }
+function flag(name: string) { return process.argv.slice(2).includes(`--${name}`) }
+
+/**
+ * Signature of the templated / bot query pattern, e.g.
+ *   "turtles all the way down" challenged banned
+ *   "let it snow" john green banned challenged book
+ * The tell is the bare adjacency of "challenged" + "banned" in either order —
+ * no human formulates a search this way.
+ * BOT_QUERY_RE2 is the RE2 form for GSC's includingRegex/excludingRegex (server-side);
+ * BOT_QUERY_RE is the JS equivalent for client-side classification.
+ */
+const BOT_QUERY_RE2 = '(?i)(challenged banned|banned challenged)'
+const BOT_QUERY_RE = /(challenged banned|banned challenged)/i
+function isTemplatedQuery(q: string) { return BOT_QUERY_RE.test(q) }
 
 async function main() {
   const site = arg('site', 'sc-domain:banned-books.org')!
   const days = Number(arg('days', '60'))
   const queryFilter = arg('query')
   const pageFilter = arg('page')
+  const excludeBots = flag('exclude-bots')
+  const onlyBots = flag('only-bots')
   const auth = await authorize()
   const sc = google.searchconsole({ version: 'v1', auth })
 
   const endDate = isoDate(daysAgo(2))
   const startDate = isoDate(daysAgo(days + 2))
-  const label = queryFilter ? `query~"${queryFilter}"` : pageFilter ? `page~"${pageFilter}"` : 'sitewide'
-  console.log(`\n${site}  (${startDate} → ${endDate})  filter: ${label}\n`)
+  const baseLabel = queryFilter ? `query~"${queryFilter}"` : pageFilter ? `page~"${pageFilter}"` : 'sitewide'
+  const botLabel = excludeBots ? ' (organic only)' : onlyBots ? ' (templated/bot only)' : ''
+  console.log(`\n${site}  (${startDate} → ${endDate})  filter: ${baseLabel}${botLabel}\n`)
+  if (excludeBots || onlyBots) {
+    console.log('⚠  Query-dimension filter active: GSC drops anonymized long-tail rows, which carry')
+    console.log('   most clicks. Use these daily totals for IMPRESSION patterns, not click trends.\n')
+  }
 
-  const dimensionFilterGroups = queryFilter
-    ? [{ filters: [{ dimension: 'query', operator: 'contains', expression: queryFilter }] }]
-    : pageFilter
-    ? [{ filters: [{ dimension: 'page', operator: 'contains', expression: pageFilter }] }]
-    : undefined
+  const filters: Array<{ dimension: string; operator: string; expression: string }> = []
+  if (queryFilter) filters.push({ dimension: 'query', operator: 'contains', expression: queryFilter })
+  if (pageFilter) filters.push({ dimension: 'page', operator: 'contains', expression: pageFilter })
+  if (excludeBots) filters.push({ dimension: 'query', operator: 'excludingRegex', expression: BOT_QUERY_RE2 })
+  if (onlyBots) filters.push({ dimension: 'query', operator: 'includingRegex', expression: BOT_QUERY_RE2 })
+  const dimensionFilterGroups = filters.length ? [{ filters }] : undefined
 
   const { data } = await sc.searchanalytics.query({
     siteUrl: site,
@@ -104,6 +134,40 @@ async function main() {
   console.log(`\nLast ${window}d avg clicks: ${recentTrail.toFixed(1)}/day`)
   console.log(`Prior ${window}d avg clicks: ${priorTrail.toFixed(1)}/day`)
   console.log(`Change: ${trailChange >= 0 ? '+' : ''}${trailChange.toFixed(1)}%`)
+
+  // Query classification: split traffic into organic vs templated/bot lookups.
+  // Skipped when a query/page filter or a bot flag is active (the split is the whole point of the default view).
+  if (!queryFilter && !pageFilter && !excludeBots && !onlyBots) {
+    // High rowLimit: templated bot queries have ~0 clicks and sort to the bottom,
+    // so a small cap truncates them out and understates their share. 25000 is the GSC max.
+    const { data: qData } = await sc.searchanalytics.query({
+      siteUrl: site,
+      requestBody: { startDate, endDate, dimensions: ['query'], rowLimit: 25000 },
+    })
+    const qRows = qData.rows ?? []
+    const bucket = (rs: typeof qRows) => rs.reduce<{ q: number; clicks: number; impr: number }>(
+      (a, r) => ({ q: a.q + 1, clicks: a.clicks + (r.clicks ?? 0), impr: a.impr + (r.impressions ?? 0) }),
+      { q: 0, clicks: 0, impr: 0 },
+    )
+    const bots = qRows.filter(r => isTemplatedQuery(r.keys?.[0] ?? ''))
+    const organic = qRows.filter(r => !isTemplatedQuery(r.keys?.[0] ?? ''))
+    const b = bucket(bots)
+    const o = bucket(organic)
+    const pct = (n: number, d: number) => (d > 0 ? ((n / d) * 100).toFixed(1) : '0.0')
+    const ctr = (c: number, i: number) => (i > 0 ? ((c / i) * 100).toFixed(2) : '0.00')
+
+    console.log(`\nQuery classification (${qRows.length} named queries; anonymized long-tail not included):`)
+    console.log('bucket          queries   clicks      impr   ctr%')
+    console.log('─'.repeat(56))
+    console.log(`organic         ${String(o.q).padStart(7)}  ${String(o.clicks).padStart(7)}  ${String(o.impr).padStart(8)}  ${ctr(o.clicks, o.impr).padStart(5)}`)
+    console.log(`templated/bot   ${String(b.q).padStart(7)}  ${String(b.clicks).padStart(7)}  ${String(b.impr).padStart(8)}  ${ctr(b.clicks, b.impr).padStart(5)}`)
+    console.log(`\nTemplated/bot share: ${pct(b.impr, b.impr + o.impr)}% of impressions, ${pct(b.clicks, b.clicks + o.clicks)}% of clicks`)
+    if (bots.length) {
+      console.log('Examples:')
+      bots.slice(0, 5).forEach(r => console.log(`  · ${r.keys?.[0]}  (${r.impressions ?? 0}i, ${r.clicks ?? 0}c)`))
+      console.log('Re-run with --only-bots to inspect the pattern, or --exclude-bots for organic-only impressions (clicks unreliable — anonymized rows drop out).')
+    }
+  }
 }
 
 main().catch(e => { console.error(e); process.exit(1) })
