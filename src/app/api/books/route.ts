@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     country:    sp.get('country') ?? undefined,
     activeOnly: sp.get('activeOnly') === '1',
     reason:     sp.get('reason') ?? undefined,
+    year:       sp.get('year') ? parseInt(sp.get('year')!, 10) : undefined,
     sort:       parseBookSort(sp.get('sort')),
     offset:     parseInt(sp.get('offset') ?? '0', 10),
     limit:      parseInt(sp.get('limit') ?? '48', 10),

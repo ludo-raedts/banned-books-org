@@ -13,10 +13,31 @@ export type BookSearchParams = {
   country?: string
   scope?: string
   reason?: string
+  year?: number
   activeOnly?: boolean
   offset?: number
   limit?: number
   sort?: BookSort
+}
+
+// Supabase caps a plain .select() at 1000 rows, so any filter that maps over a
+// large table (bans for the US, ban_reason_links for 'political') silently
+// truncates without pagination — e.g. reason=political returned 913 of 5788
+// books. Page through with a stable .order() until the rows run out. The caller
+// supplies a factory that applies .order().range(from, to).
+async function paginateAll<T>(
+  make: (from: number, to: number) => PromiseLike<{ data: T[] | null }>,
+): Promise<T[]> {
+  const out: T[] = []
+  let from = 0
+  for (;;) {
+    const { data } = await make(from, from + 999)
+    if (!data || data.length === 0) break
+    out.push(...data)
+    if (data.length < 1000) break
+    from += 1000
+  }
+  return out
 }
 
 export type BookSearchResult = {
@@ -71,12 +92,13 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
   const country    = params.country ?? ''
   const activeOnly = !!params.activeOnly
   const reason     = params.reason ?? ''
+  const year       = params.year && Number.isFinite(params.year) ? params.year : 0
   const sort       = params.sort ?? DEFAULT_BOOK_SORT
   const offset     = Math.max(0, params.offset ?? 0)
   const limit      = Math.min(100, Math.max(1, params.limit ?? 48))
 
   const supabase = adminClient()
-  const hasFilters = !!(q || scope || country || activeOnly || reason)
+  const hasFilters = !!(q || scope || country || activeOnly || reason || year)
 
   // ── No filters: page directly off books, ordering depends on sort ──────────
   if (!hasFilters) {
@@ -156,60 +178,86 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
   }
 
   if (country) {
-    const { data } = await supabase.from('bans').select('book_id').eq('country_code', country)
-    idSets.push(new Set((data ?? []).map(b => b.book_id as number)))
+    const rows = await paginateAll<{ book_id: number }>((f, t) =>
+      supabase.from('bans').select('book_id').eq('country_code', country).order('id').range(f, t))
+    idSets.push(new Set(rows.map(b => b.book_id)))
   }
 
   if (activeOnly) {
-    const { data } = await supabase.from('bans').select('book_id').eq('status', 'active')
-    idSets.push(new Set((data ?? []).map(b => b.book_id as number)))
+    const rows = await paginateAll<{ book_id: number }>((f, t) =>
+      supabase.from('bans').select('book_id').eq('status', 'active').order('id').range(f, t))
+    idSets.push(new Set(rows.map(b => b.book_id)))
+  }
+
+  if (year) {
+    const rows = await paginateAll<{ book_id: number }>((f, t) =>
+      supabase.from('bans').select('book_id').eq('year_started', year).order('id').range(f, t))
+    idSets.push(new Set(rows.map(b => b.book_id)))
   }
 
   if (scope) {
     const { data: scopeRow } = await supabase.from('scopes').select('id').eq('slug', scope).single()
     if (!scopeRow) return { books: [], total: 0 }
-    const { data } = await supabase.from('bans').select('book_id').eq('scope_id', scopeRow.id)
-    idSets.push(new Set((data ?? []).map(b => b.book_id as number)))
+    const rows = await paginateAll<{ book_id: number }>((f, t) =>
+      supabase.from('bans').select('book_id').eq('scope_id', scopeRow.id).order('id').range(f, t))
+    idSets.push(new Set(rows.map(b => b.book_id)))
   }
 
   if (reason) {
     const { data: reasonRow } = await supabase.from('reasons').select('id').eq('slug', reason).single()
     if (!reasonRow) return { books: [], total: 0 }
-    const { data: links } = await supabase
-      .from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id)
-    if (!links?.length) return { books: [], total: 0 }
-    const { data: bansForReason } = await supabase
-      .from('bans').select('book_id').in('id', links.map(l => l.ban_id))
-    idSets.push(new Set((bansForReason ?? []).map(b => b.book_id as number)))
+    // Paginate the links (popular reasons have >>1000), then chunk the ban→book
+    // lookup so thousands of ban_ids don't blow the PostgREST URL-length cap.
+    const links = await paginateAll<{ ban_id: number }>((f, t) =>
+      supabase.from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id).order('ban_id').range(f, t))
+    if (!links.length) return { books: [], total: 0 }
+    const banIds = links.map(l => l.ban_id)
+    const bookIds = new Set<number>()
+    const CHUNK = 500
+    for (let i = 0; i < banIds.length; i += CHUNK) {
+      const { data } = await supabase.from('bans').select('book_id').in('id', banIds.slice(i, i + CHUNK))
+      for (const b of (data ?? []) as { book_id: number }[]) bookIds.add(b.book_id)
+    }
+    idSets.push(bookIds)
   }
 
   if (idSets.length === 0) return { books: [], total: 0 }
   const allIds = [...idSets[0]].filter(id => idSets.every(s => s.has(id)))
   if (allIds.length === 0) return { books: [], total: 0 }
 
-  // Sort the intersected set.
+  // Fetch sort keys for the matched ids in chunks — `.in('id', allIds)` with
+  // thousands of ids would exceed the PostgREST URL-length cap (this is what
+  // silently zeroed out large reason/country filters once they stopped being
+  // truncated to 1000). Exclude gated here so `total` and paging match what
+  // actually renders below, then sort in JS.
+  const SORT_CHUNK = 500
+  type SortRow = { id: number; title: string; created_at: string | null }
+  const sortRows: SortRow[] = []
+  for (let i = 0; i < allIds.length; i += SORT_CHUNK) {
+    const { data } = await supabase
+      .from('books').select('id, title, created_at')
+      .eq('is_gated', false)
+      .in('id', allIds.slice(i, i + SORT_CHUNK))
+    if (data) sortRows.push(...(data as SortRow[]))
+  }
+
   let sortedIds: number[]
   if (sort === 'alpha') {
-    const { data: sorted } = await supabase
-      .from('books').select('id').in('id', allIds).order('title')
-    sortedIds = sorted?.map(b => b.id as number) ?? allIds
+    sortedIds = [...sortRows].sort((a, b) => a.title.localeCompare(b.title)).map(r => r.id)
   } else {
     const topIds = await topIdsForSort(supabase, sort)
     const rank = new Map<number, number>()
     topIds.forEach((id, i) => rank.set(id, i))
-    // Pull intersected ids in created_at DESC order as the tail tiebreaker;
-    // stable-sort by rank puts the popular/most-banned head first and leaves
-    // the rest in created_at DESC order.
-    const { data: tail } = await supabase
-      .from('books').select('id').in('id', allIds)
-      .order('created_at', { ascending: false, nullsFirst: false })
-      .order('title')
-    sortedIds = (tail ?? []).map(r => r.id as number)
-    sortedIds.sort((a, b) => {
-      const ra = rank.has(a) ? rank.get(a)! : Infinity
-      const rb = rank.has(b) ? rank.get(b)! : Infinity
-      return ra === rb ? 0 : ra - rb
-    })
+    // Head = view rank (popular/most-banned); tail = created_at DESC so newly
+    // added books bubble above the alphabetical long tail (title as tiebreak).
+    sortedIds = [...sortRows].sort((a, b) => {
+      const ra = rank.has(a.id) ? rank.get(a.id)! : Infinity
+      const rb = rank.has(b.id) ? rank.get(b.id)! : Infinity
+      if (ra !== rb) return ra - rb
+      const ca = a.created_at ?? '', cb = b.created_at ?? ''
+      if (ca !== cb) return ca < cb ? 1 : -1
+      return a.title.localeCompare(b.title)
+    }).map(r => r.id)
   }
 
   const total = sortedIds.length
