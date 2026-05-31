@@ -3,16 +3,13 @@
 export const revalidate = 3600
 
 import type { Metadata } from 'next'
-import Image from 'next/image'
-import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import { adminClient } from '@/lib/supabase'
-import { coverAlt } from '@/lib/cover-alt'
+import { searchBooks } from '@/lib/book-search'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
-import ReasonControls from '@/components/reason-controls'
+import ReasonCatalogueBrowser, { type ApiBook } from '@/components/reason-catalogue-browser'
 import BookCardCompact from '@/components/home/BookCardCompact'
 import SectionShell from '@/components/section/SectionShell'
 import SectionHeader from '@/components/section/SectionHeader'
@@ -59,17 +56,13 @@ function countryFlag(code: string): string {
   ).join('')
 }
 
-// Prebuild all reason hubs. NOTE: this route is still rendered dynamically
-// (no-store) today because the page awaits searchParams for server-side
-// country/year/active/sort filtering — that opts the whole route out of
-// static rendering, so these params don't take effect yet. Once the filtering
-// moves client-side (same refactor as the /countries list), the route becomes
-// static + ISR and these prebuilt params start caching. Kept now so that
-// refactor is a one-line change.
+// Return [] (not the 11 slugs): empty array still flips the route to static +
+// ISR — the catalogue is now client-side (ReasonCatalogueBrowser), so the page
+// no longer reads searchParams and can be cached. Renders on first request
+// rather than running 11 reason sweeps concurrently at build time (the same
+// build-timeout hazard that hit the country pages under DB load).
 export async function generateStaticParams() {
-  const { data } = await adminClient().from('reasons').select('slug')
-  const rows = (data ?? []) as { slug: string }[]
-  return rows.map((r) => ({ slug: r.slug }))
+  return [] as { slug: string }[]
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -135,15 +128,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ReasonPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ country?: string; year?: string; active?: string; sort?: string }>
 }) {
   const { slug } = await params
-  const { country: filterCountry = '', year: filterYear = '', active: filterActiveStr, sort: filterSort = 'bans' } = await searchParams
-  const filterActive = filterActiveStr === '1'
-  const filterYearNum = filterYear ? parseInt(filterYear, 10) : null
   const label = reasonLabel(slug)
   if (!label || label === slug) notFound()
 
@@ -152,62 +140,71 @@ export default async function ReasonPage({
   const { data: reason } = await supabase.from('reasons').select('id, slug').eq('slug', slug).single()
   if (!reason) notFound()
 
-  // Paginate ban_reason_links — popular reasons (lgbtq, political) can exceed 1000 rows
-  // rows: all links for this reason | fields: [book_id, country_code via bans] | reason: collect book ID set + country frequency
-  const bookIdSet = new Set<number>()
+  // ── Light sweep over this reason's ban links ─────────────────────────────────
+  // One pass yields every aggregate the page needs (distinct books, per-book
+  // event counts, countries, years, active/total counts) WITHOUT hydrating
+  // thousands of full book rows. The full catalogue is served client-side by
+  // <ReasonCatalogueBrowser> via /api/books, so the page stays light + cacheable
+  // (previously this fetched all ~5.8k books server-side and forced dynamic
+  // rendering via searchParams).
+  const bookCountById = new Map<number, number>()   // book_id → events citing this reason
   const countryBanCounts = new Map<string, number>()
+  const yearSet = new Set<number>()
+  let totalBans = 0
+  let activeBans = 0
   {
     let offset = 0
     while (true) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('ban_reason_links')
-        .select('bans(book_id, country_code)')
+        .select('bans(book_id, country_code, year_started, status)')
         .eq('reason_id', reason.id)
-        // Stable order across pages (ban_id is unique for a fixed reason_id);
-        // without it .range() can skip rows past 1000 and undercount books.
+        // Stable order (ban_id unique for a fixed reason_id) or .range() skips past 1000.
         .order('ban_id')
         .range(offset, offset + 999)
+      if (error) throw error
       if (!data || data.length === 0) break
       for (const bl of data) {
-        const ban = bl.bans as unknown as { book_id?: number; country_code?: string } | null
+        const ban = bl.bans as unknown as { book_id?: number; country_code?: string; year_started?: number | null; status?: string } | null
         if (!ban) continue
-        if (ban.book_id) bookIdSet.add(ban.book_id)
-        if (ban.country_code) {
-          countryBanCounts.set(ban.country_code, (countryBanCounts.get(ban.country_code) ?? 0) + 1)
-        }
+        totalBans++
+        if (ban.status === 'active') activeBans++
+        if (ban.book_id) bookCountById.set(ban.book_id, (bookCountById.get(ban.book_id) ?? 0) + 1)
+        if (ban.country_code) countryBanCounts.set(ban.country_code, (countryBanCounts.get(ban.country_code) ?? 0) + 1)
+        if (ban.year_started != null) yearSet.add(ban.year_started)
       }
       if (data.length < 1000) break
       offset += 1000
     }
   }
 
-  const bookIds = [...bookIdSet]
+  const bookCount = bookCountById.size
+  const countries = countryBanCounts.size
+  const availableYears = [...yearSet].sort((a, b) => b - a)
+  const earliestBanYear = yearSet.size > 0 ? Math.min(...yearSet) : null
 
-  // Top 5 countries where this reason appears most (by ban count)
-  const top5CountryCounts = [...countryBanCounts.entries()]
+  // Country names for the "top countries" section + the browser's dropdown
+  // (≤ ~200 distinct codes, well under the URL cap).
+  const allCodes = [...countryBanCounts.keys()]
+  const countryNameMap = new Map<string, string>()
+  if (allCodes.length > 0) {
+    const { data: names } = await supabase.from('countries').select('code, name_en').in('code', allCodes)
+    for (const c of (names ?? []) as { code: string; name_en: string }[]) countryNameMap.set(c.code, c.name_en)
+  }
+  const countryOptions = allCodes
+    .map(code => ({ code, name: countryNameMap.get(code) ?? code }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+  const topCountries = [...countryBanCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-  let topCountries: { code: string; name_en: string; count: number }[] = []
-  if (top5CountryCounts.length > 0) {
-    const { data: names } = await supabase
-      .from('countries')
-      .select('code, name_en')
-      .in('code', top5CountryCounts.map(([code]) => code))
-    const nameMap = new Map((names ?? []).map(c => [c.code, c.name_en]))
-    topCountries = top5CountryCounts.map(([code, count]) => ({
-      code, name_en: nameMap.get(code) ?? code, count,
-    }))
-  }
+    .map(([code, count]) => ({ code, name_en: countryNameMap.get(code) ?? code, count }))
 
-  // Chunk by IDs — `.in('id', [...])` ships every ID in the request URL, and
-  // popular reasons (lgbtq ≈ 2.3k books, political similar) blow past the
-  // PostgREST URL-length cap and the response silently comes back empty.
-  // 500 IDs/chunk keeps the URL well under any nginx/PostgREST default and
-  // each chunk returns ≤ 500 rows, so no per-chunk range pagination needed.
-  const BOOKS_CHUNK = 500
-  let books: Book[] = []
-  for (let i = 0; i < bookIds.length; i += BOOKS_CHUNK) {
-    const chunk = bookIds.slice(i, i + BOOKS_CHUNK)
+  // Hydrate the top books by reason-scoped event count: top 12 for the "Most
+  // banned" cards, top 50 for the JSON-LD ItemList. One .in() (≤50 ids).
+  const rankedIds = [...bookCountById.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id)
+  const topIds = rankedIds.slice(0, 50)
+  let topBooks: Book[] = []
+  if (topIds.length > 0) {
     const { data } = await supabase
       .from('books')
       .select(`
@@ -215,101 +212,38 @@ export default async function ReasonPage({
         book_authors(authors(display_name)),
         bans(id, status, country_code, year_started, countries(name_en), ban_reason_links(reasons(slug)))
       `)
-      .in('id', chunk)
-      .order('title')
-    if (data && data.length > 0) books = books.concat(data as unknown as Book[])
+      .in('id', topIds)
+    const byId = new Map(((data ?? []) as unknown as Book[]).map(b => [b.id, b]))
+    topBooks = topIds.map(id => byId.get(id)).filter(Boolean) as Book[]
   }
 
-  // ── Build filter option lists from full unfiltered set ───────────────────────
-  const countryMap = new Map<string, string>()
-  for (const book of books) {
-    for (const ban of book.bans) {
-      if (!countryMap.has(ban.country_code)) {
-        countryMap.set(ban.country_code, ban.countries?.name_en ?? ban.country_code)
-      }
+  // BookCardCompact shape — slim view-model so the homepage rail chrome wraps
+  // every card on the page.
+  const topBookCards = topBooks.slice(0, 12).map(book => {
+    const count = bookCountById.get(book.id) ?? 0
+    return {
+      id: book.id,
+      title: book.title,
+      slug: book.slug,
+      cover_url: book.cover_url,
+      author: authorName(book),
+      context: `${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'}`,
     }
-  }
-  const countryOptions = [...countryMap.entries()]
-    .sort((a, b) => a[1].localeCompare(b[1]))
-    .map(([code, name]) => ({ code, name }))
-
-  const availableYears = [...new Set(
-    books.flatMap(b => b.bans.map(bn => bn.year_started).filter((y): y is number => y != null))
-  )].sort((a, b) => b - a)
-
-  // A book on /reasons/lgbtq can also have non-LGBTQ+ bans (Index Librorum
-  // 1559, sedition 1933, etc.). Filter every per-reason aggregate to only
-  // the bans that actually carry THIS reason — otherwise the lead claims
-  // censorship started in 1559 because some LGBTQ+-tagged book also has
-  // an Index Librorum entry. matchesReason() is shared by totals, country
-  // counts, ranking, and the earliest-year calculation below.
-  const matchesReason = (ban: Book['bans'][number]) =>
-    ban.ban_reason_links.some(l => l.reasons?.slug === slug)
-
-  // ── Apply filters (affects the A–Z catalogue section only) ───────────────────
-  const filtered = books.filter(book => {
-    let bans = book.bans
-    if (filterCountry) bans = bans.filter(b => b.country_code === filterCountry)
-    if (filterYearNum) bans = bans.filter(b => b.year_started === filterYearNum)
-    if (filterActive) bans = bans.filter(b => b.status === 'active')
-    return bans.length > 0
   })
 
-  const sorted = [...filtered].sort((a, b) => {
-    if (filterSort === 'title') return a.title.localeCompare(b.title)
-    if (filterSort === 'year') {
-      const aYear = Math.min(...a.bans.map(bn => bn.year_started ?? 9999))
-      const bYear = Math.min(...b.bans.map(bn => bn.year_started ?? 9999))
-      return aYear - bYear
-    }
-    // Default: sort by reason-scoped ban count (descending)
-    return b.bans.filter(matchesReason).length - a.bans.filter(matchesReason).length
-  })
-
-  // ── Stats ────────────────────────────────────────────────────────────────────
-  const totalBans = books.reduce(
-    (sum, b) => sum + b.bans.filter(matchesReason).length,
-    0,
-  )
-  const activeBans = books.reduce(
-    (sum, b) => sum + b.bans.filter(bn => matchesReason(bn) && bn.status === 'active').length,
-    0,
-  )
-  const countries = [...new Set(
-    books.flatMap(b => b.bans.filter(matchesReason).map(bn => bn.country_code)),
-  )].length
-
-  // Top-12 most banned for THIS reason (ranked, unfiltered) — anchored
-  // showcase row, parallel to /scope/[slug]'s "Most banned in U.S. schools".
-  const topBookRanking = [...books]
-    .map(b => ({ book: b, count: b.bans.filter(matchesReason).length }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 12)
-
-  // BookCardCompact shape — slim view-model so the homepage rail chrome
-  // (serif title, oxblood hover, 2:3 cover) wraps every card on the page.
-  const topBookCards = topBookRanking.map(({ book, count }) => ({
-    id: book.id,
-    title: book.title,
-    slug: book.slug,
-    cover_url: book.cover_url,
-    author: authorName(book),
-    context: `${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'}`,
-  }))
-  const topBookIdSet = new Set(topBookCards.map(b => b.id))
+  // Initial (unfiltered, most-banned) catalogue page — server-fetched for SSR
+  // and SEO; <ReasonCatalogueBrowser> takes over filtering/pagination client-side.
+  const initial = await searchBooks({ reason: slug, sort: 'bans', limit: 48 })
+  const initialBooks = initial.books as unknown as ApiBook[]
+  const initialTotal = initial.total
 
   // ── Editorial copy ───────────────────────────────────────────────────────────
   const intro = REASON_INTROS[slug]
   const phrase = reasonPhrase(slug)
   const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
-  const allBanYears = books.flatMap(b =>
-    b.bans.filter(matchesReason).map(bn => bn.year_started).filter((y): y is number => y != null),
-  )
-  const earliestBanYear = allBanYears.length > 0 ? Math.min(...allBanYears) : null
 
   let reasonLead: string | null = null
-  if (bookIds.length > 0) {
-    const bookCount = bookIds.length
+  if (bookCount > 0) {
     const head = `${bookCount} ${bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for ${phrase} worldwide`
     const tail = earliestBanYear ? ` since ${earliestBanYear}` : ''
     reasonLead = `${head}${tail}.`
@@ -322,7 +256,7 @@ export default async function ReasonPage({
   // Hero stats — same shape as /scope/[slug] for cross-page consistency.
   type Stat = { value: string; label: string }
   const heroStats: Stat[] = []
-  heroStats.push({ value: bookIds.length.toLocaleString('en'), label: bookIds.length === 1 ? 'Book' : 'Books' })
+  heroStats.push({ value: bookCount.toLocaleString('en'), label: bookCount === 1 ? 'Book' : 'Books' })
   heroStats.push({ value: totalBans.toLocaleString('en'), label: totalBans === 1 ? 'Documented event' : 'Documented events' })
   if (countries > 0) heroStats.push({ value: countries.toLocaleString('en'), label: countries === 1 ? 'Country' : 'Countries' })
   if (activeBans > 0) heroStats.push({ value: activeBans.toLocaleString('en'), label: 'Currently active' })
@@ -338,11 +272,11 @@ export default async function ReasonPage({
     mainEntityOfPage: collectionUrl,
   }
   if (reasonLead) collectionJsonLd.description = reasonLead
-  if (books.length > 0) {
+  if (topBooks.length > 0) {
     collectionJsonLd.mainEntity = {
       '@type': 'ItemList',
-      numberOfItems: bookIds.length,
-      itemListElement: books.slice(0, 50).map((b, idx) => ({
+      numberOfItems: bookCount,
+      itemListElement: topBooks.map((b, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
         url: `https://www.banned-books.org/books/${b.slug}`,
@@ -356,7 +290,7 @@ export default async function ReasonPage({
   const faqItems: FaqItem[] = []
   faqItems.push({
     q: `How many books have been banned for ${phrase}?`,
-    a: `${bookIds.length.toLocaleString('en')} ${bookIds.length === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
+    a: `${bookCount.toLocaleString('en')} ${bookCount === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
       topCountries.length >= 1 ? ` ${topCountries[0].name_en} has the most documented cases.` : ''
     }`,
   })
@@ -372,10 +306,10 @@ export default async function ReasonPage({
       a: `The earliest documented ${phrase} ban in this catalogue dates to ${earliestBanYear}.`,
     })
   }
-  if (books.length >= 3) {
+  if (topBooks.length >= 3) {
     faqItems.push({
       q: `What books have been banned for ${phrase}?`,
-      a: `Notable examples include ${topBookRanking.slice(0, 5).map(({ book }) => book.title).join(', ')}.`,
+      a: `Notable examples include ${topBooks.slice(0, 5).map(b => b.title).join(', ')}.`,
     })
   }
 
@@ -502,71 +436,20 @@ export default async function ReasonPage({
         )
       })()}
 
-      {/* ── Filter + Full catalogue (A–Z, gated to non-top-12) ─────────── */}
-      <SectionShell tone="cream" eyebrow="Full catalogue · A–Z">
+      {/* ── Full catalogue (client-side filtered via /api/books) ─────────── */}
+      <SectionShell tone="cream" eyebrow="Full catalogue">
         <SectionHeader
           title="Browse the full catalogue"
-          subtitle={
-            sorted.length === books.length
-              ? `All ${books.length.toLocaleString('en')} titles. Filter by country, year, or status.`
-              : `Showing ${sorted.length.toLocaleString('en')} of ${books.length.toLocaleString('en')} titles after filtering.`
-          }
+          subtitle={`All ${bookCount.toLocaleString('en')} titles. Filter by country, year, or status.`}
           accent="black"
         />
-        <Suspense>
-          <ReasonControls
-            current={{ country: filterCountry, year: filterYear, active: filterActive, sort: filterSort }}
-            countries={countryOptions}
-            years={availableYears}
-            totalBooks={books.length}
-            filteredBooks={sorted.length}
-          />
-        </Suspense>
-
-        {sorted.length === 0 ? (
-          <p className="text-neutral-500 text-sm">No books match the current filters.</p>
-        ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
-            {sorted
-              .filter(b => !topBookIdSet.has(b.id))
-              .slice(0, 100)
-              .map(book => (
-                <Link
-                  key={book.id}
-                  href={`/books/${book.slug}`}
-                  className="group flex flex-col"
-                >
-                  <div className="relative w-full aspect-[2/3] overflow-hidden rounded-sm bg-white border border-neutral-200">
-                    {book.cover_url ? (
-                      <Image
-                        src={book.cover_url}
-                        alt={coverAlt(book.title, authorName(book), book.first_published_year)}
-                        fill
-                        className="object-cover"
-                        sizes="(min-width: 1024px) 130px, (min-width: 768px) 16vw, 30vw"
-                      />
-                    ) : (
-                      <BookCoverPlaceholder
-                        title={book.title}
-                        author={authorName(book)}
-                        slug={book.slug}
-                        className="absolute inset-0 w-full h-full"
-                      />
-                    )}
-                  </div>
-                  <h3 className="mt-2 font-serif text-xs font-medium leading-snug text-gray-900 group-hover:text-oxblood line-clamp-2 transition-colors">
-                    {book.title}
-                  </h3>
-                </Link>
-              ))}
-          </div>
-        )}
-        {sorted.length > 100 + topBookIdSet.size && (
-          <p className="mt-4 text-[11px] text-neutral-500">
-            Showing the first 100 of {(sorted.length - topBookIdSet.size).toLocaleString('en')} remaining titles. Use the filters above to narrow down, or{' '}
-            <Link href="/search" className="underline hover:text-oxblood">search the full catalogue</Link>.
-          </p>
-        )}
+        <ReasonCatalogueBrowser
+          reason={slug}
+          initialBooks={initialBooks}
+          initialTotal={initialTotal}
+          countryOptions={countryOptions}
+          years={availableYears}
+        />
       </SectionShell>
 
       {/* ── Bookshop.org reading list (compact, below catalogue) ────────── */}
