@@ -21,15 +21,17 @@ import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 
-// Prebuild every country hub at build time. Without a generateStaticParams the
-// route renders fully dynamically in production (cache-control: no-store,
-// x-vercel-cache: MISS on every request), so revalidate=3600 never takes
-// effect. Returning params flips it to static + ISR so it's edge-cached.
-// Canonical URLs are lowercase (see canonical below), so emit lowercase codes.
+// Return [] (not the full country list): an empty array still flips the route
+// to static + ISR — the key fix, so it's edge-cached (s-maxage) instead of
+// no-store — but renders each country on first request rather than all 103 at
+// build time. Prerendering every country during `next build` ran this page's
+// heavy ban aggregation 103× concurrently and tripped Supabase statement
+// timeouts under load (e.g. while the enrichment pipeline is running),
+// failing the whole build. On-demand ISR keeps the caching win without that
+// build-time fan-out. (Revisit prebuilding once the per-country aggregation is
+// MV-backed — see P2.)
 export async function generateStaticParams() {
-  const { data } = await adminClient().from('countries').select('code')
-  const rows = (data ?? []) as { code: string }[]
-  return rows.map((c) => ({ code: c.code.toLowerCase() }))
+  return [] as { code: string }[]
 }
 
 export async function generateMetadata({
