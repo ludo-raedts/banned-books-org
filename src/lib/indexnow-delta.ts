@@ -20,6 +20,8 @@ export type IndexNowDeltaResult = {
   batches: number
   books: number
   authors: number
+  countries: number
+  reasons: number
   staticPages: number
   message?: string
   results?: Array<
@@ -28,7 +30,11 @@ export type IndexNowDeltaResult = {
   >
 }
 
-async function fetchSlugsCreatedAfter(
+// Keyed on updated_at (not created_at) so enrichment — new descriptions,
+// covers, added bans — re-submits the changed page to IndexNow, not just
+// brand-new slugs. updated_at is the same trigger-bumped column the sitemap
+// uses for lastmod, so the two stay consistent.
+async function fetchSlugsUpdatedAfter(
   table: 'books' | 'authors',
   cutoff: string,
 ): Promise<string[]> {
@@ -39,9 +45,9 @@ async function fetchSlugsCreatedAfter(
     const { data, error } = await supabase
       .from(table)
       .select('slug')
-      .gt('created_at', cutoff)
+      .gt('updated_at', cutoff)
       .not('slug', 'is', null)
-      .order('created_at', { ascending: true })
+      .order('updated_at', { ascending: true })
       .range(offset, offset + 999)
     if (error) throw new Error(`${table}: ${error.message}`)
     if (!data || data.length === 0) break
@@ -64,6 +70,8 @@ export async function runIndexNowDelta(): Promise<IndexNowDeltaResult> {
       batches: 0,
       books: 0,
       authors: 0,
+      countries: 0,
+      reasons: 0,
       staticPages: 0,
       message: 'INDEXNOW_KEY not configured',
     }
@@ -94,13 +102,35 @@ export async function runIndexNowDelta(): Promise<IndexNowDeltaResult> {
     : currentStaticUrls
 
   const [bookSlugs, authorSlugs] = await Promise.all([
-    fetchSlugsCreatedAfter('books', cutoff),
-    fetchSlugsCreatedAfter('authors', cutoff),
+    fetchSlugsUpdatedAfter('books', cutoff),
+    fetchSlugsUpdatedAfter('authors', cutoff),
   ])
+
+  // Country/reason hub pages aggregate the catalogue — when books/authors
+  // changed since the last run, those hubs almost certainly did too (a new ban
+  // shows up on its country and reason pages). The hub set is tiny (≤~115), so
+  // when there's catalogue activity we re-submit all of them rather than
+  // computing exact per-hub deltas. On a quiet run (no book/author changes) we
+  // skip them, so this doesn't spam IndexNow.
+  let countryUrls: string[] = []
+  let reasonUrls: string[] = []
+  if (bookSlugs.length + authorSlugs.length > 0) {
+    const [{ data: countries }, { data: reasons }] = await Promise.all([
+      supabase.from('countries').select('code'),
+      supabase.from('reasons').select('slug'),
+    ])
+    countryUrls = (countries ?? [])
+      .map((c) => `${SITEMAP_BASE_URL}/countries/${String(c.code).toLowerCase()}`)
+    reasonUrls = (reasons ?? [])
+      .filter((r): r is { slug: string } => Boolean(r.slug))
+      .map((r) => `${SITEMAP_BASE_URL}/reasons/${r.slug}`)
+  }
 
   const urls = [
     ...bookSlugs.map((slug) => `${SITEMAP_BASE_URL}/books/${slug}`),
     ...authorSlugs.map((slug) => `${SITEMAP_BASE_URL}/authors/${slug}`),
+    ...countryUrls,
+    ...reasonUrls,
     ...newStaticUrls,
   ]
 
@@ -123,6 +153,8 @@ export async function runIndexNowDelta(): Promise<IndexNowDeltaResult> {
       batches: 0,
       books: 0,
       authors: 0,
+      countries: 0,
+      reasons: 0,
       staticPages: 0,
       message: 'No new pages since last successful submission.',
     }
@@ -150,6 +182,8 @@ export async function runIndexNowDelta(): Promise<IndexNowDeltaResult> {
     batches: summary.batches,
     books: bookSlugs.length,
     authors: authorSlugs.length,
+    countries: countryUrls.length,
+    reasons: reasonUrls.length,
     staticPages: newStaticUrls.length,
     results: summary.results.map((r) =>
       r.ok

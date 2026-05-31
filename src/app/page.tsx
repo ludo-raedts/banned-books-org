@@ -455,7 +455,12 @@ export default async function HomePage() {
     '@id': 'https://www.banned-books.org/#organization',
     name: 'Banned Books',
     url: 'https://www.banned-books.org',
-    logo: 'https://www.banned-books.org/icon.svg',
+    logo: {
+      '@type': 'ImageObject',
+      // Raster PNG, not the SVG icon — Google's logo structured-data guidelines
+      // don't reliably accept SVG for the knowledge-panel/logo.
+      url: 'https://www.banned-books.org/brand/compact-bb.png',
+    },
     description: 'An international catalogue of books banned by governments and schools worldwide. Documents censorship history, dates, scope, and source citations.',
   }
 
