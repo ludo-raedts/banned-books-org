@@ -11,6 +11,10 @@ export type BookEditData = {
   id: number
   slug: string
   title: string
+  title_native: string | null
+  title_native_script: string | null
+  title_transliterated: string | null
+  title_english_meaningful: string | null
   cover_url: string | null
   first_published_year: number | null
   genres: string[]
@@ -34,7 +38,9 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
   const { data, error } = await supabase
     .from('books')
     .select(`
-      id, slug, title, cover_url, first_published_year, genres,
+      id, slug, title,
+      title_native, title_native_script, title_transliterated, title_english_meaningful,
+      cover_url, first_published_year, genres,
       description_book, description_ban, censorship_context,
       ai_drafted, warning_level, inclusion_rationale, extended_context,
       isbn13, openlibrary_work_id,
@@ -46,7 +52,10 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
   if (error || !data) notFound()
 
   const raw = data as unknown as {
-    id: number; slug: string; title: string; cover_url: string | null
+    id: number; slug: string; title: string
+    title_native: string | null; title_native_script: string | null
+    title_transliterated: string | null; title_english_meaningful: string | null
+    cover_url: string | null
     first_published_year: number | null; genres: string[]
     description_book: string | null; description_ban: string | null
     censorship_context: string | null; ai_drafted: boolean | null
@@ -63,6 +72,10 @@ export default async function AdminBookEditPage({ params }: { params: Promise<{ 
     id: raw.id,
     slug: raw.slug,
     title: raw.title,
+    title_native: raw.title_native,
+    title_native_script: raw.title_native_script,
+    title_transliterated: raw.title_transliterated,
+    title_english_meaningful: raw.title_english_meaningful,
     cover_url: raw.cover_url,
     first_published_year: raw.first_published_year,
     genres: raw.genres ?? [],

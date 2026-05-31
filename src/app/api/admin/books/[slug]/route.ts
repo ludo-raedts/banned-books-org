@@ -4,7 +4,8 @@ import { adminClient } from '@/lib/supabase'
 import { notifyIndexNow } from '@/lib/indexnow'
 
 const ALLOWED_FIELDS = new Set([
-  'title', 'first_published_year', 'genres', 'cover_url',
+  'title', 'title_native', 'title_native_script', 'title_transliterated',
+  'title_english_meaningful', 'first_published_year', 'genres', 'cover_url',
   'description_book', 'description_ban', 'censorship_context', 'ai_drafted',
   'warning_level', 'inclusion_rationale', 'extended_context',
 ])

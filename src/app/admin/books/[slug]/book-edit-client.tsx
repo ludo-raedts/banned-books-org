@@ -24,8 +24,21 @@ function getHostname(url: string): string | null {
 const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
 const textareaCls = `${inputCls} resize-y`
 
+// Mirrors DetectedScript in src/lib/imports/language-inference.ts — the values
+// detectScript() can produce. Used to backfill title_native_script automatically.
+const NATIVE_SCRIPTS = [
+  'latin', 'cyrillic', 'greek', 'arabic', 'hebrew', 'han', 'hiragana', 'katakana',
+  'hangul', 'devanagari', 'bengali', 'gurmukhi', 'gujarati', 'oriya', 'tamil',
+  'telugu', 'kannada', 'malayalam', 'sinhala', 'thai', 'lao', 'tibetan', 'myanmar',
+  'khmer', 'georgian', 'armenian', 'ethiopic', 'mixed',
+] as const
+
 export default function BookEditClient({ book }: { book: BookEditData }) {
   const [title, setTitle] = useState(book.title)
+  const [titleNative, setTitleNative] = useState(book.title_native ?? '')
+  const [titleNativeScript, setTitleNativeScript] = useState(book.title_native_script ?? '')
+  const [titleTransliterated, setTitleTransliterated] = useState(book.title_transliterated ?? '')
+  const [titleEnglish, setTitleEnglish] = useState(book.title_english_meaningful ?? '')
   const [year, setYear] = useState(book.first_published_year?.toString() ?? '')
   const [genres, setGenres] = useState((book.genres ?? []).join(', '))
   const [coverUrl, setCoverUrl] = useState(book.cover_url ?? '')
@@ -59,6 +72,10 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
     try {
       const body: Record<string, unknown> = {
         title,
+        title_native: titleNative.trim() || null,
+        title_native_script: titleNativeScript || null,
+        title_transliterated: titleTransliterated.trim() || null,
+        title_english_meaningful: titleEnglish.trim() || null,
         first_published_year: year ? parseInt(year) : null,
         genres: genres.split(',').map(g => g.trim()).filter(Boolean),
         cover_url: coverUrl || null,
@@ -119,6 +136,47 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
         <Field label="Title" hint="The book's display title">
           <input type="text" value={title} onChange={e => setTitle(e.target.value)} className={inputCls} />
         </Field>
+
+        <div className="border-t border-gray-200 pt-5 flex flex-col gap-5">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Multilingual title
+          </h2>
+
+          <Field
+            label="Native title"
+            hint="The title in its original language/script, e.g. «Архипелаг ГУЛАГ». Leave empty when it's the same as the title above. Shown as a secondary line on the public book page; powers a search-alias."
+          >
+            <input type="text" value={titleNative} onChange={e => setTitleNative(e.target.value)} className={inputCls} dir="auto" />
+          </Field>
+
+          <Field
+            label="Native script"
+            hint="Writing system of the native title. Normally auto-detected from the native title by the language-inference backfill — only set it by hand to override."
+          >
+            <select
+              value={titleNativeScript}
+              onChange={e => setTitleNativeScript(e.target.value)}
+              className={`${inputCls} w-56`}
+            >
+              <option value="">— none / unknown —</option>
+              {NATIVE_SCRIPTS.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </Field>
+
+          <Field
+            label="Transliterated title"
+            hint="Romanised form of a non-Latin native title, e.g. «Arkhipelag GULAG». Leave empty for Latin-script originals. Shown as a small italic line under the title on the public book page."
+          >
+            <input type="text" value={titleTransliterated} onChange={e => setTitleTransliterated(e.target.value)} className={inputCls} />
+          </Field>
+
+          <Field
+            label="English meaning"
+            hint="Literal English rendering when the title is non-English, e.g. «The Gulag Archipelago». Leave empty when the title above is already English. Shown as a secondary H2 on the public book page; powers a search-alias."
+          >
+            <input type="text" value={titleEnglish} onChange={e => setTitleEnglish(e.target.value)} className={inputCls} />
+          </Field>
+        </div>
 
         <Field label="First published year" hint="4-digit year of first publication">
           <input type="number" value={year} onChange={e => setYear(e.target.value)} min={1000} max={2099} className={`${inputCls} w-32`} />
