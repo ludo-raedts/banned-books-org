@@ -113,6 +113,13 @@ const CATEGORIES: readonly Category[] = [
           'Global network of free-expression organisations. Member alerts document specific banned/seized titles and prosecuted authors — cited e.g. for the Algiers Book Fair bans of Mohamed Benchicou\'s books.',
         match: ['ifex.org'],
       },
+      {
+        name: 'Forum 18',
+        url: 'https://www.forum18.org',
+        description:
+          'Norwegian religious-freedom watchdog; the cite-of-record for title-level court bans of specific religious books in Central Asia and the Caucasus (Kazakhstan, etc.), often with case dates and court names.',
+        match: ['forum18.org'],
+      },
     ],
   },
   {
@@ -631,6 +638,20 @@ const CATEGORIES: readonly Category[] = [
           'Independent Vietnamese literary site (Ban Vận động Văn đoàn Độc lập) documenting censored and unpublished Vietnamese writing; cited for title-level suppression in Vietnam.',
         match: ['vanviet.info'],
       },
+      {
+        name: 'SciELO Brazil',
+        url: 'https://www.scielo.br',
+        description:
+          'Open-access Brazilian academic journals. A recurring cite-of-record for Latin American censorship scholarship — e.g. Reimão\'s study of military-dictatorship (DCDP) book bans in Estudos Avançados, and the censorship of Luandino Vieira\'s Luuanda in Revista Brasileira de História.',
+        match: ['scielo.br'],
+      },
+      {
+        name: 'Libros Prohibidos (Chile)',
+        url: 'https://www.librosprohibidos.cl',
+        description:
+          'Chilean documentation project cataloguing books prohibited, seized or destroyed under the Pinochet dictatorship (1973–90), with per-title records.',
+        match: ['librosprohibidos.cl'],
+      },
     ],
   },
   {
@@ -1077,6 +1098,20 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Indian news site; a recurring cite-of-record for Indian book bans, publisher withdrawals and court restraints (e.g. the Punjab textbook bans and the Ramdev biography injunction).',
         match: ['scroll.in'],
+      },
+      {
+        name: 'Asia-Plus',
+        url: 'https://asiaplus.news',
+        description:
+          'Tajik news agency; cited for Tajikistan\'s Interior Ministry list of banned Salafi titles and other Central Asian book restrictions.',
+        match: ['asiaplus.news'],
+      },
+      {
+        name: 'El Día (Dominican Republic)',
+        url: 'https://eldia.com.do',
+        description:
+          'Dominican daily; cited for its roster of books prohibited under the Trujillo dictatorship (Galíndez, Requena and others).',
+        match: ['eldia.com.do'],
       },
     ],
   },
