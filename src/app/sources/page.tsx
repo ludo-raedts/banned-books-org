@@ -1071,6 +1071,13 @@ const CATEGORIES: readonly Category[] = [
           'Spanish-language literary site; cited for Franco-era and Latin American book-censorship histories.',
         match: ['zendalibros.com'],
       },
+      {
+        name: 'Scroll.in',
+        url: 'https://scroll.in',
+        description:
+          'Indian news site; a recurring cite-of-record for Indian book bans, publisher withdrawals and court restraints (e.g. the Punjab textbook bans and the Ramdev biography injunction).',
+        match: ['scroll.in'],
+      },
     ],
   },
   {
