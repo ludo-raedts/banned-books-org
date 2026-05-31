@@ -106,6 +106,13 @@ const CATEGORIES: readonly Category[] = [
           'Amnesty country pages and Urgent Action releases document specific cases of authors and publishers detained or prosecuted for prohibited works — used as cite-of-record for individual ban events in restrictive jurisdictions.',
         match: ['amnesty.org'],
       },
+      {
+        name: 'IFEX',
+        url: 'https://ifex.org',
+        description:
+          'Global network of free-expression organisations. Member alerts document specific banned/seized titles and prosecuted authors — cited e.g. for the Algiers Book Fair bans of Mohamed Benchicou\'s books.',
+        match: ['ifex.org'],
+      },
     ],
   },
   {
@@ -323,6 +330,13 @@ const CATEGORIES: readonly Category[] = [
           'Direct citations to Russia\'s official FSEM register (Federal Law 114-FZ). Used selectively per-entry where Wikipedia coverage was incomplete. The full ~5,500-entry crawl remains a future scale-up (most entries are pamphlets/audio rather than books).',
         match: ['minjust.gov.ru'],
       },
+      {
+        name: 'Plano Nacional de Leitura — Lista de Livros Censurados (Portugal)',
+        url: 'https://pnl2027.gov.pt',
+        description:
+          'Portugal\'s government National Reading Plan publishes a list of books censored under the Estado Novo dictatorship (1933–1974) — the cite-of-record for Salazar/Caetano-era Portuguese title bans.',
+        match: ['pnl2027.gov.pt'],
+      },
     ],
   },
   {
@@ -467,8 +481,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'The File Room — Article 19 / Index on Censorship archive',
         url: 'https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/file.html',
         description:
-          'Antoni Muntadas\'s 1994 net.art project The File Room — an online crowd-sourced censorship archive originally hosted by Chicago\'s Randolph Street Gallery and now preserved by NTT InterCommunication Center (Tokyo, Japan). Curated in cooperation with Article 19 and Index on Censorship. Cited as historical-archive source for late-20th-century censorship cases that pre-date modern HRW / PEN databases.',
-        match: ['ntticc.or.jp'],
+          'Antoni Muntadas\'s 1994 net.art project The File Room — an online crowd-sourced censorship archive originally hosted by Chicago\'s Randolph Street Gallery and now preserved by NTT InterCommunication Center (Tokyo, Japan) and at thefileroom.org. Curated in cooperation with Article 19 and Index on Censorship. Cited as historical-archive source for late-20th-century censorship cases that pre-date modern HRW / PEN databases (e.g. Ethiopia\'s 1921 ban of Tekle Hawariat\'s Fabula).',
+        match: ['ntticc.or.jp', 'thefileroom.org'],
       },
       {
         name: 'Mushakavanhu — None but Ourselves (Rhodesia history)',
@@ -595,6 +609,27 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Laureate profiles document free-expression cases, cited for the lèse-majesté suppression of Sulak Sivaraksa\'s Unmasking Thai Society.',
         match: ['rightlivelihood.org'],
+      },
+      {
+        name: 'Spanish Wikipedia — censorship catalogues',
+        url: 'https://es.wikipedia.org',
+        description:
+          'Spanish-language Wikipedia articles (e.g. Censura durante el franquismo) cited for Franco-era and Latin American title bans where English coverage is thin.',
+        match: ['es.wikipedia.org'],
+      },
+      {
+        name: 'Global Literature in Libraries Initiative (GLLI)',
+        url: 'https://glli-us.org',
+        description:
+          'Translators/librarians initiative profiling world literature; cited for title-level censorship histories of translated and banned works.',
+        match: ['glli-us.org'],
+      },
+      {
+        name: 'Văn Việt',
+        url: 'https://vanviet.info',
+        description:
+          'Independent Vietnamese literary site (Ban Vận động Văn đoàn Độc lập) documenting censored and unpublished Vietnamese writing; cited for title-level suppression in Vietnam.',
+        match: ['vanviet.info'],
       },
     ],
   },
@@ -909,6 +944,132 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Publishing-industry outlet, cited for the ~1,000 titles barred from the 2018 Kuwait International Book Fair, including Dostoevsky\'s The Brothers Karamazov.',
         match: ['thenewpublishingstandard.com'],
+      },
+      {
+        name: 'Radio Dabanga',
+        url: 'https://www.dabangasudan.org',
+        description:
+          'Sudan-focused outlet; the cite-of-record for Khartoum International Book Fair confiscations (Baraka Sakin\'s The Messiah of Darfur, Kazantzakis, and more).',
+        match: ['dabangasudan.org'],
+      },
+      {
+        name: 'NPR',
+        url: 'https://www.npr.org',
+        description:
+          'US public radio; cited for international book-ban reporting, e.g. the most-requested banned books in Jordan (2010).',
+        match: ['npr.org'],
+      },
+      {
+        name: 'Dawn',
+        url: 'https://www.dawn.com',
+        description:
+          'Pakistan\'s leading English daily; cited for Pakistani book bans and seizures.',
+        match: ['dawn.com'],
+      },
+      {
+        name: 'The Friday Times',
+        url: 'https://thefridaytimes.com',
+        description:
+          'Pakistani weekly; cited for Pakistani title bans and censorship cases.',
+        match: ['thefridaytimes.com'],
+      },
+      {
+        name: 'Minute Mirror',
+        url: 'https://minutemirror.com.pk',
+        description:
+          'Pakistani daily; cited (with PEIRA) for textbook and title bans in Pakistan.',
+        match: ['minutemirror.com.pk'],
+      },
+      {
+        name: 'RFE/RL (Gandhara)',
+        url: 'https://www.rferl.org',
+        description:
+          'Radio Free Europe/Radio Liberty\'s Gandhara service; cited for book bans in Pakistan, Afghanistan and Central Asia.',
+        match: ['rferl.org'],
+      },
+      {
+        name: 'The Jakarta Post',
+        url: 'https://www.thejakartapost.com',
+        description:
+          'Indonesia\'s main English daily; cited for Indonesian book bans and Attorney-General confiscations.',
+        match: ['thejakartapost.com'],
+      },
+      {
+        name: 'Tuổi Trẻ',
+        url: 'https://tuoitre.vn',
+        description:
+          'Major Vietnamese daily; cited for Vietnamese title withdrawals and bans.',
+        match: ['tuoitre.vn'],
+      },
+      {
+        name: 'Havana Times',
+        url: 'https://havanatimes.org',
+        description:
+          'English-language outlet on Cuba; cited for Cuban book censorship cases.',
+        match: ['havanatimes.org'],
+      },
+      {
+        name: 'The Arab Weekly',
+        url: 'https://thearabweekly.com',
+        description:
+          'Pan-Arab weekly; cited for Algerian and other Arab-world book bans (e.g. Benchicou\'s Bouteflika biography).',
+        match: ['thearabweekly.com'],
+      },
+      {
+        name: 'Ammon News',
+        url: 'https://en.ammonnews.net',
+        description:
+          'Jordanian news agency; cited for Department of Press and Publications book withdrawals.',
+        match: ['ammonnews.net'],
+      },
+      {
+        name: 'Doha News',
+        url: 'https://dohanews.co',
+        description:
+          'Qatar-focused outlet; cited for the Ministry of Culture ban on Mohanalakshmi Rajakumar\'s Love Comes Later.',
+        match: ['dohanews.co'],
+      },
+      {
+        name: 'Euronews',
+        url: 'https://www.euronews.com',
+        description:
+          'European broadcaster; cited for the Algiers Book Fair ban on Kamel Daoud\'s Houris.',
+        match: ['euronews.com'],
+      },
+      {
+        name: 'Publishing Perspectives',
+        url: 'https://publishingperspectives.com',
+        description:
+          'International publishing-industry outlet; cited for UAE confiscations and Gulf book-clearance bottlenecks.',
+        match: ['publishingperspectives.com'],
+      },
+      {
+        name: 'Publishers Weekly',
+        url: 'https://www.publishersweekly.com',
+        description:
+          'US publishing trade magazine; cited for international ban and censorship reporting.',
+        match: ['publishersweekly.com'],
+      },
+      {
+        name: 'Literary Hub',
+        url: 'https://lithub.com',
+        description:
+          'Literary news site; cited for title-level censorship and banned-book reporting.',
+        match: ['lithub.com'],
+      },
+      {
+        name: 'London Review of Books',
+        url: 'https://www.lrb.co.uk',
+        description:
+          'UK literary review; cited for essays documenting specific title bans.',
+        match: ['lrb.co.uk'],
+      },
+      {
+        name: 'Zenda',
+        url: 'https://www.zendalibros.com',
+        description:
+          'Spanish-language literary site; cited for Franco-era and Latin American book-censorship histories.',
+        match: ['zendalibros.com'],
       },
     ],
   },
