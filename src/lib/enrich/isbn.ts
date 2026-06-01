@@ -22,10 +22,14 @@
 //     isbn_checked_at, so the row drops out of the pool.
 //   - On a prefilter-reject: same not_found stamp (structurally unsearchable
 //     — no upside to re-trying).
-//   - On a low-similarity or edition-mismatch reject: NOT stamped. OL/GB
-//     metadata can improve; we want the row to re-try on a future sweep.
+//   - On a low-similarity or edition-mismatch reject: isbn_status='no_match' +
+//     isbn_checked_at. A candidate existed but failed the confidence guards;
+//     stamping it (distinct from 'not_found') stops the row from being fully
+//     re-queried every sweep while still letting a targeted re-sweep reopen
+//     only 'no_match' rows if OL/GB metadata later improves.
 //   - On a dup-collision (candidate ISBN already on another row): NOT
-//     stamped. The clashing row may later get reassigned.
+//     stamped. A real match was found; the clashing row may later get
+//     reassigned, so we want this row to re-try.
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
@@ -420,19 +424,23 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       notFound++
       if (samples.length < 10) samples.push({ title: book.title, isbn: null, source: '' })
 
-      // Stamp true misses only — OL/GB returned nothing usable. Leave
-      // low-similarity and edition-mismatch rejects unstamped so they
-      // retry once OL/GB metadata improves.
-      if (opts.apply && rejectedSim === 0 && rejectedEd === 0) {
+      // Stamp every exhausted lookup so it leaves the eligible pool:
+      //   - 'not_found' when OL/GB returned no candidate at all.
+      //   - 'no_match' when a candidate existed but failed the confidence
+      //     guards (low title-similarity / edition language-mismatch).
+      // Keeping them distinct lets a future sweep reopen only 'no_match'
+      // rows without re-running true misses.
+      if (opts.apply) {
+        const status = rejectedSim > 0 || rejectedEd > 0 ? 'no_match' : 'not_found'
         const { error } = await supabase
           .from('books')
           .update({
-            isbn_status: 'not_found',
+            isbn_status: status,
             isbn_checked_at: new Date().toISOString(),
           })
           .eq('id', book.id)
           .is('isbn13', null)
-        if (error) log(`    ✗ Not-found stamp failed: ${error.message}`)
+        if (error) log(`    ✗ ${status} stamp failed: ${error.message}`)
       }
     }
   }
