@@ -14,6 +14,7 @@ import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import TrendingWidget from '@/components/trending-widget'
 import StatsFilters from '@/components/stats-filters'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
+import { countryFlag } from '@/lib/country-flag'
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = adminClient()
@@ -30,13 +31,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: `${books} banned books and ${bans} documented bans across ${countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
     alternates: { canonical: '/stats' },
   }
-}
-
-function countryFlag(code: string): string {
-  if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
-  return [...code.toUpperCase()].map(c =>
-    String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
-  ).join('')
 }
 
 const REASON_COLORS: Record<string, string> = {

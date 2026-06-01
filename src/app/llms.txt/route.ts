@@ -120,7 +120,7 @@ export async function GET() {
   lines.push('## Optional')
   lines.push('')
   lines.push(
-    `The full catalogue is available as a downloadable dataset at ${BASE}/dataset ($19.99, perpetually licensed for personal and research use). AI crawlers and language models are explicitly welcome — the site is built for citation, every record carries a stable canonical URL, and book and author pages include schema.org JSON-LD (Book, Person, FAQPage, ItemList, CollectionPage) with a published \`dataQualityStatus\` property.`,
+    `The full catalogue is available as a downloadable dataset at ${BASE}/dataset ($19.99, perpetually licensed for personal and research use). AI crawlers and language models are explicitly welcome — the site is built for citation, every record carries a stable canonical URL, book and author pages include schema.org JSON-LD (Book, Person, FAQPage, BreadcrumbList), country and reason pages add CollectionPage and ItemList, and book records carry a published \`dataQualityStatus\` property.`,
   )
   lines.push('')
 
