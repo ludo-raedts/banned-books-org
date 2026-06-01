@@ -23,8 +23,17 @@ import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { POC_COUNTRY_CODES, getCentroid } from './lib/country-centroids'
+import { getStateCentroid, stateCodeFromRegion } from './lib/us-state-centroids'
 
 const APPLY = process.argv.includes('--apply')
+
+// US per-state spreading (Option B): events whose `region` resolves to a state are
+// placed on that state's centroid and deduped per (book, country, state, year).
+// `region = "Nation"` collapses to one national dot on the US country centroid.
+// US events with no resolvable state (older Wikipedia/ALA/old-PEN aggregates) are
+// DROPPED from the film layer — they have no place on a per-state map. Non-US
+// countries are untouched (still deduped at country level).
+const US_NATION_REGION = 'Nation'
 
 const ROOT = process.cwd()
 const OUT_DIR = join(ROOT, 'data', 'film')
@@ -57,6 +66,7 @@ type BanRow = {
   country_code: string
   scope_id: number
   year_started: number | null
+  region: string | null
 }
 
 async function main() {
@@ -90,23 +100,50 @@ async function main() {
   const frDropped = bans.length - kept.length
   console.log(`  · dropped ${frDropped} FR pre-${FR_MIN_YEAR} (Liste Otto) + null-year rows`)
 
-  // ── 3. Dedup on (book_id, country_code, year_started); pick representative scope
-  const byTuple = new Map<string, BanRow>()
+  // ── 3. Place each ban geographically, then dedup ────────────────────────────
+  // Non-US → country centroid, key (book, country, year).
+  // US + resolvable state → state centroid, key (book, US, state, year).
+  // US + "Nation" → US country centroid, key (book, US, NATION, year), state null.
+  // US + no state → dropped.
+  type Placed = { ban: BanRow; key: string; lng: number; lat: number; state: string | null }
+  const placedList: Placed[] = []
+  let droppedUS = 0
   for (const b of kept) {
-    const key = `${b.book_id}|${b.country_code}|${b.year_started}`
-    const cur = byTuple.get(key)
-    if (!cur) {
-      byTuple.set(key, b)
+    if (b.country_code !== 'US') {
+      const c = getCentroid(b.country_code)
+      if (!c) continue // defensive: filtered to PoC codes already
+      placedList.push({ ban: b, key: `${b.book_id}|${b.country_code}|${b.year_started}`, lng: c[0], lat: c[1], state: null })
       continue
     }
-    if (better(b, cur, scopeById)) byTuple.set(key, b)
+    // US
+    const region = (b.region ?? '').trim()
+    if (region === US_NATION_REGION) {
+      const c = getCentroid('US')!
+      placedList.push({ ban: b, key: `${b.book_id}|US|NATION|${b.year_started}`, lng: c[0], lat: c[1], state: null })
+      continue
+    }
+    const code = stateCodeFromRegion(region)
+    const c = code ? getStateCentroid(code) : null
+    if (!code || !c) {
+      droppedUS++ // older aggregates (no/unresolvable state) — not on a per-state map
+      continue
+    }
+    placedList.push({ ban: b, key: `${b.book_id}|US|${code}|${b.year_started}`, lng: c[0], lat: c[1], state: code })
   }
-  const deduped = [...byTuple.values()]
-  console.log(`  · ${deduped.length} distinct (book, country, year) tuples after dedup`)
+
+  // Dedup per geo key; pick the representative scope (government > school > rest).
+  const byKey = new Map<string, Placed>()
+  for (const p of placedList) {
+    const cur = byKey.get(p.key)
+    if (!cur || better(p.ban, cur.ban, scopeById)) byKey.set(p.key, p)
+  }
+  const placed = [...byKey.values()]
+  console.log(`  · dropped ${droppedUS} US events with no resolvable state (older aggregates)`)
+  console.log(`  · ${placed.length} dots after geo-aware dedup (US per state, rest per country)`)
 
   // ── 4. Resolve joins for the kept rows only ────────────────────────────────
-  const bookIds = unique(deduped.map((b) => b.book_id))
-  const banIds = unique(deduped.map((b) => b.id))
+  const bookIds = unique(placed.map((p) => p.ban.book_id))
+  const banIds = unique(placed.map((p) => p.ban.id))
 
   const books = await fetchByIds(
     supabase, 'books', 'id, slug, title, warning_level', 'id', bookIds,
@@ -158,6 +195,7 @@ async function main() {
     title: string | null
     author: string | null
     country_code: string
+    state: string | null // US: 2-letter state code; null = national US dot or non-US
     lng: number
     lat: number
     year: number
@@ -167,9 +205,8 @@ async function main() {
   }
 
   const events: Event[] = []
-  for (const b of deduped) {
-    const centroid = getCentroid(b.country_code)
-    if (!centroid) continue // defensive: should never happen, we filter on PoC codes
+  for (const p of placed) {
+    const b = p.ban
     const book = bookById.get(b.book_id)
     const authorId = firstAuthorIdByBook.get(b.book_id)
     const reasonId = firstReasonIdByBan.get(b.id)
@@ -180,8 +217,9 @@ async function main() {
       title: book ? (book.title as string) : null,
       author: authorId !== undefined ? (authorNameById.get(authorId) ?? null) : null,
       country_code: b.country_code,
-      lng: centroid[0],
-      lat: centroid[1],
+      state: p.state,
+      lng: p.lng,
+      lat: p.lat,
       year: b.year_started as number,
       reason_slug: reasonId !== undefined ? (reasonSlugById.get(reasonId) ?? null) : null,
       scope: scope ? scope.slug : null,
@@ -193,6 +231,7 @@ async function main() {
   events.sort((a, b) =>
     a.year - b.year ||
     a.country_code.localeCompare(b.country_code) ||
+    (a.state ?? '').localeCompare(b.state ?? '') ||
     (a.book_slug ?? '').localeCompare(b.book_slug ?? ''),
   )
   const pad = String(events.length).length // zero-pad width sized to the total
@@ -203,31 +242,45 @@ async function main() {
   // ── 6. Meta + payload ──────────────────────────────────────────────────────
   const years = events.map((e) => e.year)
   const countriesCovered = new Set(events.map((e) => e.country_code))
+  const usStateDots = events.filter((e) => e.country_code === 'US' && e.state !== null)
+  const usNationalDots = events.filter((e) => e.country_code === 'US' && e.state === null).length
+  const statesCovered = new Set(usStateDots.map((e) => e.state)).size
   const payload = {
     generated_at: new Date().toISOString(),
     meta: {
       total_events: events.length,
       countries_covered: countriesCovered.size,
       year_range: [Math.min(...years), Math.max(...years)] as [number, number],
+      us_state_dots: usStateDots.length,
+      us_states_covered: statesCovered,
+      us_national_dots: usNationalDots,
+      us_dropped_no_state: droppedUS,
     },
     events,
   }
 
   // ── 7. Output ──────────────────────────────────────────────────────────────
   const perCountry = countByCountry(events)
+  const perState = countByState(usStateDots)
+  const report = () => {
+    console.log('\nevents per country_code:')
+    for (const [code, n] of perCountry) console.log(`  ${code}: ${n}`)
+    console.log(`\nUS breakdown: ${usStateDots.length} state dots across ${statesCovered} states,` +
+      ` ${usNationalDots} national dots, ${droppedUS} dropped (no resolvable state)`)
+    console.log('top 10 US states (dots after dedup):')
+    for (const [code, n] of perState.slice(0, 10)) console.log(`  ${code}: ${n}`)
+  }
   if (!APPLY) {
     console.log('\n── DRY-RUN — nothing written ──')
     console.log('meta:', JSON.stringify(payload.meta))
     console.log('\nfirst 5 events:')
     for (const e of events.slice(0, 5)) console.log('  ', JSON.stringify(e))
-    console.log('\nevents per country_code:')
-    for (const [code, n] of perCountry) console.log(`  ${code}: ${n}`)
+    report()
     console.log('\nRe-run with --apply to write the file.')
   } else {
     await mkdir(OUT_DIR, { recursive: true })
     await writeFile(OUT_FILE, JSON.stringify(payload, null, 2) + '\n', 'utf8')
-    console.log('\nevents per country_code:')
-    for (const [code, n] of perCountry) console.log(`  ${code}: ${n}`)
+    report()
     console.log(`\n✓ Wrote ${OUT_FILE} — ${events.length} events`)
   }
 
@@ -255,7 +308,7 @@ async function fetchBans(supabase: ReturnType<typeof adminClient>): Promise<BanR
     // supabase-pagination) — without it rows can repeat across pages.
     const { data, error } = await supabase
       .from('bans')
-      .select('id, book_id, country_code, scope_id, year_started')
+      .select('id, book_id, country_code, scope_id, year_started, region')
       .in('country_code', POC_COUNTRY_CODES as unknown as string[])
       .gte('year_started', MIN_YEAR)
       .order('id', { ascending: true })
@@ -298,6 +351,12 @@ function unique(nums: number[]): number[] {
 function countByCountry(events: { country_code: string }[]): [string, number][] {
   const m = new Map<string, number>()
   for (const e of events) m.set(e.country_code, (m.get(e.country_code) ?? 0) + 1)
+  return [...m.entries()].sort((a, b) => b[1] - a[1])
+}
+
+function countByState(events: { state: string | null }[]): [string, number][] {
+  const m = new Map<string, number>()
+  for (const e of events) if (e.state) m.set(e.state, (m.get(e.state) ?? 0) + 1)
   return [...m.entries()].sort((a, b) => b[1] - a[1])
 }
 
