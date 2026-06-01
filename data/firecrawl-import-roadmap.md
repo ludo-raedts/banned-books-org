@@ -109,7 +109,7 @@ van boeken met titel, auteur, jaar van ban, reden, en primary-source URL
 
 After the Wikipedia + Perplexity sweep, the next investment becomes scraping the structured ban-registries themselves:
 
-- **Russia FSEM** (minjust.gov.ru) — 5,500 entries via Firecrawl-crawl + book-filter → 500-1,500 new bans
+- **Russia FSEM** (minjust.gov.ru) — ~5,500 entries via Firecrawl-crawl + book-filter. **Status as of 2026-06-01: partial sample done.** 45 entries already imported directly from minjust.gov.ru (in addition to 44 from the Wikipedia overview). A full crawl would target the remaining ~5,000 entries; conservative book-yield estimate 1,500-2,000 after filtering out leaflets/audio/video.
 - **PEN America Index of School Book Bans** (registry already in source-registry, importer not built) — 5,000+ US school bans (vs. our 20,776 — but with district granularity)
 - **US Prison FOIA** (TX, KS, VA, CA, SC, WA, NC) — combined 50,000+ records
 - **South Korea military banned books** — 23-book 2008 list + 19-book 2011 list (per Wiki, not all in DB)
@@ -213,12 +213,64 @@ source-link attribution on the ban_id.
   highest for very-recent bans (post-2020) and primary-source attribution
   — not for finding new titles.
 
+## Russia — extended status (2026-06-01)
+
+After the original FSEM batch1 (Wikipedia overview, 44 entries) several other
+ingestion paths into Russia landed via separate dialogs / batches. Current
+RU coverage is **137 bans** with multi-source provenance:
+
+| Source | Citations | Path |
+|---|---:|---|
+| minjust.gov.ru (official FSEM, Firecrawl-scraped) | 45 | Path B (partial — 45 of ~5,500) |
+| Wikipedia: Federal List of Extremist Materials | 44 | Path A (original batch1) |
+| Wikipedia: List of books banned by governments | 17 | Bulk import |
+| theins.press (independent Russian press) | 9 | Independent-press wave |
+| Meduza (English) | 5 | Independent-press wave |
+| The Moscow Times | 5 | Independent-press wave |
+| HRW (World Report 2024 + 2025 + Russia desk) | 6 | Tier-1 NGO |
+| Index on Censorship | 3 | Tier-1 NGO |
+| PEN International / Amnesty / PEN America | 4 | Tier-1 NGO |
+| Tsarist + Soviet-era long-tail Wikipedia entries | ~8 | Pre-imported |
+
+Year coverage now spans 1885–2026, with strong concentration on the post-
+Ukraine-war repression wave: 2022:13, 2023:19, 2024:23, 2025:15, 2026:5.
+
+**Remaining open work on Russia:**
+
+1. **Full FSEM crawl** — Path B completion. 45 of ~5,500 minjust.gov.ru
+   entries done; the rest is mechanical (same Firecrawl-scrape pattern,
+   ~50 entries per page, ~110 pages). Conservative book-yield 1,500-2,000
+   after filtering out leaflets/audio/video.
+2. **Memorial archive (Wayback)** — Memorial was banned in 2021; its
+   archive of Soviet-era dissidents and specific banned titles lives
+   only as Wayback snapshots now.
+3. **Tsarist-era expansion** — only 3 entries (1885-1888) for a regime
+   that ran centralized censorship 1804-1917 (Ustav o tsenzure 1804,
+   Reformatory Statute 1828, Reformed Statute 1865 etc).
+
+Path C (~5,500 records) is the highest-yield remaining single investment
+in the entire roadmap if appetite returns.
+
 ## Status
 
 - ✅ Singapore proof-of-concept committed (commit `f521c5c`, batch1 + batch2 = 31 + 6 = 37 new bans)
-- ✅ Russia FSEM batch1 committed (commit `8bd8a5d`, 44 entries)
+- ✅ Russia FSEM batch1 committed (commit `8bd8a5d`, 44 entries) — and subsequent independent batches grew RU to **137 bans** (see "Russia — extended status" above)
 - ✅ Iran probe + cleanup committed (commit `9dd34ed`, +2 new bans, 31 renames, 4 duplicate merges)
+- ✅ Indonesia (batch1 + batch2 = 8 new bans, 2010 Constitutional Court ban-law strike-down captured)
+- ✅ Egypt (4 cases via Firecrawl Tier-1: Metro, Naji, Abu Zayd, Foda)
+- ✅ Pakistan (Shame + Military Inc.)
+- ✅ Hungary (Meseország + Hamvas + Konrád)
+- ✅ Italy (2015 Venice Brugnaro 49-book children's ban)
+- ✅ Poland (Szpilman 1946 + Michnik 1980s)
+- ✅ Czechoslovakia/Czechia (6 normalization-era dissidents: Kundera, Havel, Hrabal ×3, Vaculík)
+- ✅ Ukraine (Stus + 2015 Russian-nationalist wave: Dugin, Limonov, Glazyev)
+- ✅ Philippines (2022 KWF/NTF-ELCAC red-tagging additions)
+- ✅ Chile + Uruguay (1986 Valparaíso burning of García Márquez + Petkoff, Benedetti)
+- ✅ Brazil (Freire + Marighella)
 - ✅ Generic per-country importer ready (`import-singapore-wiki.ts` reads `country_code` from JSON)
 - ✅ Non-Latin title cleanup template ready (`cleanup-iran-titles.ts`)
 - ✅ Safe-merge duplicate template ready (`merge-iran-duplicates.ts`)
-- ⏸ Tier-1 sweep deferred (Iran probe consumed the Tier-1 budget; remaining: China, Saudi Arabia, India, Egypt, Pakistan, Indonesia)
+- ⏸ Remaining Tier-1 candidates: China, Saudi Arabia, India
+- ⏸ Remaining Tier-2 candidates: Romania, Bulgaria, Albania, Yugoslavia successor states (RS/HR/SI/BA/XK split from YU legacy)
+- ⏸ Remaining big-source paths: Russia FSEM full crawl, PEN America registry, US Prison FOIA
+- ⏸ South America regional follow-up: Bolivia, Ecuador, Colombia, Peru, Paraguay, Venezuela all still <5 bans each
