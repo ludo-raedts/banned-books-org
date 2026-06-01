@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "note": "African zero-coverage sweep. Nearly all agent candidates already existed (Mongo Beti CM x2, Luuanda AO, The Rape of Sita MU). Only Honwana's PIDE-banned Mozambican collection was genuinely new. The remaining true zero-coverage African countries (Ghana, Zambia, Senegal, Guinea, Côte d'Ivoire, DR Congo, etc.) yielded no retraceable title-specific book ban — censorship there is documented at author/press/film level. Held: weak Satanic Verses possession-penalty mentions for Liberia/Sierra Leone.",
+    "source_type": "media"
+  },
+  "entries": [
+    { "title": "Nós Matámos o Cão Tinhoso!", "authors": ["Luís Bernardo Honwana"], "first_published_year": 1964, "original_language": "pt", "country_code": "MZ", "ban_year": 1964, "scope_slug": "government", "action_type": "banned", "reason_slug": "political", "ban_status": "historical", "description_ban": "Story collection ('We Killed Mangy-Dog') exposing racism under Portuguese colonialism; quickly banned and seized by the PIDE secret police shortly after publication, and the author, a FRELIMO militant, was imprisoned.", "inclusion_rationale": "Title-specific colonial-era ban; documented via Wikipedia.", "source_url": "https://en.wikipedia.org/wiki/We_Killed_Mangy_Dog_and_Other_Stories", "source_name": "Wikipedia (We Killed Mangy-Dog)", "source_type": "media", "needs_review": false }
+  ]
+}
