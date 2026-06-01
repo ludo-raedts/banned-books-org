@@ -1122,10 +1122,31 @@ const CATEGORIES: readonly Category[] = [
       },
       {
         name: 'Asia-Plus',
-        url: 'https://asiaplus.news',
+        url: 'https://asiaplustj.info',
         description:
-          'Tajik news agency; cited for Tajikistan\'s Interior Ministry list of banned Salafi titles and other Central Asian book restrictions.',
-        match: ['asiaplus.news'],
+          'Tajik news agency; the cite-of-record for Tajikistan\'s Interior Ministry list of banned Salafi titles and other Central Asian book restrictions.',
+        match: ['asiaplustj.info', 'asiaplus.news'],
+      },
+      {
+        name: 'Al Jazeera',
+        url: 'https://www.aljazeera.com',
+        description:
+          'Qatari international broadcaster; cited for book bans across the Middle East and South/Central Asia (e.g. the Taliban\'s university-curriculum bans in Afghanistan).',
+        match: ['aljazeera.com'],
+      },
+      {
+        name: 'CIVICUS Monitor',
+        url: 'https://monitor.civicus.org',
+        description:
+          'Global civil-society alliance tracking civic-space violations; cited for title-level book-fair seizures such as Oman\'s Muscat International Book Fair confiscations.',
+        match: ['civicus.org'],
+      },
+      {
+        name: 'International Anthony Burgess Foundation',
+        url: 'https://www.anthonyburgess.org',
+        description:
+          'Archive of the novelist Anthony Burgess; its banned-books pages document the 1968 Malta confiscation and destruction of dozens of titles from Burgess\'s personal library.',
+        match: ['anthonyburgess.org'],
       },
       {
         name: 'El Día (Dominican Republic)',
