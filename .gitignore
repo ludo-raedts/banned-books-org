@@ -38,7 +38,9 @@ yarn-error.log*
 .vercel
 
 # claude code
-.claude/
+.claude/*
+# share the project-level settings, keep personal settings/worktrees local
+!.claude/settings.json
 
 # supabase temp
 supabase/.temp/
