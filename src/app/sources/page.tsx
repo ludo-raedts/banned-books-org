@@ -208,8 +208,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'Wikipedia — book and author articles (per-title citations)',
         url: 'https://en.wikipedia.org/',
         description:
-          'For individually-curated entries, we cite the relevant book or author\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four, en.wikipedia.org/wiki/Bohumil_Hrabal). Also includes non-English Wikipedias where the English article doesn\'t exist — Korean Wikipedia (ko.wikipedia.org) for Korean-only titles like 난장이가 쏘아올린 작은 공 (A Small Ball Shot by a Dwarf), etc. These are manual curation, not bulk-imported.',
-        match: ['en.wikipedia.org/wiki/', 'ko.wikipedia.org/wiki/'],
+          'For individually-curated entries, we cite the relevant book or author\'s Wikipedia article directly (e.g. en.wikipedia.org/wiki/Nineteen_Eighty-Four, en.wikipedia.org/wiki/Bohumil_Hrabal). Also includes non-English Wikipedias where the English article doesn\'t exist — Italian (it.wikipedia.org) for Fascist-era bans, Spanish/Romanian (es./ro.wikipedia.org) for Latin American and Romanian titles, Korean (ko.wikipedia.org), etc. These are manual curation, not bulk-imported.',
+        match: ['en.wikipedia.org/wiki/', 'ko.wikipedia.org/wiki/', 'it.wikipedia.org/wiki/', 'es.wikipedia.org/wiki/', 'ro.wikipedia.org/wiki/'],
       },
       {
         name: 'Wikisource — Liste Otto (Nazi-era France, 1940–1944)',
@@ -651,6 +651,27 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Chilean documentation project cataloguing books prohibited, seized or destroyed under the Pinochet dictatorship (1973–90), with per-title records.',
         match: ['librosprohibidos.cl'],
+      },
+      {
+        name: 'Hungarian Literature Online (HLO)',
+        url: 'https://hlo.hu',
+        description:
+          'English-language site of the literary institution Petőfi Literary Museum; its survey of Kádár-era censorship is a recurring cite-of-record for specific Hungarian book bans (Haraszti, Zilahy\'s razored Dukays, recalled foreign titles).',
+        match: ['hlo.hu'],
+      },
+      {
+        name: 'The Metaxas Project',
+        url: 'https://metaxas-project.com',
+        description:
+          'Research site on Greece\'s 1936–41 Metaxas regime; documents the 1936 book-burnings and the school-text bans of specific titles (Sophocles\' Antigone, Plato\'s Republic, Myrivilis, Papantoniou).',
+        match: ['metaxas-project.com'],
+      },
+      {
+        name: 'University of Kansas — Banned Books in Communist Poland',
+        url: 'https://guides.lib.ku.edu/c.php?g=95123&p=618653',
+        description:
+          'KU Libraries research guide cataloguing PRL-era (1945–89) banned and samizdat Polish titles with per-title detail (Hłasko, Tyrmand, Miłosz, Konwicki).',
+        match: ['guides.lib.ku.edu'],
       },
     ],
   },
