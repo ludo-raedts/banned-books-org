@@ -281,8 +281,14 @@ async function main() {
       since_year: SLOT_MIN_YEAR,
       content_category: SLOT_CONTENT_SLUGS,
       threshold: 'V2: dominant category >=5 events AND >=50% of the entity\'s events',
-      meta: slot.summary,
-      countries: slot.countries, // colored + neutral (omitted entities excluded)
+      // Convert the color-distribution Maps to plain objects so they actually
+      // serialize (JSON.stringify drops Map contents to {}).
+      meta: {
+        ...slot.summary,
+        countryColors: objFromMap(slot.summary.countryColors),
+        stateColors: objFromMap(slot.summary.stateColors),
+      },
+      countries: slot.countries, // colored + mixed + sparse (truly-empty excluded)
       states: slot.states,
     },
   }
@@ -303,15 +309,14 @@ async function main() {
 
     const s = slot.summary
     console.log('\n── Layer 2 — slot map (bans since 2000, content = moral+sexual+obscenity) ──')
-    console.log(`COUNTRIES: colored ${s.countriesColored}, neutral ${s.countriesNeutral}, omitted ${s.countriesOmitted}`)
-    console.log(`   color categories: ${fmtDist(s.countryColors)}`)
-    console.log(`US-STATES: colored ${s.statesColored}, neutral ${s.statesNeutral}, omitted ${s.statesOmitted}`)
-    console.log(`   color categories: ${fmtDist(s.stateColors)}`)
-    console.log('\n── Comparison to threshold survey V2 (un-merged) ──')
-    console.log(`   V2 baseline: ~23 countries colored, 15 US states colored (moral 11 / sexual 2 / lgbtq 2).`)
-    console.log(`   With the content-merge, states colored should RISE above 15 (FL/TX/TN that split`)
-    console.log(`   moral~sexual now resolve to 'content'); countries ~unchanged (political-dominated).`)
-    console.log(`   -> got countries ${s.countriesColored}, states ${s.statesColored}.`)
+    console.log('three tiers shown on the map; truly-empty (bans only pre-2000 / none) stay uncoloured:')
+    console.log(`COUNTRIES: colored ${s.countriesColored}, mixed ${s.countriesMixed}, sparse ${s.countriesSparse}` +
+      `  |  truly-empty (excluded) ${s.countriesEmpty}`)
+    console.log(`   colored categories: ${fmtDist(s.countryColors)}`)
+    console.log(`US-STATES: colored ${s.statesColored}, mixed ${s.statesMixed}, sparse ${s.statesSparse}` +
+      `  |  truly-empty (excluded) ${s.statesEmpty}`)
+    console.log(`   colored categories: ${fmtDist(s.stateColors)}`)
+    console.log(`mapped entities: ${slot.countries.length} countries + ${slot.states.length} states (colored+mixed+sparse)`)
   }
   if (!APPLY) {
     console.log('\n── DRY-RUN — nothing written ──')
@@ -335,14 +340,26 @@ function fmtDist(m: Map<string, number>): string {
   return arr.length ? arr.map(([c, n]) => `${c} ${n}`).join(', ') : '(none)'
 }
 
+/** Map → plain object (sorted desc by value), so it serializes to JSON. */
+function objFromMap(m: Map<string, number>): Record<string, number> {
+  return Object.fromEntries([...m.entries()].sort((a, b) => b[1] - a[1]))
+}
+
 // ── Layer 2: slot-map aggregate ────────────────────────────────────────────────
 
+// Three visual tiers (+ truly-empty entities are simply absent from the lists):
+//   colored — dominant category meets V2 (full category colour)
+//   mixed   — >=5 events on the top category but it's <50% (genuine data, no dominant
+//             reason) → muted tint
+//   sparse  — has bans since 2000 but <5 on every category (too thin to read) →
+//             light tint. "It happens here too, too little documented to characterise."
+type SlotStatus = 'colored' | 'mixed' | 'sparse'
 type SlotEntity = {
   code: string
   lng: number
   lat: number
-  status: 'colored' | 'neutral'
-  category: string | null // dominant category when colored
+  status: SlotStatus
+  category: string | null // dominant category — only set when colored
   total: number
   top: { category: string; count: number }
 }
@@ -351,8 +368,8 @@ async function buildSlotMap(supabase: ReturnType<typeof adminClient>): Promise<{
   countries: SlotEntity[]
   states: SlotEntity[]
   summary: {
-    countriesColored: number; countriesNeutral: number; countriesOmitted: number
-    statesColored: number; statesNeutral: number; statesOmitted: number
+    countriesColored: number; countriesMixed: number; countriesSparse: number; countriesEmpty: number
+    statesColored: number; statesMixed: number; statesSparse: number; statesEmpty: number
     countryColors: Map<string, number>; stateColors: Map<string, number>
   }
 }> {
@@ -416,34 +433,36 @@ async function buildSlotMap(supabase: ReturnType<typeof adminClient>): Promise<{
     }
   }
 
-  // 3. Classify each entity (V2) and attach a centroid.
+  // 3. Classify each entity into colored / mixed / sparse, attach a centroid.
+  // Every entity here has >=1 ban since SLOT_MIN_YEAR (it came from that query), so
+  // none are "truly empty" — those are handled separately in step 4.
   const countries: SlotEntity[] = []
   const states: SlotEntity[] = []
   const summary = {
-    countriesColored: 0, countriesNeutral: 0, countriesOmitted: 0,
-    statesColored: 0, statesNeutral: 0, statesOmitted: 0,
+    countriesColored: 0, countriesMixed: 0, countriesSparse: 0, countriesEmpty: 0,
+    statesColored: 0, statesMixed: 0, statesSparse: 0, statesEmpty: 0,
     countryColors: new Map<string, number>(), stateColors: new Map<string, number>(),
   }
   for (const e of ents.values()) {
     const ranked = [...e.cats.entries()].map(([c, s]) => [c, s.size] as [string, number]).sort((a, b) => b[1] - a[1])
     const top = ranked[0] ?? ['none', 0]
     const total = e.all.size
-    let status: 'colored' | 'neutral' | 'omitted'
-    if (top[1] < SLOT_MIN_EVENTS) status = 'omitted'
-    else if (top[1] >= SLOT_MIN_EVENTS && top[1] >= SLOT_MIN_SHARE * total) status = 'colored'
-    else status = 'neutral'
+    let status: SlotStatus
+    if (top[1] >= SLOT_MIN_EVENTS && top[1] >= SLOT_MIN_SHARE * total) status = 'colored'
+    else if (top[1] >= SLOT_MIN_EVENTS) status = 'mixed'
+    else status = 'sparse'
 
     if (e.isState) {
-      if (status === 'omitted') summary.statesOmitted++
-      else if (status === 'colored') { summary.statesColored++; summary.stateColors.set(top[0], (summary.stateColors.get(top[0]) ?? 0) + 1) }
-      else summary.statesNeutral++
+      if (status === 'colored') { summary.statesColored++; summary.stateColors.set(top[0], (summary.stateColors.get(top[0]) ?? 0) + 1) }
+      else if (status === 'mixed') summary.statesMixed++
+      else summary.statesSparse++
     } else {
-      if (status === 'omitted') summary.countriesOmitted++
-      else if (status === 'colored') { summary.countriesColored++; summary.countryColors.set(top[0], (summary.countryColors.get(top[0]) ?? 0) + 1) }
-      else summary.countriesNeutral++
+      if (status === 'colored') { summary.countriesColored++; summary.countryColors.set(top[0], (summary.countryColors.get(top[0]) ?? 0) + 1) }
+      else if (status === 'mixed') summary.countriesMixed++
+      else summary.countriesSparse++
     }
-    if (status === 'omitted') continue // omitted entities are too thin to map
 
+    // All three tiers render (colored full, mixed muted, sparse light) — include all.
     const c = e.isState ? getStateCentroid(e.code) : getCentroid(e.code)
     if (!c) {
       console.warn(`  ! slot map: no centroid for ${e.isState ? 'state' : 'country'} ${e.code} — skipped`)
@@ -456,6 +475,35 @@ async function buildSlotMap(supabase: ReturnType<typeof adminClient>): Promise<{
     }
     ;(e.isState ? states : countries).push(entry)
   }
+
+  // 4. Truly-empty (for the slot map): entities that have bans but NONE since
+  // SLOT_MIN_YEAR. They must stay uncoloured — showing them as sparse would imply
+  // bans that don't exist in this window. Count them for the report.
+  const since2000Countries = new Set([...ents.values()].filter((e) => !e.isState).map((e) => e.code))
+  const since2000States = new Set([...ents.values()].filter((e) => e.isState).map((e) => e.code))
+  const emptyCountries = new Set<string>()
+  const emptyStates = new Set<string>()
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('bans')
+      .select('country_code, region, year_started')
+      .lt('year_started', SLOT_MIN_YEAR)
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1)
+    if (error) throw new Error(`slot pre-2000 bans: ${error.message}`)
+    if (!data || data.length === 0) break
+    for (const b of data as unknown as { country_code: string; region: string | null }[]) {
+      if (b.country_code !== 'US') {
+        if (!since2000Countries.has(b.country_code)) emptyCountries.add(b.country_code)
+      } else {
+        const st = stateCodeFromRegion((b.region ?? '').trim())
+        if (st && !since2000States.has(st)) emptyStates.add(st)
+      }
+    }
+    if (data.length < PAGE) break
+  }
+  summary.countriesEmpty = emptyCountries.size
+  summary.statesEmpty = emptyStates.size
   countries.sort((a, b) => a.code.localeCompare(b.code))
   states.sort((a, b) => a.code.localeCompare(b.code))
   return { countries, states, summary }
