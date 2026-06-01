@@ -158,7 +158,6 @@ async function main() {
 
   // ── 4. Resolve joins for the kept rows only ────────────────────────────────
   const bookIds = unique(placed.map((p) => p.ban.book_id))
-  const banIds = unique(placed.map((p) => p.ban.id))
 
   const books = await fetchByIds(
     supabase, 'books', 'id, slug, title, warning_level', 'id', bookIds,
@@ -185,23 +184,44 @@ async function main() {
   const authorNameById = new Map<number, string>()
   for (const a of authors) authorNameById.set(Number(a.id), String(a.display_name))
 
-  // First reason per ban = lowest reason_id (deterministic). Null when none.
+  // Reasons. Fetch links for ALL bans that fold into a dot (placedList, not just the
+  // deduped representatives), because a dot summarises several bans and its `reasons`
+  // array is the UNION of every collapsed ban's reasons — so a chapter filter can
+  // match a reason that's secondary on one underlying ban (e.g. Spanish Inquisition
+  // bans tagged political-first but religious-secondary).
+  const allBanIds = unique(placedList.map((p) => p.ban.id))
   const reasonLinks = await fetchByIds(
-    supabase, 'ban_reason_links', 'ban_id, reason_id', 'ban_id', banIds,
+    supabase, 'ban_reason_links', 'ban_id, reason_id', 'ban_id', allBanIds,
   )
+  const reasonIds = unique(reasonLinks.map((l) => Number(l.reason_id)))
+  const reasonRows = await fetchByIds(supabase, 'reasons', 'id, slug', 'id', reasonIds)
+  const reasonSlugById = new Map<number, string>()
+  for (const r of reasonRows) reasonSlugById.set(Number(r.id), String(r.slug))
+
+  // Per ban: the full slug set + the primary slug (lowest reason_id, backwards-compat).
+  const slugsByBan = new Map<number, Set<string>>()
   const firstReasonIdByBan = new Map<number, number>()
   for (const l of reasonLinks) {
     const ban = Number(l.ban_id)
     const rid = Number(l.reason_id)
+    const slug = reasonSlugById.get(rid)
+    if (!slug) continue
+    let s = slugsByBan.get(ban)
+    if (!s) { s = new Set(); slugsByBan.set(ban, s) }
+    s.add(slug)
     const cur = firstReasonIdByBan.get(ban)
     if (cur === undefined || rid < cur) firstReasonIdByBan.set(ban, rid)
   }
-  const reasonIds = unique([...firstReasonIdByBan.values()])
-  const reasons = await fetchByIds(
-    supabase, 'reasons', 'id, slug', 'id', reasonIds,
-  )
-  const reasonSlugById = new Map<number, string>()
-  for (const r of reasons) reasonSlugById.set(Number(r.id), String(r.slug))
+
+  // Per dedup key: union of all reason slugs across every ban collapsed into the dot.
+  const reasonsByKey = new Map<string, Set<string>>()
+  for (const p of placedList) {
+    const s = slugsByBan.get(p.ban.id)
+    if (!s) continue
+    let agg = reasonsByKey.get(p.key)
+    if (!agg) { agg = new Set(); reasonsByKey.set(p.key, agg) }
+    for (const slug of s) agg.add(slug)
+  }
 
   // ── 5. Assemble events ─────────────────────────────────────────────────────
   type Event = {
@@ -214,7 +234,8 @@ async function main() {
     lng: number
     lat: number
     year: number
-    reason_slug: string | null
+    reason_slug: string | null // primary reason (backwards-compat)
+    reasons: string[] // full reason set (union across collapsed bans) — filter on this
     scope: string | null
     warning_level: string | null
   }
@@ -237,6 +258,7 @@ async function main() {
       lat: p.lat,
       year: b.year_started as number,
       reason_slug: reasonId !== undefined ? (reasonSlugById.get(reasonId) ?? null) : null,
+      reasons: [...(reasonsByKey.get(p.key) ?? [])].sort(),
       scope: scope ? scope.slug : null,
       warning_level: book ? ((book.warning_level as string) ?? null) : null,
     })
