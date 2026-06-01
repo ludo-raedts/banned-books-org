@@ -175,8 +175,7 @@ export default async function HomePage() {
     placeholderAuthorsRes,
     reasonTopBooksRes,
     bbwConfigRes,
-    rushdieRes,
-  ] = await timer.wrap('parallel-batch-12', () => Promise.all([
+  ] = await timer.wrap('parallel-batch-11', () => Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
@@ -197,19 +196,16 @@ export default async function HomePage() {
       .in('reason_slug', REASON_SLUGS)
       .lte('rank', REASON_POOL_DEPTH)
       .order('reason_slug').order('rank'),
-    // bbw_config + the Rushdie quote book power the hero callout. bbw_config
-    // read via adminClient (this supabase var) on purpose — anon hits RLS on
-    // the singleton and silently returns DEFAULTS, which masks an
-    // editor-enabled BBW state.
+    // bbw_config powers the hero callout (BBW banner when enabled, else the
+    // rotating "From the archive" quote). Read via adminClient (this supabase
+    // var) on purpose — anon hits RLS on the singleton and silently returns
+    // DEFAULTS, which masks an editor-enabled BBW state.
     supabase.from('bbw_config').select('enabled, year').eq('id', 1).maybeSingle(),
-    supabase.from('books').select('slug, bans(country_code)').eq('slug', 'the-satanic-verses').maybeSingle(),
   ]))
 
   const total = totalCountRes.count ?? 0
   const totalBans = totalBansRes.count ?? 0
   const bbwConfig = (bbwConfigRes.data ?? null) as { enabled: boolean; year: number } | null
-  const rushdieRow = (rushdieRes.data ?? null) as { slug: string; bans: { country_code: string }[] } | null
-  const rushdieCountryCount = rushdieRow ? new Set(rushdieRow.bans.map(b => b.country_code)).size : 0
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -478,11 +474,7 @@ export default async function HomePage() {
         callout={
           bbwConfig?.enabled
             ? { kind: 'bbw', year: bbwConfig.year ?? new Date().getFullYear() }
-            : {
-                kind: 'rushdie',
-                slug: rushdieRow?.slug ?? 'the-satanic-verses',
-                countryCount: rushdieCountryCount,
-              }
+            : { kind: 'archive', seed }
         }
       />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}

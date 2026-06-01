@@ -13,14 +13,49 @@ export type HeroCallout =
       subtitle?: string | null
     }
   | {
-      kind: 'rushdie'
-      /** Slug for the linked book detail page. */
-      slug: string
-      /** Live country-count for "Banned in N countries · Read entry →". */
-      countryCount: number
+      kind: 'archive'
+      /** Rotation seed (e.g. day-of-year) — picks one of ARCHIVE_QUOTES. */
+      seed: number
     }
 
 const DEFAULT_BBW_SUBTITLE = 'Featured selection: 25 books worth defending this year.'
+
+/**
+ * Real, verifiable quotes from authors held in the archive. Rotated daily.
+ * Every entry must be a genuine, attributable quote — never paraphrased or
+ * invented — and link to a relevant record (book entry or the timeline).
+ */
+const ARCHIVE_QUOTES: {
+  quote: string
+  author: string
+  href: string
+  linkLabel: string
+}[] = [
+  {
+    quote: 'What is freedom of expression? Without the freedom to offend, it ceases to exist.',
+    author: 'Salman Rushdie',
+    href: '/books/the-satanic-verses',
+    linkLabel: 'Read the entry →',
+  },
+  {
+    quote: 'Where they burn books, they will, in the end, burn people too.',
+    author: 'Heinrich Heine',
+    href: '/timeline',
+    linkLabel: 'See the timeline →',
+  },
+  {
+    quote: 'If liberty means anything at all, it means the right to tell people what they do not want to hear.',
+    author: 'George Orwell',
+    href: '/books/animal-farm',
+    linkLabel: 'Read the entry →',
+  },
+  {
+    quote: 'It’s not books they find obscene. It’s reality they find obscene.',
+    author: 'John Green',
+    href: '/books/looking-for-alaska',
+    linkLabel: 'Read the entry →',
+  },
+]
 
 export default function HeroSection({
   totalBooks,
@@ -77,7 +112,7 @@ export default function HeroSection({
         {callout.kind === 'bbw' ? (
           <BbwCallout year={callout.year} subtitle={callout.subtitle ?? DEFAULT_BBW_SUBTITLE} />
         ) : (
-          <RushdieCallout slug={callout.slug} countryCount={callout.countryCount} />
+          <ArchiveCallout seed={callout.seed} />
         )}
       </div>
     </section>
@@ -102,24 +137,21 @@ function BbwCallout({ year, subtitle }: { year: number; subtitle: string }) {
   )
 }
 
-function RushdieCallout({ slug, countryCount }: { slug: string; countryCount: number }) {
+function ArchiveCallout({ seed }: { seed: number }) {
+  const { quote, author, href, linkLabel } =
+    ARCHIVE_QUOTES[((seed % ARCHIVE_QUOTES.length) + ARCHIVE_QUOTES.length) % ARCHIVE_QUOTES.length]
   return (
-    <Link href={`/books/${slug}`} className="group block">
-      <p className="text-[10px] uppercase tracking-[0.14em] text-oxblood font-semibold mb-2">
+    <Link href={href} className="group block border-l-2 border-oxblood/60 pl-4">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-oxblood font-semibold mb-2.5">
         From the archive
       </p>
       <p className="font-serif italic text-base font-medium leading-relaxed text-neutral-900 mb-2.5">
-        “What is freedom of expression? Without the freedom to offend, it ceases to exist.”
+        “{quote}”
       </p>
-      <p className="text-xs text-oxblood font-medium mb-1">— Salman Rushdie</p>
-      <p className="text-[10px] text-neutral-500">
-        {countryCount > 0 ? (
-          <>
-            Banned in {countryCount} {countryCount === 1 ? 'country' : 'countries'} ·{' '}
-          </>
-        ) : null}
-        <span className="text-oxblood font-medium group-hover:underline">Read entry →</span>
-      </p>
+      <p className="text-xs text-oxblood font-medium mb-1.5">— {author}</p>
+      <span className="text-[10px] text-oxblood font-medium tracking-wide group-hover:underline">
+        {linkLabel}
+      </span>
     </Link>
   )
 }
