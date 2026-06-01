@@ -1,28 +1,649 @@
 {
   "meta": {
-    "note": "Central Asia + Caucasus, mostly Forum 18 / Asia-Plus sourced. Kazakhstan: court 'extremism' bans of Christian books and JW import refusals. Azerbaijan: police-list bans (Nursi collection, JW booklet). Uzbekistan: Ismailov's blacklisted novels. Tajikistan: the remaining titles from the Interior Ministry's 1 July 2015 list of 13 'Salafi' books (the others are already in the DB). Held: UZ Sahih al-Bukhari (blanket/low), Kyrgyzstan (court suit rejected), Turkmenistan (nothing title-specific).",
+    "note": "Central Asia + Caucasus, mostly Forum 18 / Asia-Plus sourced. Kazakhstan: court 'extremism' bans of Christian books and JW import refusals. Azerbaijan: police-list bans (Nursi collection, JW booklet). Uzbekistan: Ismailov's blacklisted novels. Tajikistan: the remaining titles from the Interior Ministry's 1 July 2015 list of 13 'Salafi' books (the others are already in the DB). Held: UZ Sahih al-Bukhari (blanket/low), Kyrgyzstan (court suit rejected), Turkmenistan (nothing title-specific). (Merged file: also retains the 12 entries from a parallel session's earlier version that this batch had overwritten.)",
     "source_type": "ngo"
   },
   "entries": [
-    { "title": "Called to the Great Commission", "authors": ["Kanat Oryntai uuli"], "first_published_year": null, "original_language": "ru", "country_code": "KZ", "ban_year": 2016, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Christian missionary book ruled 'extremist' by Esil District Court, Astana (15 Feb 2016), alleging it subverted state security and inter-confessional accord.", "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2158", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "Healing the Broken Family of Abraham", "authors": ["Don McCurry"], "first_published_year": 2001, "original_language": "en", "country_code": "KZ", "ban_year": 2012, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Christian apologetic work on Muslim outreach, banned as 'extremist' by an Almaty court in November 2012.", "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2158", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "Jesus: More than a Prophet", "authors": ["Richard Wootton"], "first_published_year": 2008, "original_language": "en", "country_code": "KZ", "ban_year": 2014, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Collection of Muslim-convert testimonies (ed. Richard Wootton); banned 'extremist' by an Akmola Region court in November 2014.", "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2158", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "What Does the Bible Really Teach?", "authors": ["Jehovah's Witnesses (Watch Tower Society)"], "first_published_year": 2005, "original_language": "en", "country_code": "KZ", "ban_year": 2016, "scope_slug": "customs", "action_type": "restricted", "reason_slug": "religious", "ban_status": "active", "description_ban": "Import rejected by the Religious Affairs Committee (Aug 2015); rejection upheld by the Astana Specialised Interdistrict Economic Court, 29 Feb 2016.", "inclusion_rationale": "Title-specific import ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2158", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "Keep Yourselves in God's Love", "authors": ["Jehovah's Witnesses (Watch Tower Society)"], "first_published_year": 2008, "original_language": "en", "country_code": "KZ", "ban_year": 2016, "scope_slug": "customs", "action_type": "restricted", "reason_slug": "religious", "ban_status": "active", "description_ban": "Import rejected alongside 'What Does the Bible Really Teach?'; upheld by the same Astana court on 29 Feb 2016.", "inclusion_rationale": "Title-specific import ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2158", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "Awakening from Sleep", "authors": ["Kubaidolla Tyulyubayev"], "first_published_year": null, "original_language": "kk", "country_code": "KZ", "ban_year": 2019, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Short Tabligh-Jamaat-linked book banned 'extremist' by a Karaganda court (in force 11 Jun 2019), on the grounds of the author's link to a banned movement rather than the content.", "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.", "source_url": "https://www.forum18.org/archive.php?article_id=2488", "source_name": "Forum 18", "source_type": "ngo", "needs_review": false },
-    { "title": "Risale-i Nur", "authors": ["Said Nursi"], "first_published_year": 1950, "original_language": "tr", "country_code": "AZ", "ban_year": 2014, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Said Nursi's 14-volume Islamic theology collection appears on Azerbaijan's (police-compiled, State-Committee-sourced) banned-literature list; copies have been repeatedly confiscated as 'illegal' in raids.", "inclusion_rationale": "Title-specific listing/confiscation; documented by Forum 18 (medium confidence).", "source_url": "https://wwrn.org/articles/42368/", "source_name": "Forum 18 (via WWRN)", "source_type": "ngo", "needs_review": false },
-    { "title": "Who Are Doing Jehovah's Will Today?", "authors": ["Jehovah's Witnesses (Watch Tower Society)"], "first_published_year": 2012, "original_language": "az", "country_code": "AZ", "ban_year": 2014, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "Azeri-language Jehovah's Witness booklet on Azerbaijan's banned-literature list.", "inclusion_rationale": "Title-specific listing; documented by Forum 18 (medium confidence).", "source_url": "https://wwrn.org/articles/42368/", "source_name": "Forum 18 (via WWRN)", "source_type": "ngo", "needs_review": false },
-    { "title": "The Devils' Dance", "authors": ["Hamid Ismailov"], "first_published_year": 2016, "original_language": "uz", "country_code": "UZ", "ban_year": 1992, "scope_slug": "government", "action_type": "banned", "reason_slug": "political", "ban_status": "active", "description_ban": "Acclaimed Uzbek novel (Jinlar bazmi); Ismailov's works have been banned in Uzbekistan since a 1992 Karimov-era criminal case, and a clandestine print run circulated in 2016.", "inclusion_rationale": "Title-specific ban within the author's standing blacklist; documented via Wikipedia (medium confidence).", "source_url": "https://en.wikipedia.org/wiki/Hamid_Ismailov", "source_name": "Wikipedia (Hamid Ismailov)", "source_type": "media", "needs_review": false },
-    { "title": "The Railway", "authors": ["Hamid Ismailov"], "first_published_year": 1997, "original_language": "uz", "country_code": "UZ", "ban_year": 1992, "scope_slug": "government", "action_type": "banned", "reason_slug": "political", "ban_status": "active", "description_ban": "Ismailov's earlier novel (Temir yo'l); banned in Uzbekistan with all his work and first published abroad under a pseudonym.", "inclusion_rationale": "Title-specific ban within the author's standing blacklist; documented via Wikipedia (medium confidence).", "source_url": "https://en.wikipedia.org/wiki/Hamid_Ismailov", "source_name": "Wikipedia (Hamid Ismailov)", "source_type": "media", "needs_review": false },
-    { "title": "Al-Majmu'at al-'Aliyya", "authors": ["Ibn Taymiyya"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "One of 13 'Salafi' titles added to Tajikistan's banned-literature list by the Interior Ministry (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Al-Juhud al-Hadithiyya", "authors": ["Abd al-Aziz ibn Baz"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Sharhu Muqaddima fi Usuli-t-Tafsir", "authors": ["Musaid al-Tayyar"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Favaidu mina-t-Tafsir", "authors": ["Abd al-Aziz ibn Baz"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Taysiru-l-Ilah", "authors": ["al-Jabiri"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Favaqir al-Izab", "authors": ["Mu'mir"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "al-Ilaqat bayna-t-Tashayyu wa-t-Tasawwuf", "authors": ["al-Mandakar"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Sharh Fadl al-Islam", "authors": ["Al ash-Sheikh"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "al-Ali al-Bahiyya", "authors": ["Al ash-Sheikh"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false },
-    { "title": "Fadlu Ilm al-Salaf", "authors": ["Abdul Qasim"], "first_published_year": null, "original_language": "ar", "country_code": "TJ", "ban_year": 2015, "scope_slug": "government", "action_type": "banned", "reason_slug": "religious", "ban_status": "active", "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).", "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.", "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan", "source_name": "Asia-Plus", "source_type": "media", "needs_review": false }
+    {
+      "title": "Called to the Great Commission",
+      "authors": [
+        "Kanat Oryntai uuli"
+      ],
+      "first_published_year": null,
+      "original_language": "ru",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Christian missionary book ruled 'extremist' by Esil District Court, Astana (15 Feb 2016), alleging it subverted state security and inter-confessional accord.",
+      "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Healing the Broken Family of Abraham",
+      "authors": [
+        "Don McCurry"
+      ],
+      "first_published_year": 2001,
+      "original_language": "en",
+      "country_code": "KZ",
+      "ban_year": 2012,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Christian apologetic work on Muslim outreach, banned as 'extremist' by an Almaty court in November 2012.",
+      "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Jesus: More than a Prophet",
+      "authors": [
+        "Richard Wootton"
+      ],
+      "first_published_year": 2008,
+      "original_language": "en",
+      "country_code": "KZ",
+      "ban_year": 2014,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Collection of Muslim-convert testimonies (ed. Richard Wootton); banned 'extremist' by an Akmola Region court in November 2014.",
+      "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "What Does the Bible Really Teach?",
+      "authors": [
+        "Jehovah's Witnesses (Watch Tower Society)"
+      ],
+      "first_published_year": 2005,
+      "original_language": "en",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "customs",
+      "action_type": "restricted",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Import rejected by the Religious Affairs Committee (Aug 2015); rejection upheld by the Astana Specialised Interdistrict Economic Court, 29 Feb 2016.",
+      "inclusion_rationale": "Title-specific import ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Keep Yourselves in God's Love",
+      "authors": [
+        "Jehovah's Witnesses (Watch Tower Society)"
+      ],
+      "first_published_year": 2008,
+      "original_language": "en",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "customs",
+      "action_type": "restricted",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Import rejected alongside 'What Does the Bible Really Teach?'; upheld by the same Astana court on 29 Feb 2016.",
+      "inclusion_rationale": "Title-specific import ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Awakening from Sleep",
+      "authors": [
+        "Kubaidolla Tyulyubayev"
+      ],
+      "first_published_year": null,
+      "original_language": "kk",
+      "country_code": "KZ",
+      "ban_year": 2019,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Short Tabligh-Jamaat-linked book banned 'extremist' by a Karaganda court (in force 11 Jun 2019), on the grounds of the author's link to a banned movement rather than the content.",
+      "inclusion_rationale": "Title-specific court 'extremism' ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2488",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Risale-i Nur",
+      "authors": [
+        "Said Nursi"
+      ],
+      "first_published_year": 1950,
+      "original_language": "tr",
+      "country_code": "AZ",
+      "ban_year": 2014,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Said Nursi's 14-volume Islamic theology collection appears on Azerbaijan's (police-compiled, State-Committee-sourced) banned-literature list; copies have been repeatedly confiscated as 'illegal' in raids.",
+      "inclusion_rationale": "Title-specific listing/confiscation; documented by Forum 18 (medium confidence).",
+      "source_url": "https://wwrn.org/articles/42368/",
+      "source_name": "Forum 18 (via WWRN)",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Who Are Doing Jehovah's Will Today?",
+      "authors": [
+        "Jehovah's Witnesses (Watch Tower Society)"
+      ],
+      "first_published_year": 2012,
+      "original_language": "az",
+      "country_code": "AZ",
+      "ban_year": 2014,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Azeri-language Jehovah's Witness booklet on Azerbaijan's banned-literature list.",
+      "inclusion_rationale": "Title-specific listing; documented by Forum 18 (medium confidence).",
+      "source_url": "https://wwrn.org/articles/42368/",
+      "source_name": "Forum 18 (via WWRN)",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "The Devils' Dance",
+      "authors": [
+        "Hamid Ismailov"
+      ],
+      "first_published_year": 2016,
+      "original_language": "uz",
+      "country_code": "UZ",
+      "ban_year": 1992,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Acclaimed Uzbek novel (Jinlar bazmi); Ismailov's works have been banned in Uzbekistan since a 1992 Karimov-era criminal case, and a clandestine print run circulated in 2016.",
+      "inclusion_rationale": "Title-specific ban within the author's standing blacklist; documented via Wikipedia (medium confidence).",
+      "source_url": "https://en.wikipedia.org/wiki/Hamid_Ismailov",
+      "source_name": "Wikipedia (Hamid Ismailov)",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "The Railway",
+      "authors": [
+        "Hamid Ismailov"
+      ],
+      "first_published_year": 1997,
+      "original_language": "uz",
+      "country_code": "UZ",
+      "ban_year": 1992,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Ismailov's earlier novel (Temir yo'l); banned in Uzbekistan with all his work and first published abroad under a pseudonym.",
+      "inclusion_rationale": "Title-specific ban within the author's standing blacklist; documented via Wikipedia (medium confidence).",
+      "source_url": "https://en.wikipedia.org/wiki/Hamid_Ismailov",
+      "source_name": "Wikipedia (Hamid Ismailov)",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Al-Majmu'at al-'Aliyya",
+      "authors": [
+        "Ibn Taymiyya"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "One of 13 'Salafi' titles added to Tajikistan's banned-literature list by the Interior Ministry (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Al-Juhud al-Hadithiyya",
+      "authors": [
+        "Abd al-Aziz ibn Baz"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Sharhu Muqaddima fi Usuli-t-Tafsir",
+      "authors": [
+        "Musaid al-Tayyar"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Favaidu mina-t-Tafsir",
+      "authors": [
+        "Abd al-Aziz ibn Baz"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Taysiru-l-Ilah",
+      "authors": [
+        "al-Jabiri"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Favaqir al-Izab",
+      "authors": [
+        "Mu'mir"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "al-Ilaqat bayna-t-Tashayyu wa-t-Tasawwuf",
+      "authors": [
+        "al-Mandakar"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Sharh Fadl al-Islam",
+      "authors": [
+        "Al ash-Sheikh"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "al-Ali al-Bahiyya",
+      "authors": [
+        "Al ash-Sheikh"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Fadlu Ilm al-Salaf",
+      "authors": [
+        "Abdul Qasim"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "On Tajikistan's Interior Ministry list of 13 banned 'Salafi' books (1 July 2015).",
+      "inclusion_rationale": "Title-specific ministry ban; documented by Asia-Plus.",
+      "source_url": "https://www.asiaplustj.info/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Stone Dreams",
+      "authors": [
+        "Akram Aylisli"
+      ],
+      "first_published_year": 2012,
+      "original_language": "az",
+      "country_code": "AZ",
+      "ban_year": 2013,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Novella sympathetic to Armenians (Daş yuxular); copies were publicly burned, it was withdrawn from school curricula, and the author was stripped of his state honours and pension by presidential decree.",
+      "inclusion_rationale": "Title-specific suppression; documented by PEN International.",
+      "source_url": "https://www.pen-international.org/cases/akram-aylisli",
+      "source_name": "PEN International",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "A Fantastical Traffic Jam",
+      "authors": [
+        "Akram Aylisli"
+      ],
+      "first_published_year": 2013,
+      "original_language": "az",
+      "country_code": "AZ",
+      "ban_year": 2013,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Third novella of Aylisli's 'Farewell, Aylis' trilogy, satirising an oil-rich dictatorship resembling the Aliyev regime; suppressed and never publicly released in Azeri or Russian.",
+      "inclusion_rationale": "Title-specific suppression; reported by Eurasianet (medium confidence).",
+      "source_url": "https://eurasianet.org/azerbaijan-writer-buckling-under-strain-of-literary-controversy",
+      "source_name": "Eurasianet",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Selected Hadith",
+      "authors": [
+        "Muhammad Yusuf Kandhlawi"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Banned as 'extremist' by Alakol District Court (2 Aug 2016) over its association with the proscribed Tabligh Jamaat, though experts found no incitement.",
+      "inclusion_rationale": "Title-specific court ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2488",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Worthy Answers",
+      "authors": [
+        "Galymzhan Tanatgan",
+        "Zhomart Temir"
+      ],
+      "first_published_year": null,
+      "original_language": "kk",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Protestant title banned as 'extremist' by an Astana court (15 Feb 2016); the prosecutor could not say what harm it caused.",
+      "inclusion_rationale": "Title-specific court ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Share Your Faith with a Muslim",
+      "authors": [
+        "Charles Marsh"
+      ],
+      "first_published_year": null,
+      "original_language": "en",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Brethren missionary's book banned as 'extremist' by an Astana court (15 Feb 2016) in the same ruling.",
+      "inclusion_rationale": "Title-specific court ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "The History of Christianity in Central Asia and Kazakhstan",
+      "authors": [
+        "Manarbek Baieke"
+      ],
+      "first_published_year": null,
+      "original_language": "ru",
+      "country_code": "KZ",
+      "ban_year": 2016,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Protestant history banned as 'extremist' by an Astana court (15 Feb 2016) in the same suit.",
+      "inclusion_rationale": "Title-specific court ban; documented by Forum 18.",
+      "source_url": "https://www.forum18.org/archive.php?article_id=2158",
+      "source_name": "Forum 18",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Bu Kunlar",
+      "authors": [
+        "Nurullo Otakhonov"
+      ],
+      "first_published_year": 2016,
+      "original_language": "uz",
+      "country_code": "UZ",
+      "ban_year": 2017,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Book ('These Days') criticising post-independence Uzbekistan and the late Karimov; it was the basis for an extremism charge when the exiled author returned and was detained in 2017.",
+      "inclusion_rationale": "Title-specific political ban; reported by Eurasianet.",
+      "source_url": "https://eurasianet.org/uzbekistan-detained-dissident-accused-of-promoting-extremism",
+      "source_name": "Eurasianet",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Ventsenosny Skitalets",
+      "authors": [
+        "Rakhim Esenov"
+      ],
+      "first_published_year": 2003,
+      "original_language": "ru",
+      "country_code": "TM",
+      "ban_year": 1997,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "historical",
+      "description_ban": "Historical novel ('The Crowned Wanderer') on the 16th-century Mughal general Bayram Khan; President Niyazov denounced it as 'historically inaccurate' and banned publication, and Esenov was arrested in 2004 for smuggling in copies.",
+      "inclusion_rationale": "Title-specific presidential ban; documented by PEN America and RFE/RL.",
+      "source_url": "https://pen.org/advocacy-case/rakhim-esenov/",
+      "source_name": "PEN America",
+      "source_type": "ngo",
+      "needs_review": false
+    },
+    {
+      "title": "Events of My Life",
+      "authors": [
+        "Abdukhalil Kholiqzoda"
+      ],
+      "first_published_year": 2023,
+      "original_language": "tg",
+      "country_code": "TJ",
+      "ban_year": 2023,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "political",
+      "ban_status": "active",
+      "description_ban": "Businessman's memoir (Voqeahoi zindagii man); copies were seized from bookstores nationwide in August 2023 and the author imprisoned on 'incitement of enmity' charges over passages on southern Tajikistan's elites.",
+      "inclusion_rationale": "Title-specific nationwide seizure; documented by Lossi 36 and RFE/RL.",
+      "source_url": "https://lossi36.com/2024/10/11/kholiqzoda-tajikistans-recent-literary-purge/",
+      "source_name": "Lossi 36",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Sharhu Lam'atu-l-Etiqad",
+      "authors": [
+        "Muhammad ibn Salih al-Uthaymin"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Salafi creed commentary; one of 13 titles on the Tajik Interior Ministry's 2015 banned-literature list, prohibited from import and distribution following the 2009 Supreme Court ban on Salafiyya.",
+      "inclusion_rationale": "Named on the 2015 Tajik Interior Ministry Salafi-literature ban list; documented by Asia-Plus.",
+      "source_url": "https://asiaplus.news/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Al-Usul min Ilm al-Usul",
+      "authors": [
+        "Muhammad ibn Salih al-Uthaymin"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Classical Salafi work on the principles of jurisprudence; title #13 on Tajikistan's 2015 Interior Ministry banned Salafi-literature list, prohibited from import and distribution.",
+      "inclusion_rationale": "Named on the 2015 Tajik Salafi-literature ban list; documented by Asia-Plus.",
+      "source_url": "https://asiaplus.news/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    },
+    {
+      "title": "Kitab al-Iman",
+      "authors": [
+        "Abu Ubaid al-Qasim ibn Sallam"
+      ],
+      "first_published_year": null,
+      "original_language": "ar",
+      "country_code": "TJ",
+      "ban_year": 2015,
+      "scope_slug": "government",
+      "action_type": "banned",
+      "reason_slug": "religious",
+      "ban_status": "active",
+      "description_ban": "Classical Islamic work on faith; title #9 on Tajikistan's 2015 Interior Ministry banned Salafi-literature list, prohibited from import and distribution.",
+      "inclusion_rationale": "Named on the 2015 Tajik Salafi-literature ban list; documented by Asia-Plus.",
+      "source_url": "https://asiaplus.news/en/news/tajikistan/security/20150701/list-salafi-literature-banned-tajikistan",
+      "source_name": "Asia-Plus",
+      "source_type": "media",
+      "needs_review": false
+    }
   ]
 }
