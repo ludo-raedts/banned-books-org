@@ -26,67 +26,70 @@ The Singapore pipeline established a repeatable four-step cycle:
 
 ## Coverage delta (current DB vs Wikipedia coverage)
 
-### Severely underrepresented jurisdictions (Tier 1)
+### Snapshot 2026-06-02 — global coverage
 
-These countries are major censorship jurisdictions but we have minimal documentation:
+**Headline:** **111 countries** with ≥1 ban, **28,653 total bans**, **13,978 books**, **8,601 authors**. Multi-agent parallel work since the original roadmap has dramatically expanded coverage beyond what the original Tier-1/2/3 tables anticipated. New historical country codes added: **SU** (Soviet Union, 25), **DD** (East Germany / DDR, 8) — and via 80+ ISO country codes covering Africa, Caucasus, Central Asia, and the Pacific.
 
-| Country | Code | Current bans | Wiki entries | Notes |
-|---|---|---:|---:|---|
-| **Iran** | IR | 54 | 4 | Theocratic state, decades of book bans; Wiki underrepresents. Tier-1 target. |
-| **China** | CN | 60 | 36 | Industrial-scale censorship; Wiki has 36 entries but PEN America China Reading Room has hundreds. |
-| **Saudi Arabia** | SA | 18 | 3 | Wahhabi censorship; LGBT/feminism/religious-dissent bans. Tier-1. |
-| **Pakistan** | PK | 11 | 5 | Blasphemy law + political. |
-| **Egypt** | EG | 9 | 2 | Cairo Institute for HR Studies + Mada Masr + EIPR document. |
-| **Indonesia** | ID | 9 | 3 | PKI / atheism bans, KPI documentation. |
-| **Bangladesh** | BD | 7 | 5 | Secular vs Islamist censorship. |
-| **Lebanon** | LB | 8 | 4 | Hezbollah/Israel-related bans. |
+**The original Tier-1 list has largely closed.** Iran 54→57, China 60→60, Saudi Arabia 18→27, Pakistan 11→21, Egypt 9→24, Indonesia 9→29, Bangladesh 7→8, Lebanon 8→8. Several of these were addressed via direct Firecrawl Tier-1 searches (Egypt batch1, Pakistan batch1, Indonesia batch1+2), others by parallel-agent activity in subsequent sessions.
 
-### Moderately underrepresented (Tier 2)
+### Severely underrepresented jurisdictions (Tier 1 — now updated)
 
-| Country | Code | Current | Wiki | Notes |
-|---|---|---:|---:|---|
-| Vietnam | VN | 27 | 15 | Communist Party censorship. |
-| Israel | IL | 26 | (regex miss) | Mostly Palestinian/Arab content. |
-| Yugoslavia successor states | YU/RS/HR/SI/BA/XK | 0-15 | 15 | Post-war breakup era. |
-| Turkey | TR | 13 | (not in list) | Erdoğan-era press + book censorship; Karaca 2013 catalog cited in upstream-sources-inventory. |
-| South Korea | KR | 18 | 9 | 2008 + 2011 military bans + recent sex-ed bans. |
-| Italy | IT | 17 | 2 | Index Librorum + fascist-era. |
-| Brazil | BR | 11 | 1 | Military dictatorship era. |
-| Portugal | PT | 11 | 2 | Salazar/Caetano "Livros Proibidos" — 892 records (Kasseler-cited upstream, see inventory). |
+These remain the largest impact-per-effort gaps relative to known censorship history:
 
-### Zero-coverage candidates (Tier 3)
+| Country | Code | Current bans | Notes |
+|---|---|---:|---|
+| **China** | CN | 60 | Industrial-scale censorship; PEN America China Reading Room + Article 19 China desk + Foreign Correspondents Club Hong Kong = strong Tier-1 stack. Estimated still ≥10× under-represented. |
+| **Saudi Arabia** | SA | 27 | Wahhabi censorship; LGBT/feminism/religious-dissent bans. SaudiCensorship.org, Arabic primary press largely untapped. |
+| **India** | IN | 135 | Already decent (Indian Kanoon case law) but Hindutva-era 2014+ bans on academic / historical works under-covered. |
+| **North Korea** | KP | 6 | DPRK book-bans hard to research; Bandi case + recent defector accounts via RFA Korea. |
+| **Cuba** | CU | 21 | Newly opened by parallel-agent work; Castro/Soviet era + recent Decree 349 cases. |
+| **Bangladesh** | BD | 8 | Blasphemy law + Islamist street-pressure cases (Taslima Nasrin, etc.). |
+| **Bahrain / Qatar / UAE** | BH/QA/AE | 1/6/8 | Gulf monarchies; Article 19 MENA + Index on Censorship Gulf coverage. |
 
-Some countries have zero bans despite known censorship history:
+### Moderately covered (Tier 2 — now achievable via direct Firecrawl)
 
-- **Uzbekistan** (UZ): 0 — Karimov-era censorship documented
-- **Liberia** (LR): 0 — civil-war era
-- **Palestinian Territories** (PS): 0 — Hamas + PA bans
-- **Slovakia** (SK), **Kosovo** (XK), **Cyprus** (CY): 0
-- **Croatia** (HR), **Slovenia** (SI): 0 — post-Yugoslavia successor states
-- **Senegal** (SN), **Papua New Guinea** (PG): 0
+| Country | Code | Current | Notes |
+|---|---|---:|---|
+| Hong Kong | HK | **635** | Massive expansion since national-security law 2020. Independent Firecrawl import landed via parallel-agent work. |
+| Soviet Union | SU | 25 | Historical code now in use — Stalin / Brezhnev era bans pre-1991. |
+| Czechoslovakia | CS | 23 | Historical code (separate from CZ=9 / SK=0); covers 1948-1992 communist era. |
+| East Germany | DD | 8 | Polunbi-style DDR catalog partially landed via parallel work (was deprioritized "te groot" in original roadmap). |
+| Yugoslavia | YU | 21 | Legacy code; successor states RS=1 / HR=0 / SI=0 / BA=1 / XK=0 still need split. |
+| Romania | RO | 14 | Ceaușescu-era; HRW + Paul Goma archive. |
+| Zimbabwe | ZW | 14 | Ian Smith Rhodesia → Mugabe; Mushakavanhu/Frederikse sources documented. |
+| Tanzania, Kenya, Nigeria, Uganda, Algeria, Sudan, Morocco | TZ/KE/NG/UG/DZ/SD/MA | 9-16 each | African press cluster (allafrica, nation.africa, monitor.co.ug, theeastafrican) substantially scraped. |
+| Myanmar, Cuba, Vietnam | MM/CU/VN | 5/21/33 | Authoritarian-state cluster. |
+| Latvia, Lithuania, Estonia | LV/LT/EE | 2/1/1 | Baltic Soviet-occupation era — still very thin. |
+
+### Remaining zero-coverage / very-low countries
+
+- **Slovakia** (SK), **Kosovo** (XK), **Cyprus** (CY), **Liberia** (LR), **Papua New Guinea** (PG): 0 each
+- **Croatia** (HR), **Slovenia** (SI): 0 (Yugoslavia successor split unresolved)
+- **Senegal** (SN): 0
+- **Bolivia** (BO), **Ecuador** (EC): 0 each (Andean dictatorship-era under-covered)
 
 ## Concrete next-session plan
 
 ### Phase 1 — Tier-1 Wikipedia sweeps (~half day)
 
+> **Status 2026-06-02**: Phase 1 is **substantially done** through 2026-05-29/06-01 sweeps. Iran, Egypt, Indonesia, Pakistan, Hungary, Italy, Poland, Czechoslovakia, Ukraine, Japan, Philippines, Chile, Uruguay, Brazil all landed via the methodology below. The original 5-country Tier-1 list has been completed or upgraded; **China, Saudi Arabia, India** remain as the highest-impact untackled Tier-1 cases — each plausibly yielding 10-30 new bans via direct Firecrawl Tier-1 search (PEN America China Reading Room, SaudiCensorship.org, India HRW / Indian Express).
+
 Five Tier-1 countries with the highest expected yield. For each: Firecrawl-scrape the Wikipedia section, parse table to JSON, dry-run, apply.
 
-| # | Country | URL anchor | Est. new entries |
-|---|---|---|---:|
-| 1 | Iran | #Iran | ~10-20 (Wiki + Perplexity) |
-| 2 | China | #China | ~30-50 |
-| 3 | Saudi Arabia | #Saudi_Arabia | ~10-15 |
-| 4 | India | #India (regex missed — manual check needed) | ~20-30 |
-| 5 | Egypt | #Egypt | ~5-10 |
+| # | Country | URL anchor | Est. new entries | Status |
+|---|---|---|---:|---|
+| 1 | Iran | #Iran | ~10-20 (Wiki + Perplexity) | ✅ done (2026-05-29) |
+| 2 | China | #China | ~30-50 | ⏸ open |
+| 3 | Saudi Arabia | #Saudi_Arabia | ~10-15 | ⏸ open |
+| 4 | India | #India (regex missed — manual check needed) | ~20-30 | partial (135 already; +20-30 more open) |
+| 5 | Egypt | #Egypt | ~5-10 | ✅ done (2026-05-29) |
 
 URLs to scrape (all from same global list):
 
 ```
-https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#Iran
 https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#China
 https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#Saudi_Arabia
 https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#India
-https://en.wikipedia.org/wiki/List_of_books_banned_by_governments#Egypt
 ```
 
 (In practice we scrape the full list once — already cached at `/tmp/lobbg.md` 1475 lines — and parse per country.)
@@ -270,7 +273,30 @@ in the entire roadmap if appetite returns.
 - ✅ Generic per-country importer ready (`import-singapore-wiki.ts` reads `country_code` from JSON)
 - ✅ Non-Latin title cleanup template ready (`cleanup-iran-titles.ts`)
 - ✅ Safe-merge duplicate template ready (`merge-iran-duplicates.ts`)
-- ⏸ Remaining Tier-1 candidates: China, Saudi Arabia, India
-- ⏸ Remaining Tier-2 candidates: Romania, Bulgaria, Albania, Yugoslavia successor states (RS/HR/SI/BA/XK split from YU legacy)
-- ⏸ Remaining big-source paths: Russia FSEM full crawl, PEN America registry, US Prison FOIA
-- ⏸ South America regional follow-up: Bolivia, Ecuador, Colombia, Peru, Paraguay, Venezuela all still <5 bans each
+
+### Parallel-agent batches (landed in 2026-05-29..2026-06-02 sessions)
+
+Multi-agent workstreams have substantially expanded coverage beyond the original roadmap forecast. **111 countries, 28,653 bans, 13,978 books, 8,601 authors.** Notable parallel-agent additions:
+
+- **Hong Kong: 635 bans** — new largest non-US/MY/FR jurisdiction. Post-NSL 2020 wave.
+- **Soviet Union (SU): 25 bans** — new historical code, separates Stalin/Brezhnev-era from Russian Federation
+- **East Germany (DDR/DD): 8 bans** — was deprioritized "te groot" originally; partial DDR coverage now landed
+- **Czechoslovakia (CS): 23 bans** — alongside Czechia (9) + Slovakia (0). Full normalization-era cohort.
+- **Cuba (CU): 21 bans** — newly opened. Castro/Soviet era + recent Decree 349 cases.
+- **Africa cluster expanded** — Tanzania 16, Nigeria 15, Kenya 10, Sudan 10, Algeria 9, Uganda 9, Morocco 12, Zimbabwe 14, Libya 6, Tunisia 6, Mozambique 2, Angola 2, Cameroon 2, Ethiopia 5, Malawi 3, Somalia 3
+- **Caucasus / Central Asia opened** — Azerbaijan 2, Kazakhstan 4, Tajikistan 4, Turkmenistan 1, Uzbekistan 1
+- **DPRK (KP): 6 bans** — newly opened; Bandi case + recent defector accounts via RFA Korea
+- **Latvia/Lithuania/Estonia + Baltic expansion** — LV 2, LT 1, EE 1 (still very thin)
+- **Burma/Myanmar (MM): 5 bans** — newly opened post-2021 coup wave
+
+### Remaining open work
+
+- ⏸ **Tier-1 final**: China, Saudi Arabia, India deeper Hindutva-era — direct Firecrawl Tier-1 search candidate
+- ⏸ **Tier-2 European post-communist**: Bulgaria (10), Albania (6), Romania (14) — could each grow 2-3×
+- ⏸ **Yugoslavia successor-state split**: 21 YU-legacy bans → split editorial judgment per book to RS/HR/SI/BA/XK
+- ⏸ **Big-source paths**: Russia FSEM full crawl (≥1,500 books), PEN America registry, US Prison FOIA (50,000+), Memorial Wayback archive
+- ⏸ **South America regional gap**: Bolivia 0, Ecuador 0 — and PY 5 / VE 3 / CO 4 / PE 3 all still <10
+- ⏸ **Baltic states deepening**: LV 2 / LT 1 / EE 1 — Soviet-occupation era badly under-documented
+- ⏸ **Caucasus/Central Asia deepening**: AZ 2 / KZ 4 / TJ 4 / TM 1 / UZ 1 — most have richer Soviet + post-Soviet ban histories
+- ⏸ **Outstanding zero-coverage**: Slovakia, Kosovo, Cyprus, Liberia, Croatia, Slovenia, Senegal, Papua New Guinea
+- ⏸ **Cleanup pile**: Fonseca "Feliz Ano Novo" / "Happy New Year" PT-EN duplicate; "What Islam Is All About" year-fix; Madonna "Sex" / "Madonna Erotica" title-restore
