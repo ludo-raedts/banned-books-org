@@ -33,8 +33,14 @@ const jsonLd = {
   headline: essay.title,
   description: essay.dek,
   datePublished: essay.publishedAt,
+  dateModified: essay.publishedAt,
+  image: 'https://www.banned-books.org/opengraph-image',
   author: { '@type': 'Organization', name: 'banned-books.org' },
-  publisher: { '@type': 'Organization', name: 'banned-books.org' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'banned-books.org',
+    logo: { '@type': 'ImageObject', url: 'https://www.banned-books.org/brand/compact-bb.png' },
+  },
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 

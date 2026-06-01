@@ -35,8 +35,15 @@ const jsonLd = {
   headline: TITLE,
   description: DEK,
   about: { '@type': 'Legislation', name: 'Loi n° 90-615 du 13 juillet 1990 (loi Gayssot)' },
+  datePublished: '2026-05-30',
+  dateModified: '2026-05-31',
+  image: 'https://www.banned-books.org/laws/oradour.jpg',
   author: { '@type': 'Organization', name: 'banned-books.org' },
-  publisher: { '@type': 'Organization', name: 'banned-books.org' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'banned-books.org',
+    logo: { '@type': 'ImageObject', url: 'https://www.banned-books.org/brand/compact-bb.png' },
+  },
   mainEntityOfPage: URL,
 }
 
