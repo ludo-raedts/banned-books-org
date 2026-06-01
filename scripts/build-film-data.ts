@@ -22,7 +22,7 @@ import { adminClient } from '../src/lib/supabase'
 import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { POC_COUNTRY_CODES, getCentroid } from './lib/country-centroids'
+import { CHAPTER_COUNTRY_CODES, getCentroid } from './lib/country-centroids'
 import { getStateCentroid, stateCodeFromRegion } from './lib/us-state-centroids'
 
 const APPLY = process.argv.includes('--apply')
@@ -42,6 +42,21 @@ const OUT_FILE = join(OUT_DIR, 'film-data.json')
 // Earliest year we trust. Guards against the IT year-8 data error (a single ban
 // row with year_started = 8); fixing that row is out of PoC scope.
 const MIN_YEAR = 1450
+
+// ── Slot-map layer (dominant-reason colouring) ─────────────────────────────────
+// Window: bans since this year.
+const SLOT_MIN_YEAR = 2000
+// Content merge: moral + sexual + obscenity collapse to one category "content"
+// (objectionable content). The other reasons stay separate (political, religious,
+// lgbtq, violence, racial, …). Decided because moral/sexual sit near-tied in the US
+// states; merging lets FL/TX/TN colour honestly instead of going neutral.
+const SLOT_CONTENT_SLUGS = ['moral', 'sexual', 'obscenity']
+const SLOT_CONTENT_KEY = 'content'
+// V2 threshold: a category colours an entity only if it has >= this many events AND
+// makes up >= this fraction of the entity's events.
+const SLOT_MIN_EVENTS = 5
+const SLOT_MIN_SHARE = 0.5
+const slotCategory = (slug: string): string => (SLOT_CONTENT_SLUGS.includes(slug) ? SLOT_CONTENT_KEY : slug)
 
 // Liste-Otto exclusion. The dataset holds 909 FR events with year_started = 1940:
 // the "Liste Otto", books banned by the GERMAN OCCUPIER in occupied France. They
@@ -74,7 +89,7 @@ async function main() {
   const supabase = adminClient()
 
   console.log(`▸ build-film-data (${APPLY ? 'APPLY' : 'DRY-RUN'})`)
-  console.log(`  · PoC countries: ${POC_COUNTRY_CODES.join(', ')}`)
+  console.log(`  · chapter countries (layer 1): ${CHAPTER_COUNTRY_CODES.join(', ')}`)
 
   // ── 1. Scopes lookup (small table, fetch all) ──────────────────────────────
   const { data: scopeRows, error: scopeErr } = await supabase
@@ -239,7 +254,10 @@ async function main() {
     e.id = `evt_${String(i + 1).padStart(Math.max(5, pad), '0')}`
   })
 
-  // ── 6. Meta + payload ──────────────────────────────────────────────────────
+  // ── 6. Layer 2: slot-map aggregate (all countries + US states, bans since 2000)
+  const slot = await buildSlotMap(supabase)
+
+  // ── 7. Meta + payload ──────────────────────────────────────────────────────
   const years = events.map((e) => e.year)
   const countriesCovered = new Set(events.map((e) => e.country_code))
   const usStateDots = events.filter((e) => e.country_code === 'US' && e.state !== null)
@@ -256,24 +274,49 @@ async function main() {
       us_national_dots: usNationalDots,
       us_dropped_no_state: droppedUS,
     },
+    // Layer 1 — pulse events (chapter scenes).
     events,
+    // Layer 2 — slot-map aggregate (dominant-reason colouring since 2000).
+    slot_map: {
+      since_year: SLOT_MIN_YEAR,
+      content_category: SLOT_CONTENT_SLUGS,
+      threshold: 'V2: dominant category >=5 events AND >=50% of the entity\'s events',
+      meta: slot.summary,
+      countries: slot.countries, // colored + neutral (omitted entities excluded)
+      states: slot.states,
+    },
   }
 
-  // ── 7. Output ──────────────────────────────────────────────────────────────
+  // ── 8. Output ──────────────────────────────────────────────────────────────
   const perCountry = countByCountry(events)
   const perState = countByState(usStateDots)
   const report = () => {
-    console.log('\nevents per country_code:')
-    for (const [code, n] of perCountry) console.log(`  ${code}: ${n}`)
-    console.log(`\nUS breakdown: ${usStateDots.length} state dots across ${statesCovered} states,` +
-      ` ${usNationalDots} national dots, ${droppedUS} dropped (no resolvable state)`)
-    console.log('top 10 US states (dots after dedup):')
-    for (const [code, n] of perState.slice(0, 10)) console.log(`  ${code}: ${n}`)
+    console.log('\n── Layer 1 — pulse events ──')
+    console.log(`total events: ${events.length}`)
+    console.log('events per country_code:')
+    for (const [code, n] of perCountry) {
+      const isNew = (['AR', 'BY', 'MY', 'SA'] as string[]).includes(code)
+      console.log(`  ${code}: ${n}${isNew ? '   <- new chapter country' : ''}`)
+    }
+    console.log(`US: ${usStateDots.length} state dots / ${statesCovered} states, ` +
+      `${usNationalDots} national, ${droppedUS} dropped`)
+
+    const s = slot.summary
+    console.log('\n── Layer 2 — slot map (bans since 2000, content = moral+sexual+obscenity) ──')
+    console.log(`COUNTRIES: colored ${s.countriesColored}, neutral ${s.countriesNeutral}, omitted ${s.countriesOmitted}`)
+    console.log(`   color categories: ${fmtDist(s.countryColors)}`)
+    console.log(`US-STATES: colored ${s.statesColored}, neutral ${s.statesNeutral}, omitted ${s.statesOmitted}`)
+    console.log(`   color categories: ${fmtDist(s.stateColors)}`)
+    console.log('\n── Comparison to threshold survey V2 (un-merged) ──')
+    console.log(`   V2 baseline: ~23 countries colored, 15 US states colored (moral 11 / sexual 2 / lgbtq 2).`)
+    console.log(`   With the content-merge, states colored should RISE above 15 (FL/TX/TN that split`)
+    console.log(`   moral~sexual now resolve to 'content'); countries ~unchanged (political-dominated).`)
+    console.log(`   -> got countries ${s.countriesColored}, states ${s.statesColored}.`)
   }
   if (!APPLY) {
     console.log('\n── DRY-RUN — nothing written ──')
     console.log('meta:', JSON.stringify(payload.meta))
-    console.log('\nfirst 5 events:')
+    console.log('\nfirst 5 pulse events:')
     for (const e of events.slice(0, 5)) console.log('  ', JSON.stringify(e))
     report()
     console.log('\nRe-run with --apply to write the file.')
@@ -281,10 +324,141 @@ async function main() {
     await mkdir(OUT_DIR, { recursive: true })
     await writeFile(OUT_FILE, JSON.stringify(payload, null, 2) + '\n', 'utf8')
     report()
-    console.log(`\n✓ Wrote ${OUT_FILE} — ${events.length} events`)
+    console.log(`\n✓ Wrote ${OUT_FILE} — ${events.length} events + slot map`)
   }
 
   console.log(`(${((Date.now() - startedAt) / 1000).toFixed(1)}s)`)
+}
+
+function fmtDist(m: Map<string, number>): string {
+  const arr = [...m.entries()].sort((a, b) => b[1] - a[1])
+  return arr.length ? arr.map(([c, n]) => `${c} ${n}`).join(', ') : '(none)'
+}
+
+// ── Layer 2: slot-map aggregate ────────────────────────────────────────────────
+
+type SlotEntity = {
+  code: string
+  lng: number
+  lat: number
+  status: 'colored' | 'neutral'
+  category: string | null // dominant category when colored
+  total: number
+  top: { category: string; count: number }
+}
+
+async function buildSlotMap(supabase: ReturnType<typeof adminClient>): Promise<{
+  countries: SlotEntity[]
+  states: SlotEntity[]
+  summary: {
+    countriesColored: number; countriesNeutral: number; countriesOmitted: number
+    statesColored: number; statesNeutral: number; statesOmitted: number
+    countryColors: Map<string, number>; stateColors: Map<string, number>
+  }
+}> {
+  // 1. All bans since SLOT_MIN_YEAR (every country) + their reasons.
+  const PAGE = 1000
+  type SlotBan = { id: number; book_id: number; country_code: string; scope_id: number; year_started: number | null; region: string | null }
+  const bans: SlotBan[] = []
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('bans')
+      .select('id, book_id, country_code, scope_id, year_started, region')
+      .gte('year_started', SLOT_MIN_YEAR)
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1)
+    if (error) throw new Error(`slot bans: ${error.message}`)
+    if (!data || data.length === 0) break
+    bans.push(...(data as unknown as SlotBan[]))
+    if (data.length < PAGE) break
+  }
+
+  const { data: reasonRows, error: rErr } = await supabase.from('reasons').select('id, slug')
+  if (rErr) throw new Error(`reasons: ${rErr.message}`)
+  const reasonSlugById = new Map<number, string>()
+  for (const r of reasonRows ?? []) reasonSlugById.set(Number(r.id), String(r.slug))
+
+  const reasonLinks = await fetchByIds(
+    supabase, 'ban_reason_links', 'ban_id, reason_id', 'ban_id', unique(bans.map((b) => b.id)),
+  )
+  const categoriesByBan = new Map<number, Set<string>>()
+  for (const l of reasonLinks) {
+    const banId = Number(l.ban_id)
+    const slug = reasonSlugById.get(Number(l.reason_id))
+    if (!slug) continue
+    let s = categoriesByBan.get(banId)
+    if (!s) { s = new Set(); categoriesByBan.set(banId, s) }
+    s.add(slotCategory(slug))
+  }
+
+  // 2. Group per entity: country_code for non-US, resolved state for US (Nation /
+  //    unresolvable US events have no state → excluded, as in the threshold survey).
+  type Ent = { isState: boolean; code: string; all: Set<string>; cats: Map<string, Set<string>> }
+  const ents = new Map<string, Ent>()
+  for (const b of bans) {
+    let key: string, code: string, isState: boolean
+    if (b.country_code !== 'US') { code = b.country_code; key = 'C:' + code; isState = false }
+    else {
+      const region = (b.region ?? '').trim()
+      if (region === US_NATION_REGION) continue
+      const st = stateCodeFromRegion(region)
+      if (!st) continue
+      code = st; key = 'S:' + st; isState = true
+    }
+    let e = ents.get(key)
+    if (!e) { e = { isState, code, all: new Set(), cats: new Map() }; ents.set(key, e) }
+    const ev = `${b.book_id}|${b.year_started}|${b.scope_id}` // distinct-event key
+    e.all.add(ev)
+    for (const cat of categoriesByBan.get(b.id) ?? []) {
+      let cs = e.cats.get(cat)
+      if (!cs) { cs = new Set(); e.cats.set(cat, cs) }
+      cs.add(ev)
+    }
+  }
+
+  // 3. Classify each entity (V2) and attach a centroid.
+  const countries: SlotEntity[] = []
+  const states: SlotEntity[] = []
+  const summary = {
+    countriesColored: 0, countriesNeutral: 0, countriesOmitted: 0,
+    statesColored: 0, statesNeutral: 0, statesOmitted: 0,
+    countryColors: new Map<string, number>(), stateColors: new Map<string, number>(),
+  }
+  for (const e of ents.values()) {
+    const ranked = [...e.cats.entries()].map(([c, s]) => [c, s.size] as [string, number]).sort((a, b) => b[1] - a[1])
+    const top = ranked[0] ?? ['none', 0]
+    const total = e.all.size
+    let status: 'colored' | 'neutral' | 'omitted'
+    if (top[1] < SLOT_MIN_EVENTS) status = 'omitted'
+    else if (top[1] >= SLOT_MIN_EVENTS && top[1] >= SLOT_MIN_SHARE * total) status = 'colored'
+    else status = 'neutral'
+
+    if (e.isState) {
+      if (status === 'omitted') summary.statesOmitted++
+      else if (status === 'colored') { summary.statesColored++; summary.stateColors.set(top[0], (summary.stateColors.get(top[0]) ?? 0) + 1) }
+      else summary.statesNeutral++
+    } else {
+      if (status === 'omitted') summary.countriesOmitted++
+      else if (status === 'colored') { summary.countriesColored++; summary.countryColors.set(top[0], (summary.countryColors.get(top[0]) ?? 0) + 1) }
+      else summary.countriesNeutral++
+    }
+    if (status === 'omitted') continue // omitted entities are too thin to map
+
+    const c = e.isState ? getStateCentroid(e.code) : getCentroid(e.code)
+    if (!c) {
+      console.warn(`  ! slot map: no centroid for ${e.isState ? 'state' : 'country'} ${e.code} — skipped`)
+      continue
+    }
+    const entry: SlotEntity = {
+      code: e.code, lng: c[0], lat: c[1], status,
+      category: status === 'colored' ? top[0] : null,
+      total, top: { category: top[0], count: top[1] },
+    }
+    ;(e.isState ? states : countries).push(entry)
+  }
+  countries.sort((a, b) => a.code.localeCompare(b.code))
+  states.sort((a, b) => a.code.localeCompare(b.code))
+  return { countries, states, summary }
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -309,7 +483,7 @@ async function fetchBans(supabase: ReturnType<typeof adminClient>): Promise<BanR
     const { data, error } = await supabase
       .from('bans')
       .select('id, book_id, country_code, scope_id, year_started, region')
-      .in('country_code', POC_COUNTRY_CODES as unknown as string[])
+      .in('country_code', CHAPTER_COUNTRY_CODES as unknown as string[])
       .gte('year_started', MIN_YEAR)
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
