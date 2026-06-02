@@ -102,11 +102,16 @@ Authors" that groups unrelated works). *No biographies* — those are commercial
 
 **`bans.csv`** — `ban_id` (PK, surrogate), `book_slug` (FK), `country_code`
 (FK), `year_started` / `year_ended` (int, nullable; `year_ended` empty if in
-force/unknown), `action_type` (one of `banned`, `restricted`, `challenged`,
-`removed`, `blocked`), `status` (one of `active`, `historical`, `rescinded`,
-`unclear`), `scope` (taxonomy slug: `school`, `government`, `prison`, …; empty
-if unscoped). `banned` and `active` dominate; `removed`, `blocked`, `rescinded`,
-and `unclear` are rare tail values present in the data.
+force/unknown), `action_type` (one of `banned`, `restricted`, `challenged`),
+`status` (one of `active`, `historical`, `rescinded`), `scope` (taxonomy slug:
+`school`, `government`, `prison`, …; empty if unscoped). `banned` and `active`
+dominate; `challenged` and `rescinded` are smaller categories.
+
+> **Withheld rows.** A tiny number of bans with an *indeterminate* status
+> (`status = 'unclear'`; currently 2 rows) exist in the live catalogue but are
+> deliberately omitted from this open export. As a result the open ban count is
+> marginally lower than the headline figure on banned-books.org. The DB is not
+> modified — these rows simply aren't deposited.
 
 **`ban_reasons.csv`** — `ban_id` (FK), `reason_slug` (stable taxonomy slug),
 `reason_label` (English label). Zero or more rows per ban.
@@ -184,6 +189,12 @@ overstate the US relative to a ranking built on distinct banned titles.
 The export is intentionally **not pre-aggregated**: every event is preserved so
 researchers can choose their own grain. This section exists so they don't
 mistake the event grain for a title count.
+
+**Status semantics.** `rescinded` is a genuine category, not a synonym of
+`historical`: it marks a ban that was formally *lifted in a later year* (nearly
+all such rows — 51 of 52 at the current snapshot — carry a `year_ended`),
+whereas `historical` simply means no longer in force without asserting a
+documented reversal.
 
 ---
 
