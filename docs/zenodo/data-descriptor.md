@@ -44,9 +44,11 @@ catalogue grows — the deposited files are the authority):
   Germany, Czechoslovakia, Yugoslavia)
 - ~52,800 ban–reason links and ~28,800 ban–source citations
 
-**Out of scope.** The catalogue documents *books*. Periodicals, films, and audio
-works are not in scope. Records must describe a real removal/restriction with an
-institutional actor and a documented decision (see §4).
+**Scope.** This deposit covers *books*. Records must describe a real
+removal/restriction with an institutional actor and a documented decision (see
+§4). The catalogue does not carry a media-type field, so non-book media are not
+systematically distinguished or excluded at the schema level; the editorial
+intent is books, but the data offers no hard guarantee that every row is one.
 
 ---
 
@@ -94,13 +96,17 @@ Authoritative, machine-readable types live in `schema.json`. Summary:
 `author_slugs` (pipe-separated `authors.slug`, nullable).
 
 **`authors.csv`** — `slug` (PK), `display_name` (slug-canonical, Anglo-friendly
-form), `birth_country` (code, nullable). *No biographies* — those are commercial.
+form), `birth_country` (code, nullable), `is_placeholder` (boolean: `true` =
+aggregate / non-attributable bucket entry such as "Anonymous" or "Various
+Authors" that groups unrelated works). *No biographies* — those are commercial.
 
 **`bans.csv`** — `ban_id` (PK, surrogate), `book_slug` (FK), `country_code`
 (FK), `year_started` / `year_ended` (int, nullable; `year_ended` empty if in
-force/unknown), `action_type` (formal ban vs. restriction vs. documented
-challenge), `status` (`active` | `lifted` | `historical` | `unknown`), `scope`
-(taxonomy slug: `school`, `government`, `prison`, …; empty if unscoped).
+force/unknown), `action_type` (one of `banned`, `restricted`, `challenged`,
+`removed`, `blocked`), `status` (one of `active`, `historical`, `rescinded`,
+`unclear`), `scope` (taxonomy slug: `school`, `government`, `prison`, …; empty
+if unscoped). `banned` and `active` dominate; `removed`, `blocked`, `rescinded`,
+and `unclear` are rare tail values present in the data.
 
 **`ban_reasons.csv`** — `ban_id` (FK), `reason_slug` (stable taxonomy slug),
 `reason_label` (English label). Zero or more rows per ban.
@@ -136,16 +142,23 @@ chose not to distribute, and books that are culturally stigmatised but legally
 available. The restriction must have an institutional actor and a documented
 decision.
 
-**Verification.** Sources carry a `verification_status` (above). The catalogue
-is built mostly by automated import from public sources and then enriched and
-reviewed; not every entry has been individually checked by a human. The
-commercial dataset additionally exposes a per-record `data_quality_status`
-(`confident` / `default` / `flagged`) computed from signals such as canonical
-identifiers, editorial completeness, ban evidence, source citations, and author
-legitimacy. That status field is **not** part of this open release, but the
-underlying open signal — the source citations themselves — is: filter on
-`ban_sources.verification_status = 'verified'` to restrict to the
-archive-confirmed subset.
+**Verification.** Sources carry a `verification_status`. Archive-verification is
+an ongoing process and the field is mostly unpopulated so far. At the snapshot
+used here, of ~820 source rows the distribution is roughly: `unverified` ≈ 89%,
+empty/`(null)` ≈ 10%, `verified` = 5 rows, `pending` = 2 rows, and `broken` = 0.
+**In practical terms, filtering on `verification_status = 'verified'` currently
+returns a near-empty subset (a handful of rows) and is not yet a usable quality
+gate.** Treat it as a lever that becomes useful as verification runs progress,
+not as something to filter on today. The catalogue is built mostly by automated
+import from public sources and then enriched and reviewed; not every entry has
+been individually checked by a human.
+
+**Per-record data quality.** A composite per-record `data_quality_status`
+(`confident` / `default` / `flagged`) exists in the underlying catalogue, but it
+is intentionally **not** included in this open release; it is available in the
+commercial dataset. The open data does not provide an equivalent quality
+signal — the source citations in `ban_sources.csv` let you inspect provenance,
+but they are not a substitute for the composite status.
 
 ---
 
@@ -211,8 +224,15 @@ This dataset is honest about what it is not.
 
 6. **Automated import, partial human review.** Most records originate from
    automated pipelines. Broad strokes (title, author, ban country) are reliable;
-   narrower details may be provisional. The `ban_sources.verification_status`
-   field is the open lever for filtering to the archive-confirmed subset.
+   narrower details may be provisional. `ban_sources.verification_status` is
+   mostly `unverified` today (see §4), so it cannot yet stand in for record-level
+   quality filtering.
+
+7. **Placeholder / aggregate author entries.** A small number of `authors` rows
+   are non-attributable buckets ("Anonymous", "Various Authors") that group
+   unrelated works. They are flagged `is_placeholder = true`; filter them out
+   before computing per-author statistics so a bucket isn't treated as a single
+   author.
 
 ---
 
