@@ -13,6 +13,8 @@ const YOUTUBE_VIDEO_ID = 'ZVuLsMQ_NLo'
 // structured-data validator warns on a bare date). Mirrors YouTube's own
 // publishDate for this upload; update if the video is re-uploaded.
 const FILM_UPLOAD_DATE = '2026-06-02T09:17:48-07:00'
+// Runtime as ISO 8601 duration (124 s ≈ PT2M4S), mirroring YouTube's length.
+const FILM_DURATION = 'PT2M4S'
 
 const FILM_TITLE = 'A World Map of Banned Books'
 const FILM_DESCRIPTION =
@@ -24,7 +26,9 @@ const THUMBNAIL_URL = `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`
 
 // Static page — content is editorial, no per-request data. No need to revalidate.
 export const metadata: Metadata = {
-  title: 'The film',
+  // Absolute title (skips the "%s | Banned Books" template) so it matches the
+  // H1 and carries the keywords "banned books" + "documentary".
+  title: { absolute: `${FILM_TITLE} — Documentary | Banned Books` },
   description: FILM_DESCRIPTION,
   alternates: { canonical: '/film' },
   openGraph: {
@@ -49,6 +53,7 @@ const videoSchema = {
   description: FILM_DESCRIPTION,
   thumbnailUrl: [THUMBNAIL_URL],
   uploadDate: FILM_UPLOAD_DATE,
+  duration: FILM_DURATION,
   embedUrl: EMBED_URL,
   contentUrl: WATCH_URL,
   publisher: {
@@ -180,8 +185,64 @@ export default function FilmPage() {
         </div>
       </SectionShell>
 
-      {/* ── Credits ───────────────────────────────────────────────────── */}
+      {/* ── What the film covers ──────────────────────────────────────── */}
       <SectionShell tone="cream">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+            What the film covers
+          </h2>
+          <div className="flex flex-col gap-4 text-base leading-relaxed text-neutral-700">
+            <p>
+              The documentary animates a world map of book censorship, building
+              it from the same records that power this archive: thousands of
+              banned, challenged, and restricted titles, each tied to the{' '}
+              <Link href="/countries" className="text-oxblood hover:underline">
+                country
+              </Link>{' '}
+              that restricted it, the{' '}
+              <Link href="/reasons" className="text-oxblood hover:underline">
+                stated reason
+              </Link>
+              , and a documented source.
+            </p>
+            <p>
+              It explains why the United States dominates the map.{' '}
+              <Link href="/scope/school" className="text-oxblood hover:underline">
+                School-district book removals
+              </Link>{' '}
+              — tracked in detail by PEN America — are each counted separately,
+              which inflates the US total against countries where a single
+              government decree bans a book everywhere at once. The map is a
+              record of what is <em>documented</em>, not a census of all
+              censorship: the regions that glow brightest are often those with
+              the freest press, while suppression in closed states goes
+              unrecorded.
+            </p>
+            <p>
+              The full picture sits behind the film. Browse the{' '}
+              <Link href="/" className="text-oxblood hover:underline">
+                archive
+              </Link>
+              , read how the catalogue is built in the{' '}
+              <Link href="/methodology" className="text-oxblood hover:underline">
+                methodology
+              </Link>
+              , check{' '}
+              <Link href="/sources" className="text-oxblood hover:underline">
+                where the data comes from
+              </Link>
+              , or download the structured{' '}
+              <Link href="/dataset" className="text-oxblood hover:underline">
+                dataset
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </SectionShell>
+
+      {/* ── Credits ───────────────────────────────────────────────────── */}
+      <SectionShell tone="white">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
             Credits
