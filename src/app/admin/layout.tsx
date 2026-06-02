@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import AdminShell from './admin-shell'
 
 // Apply noindex + nofollow to every /admin/* route via Next's nested metadata
 // system. Crawlers (Google, Bing, GPTBot, etc.) routinely follow links into
@@ -21,5 +22,5 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <AdminShell>{children}</AdminShell>
 }

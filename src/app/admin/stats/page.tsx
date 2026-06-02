@@ -1,5 +1,4 @@
 import { adminClient } from '@/lib/supabase'
-import AdminTabs from '../admin-tabs'
 import CloudflareCards from '../cloudflare-cards'
 import TrafficCard, { type CountryViewRow, type ReferrerViewRow } from '../traffic-card'
 import TrendingCard, { type TrendingBookRow, type TrendingAuthorRow, type AllTimeBookRow, type AllTimeAuthorRow } from '../trending-card'
@@ -165,8 +164,6 @@ export default async function AdminStatsPage() {
         <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
         <h1 className="text-2xl font-bold">Admin</h1>
       </div>
-
-      <AdminTabs />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <CloudflareCards />

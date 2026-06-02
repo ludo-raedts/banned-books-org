@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useAdminUi } from '../admin-ui'
 import type { ReadingClubCard } from '@/lib/reading-club-data'
 
 type BlockStatusSummary = { ready: boolean; total: number; published: number }
@@ -636,6 +637,7 @@ function YoungReadersTab({
 }) {
   const [picks, setPicks] = useState<YoungReadersPick[]>(rows as YoungReadersPick[])
   const [genBusy, setGenBusy] = useState<string | null>(null)
+  const ui = useAdminUi()
 
   function update(i: number, patch: Partial<YoungReadersPick>) {
     const next = [...picks]
@@ -704,10 +706,12 @@ function YoungReadersTab({
     if (!p.bookId) return
     const existing = setType === 'book' ? p.discussionQuestions : (p.discussionQuestionsBan ?? [])
     if (existing.length > 0) {
-      const ok = window.confirm(
-        `Replace ${existing.length} existing question${existing.length === 1 ? '' : 's'} with a freshly generated set?\n\n` +
-        `The current questions will be lost. Save the row first if you want to keep a copy.`,
-      )
+      const ok = await ui.confirm({
+        title: `Replace ${existing.length} existing question${existing.length === 1 ? '' : 's'}?`,
+        body: 'A freshly generated set will replace them. The current questions will be lost — save the row first if you want to keep a copy.',
+        confirmLabel: 'Replace',
+        danger: true,
+      })
       if (!ok) return
     }
     setGenBusy(`${i}:${setType}`)
@@ -730,7 +734,7 @@ function YoungReadersTab({
         ? { discussionQuestions: questions }
         : { discussionQuestionsBan: questions })
     } catch (err) {
-      window.alert(`Generate failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      ui.toast(`Generate failed: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error')
     } finally {
       setGenBusy(null)
     }
@@ -1141,17 +1145,20 @@ function GenerateQuestionsBanner({
   const [state, setState] = useState<'idle' | 'running' | 'done' | 'error'>('idle')
   const [result, setResult] = useState<{ success: number; failed: number; provider: string } | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const ui = useAdminUi()
 
   if (count === 0 && state === 'idle') return null
 
   async function run() {
     if (count === 0) return
-    const ok = window.confirm(
-      `Generate discussion questions for ${count} book${count === 1 ? '' : 's'}?\n\n` +
-      `Each book makes one LLM call (~5 seconds). Approximate cost: ` +
-      `${count <= 25 ? '$0.05–$0.10 with gpt-4o' : `$${(count * 0.002).toFixed(2)} with gpt-4o`}.\n\n` +
-      `Existing questions are preserved.`,
-    )
+    const ok = await ui.confirm({
+      title: `Generate questions for ${count} book${count === 1 ? '' : 's'}?`,
+      body:
+        `Each book makes one LLM call (~5 seconds). Approximate cost: ` +
+        `${count <= 25 ? '$0.05–$0.10 with gpt-4o' : `$${(count * 0.002).toFixed(2)} with gpt-4o`}. ` +
+        `Existing questions are preserved.`,
+      confirmLabel: 'Generate',
+    })
     if (!ok) return
     setState('running')
     setError(null)

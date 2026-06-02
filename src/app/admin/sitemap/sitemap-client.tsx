@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Map as MapIcon } from 'lucide-react'
+import { useAdminUi } from '../admin-ui'
 
 const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
@@ -40,6 +41,7 @@ export default function SitemapClient({
   const [indexNowMsg, setIndexNowMsg] = useState('')
   const [deltaState, setDeltaState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [deltaMsg, setDeltaMsg] = useState('')
+  const ui = useAdminUi()
 
   const sitemapTotal =
     sitemapCounts.static +
@@ -49,7 +51,12 @@ export default function SitemapClient({
     sitemapCounts.reasons
 
   async function handleIndexNowBulk() {
-    if (!confirm(`Submit ~${sitemapTotal.toLocaleString('en')} URLs to IndexNow (Bing)?`)) return
+    const ok = await ui.confirm({
+      title: 'Submit all URLs to IndexNow?',
+      body: `~${sitemapTotal.toLocaleString('en')} URLs will be submitted to IndexNow (Bing).`,
+      confirmLabel: 'Submit',
+    })
+    if (!ok) return
     setIndexNowState('loading')
     setIndexNowMsg('')
     try {

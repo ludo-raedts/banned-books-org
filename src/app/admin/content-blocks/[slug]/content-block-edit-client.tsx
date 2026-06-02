@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminBackLink from '@/components/admin-back-link'
+import { useAdminUi } from '../../admin-ui'
+import { useUnsavedChanges } from '../../use-unsaved-changes'
 import type { ContentBlockRow, ContentBlockStatus } from '@/lib/content-blocks'
 
 // Split-pane markdown editor with live preview. The preview HTML is the same
@@ -31,10 +33,13 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
   const [status, setStatus] = useState<ContentBlockStatus>(block.status)
   const [showBrief, setShowBrief] = useState(status === 'placeholder')
   const [saving, setSaving] = useState<null | 'save' | 'publish' | 'revert'>(null)
-  const [error, setError] = useState<string | null>(null)
   const [savedAt, setSavedAt] = useState<string | null>(block.last_edited_at)
+  const ui = useAdminUi()
 
-  const dirty = markdown !== (block.body_markdown ?? '') || notes !== (block.notes ?? '')
+  const snapshot = JSON.stringify({ markdown, notes })
+  const [baseline, setBaseline] = useState(snapshot)
+  const dirty = snapshot !== baseline
+  useUnsavedChanges(dirty)
 
   const wordCount = useMemo(() => {
     const trimmed = markdown.trim()
@@ -45,7 +50,6 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
   async function call(action: 'save_draft' | 'publish' | 'revert_to_draft') {
     const flag = action === 'save_draft' ? 'save' : action === 'publish' ? 'publish' : 'revert'
     setSaving(flag)
-    setError(null)
     try {
       const res = await fetch(`/api/admin/content-blocks/${block.slug}`, {
         method: 'PATCH',
@@ -58,9 +62,14 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
       setStatus(data.status)
       setPreviewHtml(data.body_html ?? '')
       setSavedAt(data.last_edited_at ?? new Date().toISOString())
+      setBaseline(snapshot)
+      ui.toast(
+        action === 'publish' ? 'Published' : action === 'revert_to_draft' ? 'Reverted to draft' : 'Draft saved',
+        'success',
+      )
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Save failed')
+      ui.toast(err instanceof Error ? err.message : 'Save failed', 'error')
     }
     setSaving(null)
   }
@@ -122,10 +131,6 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
           </div>
         </div>
       </div>
-
-      {error && (
-        <p className="mt-4 text-red-600 border border-red-200 rounded-lg p-3 bg-red-50 text-sm">{error}</p>
-      )}
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button

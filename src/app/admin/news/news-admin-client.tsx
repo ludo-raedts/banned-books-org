@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAdminUi } from '../admin-ui'
 import { normalizeNewsDisplay, languageInfo, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 import type { NewsConfig } from '@/config/news'
 
@@ -324,6 +325,7 @@ export default function NewsAdminClient({
 }
 
 function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: (id: number) => void; onPatch: (patch: Partial<PublishedItem>) => void }) {
+  const ui = useAdminUi()
   const [editing, setEditing] = useState(false)
   const [headline, setHeadline] = useState(item.headline ?? '')
   const [summary, setSummary] = useState(item.summary ?? '')
@@ -342,7 +344,13 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
   }
 
   async function unpublish() {
-    if (!confirm(`Unpublish "${item.title.slice(0, 80)}"?\n\nIt will be removed from /news. The source URL stays in the dedup list so it won't be re-published.`)) return
+    const ok = await ui.confirm({
+      title: `Unpublish "${item.title.slice(0, 80)}"?`,
+      body: "It will be removed from /news. The source URL stays in the dedup list so it won't be re-published.",
+      confirmLabel: 'Unpublish',
+      danger: true,
+    })
+    if (!ok) return
     await call('unpublish')
   }
 

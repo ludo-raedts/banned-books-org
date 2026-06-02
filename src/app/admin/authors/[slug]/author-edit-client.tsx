@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useAdminUi } from '../../admin-ui'
+import { useUnsavedChanges } from '../../use-unsaved-changes'
 import type { AuthorEditData } from './page'
-
-type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -25,12 +25,16 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
   const [deathYear, setDeathYear] = useState(author.death_year?.toString() ?? '')
   const [birthCountry, setBirthCountry] = useState(author.birth_country ?? '')
   const [photoUrl, setPhotoUrl] = useState(author.photo_url ?? '')
-  const [saveState, setSaveState] = useState<SaveState>('idle')
-  const [errorMsg, setErrorMsg] = useState('')
+  const [saving, setSaving] = useState(false)
+  const ui = useAdminUi()
+
+  const snapshot = JSON.stringify({ displayName, bio, birthYear, deathYear, birthCountry, photoUrl })
+  const [baseline, setBaseline] = useState(snapshot)
+  const dirty = snapshot !== baseline
+  useUnsavedChanges(dirty)
 
   async function handleSave() {
-    setSaveState('saving')
-    setErrorMsg('')
+    setSaving(true)
     try {
       const body: Record<string, unknown> = {
         display_name: displayName,
@@ -49,11 +53,12 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
         const j = await res.json().catch(() => ({}))
         throw new Error(j.error ?? `HTTP ${res.status}`)
       }
-      setSaveState('saved')
-      setTimeout(() => setSaveState('idle'), 2500)
+      setBaseline(snapshot)
+      ui.toast('Saved', 'success')
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Unknown error')
-      setSaveState('error')
+      ui.toast(err instanceof Error ? err.message : 'Save failed', 'error')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -109,16 +114,13 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
         <div className="flex items-center gap-3 pt-1">
           <button
             onClick={handleSave}
-            disabled={saveState === 'saving'}
+            disabled={saving || !dirty}
             className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
-            {saveState === 'saving' ? 'Saving…' : 'Save changes'}
+            {saving ? 'Saving…' : 'Save changes'}
           </button>
-          {saveState === 'saved' && (
-            <span className="text-sm text-green-600">Saved ✓</span>
-          )}
-          {saveState === 'error' && (
-            <span className="text-sm text-red-600">{errorMsg}</span>
+          {dirty && !saving && (
+            <span className="text-sm text-amber-600">Unsaved changes</span>
           )}
         </div>
       </div>

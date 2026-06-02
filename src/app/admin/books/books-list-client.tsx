@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import type { BookListItem } from './page'
 
 const PAGE_SIZE = 50
@@ -16,6 +17,7 @@ type ClassificationFilter =
   | 'extended_no_essay'
 
 export default function BooksListClient({ books }: { books: BookListItem[] }) {
+  const router = useRouter()
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
   const [classFilter, setClassFilter] = useState<ClassificationFilter>('all')
@@ -125,7 +127,7 @@ export default function BooksListClient({ books }: { books: BookListItem[] }) {
                   <tr
                     key={book.id}
                     className={`border-b last:border-0 border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50'}`}
-                    onClick={() => window.location.href = `/admin/books/${book.slug}`}
+                    onClick={() => router.push(`/admin/books/${book.slug}`)}
                   >
                     <td className="px-3 py-2">
                       {book.cover_url ? (

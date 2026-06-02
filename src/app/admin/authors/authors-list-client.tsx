@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import type { AuthorListItem } from './page'
 
 const PAGE_SIZE = 50
@@ -15,6 +16,7 @@ function Check({ value }: { value: boolean }) {
 }
 
 export default function AuthorsListClient({ authors }: { authors: AuthorListItem[] }) {
+  const router = useRouter()
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
 
@@ -67,7 +69,7 @@ export default function AuthorsListClient({ authors }: { authors: AuthorListItem
                   <tr
                     key={author.id}
                     className={`border-b last:border-0 border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/50'}`}
-                    onClick={() => window.location.href = `/admin/authors/${author.slug}`}
+                    onClick={() => router.push(`/admin/authors/${author.slug}`)}
                   >
                     <td className="px-3 py-2 font-medium leading-snug">
                       <Link

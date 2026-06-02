@@ -1,5 +1,4 @@
 import { adminClient } from '@/lib/supabase'
-import AdminTabs from '../admin-tabs'
 import SitemapClient from './sitemap-client'
 import { getSitemapStaticEntries } from '@/lib/sitemap-static-entries'
 
@@ -36,8 +35,6 @@ export default async function AdminSitemapPage() {
         <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
         <h1 className="text-2xl font-bold">Admin</h1>
       </div>
-
-      <AdminTabs />
 
       <SitemapClient
         sitemapCounts={{

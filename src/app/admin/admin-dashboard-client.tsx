@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ZENODO_DOI_URL } from '@/lib/zenodo'
-import AdminTabs from './admin-tabs'
+import { useAdminUi } from './admin-ui'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
 import PipelineCard from './pipeline-card'
@@ -193,12 +193,7 @@ export default function AdminDashboardClient({
   const [buildDatasetState, setBuildDatasetState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [buildDatasetMsg, setBuildDatasetMsg] = useState('')
   const [datasetBuiltAt, setDatasetBuiltAt] = useState(datasetStats.datasetBuiltAt)
-  const router = useRouter()
-
-  async function handleLogout() {
-    await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' }).catch(() => {})
-    router.push('/admin/login')
-  }
+  const ui = useAdminUi()
 
   async function handleRefreshViews() {
     setRefreshState('loading')
@@ -217,7 +212,12 @@ export default function AdminDashboardClient({
   }
 
   async function handleBuildDataset() {
-    if (!confirm('Rebuild the downloadable dataset ZIP from current data? This takes ~5 seconds.')) return
+    const ok = await ui.confirm({
+      title: 'Rebuild dataset?',
+      body: 'Rebuild the downloadable dataset ZIP from current data. This takes ~5 seconds.',
+      confirmLabel: 'Rebuild',
+    })
+    if (!ok) return
     setBuildDatasetState('loading')
     setBuildDatasetMsg('')
     try {
@@ -237,20 +237,9 @@ export default function AdminDashboardClient({
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
-          <h1 className="text-2xl font-bold">Admin</h1>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors"
-        >
-          Sign out
-        </button>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Overview</h1>
       </div>
-
-      <AdminTabs />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -316,8 +305,8 @@ export default function AdminDashboardClient({
         <InboxCard rows={inboxRows} fetchedAt={inboxFetchedAt} cardCls={cardCls} />
 
         {/* BBW / Reading Club / Content blocks cards intentionally removed —
-            those sections are reachable via the AdminTabs nav above this grid,
-            and duplicating the entry points clutters the overview. */}
+            those sections are reachable via the top nav bar, and duplicating
+            the entry points clutters the overview. */}
 
         {/* Row 2 — Database */}
         <div className={cardCls}>

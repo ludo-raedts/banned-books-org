@@ -2,9 +2,11 @@
 
 import { useState, useRef } from 'react'
 import { ALLOWED_IMAGE_HOSTS } from '@/lib/allowed-image-hosts'
+import { useAdminUi } from '../../admin-ui'
+import { useUnsavedChanges } from '../../use-unsaved-changes'
 import type { BookEditData } from './page'
 
-type SaveState = 'idle' | 'saving' | 'saved' | 'error'
+type SaveState = 'idle' | 'saving'
 type ImgStatus = 'idle' | 'loading' | 'loaded' | 'error'
 
 function Field({ label, hint, children }: { label: React.ReactNode; hint?: string; children: React.ReactNode }) {
@@ -51,10 +53,19 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
   const [inclusionRationale, setInclusionRationale] = useState(book.inclusion_rationale ?? '')
   const [extendedContext, setExtendedContext] = useState(book.extended_context ?? '')
   const [saveState, setSaveState] = useState<SaveState>('idle')
-  const [errorMsg, setErrorMsg] = useState('')
   const [showHostWarning, setShowHostWarning] = useState(false)
   const [hostAdded, setHostAdded] = useState(false)
   const imgKey = useRef(0)
+  const ui = useAdminUi()
+
+  const snapshot = JSON.stringify({
+    title, titleNative, titleNativeScript, titleTransliterated, titleEnglish,
+    year, genres, coverUrl, descriptionBook, descriptionBan, censorshipContext,
+    aiDrafted, warningLevel, inclusionRationale, extendedContext,
+  })
+  const [baseline, setBaseline] = useState(snapshot)
+  const dirty = snapshot !== baseline
+  useUnsavedChanges(dirty)
 
   function handleCoverUrlChange(val: string) {
     setCoverUrl(val)
@@ -68,7 +79,6 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
   async function performSave() {
     setSaveState('saving')
     setShowHostWarning(false)
-    setErrorMsg('')
     try {
       const body: Record<string, unknown> = {
         title,
@@ -96,11 +106,12 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
         const j = await res.json().catch(() => ({}))
         throw new Error(j.error ?? `HTTP ${res.status}`)
       }
-      setSaveState('saved')
-      setTimeout(() => setSaveState('idle'), 2500)
+      setBaseline(snapshot)
+      setSaveState('idle')
+      ui.toast('Saved', 'success')
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Unknown error')
-      setSaveState('error')
+      setSaveState('idle')
+      ui.toast(err instanceof Error ? err.message : 'Save failed', 'error')
     }
   }
 
@@ -392,16 +403,13 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
           <div className="flex items-center gap-3 pt-1">
             <button
               onClick={handleSaveClick}
-              disabled={saveState === 'saving'}
+              disabled={saveState === 'saving' || !dirty}
               className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {saveState === 'saving' ? 'Saving…' : 'Save changes'}
             </button>
-            {saveState === 'saved' && (
-              <span className="text-sm text-green-600">Saved ✓</span>
-            )}
-            {saveState === 'error' && (
-              <span className="text-sm text-red-600">{errorMsg}</span>
+            {dirty && saveState !== 'saving' && (
+              <span className="text-sm text-amber-600">Unsaved changes</span>
             )}
           </div>
         )}
