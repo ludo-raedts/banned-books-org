@@ -1,13 +1,9 @@
 # Banned Books — Open Censorship Core: Data Descriptor
 
-> **Source document** for the Zenodo deposit. Convert to PDF for the deposit's
-> "Additional files" / data-descriptor slot. Prose is adapted from the public
-> [/methodology](https://www.banned-books.org/methodology) and
-> [/data-quality](https://www.banned-books.org/data-quality) pages.
-
 - **Dataset:** Banned Books — Open Censorship Core
 - **Publisher:** Banned Books (https://www.banned-books.org)
 - **Creator:** Ludo Raedts
+- **ORCID:** https://orcid.org/0009-0006-8358-7119
 - **License:** CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
 - **Concept DOI:** `TODO(zenodo)` — paste the version-independent concept DOI here after first publish (e.g. `10.5281/zenodo.XXXXXXX`).
 - **Companion files:** `books.csv`, `authors.csv`, `bans.csv`, `ban_reasons.csv`, `ban_sources.csv`, `countries.csv`, `schema.json`, `README.md`, `LICENSE.txt`.
@@ -40,7 +36,7 @@ the written description paragraph that interprets a ban is commercial.
 catalogue grows — the deposited files are the authority):
 
 - ~14,000 books, ~8,650 authors
-- ~28,700 ban events across 119 countries (including defunct states: USSR, East
+- ~28,730 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
 - ~52,800 ban–reason links and ~28,800 ban–source citations
 
@@ -275,15 +271,10 @@ Cite the **concept DOI** — the version-independent Zenodo DOI that always
 resolves to the latest version — not a specific version DOI, unless you need to
 pin an exact snapshot for reproducibility.
 
-> Raedts, L. *Banned Books — Open Censorship Core.* banned-books.org. Zenodo.
-> CC-BY-4.0. DOI: `TODO(zenodo)`.
+> Raedts, Ludo. *Banned Books — Open Censorship Core.* banned-books.org. Zenodo.
+> CC-BY-4.0. ORCID: https://orcid.org/0009-0006-8358-7119. DOI: `TODO(zenodo)`.
 
 When attributing in prose or visualisations: **"Banned Books
 (banned-books.org), CC-BY-4.0"**, with a link to the DOI. If you publish a
 ranking or aggregate, please state whether it is built on distinct books /
 countries or on raw ban events (§5), so readers can interpret it correctly.
-
----
-
-*Descriptor version: draft for first Zenodo deposit. Replace every `TODO(zenodo)`
-placeholder with the concept DOI before converting to PDF and depositing.*
