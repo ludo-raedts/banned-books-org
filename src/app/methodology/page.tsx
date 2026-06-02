@@ -4,6 +4,7 @@ import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import { ZENODO_DOI_URL } from '@/lib/zenodo'
 
 const METHODOLOGY_CANONICAL = 'https://www.banned-books.org/methodology'
 const METHODOLOGY_ONLINE_DATE = '2025-08-01'
@@ -128,6 +129,12 @@ export default function MethodologyPage() {
               . The complete catalogue is also available as a{' '}
               <Link href="/dataset" className="text-oxblood hover:underline">downloadable dataset</Link>
               {' '}for research and analysis.
+              {ZENODO_DOI_URL && (
+                <>
+                  {' '}An open, citeable version of the core censorship data (CC-BY-4.0) is deposited at{' '}
+                  <a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">{ZENODO_DOI_URL}</a>.
+                </>
+              )}
             </p>
           </div>
         </div>

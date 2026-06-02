@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import DatasetCheckoutButton from '@/components/dataset-checkout-button'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
@@ -111,9 +112,14 @@ export default async function DatasetPage() {
     ],
     datePublished: '2026-04-24',
     inLanguage: 'en',
-    // TODO(zenodo): add "citation" with DOI once Zenodo upload is live
   }
   if (stats.dataLastChanged) datasetSchema.dateModified = stats.dataLastChanged
+  // The open CC-BY-4.0 core is deposited on Zenodo with a citeable DOI. Once
+  // ZENODO_CONCEPT_DOI is set, advertise it as the dataset identifier so search
+  // engines and citation tools can resolve it. Stays absent until then.
+  if (ZENODO_CONCEPT_DOI) {
+    datasetSchema.identifier = ZENODO_DOI_URL
+  }
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
@@ -200,6 +206,14 @@ export default async function DatasetPage() {
             One-time purchase grants you a perpetual personal-use license: cite, analyse, and use the data in your own research, articles, and tools. Redistribution of the dataset itself, or use in a commercial product that resells the data, requires a separate license — get in touch via the{' '}
             <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">About page</Link>.
           </p>
+          {ZENODO_DOI_URL && (
+            <p className="mt-4 text-sm text-neutral-700 leading-relaxed">
+              A free, open core of this dataset — the verifiable censorship facts, reason taxonomy, and source citations, without the editorial prose or convenience formats — is published under{' '}
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">CC-BY-4.0</a>{' '}
+              as a citeable research dataset:{' '}
+              <a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">{ZENODO_DOI_URL}</a>.
+            </p>
+          )}
         </div>
       </SectionShell>
 
