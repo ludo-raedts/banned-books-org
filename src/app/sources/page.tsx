@@ -331,10 +331,10 @@ const CATEGORIES: readonly Category[] = [
         match: ['nigerialii.org'],
       },
       {
-        name: 'Ukrainian State Committee for Television and Radio Broadcasting',
+        name: 'Ukrainian State Committee for Television and Radio Broadcasting (Derzhkomteleradio)',
         url: 'https://comin.kmu.gov.ua',
         description:
-          'Ukraine\'s import-ban register for foreign publications (predominantly Russian-language works prohibited from import since 2014, expanded after 2022). Planned adapter — exact URL structure under review.',
+          'Administers Ukraine\'s import-permit regime for Russian/Belarusian publications (law signed 30 Dec 2016, tightened to a near-total ban on 19 Jun 2022). Investigated 2026: Derzhkomteleradio denies import permits case-by-case and does not publish a public, per-title enumerated register, so it cannot feed title-level records via a scrapeable adapter. Documented denials are reported at author/category level (Dugin, Limonov, Glazyev; "two Akunin novels"; "bogatyr" children\'s books), which don\'t meet the title-specific bar — so notable individual Ukrainian cases are captured from press/Wikipedia instead.',
         planned: true,
       },
       {
