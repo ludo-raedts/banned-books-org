@@ -13,18 +13,12 @@
  * (modulo the timestamp in metadata).
  */
 
-import { createClient } from '@supabase/supabase-js'
 import archiver from 'archiver'
 import Database from 'better-sqlite3'
-import { createWriteStream, existsSync, mkdirSync, rmSync, readFileSync } from 'node:fs'
+import { createWriteStream, existsSync, mkdirSync, rmSync } from 'node:fs'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-
-// dotenv/config doesn't auto-read .env.local; do it manually for a script run.
-loadEnvLocal()
-
-const SUPABASE_URL = mustEnv('NEXT_PUBLIC_SUPABASE_URL')
-const SUPABASE_KEY = mustEnv('SUPABASE_SERVICE_ROLE_KEY')
+import { fetchAll, writeCsv, makeAdminClient } from './lib/dataset-io'
 
 const ROOT = process.cwd()
 const STAGING_DIR = join(ROOT, 'private', '_dataset_build')
@@ -67,9 +61,7 @@ async function main() {
   const startedAt = Date.now()
   console.log('▸ Building dataset…')
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  })
+  const supabase = makeAdminClient()
 
   // 1. Pull all data in parallel
   console.log('  · Fetching from Supabase')
@@ -146,56 +138,6 @@ async function main() {
 
   const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1)
   console.log(`✓ Built ${OUTPUT_ZIP} in ${elapsed}s`)
-}
-
-// ─── Fetching ────────────────────────────────────────────────────────────────
-
-async function fetchAll(
-  supabase: ReturnType<typeof createClient>,
-  table: string,
-  columns: string,
-  orderBy: string,
-): Promise<Record<string, unknown>[]> {
-  const PAGE = 1000
-  const rows: Record<string, unknown>[] = []
-  for (let from = 0; ; from += PAGE) {
-    let q = supabase.from(table).select(columns)
-    // Stable ordering is required for paginated reads — without it, Supabase
-    // can return the same row in two consecutive pages once the table grows
-    // past PAGE rows, breaking the SQLite primary-key insert downstream.
-    for (const col of orderBy.split(',').map((c) => c.trim()).filter(Boolean)) {
-      q = q.order(col, { ascending: true })
-    }
-    const { data, error } = await q.range(from, from + PAGE - 1)
-    if (error) throw new Error(`fetch ${table}: ${error.message}`)
-    if (!data || data.length === 0) break
-    rows.push(...(data as Record<string, unknown>[]))
-    if (data.length < PAGE) break
-  }
-  return rows
-}
-
-// ─── CSV ─────────────────────────────────────────────────────────────────────
-
-function writeCsv(
-  dir: string,
-  filename: string,
-  columns: readonly string[],
-  rows: Record<string, unknown>[],
-) {
-  const lines = [columns.map(csvEscape).join(',')]
-  for (const row of rows) {
-    lines.push(columns.map((c) => csvEscape(row[c])).join(','))
-  }
-  return writeFile(join(dir, filename), lines.join('\n') + '\n', 'utf8')
-}
-
-function csvEscape(value: unknown): string {
-  if (value == null) return ''
-  if (Array.isArray(value)) return csvEscape(value.join('|'))
-  const s = typeof value === 'string' ? value : String(value)
-  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`
-  return s
 }
 
 // ─── Denormalised JSON ───────────────────────────────────────────────────────
@@ -580,28 +522,6 @@ incomplete and biased toward English-language reporting; see README.md.
 For commercial licensing, redistribution rights, or institutional access,
 contact: https://www.banned-books.org/about#get-in-touch
 `
-}
-
-// ─── Env helpers ─────────────────────────────────────────────────────────────
-
-function loadEnvLocal() {
-  const path = join(process.cwd(), '.env.local')
-  if (!existsSync(path)) return
-  for (const line of readFileSync(path, 'utf8').split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-    const eq = trimmed.indexOf('=')
-    if (eq === -1) continue
-    const key = trimmed.slice(0, eq)
-    if (process.env[key]) continue
-    process.env[key] = trimmed.slice(eq + 1)
-  }
-}
-
-function mustEnv(name: string) {
-  const v = process.env[name]
-  if (!v) throw new Error(`Missing env: ${name}`)
-  return v
 }
 
 main().catch((err) => {
