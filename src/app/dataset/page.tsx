@@ -130,6 +130,23 @@ export default async function DatasetPage() {
     { value: stats.sources.toLocaleString('en'), label: 'Sources' },
   ]
 
+  // Citation form for the open deposit (descriptor §8). Built from the live
+  // concept DOI in zenodo.ts — not hardcoded here.
+  const zenodoCitation = ZENODO_CONCEPT_DOI
+    ? `Raedts, Ludo. Banned Books — Open Censorship Core. Zenodo. CC-BY-4.0. DOI: ${ZENODO_CONCEPT_DOI}.`
+    : null
+
+  // The field split, stated once. Membership is the argument — no sell copy.
+  const comparison: { label: string; open: boolean }[] = [
+    { label: 'Structured facts — book, country, year, action type, status, scope', open: true },
+    { label: 'Reason taxonomy (structured reason slugs)', open: true },
+    { label: 'Source citations + verification status', open: true },
+    { label: 'Aggregate-author flag (is_placeholder)', open: true },
+    { label: 'Editorial prose — book & ban descriptions, censorship context', open: false },
+    { label: 'Enrichment — ISBN-13, cover images, author bios & photos, edition data', open: false },
+    { label: 'Convenience formats — denormalised JSON + ready-to-query SQLite', open: false },
+  ]
+
   return (
     <main>
       <script
@@ -140,9 +157,9 @@ export default async function DatasetPage() {
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-3xl mx-auto">
-          <Eyebrow>Dataset · CSV · JSON · SQLite</Eyebrow>
+          <Eyebrow>Dataset · open core + full dataset</Eyebrow>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
-            Download the full dataset.
+            The dataset, two ways.
           </h1>
 
           <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
@@ -159,84 +176,125 @@ export default async function DatasetPage() {
           </div>
 
           <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
-            The complete Banned Books catalogue as a structured dataset. Every book, every ban, every source citation — in formats you can analyse, cite, and build on.
+            Every documented ban, with the sources behind it — in two forms for two jobs. The open core is for <strong className="font-semibold">citing and verifying</strong>; the full dataset is for <strong className="font-semibold">working with the data</strong>.
           </p>
         </div>
       </section>
 
-      {/* ── What's in the file ────────────────────────────────────── */}
-      <SectionShell tone="cream" eyebrow="File contents">
+      {/* ── Two versions, side by side ────────────────────────────── */}
+      <SectionShell tone="cream" eyebrow="Two versions">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
-            What&rsquo;s in the file
-          </h2>
-          <ul className="text-sm text-neutral-700 leading-relaxed flex flex-col gap-2">
-            <li><strong className="text-gray-900">books.csv</strong> — title, author, ISBN, year, genres, description</li>
-            <li><strong className="text-gray-900">bans.csv</strong> — country, year, status, scope, action type, reasons</li>
-            <li><strong className="text-gray-900">sources.csv</strong> — citation URLs and source names for every ban</li>
-            <li><strong className="text-gray-900">countries.csv</strong>, <strong className="text-gray-900">authors.csv</strong>, <strong className="text-gray-900">reasons.csv</strong> — lookup tables</li>
-            <li><strong className="text-gray-900">dataset.json</strong> — single-file nested format for programmatic use</li>
-            <li><strong className="text-gray-900">dataset.sqlite</strong> — single-file SQLite database with all relations preserved</li>
-          </ul>
-        </div>
-      </SectionShell>
+          <div className="grid md:grid-cols-2 gap-5 items-stretch">
 
-      {/* ── Use cases ─────────────────────────────────────────────── */}
-      <SectionShell tone="white" eyebrow="Who buys this">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
-            Use cases
-          </h2>
-          <ul className="text-sm text-neutral-700 leading-relaxed flex flex-col gap-3">
-            <li>📊 <strong className="text-gray-900">Research and journalism</strong> — quantify trends in censorship, identify under-reported regions, write data-driven stories.</li>
-            <li>🎓 <strong className="text-gray-900">Academic work</strong> — cite stable, dated snapshots in papers on intellectual freedom, library science, or media studies.</li>
-            <li>🛠️ <strong className="text-gray-900">Building tools</strong> — power dashboards, comparison sites, classroom resources, or reading-list generators.</li>
-            <li>📚 <strong className="text-gray-900">Library and archive collections</strong> — cross-reference your holdings against a documented record of bans.</li>
-          </ul>
-        </div>
-      </SectionShell>
-
-      {/* ── License ───────────────────────────────────────────────── */}
-      <SectionShell tone="cream" eyebrow="Terms of use">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
-            License
-          </h2>
-          <p className="text-sm text-neutral-700 leading-relaxed">
-            One-time purchase grants you a perpetual personal-use license: cite, analyse, and use the data in your own research, articles, and tools. Redistribution of the dataset itself, or use in a commercial product that resells the data, requires a separate license — get in touch via the{' '}
-            <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">About page</Link>.
-          </p>
-          {ZENODO_DOI_URL && (
-            <p className="mt-4 text-sm text-neutral-700 leading-relaxed">
-              A free, open core of this dataset — the verifiable censorship facts, reason taxonomy, and source citations, without the editorial prose or convenience formats — is published under{' '}
-              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">CC-BY-4.0</a>{' '}
-              as a citeable research dataset:{' '}
-              <a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">{ZENODO_DOI_URL}</a>.
-            </p>
-          )}
-        </div>
-      </SectionShell>
-
-      {/* ── CTA ───────────────────────────────────────────────────── */}
-      <SectionShell tone="white" eyebrow="Buy now">
-        <div className="max-w-3xl mx-auto">
-          <div className="border border-neutral-200 bg-white rounded-sm p-6 sm:p-8 flex flex-col gap-5 items-start">
-            <div>
-              <p className="font-serif text-4xl md:text-5xl font-semibold tracking-tight text-oxblood">
-                ${DATASET_PRICE_USD.toFixed(2)}
+            {/* Open core — Zenodo, CC-BY-4.0, free */}
+            <div className="flex flex-col border border-neutral-200 bg-white rounded-sm p-6">
+              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Open core · CC-BY-4.0 · Free</p>
+              <h2 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-gray-900">
+                For citing &amp; verifying
+              </h2>
+              <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
+                The structured, verifiable censorship core — the facts and the source citations behind them. Deposited on Zenodo as a citeable research dataset with a permanent, version-independent DOI.
               </p>
-              <p className="text-xs text-neutral-500 mt-1">One-time payment · instant download · taxes calculated at checkout</p>
+              {ZENODO_DOI_URL ? (
+                <>
+                  <a
+                    href={ZENODO_DOI_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex w-fit items-center border border-oxblood text-oxblood hover:bg-oxblood hover:text-cream font-serif font-semibold rounded-sm px-5 py-2.5 text-sm transition-colors"
+                  >
+                    View on Zenodo →
+                  </a>
+                  {zenodoCitation && (
+                    <div className="mt-4">
+                      <p className="text-[11px] uppercase tracking-wider text-neutral-500 mb-1">Cite as</p>
+                      <p className="text-xs text-neutral-600 leading-relaxed">{zenodoCitation}</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="mt-5 text-sm text-neutral-500">Open version coming soon.</p>
+              )}
             </div>
-            <form action="/api/dataset/checkout" method="POST">
-              <DatasetCheckoutButton
-                priceUsd={DATASET_PRICE_USD}
-                className="bg-oxblood hover:bg-brand-dark text-cream font-serif font-semibold rounded-sm px-6 py-3 text-base transition-colors"
-              >
-                Buy and download →
-              </DatasetCheckoutButton>
-            </form>
-            <p className="text-xs text-neutral-500 leading-relaxed">
-              Payment is handled by Stripe. After checkout you&rsquo;ll receive a download link by email and on the confirmation page. The dataset reflects the catalogue at the moment of purchase.
+
+            {/* Full dataset — commercial, Stripe (unchanged flow) */}
+            <div className="flex flex-col border border-neutral-200 bg-white rounded-sm p-6">
+              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Full dataset · ${DATASET_PRICE_USD.toFixed(2)}</p>
+              <h2 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-gray-900">
+                For working with the data
+              </h2>
+              <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
+                The complete working dataset: every open field <em>plus</em> editorial prose, enrichment (ISBNs, covers, author bios), and ready-to-use formats — a denormalised JSON file and a SQLite database.
+              </p>
+              <form action="/api/dataset/checkout" method="POST" className="mt-5">
+                <DatasetCheckoutButton
+                  priceUsd={DATASET_PRICE_USD}
+                  className="bg-oxblood hover:bg-brand-dark text-cream font-serif font-semibold rounded-sm px-5 py-2.5 text-sm transition-colors"
+                >
+                  Buy and download →
+                </DatasetCheckoutButton>
+              </form>
+              <p className="mt-3 text-xs text-neutral-500 leading-relaxed">
+                One-time payment via Stripe · instant download · taxes calculated at checkout. The dataset reflects the catalogue at the moment of purchase.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </SectionShell>
+
+      {/* ── What's in each ────────────────────────────────────────── */}
+      <SectionShell tone="white" eyebrow="What's in each">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+            What&rsquo;s in each
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="border-b border-oxblood/30 text-left">
+                  <th className="py-2 pr-4 font-serif font-semibold text-gray-900">Included</th>
+                  <th className="py-2 px-3 text-center text-[11px] uppercase tracking-wider text-neutral-600 whitespace-nowrap">Open core</th>
+                  <th className="py-2 px-3 text-center text-[11px] uppercase tracking-wider text-neutral-600 whitespace-nowrap">Full dataset</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.map((row) => (
+                  <tr key={row.label} className="border-b border-neutral-200 align-top">
+                    <td className="py-2.5 pr-4 text-neutral-700 leading-relaxed">{row.label}</td>
+                    <td className="py-2.5 px-3 text-center">
+                      {row.open
+                        ? <span className="text-oxblood font-semibold" aria-label="included">✓</span>
+                        : <span className="text-neutral-300" aria-label="not included">—</span>}
+                    </td>
+                    <td className="py-2.5 px-3 text-center">
+                      <span className="text-oxblood font-semibold" aria-label="included">✓</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-5 text-xs text-neutral-500 leading-relaxed">
+            The open core carries the facts you can verify and cite; the full dataset adds the editorial and convenience layers built on top of them.
+          </p>
+        </div>
+      </SectionShell>
+
+      {/* ── Licensing ─────────────────────────────────────────────── */}
+      <SectionShell tone="cream" eyebrow="Licensing">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
+            Licensing
+          </h2>
+          <div className="flex flex-col gap-4 text-sm text-neutral-700 leading-relaxed">
+            <p>
+              <strong className="text-gray-900">Open core —</strong> released under{' '}
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">CC-BY-4.0</a>. Share and adapt it for any purpose, including commercially, with attribution{ZENODO_DOI_URL ? <> — cite the concept DOI (<a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">{ZENODO_DOI_URL}</a>)</> : null}.
+            </p>
+            <p>
+              <strong className="text-gray-900">Full dataset —</strong> a one-time purchase grants a perpetual personal-use license: cite, analyse, and use the data in your own research, articles, and tools. Redistributing the dataset itself, or using it in a commercial product that resells the data, requires a separate license — get in touch via the{' '}
+              <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">About page</Link>.
             </p>
           </div>
         </div>
