@@ -136,9 +136,15 @@ async function main() {
 
   // ─── bans.csv ───────────────────────────────────────────────────────────────
   // Drop any ban whose book has no slug — referential integrity for the open set.
+  // Also withhold rows with an indeterminate status from the OPEN export only:
+  // status = 'unclear' stays in the live catalogue but is excluded here, so its
+  // ban_reasons / ban_sources rows cascade out via keptBanIds and never orphan.
+  // This is an export filter, NOT a DB change.
   const keptBanIds = new Set<string>()
   const outBans: Row[] = []
+  let excludedUnclear = 0
   for (const ban of bans) {
+    if (ban.status === 'unclear') { excludedUnclear++; continue }
     const bookSlug = bookSlugById.get(String(ban.book_id))
     if (!bookSlug) continue
     keptBanIds.add(String(ban.id))
@@ -205,10 +211,10 @@ async function main() {
   console.log(`    distinct countries with ≥1 ban  ${String(distinctCountriesWithBans).padStart(8)}`)
   console.log(`    raw ban rows (supporting only)  ${String(outBans.length).padStart(8)}`)
 
-  const droppedBans = bans.length - outBans.length
-  if (droppedBans > 0) {
-    console.log(`\n  ! Dropped ${droppedBans} ban row(s) with no slugged book (referential-integrity filter).`)
-  }
+  console.log(`\n  Excluded from open export:`)
+  console.log(`    status='unclear' (withheld, DB unchanged)  ${String(excludedUnclear).padStart(5)}`)
+  const droppedNoSlug = bans.length - excludedUnclear - outBans.length
+  console.log(`    ban rows with no slugged book              ${String(droppedNoSlug).padStart(5)}`)
 
   if (!APPLY) {
     const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1)
@@ -290,8 +296,8 @@ function buildSchema() {
           country_code: { type: 'string', description: 'Foreign key → countries.code. Includes defunct states (USSR, East Germany, etc.).' },
           year_started: { type: 'integer|null', description: 'Year the ban took effect, where known.' },
           year_ended: { type: 'integer|null', description: 'Year the ban was lifted; empty if still in force or unknown.' },
-          action_type: { type: 'string', description: 'One of banned, restricted, challenged, removed, blocked (banned dominates; the rest are progressively rarer).' },
-          status: { type: 'string', description: 'One of active, historical, rescinded, unclear (active and historical dominate; rescinded and unclear are rare).' },
+          action_type: { type: 'string', description: 'One of banned, restricted, challenged (banned dominates; challenged is rare).' },
+          status: { type: 'string', description: 'One of active, historical, rescinded. (rescinded = a ban formally lifted in a later year — see year_ended. A handful of rows with indeterminate status="unclear" exist in the live catalogue but are withheld from this open export.)' },
           scope: { type: 'string|null', description: 'Scope slug (e.g. school, government, prison) resolved from the scopes taxonomy. Empty if unscoped.' },
         },
       },
