@@ -7,7 +7,7 @@
 //   GITHUB_REPO             e.g. "ludo-raedts/banned-books-org" (owner/repo)
 
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { z } from 'zod'
 
 const Body = z.object({
@@ -18,10 +18,8 @@ const Body = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  const cs = await cookies()
-  if (cs.get('admin_session')?.value !== process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   const token = process.env.GITHUB_DISPATCH_TOKEN
   const repo = process.env.GITHUB_REPO

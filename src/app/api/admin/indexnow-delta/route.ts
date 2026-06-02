@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { runIndexNowDelta } from '@/lib/indexnow-delta'
 
 export const runtime = 'nodejs'
@@ -10,12 +10,8 @@ export const maxDuration = 60
 // this manual path stays so admins can force an immediate ping right
 // after deploying a content change.
 export async function POST() {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
-  const secret = process.env.ADMIN_SECRET
-  if (!secret || session !== secret) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   const result = await runIndexNowDelta()
   if (result.status === 503) {

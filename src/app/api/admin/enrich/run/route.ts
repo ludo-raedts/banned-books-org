@@ -8,7 +8,7 @@
 // summary, then add a `case` below.
 
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { z } from 'zod'
 import { enrichIsbn } from '@/lib/enrich/isbn'
 import { enrichCovers } from '@/lib/enrich/covers'
@@ -25,10 +25,8 @@ const Body = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  const cs = await cookies()
-  if (cs.get('admin_session')?.value !== process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   const parsed = Body.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {

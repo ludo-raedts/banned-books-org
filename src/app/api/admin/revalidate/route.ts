@@ -20,7 +20,7 @@
  * Returns: { revalidated: true, path?: string, tag?: string, now: number }
  */
 import { NextResponse, type NextRequest } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 type Body = {
@@ -30,12 +30,8 @@ type Body = {
 }
 
 export async function POST(request: NextRequest) {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
-  const secret = process.env.ADMIN_SECRET
-  if (!secret || session !== secret) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   let body: Body
   try {

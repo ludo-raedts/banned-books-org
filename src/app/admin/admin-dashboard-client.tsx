@@ -193,6 +193,12 @@ export default function AdminDashboardClient({
   const [buildDatasetState, setBuildDatasetState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [buildDatasetMsg, setBuildDatasetMsg] = useState('')
   const [datasetBuiltAt, setDatasetBuiltAt] = useState(datasetStats.datasetBuiltAt)
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' }).catch(() => {})
+    router.push('/admin/login')
+  }
 
   async function handleRefreshViews() {
     setRefreshState('loading')
@@ -231,9 +237,17 @@ export default function AdminDashboardClient({
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
-      <div className="mb-6">
-        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
-        <h1 className="text-2xl font-bold">Admin</h1>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">banned-books.org</p>
+          <h1 className="text-2xl font-bold">Admin</h1>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="text-sm text-gray-500 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors"
+        >
+          Sign out
+        </button>
       </div>
 
       <AdminTabs />

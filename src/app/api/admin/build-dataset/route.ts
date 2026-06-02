@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { spawn } from 'node:child_process'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
 
 export async function POST() {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
-  const secret = process.env.ADMIN_SECRET
-  if (!secret || session !== secret) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   // Vercel's runtime filesystem is read-only — rebuilds happen at deploy time
   // via the build command. We surface that explicitly rather than fail with ENOENT.

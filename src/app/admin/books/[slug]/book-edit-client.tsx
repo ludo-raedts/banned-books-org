@@ -108,12 +108,14 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
     // Add unknown hostname to allowed list
     if (hostname && !isAllowedHost) {
       try {
-        await fetch('/api/admin/books/add-image-host', {
+        const res = await fetch('/api/admin/books/add-image-host', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ hostname }),
         })
-        setHostAdded(true)
+        // In production the allowlist is build-time only, so the route 400s;
+        // only show the "added" banner when it actually succeeded.
+        if (res.ok) setHostAdded(true)
       } catch {
         // non-fatal — DB save still proceeds
       }

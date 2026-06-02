@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { requireAdmin } from '@/lib/admin-auth'
 import { adminClient } from '@/lib/supabase'
-
-async function auth(): Promise<boolean> {
-  const cs = await cookies()
-  const session = cs.get('admin_session')?.value
-  return !!(process.env.ADMIN_SECRET && session === process.env.ADMIN_SECRET)
-}
 
 async function paginatedIds(
   sb: ReturnType<typeof adminClient>,
@@ -398,7 +392,8 @@ async function fetchDetail(sb: ReturnType<typeof adminClient>, metric: string, l
 }
 
 export async function GET(req: NextRequest) {
-  if (!(await auth())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const auth = await requireAdmin()
+  if (!auth.ok) return auth.response
 
   const sp = new URL(req.url).searchParams
   const detail = sp.get('detail')

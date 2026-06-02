@@ -8,6 +8,7 @@
 
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/admin-session'
 
 export type AdminAuthResult =
   | { ok: true }
@@ -15,9 +16,9 @@ export type AdminAuthResult =
 
 export async function requireAdmin(): Promise<AdminAuthResult> {
   const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
-  const secret = process.env.ADMIN_SECRET
-  if (!secret || !session || session !== secret) {
+  const session = cookieStore.get(SESSION_COOKIE)?.value
+  const valid = await verifySessionToken(session, process.env.ADMIN_SECRET)
+  if (!valid) {
     return {
       ok: false,
       response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
