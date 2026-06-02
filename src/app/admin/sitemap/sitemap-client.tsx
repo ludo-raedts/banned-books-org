@@ -207,7 +207,7 @@ export default function SitemapClient({
           </button>
         </div>
         <p className="text-xs text-gray-400 mt-1">
-          &ldquo;Submit new pages&rdquo; pings books/authors added since the last successful submission, plus any landing pages added to the static sitemap entries since then.
+          &ldquo;Submit new pages&rdquo; pings books/authors added or updated since the last successful submission, plus any landing pages added to the static sitemap entries since then.
           &ldquo;Resubmit all&rdquo; pings every canonical URL — use sparingly (rate-limited).
         </p>
 
