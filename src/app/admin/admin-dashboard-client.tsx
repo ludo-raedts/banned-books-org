@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { ZENODO_DOI_URL } from '@/lib/zenodo'
 import AdminTabs from './admin-tabs'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
@@ -370,6 +371,12 @@ export default function AdminDashboardClient({
               → Sitemap &amp; IndexNow
             </a>
             <a
+              href="/admin/zenodo"
+              className="text-gray-700 hover:text-brand transition-colors"
+            >
+              → Zenodo re-deposit guide
+            </a>
+            <a
               href="https://www.banned-books.org"
               target="_blank"
               rel="noopener noreferrer"
@@ -440,6 +447,30 @@ export default function AdminDashboardClient({
               className="text-gray-700 hover:text-brand transition-colors"
             >
               → Kobo affiliate dashboard (Rakuten)
+            </a>
+            <a
+              href={ZENODO_DOI_URL ?? 'https://doi.org/10.5281/zenodo.20511553'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-brand transition-colors"
+            >
+              → Zenodo dataset (concept DOI)
+            </a>
+            <a
+              href="https://zenodo.org/records/20511554"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-brand transition-colors"
+            >
+              → Zenodo record (manage / new version)
+            </a>
+            <a
+              href="https://orcid.org/0009-0006-8358-7119"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-brand transition-colors"
+            >
+              → ORCID — Ludo Raedts
             </a>
           </div>
         </div>
