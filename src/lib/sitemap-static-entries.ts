@@ -41,6 +41,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/sources`, changefreq: 'monthly', priority: 0.4 },
     { loc: `${base}/methodology`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/dataset`, changefreq: 'monthly', priority: 0.8 },
+    // Documentary landing — YouTube embed + VideoObject JSON-LD, routes viewers
+    // into the archive and dataset.
+    { loc: `${base}/film`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/timeline`, changefreq: 'monthly', priority: 0.8 },
     { loc: `${base}/privacy`, changefreq: 'yearly', priority: 0.3 },
     { loc: `${base}/challenged-books`, changefreq: 'weekly', priority: 0.9 },

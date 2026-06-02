@@ -139,6 +139,7 @@ export default function RootLayout({
               <div>
                 <h2 className="text-[11px] uppercase tracking-wider font-semibold text-gray-700 mb-2">Read</h2>
                 <ul className="space-y-1.5">
+                  <li><Link href="/film" className="hover:text-gray-800 transition-colors">Film</Link></li>
                   <li><Link href="/essays" className="hover:text-gray-800 transition-colors">Essays</Link></li>
                   <li><Link href="/history" className="hover:text-gray-800 transition-colors">History</Link></li>
                   <li><Link href="/timeline" className="hover:text-gray-800 transition-colors">Timeline</Link></li>

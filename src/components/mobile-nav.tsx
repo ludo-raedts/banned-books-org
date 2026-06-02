@@ -27,6 +27,7 @@ const SECTIONS: NavSection[] = [
   {
     heading: 'Read',
     links: [
+      { href: '/film', label: 'Film' },
       { href: '/history', label: 'History' },
       { href: '/essays', label: 'Essays' },
       { href: '/news', label: 'News' },
