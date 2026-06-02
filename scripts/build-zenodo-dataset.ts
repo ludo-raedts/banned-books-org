@@ -48,7 +48,7 @@ const APPLY = process.argv.includes('--apply')
 // description_*, no bios, no photo_url, no enrichment. The split is enforced by
 // omission — paid-only columns simply don't appear below.
 const SRC_BOOK_COLUMNS    = ['id', 'slug', 'title', 'first_published_year', 'original_language'] as const
-const SRC_AUTHOR_COLUMNS  = ['id', 'slug', 'display_name', 'birth_country'] as const
+const SRC_AUTHOR_COLUMNS  = ['id', 'slug', 'display_name', 'birth_country', 'is_placeholder'] as const
 const SRC_BAN_COLUMNS      = ['id', 'book_id', 'country_code', 'scope_id', 'action_type', 'status', 'year_started', 'year_ended'] as const
 const SRC_COUNTRY_COLUMNS = ['code', 'name_en'] as const
 const SRC_REASON_COLUMNS  = ['id', 'slug', 'label_en'] as const
@@ -57,7 +57,7 @@ const SRC_SOURCE_COLUMNS  = ['id', 'source_name', 'source_url', 'source_type', '
 
 // ─── Output CSV schemas (the public, slug-keyed shape) ────────────────────────
 const OUT_BOOKS       = ['slug', 'title', 'first_published_year', 'original_language', 'author_slugs'] as const
-const OUT_AUTHORS     = ['slug', 'display_name', 'birth_country'] as const
+const OUT_AUTHORS     = ['slug', 'display_name', 'birth_country', 'is_placeholder'] as const
 const OUT_BANS         = ['ban_id', 'book_slug', 'country_code', 'year_started', 'year_ended', 'action_type', 'status', 'scope'] as const
 const OUT_BAN_REASONS = ['ban_id', 'reason_slug', 'reason_label'] as const
 const OUT_BAN_SOURCES = ['ban_id', 'source_name', 'source_url', 'source_type', 'verification_status', 'accessed_at', 'locator'] as const
@@ -126,7 +126,13 @@ async function main() {
   // ─── authors.csv ──────────────────────────────────────────────────────────
   const outAuthors: Row[] = authors
     .filter((a) => a.slug)
-    .map((a) => ({ slug: a.slug, display_name: a.display_name, birth_country: a.birth_country }))
+    .map((a) => ({
+      slug: a.slug,
+      display_name: a.display_name,
+      birth_country: a.birth_country,
+      // true = aggregate / non-attributable bucket (Anonymous, Various Authors).
+      is_placeholder: a.is_placeholder === true,
+    }))
 
   // ─── bans.csv ───────────────────────────────────────────────────────────────
   // Drop any ban whose book has no slug — referential integrity for the open set.
@@ -271,6 +277,7 @@ function buildSchema() {
           slug: { type: 'string', description: 'Stable public identifier; referenced by books.author_slugs.' },
           display_name: { type: 'string', description: 'Slug-canonical, Anglo-friendly display form of the name.' },
           birth_country: { type: 'string|null', description: 'ISO country code of the author’s birth country, where known.' },
+          is_placeholder: { type: 'boolean', description: 'true = aggregate / non-attributable bucket entry (e.g. "Anonymous", "Various Authors") that groups unrelated works. Filter these out before computing per-author statistics.' },
         },
       },
       bans: {
@@ -283,8 +290,8 @@ function buildSchema() {
           country_code: { type: 'string', description: 'Foreign key → countries.code. Includes defunct states (USSR, East Germany, etc.).' },
           year_started: { type: 'integer|null', description: 'Year the ban took effect, where known.' },
           year_ended: { type: 'integer|null', description: 'Year the ban was lifted; empty if still in force or unknown.' },
-          action_type: { type: 'string', description: 'Distinguishes formal bans, restrictions, and documented challenges.' },
-          status: { type: 'string', description: 'One of active, lifted, historical, unknown.' },
+          action_type: { type: 'string', description: 'One of banned, restricted, challenged, removed, blocked (banned dominates; the rest are progressively rarer).' },
+          status: { type: 'string', description: 'One of active, historical, rescinded, unclear (active and historical dominate; rescinded and unclear are rare).' },
           scope: { type: 'string|null', description: 'Scope slug (e.g. school, government, prison) resolved from the scopes taxonomy. Empty if unscoped.' },
         },
       },
@@ -368,6 +375,10 @@ formats (SQLite/JSON), and enrichment (ISBNs, covers, descriptions, author bios)
 
 Arrays (\`books.author_slugs\`) are pipe-separated (\`|\`). NULLs are empty strings.
 See \`schema.json\` for the machine-readable column types and the full join map.
+
+\`authors.is_placeholder\` is \`true\` for aggregate / non-attributable bucket
+entries ("Anonymous", "Various Authors"). Filter these out before computing
+per-author statistics so a bucket isn't mistaken for a single writer.
 
 ## How to count (important)
 
