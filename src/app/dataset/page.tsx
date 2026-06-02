@@ -121,6 +121,60 @@ export default async function DatasetPage() {
     datasetSchema.identifier = ZENODO_DOI_URL
   }
 
+  // Second Dataset entity: the OPEN, free, CC-BY-4.0 censorship core deposited on
+  // Zenodo. Distinct from the commercial schema above — this one carries the
+  // signals Google Dataset Search rewards (isAccessibleForFree, a real CC-BY
+  // license URL, the concept DOI, and a Zenodo distribution). No Offer here: it
+  // isn't sold. Only emitted once the concept DOI is live.
+  const openDatasetSchema: Record<string, unknown> | null = ZENODO_DOI_URL
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        name: 'Banned Books — Open Censorship Core',
+        description: `The open, verifiable censorship core of the Banned Books catalogue: structured facts about book bans, restrictions, and challenges across ${stats.countries} countries, with the reason taxonomy and source citations behind them. Released under CC-BY-4.0 as a citeable research dataset. Excludes the editorial prose, enrichment, and convenience formats of the commercial dataset.`,
+        url: 'https://www.banned-books.org/dataset',
+        identifier: ZENODO_DOI_URL,
+        sameAs: ZENODO_DOI_URL,
+        isAccessibleForFree: true,
+        license: 'https://creativecommons.org/licenses/by/4.0/',
+        creator: {
+          '@type': 'Person',
+          name: 'Ludo Raedts',
+          url: 'https://www.banned-books.org/about',
+          identifier: 'https://orcid.org/0009-0006-8358-7119',
+          sameAs: 'https://orcid.org/0009-0006-8358-7119',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Banned Books',
+          url: 'https://www.banned-books.org',
+          logo: 'https://www.banned-books.org/brand/compact-bb.png',
+        },
+        keywords: datasetSchema.keywords,
+        temporalCoverage: datasetSchema.temporalCoverage,
+        spatialCoverage: { '@type': 'Place', name: 'Global (worldwide)' },
+        variableMeasured: [
+          'book title',
+          'country of ban',
+          'ban year (start, end)',
+          'ban scope (school, government, prison)',
+          'ban status (active, historical, rescinded)',
+          'ban action type (banned, restricted, challenged)',
+          'ban reason taxonomy',
+          'source citation URL',
+          'source verification status',
+        ],
+        distribution: {
+          '@type': 'DataDownload',
+          encodingFormat: 'text/csv',
+          name: 'Open censorship core — CSV tables (Zenodo)',
+          contentUrl: ZENODO_DOI_URL,
+        },
+        inLanguage: 'en',
+      }
+    : null
+  if (openDatasetSchema && stats.dataLastChanged) openDatasetSchema.dateModified = stats.dataLastChanged
+
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
   const heroStats = [
@@ -153,6 +207,12 @@ export default async function DatasetPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(datasetSchema) }}
       />
+      {openDatasetSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ldHtml(openDatasetSchema) }}
+        />
+      )}
 
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
