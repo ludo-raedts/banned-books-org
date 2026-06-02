@@ -5,7 +5,7 @@
 - **Creator:** Ludo Raedts
 - **ORCID:** https://orcid.org/0009-0006-8358-7119
 - **License:** CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
-- **Concept DOI:** `TODO(zenodo)` — paste the version-independent concept DOI here after first publish (e.g. `10.5281/zenodo.XXXXXXX`).
+- **Concept DOI:** `10.5281/zenodo.20511553` (version-independent — always resolves to the latest version).
 - **Companion files:** `books.csv`, `authors.csv`, `bans.csv`, `ban_reasons.csv`, `ban_sources.csv`, `countries.csv`, `schema.json`, `README.md`, `LICENSE.txt`.
 
 ---
@@ -272,7 +272,7 @@ resolves to the latest version — not a specific version DOI, unless you need t
 pin an exact snapshot for reproducibility.
 
 > Raedts, Ludo. *Banned Books — Open Censorship Core.* banned-books.org. Zenodo.
-> CC-BY-4.0. ORCID: https://orcid.org/0009-0006-8358-7119. DOI: `TODO(zenodo)`.
+> CC-BY-4.0. ORCID: https://orcid.org/0009-0006-8358-7119. DOI: `10.5281/zenodo.20511553`.
 
 When attributing in prose or visualisations: **"Banned Books
 (banned-books.org), CC-BY-4.0"**, with a link to the DOI. If you publish a

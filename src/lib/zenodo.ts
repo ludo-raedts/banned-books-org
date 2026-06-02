@@ -6,15 +6,16 @@
  * is deposited on Zenodo as a citeable research artifact with a DOI.
  *
  * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ TODO(zenodo): after the FIRST publish, paste the *concept* DOI below.     │
- * │ The concept DOI is version-independent — it always resolves to the latest │
- * │ version (e.g. '10.5281/zenodo.1234567'), as opposed to a per-version DOI. │
- * │ Until it is set, every consumer below renders NOTHING — no DOI link, no   │
- * │ JSON-LD identifier — so the site never claims a citeable version is live  │
- * │ before it actually is.                                                    │
+ * │ This is the *concept* DOI — version-independent, always resolves to the   │
+ * │ latest version (the Zenodo "Cite all versions" DOI), NOT the per-version  │
+ * │ DOI (…554) which pins to v1. Stored as the BARE DOI; ZENODO_DOI_URL below │
+ * │ derives the resolvable https://doi.org/… form that the consumers use.     │
+ * │ When null, every consumer renders NOTHING (no DOI link, no JSON-LD        │
+ * │ identifier), so the site never claims a citeable version before there is  │
+ * │ one.                                                                       │
  * └─────────────────────────────────────────────────────────────────────────┘
  */
-export const ZENODO_CONCEPT_DOI: string | null = null
+export const ZENODO_CONCEPT_DOI: string | null = '10.5281/zenodo.20511553'
 
 /** Resolvable DOI URL, or null while the DOI is still a placeholder. */
 export const ZENODO_DOI_URL: string | null = ZENODO_CONCEPT_DOI
