@@ -59,6 +59,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['ala.org'],
       },
       {
+        name: 'Freedom to Read (Canada)',
+        url: 'https://www.freedomtoread.ca/challenged-works/',
+        description:
+          'The Book and Periodical Council of Canada\'s Freedom to Read project maintains the canonical record of Canadian book challenges — a per-title "challenged works" database plus annual surveys (run with the CFLA) documenting school-board, public-library and government cases with location, year, reason and outcome. The Canadian counterpart to the ALA, and the basis of our Canadian challenge coverage.',
+        match: ['freedomtoread.ca'],
+      },
+      {
         name: 'Index on Censorship',
         url: 'https://www.indexoncensorship.org',
         description:
