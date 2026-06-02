@@ -9,8 +9,10 @@ import Eyebrow from '@/components/section/Eyebrow'
 // https://youtu.be/ZVuLsMQ_NLo it is "ZVuLsMQ_NLo"). Swap in the final ID here
 // if the upload is replaced; everything (embed, poster, JSON-LD) derives from it.
 const YOUTUBE_VIDEO_ID = 'ZVuLsMQ_NLo'
-// Upload date for the VideoObject (ISO 8601). Update to the real publish date.
-const FILM_UPLOAD_DATE = '2026-06-02'
+// Upload date for the VideoObject — full ISO 8601 with timezone (Google's video
+// structured-data validator warns on a bare date). Mirrors YouTube's own
+// publishDate for this upload; update if the video is re-uploaded.
+const FILM_UPLOAD_DATE = '2026-06-02T09:17:48-07:00'
 
 const FILM_TITLE = 'A World Map of Banned Books'
 const FILM_DESCRIPTION =
