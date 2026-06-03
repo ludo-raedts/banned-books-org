@@ -19,5 +19,15 @@
   "74": { "url": "https://en.wikipedia.org/wiki/The_Picture_of_Dorian_Gray", "note": "Oscar Wilde novel, not the (play) adaptation" },
   "600": { "url": "https://en.wikipedia.org/wiki/Fifty_Shades_of_Grey", "note": "first novel of the trilogy, not the series page" },
   "268": { "url": "https://en.wikipedia.org/wiki/A_Clash_of_Kings", "note": "Martin novel; matcher redirected to the (board game) page" },
-  "755": { "url": null, "note": "Total Abuse by Peter Sotos — no dedicated Wikipedia article" }
+  "755": { "url": null, "note": "Total Abuse by Peter Sotos — no dedicated Wikipedia article" },
+
+  "861": { "url": "https://en.wikipedia.org/wiki/Haidar_Haidar", "note": "A Banquet for Seaweed — no dedicated book article; author page documents the 2000 Al-Azhar fatwa/ban with specifics" },
+  "870": { "url": "https://en.wikipedia.org/wiki/Rangila_Rasul", "note": "correct article; matcher flagged medium only for missing author-intro match" },
+  "1098": { "url": "https://en.wikipedia.org/wiki/Lullaby_(Palahniuk_novel)", "note": "Chuck Palahniuk novel, not the disambiguation page" },
+  "29": { "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower", "note": "correct article; matcher only hit a transient 429 during extract fetch" },
+  "133": { "url": "https://en.wikipedia.org/wiki/Crank_(novel)", "note": "Ellen Hopkins novel; opensearch missed it" },
+
+  "5018": { "url": null, "note": "Maria by Sylvia Aguilar Zeleny — no dedicated Wikipedia article" },
+  "3740": { "url": null, "note": "Heroin by Sandra Lee Smith — no dedicated Wikipedia article" },
+  "1118": { "url": null, "note": "After by Amy Efaw — no dedicated Wikipedia article" }
 }
