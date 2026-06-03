@@ -26,6 +26,15 @@ const nextConfig: NextConfig = {
         destination: '/reasons/religious',
         permanent: true,
       },
+      // D.H. Lawrence was duplicated as two author records (`dh-lawrence` and
+      // `d-h-lawrence`, the latter seeded by the KDN-Malaysia import on
+      // 2026-06-03). Merged onto the canonical `dh-lawrence`; there is no
+      // author-slug-alias mechanism, so preserve the dead URL with a redirect.
+      {
+        source: '/authors/d-h-lawrence',
+        destination: '/authors/dh-lawrence',
+        permanent: true,
+      },
       // Canonical host enforcement. Google indexed both banned-books.org
       // (apex) and www.banned-books.org until 2026-05-16 — Search Console
       // shows 360 pages on the apex variant vs 640 on www, with click
