@@ -48,12 +48,20 @@ export default async function MostBannedAuthorsPage() {
 
   const { data: detailsRes } = ids.length > 0
     ? await timer.wrap('author-details', () =>
-        supabase.from('authors').select('id, display_name, slug, photo_url').in('id', ids),
+        supabase.from('authors').select('id, display_name, slug, photo_url, updated_at').in('id', ids),
       )
     : { data: null }
-  const authorById = new Map(
-    ((detailsRes ?? []) as { id: number; display_name: string; slug: string; photo_url: string | null }[])
-      .map(a => [a.id, a]),
+  const details = (detailsRes ?? []) as {
+    id: number; display_name: string; slug: string; photo_url: string | null; updated_at: string | null
+  }[]
+  const authorById = new Map(details.map(a => [a.id, a]))
+
+  // Real freshness signal: the most recent record change among the listed
+  // authors. Driven by actual data (enrichment, photos, re-ranking inputs),
+  // not a synthetic render timestamp — Google reads invented churn as spam.
+  const lastModified = details.reduce<string | null>(
+    (max, a) => (a.updated_at && (!max || a.updated_at > max) ? a.updated_at : max),
+    null,
   )
 
   const authors: TopListAuthor[] = ranked
@@ -80,17 +88,24 @@ export default async function MostBannedAuthorsPage() {
 
   timer.end()
 
-  const itemListJsonLd = {
+  const itemListJsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': 'ItemList',
+    '@type': 'CollectionPage',
     name: 'Most banned authors of all time',
-    numberOfItems: authors.length,
-    itemListElement: authors.map((a, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      url: `https://www.banned-books.org/authors/${a.slug}`,
-      name: a.display_name,
-    })),
+    url: 'https://www.banned-books.org/most-banned-authors',
+    description:
+      'A ranked list of the writers censored across the most jurisdictions, by number of distinct books banned.',
+    ...(lastModified ? { dateModified: lastModified } : {}),
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: authors.length,
+      itemListElement: authors.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://www.banned-books.org/authors/${a.slug}`,
+        name: a.display_name,
+      })),
+    },
   }
 
   return (
@@ -123,7 +138,7 @@ export default async function MostBannedAuthorsPage() {
       </section>
 
       {/* ── The list ──────────────────────────────────────────────────── */}
-      <SectionShell tone="cream" eyebrow="Updated hourly">
+      <SectionShell tone="cream" eyebrow={`The ${authors.length} most-banned authors · worldwide`}>
         {authors.length === 0 ? (
           <p className="text-neutral-500 text-sm">No author leaderboard data available yet.</p>
         ) : (

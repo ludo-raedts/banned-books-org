@@ -2,8 +2,25 @@ import { SITEMAP_BASE_URL, type SitemapEntry } from './sitemap-xml'
 import { publishedEssays } from './essays-data'
 import { THEME_REASON_MAP } from './reading-club-data'
 import { isBannedBooksWeekActive } from '@/config/banned-books-week'
+import { adminClient } from '@/lib/supabase'
 
 const base = SITEMAP_BASE_URL
+
+// Most-recent author-record change — the freshness signal for the
+// /most-banned-authors leaderboard. Cheap single-row read (proxy for the
+// page's own dateModified, which is the max over the displayed top-50).
+// Returns null on error so the entry simply omits <lastmod>.
+async function getAuthorsLastModified(): Promise<string | null> {
+  const { data } = await adminClient()
+    .from('authors')
+    .select('updated_at')
+    .eq('is_placeholder', false)
+    .not('updated_at', 'is', null)
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return (data?.updated_at as string | undefined) ?? null
+}
 
 // Returns the static sitemap entries. Async because the BBW changefreq /
 // priority depend on the runtime config (DB-backed), not on a build-time
@@ -11,6 +28,7 @@ const base = SITEMAP_BASE_URL
 // per-resource sitemap routes and aren't included here.
 export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
   const isBbwActive = await isBannedBooksWeekActive()
+  const authorsLastMod = await getAuthorsLastModified()
 
   const STATIC_ENTRIES: SitemapEntry[] = [
     { loc: base, changefreq: 'daily', priority: 1.0 },
@@ -23,7 +41,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     // are ban-driven so weekly is enough.
     { loc: `${base}/trending-banned-books`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/rising-banned-books`, changefreq: 'daily', priority: 0.8 },
-    { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9 },
+    { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9, lastmod: authorsLastMod },
     { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2026`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/banned-books/2025`, changefreq: 'weekly', priority: 0.9 },
