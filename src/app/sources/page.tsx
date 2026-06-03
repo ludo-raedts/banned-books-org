@@ -1257,6 +1257,23 @@ export default async function SourcesPage() {
           <p className="mt-3 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
             The list below shows every source family currently in use, the count of ban records attributed to it, and where the data comes from. The catalogue currently aggregates <strong>{totalBans.toLocaleString('en-US')}</strong> source citations across <strong>{counts.size}</strong> distinct source URLs.
           </p>
+
+          <Link
+            href="/dataset"
+            className="group mt-8 flex max-w-[720px] items-center gap-4 rounded-xl border border-brand/20 bg-brand-light/60 px-5 py-4 transition-colors hover:bg-brand-light"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-brand">
+                Free · CSV · CC-BY-4.0
+              </p>
+              <p className="mt-1 text-sm md:text-base font-medium text-gray-900">
+                Download the whole catalogue as a free CSV dataset
+              </p>
+            </div>
+            <span className="shrink-0 text-sm font-semibold text-brand group-hover:underline">
+              Get the data&nbsp;→
+            </span>
+          </Link>
         </div>
       </section>
 

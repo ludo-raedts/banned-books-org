@@ -304,7 +304,7 @@ export default async function DatasetPage() {
       </SectionShell>
 
       {/* ── What's in each ────────────────────────────────────────── */}
-      <SectionShell tone="white" eyebrow="What's in each">
+      <SectionShell tone="white" eyebrow="Comparison">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
             What&rsquo;s in each
@@ -342,7 +342,7 @@ export default async function DatasetPage() {
       </SectionShell>
 
       {/* ── Licensing ─────────────────────────────────────────────── */}
-      <SectionShell tone="cream" eyebrow="Licensing">
+      <SectionShell tone="cream" eyebrow="Usage rights">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
             Licensing
