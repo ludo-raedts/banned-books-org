@@ -26,6 +26,12 @@
  *   npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --process-flagged
  *     → ALSO re-attempts rows previously flagged by the judge (recommended
  *       after the judge run completes).
+ *   npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungrounded
+ *     → DRY-RUN over ISBN rows whose synopsis has no tracked source (pre-v2
+ *       ungrounded text). With --apply: overwrites them with OpenLibrary-by-ISBN
+ *       sourced text + provenance, backing up originals to
+ *       data/description-book-reground-backup-<ts>.csv. Rows where no verified
+ *       source resolves keep their existing text untouched.
  *   npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --slug=foo
  *     → single book (bypasses all filters)
  *   npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --overwrite --limit=50
@@ -41,6 +47,7 @@ const APPLY            = process.argv.includes('--apply')
 const OVERWRITE        = process.argv.includes('--overwrite')
 const ALLOW_LLM        = process.argv.includes('--allow-llm')
 const PROCESS_FLAGGED  = process.argv.includes('--process-flagged')
+const REGROUND         = process.argv.includes('--reground-ungrounded')
 const limitArg         = process.argv.find(a => a.startsWith('--limit='))
 const slugArg          = process.argv.find(a => a.startsWith('--slug='))
 const concArg          = process.argv.find(a => a.startsWith('--concurrency='))
@@ -53,6 +60,7 @@ async function main() {
   if (SLUG)            console.log(`  --slug=${SLUG}`)
   if (OVERWRITE)       console.log(`  --overwrite: replacing existing description_book too`)
   if (PROCESS_FLAGGED) console.log(`  --process-flagged: include rows the judge flagged`)
+  if (REGROUND)        console.log(`  --reground-ungrounded: re-source ISBN rows with untracked synopses (overwrite, backed up)`)
   if (ALLOW_LLM)       console.log(`  --allow-llm: grounded LLM synthesis ENABLED`)
   if (LIMIT)           console.log(`  --limit=${LIMIT}`)
   if (CONCURRENCY > 1) console.log(`  --concurrency=${CONCURRENCY}`)
@@ -65,6 +73,7 @@ async function main() {
     slug: SLUG,
     allowLlm: ALLOW_LLM,
     processFlagged: PROCESS_FLAGGED,
+    regroundUngrounded: REGROUND,
     concurrency: CONCURRENCY,
     onProgress: msg => console.log(msg),
   })
