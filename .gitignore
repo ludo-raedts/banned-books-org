@@ -108,3 +108,6 @@ next-env.d.ts
 
 # large regenerable audit intermediate (rebuilt by audit-publication-years.ts)
 /data/publication-year-audit.json
+
+# generated visual-check montage (rebuilt by _montage_google_covers.ts)
+/public/cover-montage.html
