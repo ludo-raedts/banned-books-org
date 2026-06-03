@@ -113,15 +113,21 @@ export function csvEscape(value: unknown): string {
   return s
 }
 
+/** Render rows to a CSV string (header + lines). Single source of truth so a
+ *  hash of this output matches the file written by writeCsv byte-for-byte. */
+export function toCsv(columns: readonly string[], rows: Row[]): string {
+  const lines = [columns.map(csvEscape).join(',')]
+  for (const row of rows) {
+    lines.push(columns.map((c) => csvEscape(row[c])).join(','))
+  }
+  return lines.join('\n') + '\n'
+}
+
 export function writeCsv(
   dir: string,
   filename: string,
   columns: readonly string[],
   rows: Row[],
 ) {
-  const lines = [columns.map(csvEscape).join(',')]
-  for (const row of rows) {
-    lines.push(columns.map((c) => csvEscape(row[c])).join(','))
-  }
-  return writeFile(join(dir, filename), lines.join('\n') + '\n', 'utf8')
+  return writeFile(join(dir, filename), toCsv(columns, rows), 'utf8')
 }

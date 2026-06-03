@@ -63,13 +63,23 @@ const OUT_BAN_REASONS = ['ban_id', 'reason_slug', 'reason_label'] as const
 const OUT_BAN_SOURCES = ['ban_id', 'source_name', 'source_url', 'source_type', 'verification_status', 'accessed_at', 'locator'] as const
 const OUT_COUNTRIES   = ['code', 'name_en'] as const
 
-async function main() {
-  const startedAt = Date.now()
-  console.log(`▸ Building Zenodo open dataset… ${APPLY ? '(--apply: will write files)' : '(dry-run: counts only)'}`)
+export type OpenTable = { name: string; columns: readonly string[]; rows: Row[] }
+export type OpenExportMeta = {
+  excludedUnclear: number
+  droppedNoSlug: number
+  distinctBooksWithBans: number
+  distinctCountriesWithBans: number
+}
 
-  const supabase = makeAdminClient()
-
-  console.log('  · Fetching from Supabase (open fields only)')
+/**
+ * Fetch the open fields and resolve them into the six public, slug-keyed
+ * tables. Shared by this build script (which writes the CSVs) and
+ * scripts/zenodo-deposit-diff.ts (which hashes the in-memory rows) so both
+ * always see byte-identical export content.
+ */
+export async function buildOpenTables(
+  supabase: ReturnType<typeof makeAdminClient>,
+): Promise<{ tables: OpenTable[]; meta: OpenExportMeta }> {
   const [
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
     countries, reasons, scopes, sources,
@@ -189,32 +199,46 @@ async function main() {
   // ─── countries.csv ────────────────────────────────────────────────────────
   const outCountries: Row[] = countries.map((c) => ({ code: c.code, name_en: c.name_en }))
 
-  // ─── Report ──────────────────────────────────────────────────────────────
-  const tables: Array<[string, readonly string[], Row[]]> = [
-    ['books.csv',       OUT_BOOKS,       outBooks],
-    ['authors.csv',     OUT_AUTHORS,     outAuthors],
-    ['bans.csv',        OUT_BANS,        outBans],
-    ['ban_reasons.csv', OUT_BAN_REASONS, outBanReasons],
-    ['ban_sources.csv', OUT_BAN_SOURCES, outBanSources],
-    ['countries.csv',   OUT_COUNTRIES,   outCountries],
+  const tables: OpenTable[] = [
+    { name: 'books.csv',       columns: OUT_BOOKS,       rows: outBooks },
+    { name: 'authors.csv',     columns: OUT_AUTHORS,     rows: outAuthors },
+    { name: 'bans.csv',        columns: OUT_BANS,        rows: outBans },
+    { name: 'ban_reasons.csv', columns: OUT_BAN_REASONS, rows: outBanReasons },
+    { name: 'ban_sources.csv', columns: OUT_BAN_SOURCES, rows: outBanSources },
+    { name: 'countries.csv',   columns: OUT_COUNTRIES,   rows: outCountries },
   ]
+  const meta: OpenExportMeta = {
+    excludedUnclear,
+    droppedNoSlug: bans.length - excludedUnclear - outBans.length,
+    distinctCountriesWithBans: new Set(outBans.map((b) => b.country_code)).size,
+    distinctBooksWithBans: new Set(outBans.map((b) => b.book_slug)).size,
+  }
+  return { tables, meta }
+}
+
+async function main() {
+  const startedAt = Date.now()
+  console.log(`▸ Building Zenodo open dataset… ${APPLY ? '(--apply: will write files)' : '(dry-run: counts only)'}`)
+
+  const supabase = makeAdminClient()
+  console.log('  · Fetching from Supabase (open fields only)')
+  const { tables, meta } = await buildOpenTables(supabase)
+
+  const rowsOf = (name: string) => tables.find((t) => t.name === name)!.rows
 
   console.log('\n  Row counts per output table:')
-  for (const [name, , rows] of tables) {
-    console.log(`    ${name.padEnd(18)} ${rows.length.toLocaleString('en').padStart(8)}`)
+  for (const t of tables) {
+    console.log(`    ${t.name.padEnd(18)} ${t.rows.length.toLocaleString('en').padStart(8)}`)
   }
   // Distinct-entity sanity checks (NOT raw ban rows — see ranking doctrine).
-  const distinctCountriesWithBans = new Set(outBans.map((b) => b.country_code)).size
-  const distinctBooksWithBans     = new Set(outBans.map((b) => b.book_slug)).size
   console.log('\n  Distinct-entity checks (the canonical metrics):')
-  console.log(`    distinct books with ≥1 ban      ${String(distinctBooksWithBans).padStart(8)}`)
-  console.log(`    distinct countries with ≥1 ban  ${String(distinctCountriesWithBans).padStart(8)}`)
-  console.log(`    raw ban rows (supporting only)  ${String(outBans.length).padStart(8)}`)
+  console.log(`    distinct books with ≥1 ban      ${String(meta.distinctBooksWithBans).padStart(8)}`)
+  console.log(`    distinct countries with ≥1 ban  ${String(meta.distinctCountriesWithBans).padStart(8)}`)
+  console.log(`    raw ban rows (supporting only)  ${String(rowsOf('bans.csv').length).padStart(8)}`)
 
   console.log(`\n  Excluded from open export:`)
-  console.log(`    status='unclear' (withheld, DB unchanged)  ${String(excludedUnclear).padStart(5)}`)
-  const droppedNoSlug = bans.length - excludedUnclear - outBans.length
-  console.log(`    ban rows with no slugged book              ${String(droppedNoSlug).padStart(5)}`)
+  console.log(`    status='unclear' (withheld, DB unchanged)  ${String(meta.excludedUnclear).padStart(5)}`)
+  console.log(`    ban rows with no slugged book              ${String(meta.droppedNoSlug).padStart(5)}`)
 
   if (!APPLY) {
     const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1)
@@ -227,7 +251,7 @@ async function main() {
   mkdirSync(OUTPUT_DIR, { recursive: true })
 
   console.log(`\n  · Writing CSVs to ${OUTPUT_DIR}`)
-  await Promise.all(tables.map(([name, cols, rows]) => writeCsv(OUTPUT_DIR, name, cols, rows)))
+  await Promise.all(tables.map((t) => writeCsv(OUTPUT_DIR, t.name, t.columns, t.rows)))
 
   console.log('  · Writing schema.json')
   await writeFile(join(OUTPUT_DIR, 'schema.json'), JSON.stringify(buildSchema(), null, 2), 'utf8')
@@ -236,11 +260,11 @@ async function main() {
   await writeFile(
     join(OUTPUT_DIR, 'README.md'),
     readme({
-      books: outBooks.length,
-      bans: outBans.length,
-      sources: outBanSources.length,
-      distinctBooksWithBans,
-      distinctCountriesWithBans,
+      books: rowsOf('books.csv').length,
+      bans: rowsOf('bans.csv').length,
+      sources: rowsOf('ban_sources.csv').length,
+      distinctBooksWithBans: meta.distinctBooksWithBans,
+      distinctCountriesWithBans: meta.distinctCountriesWithBans,
     }),
     'utf8',
   )
@@ -445,7 +469,12 @@ remain under the commercial license at https://www.banned-books.org/dataset.
 `
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+// Only run when invoked directly — not when buildOpenTables is imported (e.g.
+// by scripts/zenodo-deposit-diff.ts), which would otherwise trigger a full run.
+const entry = process.argv[1] ?? ''
+if (/build-zenodo-dataset\.(ts|js)$/.test(entry)) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}

@@ -102,6 +102,31 @@ export default function ZenodoAdminPage() {
           </div>
         </div>
 
+        {/* ── Quantify first ────────────────────────────────────────── */}
+        <div className={cardCls}>
+          <div className="flex items-center gap-2">
+            <Archive className="w-5 h-5 text-gray-400 shrink-0" />
+            <h2 className="font-semibold text-gray-900">First: quantify the change since the last deposit</h2>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            Don&rsquo;t eyeball it — run the diff tool. It rebuilds the open export in-memory and compares it to the
+            last deposited baseline, then prints per-table row deltas, new countries, taxonomy/enum changes, and a
+            recommendation. It reads only the open core, so commercial-only enrichment never shows up here (by design).
+          </p>
+          <Code>{`# How much has the open core changed since the last deposit?
+pnpm tsx scripts/zenodo-deposit-diff.ts`}</Code>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            The baseline lives in <code className="font-mono text-xs bg-gray-100 px-1 rounded">docs/zenodo/deposited-manifest.json</code> (committed).
+            <strong> Right after you publish a new Zenodo version</strong>, re-anchor it so the next diff measures drift from that release:
+          </p>
+          <Code>{`pnpm tsx scripts/zenodo-deposit-diff.ts --mark-deposited --note="France batch"
+# then commit docs/zenodo/deposited-manifest.json`}</Code>
+          <p className="text-xs text-gray-400 italic">
+            Compact baseline: per-table row count + content hash + enum value-sets. It tells you <em>that</em> a table
+            changed and by how many rows, not the exact per-row count — enough to decide.
+          </p>
+        </div>
+
         {/* ── Re-deposit procedure ──────────────────────────────────── */}
         <div className={cardCls}>
           <div className="flex items-center gap-2">
