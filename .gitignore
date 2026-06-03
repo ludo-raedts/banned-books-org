@@ -105,3 +105,6 @@ next-env.d.ts
 
 # per-run rejection logs (timestamped, local-only audit trail)
 /data/*-rejected-*.jsonl
+
+# large regenerable audit intermediate (rebuilt by audit-publication-years.ts)
+/data/publication-year-audit.json
