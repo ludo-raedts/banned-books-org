@@ -15,6 +15,15 @@ If the user asks a **substantive Vercel question** — pastes a deployment/build
 
 For incidental Vercel mentions (a deploy URL, "it runs on Vercel"), just answer normally — no re-enable prompt needed.
 
+# Import / dedup / merge scripts — check the catalog first
+
+Before searching through `scripts/` for an import, dedup, or merge task, read
+`scripts/README.md`. It is a decision guide ("I want to import/clean up X →
+use script Y") covering: the shared import pipeline (`src/lib/imports/`) vs. the
+one-off importers, the read-only `_audit_*` duplicate detectors, and the
+merge-doctrine scripts. Pick the matching template from there instead of
+re-deriving which script does what.
+
 # Reading large data files
 
 Files under `data/` can be multiple MB (e.g. `data/film/film-data.json`, `data/pen-america-*.json`). Do not read them in full. Use `jq`, `grep`, `wc`, or `Read` with `offset`/`limit` to pull only the slice you need. Reserve a full read for files you have confirmed are small.
