@@ -41,8 +41,12 @@ export const LANG_NAMES: Record<string, string> = {
   cn: 'Chinese',
 }
 
+// NB: no prose columns here. Top-list cards render only title/cover/author/
+// context (see toBookCard) — `description_book` was fetched but never read,
+// adding ~0.5 KB/row of dead payload to every list page. Detail pages fetch
+// the prose separately. Keep this select lean.
 export const TOP_LIST_BOOK_SELECT =
-  'id, title, slug, cover_url, cover_status, original_language, description_book, first_published_year, ' +
+  'id, title, slug, cover_url, cover_status, original_language, first_published_year, ' +
   'book_authors(authors(display_name)), bans(country_code)'
 
 export type TopListBookRow = {
@@ -53,8 +57,14 @@ export type TopListBookRow = {
   /** 'valid' | 'rejected_placeholder' | 'manual_override' | null — null means "not audited yet". */
   cover_status: string | null
   original_language: string | null
-  description_book: string | null
   first_published_year: number | null
+  /**
+   * Optional: NOT in TOP_LIST_BOOK_SELECT (which is intentionally lean and
+   * never renders prose). Present only when a caller opts in by appending
+   * `description_book` to the select — currently just the homepage's
+   * book-of-the-day presence filter. Undefined everywhere else.
+   */
+  description_book?: string | null
   book_authors: { authors: { display_name: string } | null }[]
   bans: { country_code: string }[]
 }
