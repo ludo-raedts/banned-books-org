@@ -9,6 +9,10 @@
  * Idempotent: only targets books where `genres = '{}'`. Manual edits via the
  * admin (or seed-genres.ts) survive re-runs because their `genres` is non-empty.
  *
+ * Books the model can't place (empty / low-confidence result) keep `genres = '{}'`
+ * and so resurface on every run. After a gpt-4o-mini sweep the remaining candidates
+ * ARE the hard cases — mop them up with enrich-genres-retry-gpt.ts (stronger model).
+ *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts             # dry-run, 5 samples
  *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply
@@ -20,16 +24,33 @@
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 
-const APPLY     = process.argv.includes('--apply')
-const OVERWRITE = process.argv.includes('--overwrite')
-const limitArg  = process.argv.find(a => a.startsWith('--limit='))
-const slugArg   = process.argv.find(a => a.startsWith('--slug='))
-const delayArg  = process.argv.find(a => a.startsWith('--delay='))
-const modelArg  = process.argv.find(a => a.startsWith('--model='))
-const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 999 : 5)
-const SLUG      = slugArg?.split('=')[1] ?? null
-const DELAY     = delayArg ? parseInt(delayArg.split('=')[1]) : 300
-const MODEL     = modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? 'gpt-4o-mini'
+export type EnrichGenresOptions = {
+  apply:     boolean
+  overwrite: boolean
+  limit:     number
+  slug:      string | null
+  delay:     number
+  model:     string
+}
+
+export function optionsFromArgv(defaults: Partial<EnrichGenresOptions> = {}): EnrichGenresOptions {
+  const apply     = process.argv.includes('--apply')
+  const overwrite = process.argv.includes('--overwrite')
+  const limitArg  = process.argv.find(a => a.startsWith('--limit='))
+  const slugArg   = process.argv.find(a => a.startsWith('--slug='))
+  const delayArg  = process.argv.find(a => a.startsWith('--delay='))
+  const modelArg  = process.argv.find(a => a.startsWith('--model='))
+  // Default apply = no cap (paginate over the whole candidate set); dry-run = 5 samples.
+  const limit = limitArg ? parseInt(limitArg.split('=')[1]) : (apply ? Infinity : 5)
+  return {
+    apply,
+    overwrite,
+    limit,
+    slug:  slugArg?.split('=')[1] ?? null,
+    delay: delayArg ? parseInt(delayArg.split('=')[1]) : (defaults.delay ?? 300),
+    model: modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? defaults.model ?? 'gpt-4o-mini',
+  }
+}
 
 // Mirror of GENRES in src/components/genre-badge.tsx. Keep in sync until the
 // vocabulary moves to a DB table.
@@ -135,10 +156,10 @@ function buildPrompt(book: BookRow): string {
 Return the structured classification. Pick 1–3 slugs that best capture this work, or an empty array if you genuinely don't know.`
 }
 
-async function classify(client: OpenAI, book: BookRow): Promise<GenreResult | null> {
+async function classify(client: OpenAI, book: BookRow, model: string): Promise<GenreResult | null> {
   try {
     const res = await client.chat.completions.create({
-      model: MODEL,
+      model,
       messages: [
         { role: 'system', content: POLICY },
         { role: 'user',   content: buildPrompt(book) },
@@ -160,7 +181,52 @@ async function classify(client: OpenAI, book: BookRow): Promise<GenreResult | nu
   }
 }
 
-async function main() {
+const SELECT_COLS = `
+  id, title, slug, first_published_year, genres, description_book,
+  book_authors(authors(display_name))
+`
+
+const PAGE = 1000
+
+/**
+ * Fetch all candidate books, paginating past Supabase's hard 1000-row cap on a
+ * plain .select(). Ordered by `id` (stable, unique) so .range() never skips or
+ * duplicates rows. Stops early once `limit` rows are collected.
+ */
+async function fetchCandidates(
+  supabase: ReturnType<typeof adminClient>,
+  opts: EnrichGenresOptions,
+): Promise<BookRow[]> {
+  const all: BookRow[] = []
+  for (let from = 0; ; from += PAGE) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query: any = supabase
+      .from('books')
+      .select(SELECT_COLS)
+      .order('id')
+      .range(from, from + PAGE - 1)
+
+    if (opts.slug) {
+      query = query.eq('slug', opts.slug)
+    } else if (!opts.overwrite) {
+      // Empty text[] arrays are stored as '{}'; Supabase needs the raw .filter form.
+      query = query.filter('genres', 'eq', '{}')
+    }
+
+    const { data, error } = await query
+    if (error) { console.error('DB error:', error.message); process.exit(1) }
+
+    const rows = (data ?? []) as unknown as BookRow[]
+    all.push(...rows)
+
+    if (rows.length < PAGE) break               // last page
+    if (Number.isFinite(opts.limit) && all.length >= opts.limit) break
+    if (opts.slug) break                          // single-target never paginates
+  }
+  return all
+}
+
+export async function enrichGenres(opts: EnrichGenresOptions) {
   if (!process.env.OPENAI_API_KEY) {
     console.error('OPENAI_API_KEY not set in .env.local')
     process.exit(1)
@@ -169,31 +235,12 @@ async function main() {
   const supabase = adminClient()
   const openai   = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query: any = supabase
-    .from('books')
-    .select(`
-      id, title, slug, first_published_year, genres, description_book,
-      book_authors(authors(display_name))
-    `)
-    .order('title')
+  const all   = await fetchCandidates(supabase, opts)
+  const batch = Number.isFinite(opts.limit) ? all.slice(0, opts.limit) : all
 
-  if (SLUG) {
-    query = query.eq('slug', SLUG)
-  } else if (!OVERWRITE) {
-    // Empty text[] arrays are stored as '{}'; Supabase needs the raw .filter form.
-    query = query.filter('genres', 'eq', '{}')
-  }
-
-  const { data, error } = await query
-  if (error) { console.error('DB error:', error.message); process.exit(1) }
-
-  const all   = (data ?? []) as unknown as BookRow[]
-  const batch = all.slice(0, LIMIT)
-
-  console.log(`\n── enrich-genres-gpt (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
-  console.log(`  model: ${MODEL}`)
-  if (OVERWRITE) console.log('  --overwrite: replacing existing genres too')
+  console.log(`\n── enrich-genres-gpt (${opts.apply ? 'APPLY' : 'DRY-RUN'}) ──`)
+  console.log(`  model: ${opts.model}`)
+  if (opts.overwrite) console.log('  --overwrite: replacing existing genres too')
   console.log(`  Candidates: ${all.length}  Processing: ${batch.length}\n`)
 
   let written = 0, unknown = 0, lowConf = 0, errors = 0
@@ -202,7 +249,7 @@ async function main() {
     const author = book.book_authors[0]?.authors?.display_name ?? ''
     console.log(`[${book.slug}]  ${book.title}${author ? ` / ${author}` : ''}`)
 
-    const result = await classify(openai, book)
+    const result = await classify(openai, book, opts.model)
 
     if (!result) {
       console.log(`  → error`)
@@ -215,7 +262,7 @@ async function main() {
       lowConf++
     } else {
       console.log(`  → ${result.genres.join(', ')}  (confidence=${result.confidence})`)
-      if (APPLY) {
+      if (opts.apply) {
         const { error: upErr } = await supabase
           .from('books')
           .update({ genres: result.genres })
@@ -225,11 +272,15 @@ async function main() {
       }
     }
 
-    if (DELAY > 0) await new Promise(r => setTimeout(r, DELAY))
+    if (opts.delay > 0) await new Promise(r => setTimeout(r, opts.delay))
   }
 
   console.log(`\nDone.  Written: ${written}  Unknown: ${unknown}  Low-confidence skipped: ${lowConf}  Errors: ${errors}`)
-  if (!APPLY) console.log('DRY-RUN — add --apply to write.')
+  if (!opts.apply) console.log('DRY-RUN — add --apply to write.')
+  return { written, unknown, lowConf, errors }
 }
 
-main().catch(e => { console.error(e); process.exit(1) })
+// Run as CLI unless imported (the retry variant imports enrichGenres directly).
+if (process.argv[1] && /enrich-genres-gpt\.ts$/.test(process.argv[1])) {
+  enrichGenres(optionsFromArgv()).catch(e => { console.error(e); process.exit(1) })
+}

@@ -455,13 +455,13 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungro
 
           <Script
             name="enrich-genres-gpt.ts"
-            what="Kiest 1–3 genre-slugs uit de vaste 21-slug vocabulary (src/components/genre-badge.tsx) op basis van title + author + first_published_year + description_book. Alleen boeken met een lege genres-array worden geraakt; handmatige edits overleven re-runs."
+            what="Kiest 1–3 genre-slugs uit de vaste 21-slug vocabulary (src/components/genre-badge.tsx) op basis van title + author + first_published_year + description_book. Alleen boeken met een lege genres-array worden geraakt; handmatige edits overleven re-runs. Pagineert over de hele kandidatenset (.range() per 1000, geordend op id) — niet langer gecapt op de eerste 1000 rijen."
             tags={['gpt']}
             meta={{
-              coverage: <>default: <code className="font-mono">genres = &apos;{'{}'}&apos;</code> (lege array). Met --overwrite: all-rows.</>,
+              coverage: <>default: <code className="font-mono">genres = &apos;{'{}'}&apos;</code> (lege array). Met --overwrite: all-rows. Bij apply zonder <code className="font-mono">--limit</code> wordt de <strong>volledige</strong> kandidatenset verwerkt (geen 1000-cap meer).</>,
               cadence: 'na elke import + one-off backfill',
               writes: <><code className="font-mono">books.genres</code> (1–3 slugs uit vaste vocabulary)</>,
-              idempotent: 'ja — boeken met empty/low-confidence GPT-resultaat worden geskipt',
+              idempotent: <>ja — boeken met empty/low-confidence GPT-resultaat worden geskipt (en houden dus <code className="font-mono">genres = &apos;{'{}'}&apos;</code> → zie retry-script hieronder)</>,
               cost: 'GPT-mini (~€1–3 voor volledige backlog)',
             }}
             command={`# Dry-run op 5 samples
@@ -473,17 +473,62 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --slug=animal-farm
 # Kleine batch eerst
 npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply --limit=100
 
-# Volledige sweep
+# Volledige sweep (alle kandidaten, gepagineerd)
 npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
             flags={[
               { flag: '--apply', desc: 'Schrijf genres naar DB' },
-              { flag: '--limit=N', desc: 'Cap op N boeken (default 999 apply, 5 dry-run)' },
+              { flag: '--limit=N', desc: 'Cap op N boeken (default: alle kandidaten bij apply, 5 bij dry-run)' },
               { flag: '--slug=X', desc: 'Eén boek (werkt met of zonder --overwrite)' },
               { flag: '--overwrite', desc: 'Process ook boeken die al genres hebben' },
               { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 300)' },
               { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
             ]}
-            note="Genre-vocabulary leeft in src/components/genre-badge.tsx (21 slugs). Houd in sync tot vocabulary naar een DB-tabel verhuist."
+            note={
+              <>
+                Genre-vocabulary leeft in src/components/genre-badge.tsx (21 slugs). Houd in sync tot vocabulary naar een
+                DB-tabel verhuist. Let op: boeken die het model niet kan plaatsen (UNKNOWN / low-confidence) houden{' '}
+                <code className="font-mono">genres = &apos;{'{}'}&apos;</code> en komen elke run terug — dat is geen bug.
+                Na een mini-sweep zijn de overgebleven kandidaten precies die harde gevallen; ruim ze op met{' '}
+                <code className="font-mono">enrich-genres-retry-gpt.ts</code> hieronder.
+              </>
+            }
+          />
+
+          <Script
+            name="enrich-genres-retry-gpt.ts"
+            what="Tweede-pass genre-enrichment voor de boeken die gpt-4o-mini niet kon plaatsen. Dunne wrapper rond enrich-genres-gpt.ts: zelfde vocabulary, prompt, filter en paginering — maar default-model is gpt-4o (sterker), dat een deel van de obscure / anderstalige / niche titels alsnog herkent. Targets exact dezelfde lege-genres-set, dus draai dit ná de goedkope mini-sweep, niet ervoor."
+            tags={['gpt']}
+            meta={{
+              coverage: <>default: <code className="font-mono">genres = &apos;{'{}'}&apos;</code> — de rest die de mini-sweep liet staan. Met --overwrite: all-rows.</>,
+              cadence: 'one-off ná een enrich-genres-gpt.ts sweep',
+              writes: <><code className="font-mono">books.genres</code> (1–3 slugs uit vaste vocabulary)</>,
+              idempotent: <>ja — empty/low-confidence resultaten worden nog steeds geskipt; echt onclassificeerbare titels (geen training-data) blijven <code className="font-mono">genres = &apos;{'{}'}&apos;</code></>,
+              cost: 'GPT-4o (~10–20× mini per call; alleen de rest-set, dus klein totaal)',
+            }}
+            command={`# Dry-run op 5 samples (gpt-4o)
+npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts
+
+# Ruim de hele rest-set op
+npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply
+
+# Kleine batch / ander model
+npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --limit=50
+npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model=gpt-4.1`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf genres naar DB' },
+              { flag: '--limit=N', desc: 'Cap op N boeken (default: alle kandidaten bij apply, 5 bij dry-run)' },
+              { flag: '--slug=X', desc: 'Eén boek' },
+              { flag: '--overwrite', desc: 'Process ook boeken die al genres hebben' },
+              { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 300)' },
+              { flag: '--model=X', desc: 'Override model (default gpt-4o)' },
+            ]}
+            note={
+              <>
+                Wat na deze pass nóg <code className="font-mono">genres = &apos;{'{}'}&apos;</code> houdt, zijn titels die
+                geen enkel model kent (lokale publicaties, anonieme/ontbrekende metadata). Die zijn een handmatige{' '}
+                <code className="font-mono">seed-genres.ts</code>-klus, geen model-probleem.
+              </>
+            }
           />
 
           {/* 3b — Bans */}
