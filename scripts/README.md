@@ -232,9 +232,9 @@ Verwerking van `import_review_queue` (legacy/idle — zie memory "Import queue i
 | Script | Produceert |
 |---|---|
 | `build-dataset.ts` | Betaalde download-dataset ZIP |
-| `build-zenodo-dataset.ts` | Open citeerbare dataset voor Zenodo (CC-BY-4.0) — zie memory Zenodo |
-| `zenodo-descriptor-to-pdf.tsx` | `docs/zenodo/data-descriptor.md` → PDF |
-| `zenodo-deposit-diff.ts` | Bepaalt of de open core genoeg veranderd is voor een nieuwe Zenodo-versie (re-deposit is bewust, niet automatisch) |
+| `build-zenodo-dataset.ts` | Open citeerbare dataset voor Zenodo (CC-BY-4.0): 6 slug-keyed CSV's + `schema.json`/README/LICENSE. Dry-run; `--apply` → `private/zenodo/`. Exporteert `buildOpenTables()` (gedeeld met de diff). |
+| `zenodo-descriptor-to-pdf.tsx` | `docs/zenodo/data-descriptor.md` → `data-descriptor.pdf` (marked + @react-pdf/renderer; Arial/Andale-Mono embedded) |
+| `zenodo-deposit-diff.ts` | Vergelijkt de huidige open export met de laatst-gedeponeerde baseline (`docs/zenodo/deposited-manifest.json`) en adviseert of een nieuwe Zenodo-versie nodig is. Leest alléén de open core (commerciële verrijking telt niet mee). `--mark-deposited` her-ankert de baseline ná een deposit. Re-deposit is bewust, niet automatisch — zie `/admin/zenodo`. |
 | `build-film-data.ts` | Events-layer voor de animated-world-map film-PoC |
 | `build-wiki-enrichment-worklist.ts` | Worklist boeken voor Wikipedia ban-enrichment (Step A) |
 | `stage-wiki-enrichment.ts` | Step B van de Wikipedia-enrichment-pijplijn |
