@@ -71,18 +71,25 @@ export function makeAdminClient(): DatasetClient {
  * `orderBy` is a comma-separated list of columns and is REQUIRED: stable
  * ordering is the only thing that keeps `.range()` from returning the same row
  * in two consecutive pages once a table grows past PAGE rows.
+ *
+ * `pageSize` defaults to 1000. Lower it for wide tables whose rows carry large
+ * text columns (e.g. `books` with its prose fields): at ~14k rows a 1000-row
+ * page took ~6s server-side, close enough to Supabase's statement_timeout that
+ * it tipped over under the concurrent Promise.all in build-dataset. A 500-row
+ * page is ~1s — comfortably under the limit.
  */
 export async function fetchAll(
   supabase: DatasetClient,
   table: string,
   columns: string,
   orderBy: string,
+  pageSize = 1000,
 ): Promise<Row[]> {
   const cols = orderBy.split(',').map((c) => c.trim()).filter(Boolean)
   if (cols.length === 0) {
     throw new Error(`fetchAll(${table}): orderBy is required for stable pagination`)
   }
-  const PAGE = 1000
+  const PAGE = pageSize
   const rows: Row[] = []
   for (let from = 0; ; from += PAGE) {
     let q = supabase.from(table).select(columns)
