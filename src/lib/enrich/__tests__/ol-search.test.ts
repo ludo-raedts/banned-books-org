@@ -8,7 +8,7 @@ import { olSearch } from '../covers'
 // search query. These tests verify both branches stay correct so the
 // next refactor can't silently re-introduce the bug.
 
-const olJson = (docs: Array<{ key?: string; cover_i?: number }>) =>
+const olJson = (docs: Array<{ key?: string; cover_i?: number; title?: string }>) =>
   Promise.resolve({ ok: true, json: () => Promise.resolve({ docs }) } as Response)
 
 describe('olSearch (covers.ts)', () => {
@@ -19,7 +19,7 @@ describe('olSearch (covers.ts)', () => {
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
-      olJson([{ key: '/works/OL999W', cover_i: 12345 }]),
+      olJson([{ key: '/works/OL999W', cover_i: 12345, title: 'Ask the Passengers' }]),
     ) as unknown as ReturnType<typeof vi.fn>
   })
 
@@ -46,6 +46,7 @@ describe('olSearch (covers.ts)', () => {
   })
 
   it('returns the workId stripped of the /works/ prefix', async () => {
+    fetchSpy.mockImplementationOnce(() => olJson([{ key: '/works/OL999W', cover_i: 12345, title: '1984' }]))
     const r = await olSearch('1984', 'George Orwell')
     expect(r.workId).toBe('OL999W')
     expect(r.coverUrl).toBe('https://covers.openlibrary.org/b/id/12345-L.jpg')
@@ -58,10 +59,32 @@ describe('olSearch (covers.ts)', () => {
     expect(r.coverUrl).toBeNull()
   })
 
-  it('still returns workId (no cover) when first doc has no cover_i', async () => {
-    fetchSpy.mockImplementationOnce(() => olJson([{ key: '/works/OL42W' }]))
+  it('still returns workId (no cover) when matching doc has no cover_i', async () => {
+    fetchSpy.mockImplementationOnce(() => olJson([{ key: '/works/OL42W', title: 'Some Book' }]))
     const r = await olSearch('Some Book', 'Some Author')
     expect(r.workId).toBe('OL42W')
     expect(r.coverUrl).toBeNull()
+  })
+
+  // Guard added 2026-06-03 (the "...Historic World" → "...Ancient World"
+  // cover collision): reject docs whose title doesn't contain every
+  // significant word of ours, even when they carry a cover_i. Otherwise the
+  // most-popular sibling/namesake pins the wrong cover and workId.
+  it('rejects a sibling whose title is missing a distinctive word', async () => {
+    fetchSpy.mockImplementationOnce(() =>
+      olJson([{ key: '/works/OLwrongW', cover_i: 777, title: 'The Seven Wonders of the Ancient World' }]),
+    )
+    const r = await olSearch('The Seven Wonders of the Historic World', 'Reg Cox')
+    expect(r.workId).toBeNull()
+    expect(r.coverUrl).toBeNull()
+  })
+
+  it('accepts a candidate that adds an extra subtitle/series suffix', async () => {
+    fetchSpy.mockImplementationOnce(() =>
+      olJson([{ key: '/works/OLokW', cover_i: 888, title: 'Maus I: A Survivor’s Tale' }]),
+    )
+    const r = await olSearch('Maus', 'Art Spiegelman')
+    expect(r.workId).toBe('OLokW')
+    expect(r.coverUrl).toBe('https://covers.openlibrary.org/b/id/888-L.jpg')
   })
 })

@@ -24,6 +24,7 @@
 import { adminClient } from '../src/lib/supabase'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import { verifyGbCover } from '../src/lib/enrich/_placeholder'
+import { titlesMatch } from '../src/lib/enrich/title-match'
 
 const ONCE      = process.argv.includes('--once')
 const NO_GOOGLE = process.argv.includes('--no-google')
@@ -87,8 +88,12 @@ async function olSearch(title: string, author: string): Promise<{ coverUrl: stri
     const res = await fetch(`https://openlibrary.org/search.json?${params}`, { headers: OL_HEADERS })
     await sleep(OL_DELAY_MS)
     if (!res.ok) return { coverUrl: null, workId: null }
-    const json = await res.json() as { docs: Array<{ key?: string; cover_i?: number }> }
-    for (const doc of json.docs ?? []) {
+    const json = await res.json() as { docs: Array<{ key?: string; cover_i?: number; title?: string }> }
+    // Only trust docs whose title matches ours — the search endpoint returns
+    // the most-popular namesake/sibling for an obscure query, which would
+    // otherwise pin a wrong cover (and poison openlibrary_work_id).
+    const matches = (json.docs ?? []).filter((doc) => titlesMatch(title, doc.title ?? ''))
+    for (const doc of matches) {
       if (doc.cover_i) {
         const coverUrl = `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`
         if (await isValidOLImage(coverUrl)) {
@@ -96,7 +101,7 @@ async function olSearch(title: string, author: string): Promise<{ coverUrl: stri
         }
       }
     }
-    const workId = json.docs?.[0]?.key?.replace('/works/', '') ?? null
+    const workId = matches[0]?.key?.replace('/works/', '') ?? null
     return { coverUrl: null, workId }
   } catch { return { coverUrl: null, workId: null } }
 }
@@ -140,7 +145,9 @@ async function gbBySearch(title: string, author: string): Promise<string | null>
     }
     for (const item of json.items ?? []) {
       const t = item.volumeInfo?.title ?? ''
-      if (!t.toLowerCase().includes(title.slice(0, 10).toLowerCase())) continue
+      // Require every significant word of our title in the candidate's — a
+      // 10-char prefix let "...Historic World" grab "...Ancient World".
+      if (!titlesMatch(title, t)) continue
       const img = item.volumeInfo?.imageLinks?.large
         ?? item.volumeInfo?.imageLinks?.medium
         ?? item.volumeInfo?.imageLinks?.thumbnail

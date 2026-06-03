@@ -15,6 +15,7 @@
 import { adminClient } from '../supabase'
 import { checkImageUrl, repairGbStrip } from './_placeholder'
 import { titleLadder } from './_title-ladder'
+import { titlesMatch } from './title-match'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
 
 const OL_DELAY_MS   = 200
@@ -52,8 +53,12 @@ export async function olSearch(title: string, author: string): Promise<{ coverUr
     const res = await fetch(`https://openlibrary.org/search.json?${params}`, { headers: OL_HEADERS })
     await sleep(OL_DELAY_MS)
     if (!res.ok) return { coverUrl: null, workId: null }
-    const json = await res.json() as { docs: Array<{ key?: string; cover_i?: number }> }
-    for (const doc of json.docs ?? []) {
+    const json = await res.json() as { docs: Array<{ key?: string; cover_i?: number; title?: string }> }
+    // Only trust docs whose title actually matches ours — the search endpoint
+    // returns the most-popular namesake/sibling for an obscure query, which
+    // would otherwise pin a wrong cover (and poison openlibrary_work_id).
+    const matches = (json.docs ?? []).filter((doc) => titlesMatch(title, doc.title ?? ''))
+    for (const doc of matches) {
       if (doc.cover_i) {
         return {
           coverUrl: `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`,
@@ -61,7 +66,7 @@ export async function olSearch(title: string, author: string): Promise<{ coverUr
         }
       }
     }
-    const workId = json.docs?.[0]?.key?.replace('/works/', '') ?? null
+    const workId = matches[0]?.key?.replace('/works/', '') ?? null
     return { coverUrl: null, workId }
   } catch { return { coverUrl: null, workId: null } }
 }
@@ -75,7 +80,7 @@ function transformGBUrl(url: string): string {
     .replace('edge=curl', '')
 }
 
-async function gbSearch(query: string): Promise<string | null> {
+async function gbSearch(query: string, expectedTitle: string): Promise<string | null> {
   try {
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=3&fields=items(volumeInfo(title,imageLinks))`
@@ -83,9 +88,13 @@ async function gbSearch(query: string): Promise<string | null> {
     await sleep(GB_DELAY_MS)
     if (!res.ok) return null
     const json = await res.json() as {
-      items?: Array<{ volumeInfo: { imageLinks?: { large?: string; medium?: string; thumbnail?: string } } }>
+      items?: Array<{ volumeInfo: { title?: string; imageLinks?: { large?: string; medium?: string; thumbnail?: string } } }>
     }
     for (const item of json.items ?? []) {
+      // Title-search returns the most-popular sibling for an obscure query;
+      // require the volume's own title to contain every significant word of
+      // ours before trusting its cover.
+      if (!titlesMatch(expectedTitle, item.volumeInfo?.title ?? '')) continue
       const img = item.volumeInfo?.imageLinks?.large
         ?? item.volumeInfo?.imageLinks?.medium
         ?? item.volumeInfo?.imageLinks?.thumbnail
@@ -240,8 +249,8 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   log(`Eligible:           ${toSearch.length}`)
   log(`${opts.apply ? `Processing ${limit}…` : `DRY-RUN — sampling ${limit}`}`)
 
-  async function gbSearchVerified(q: string, tracker: { sawPlaceholder: boolean }): Promise<string | null> {
-    const url = await gbSearch(q)
+  async function gbSearchVerified(q: string, expectedTitle: string, tracker: { sawPlaceholder: boolean }): Promise<string | null> {
+    const url = await gbSearch(q, expectedTitle)
     if (!url) return null
     const check = await checkImageUrl(url)
     if (check.ok === false) {
@@ -279,8 +288,8 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         const stripped = stripSubtitle(variant.title)
 
         newSources.push(`gb_title_only${tag}`)
-        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, placeholderTracker)
-          ?? await gbSearchVerified(variant.title, placeholderTracker)
+        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker)
+          ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker)
         if (coverUrl) { source = `GB-title-only${tag}`; break }
 
         newSources.push(`ol_title_only${tag}`)

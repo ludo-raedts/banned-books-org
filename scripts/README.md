@@ -161,6 +161,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `audit-covers-for-placeholders.ts` | Google Books "image not available" placeholders |
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
 | `audit-study-guide-covers.ts` | SparkNotes/CliffsNotes-covers (zie memory study-guide audit) |
+| `_audit_shared_enrichment.ts` | "Most-popular hit"-contaminatie: covers én descriptions die een titel-search op het verkeerde boek plakte → `data/shared-cover-audit.md`, `data/shared-description-audit.md`, `public/shared-cover-suspects.html` (bron-guard zit in `src/lib/enrich/title-match.ts`) |
 | **Slugs** | |
 | `audit-slugs.ts` | Bestaande slugs vs huidige `slugify()` |
 | `filter-nfd-subset.ts` | Filtert slug-audit naar de NFD-bug subset |
