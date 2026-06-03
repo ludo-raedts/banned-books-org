@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import DatasetCheckoutButton from '@/components/dataset-checkout-button'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
@@ -257,14 +258,15 @@ export default async function DatasetPage() {
               </p>
               {ZENODO_DOI_URL ? (
                 <>
-                  <a
+                  <TrackedOutboundLink
+                    eventName="Dataset Zenodo Viewed"
                     href={ZENODO_DOI_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-5 inline-flex w-fit items-center border border-oxblood text-oxblood hover:bg-oxblood hover:text-cream font-serif font-semibold rounded-sm px-5 py-2.5 text-sm transition-colors"
                   >
                     View on Zenodo →
-                  </a>
+                  </TrackedOutboundLink>
                   {zenodoCitation && (
                     <div className="mt-4">
                       <p className="text-[11px] uppercase tracking-wider text-neutral-500 mb-1">Cite as</p>
