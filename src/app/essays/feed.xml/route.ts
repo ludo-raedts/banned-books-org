@@ -8,6 +8,7 @@
 
 import { publishedEssays } from '@/lib/essays-data'
 
+import { body as inWhoseNameBody } from '@/lib/markdown-pages/in-whose-name'
 import { body as historyBody } from '@/lib/markdown-pages/history'
 import { body as whyNotAmazonBody } from '@/lib/markdown-pages/why-not-amazon'
 import { body as whatWeDocumentBody } from '@/lib/markdown-pages/what-we-document'
@@ -16,6 +17,7 @@ import { body as theGreyZoneBody } from '@/lib/markdown-pages/the-grey-zone'
 import { body as firstAmendmentParadoxBody } from '@/lib/markdown-pages/first-amendment-paradox'
 
 const ESSAY_BODIES: Record<string, string> = {
+  'in-whose-name': inWhoseNameBody,
   'history': historyBody,
   'why-not-amazon': whyNotAmazonBody,
   'what-we-document': whatWeDocumentBody,

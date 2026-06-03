@@ -15,6 +15,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'in-whose-name',
+    href: '/essays/in-whose-name',
+    title: 'In whose name: the reasons people give for banning books',
+    dek: 'Nobody bans a book and says they want to hide it — there is always a reason, and the reason always names someone who must be protected. What the catalogue’s reason data reveals about the vocabulary of censorship.',
+    publishedAt: '2026-06-03',
+    readingTimeMin: 11,
+    relatedBookSlugs: ['1984', 'the-satanic-verses', 'the-decameron', 'and-tango-makes-three', 'gender-queer', 'brave-new-world'],
+  },
+  {
     slug: 'history',
     href: '/history',
     title: 'The long shadow of censorship: a history of banned books',

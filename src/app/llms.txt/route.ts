@@ -19,6 +19,8 @@ const BASE = 'https://www.banned-books.org'
 // neutral summary works better. Falls back to dek when a slug isn't listed
 // so newly-added essays don't disappear from /llms.txt until updated here.
 const ESSAY_DESCRIPTIONS: Record<string, string> = {
+  'in-whose-name':
+    'A data analysis of the stated reasons for banning books: how justifications stack, how the vocabulary shifted from "danger to the state" to "danger to the child" after 2000, and how the same book draws different reasons in different countries.',
   history:
     'A 2,000-year arc — Qin Shi Huang, the Index Librorum Prohibitorum, Nazi book burnings, school-board challenges today.',
   'why-not-amazon':

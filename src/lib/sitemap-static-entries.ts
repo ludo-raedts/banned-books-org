@@ -106,6 +106,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/about.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/history.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/why-not-amazon.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/in-whose-name.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/essays/what-we-document.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/essays/forbidden-knowledge-iceberg.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/essays/the-grey-zone.md`, changefreq: 'monthly', priority: 0.5 },
