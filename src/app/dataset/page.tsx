@@ -14,9 +14,9 @@ const DATASET_PRICE_USD = 19.99
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Download the Banned Books dataset',
+  title: 'Banned Books Dataset — Free Open CSV (CC-BY) + Full Dataset',
   description:
-    'Download the complete Banned Books dataset — every banned, challenged, and restricted book in our catalogue, with sources, countries, and reasons. CSV, JSON, and SQLite formats.',
+    'Free, citeable CSV dataset of book bans worldwide — CC-BY-4.0 with a permanent DOI — plus a full commercial dataset (CSV, JSON, SQLite). Books, countries, years, reasons, and a source citation for every ban.',
   alternates: { canonical: '/dataset' },
 }
 
@@ -248,12 +248,12 @@ export default async function DatasetPage() {
 
             {/* Open core — Zenodo, CC-BY-4.0, free */}
             <div className="flex flex-col border border-neutral-200 bg-white rounded-sm p-6">
-              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Open core · CC-BY-4.0 · Free</p>
+              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Free CSV download · CC-BY-4.0</p>
               <h2 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-gray-900">
                 For citing &amp; verifying
               </h2>
               <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
-                The structured, verifiable censorship core — the facts and the source citations behind them. Deposited on Zenodo as a citeable research dataset with a permanent, version-independent DOI.
+                A free, downloadable CSV dataset of the verifiable censorship core — the facts and the source citations behind them. Deposited on Zenodo as a citeable research dataset under CC-BY-4.0, with a permanent, version-independent DOI.
               </p>
               {ZENODO_DOI_URL ? (
                 <>
