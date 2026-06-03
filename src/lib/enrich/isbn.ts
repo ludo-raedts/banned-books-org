@@ -27,9 +27,13 @@
 //     stamping it (distinct from 'not_found') stops the row from being fully
 //     re-queried every sweep while still letting a targeted re-sweep reopen
 //     only 'no_match' rows if OL/GB metadata later improves.
-//   - On a dup-collision (candidate ISBN already on another row): NOT
-//     stamped. A real match was found; the clashing row may later get
-//     reassigned, so we want this row to re-try.
+//   - On a dup-collision (candidate ISBN already on another row):
+//     isbn_status='dup_collision' + isbn_checked_at (isbn13 stays NULL). A
+//     real match was found but another row owns it. Leaving it unstamped made
+//     the collision set the permanent every-sweep retry residue. Resolution is
+//     always a deliberate follow-up (merge the duplicate, or clear the
+//     squatting row and reset this row's isbn_checked_at), so auto-retrying
+//     here only burns API budget.
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
@@ -43,6 +47,18 @@ const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.o
 // Tuned by walking the 2026-05-18 run: catches "The Bible → Far Eastern Art"
 // and the 9798-POD collisions while passing series-Vol matches.
 const TITLE_MATCH_THRESHOLD = 0.5
+
+// Minimum fraction of the QUERY title's significant words that must appear in
+// the matched record's title. This is the OTHER direction from
+// titleContainment (which divides by the smaller set). It closes the
+// "superset collision" gap: a DB title that is a longer, more specific work
+// than the record we matched. titleContainment("Retouches à mon retour de
+// l'U.R.S.S.", "Retour de l'U.R.S.S.") = 1.0 (the short title is fully inside
+// the long one), so a different Gide book's ISBN sailed through. queryCoverage
+// scores that 0.5 and the 0.6 gate rejects it, while genuine subtitle/volume
+// matches keep coverage 1.0 ("1984" → "1984: A Novel", "Soul Eater" → "Soul
+// Eater, Vol. 1") because every query word still appears.
+const QUERY_COVERAGE_THRESHOLD = 0.6
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -113,6 +129,37 @@ export function titleContainment(a: string, b: string): number {
   return hits / smaller.size
 }
 
+// Fraction of the QUERY title's significant words present in the matched
+// title — asymmetric, divides by the query's token count. See
+// QUERY_COVERAGE_THRESHOLD for why this exists alongside titleContainment.
+export function queryCoverage(query: string, matched: string): number {
+  const Q = tokenize(query)
+  const M = tokenize(matched)
+  if (Q.size === 0) return 0
+  let hits = 0
+  for (const w of Q) if (M.has(w)) hits++
+  return hits / Q.size
+}
+
+// Author agreement between the DB row and the record OL/GB returned. Rejects
+// only on a CONFIDENT mismatch: we have a query author AND the matched record
+// lists at least one author AND none of them share a significant word (e.g. a
+// surname) with the query author. Missing author data on either side →
+// soft-pass, so sparse OL/GB metadata never blocks a good title match. This is
+// the guard that kills "The King of Lies" (John Hart) → King Lear
+// (Shakespeare): identical "King" overlap passes the title gate, but the
+// authors share nothing.
+export function authorAgrees(queryAuthor: string, matchedAuthors: string[]): boolean {
+  if (!queryAuthor.trim()) return true
+  if (!matchedAuthors.length) return true
+  const Q = tokenize(queryAuthor)
+  if (Q.size === 0) return true
+  for (const a of matchedAuthors) {
+    for (const w of tokenize(a)) if (Q.has(w)) return true
+  }
+  return false
+}
+
 // ISO-639-1 (DB original_language) → ISO-639-2/B (OL languages.key). Only
 // the languages this catalogue actually contains. Add entries lazily as new
 // originals appear.
@@ -180,6 +227,12 @@ async function verifyEdition(
     if (sim < TITLE_MATCH_THRESHOLD) {
       return { ok: false, reason: `edition-title:"${json.title.slice(0, 40)}"` }
     }
+    // Superset guard at the edition level too: the edition's title must cover
+    // most of the query, else the edition is a shorter, different work.
+    const cov = queryCoverage(queryTitle, json.title)
+    if (cov < QUERY_COVERAGE_THRESHOLD) {
+      return { ok: false, reason: `edition-coverage:"${json.title.slice(0, 40)}"` }
+    }
   }
   const edLang = json.languages?.[0]?.key?.split('/').pop() ?? null
   if (!editionLanguageAcceptable(edLang, dbLang)) {
@@ -188,20 +241,20 @@ async function verifyEdition(
   return { ok: true }
 }
 
-type SearchHit = { isbn: string; matchedTitle: string }
+type SearchHit = { isbn: string; matchedTitle: string; matchedAuthors: string[] }
 
 async function searchOL(title: string, author: string): Promise<SearchHit | null> {
   const q = encodeURIComponent(`${title}${author ? ` ${author}` : ''}`)
   try {
     const res = await fetch(
-      `https://openlibrary.org/search.json?q=${q}&fields=isbn,title&limit=5`,
+      `https://openlibrary.org/search.json?q=${q}&fields=isbn,title,author_name&limit=5`,
       { headers: OL_HEADERS },
     )
     if (!res.ok) return null
-    const json = (await res.json()) as { docs: Array<{ isbn?: string[]; title?: string }> }
+    const json = (await res.json()) as { docs: Array<{ isbn?: string[]; title?: string; author_name?: string[] }> }
     for (const doc of json.docs ?? []) {
       const isbn = pickIsbn13(doc.isbn ?? [])
-      if (isbn) return { isbn, matchedTitle: doc.title ?? '' }
+      if (isbn) return { isbn, matchedTitle: doc.title ?? '', matchedAuthors: doc.author_name ?? [] }
     }
     return null
   } catch {
@@ -219,13 +272,14 @@ async function searchGoogleBooks(title: string, author: string): Promise<SearchH
       items?: Array<{
         volumeInfo: {
           title?: string
+          authors?: string[]
           industryIdentifiers?: Array<{ type: string; identifier: string }>
         }
       }>
     }
     for (const item of json.items ?? []) {
       for (const id of item.volumeInfo?.industryIdentifiers ?? []) {
-        if (id.type === 'ISBN_13') return { isbn: id.identifier, matchedTitle: item.volumeInfo?.title ?? '' }
+        if (id.type === 'ISBN_13') return { isbn: id.identifier, matchedTitle: item.volumeInfo?.title ?? '', matchedAuthors: item.volumeInfo?.authors ?? [] }
       }
     }
     return null
@@ -344,10 +398,14 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     let source = ''
 
     // Walk the ladder. For each variant try OL+author, then GB+author. Any
-    // hit must pass TWO guards:
+    // hit must pass THREE guards:
     //   (a) work-title similarity against the variant we queried (rejects
-    //       "top-popular-doc wins" bias — unrelated bestseller's ISBN)
-    //   (b) edition-level check via /isbn/<isbn>.json (rejects translation/
+    //       "top-popular-doc wins" bias — unrelated bestseller's ISBN), plus a
+    //       query-coverage check that rejects superset collisions (a longer DB
+    //       title matching a shorter different work's ISBN)
+    //   (b) author agreement (rejects same-keyword-different-book hits, e.g.
+    //       "The King of Lies" → King Lear)
+    //   (c) edition-level check via /isbn/<isbn>.json (rejects translation/
     //       language collisions where the work-title matches but the
     //       specific edition is in another language)
     // First passing hit wins; source tag (e.g. 'OL:english_meaningful')
@@ -366,6 +424,9 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
         if (!hit) continue
         const sim = titleContainment(variant.title, hit.matchedTitle)
         if (sim < TITLE_MATCH_THRESHOLD) { rejectedSim++; continue }
+        const cov = queryCoverage(variant.title, hit.matchedTitle)
+        if (cov < QUERY_COVERAGE_THRESHOLD) { rejectedSim++; continue }
+        if (!authorAgrees(author, hit.matchedAuthors)) { rejectedSim++; continue }
         const ed = await verifyEdition(hit.isbn, variant.title, book.original_language)
         await sleep(OL_DELAY_MS)
         if (!ed.ok) { rejectedEd++; continue }
@@ -397,8 +458,23 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
           .neq('id', book.id)
           .maybeSingle()
         if (clash) {
+          // A real match was found but another row already owns the ISBN.
+          // Stamp 'dup_collision' so this row leaves the eligible pool instead
+          // of being re-queried (OL + 400ms + edition fetch) on every sweep —
+          // these otherwise become the permanent retry residue. The collision
+          // is usually one of: (1) a true duplicate book (merge resolves it),
+          // or (2) the OTHER row squatting on this row's correct ISBN (a
+          // targeted fix clears the squatter and resets this row's
+          // isbn_checked_at to re-open it). Both are deliberate follow-ups, so
+          // auto-retrying here buys nothing.
           log(`    ⤳ skip: ${isbn} already on book #${clash.id} (${clash.title.slice(0, 40)})`)
           skippedDup++
+          const { error } = await supabase
+            .from('books')
+            .update({ isbn_status: 'dup_collision', isbn_checked_at: new Date().toISOString() })
+            .eq('id', book.id)
+            .is('isbn13', null)
+          if (error) log(`    ✗ dup_collision stamp failed: ${error.message}`)
         } else {
           const { error } = await supabase
             .from('books')

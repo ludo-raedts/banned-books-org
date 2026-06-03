@@ -1,0 +1,20 @@
+[
+  {
+    "keep": 9826,
+    "drop": 13326,
+    "keep_title": "American Roommate Experiment",
+    "drop_title": "The American Roommate Experiment",
+    "confidence": "high",
+    "reasons": ["same OL work OL26770888W", "same author Elena Armas", "article-prefix-only title variant", "OL ISBN 9781960854605 belongs to the no-article title"],
+    "flags": []
+  },
+  {
+    "keep": 11017,
+    "drop": 16508,
+    "keep_title": "State and Revolution",
+    "drop_title": "The State and Revolution",
+    "confidence": "high",
+    "reasons": ["same author Vladimir Lenin", "article-prefix-only title variant", "KEEP has isbn + 2 bans + cover, DROP is sparser"],
+    "flags": []
+  }
+]
