@@ -203,6 +203,9 @@ async function fetchCandidates(
     let query: any = supabase
       .from('books')
       .select(SELECT_COLS)
+      // Blanket-works pseudo-books (Liste Otto "Toutes ses œuvres") have no real
+      // title to classify — GPT returns UNKNOWN every run. Skip them outright.
+      .eq('is_blanket_works', false)
       .order('id')
       .range(from, from + PAGE - 1)
 

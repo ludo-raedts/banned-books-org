@@ -446,6 +446,7 @@ type BookDetail = {
   extended_context: string | null
   is_gated: boolean
   gating_country: string | null
+  is_blanket_works: boolean
   original_language: string | null
   title_native: string | null
   title_transliterated: string | null
@@ -555,7 +556,7 @@ export default async function BookPage({
       censorship_context, first_published_year, genres, gutenberg_id, isbn13,
       bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
       warning_level, inclusion_rationale, extended_context,
-      is_gated, gating_country,
+      is_gated, gating_country, is_blanket_works,
       original_language,
       title_native, title_transliterated, title_english_meaningful,
       created_at, updated_at,
@@ -590,6 +591,18 @@ export default async function BookPage({
   }
 
   const book = data as unknown as BookDetail
+
+  // Blanket-works ban ("Toutes ses œuvres", Liste Otto): this is not a real
+  // title but a pseudo-book standing in for an author-level ban (bans.book_id
+  // is NOT NULL, so the whole-oeuvre ban needs a book to hang on). It has no
+  // cover/description/genre and never will, so there is no book page to show —
+  // 308 to the author, where the ban surfaces as a "complete works" fact.
+  if (book.is_blanket_works) {
+    const blanketAuthorSlug = book.book_authors.find(ba => ba.authors?.slug)?.authors?.slug
+    if (blanketAuthorSlug) permanentRedirect(`/authors/${blanketAuthorSlug}`)
+    notFound()
+  }
+
   const author = authorName(book)
 
   // Bucket B (gated): an opaque interstitial covers the record until the reader

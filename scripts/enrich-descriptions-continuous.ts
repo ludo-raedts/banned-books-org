@@ -215,6 +215,7 @@ async function fetchBooksToSearch(): Promise<{ books: BookRow[]; skippedCount: n
       book_authors!left(authors!left(display_name))
     `)
     .is('description_book', null)
+    .eq('is_blanket_works', false) // skip Liste Otto "Toutes ses œuvres" pseudo-books — no book description exists
     .order('created_at', { ascending: false })
 
   if (error) {

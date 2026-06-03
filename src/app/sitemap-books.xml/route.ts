@@ -35,6 +35,7 @@ export async function GET() {
       .select('slug, title, updated_at, cover_url')
       .not('slug', 'is', null)
       .eq('is_gated', false)
+      .eq('is_blanket_works', false) // pseudo-books for author-level (Liste Otto) bans — never index
       .order('updated_at', { ascending: false })
       .range(offset, offset + 999)
     if (!data || data.length === 0) break

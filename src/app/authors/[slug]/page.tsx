@@ -68,6 +68,7 @@ type Book = {
   description: string | null
   first_published_year: number | null
   genres: string[]
+  is_blanket_works: boolean
   bans: Ban[]
 }
 
@@ -210,13 +211,20 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     const { data } = await supabase
       .from('books')
       .select(`
-        id, title, slug, cover_url, description, first_published_year, genres,
+        id, title, slug, cover_url, description, first_published_year, genres, is_blanket_works,
         bans(id, status, country_code, year_started, year_ended, action_type, countries(name_en), ban_reason_links(reasons(slug)))
       `)
       .in('id', bookIds)
       .order('title')
     books = (data as unknown as Book[]) ?? []
   }
+
+  // Blanket-works pseudo-books ("Toutes ses œuvres", Liste Otto) stand in for
+  // a ban on the author's ENTIRE oeuvre — they are not catalogued titles. Keep
+  // their bans in the totals (the author genuinely was banned) but exclude them
+  // from the book grid/count; they render as a dedicated "complete works" note.
+  const realBooks = books.filter(b => !b.is_blanket_works)
+  const blanketWorks = books.filter(b => b.is_blanket_works)
 
   const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)
   const countryCount = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
@@ -226,8 +234,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // most banned for. Used only when `a.bio` is NULL — see the bio render
   // below. Tiebreaker is the existing title-asc ordering from the books
   // query, so output is deterministic.
-  const representativeBook = books.length > 0
-    ? [...books].sort((x, y) => y.bans.length - x.bans.length)[0]
+  const representativeBook = realBooks.length > 0
+    ? [...realBooks].sort((x, y) => y.bans.length - x.bans.length)[0]
     : null
 
   // Placeholder-author explanation. Six rows in `authors` exist as catalogue
@@ -435,8 +443,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
     if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
     if (a.original_language) personJsonLd.knowsLanguage = a.original_language
-    if (books.length > 0) {
-      personJsonLd.workExample = books.slice(0, 50).map(b => ({
+    if (realBooks.length > 0) {
+      personJsonLd.workExample = realBooks.slice(0, 50).map(b => ({
         '@type': 'Book',
         name: b.title,
         url: `https://www.banned-books.org/books/${b.slug}`,
@@ -469,7 +477,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // Placeholder authors get a special editorial lead instead of the
   // counts-driven one — see below — and no FAQ schema (no real entity
   // to answer questions about).
-  if (!isPlaceholder && books.length > 0 && totalBans > 0) {
+  if (!isPlaceholder && realBooks.length > 0 && totalBans > 0) {
     const reasonSlugCounts = new Map<string, number>()
     for (const b of books) {
       for (const ban of b.bans) {
@@ -485,7 +493,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     const datedBans = books.flatMap(b => b.bans.filter((ban: AuthorBan) => ban.year_started != null))
     const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map((b: AuthorBan) => b.year_started!)) : null
 
-    const bannedBookCount = books.filter(b => b.bans.length > 0).length
+    const bannedBookCount = realBooks.filter(b => b.bans.length > 0).length
 
     let head = `${a.display_name} has ${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} that ${bannedBookCount === 1 ? 'has' : 'have'} been banned or challenged in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
     if (earliestYear) head += ` since ${earliestYear}`
@@ -509,7 +517,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       })
     }
     if (earliestYear) {
-      const firstBookBan = books
+      const firstBookBan = realBooks
         .map(b => ({ title: b.title, slug: b.slug, earliest: Math.min(...b.bans.filter(bn => bn.year_started != null).map(bn => bn.year_started!), Infinity) }))
         .filter(x => Number.isFinite(x.earliest))
         .sort((x, y) => x.earliest - y.earliest)[0]
@@ -525,8 +533,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         })
       }
     }
-    if (books.length >= 3) {
-      const titles = books.slice(0, 5).map(b => b.title).join(', ')
+    if (realBooks.length >= 3) {
+      const titles = realBooks.slice(0, 5).map(b => b.title).join(', ')
       items.push({
         q: `Which books by ${a.display_name} have been banned?`,
         a: `Banned or challenged books by ${a.display_name} include ${titles}.`,
@@ -640,11 +648,15 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               names have something concrete to rank against. Suppressed for
               authors with no documented bans (e.g. placeholder/anonymous
               buckets) where the phrase would mislead. */}
-          {books.length > 0 && countryCount > 0 && (
+          {realBooks.length > 0 && countryCount > 0 ? (
             <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
-              {books.length} banned {books.length === 1 ? 'book' : 'books'} in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
+              {realBooks.length} banned {realBooks.length === 1 ? 'book' : 'books'} in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
             </p>
-          )}
+          ) : blanketWorks.length > 0 && countryCount > 0 ? (
+            <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
+              Complete works banned in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
+            </p>
+          ) : null}
           {/* Secondary name: native-script form (for authors whose original
               writing language is non-English) OR a known English pen name
               when it differs from the canonical display_name. Suppressed
@@ -805,15 +817,34 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         </section>
       )}
 
-      {books.length === 0 ? (
-        <p className="text-gray-500">No books recorded for this author yet.</p>
+      {blanketWorks.length > 0 && (
+        <section className="mb-8 rounded-lg border border-oxblood/20 bg-oxblood/5 p-4">
+          <h2 className="text-base font-semibold text-oxblood/90 mb-1">
+            Complete works banned
+          </h2>
+          <p className="text-sm text-gray-700">
+            Rather than a single title, the entire body of work by {a.display_name} was
+            banned{(() => {
+              const cc = [...new Set(blanketWorks.flatMap(b => b.bans.map(bn => bn.country_code)))]
+              const names = cc.map(c => blanketWorks.flatMap(b => b.bans).find(bn => bn.country_code === c)?.countries?.name_en ?? c)
+              return names.length > 0 ? ` in ${names.join(', ')}` : ''
+            })()}. This is recorded as an author-level ban; no individual titles are
+            catalogued for it.
+          </p>
+        </section>
+      )}
+
+      {realBooks.length === 0 ? (
+        blanketWorks.length === 0 && (
+          <p className="text-gray-500">No books recorded for this author yet.</p>
+        )
       ) : (
         <>
         <h2 className="text-lg font-semibold mb-4">
           Banned books by {a.display_name}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          {books.map(book => {
+          {realBooks.map(book => {
             const reasons = getReasons(book.bans)
             const activeBans = book.bans.filter(b => b.status === 'active')
             const displayBans = activeBans.length > 0 ? activeBans : book.bans.slice(0, 4)

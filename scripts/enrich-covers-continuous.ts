@@ -197,6 +197,7 @@ async function fetchBooksToSearch(loopStart: Date): Promise<{ books: BookRow[]; 
       book_authors!left(authors!left(display_name))
     `)
     .is('cover_url', null)
+    .eq('is_blanket_works', false) // skip Liste Otto "Toutes ses œuvres" pseudo-books — no cover to find
     .order('created_at', { ascending: false })
 
   if (error) {

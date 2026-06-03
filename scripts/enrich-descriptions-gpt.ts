@@ -97,8 +97,11 @@ async function main() {
 
   if (SLUG) {
     query = (query as any).eq('slug', SLUG)
-  } else if (!OVERWRITE) {
-    query = (query as any).is('description_book', null)
+  } else {
+    // Blanket-works pseudo-books (Liste Otto "Toutes ses œuvres") aren't real
+    // titles — GPT returns UNKNOWN every run. Skip unless explicitly targeted.
+    query = (query as any).eq('is_blanket_works', false)
+    if (!OVERWRITE) query = (query as any).is('description_book', null)
   }
 
   const { data, error } = await query
