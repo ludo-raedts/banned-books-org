@@ -101,3 +101,7 @@ next-env.d.ts
 /data/*-log.txt
 /data/firecrawl-*.csv
 /data/*-state.json
+/.firecrawl/
+
+# per-run rejection logs (timestamped, local-only audit trail)
+/data/*-rejected-*.jsonl
