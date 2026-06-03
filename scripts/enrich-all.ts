@@ -45,6 +45,7 @@
 import { spawnSync } from 'child_process'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { catalogReminder } from './audit-scripts-catalog'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -243,6 +244,14 @@ async function main() {
     console.log(`  ✗ ${failed} step(s) failed — check output above`)
   }
   console.log(`${'═'.repeat(60)}\n`)
+
+  // Catalog freshness — last thing you see, so new scripts don't rot out of
+  // scripts/README.md. Read-only; never affects exit status on its own.
+  const reminder = catalogReminder()
+  if (reminder) {
+    console.log(reminder)
+    console.log('')
+  }
 
   if (failed > 0) process.exit(1)
 }

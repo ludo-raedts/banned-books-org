@@ -19,6 +19,11 @@
 - `merge-*` — duplicaten samenvoegen.
 - `enrich-*` — bestaande records met extra velden vullen.
 - Leidende `_` = doorgaans **one-off / wegwerp** (specifieke batch of meting), niet herbruikbaar.
+- `_tmp_*` = scratch/prototype — wordt **niet** in deze catalogus opgenomen (genegeerd door de freshness-check).
+
+> **Catalogus actueel houden:** `scripts/audit-scripts-catalog.ts` flag't elk script dat
+> hier niet genoemd wordt. Het draait automatisch als slotboodschap van `enrich-all.ts`, of los:
+> `npx tsx scripts/audit-scripts-catalog.ts`. Voeg een nieuw script toe aan de juiste sectie hieronder.
 
 ## Families (sprong naar sectie)
 1. [Import](#1-import) · 2. [Dedup-detectie](#2-dedup-detectie-vinden) · 3. [Merge](#3-merge-samenvoegen)
@@ -143,11 +148,13 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `audit-db.ts` | Algemene DB-health (boeken zonder cover/description, …) |
 | `_audit_site_health.ts` | Data-integriteit voor de site-audit (alleen SELECTs) |
 | `score-data-quality.ts` | Data-quality classifier over de catalogus |
+| `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
 | `check-coverage.ts` / `check-no-desc.ts` | Snelle coverage-checks |
 | **Jaren** | |
 | `audit-publication-years.ts` | `first_published_year` vs OpenLibrary → review-artifact |
 | `audit-impossible-years.ts` | Onmogelijke/verdachte publicatiejaren |
 | `audit-author-years.ts` | Onmogelijke birth/death years |
+| `verify-years-llm.ts` | LLM-cascade die `first_published_year` verifieert/backfillt voor rijen die OpenLibrary niet kon bevestigen (vervolg op `audit-publication-years.ts`) |
 | **Auteurs** | |
 | `audit-non-person-authors.ts` | Author-rijen die geen persoon zijn (uitgevers/comités/…) |
 | **Covers** | |
@@ -227,6 +234,7 @@ Verwerking van `import_review_queue` (legacy/idle — zie memory "Import queue i
 | `build-dataset.ts` | Betaalde download-dataset ZIP |
 | `build-zenodo-dataset.ts` | Open citeerbare dataset voor Zenodo (CC-BY-4.0) — zie memory Zenodo |
 | `zenodo-descriptor-to-pdf.tsx` | `docs/zenodo/data-descriptor.md` → PDF |
+| `zenodo-deposit-diff.ts` | Bepaalt of de open core genoeg veranderd is voor een nieuwe Zenodo-versie (re-deposit is bewust, niet automatisch) |
 | `build-film-data.ts` | Events-layer voor de animated-world-map film-PoC |
 | `build-wiki-enrichment-worklist.ts` | Worklist boeken voor Wikipedia ban-enrichment (Step A) |
 | `stage-wiki-enrichment.ts` | Step B van de Wikipedia-enrichment-pijplijn |
