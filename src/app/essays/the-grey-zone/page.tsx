@@ -44,14 +44,6 @@ const jsonLd = {
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 
-const proseClasses =
-  'prose prose-gray max-w-none ' +
-  'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 ' +
-  'hover:prose-a:decoration-gray-600 ' +
-  'prose-p:leading-relaxed'
-
 export default function TheGreyZonePage() {
   return (
     <>
@@ -60,7 +52,6 @@ export default function TheGreyZonePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EssayLayout essay={essay}>
-        <article className={proseClasses}>
           <p>
             A secondary school in Antwerp{' '}
             <a href={NOS_SOURCE_URL} target="_blank" rel="noopener noreferrer">
@@ -192,7 +183,6 @@ export default function TheGreyZonePage() {
             thinking has to happen, long before anything is officially
             forbidden.
           </p>
-        </article>
       </EssayLayout>
     </>
   )

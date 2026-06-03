@@ -41,14 +41,6 @@ const jsonLd = {
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 
-const proseClasses =
-  'prose prose-gray max-w-none ' +
-  'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 ' +
-  'hover:prose-a:decoration-gray-600 ' +
-  'prose-p:leading-relaxed'
-
 export default function WhatWeDocumentPage() {
   return (
     <>
@@ -57,7 +49,6 @@ export default function WhatWeDocumentPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EssayLayout essay={essay}>
-        <article className={proseClasses}>
           <p>
             When I started building banned-books.org, I assumed the difficult part would
             be the data.
@@ -392,7 +383,6 @@ export default function WhatWeDocumentPage() {
             But I would rather make the editorial choices visible — and open to
             criticism — than quietly pretend they do not exist.
           </p>
-        </article>
       </EssayLayout>
     </>
   )

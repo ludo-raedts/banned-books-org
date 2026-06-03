@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import EssayRelatedBooks from './essay-related-books'
 import MoreEssays from './more-essays'
 import CitationBlock from './citation-block'
+import SectionShell from './section/SectionShell'
+import Eyebrow from './section/Eyebrow'
 import type { Essay } from '@/lib/essays-data'
 
 type Hero = {
@@ -15,8 +17,19 @@ type Hero = {
 type Props = {
   essay: Essay
   hero?: Hero
-  children: ReactNode               // The essay body — typically wrapped in <article class="prose">
+  children: ReactNode               // The essay prose — rendered inside a styled <article>
 }
+
+// Shared prose styling, matching the modern reference pages (/why-not-amazon,
+// /methodology): serif headings with an oxblood underline rule, oxblood links.
+const proseClasses =
+  'max-w-3xl mx-auto prose prose-gray ' +
+  'prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight ' +
+  'prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 ' +
+  'prose-h2:border-b prose-h2:border-oxblood/30 ' +
+  'prose-h3:mt-6 prose-h3:mb-2 ' +
+  'prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline ' +
+  'prose-strong:text-gray-900 prose-p:leading-relaxed'
 
 export default function EssayLayout({ essay, hero, children }: Props) {
   const publishedDate = new Date(essay.publishedAt).toLocaleDateString('en-GB', {
@@ -24,59 +37,71 @@ export default function EssayLayout({ essay, hero, children }: Props) {
   })
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-10">
-      <Link
-        href="/essays"
-        className="inline-block text-sm text-gray-400 hover:text-gray-600 mb-8"
-      >
-        ← Essays
-      </Link>
+    <main>
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/essays"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-500 hover:text-oxblood mb-6 transition-colors"
+          >
+            ← Essays
+          </Link>
 
-      <header className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-12 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">
-          Essay · {essay.readingTimeMin} min read
-        </p>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-          {essay.title}
-        </h1>
-        <p className="text-base text-gray-700 leading-relaxed">
-          {essay.dek}
-        </p>
-        <p className="text-xs text-gray-400 mt-4">
-          Published {publishedDate}
-        </p>
-      </header>
+          <Eyebrow>Essay · {essay.readingTimeMin} min read</Eyebrow>
 
-      {hero && (
-        <figure className="mb-12 -mx-4 sm:mx-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={hero.src}
-            alt={hero.alt}
-            className="w-full sm:rounded-xl object-cover"
-            loading={hero.eager ? 'eager' : 'lazy'}
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            {essay.title}
+          </h1>
+
+          <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+            {essay.dek}
+          </p>
+
+          <p className="mt-6 text-xs text-neutral-500">
+            Published {publishedDate}
+          </p>
+        </div>
+      </section>
+
+      {/* ── Body ──────────────────────────────────────────────────── */}
+      <SectionShell tone="cream">
+        {hero && (
+          <figure className="max-w-3xl mx-auto mb-10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={hero.src}
+              alt={hero.alt}
+              className="w-full rounded-xl object-cover"
+              loading={hero.eager ? 'eager' : 'lazy'}
+            />
+            {hero.caption && (
+              <figcaption className="text-xs text-neutral-500 mt-2">
+                {hero.caption}
+              </figcaption>
+            )}
+          </figure>
+        )}
+
+        <article className={proseClasses}>{children}</article>
+      </SectionShell>
+
+      {/* ── Footer: citation, related books, more essays ──────────── */}
+      <SectionShell tone="white">
+        <div className="max-w-3xl mx-auto">
+          <CitationBlock
+            entityType="essay"
+            entity={{ title: essay.title, slug: essay.slug }}
+            url={`https://www.banned-books.org${essay.href}`}
           />
-          {hero.caption && (
-            <figcaption className="text-xs text-gray-400 mt-2 px-4 sm:px-0">
-              {hero.caption}
-            </figcaption>
+
+          {essay.relatedBookSlugs.length > 0 && (
+            <EssayRelatedBooks slugs={essay.relatedBookSlugs} />
           )}
-        </figure>
-      )}
 
-      {children}
-
-      <CitationBlock
-        entityType="essay"
-        entity={{ title: essay.title, slug: essay.slug }}
-        url={`https://www.banned-books.org${essay.href}`}
-      />
-
-      {essay.relatedBookSlugs.length > 0 && (
-        <EssayRelatedBooks slugs={essay.relatedBookSlugs} />
-      )}
-
-      <MoreEssays currentSlug={essay.slug} />
+          <MoreEssays currentSlug={essay.slug} />
+        </div>
+      </SectionShell>
     </main>
   )
 }

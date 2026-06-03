@@ -41,14 +41,6 @@ const jsonLd = {
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 
-const proseClasses =
-  'prose prose-gray max-w-none ' +
-  'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 ' +
-  'hover:prose-a:decoration-gray-600 ' +
-  'prose-p:leading-relaxed'
-
 export default function ForbiddenKnowledgeIcebergPage() {
   return (
     <>
@@ -57,7 +49,6 @@ export default function ForbiddenKnowledgeIcebergPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EssayLayout essay={essay}>
-        <article className={proseClasses}>
           <p>There is a particular kind of image that keeps resurfacing online.</p>
 
           <p>
@@ -333,7 +324,6 @@ export default function ForbiddenKnowledgeIcebergPage() {
             and open to criticism than quietly hide them behind the performance of
             neutrality.
           </p>
-        </article>
       </EssayLayout>
     </>
   )

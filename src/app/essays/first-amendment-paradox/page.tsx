@@ -41,14 +41,6 @@ const jsonLd = {
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 
-const proseClasses =
-  'prose prose-gray max-w-none ' +
-  'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 ' +
-  'hover:prose-a:decoration-gray-600 ' +
-  'prose-p:leading-relaxed'
-
 export default function FirstAmendmentParadoxPage() {
   return (
     <>
@@ -57,7 +49,6 @@ export default function FirstAmendmentParadoxPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EssayLayout essay={essay}>
-        <article className={proseClasses}>
           <h2>A self-undermining hearing</h2>
 
           <p>
@@ -399,7 +390,6 @@ export default function FirstAmendmentParadoxPage() {
               <a href="https://www.edweek.org/leadership/parents-trust-school-librarians-to-select-books-but-theres-a-catch/2024/01" target="_blank" rel="noopener noreferrer">edweek.org</a>.
             </li>
           </ul>
-        </article>
       </EssayLayout>
     </>
   )

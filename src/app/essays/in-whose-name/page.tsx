@@ -41,14 +41,6 @@ const jsonLd = {
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,
 }
 
-const proseClasses =
-  'prose prose-gray max-w-none ' +
-  'prose-headings:font-bold prose-headings:tracking-tight ' +
-  'prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 ' +
-  'prose-a:decoration-gray-300 ' +
-  'hover:prose-a:decoration-gray-600 ' +
-  'prose-p:leading-relaxed'
-
 export default function InWhoseNamePage() {
   return (
     <>
@@ -57,7 +49,6 @@ export default function InWhoseNamePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EssayLayout essay={essay}>
-        <article className={proseClasses}>
           <h2>The reason is the tell</h2>
 
           <p>
@@ -400,7 +391,6 @@ export default function InWhoseNamePage() {
             <Link href="/essays/first-amendment-paradox">The First Amendment paradox</Link>,
             and it annotates the <Link href="/reasons">reasons index</Link>.
           </p>
-        </article>
       </EssayLayout>
     </>
   )
