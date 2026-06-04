@@ -139,8 +139,14 @@ function lastNameOf(author: string): string {
  * Combined title+author guard. Both must show up in the candidate text.
  *  - author surname (≥3 chars, accent-stripped)
  *  - at least one variant of the title head (full / no-subtitle / first ≥4-char word)
+ *
+ * IMPORTANT: pass ONLY the candidate source text as `text`. Never concatenate
+ * our own `title`/`author` into it — that poisons the haystack with the very
+ * needle we're searching for, so the guard can never reject anything. That bug
+ * (present since the v2 pipeline shipped) is what pasted Huckleberry Finn's
+ * OpenLibrary blurb onto "Bondage Classics" and others. See _audit_ol_contamination.ts.
  */
-function sourceMatches(text: string, title: string, author: string): boolean {
+export function sourceMatches(text: string, title: string, author: string): boolean {
   const norm = normaliseForMatch(text)
   const surname = normaliseForMatch(lastNameOf(author))
   if (surname.length < 3) return false   // can't reliably guard without surname
@@ -275,20 +281,25 @@ function extractOlDesc(json: Record<string, unknown>): string | null {
   return null
 }
 
-async function olWorks(workId: string, title: string, author: string): Promise<SourceExtract | null> {
+/**
+ * `lenient` says whether `workId` is a binding we trust. When it is — a stored
+ * books.openlibrary_work_id, or a work reached from an exact ISBN — that
+ * binding IS the verification, so we accept the synopsis even when it doesn't
+ * echo our title/author (real blurbs frequently don't; requiring it rejected
+ * ~84% of correct rows). When the work id came from a free-text search
+ * (olSearch) it's just OpenLibrary's top guess, so we require the text to
+ * actually mention our title/author — otherwise the most-popular namesake's
+ * synopsis sails straight through (the Huckleberry-Finn-on-everything bug).
+ * Wrong-binding cases that slip past trust are caught by
+ * scripts/_audit_shared_enrichment.ts.
+ */
+async function olWorks(workId: string, title: string, author: string, lenient: boolean): Promise<SourceExtract | null> {
   try {
     const res = await fetch(`https://openlibrary.org/works/${workId}.json`, { headers: UA })
     if (!res.ok) return null
     const text = extractOlDesc(await res.json() as Record<string, unknown>)
     if (!text || text.length < MIN_DESC_CHARS) return null
-    if (!sourceMatches(`${text} ${title} ${author}`, title, author)) {
-      // OL work descriptions sometimes don't mention author/title literally
-      // (they're stand-alone synopses). Be lenient: only enforce match when
-      // the extract is long enough to expect it. For short descriptions
-      // (80-300 chars) accept on OL-work-id alone — the work ID itself is
-      // the binding.
-      if (text.length > 300) return null
-    }
+    if (!lenient && !sourceMatches(text, title, author)) return null
     return { type: 'openlibrary', url: `https://openlibrary.org/works/${workId}`, text, pageLang: 'en' }
   } catch { return null }
 }
@@ -302,7 +313,8 @@ async function olSearch(title: string, author: string): Promise<SourceExtract | 
     const workId = json.docs?.[0]?.key?.replace('/works/', '')
     if (!workId) return null
     await sleep(OL_DELAY_MS)
-    return await olWorks(workId, title, author)
+    // Search-derived work id is unproven — require a strict text match.
+    return await olWorks(workId, title, author, false)
   } catch { return null }
 }
 
@@ -312,15 +324,17 @@ async function olSearch(title: string, author: string): Promise<SourceExtract | 
  * often localized translations, so we PREFER the work-level description (the
  * canonical, usually-English synopsis) and only fall back to the edition blurb.
  *
- * Reliability gate (measured 2026-05-31): even with an exact ISBN, OL can return
- * the wrong book when our isbn13 is wrong or OL's edition→work mapping is junk
- * ("De la France" → Don Quijote). So the resolved text MUST still mention the
- * author surname or a title-head token. If it can't be verified, we return null
- * and let the rest of the ladder (Wikipedia / title-search) try instead, rather
- * than publish unverifiable text. This costs us some correct-but-non-Latin-script
- * editions, which the Wikipedia langlink path is better suited to anyway.
+ * Trust model (revised 2026-06-04): the ISBN→edition→work resolution IS the
+ * verification, so we accept the synopsis on that binding alone. We do NOT
+ * require the text to echo the title/author — real synopses frequently omit the
+ * author name, and enforcing it rejected ~84% of correct rows (the old "must
+ * mention the surname" gate was a no-op anyway: it was fed a haystack poisoned
+ * with our own title+author, so it never rejected anything). The residual risk —
+ * a wrong isbn13 or junk OL edition→work mapping ("De la France" → Don Quijote) —
+ * is caught downstream by scripts/_audit_shared_enrichment.ts rather than by
+ * discarding thousands of correct descriptions here.
  */
-async function olByIsbn(isbn: string, title: string, author: string): Promise<SourceExtract | null> {
+async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
   try {
     const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`, { headers: UA, redirect: 'follow' })
     if (!res.ok) return null
@@ -346,11 +360,7 @@ async function olByIsbn(isbn: string, title: string, author: string): Promise<So
     }
     if (!text) return null
 
-    // Hard relevance gate — see doc comment. No lenient short-text exception
-    // here (unlike olWorks): the ISBN already told us which edition, so a
-    // missing author/title is a real signal something is off.
-    if (!sourceMatches(`${text} ${title} ${author}`, title, author)) return null
-
+    // No text gate — the ISBN binding is the verification (see doc comment).
     return { type: 'openlibrary', url, text, pageLang: 'en' }
   } catch { return null }
 }
@@ -490,11 +500,12 @@ async function enrichOne(
   //    try it first; fall back to work-id, then title/author search.
   let ol: SourceExtract | null = null
   if (row.isbn13) {
-    ol = await olByIsbn(row.isbn13, row.title, author)
+    ol = await olByIsbn(row.isbn13)
     await sleep(OL_DELAY_MS)
   }
   if (!ol && row.openlibrary_work_id) {
-    ol = await olWorks(row.openlibrary_work_id, row.title, author)
+    // Trusted binding from a prior ISBN/work-id resolution → lenient short-text OK.
+    ol = await olWorks(row.openlibrary_work_id, row.title, author, true)
     await sleep(OL_DELAY_MS)
   }
   if (!ol) {

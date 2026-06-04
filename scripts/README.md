@@ -163,6 +163,9 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
 | `audit-study-guide-covers.ts` | SparkNotes/CliffsNotes-covers (zie memory study-guide audit) |
 | `_audit_shared_enrichment.ts` | "Most-popular hit"-contaminatie: covers én descriptions die een titel-search op het verkeerde boek plakte → `data/shared-cover-audit.md`, `data/shared-description-audit.md`, `public/shared-cover-suspects.html` (bron-guard zit in `src/lib/enrich/title-match.ts`) |
+| `_audit_ol_contamination.ts` | "Poisoned guard"-incident (2026-06-04): herpast de gecorrigeerde OL-guard op elke opgeslagen `openlibrary`-description en bucketet afwijzingen per binding (isbn / work_id / search) → `data/ol-contamination-audit.md`. Read-only. |
+| `remediate-ol-contamination.ts` | Schoont de bevestigde "poisoned guard"-contaminatie op: nullt+flagt OL-descriptions die de gecorrigeerde guard afwijst **én** search-bound zijn of een blurb delen over inconsistente titels. Back-upt origineel naar CSV; `--apply` schrijft. |
+| `_audit_llm_ol_contamination.ts` | Follow-up op "poisoned guard": checkt of search-only `llm_grounded_*`-descriptions uit een fout OL-search source zijn gesynthetiseerd. Read-only. Resultaat 2026-06-04: 15 rijen, **0 besmet** (allen Wikipedia-gegrond). |
 | **Slugs** | |
 | `audit-slugs.ts` | Bestaande slugs vs huidige `slugify()` |
 | `filter-nfd-subset.ts` | Filtert slug-audit naar de NFD-bug subset |

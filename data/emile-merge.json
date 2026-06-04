@@ -1,0 +1,17 @@
+[
+  {
+    "keep": 658,
+    "drop": 6237,
+    "keep_title": "Emile, or On Education",
+    "drop_title": "Emile, ou De l'éducation",
+    "confidence": "high",
+    "reasons": [
+      "Same work: Jean-Jacques Rousseau, Émile ou De l'éducation (1762)",
+      "Both authored by Jean-Jacques Rousseau (author #434)",
+      "Differ only by English (KEEP) vs French (DROP) title",
+      "KEEP is canonical: clean slug, real ISBN, OpenLibrary work OL80613W, Gutenberg 5427, OpenLibrary cover, full description; DROP has Google zoom=3 strip cover and no description",
+      "Wikipedia enrichment duplicated Geneva 1762 (CH/gov) and Paris 1762 (FR/gov) bans across both rows"
+    ],
+    "flags": ["DROP also carries a distinct VA/1762/church ban that will move to KEEP as a new row"]
+  }
+]
