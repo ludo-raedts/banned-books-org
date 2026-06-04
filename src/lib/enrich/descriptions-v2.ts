@@ -82,6 +82,12 @@ export type EnrichDescriptionsV2Opts = {
    */
   regroundUngrounded?: boolean
   /**
+   * Restrict the candidate set to these exact book ids (bypasses the
+   * description_book / status / reground filters). Used for scoped test runs —
+   * e.g. a random sample — where the caller has already chosen the rows.
+   */
+  ids?: number[]
+  /**
    * Number of books processed concurrently. Defaults to 1 (sequential).
    * Each worker does its own Wikipedia/OL/GB lookups, so concurrency=5
    * is a safe upper bound that respects Wikipedia's etiquette (≤10 req/s
@@ -650,7 +656,8 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
         .eq('is_blanket_works', false)
         .order('id', { ascending: true })
         .range(from, from + 999)
-      if (opts.slug) q = q.eq('slug', opts.slug) as typeof q
+      if (opts.ids?.length) q = q.in('id', opts.ids) as typeof q
+      else if (opts.slug) q = q.eq('slug', opts.slug) as typeof q
       else if (opts.regroundUngrounded) {
         // Pre-v2 ungrounded synopses on ISBN-bearing rows.
         q = q.not('isbn13', 'is', null).is('description_source_type', null) as typeof q
@@ -665,8 +672,8 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     }
   }
 
-  // Filter by status (unless --slug / --overwrite / --reground bypass).
-  if (!opts.slug && !opts.overwrite && !opts.regroundUngrounded) {
+  // Filter by status (unless --slug / --ids / --overwrite / --reground bypass).
+  if (!opts.slug && !opts.ids?.length && !opts.overwrite && !opts.regroundUngrounded) {
     if (!opts.processFlagged) {
       candidates = candidates.filter(b => b.data_quality_status !== 'flagged')
     }
