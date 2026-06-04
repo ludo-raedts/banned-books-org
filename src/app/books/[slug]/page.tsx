@@ -15,6 +15,7 @@ import { adminClient } from '@/lib/supabase'
 import PageviewTracker from '@/components/pageview-tracker'
 import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
+import BanActionBadge from '@/components/ban-action-badge'
 import GenreBadge from '@/components/genre-badge'
 import ShareButtons from '@/components/share-buttons'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
@@ -520,24 +521,9 @@ function clusterBans(bans: Ban[]): BanCluster[] {
   return [...map.values()].sort((a, b) => (a.year_started ?? 9999) - (b.year_started ?? 9999))
 }
 
-// Human-friendly "School · 6 banned, 3 restricted" suffix. Uses a stable
-// action ordering so 'banned, restricted' always appears in the same order
-// regardless of insertion order in the Map.
+// Stable action ordering so a mixed cluster lists its action badges in a
+// consistent order regardless of Map insertion order.
 const ACTION_ORDER = ['banned', 'restricted', 'challenged', 'removed', 'blocked'] as const
-function actionBreakdown(action_counts: Map<string, number>): string {
-  const total = [...action_counts.values()].reduce((n, c) => n + c, 0)
-  if (total <= 1) return ''  // single ban: action already implicit in row context
-  const parts: string[] = []
-  for (const a of ACTION_ORDER) {
-    const n = action_counts.get(a)
-    if (n) parts.push(`${n} ${a}`)
-  }
-  // Any uncategorised action_type (defensive — shouldn't happen given the CHECK constraint)
-  for (const [a, n] of action_counts) {
-    if (!ACTION_ORDER.includes(a as (typeof ACTION_ORDER)[number])) parts.push(`${n} ${a}`)
-  }
-  return parts.join(', ')
-}
 
 export default async function BookPage({
   params,
@@ -1244,12 +1230,16 @@ export default async function BookPage({
                             )}
                           </td>
                           <td className="px-3 py-2.5 text-gray-600 hidden sm:table-cell">
-                            {c.scope_label ?? '—'}
-                            {c.bans.length > 1 && (
-                              <span className="ml-1 text-[11px] text-gray-500">
-                                · {actionBreakdown(c.action_counts)}
-                              </span>
-                            )}
+                            <div className="flex flex-wrap items-center gap-1">
+                              {ACTION_ORDER.filter((a) => c.action_counts.has(a)).map((a) => (
+                                <BanActionBadge
+                                  key={a}
+                                  action={a}
+                                  count={c.bans.length > 1 ? c.action_counts.get(a) : undefined}
+                                />
+                              ))}
+                              {c.scope_label && <span className="text-xs text-gray-500">{c.scope_label}</span>}
+                            </div>
                           </td>
                           <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1">
@@ -1319,6 +1309,25 @@ export default async function BookPage({
               </table>
             </div>
           </div>
+
+          {/* Legend — the canonical meaning of each action type, shown right
+              where the actions appear (and consistent with /about + /challenged-books). */}
+          <dl className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-500">
+            <div className="flex items-center gap-1.5">
+              <BanActionBadge action="banned" /> <span>legal prohibition</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <BanActionBadge action="restricted" /> <span>institutional removal (school, library, prison)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <BanActionBadge action="challenged" /> <span>formal complaint that led to removal</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-500">lifted</span>
+              <span>ban since rescinded</span>
+            </div>
+            <Link href="/challenged-books" className="text-blue-600 hover:underline">More on these terms →</Link>
+          </dl>
         </section>
       )}
 
