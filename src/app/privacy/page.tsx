@@ -132,6 +132,26 @@ export default function PrivacyPage() {
             no influence on what they collect once you leave our domain.
           </p>
 
+          <h2>Embedded media and widgets</h2>
+          <p>
+            A few pages embed content from third parties. Opening those pages can cause your browser to
+            contact those services:
+          </p>
+          <ul>
+            <li>
+              <strong>YouTube videos</strong> (on the film and history pages) use a click-to-load facade in
+              privacy-enhanced mode (<code>youtube-nocookie.com</code>): no YouTube player or cookie loads
+              until you press play. The still thumbnail shown before you click is fetched from YouTube&apos;s
+              image CDN, so your IP address does reach Google for that one image.
+            </li>
+            <li>
+              <strong>Bookshop.org reading-list widgets</strong> (on some reason and scope pages) load an
+              embedded list from Bookshop.org when they scroll into view, which sends Bookshop the request and
+              our affiliate tag. This is the same affiliate relationship described above, delivered as an embed
+              rather than a link.
+            </li>
+          </ul>
+
           <h2>Contact form</h2>
           <p>
             The contact form on the <Link href="/about">about page</Link> is

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import MoreEssays from '@/components/more-essays'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import YouTubeEmbed from '@/components/youtube-embed'
 
 export const metadata: Metadata = {
   title: 'History of Book Banning — From Ancient Rome to Today',
@@ -159,19 +160,10 @@ export default function HistoryPage() {
             tragically prophetic.
           </p>
 
-          {/* Video embed */}
+          {/* Video embed — click-to-load facade (youtube-nocookie), so no
+              third-party request fires until the reader chooses to play. */}
           <div className="not-prose my-8">
-            <div className="aspect-video rounded-xl overflow-hidden bg-gray-100">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/kHCmiWaHUCw"
-                title="Nazi book burning footage, 1933"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            </div>
+            <YouTubeEmbed videoId="kHCmiWaHUCw" title="Nazi book burning footage, 1933" />
             <p className="text-xs text-gray-400 mt-2">
               Contemporary footage of the 1933 book burnings. These events were public, deliberate, and
               widely supported at the time — a reminder of how quickly the suppression of ideas can be
