@@ -76,7 +76,13 @@ function buildBanSummary(
       if (slug) reasonCount.set(slug, (reasonCount.get(slug) ?? 0) + 1)
     }
   }
-  const topReasonSlug = [...reasonCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+  // Tie-break by slug so the headline reason is deterministic. Without it,
+  // a book whose top reasons are level-pegged (e.g. 1 sexual + 1 political)
+  // resolves differently here than in generateMetadata — the two iterate the
+  // bans in different orders (sorted-by-year vs. raw query order) — so the page
+  // renders a <title> ("…for sexual content") that contradicts the H1 subtitle
+  // ("…for political content").
+  const topReasonSlug = [...reasonCount.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0]
   const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
 
   const datedBans = sortedBans.filter(b => b.year_started != null)
@@ -272,7 +278,9 @@ export async function generateMetadata({
       if (s) reasonCounts.set(s, (reasonCounts.get(s) ?? 0) + 1)
     }
   }
-  const topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+  // Same deterministic tie-break as buildBanSummary (see note there): keeps the
+  // <title> reason phrase in lock-step with the H1 subtitle on tied books.
+  const topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0]
   const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
 
   // Title-candidate ladder — pick the first that fits the 70-char visible cap.
