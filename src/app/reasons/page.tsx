@@ -83,7 +83,7 @@ export default async function ReasonsPage() {
         <h1 className="text-3xl font-bold tracking-tight mb-1">Why Books Are Banned</h1>
         <p className="text-sm text-brand/70 mb-2">{reasons.length} documented reasons</p>
         <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
-          Every ban has an official justification. The stated reason — obscenity, religious offence,
+          A ban usually comes with an official justification. The stated reason — obscenity, religious offence,
           political subversion — tells us what the authorities wanted to protect. The book itself
           tells us what they were afraid of.
         </p>

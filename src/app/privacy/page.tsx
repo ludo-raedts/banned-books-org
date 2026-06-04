@@ -42,8 +42,8 @@ export default function PrivacyPage() {
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Privacy</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Privacy policy</h1>
         <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
-          Banned Books is an editorial catalogue. We do not sell anything, we do not run advertising, and we do not
-          want to know who you are. This page documents the small amount of data we do process, why, and the
+          Banned Books is an editorial catalogue. We do not run advertising, we do not sell your personal data, and
+          we do not want to know who you are. This page documents the small amount of data we do process, why, and the
           deliberate choices we have made about what <em>not</em> to use.
         </p>
         <p className="text-xs text-gray-500 mt-4">Last updated: {LAST_UPDATED}</p>

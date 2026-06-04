@@ -155,13 +155,13 @@ export default function RootLayout({
                   <li><Link href="/about" className="hover:text-gray-800 transition-colors">About</Link></li>
                   <li><Link href="/press" className="hover:text-gray-800 transition-colors">Press</Link></li>
                   <li><Link href="/privacy" className="hover:text-gray-800 transition-colors">Privacy</Link></li>
+                  <li><Link href="/accessibility" className="hover:text-gray-800 transition-colors">Accessibility</Link></li>
                   <li><a href="/feed.xml" type="application/rss+xml" className="hover:text-gray-800 transition-colors">RSS feed</a></li>
                 </ul>
               </div>
             </nav>
-            <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-gray-400">
+            <div className="mt-8 pt-4 border-t border-gray-100 text-gray-400">
               <span>Banned Books — an open catalogue of censored literature</span>
-              <Link href="/admin/login" className="text-gray-300 hover:text-gray-500 transition-colors">Admin</Link>
             </div>
             <p className="mt-2 leading-relaxed text-gray-400">
               Some outbound book links may be affiliate links. They help support this project at no extra cost to you.

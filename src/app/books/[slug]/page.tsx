@@ -404,7 +404,9 @@ type BanCluster = {
   year_ended: number | null
   status: string
   scope_label: string | null
-  source: { source_name: string; source_url: string } | null
+  // All distinct sources cited across the cluster's member bans (deduped by URL),
+  // not just the first — so secondary citations are not hidden.
+  sources: { source_name: string; source_url: string }[]
   reason_slugs: Set<string>
   description: string | null
   bans: Ban[]
@@ -485,7 +487,7 @@ function clusterBans(bans: Ban[]): BanCluster[] {
         year_ended: ban.year_ended,
         status: ban.status,
         scope_label: ban.scopes?.label_en ?? null,
-        source: ban.ban_source_links[0]?.ban_sources ?? null,
+        sources: [],
         reason_slugs: new Set<string>(),
         description: ban.description,
         bans: [],
@@ -498,6 +500,10 @@ function clusterBans(bans: Ban[]): BanCluster[] {
     c.bans.push(ban)
     c.action_counts.set(ban.action_type, (c.action_counts.get(ban.action_type) ?? 0) + 1)
     for (const l of ban.ban_reason_links) if (l.reasons) c.reason_slugs.add(l.reasons.slug)
+    for (const l of ban.ban_source_links) {
+      const s = l.ban_sources
+      if (s && !c.sources.some((x) => x.source_url === s.source_url)) c.sources.push(s)
+    }
     if (c.description == null && ban.description) c.description = ban.description
     // 'historical' wins over 'active' for cluster status if any member is lifted —
     // surfaces the "some bans rescinded" signal without losing it in the aggregate.
@@ -1253,15 +1259,20 @@ export default async function BookPage({
                             </div>
                           </td>
                           <td className="px-3 py-2.5 hidden sm:table-cell">
-                            {c.source ? (
-                              <a
-                                href={c.source.source_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline whitespace-nowrap text-xs"
-                              >
-                                {c.source.source_name}
-                              </a>
+                            {c.sources.length > 0 ? (
+                              <div className="flex flex-col gap-0.5">
+                                {c.sources.map((s) => (
+                                  <a
+                                    key={s.source_url}
+                                    href={s.source_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline text-xs"
+                                  >
+                                    {s.source_name}
+                                  </a>
+                                ))}
+                              </div>
                             ) : (
                               <span className="text-gray-400">—</span>
                             )}

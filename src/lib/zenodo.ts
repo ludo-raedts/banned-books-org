@@ -21,3 +21,30 @@ export const ZENODO_CONCEPT_DOI: string | null = '10.5281/zenodo.20511553'
 export const ZENODO_DOI_URL: string | null = ZENODO_CONCEPT_DOI
   ? `https://doi.org/${ZENODO_CONCEPT_DOI}`
   : null
+
+/**
+ * Published release history of the open dataset — the single source for the
+ * changelog rendered on /dataset. Newest first. Each release is its own Zenodo
+ * version with a version-specific DOI (distinct from the always-latest concept
+ * DOI above). Append a new entry here when build-zenodo-dataset.ts output is
+ * deposited as a new version; do not edit past entries.
+ */
+export type ZenodoVersion = {
+  version: string
+  /** ISO date the version was published on Zenodo. */
+  date: string
+  /** Version-specific DOI (pins this exact snapshot), bare form. */
+  doi: string
+  /** What this release added or changed, in one or two plain sentences. */
+  summary: string
+}
+
+export const ZENODO_VERSIONS: ZenodoVersion[] = [
+  {
+    version: '1.0',
+    date: '2026-06-02',
+    doi: '10.5281/zenodo.20511554',
+    summary:
+      'Initial public release: the verifiable censorship core — every published ban with at least one source citation, plus the reason taxonomy, country dimensions, and author records — as CSV under CC-BY-4.0.',
+  },
+]

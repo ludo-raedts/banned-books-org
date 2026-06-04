@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
-import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
+import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL, ZENODO_VERSIONS } from '@/lib/zenodo'
 import DatasetCheckoutButton from '@/components/dataset-checkout-button'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import SectionShell from '@/components/section/SectionShell'
@@ -361,6 +361,49 @@ export default async function DatasetPage() {
           </div>
         </div>
       </SectionShell>
+
+      {/* ── Versions & changelog ──────────────────────────────────── */}
+      {ZENODO_CONCEPT_DOI && (
+        <SectionShell tone="white" eyebrow="Versions">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-3 border-b border-oxblood/30">
+              Dataset versions
+            </h2>
+            <p className="text-sm text-neutral-700 leading-relaxed mb-6">
+              The open dataset is versioned on Zenodo. The concept DOI{' '}
+              {ZENODO_DOI_URL && (
+                <a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood font-medium hover:underline">
+                  ({ZENODO_CONCEPT_DOI})
+                </a>
+              )}{' '}
+              always resolves to the latest release; each release below also has its own
+              version DOI that pins that exact snapshot for reproducible citation. Figures
+              grow as the catalogue does — the deposited files are the authority.
+            </p>
+            <ol className="flex flex-col gap-5">
+              {ZENODO_VERSIONS.map((v) => (
+                <li key={v.version} className="border-l-2 border-oxblood/30 pl-4">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-serif text-lg font-semibold text-gray-900">v{v.version}</span>
+                    <time dateTime={v.date} className="text-sm text-neutral-500">
+                      {new Date(v.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </time>
+                    <a
+                      href={`https://doi.org/${v.doi}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-oxblood font-medium hover:underline"
+                    >
+                      DOI: {v.doi}
+                    </a>
+                  </div>
+                  <p className="mt-1.5 text-sm text-neutral-700 leading-relaxed">{v.summary}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </SectionShell>
+      )}
     </main>
   )
 }

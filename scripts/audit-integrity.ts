@@ -99,7 +99,7 @@ interface Author {
 }
 
 async function load() {
-  const [books, authors, bookAuthors, banBookIds] = await Promise.all([
+  const [books, authors, bookAuthors, bans, banSourceLinks] = await Promise.all([
     paginate<Book>(
       'books',
       'id, slug, title, isbn13, cover_url, description, description_book, first_published_year',
@@ -107,9 +107,10 @@ async function load() {
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
     paginate<{ book_id: number; author_id: number }>('book_authors', 'book_id, author_id', 'book_id'),
-    paginate<{ book_id: number }>('bans', 'book_id', 'book_id'),
+    paginate<{ id: number; book_id: number; year_started: number | null }>('bans', 'id, book_id, year_started', 'id'),
+    paginate<{ ban_id: number }>('ban_source_links', 'ban_id', 'ban_id'),
   ])
-  return { books, authors, bookAuthors, banBookIds }
+  return { books, authors, bookAuthors, banBookIds: bans, bans, banSourceLinks }
 }
 
 // ── non-person author classifier (lifted from audit-non-person-authors.ts) ──
@@ -143,7 +144,7 @@ const groupConsistent = (titles: string[]): boolean =>
 const hasMojibake = (s: string | null): boolean => !!s && s.includes('�')
 
 async function runChecks(): Promise<Finding[]> {
-  const { books, authors, bookAuthors, banBookIds } = await load()
+  const { books, authors, bookAuthors, banBookIds, bans, banSourceLinks } = await load()
   const findings: Finding[] = []
 
   const authorById = new Map(authors.map((a) => [a.id, a]))
@@ -192,6 +193,17 @@ async function runChecks(): Promise<Finding[]> {
     id: 'book-no-authors', label: 'book with zero linked authors',
     severity: 'invariant', count: noAuthor.length,
     samples: noAuthor.slice(0, SAMPLE_CAP).map((b) => `${b.slug}: "${b.title}"`),
+  })
+
+  // 4b. bans with zero source citations → breaks the site-wide promise that
+  //     "every ban links to a source". Held at 0 since the 2026-06-04 seed-orphan
+  //     remediation (scripts/source-orphan-{cluster,canonical}-bans.ts).
+  const banIdsWithSource = new Set(banSourceLinks.map((l) => l.ban_id))
+  const bansNoSource = bans.filter((b) => !banIdsWithSource.has(b.id))
+  findings.push({
+    id: 'ban-no-source', label: 'ban with zero source citations (breaks "every ban links to a source")',
+    severity: 'invariant', count: bansNoSource.length,
+    samples: bansNoSource.slice(0, SAMPLE_CAP).map((b) => `ban #${b.id} (book ${b.book_id})`),
   })
 
   // 5. chronologically impossible years (HARD subset only — soft cases are a deep audit)
@@ -282,6 +294,26 @@ async function runChecks(): Promise<Finding[]> {
     id: 'orphan-books', label: 'book with zero bans (never actually banned anywhere)',
     severity: 'drift', count: orphans.length,
     samples: orphans.slice(0, SAMPLE_CAP).map((b) => `${b.slug}: "${b.title}"`),
+  })
+
+  // 13. ban dated before the book's first publication. Soft companion to #5:
+  //      most are granularity noise (first_published_year tracks the English/
+  //      translated edition while the ban hit the original-language edition
+  //      earlier) or genuine pre-publication suppression (samizdat / posthumous
+  //      release, e.g. The Master and Margarita banned 1940, published 1967).
+  //      So it is DRIFT, not an invariant — but a bad import that stamps a
+  //      placeholder ban year on post-publication books (cf. the 2026-05-19
+  //      Iran "1979" batch) surfaces here as growth past baseline.
+  const bookPubYear = new Map(books.map((b) => [b.id, b.first_published_year]))
+  const banBeforePub: string[] = []
+  for (const ban of bans) {
+    const pub = bookPubYear.get(ban.book_id)
+    if (ban.year_started != null && pub != null && ban.year_started < pub)
+      banBeforePub.push(`ban #${ban.id} (book ${ban.book_id}): banned ${ban.year_started} < published ${pub}`)
+  }
+  findings.push({
+    id: 'ban-before-publication', label: 'ban dated before the book was first published',
+    severity: 'drift', count: banBeforePub.length, samples: banBeforePub.slice(0, SAMPLE_CAP),
   })
 
   // 11+12. coverage gaps
