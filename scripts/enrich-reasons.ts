@@ -94,7 +94,12 @@ Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
       .split(',')
       .map(s => s.trim())
       .filter(s => VALID_REASONS.has(s))
-    return slugs.length > 0 ? slugs : ['other']
+    if (slugs.length === 0) return ['other']
+    // 'other' is a last resort, never a co-tag: gpt-4o-mini routinely hedges by
+    // appending 'other' alongside a specific slug. Drop it whenever any specific
+    // reason was found, so 'other' survives only as the sole classification.
+    const specific = [...new Set(slugs.filter(s => s !== 'other'))]
+    return specific.length > 0 ? specific : ['other']
   } catch { return ['other'] }
 }
 
