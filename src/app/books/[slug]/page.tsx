@@ -217,7 +217,7 @@ export async function generateMetadata({
   // non-identifying metadata + noindex, before any books lookup.
   if (await isBlockedSlug(slug)) {
     return {
-      title: 'Not included — Banned Books',
+      title: 'Not included',
       robots: { index: false, follow: false },
       alternates: { canonical: `/books/${slug}` },
     }
@@ -239,7 +239,7 @@ export async function generateMetadata({
   // (the work's title is not the harmful content) but no rich OG/snippet hooks.
   if (data.is_gated) {
     return {
-      title: `${data.title} — Banned Books`,
+      title: data.title,
       robots: { index: false, follow: false },
       alternates: { canonical: `/books/${slug}` },
     }

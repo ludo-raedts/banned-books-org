@@ -10,7 +10,7 @@ import CopyButton from '@/components/copy-button'
 import SectionShell from '@/components/section/SectionShell'
 
 export const metadata: Metadata = {
-  title: 'Press & Media Kit | Banned Books',
+  title: 'Press & Media Kit',
   description:
     'Media kit for Banned Books: boilerplate, stats, logos, story angles, and press contact for journalists and researchers covering book censorship.',
   alternates: { canonical: 'https://www.banned-books.org/press' },

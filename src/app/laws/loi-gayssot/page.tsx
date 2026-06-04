@@ -17,7 +17,7 @@ const HREF = '/laws/loi-gayssot'
 const URL = `https://www.banned-books.org${HREF}`
 
 export const metadata: Metadata = {
-  title: `${TITLE} — Banned Books`,
+  title: TITLE,
   description: DEK,
   openGraph: { title: TITLE, description: DEK, type: 'article' },
   alternates: { canonical: HREF },

@@ -23,7 +23,7 @@ const ITEMS_PER_PAGE = 30
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Book Ban News — Latest Censorship Updates | Banned Books',
+    title: 'Book Ban News — Latest Censorship Updates',
     description:
       'Daily-updated coverage of book bans and censorship worldwide: newly challenged titles, school and library removals, legislation, court rulings, and reversals.',
     alternates: { canonical: '/news' },

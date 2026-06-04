@@ -7,7 +7,7 @@ import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import SectionShell from '@/components/section/SectionShell'
 
 export const metadata: Metadata = {
-  title: 'Reading List — Books About Censorship | Banned Books',
+  title: 'Reading List — Books About Censorship',
   description: 'A curated reading list of books about censorship, free expression, and the history of banned literature.',
   alternates: { canonical: '/reading-list' },
 }

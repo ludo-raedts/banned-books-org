@@ -7,7 +7,7 @@ import { buildCitationMeta } from '@/lib/citation-meta'
 const essay = essayBySlug('forbidden-knowledge-iceberg')!
 
 export const metadata: Metadata = {
-  title: `${essay.title} — Banned Books`,
+  title: essay.title,
   description: essay.dek,
   openGraph: { title: essay.title, description: essay.dek, type: 'article' },
   alternates: {

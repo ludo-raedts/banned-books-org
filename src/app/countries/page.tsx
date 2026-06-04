@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     .filter(c => !DEFUNCT.includes(c.code) && (countMap.get(c.code) ?? 0) > 0)
     .length
   return {
-    title: `Books Banned by Country — ${activeCount} Countries | Banned Books`,
+    title: `Books Banned by Country — ${activeCount} Countries`,
     description: `Browse books banned or challenged in ${activeCount} countries, from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.`,
     alternates: { canonical: '/countries' },
   }
