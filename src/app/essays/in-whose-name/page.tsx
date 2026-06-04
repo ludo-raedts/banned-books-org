@@ -90,7 +90,7 @@ export default function InWhoseNamePage() {
           <p>
             That structure turns &ldquo;the language of book-banning&rdquo; from a
             rhetorical impression into something countable. As of mid-2026 the catalogue
-            holds more than 28,000 recorded restrictions, linked to reasons over 52,000
+            holds more than 28,000 recorded restrictions, linked to reasons over 51,000
             times, covering roughly 14,000 distinct books that have been banned, challenged,
             or restricted at least once.
           </p>
@@ -131,7 +131,7 @@ export default function InWhoseNamePage() {
           <p>The first finding is that a banned book is rarely banned for one thing.</p>
 
           <p>
-            Only 40 percent of restrictions cite a single reason. Nearly 60 percent cite two
+            Only about 43 percent of restrictions cite a single reason. The majority — around 57 percent — cite two
             or more; some cite as many as seven. The stack is the norm, not the exception.
             And the way reasons cluster is not random. The most common pairings, counted in
             distinct books, are <em>moral + sexual</em> (1,563 books), <em>lgbtq + sexual</em>{' '}
@@ -171,29 +171,29 @@ export default function InWhoseNamePage() {
 
           <p>
             <strong>The venue moved from the state to the school.</strong> Before 2000, the
-            dominant scope is national government: 5,263 distinct books restricted by states,
+            dominant scope is national government: 5,259 distinct books restricted by states,
             courts, and customs. Books removed in <em>schools</em> before 2000 number just
-            188. After 2000 the figures invert: government restrictions fall to 2,171
-            distinct books, while school restrictions explode to 6,514. The characteristic
+            187. After 2000 the figures invert: government restrictions fall to 2,170
+            distinct books, while school restrictions explode to 6,516. The characteristic
             act of censorship in the data is no longer a ministry banning a title at the
             border. It is a district pulling a book off a library shelf.
           </p>
 
           <p>
             <strong>The protected party moved from the state to the child.</strong> Political
-            is the historical heavyweight — about 5,970 books, 42 percent of everything, and
+            is the historical heavyweight — about 5,960 books, 42 percent of everything, and
             the one reason that is actually <em>larger</em> before 2000 (≈3,320 books) than
             after (≈2,640). It is the through-line of the whole record: power protecting
             itself. What is new is the moral panic of the present. &ldquo;Moral&rdquo;
             justifications rise from roughly 640 books before 2000 to around 3,050 after.
             &ldquo;Sexual&rdquo; from about 640 to 2,390. And &ldquo;lgbtq&rdquo; is almost
-            entirely a twenty-first-century phenomenon: 55 distinct books before 2000,
+            entirely a twenty-first-century phenomenon: 54 distinct books before 2000,
             against some 2,365 after.
           </p>
 
           <p>
             And then the detail that ties the two shifts together. Of all eleven reasons,
-            exactly one <em>shrinks</em> across the line: obscenity, from about 396 books
+            exactly one <em>shrinks</em> across the line: obscenity, from about 397 books
             before 2000 to 223 after. The legal language of the old regime appears to be
             receding — though on a smaller base than the other reasons, so this is the most
             tentative number in the essay. What the data shows is a <em>correlation</em>, not
@@ -209,8 +209,8 @@ export default function InWhoseNamePage() {
             (Two notes on the counting. The era figures are not mutually exclusive — a book
             restricted in both eras is counted in each, and a few carry no recorded year — so
             they do not sum to a reason&apos;s all-time total. And a raw-event count would
-            tell a noisier story: &ldquo;moral&rdquo; attaches to 10,146 individual
-            restriction events but only 3,665 distinct books, &ldquo;lgbtq&rdquo; to 6,767
+            tell a noisier story: &ldquo;moral&rdquo; attaches to 10,147 individual
+            restriction events but only 3,666 distinct books, &ldquo;lgbtq&rdquo; to 6,767
             events but 2,415 books. The gap between those numbers <em>is</em> the school wave
             — the same titles, removed again and again across districts.)
           </p>
@@ -290,9 +290,10 @@ export default function InWhoseNamePage() {
             Sometimes it is the <em>legal</em> reason (the statute a customs officer cited).
             And sometimes it is <em>imputed</em> — inferred from a description of the event,
             in some cases by an automated classifier I run over restrictions that arrived
-            without a clear reason. That residual &ldquo;other&rdquo; category is still large:
-            2,507 books, the third-biggest bucket in the catalogue, a visible measure of how
-            much resists clean labelling.
+            without a clear reason. That residual &ldquo;other&rdquo; category is still sizeable —
+            about 1,677 books, 12 percent of the catalogue — even after a 2026 cleanup that
+            stripped it from some 900 records where it sat redundantly beside a real reason.
+            It is a visible measure of how much still resists clean labelling.
           </p>
 
           <p>
@@ -339,7 +340,7 @@ export default function InWhoseNamePage() {
             <Link href="/about">about</Link> and <Link href="/methodology">methodology</Link>{' '}
             pages are authoritative. At snapshot time the catalogue held more than 28,000
             restriction events across roughly 14,000 distinct books, linked to reasons over
-            52,000 times. There are eleven reason labels — political, moral, sexual, lgbtq,
+            51,000 times. There are eleven reason labels — political, moral, sexual, lgbtq,
             violence, religious, racial, obscenity, language, drugs, other — after blasphemy
             was merged into religious in the 2026 vocabulary revision, and seven scopes. All
             aggregates use the <em>distinct-books</em> metric (a title counted once per reason
@@ -348,17 +349,17 @@ export default function InWhoseNamePage() {
           </p>
 
           <p>
-            <strong>Reason distribution (distinct books):</strong> political 5,969 (42.5%);
-            moral 3,665 (26.1%); sexual 2,971 (21.2%); other 2,507 (17.9%); lgbtq 2,415
-            (17.2%); violence 2,036 (14.5%); religious 1,319 (9.4%); racial 1,243 (8.9%);
-            obscenity 609 (4.3%); language 576 (4.1%); drugs 229 (1.6%).
+            <strong>Reason distribution (distinct books):</strong> political 5,959 (42.5%);
+            moral 3,666 (26.2%); sexual 2,972 (21.2%); lgbtq 2,415 (17.2%); violence 2,036
+            (14.5%); other 1,677 (12.0%); religious 1,318 (9.4%); racial 1,243 (8.9%);
+            obscenity 610 (4.4%); language 576 (4.1%); drugs 229 (1.6%).
           </p>
 
           <p>
             <strong>Era split (pre-2000 / post-2000, distinct books):</strong> political
-            3,320 / 2,644 · moral 636 / 3,050 · sexual 643 / 2,390 · lgbtq 55 / 2,365 ·
-            violence 117 / 1,960 · obscenity 396 / 223.{' '}
-            <strong>Scope by era:</strong> government 5,263 / 2,171 · school 188 / 6,514 ·
+            3,319 / 2,635 · moral 635 / 3,052 · sexual 644 / 2,390 · lgbtq 54 / 2,366 ·
+            violence 117 / 1,960 · obscenity 397 / 223.{' '}
+            <strong>Scope by era:</strong> government 5,259 / 2,170 · school 187 / 6,516 ·
             church 16 / 0.
           </p>
 
