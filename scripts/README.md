@@ -145,8 +145,9 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 
 | Script | Controleert |
 |---|---|
+| `audit-integrity.ts` | **Staande integriteits-toets** — consolideert de goedkope SQL/regex-detectoren tot één herhaalbare check. Invarianten (image-host, mojibake, boek-zonder-auteur, onmogelijke jaren) → drempel 0, **exit 1** bij overtreding (cron/CI-gate). Drift-metrics (non-person, gedeelde-cover/desc-contaminatie, slug-drift, wezen, coverage) → vergeleken met `data/integrity-baseline.json`. Flags: `--json`, `--verbose`, `--update-baseline`. Dure audits (perceptual-hash, LLM) blijven los — zie footer van het script. |
 | `audit-db.ts` | Algemene DB-health (boeken zonder cover/description, …) |
-| `_audit_site_health.ts` | Data-integriteit voor de site-audit (alleen SELECTs) |
+| `_audit_site_health.ts` | Data-integriteit voor de site-audit (alleen SELECTs). ⚠️ checkt `publication_year` (bestaat niet) — gebruik `audit-integrity.ts` |
 | `score-data-quality.ts` | Data-quality classifier over de catalogus |
 | `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
 | `check-coverage.ts` / `check-no-desc.ts` | Snelle coverage-checks |

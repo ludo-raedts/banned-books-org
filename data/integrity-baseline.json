@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-06-04T06:31:24.386Z",
+  "metrics": {
+    "non-person-authors": 14,
+    "shared-cover-contamination": 0,
+    "shared-desc-contamination": 55,
+    "slug-drift": 354,
+    "orphan-books": 1,
+    "no-cover": 5890,
+    "no-description": 1677
+  }
+}
