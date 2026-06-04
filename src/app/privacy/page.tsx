@@ -3,6 +3,8 @@ import { statSync } from 'node:fs'
 import { join } from 'node:path'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -35,41 +37,45 @@ const LAST_UPDATED = getLastUpdated().toLocaleDateString('en-GB', {
 
 export default function PrivacyPage() {
   return (
-    <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-14">
+    <main>
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Eyebrow>Privacy</Eyebrow>
 
-      {/* Header */}
-      <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 rounded-r-xl">
-        <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Privacy</p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Privacy policy</h1>
-        <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
-          Banned Books is an editorial catalogue. We do not run advertising, we do not sell your personal data, and
-          we do not want to know who you are. This page documents the small amount of data we do process, why, and the
-          deliberate choices we have made about what <em>not</em> to use.
-        </p>
-        <p className="text-xs text-gray-500 mt-4">Last updated: {LAST_UPDATED}</p>
-      </div>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Privacy policy
+          </h1>
 
-      {/* 1. The short version */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">The short version</h2>
-        <ul className="flex flex-col gap-3 text-sm text-gray-700 leading-relaxed">
-          <li>• We log basic, anonymous pageview data so we know which entries are read.</li>
-          <li>• We do not set tracking cookies, fingerprint visitors, run ads, or load any third-party trackers.</li>
-          <li>• We do not link to Amazon, on principle.</li>
-          <li>• Outbound links to news sites and affiliate booksellers may be logged by those third parties when you click — that is outside our control.</li>
-          <li>• If you contact us, your message is processed by a form provider so we can reply.</li>
-          <li>• If you buy the dataset, payment is handled by Stripe and we store your email address so we can send (and re-send) the download link.</li>
-        </ul>
+          <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
+            Banned Books is an editorial catalogue. We do not run advertising, we do not sell your personal data, and
+            we do not want to know who you are. This page documents the small amount of data we do process, why, and
+            the deliberate choices we have made about what <em>not</em> to use.
+          </p>
+
+          <p className="mt-4 text-xs text-neutral-500">Last updated: {LAST_UPDATED}</p>
+        </div>
       </section>
 
-      {/* 2. What we collect when you visit */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">What we collect when you visit a page</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+      {/* ── Body ──────────────────────────────────────────────────────── */}
+      <SectionShell tone="cream">
+        <article className="max-w-3xl mx-auto prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-oxblood/30 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900">
+
+          <h2>The short version</h2>
+          <ul>
+            <li>We log basic, anonymous pageview data so we know which entries are read.</li>
+            <li>We do not set tracking cookies, fingerprint visitors, run ads, or load any third-party trackers.</li>
+            <li>We do not link to Amazon, on principle.</li>
+            <li>Outbound links to news sites and affiliate booksellers may be logged by those third parties when you click — that is outside our control.</li>
+            <li>If you contact us, your message is processed by a form provider so we can reply.</li>
+            <li>If you buy the dataset, payment is handled by Stripe and we store your email address so we can send (and re-send) the download link.</li>
+          </ul>
+
+          <h2>What we collect when you visit a page</h2>
           <p>
             For each pageview on a book or author page we record a small log entry in our database
             (<strong>Supabase</strong>) containing the path
-            (e.g. <code className="font-mono text-xs">/books/animal-farm</code>), a two-letter country code derived
+            (e.g. <code>/books/animal-farm</code>), a two-letter country code derived
             from your IP address by our hosting provider, and the hostname of the referring site if you arrived
             from one. We do not store IP addresses, user-agent strings, screen sizes, or any other identifier
             that could be tied back to you.
@@ -85,30 +91,20 @@ export default function PrivacyPage() {
             IP addresses for tracking; it only derives a country and device class on the edge before discarding
             the IP.
           </p>
-        </div>
-      </section>
 
-      {/* 3. Cookies */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Cookies</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Cookies</h2>
           <p>
             We do not set advertising or analytics cookies. We do not use a cookie banner because we do not
             place anything that requires consent under the ePrivacy Directive.
           </p>
           <p>
-            The only cookie the site can set is <code className="font-mono text-xs">bb_internal</code>, an
+            The only cookie the site can set is <code>bb_internal</code>, an
             internal flag we use ourselves to exclude our own visits from pageview logs. It is never set on
             ordinary visitors. Third parties whose sites you click through to may set their own cookies — see
             the section on outbound links below.
           </p>
-        </div>
-      </section>
 
-      {/* 4. Outbound links */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Outbound links and affiliate links</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Outbound links and affiliate links</h2>
           <p>
             The catalogue links extensively to outside sources: news organisations, government records, civil
             society reports, library associations, and online booksellers. When you click such a link, the
@@ -130,20 +126,15 @@ export default function PrivacyPage() {
             to a retailer that participates in the very behaviour this catalogue documents.
           </p>
           <p>
-            For public-domain works we link to <Link href="https://www.gutenberg.org" className="underline hover:text-gray-900">Project Gutenberg</Link>,
+            For public-domain works we link to <Link href="https://www.gutenberg.org">Project Gutenberg</Link>,
             which is non-commercial. For news and source citations we link to the original publishers; those
             sites have their own privacy practices and many of them do run advertising trackers. We have
             no influence on what they collect once you leave our domain.
           </p>
-        </div>
-      </section>
 
-      {/* 5. Contact form */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Contact form</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Contact form</h2>
           <p>
-            The contact form on the <Link href="/about" className="underline hover:text-gray-900">about page</Link> is
+            The contact form on the <Link href="/about">about page</Link> is
             handled by <strong>Formspree</strong>. When you submit the form, your name, optional organisation,
             email address, and message are transmitted to Formspree, which forwards them to us by email. We use
             this data only to respond to your message and to follow up if needed. We do not add you to a
@@ -153,34 +144,29 @@ export default function PrivacyPage() {
             You can ask us at any time to delete the correspondence we hold from you. Formspree&apos;s own
             privacy practices apply to the submission as it transits their service.
           </p>
-        </div>
-      </section>
 
-      {/* 6. Dataset purchases */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Dataset purchases</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Dataset purchases</h2>
           <p>
             The catalogue is also available as a paid download at{' '}
-            <Link href="/dataset" className="underline hover:text-gray-900">/dataset</Link>.
+            <Link href="/dataset">/dataset</Link>.
             When you go through checkout, three third parties are involved alongside our own database:
           </p>
-          <ul className="flex flex-col gap-2">
+          <ul>
             <li>
-              • <strong>Stripe</strong> handles the payment. You enter your name, email address, billing
+              <strong>Stripe</strong> handles the payment. You enter your name, email address, billing
               country, and payment details directly into Stripe&apos;s hosted checkout page. Stripe also
               processes your IP address for fraud prevention and tax determination, and acts as an
               independent controller for that payment data under its own privacy notice.
             </li>
             <li>
-              • Once Stripe confirms a successful payment, we receive (and store) your{' '}
+              Once Stripe confirms a successful payment, we receive (and store) your{' '}
               <strong>email address</strong>, the Stripe session ID, and the amount and currency paid.
-              These are written to a <code className="font-mono text-xs">dataset_orders</code> row in our
+              These are written to a <code>dataset_orders</code> row in our
               database (<strong>Supabase</strong>) together with a random one-time download token that
               expires after 30 days.
             </li>
             <li>
-              • The download link is delivered to your email through <strong>Resend</strong>, our
+              The download link is delivered to your email through <strong>Resend</strong>, our
               transactional email provider. Resend processes the message only to deliver it.
             </li>
           </ul>
@@ -190,38 +176,28 @@ export default function PrivacyPage() {
             share purchaser email addresses with anyone. Order rows are retained as a record of sale
             (needed for tax, refund, and licensing purposes); after the 30-day download window has
             closed you can ask us via the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>{' '}
+            <Link href="/about#get-in-touch">contact form on the about page</Link>{' '}
             to delete your order record.
           </p>
-        </div>
-      </section>
 
-      {/* 7. What we do not use */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">What we deliberately do not use</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>What we deliberately do not use</h2>
           <p>
             Privacy matters to this project. The following are <em>not</em> present anywhere on this site:
           </p>
-          <ul className="flex flex-col gap-2">
-            <li>• Google Analytics, Google Tag Manager, or any other Google tracking product.</li>
-            <li>• Google Fonts loaded from Google&apos;s servers — our fonts are self-hosted at build time.</li>
-            <li>• Facebook Pixel, Meta tracking, TikTok pixel, LinkedIn Insight, or any advertising network tag.</li>
-            <li>• Hotjar, FullStory, or any session-replay or heatmap tool.</li>
-            <li>• Amazon affiliate links, Amazon ads, or any link to amazon.com / amazon.* domains in the catalogue.</li>
-            <li>• Sponsored content, paid placements, or third-party advertising of any kind.</li>
+          <ul>
+            <li>Google Analytics, Google Tag Manager, or any other Google tracking product.</li>
+            <li>Google Fonts loaded from Google&apos;s servers — our fonts are self-hosted at build time.</li>
+            <li>Facebook Pixel, Meta tracking, TikTok pixel, LinkedIn Insight, or any advertising network tag.</li>
+            <li>Hotjar, FullStory, or any session-replay or heatmap tool.</li>
+            <li>Amazon affiliate links, Amazon ads, or any link to amazon.com / amazon.* domains in the catalogue.</li>
+            <li>Sponsored content, paid placements, or third-party advertising of any kind.</li>
           </ul>
           <p>
             If you ever see a request from this site to a tracker we have not listed here, that is a bug.
             Please tell us.
           </p>
-        </div>
-      </section>
 
-      {/* 8. Your rights */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Your rights</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Your rights</h2>
           <p>
             Under the EU General Data Protection Regulation and equivalent laws elsewhere, you have the right
             to ask what personal data we hold about you, to ask us to correct or delete it, and to object to
@@ -232,33 +208,26 @@ export default function PrivacyPage() {
           </p>
           <p>
             To exercise any of these rights, or to raise a concern, please use the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>.
+            <Link href="/about#get-in-touch">contact form on the about page</Link>.
             If you are not satisfied with our response you have the right to complain to your local data
             protection authority — for visitors in the Netherlands, the{' '}
-            <Link href="https://autoriteitpersoonsgegevens.nl" className="underline hover:text-gray-900">
-              Autoriteit Persoonsgegevens
-            </Link>.
+            <Link href="https://autoriteitpersoonsgegevens.nl">Autoriteit Persoonsgegevens</Link>.
           </p>
-        </div>
-      </section>
 
-      {/* 9. Controller & changes */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Controller and changes to this policy</h2>
-        <div className="text-gray-700 leading-relaxed flex flex-col gap-4 text-sm">
+          <h2>Controller and changes to this policy</h2>
           <p>
             Banned Books is a personal project run by Ludo Raedts, based in Groningen, the Netherlands. For the
             purposes of data protection law, the controller of any personal data processed via this site is
             Ludo Raedts. To get in touch, use the{' '}
-            <Link href="/about#get-in-touch" className="underline hover:text-gray-900">contact form on the about page</Link>.
+            <Link href="/about#get-in-touch">contact form on the about page</Link>.
           </p>
           <p>
             We will update this page if our practices change. Material changes will be reflected in the
             &ldquo;last updated&rdquo; date at the top.
           </p>
-        </div>
-      </section>
 
+        </article>
+      </SectionShell>
     </main>
   )
 }
