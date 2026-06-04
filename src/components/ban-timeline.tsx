@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 
 export type TimelineBan = {
@@ -28,10 +30,21 @@ export type BanTimelineProps = {
   currentYear?: number
 }
 
-const ROW_H = 28
+const BASE_ROW_H = 28
+const MIN_ROW_H = 15
+// Budget for the rows themselves. The grid adds a fixed ~86px of overhead on
+// top (sticky header row + the label column's internal axis spacer + footer),
+// so this stays comfortably under the container's max-h-[680px] cap. When all
+// rows fit at BASE_ROW_H we keep the comfortable height; beyond that the rows
+// shrink to fit so the whole timeline reads in one view without scrolling.
+const MAX_PLOT_H = 580
 const AXIS_H = 32
 const FOOTER_H = 22
-const VIEW_W = 800
+// Fallback width used for the SVG coordinate space before the container has
+// been measured (SSR + first paint). Once mounted we measure the actual
+// column width and use that as VIEW_W, so the chart scales to fit horizontally
+// at scale 1:1 — no distortion and no left-to-right scrolling.
+const VIEW_W_FALLBACK = 800
 const LABEL_PAD_X = 12
 
 function decadeTicks(min: number, max: number): number[] {
@@ -78,6 +91,20 @@ export default function BanTimeline({
   minBansToRender = 2,
   currentYear = new Date().getUTCFullYear(),
 }: BanTimelineProps) {
+  // Measure the available width so the SVG coordinate space matches the rendered
+  // width 1:1. Hooks must run unconditionally, so they precede the early returns.
+  const plotRef = React.useRef<HTMLDivElement>(null)
+  const [viewW, setViewW] = React.useState<number>(VIEW_W_FALLBACK)
+  React.useEffect(() => {
+    const el = plotRef.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const update = () => setViewW(Math.max(160, el.clientWidth))
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   const allBans = rows.flatMap(r => r.bans)
   if (allBans.length < minBansToRender) return null
   if (rows.length === 0) return null
@@ -102,9 +129,14 @@ export default function BanTimeline({
   const yearMin = yearMinRaw - padLeft
   const yearMax = yearMaxRaw + padRight
 
-  const x = (year: number) => ((year - yearMin) / (yearMax - yearMin)) * VIEW_W
+  const x = (year: number) => ((year - yearMin) / (yearMax - yearMin)) * viewW
 
-  const totalH = AXIS_H + rows.length * ROW_H + FOOTER_H
+  const rowH =
+    rows.length * BASE_ROW_H <= MAX_PLOT_H
+      ? BASE_ROW_H
+      : Math.max(MIN_ROW_H, Math.floor(MAX_PLOT_H / rows.length))
+  const barH = Math.max(6, Math.round(rowH * 0.5))
+  const totalH = AXIS_H + rows.length * rowH + FOOTER_H
   const ticks = ticksForRange(yearMin, yearMax)
   const decades = decadeTicks(yearMin, yearMax)
 
@@ -125,7 +157,7 @@ export default function BanTimeline({
       <h3 id={titleId} className="sr-only">
         Ban timeline
       </h3>
-      <div className="grid grid-cols-[max-content_minmax(0,1fr)] max-h-[800px] overflow-y-auto">
+      <div className="grid grid-cols-[max-content_minmax(0,1fr)] max-h-[680px] overflow-y-auto">
         {/* Header — label column spacer */}
         <div className="bg-gray-50 border-b border-r border-gray-200 sticky top-0 z-20" style={{ height: AXIS_H }} />
         {/* Header — axis spacer (the axis itself is drawn inside the main SVG, but we keep the column visually separated) */}
@@ -152,7 +184,7 @@ export default function BanTimeline({
               <div
                 key={row.key}
                 className="flex items-center px-3 border-b border-gray-100 last:border-b-0"
-                style={{ height: ROW_H, paddingLeft: LABEL_PAD_X, paddingRight: LABEL_PAD_X }}
+                style={{ height: rowH, paddingLeft: LABEL_PAD_X, paddingRight: LABEL_PAD_X }}
               >
                 {row.href ? (
                   <a href={row.href} className="hover:underline w-full overflow-hidden">
@@ -167,15 +199,15 @@ export default function BanTimeline({
           <div style={{ height: FOOTER_H }} />
         </div>
 
-        {/* Timeline column — horizontally scrollable */}
-        <div className="overflow-x-auto">
+        {/* Timeline column — scales to the available width (no horizontal scroll) */}
+        <div ref={plotRef} className="min-w-0">
           <svg
             role="img"
             aria-labelledby={`${titleId} ${descId}`}
-            viewBox={`0 0 ${VIEW_W} ${totalH}`}
+            viewBox={`0 0 ${viewW} ${totalH}`}
             preserveAspectRatio="none"
             className="block w-full"
-            style={{ minWidth: VIEW_W, height: totalH }}
+            style={{ height: totalH }}
           >
             <desc id={descId}>{summary}</desc>
 
@@ -213,14 +245,14 @@ export default function BanTimeline({
                   {y}
                 </text>
               ))}
-              <line x1="0" x2={VIEW_W} y1={AXIS_H - 4} y2={AXIS_H - 4} stroke="currentColor" strokeWidth="0.5" opacity="0.5" />
+              <line x1="0" x2={viewW} y1={AXIS_H - 4} y2={AXIS_H - 4} stroke="currentColor" strokeWidth="0.5" opacity="0.5" />
             </g>
 
             {/* First-published reference line */}
             {firstPublishedYear != null && firstPublishedYear >= yearMin && firstPublishedYear <= yearMax && (() => {
               const fpText = `${firstPublishedLabel} (${firstPublishedYear})`
               const fpXPos = x(firstPublishedYear)
-              const { textAnchor, xOffset } = edgeAnchor(fpXPos, VIEW_W, fpText.length * 5.5)
+              const { textAnchor, xOffset } = edgeAnchor(fpXPos, viewW, fpText.length * 5.5)
               return (
                 <g className="text-amber-600">
                   <line
@@ -249,7 +281,7 @@ export default function BanTimeline({
             {/* Today reference line */}
             {(() => {
               const todayXPos = x(currentYear)
-              const { textAnchor, xOffset } = edgeAnchor(todayXPos, VIEW_W, 'Today'.length * 5.5)
+              const { textAnchor, xOffset } = edgeAnchor(todayXPos, viewW, 'Today'.length * 5.5)
               return (
                 <g className="text-gray-400">
                   <line
@@ -277,15 +309,15 @@ export default function BanTimeline({
 
             {/* Bars per row */}
             {rows.map((row, rowIdx) => {
-              const yTop = AXIS_H + rowIdx * ROW_H
-              const yMid = yTop + ROW_H / 2
+              const yTop = AXIS_H + rowIdx * rowH
+              const yMid = yTop + rowH / 2
               return (
                 <g key={row.key}>
                   {/* Row separator */}
                   {rowIdx > 0 && (
                     <line
                       x1={0}
-                      x2={VIEW_W}
+                      x2={viewW}
                       y1={yTop}
                       y2={yTop}
                       className="text-gray-100"
@@ -299,7 +331,6 @@ export default function BanTimeline({
                     const x1 = x(start)
                     const x2 = x(end)
                     const w = Math.max(6, x2 - x1)
-                    const barH = 14
                     const barY = yMid - barH / 2
 
                     const isActive = ban.status === 'active'
