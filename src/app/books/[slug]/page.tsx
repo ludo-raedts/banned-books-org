@@ -441,7 +441,7 @@ type BookDetail = {
   description_source_url: string | null
   description_source_type:
     | 'wikipedia' | 'wikipedia_translated' | 'openlibrary' | 'google_books'
-    | 'llm_grounded_multi' | 'llm_grounded_single' | 'manual'
+    | 'llm_grounded_multi' | 'llm_grounded_single' | 'ai_consensus' | 'manual'
     | null
   censorship_context: string | null
   first_published_year: number | null
@@ -1166,6 +1166,12 @@ export default async function BookPage({
               url={book.description_source_url}
               type={book.description_source_type}
             />
+          )}
+          {/* Consensus tier has no single source URL — label it plainly as AI-generated. */}
+          {book.description_book && !book.description_source_url && book.description_source_type === 'ai_consensus' && (
+            <p className="mt-2 text-xs text-gray-500">
+              AI-generated summary — independently cross-checked by two models; not from a single cited source.
+            </p>
           )}
         </section>
       )}
