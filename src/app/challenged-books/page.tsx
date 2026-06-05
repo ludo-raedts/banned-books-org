@@ -34,7 +34,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: 'What is the difference between challenged and banned?',
-    a: '"Challenged" means a formal complaint was filed. "Banned" means the book was actually removed or restricted. Every library ban began as a challenge, but many challenges are rejected. This catalogue records completed actions — removals and restrictions — not merely attempted ones.',
+    a: '"Challenged" means a formal complaint was filed. "Banned" means the book was actually removed or restricted. Every library ban began as a challenge, though many challenges are rejected. We tag each record with its action — banned, restricted, or challenged — so the catalogue captures both completed removals and a smaller set of documented challenges.',
   },
   {
     q: 'Why does the United States dominate this list?',
@@ -200,7 +200,7 @@ export default async function ChallengedBooksPage() {
             </p>
 
             <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-700">
-              A challenge is a formal written request to remove a book. A ban is what happens when the institution acts on that request. This catalogue records completed actions — removals and restrictions — not the attempts that were rejected.
+              A challenge is a formal written request to remove a book. A ban is what happens when the institution acts on that request. Most of this catalogue records completed actions — removals and restrictions — alongside a smaller set of documented challenges, each tagged by its action type.
             </p>
           </div>
         </div>
@@ -229,13 +229,13 @@ export default async function ChallengedBooksPage() {
               The institution acts on the complaint.
             </p>
             <p className="text-sm leading-relaxed text-neutral-700">
-              The book is removed from shelves, pulled from the curriculum, restricted to certain grade levels, or moved behind the librarian&apos;s desk. Every entry on this page documents a completed action — not a rejected attempt.
+              The book is removed from shelves, pulled from the curriculum, restricted to certain grade levels, or moved behind the librarian&apos;s desk — a completed action, distinct from a challenge that was filed but never acted on. We record both, tagged by action type.
             </p>
           </div>
         </div>
 
         <p className="mt-8 text-xs text-neutral-500 italic leading-relaxed border-l-2 border-neutral-300 pl-4 max-w-2xl">
-          Our database uses <em>scope</em> (school vs. government) rather than a separate &ldquo;challenged&rdquo; status. The titles below represent the school-scope bans in our catalogue — the closest equivalent to the ALA&apos;s definition of a challenged book.{' '}
+          Every record carries a <em>scope</em> (school, government, public library, retail) and an <em>action</em> — banned, restricted, or <strong>challenged</strong> — recording how far the censorship went. The {distinctBooks.toLocaleString('en')} above counts distinct books targeted in U.S. school and library settings — the closest match to the ALA&apos;s definition of a challenged book. Most were removed or restricted; a smaller share are recorded specifically as formal challenges.{' '}
           <Link href="/methodology" className="text-oxblood hover:underline">Read the full methodology →</Link>
         </p>
       </SectionShell>
@@ -247,7 +247,7 @@ export default async function ChallengedBooksPage() {
             title="The books that get challenged most"
             subtitle="Ranked by the number of documented removal or restriction events across U.S. schools."
             viewAllHref="/scope/school"
-            viewAllLabel="View all 3,933 →"
+            viewAllLabel={`View all ${distinctBooks.toLocaleString('en')} →`}
             accent="oxblood"
           />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
