@@ -32,7 +32,7 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
   {
     icon: GraduationCap,
     title: 'Teach & understand censorship',
-    blurb: 'How we define a ban and what the data covers — plus the wider context.',
+    blurb: 'How we define a ban, what the data covers, and the context.',
     primary: { label: 'Methodology', href: '/methodology' },
     subs: [
       { label: 'essays', href: '/essays' },
@@ -50,8 +50,6 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
       { label: 'reading club', href: '/reading-club' },
       { label: 'top 100', href: '/top-100-banned-books' },
       { label: 'classics', href: '/banned-classics' },
-      // distinct intent: books *about* censorship, not banned books themselves
-      { label: 'books on censorship', href: '/reading-list' },
     ],
   },
 ]
