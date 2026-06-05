@@ -95,7 +95,11 @@ function classifyBook(book: any): BookVerdict {
 
   const descBook = (book.description_book ?? '').trim()
   const descBan = (book.description_ban ?? '').trim()
-  const editorialComplete = descBook.length > 100 && descBan.length > 100
+  // ai_consensus = a cross-model AI summary, neither editorially reviewed nor
+  // tied to a cited source. It must NOT count toward the editorial-complete
+  // signal that (with a canonical id) gates a book into `confident`.
+  const editorialComplete =
+    descBook.length > 100 && descBan.length > 100 && book.description_source_type !== 'ai_consensus'
   if (editorialComplete) {
     score++
     reasons.push('editorial-complete')
@@ -259,7 +263,7 @@ async function fetchAllBooks() {
         id, slug, title,
         openlibrary_work_id, isbn13, bookshop_status, gutenberg_id,
         cover_status, ai_drafted,
-        description_book, description_ban,
+        description_book, description_ban, description_source_type,
         first_published_year,
         book_authors(authors(id, display_name, is_placeholder, birth_year)),
         bans(
