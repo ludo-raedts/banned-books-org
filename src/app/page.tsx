@@ -29,6 +29,7 @@ import {
 } from '@/lib/homepage-rotation'
 
 import HeroSection from '@/components/home/HeroSection'
+import StartHereSection from '@/components/home/StartHereSection'
 import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
 import HappeningNowSection from '@/components/home/HappeningNowSection'
 import TrendingSection from '@/components/home/TrendingSection'
@@ -481,6 +482,7 @@ export default async function HomePage() {
         }
       />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}
+      <StartHereSection />
       <HappeningNowSection />
       <TrendingSection books={trendingBooks} />
       <MostBannedAuthorsSection authors={bannedAuthors} />
