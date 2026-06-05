@@ -364,7 +364,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
           <span className="uppercase tracking-widest text-gray-400 mr-2">Step 2 of 4</span>
           The fields below are what two LLMs extracted from the source — not enriched content. Confirm the metadata
           and approve to commit; covers, descriptions and reason classifications are filled by{' '}
-          <a href="/admin/scripts#after-approval" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>{' '}
+          <a href="/admin/scripts#master" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>{' '}
           afterward.
         </p>
       )}
@@ -723,7 +723,7 @@ export default function DetailClient({ data, reasons, scopes }: Props) {
               <p className="text-xs text-emerald-800/80 leading-relaxed">
                 <strong>Next step:</strong> the book has no cover, description, ban context, or reason classification
                 yet. Run{' '}
-                <a href="/admin/scripts#after-approval" className="font-mono underline hover:no-underline">
+                <a href="/admin/scripts#master" className="font-mono underline hover:no-underline">
                   enrich-all.ts
                 </a>{' '}
                 to fill those fields.

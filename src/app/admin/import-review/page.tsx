@@ -133,11 +133,11 @@ export default async function ImportReviewPage() {
           the LLM outputs only drive routing. <strong>Approval creates bare <code className="font-mono text-[11px]">books</code> and{' '}
           <code className="font-mono text-[11px]">bans</code> rows</strong> with the metadata you confirm in the form.
           Covers, descriptions, ban context, and reason classifications are filled afterward by running{' '}
-          <a href="/admin/scripts#after-approval" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>.
+          <a href="/admin/scripts#master" className="font-mono text-[11px] underline hover:no-underline">enrich-all.ts</a>.
         </p>
         <p className="text-xs leading-relaxed text-blue-800/90 mt-2">
           <strong>Triage tip.</strong> Before you start, run{' '}
-          <a href="/admin/scripts#review-queue-helpers" className="font-mono text-[11px] underline hover:no-underline">remap-unmapped-queue.ts</a>{' '}
+          <a href="/admin/scripts#new-source" className="font-mono text-[11px] underline hover:no-underline">remap-unmapped-queue.ts</a>{' '}
           to re-map rows still flagged <code className="font-mono text-[11px]">unmapped_reason</code> against the current{' '}
           <code className="font-mono text-[11px]">reason-mapper.ts</code> patterns. Strict hits drop the flag; broad
           heuristic hits leave it and mark the slug as low-confidence so you can confirm in the form.

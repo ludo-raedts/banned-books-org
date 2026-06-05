@@ -93,7 +93,7 @@ export default function PipelineCard({
 
         {/* Step 3 — Enrich */}
         <a
-          href="/admin/scripts#after-approval"
+          href="/admin/scripts#master"
           className="flex flex-col gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors bg-white"
         >
           <PhaseHeader Icon={Sparkles} n={3} label="Enrich" />
