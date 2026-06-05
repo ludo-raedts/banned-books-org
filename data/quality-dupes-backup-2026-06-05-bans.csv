@@ -1,0 +1,17 @@
+book_id,ban_id,country_code,year_started,scope_id,action_type,status,region,institution,source_ids,reason_ids
+764,833,US,1985,2,banned,historical,,,555,7;10
+1054,1263,MY,2018,4,banned,active,,,622,4
+13277,26888,MY,2017,4,banned,active,,,2154,4
+13278,26889,MY,2017,4,banned,active,,,2154,3
+6524,5069,VA,1791,4,banned,historical,,,985,3
+6524,25033,MY,1999,4,banned,active,,,2154,3;11
+13296,26907,MY,2018,4,banned,active,,,2154,3
+12168,24565,MY,1992,4,banned,active,,,2154,3;11
+16595,29321,CZ,1968,4,banned,historical,,,3404,2
+10361,23907,MY,1967,4,banned,active,,,2154,2
+3870,3299,US,2025,1,banned,active,,,190,4;9
+3870,9923,US,2025,1,banned,active,Tennessee,Monroe County Schools,2068,4;9;11
+1059,1268,MY,2018,4,banned,active,,,622,3
+11653,24239,MY,1977,4,banned,active,,,2154,2
+11655,24241,MY,1977,4,banned,active,,,2154,2
+1068,1277,MY,2023,4,banned,active,,,625,1
