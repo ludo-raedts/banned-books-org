@@ -525,8 +525,8 @@ npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model
             note={
               <>
                 Wat na deze pass nóg <code className="font-mono">genres = &apos;{'{}'}&apos;</code> houdt, zijn titels die
-                geen enkel model kent (lokale publicaties, anonieme/ontbrekende metadata). Die zijn een handmatige{' '}
-                <code className="font-mono">seed-genres.ts</code>-klus, geen model-probleem.
+                geen enkel model kent (lokale publicaties, anonieme/ontbrekende metadata). Die zijn een handmatige
+                genre-toewijzing via de admin, geen model-probleem.
               </>
             }
           />
@@ -1135,17 +1135,14 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
 npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=50
 
 # Volledige catalogus
-npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000
-
-# Toon boeken die nog wachten op manuele tier-beslissing
-npx tsx --env-file=.env.local scripts/_review_backlog.ts`}
+npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --apply --limit=5000`}
             flags={[
               { flag: '--apply', desc: 'Auto-apply low-risk; schrijf review file voor high-risk' },
               { flag: '--limit=N', desc: 'Cap (default 100 apply, 3 dry-run)' },
               { flag: '--slug=X', desc: 'Test op één boek' },
               { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
             ]}
-            note="Drie outcomes: (1) AUTO-APPLY bij warning_level='none' + confidence ≥ medium → rationale geschreven. (2) WRITE + FLAG bij 'context'/'extended' + confidence ≥ medium → rationale geschreven op none tier én gelogd in editorial-review JSON. (3) REVIEW-ONLY bij exclude=true of lage confidence → geen DB-write. Tier-upgrades zijn altijd manueel via admin."
+            note="Drie outcomes: (1) AUTO-APPLY bij warning_level='none' + confidence ≥ medium → rationale geschreven. (2) WRITE + FLAG bij 'context'/'extended' + confidence ≥ medium → rationale geschreven op none tier én gelogd in editorial-review JSON. (3) REVIEW-ONLY bij exclude=true of lage confidence → geen DB-write. Tier-upgrades zijn altijd manueel via admin. De high-risk wachtrij voor manuele tier-beslissing staat in de editorial-review JSON (zie output), niet in een apart script."
           />
 
           <Script
