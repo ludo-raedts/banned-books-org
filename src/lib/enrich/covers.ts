@@ -37,12 +37,21 @@ function stripSubtitle(title: string): string {
   return title
 }
 
+// OpenLibrary's `title=` search is phrase/prefix-anchored: a query of
+// "The Witch Doctor of Umm Suqeim" returns 0 results when the catalogued
+// record drops the leading article ("Witch Doctor Of Umm Suqeim"). Strip a
+// leading English article so we can retry; returns null when there is none.
+function stripLeadingArticle(title: string): string | null {
+  const m = title.match(/^(the|a|an)\s+(.+)/i)
+  return m ? m[2].trim() : null
+}
+
 // Exported for unit tests (see __tests__/ol-search.test.ts) which verify
 // that author is forwarded to the OL search API — the bug fixed in
 // 2026-05-16 was a caller passing '' for author, which made title-only
 // matches return the most-popular hit (a 19th-century classic) and
 // poison subsequent enrichment fields.
-export async function olSearch(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
+async function olSearchOnce(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
   try {
     const params = new URLSearchParams({
       title,
@@ -69,6 +78,21 @@ export async function olSearch(title: string, author: string): Promise<{ coverUr
     const workId = matches[0]?.key?.replace('/works/', '') ?? null
     return { coverUrl: null, workId }
   } catch { return { coverUrl: null, workId: null } }
+}
+
+export async function olSearch(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
+  const first = await olSearchOnce(title, author)
+  if (first.coverUrl) return first
+  // OL anchors its title= search on the catalogued title, which often omits a
+  // leading article. Retry once without it (e.g. "The Witch Doctor of Umm
+  // Suqeim" → "Witch Doctor of Umm Suqeim"); titlesMatch still guards the hit.
+  const stripped = stripLeadingArticle(title)
+  if (!stripped) return first
+  const retry = await olSearchOnce(stripped, author)
+  // Prefer a real cover from the retry; otherwise keep the original workId
+  // (if any) so we don't lose a weaker-but-valid match.
+  if (retry.coverUrl) return retry
+  return first.workId ? first : retry
 }
 
 function transformGBUrl(url: string): string {

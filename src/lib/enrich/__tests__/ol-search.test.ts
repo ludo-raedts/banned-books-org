@@ -87,4 +87,30 @@ describe('olSearch (covers.ts)', () => {
     expect(r.workId).toBe('OLokW')
     expect(r.coverUrl).toBe('https://covers.openlibrary.org/b/id/888-L.jpg')
   })
+
+  // Guard added 2026-06-05 (the "The Witch Doctor of Umm Suqeim" miss):
+  // OL anchors title= on the catalogued title, which often omits a leading
+  // article. The first query (with "The") returns nothing; the retry without
+  // it finds the record.
+  it('retries without a leading article when the first query is empty', async () => {
+    fetchSpy
+      .mockImplementationOnce(() => olJson([])) // "The Witch Doctor …" → no hit
+      .mockImplementationOnce(() =>
+        olJson([{ key: '/works/OL17584753W', cover_i: 7870213, title: 'Witch Doctor Of Umm Suqeim' }]),
+      )
+    const r = await olSearch('The Witch Doctor of Umm Suqeim', 'Craig Hawes')
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+    const retryUrl = String((fetchSpy.mock.calls[1] as [string])[0])
+    expect(retryUrl).toContain('title=Witch+Doctor+of+Umm+Suqeim')
+    expect(retryUrl).not.toContain('title=The+')
+    expect(r.workId).toBe('OL17584753W')
+    expect(r.coverUrl).toBe('https://covers.openlibrary.org/b/id/7870213-L.jpg')
+  })
+
+  it('does not retry when the title has no leading article', async () => {
+    fetchSpy.mockImplementationOnce(() => olJson([]))
+    const r = await olSearch('Persepolis', 'Marjane Satrapi')
+    expect(fetchSpy).toHaveBeenCalledOnce()
+    expect(r.coverUrl).toBeNull()
+  })
 })
