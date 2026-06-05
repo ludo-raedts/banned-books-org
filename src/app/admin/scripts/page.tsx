@@ -454,6 +454,37 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungro
           />
 
           <Script
+            name="enrich-descriptions-consensus.ts"
+            what="Derde, zwakkere recovery-tier voor book-descriptions: voor boeken die de v2-ladder niet kon gronden maar die de modellen wél kennen. GPT-4o-mini én Gemini-2.5-flash schrijven elk onafhankelijk een beschrijving met een harde UNKNOWN-escape ('ken je dit exacte boek niet betrouwbaar → UNKNOWN, niet gokken uit de titel'); een derde judge bevestigt overeenstemming op CONCRETE, specifieke feiten (geen generieke thema's, niet titel-afleidbaar); de opgeslagen tekst wordt gesynthetiseerd uit ALLEEN de overeengekomen feiten. UNKNOWN of disagreement → rij blijft ongemoeid (nooit gewist, nooit geconfabuleerd). Vereist GOOGLE_AI_API_KEY + de migratie die 'ai_consensus' aan de source_type-CHECK toevoegt."
+            tags={['gpt', 'destructive']}
+            meta={{
+              coverage: <>ungrounded rijen (<code className="font-mono">description_source_type IS NULL</code>) binnen <code className="font-mono">--lang</code> (default en). Alleen ACCEPT-rijen worden geschreven; REJECT/UNKNOWN blijven ongemoeid.</>,
+              cadence: 'one-off per taal-scope (na wipe + reground); ~10% accept op en',
+              writes: <><code className="font-mono">books.description_book</code> + <code className="font-mono">description_source_type=&apos;ai_consensus&apos;</code> + <code className="font-mono">ai_drafted=true</code>; backup naar <code className="font-mono">data/consensus-descriptions-backup-&lt;ts&gt;.csv</code></>,
+              idempotent: 'ja — source_type IS NULL guard slaat al-geschreven rijen over',
+              cost: '~$0.003/boek (gpt-4o-mini + gemini-2.5-flash, 3 calls)',
+            }}
+            command={`# Dry-run (geen writes) — toont accept / reject / unknown + samples
+npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --limit=200
+
+# Apply op scope en (na 'supabase db push' van de ai_consensus-migratie)
+npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --apply
+
+# Andere taal / klein / één boek
+npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --apply --lang=fr
+npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --apply --slug=the-martian`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf ACCEPT-rijen naar DB (default: dry-run)' },
+              { flag: '--lang=xx', desc: 'Taal-scope (default en)' },
+              { flag: '--limit=N', desc: 'Cap op N kandidaten' },
+              { flag: '--slug=<slug>', desc: 'Eén boek' },
+              { flag: '--concurrency=N', desc: 'Parallel workers (default 4)' },
+              { flag: '--accept-conf=N', desc: 'Min. judge-confidence om te accepteren (default 0.7)' },
+            ]}
+            note="Aparte, zwakkere tier dan llm_grounded_* — op de boekpagina gelabeld 'AI-generated summary, cross-checked, not from a single cited source' en telt NIET als confident in score-data-quality. Valideer een nieuwe scope eerst met scripts/validate-consensus-descriptions.ts (recall + false-positive rate, geen writes). Gevalideerd 2026-06-05: 0% false-positives."
+          />
+
+          <Script
             name="enrich-genres-gpt.ts"
             what="Kiest 1–3 genre-slugs uit de vaste 21-slug vocabulary (src/components/genre-badge.tsx) op basis van title + author + first_published_year + description_book. Alleen boeken met een lege genres-array worden geraakt; handmatige edits overleven re-runs. Pagineert over de hele kandidatenset (.range() per 1000, geordend op id) — niet langer gecapt op de eerste 1000 rijen."
             tags={['gpt']}
