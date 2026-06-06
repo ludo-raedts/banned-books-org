@@ -41,6 +41,13 @@ export type ZenodoVersion = {
 
 export const ZENODO_VERSIONS: ZenodoVersion[] = [
   {
+    version: '2026-06-06',
+    date: '2026-06-06',
+    doi: '10.5281/zenodo.20569551',
+    summary:
+      'Refreshed open core: ~14,400 books, ~29,060 ban events, ~29,300 source citations (+~325 bans and +~460 citations vs. the initial release). Descriptor coverage figures and verification distribution updated.',
+  },
+  {
     version: '1.0',
     date: '2026-06-02',
     doi: '10.5281/zenodo.20511554',
@@ -69,7 +76,9 @@ export function zenodoCitations(): ZenodoCitationFormat[] | null {
   const t = ZENODO_DATASET_TITLE
   const url = ZENODO_DOI_URL
   return [
-    { id: 'apa', label: 'APA', text: `Raedts, L. (${y}). ${t} [Data set]. Zenodo. ${url}` },
+    // Full given name (not the strict-APA "Raedts, L.") to match the Zenodo
+    // creator field and ORCID published name across the site.
+    { id: 'apa', label: 'APA', text: `Raedts, Ludo. (${y}). ${t} [Data set]. Zenodo. ${url}` },
     { id: 'mla', label: 'MLA', text: `Raedts, Ludo. ${t}. Zenodo, ${y}, ${url}.` },
     {
       id: 'bibtex',
