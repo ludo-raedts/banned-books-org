@@ -56,7 +56,7 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
 
 export default function StartHereSection() {
   return (
-    <SectionShell tone="cream">
+    <SectionShell tone="cream" seamless>
       <div className="max-w-6xl mx-auto">
         <Eyebrow>Start here</Eyebrow>
         <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6">
