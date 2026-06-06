@@ -35,10 +35,10 @@ the written description paragraph that interprets a ban is commercial.
 **Coverage at the snapshot used to write this descriptor** (figures move as the
 catalogue grows — the deposited files are the authority):
 
-- ~14,000 books, ~8,650 authors
-- ~28,730 ban events across 119 countries (including defunct states: USSR, East
+- ~14,400 books, ~8,700 authors
+- ~29,060 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
-- ~52,800 ban–reason links and ~28,800 ban–source citations
+- ~52,200 ban–reason links and ~29,300 ban–source citations
 
 **Scope.** This deposit covers *books*. Records must describe a real
 removal/restriction with an institutional actor and a documented decision (see
@@ -104,7 +104,7 @@ force/unknown), `action_type` (one of `banned`, `restricted`, `challenged`),
 dominate; `challenged` and `rescinded` are smaller categories.
 
 > **Withheld rows.** A tiny number of bans with an *indeterminate* status
-> (`status = 'unclear'`; currently 2 rows) exist in the live catalogue but are
+> (`status = 'unclear'`; currently 3 rows) exist in the live catalogue but are
 > deliberately omitted from this open export. As a result the open ban count is
 > marginally lower than the headline figure on banned-books.org. The DB is not
 > modified — these rows simply aren't deposited.
@@ -145,8 +145,8 @@ decision.
 
 **Verification.** Sources carry a `verification_status`. Archive-verification is
 an ongoing process and the field is mostly unpopulated so far. At the snapshot
-used here, of ~820 source rows the distribution is roughly: `unverified` ≈ 89%,
-empty/`(null)` ≈ 10%, `verified` = 5 rows, `pending` = 2 rows, and `broken` = 0.
+used here, of ~950 source rows the distribution is roughly: `unverified` ≈ 79%,
+empty/`(null)` ≈ 20%, `verified` = 7 rows, `pending` = 2 rows, and `broken` = 0.
 **In practical terms, filtering on `verification_status = 'verified'` currently
 returns a near-empty subset (a handful of rows) and is not yet a usable quality
 gate.** Treat it as a lever that becomes useful as verification runs progress,
@@ -188,7 +188,7 @@ mistake the event grain for a title count.
 
 **Status semantics.** `rescinded` is a genuine category, not a synonym of
 `historical`: it marks a ban that was formally *lifted in a later year* (nearly
-all such rows — 51 of 52 at the current snapshot — carry a `year_ended`),
+all such rows — 52 of 53 at the current snapshot — carry a `year_ended`),
 whereas `historical` simply means no longer in force without asserting a
 documented reversal.
 
