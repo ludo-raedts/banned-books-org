@@ -94,28 +94,52 @@ function canonAction(action: string): CanonAction {
   return 'banned' // banned, blocked, and any unknown → treated as the strongest
 }
 
-// Collapse a country's bans into a single "envelope" bar. The timeline is an
-// at-a-glance overview — multiple bans per country merge into one span
-// (earliest start → latest end), coloured by the most severe action and shown
-// active if any of them is still active. The per-ban breakdown lives in the
-// table below. This stops overlapping bars from compounding into muddy darker
-// reds or banned/restricted mixes, and scales to large PEN clusters (×17 etc.).
-function collapseRow(
-  bans: TimelineBan[],
-  currentYear: number,
-): { start: number; end: number; isActive: boolean; openEnded: boolean; action: CanonAction; count: number } | null {
-  if (bans.length === 0) return null
-  const start = Math.min(...bans.map(b => b.year_started))
-  const isActive = bans.some(b => b.status === 'active')
-  // Open-ended = still active, or a recorded ban with no end year (e.g. a ban
-  // marked lifted but missing its end date). Either way the bar runs to today
-  // and the label reads "present" rather than asserting a false end year.
-  const openEnded = isActive || bans.some(b => b.year_ended == null)
-  const end = openEnded ? currentYear : Math.max(...bans.map(b => b.year_ended ?? currentYear))
-  const action = bans
-    .map(b => canonAction(b.action_type))
-    .reduce<CanonAction>((worst, a) => (SEVERITY[a] > SEVERITY[worst] ? a : worst), 'challenged')
-  return { start, end, isActive, openEnded, action, count: bans.length }
+type TimelineSegment = {
+  start: number
+  end: number
+  isActive: boolean
+  openEnded: boolean
+  action: CanonAction
+  count: number
+}
+
+// Merge a country's bans into one or more bars. Overlapping or back-to-back
+// bans fuse into a single span — so concurrent/sequential bans never compound
+// into muddy overlapping rectangles, and large PEN clusters (×17 etc.) collapse
+// to one clean bar. But a genuine interruption (a ban that ended before a later
+// one began) stays as a separate bar, so a book that was banned, freed, then
+// re-banned reads as two distinct episodes. A gap can only appear when the
+// earlier ban has a recorded end year; an open-ended ban (lifted date unknown,
+// or still active) runs to today and absorbs anything after it. Each segment is
+// coloured by its most severe action and shown active if any of its bans is.
+// The full per-ban breakdown stays in the table below.
+const GAP_TOLERANCE_YEARS = 1 // ignore hairline gaps between back-to-back bans
+function mergeBans(bans: TimelineBan[], currentYear: number): TimelineSegment[] {
+  const items = bans
+    .map(b => ({
+      start: b.year_started,
+      end: b.year_ended ?? currentYear,
+      isActive: b.status === 'active',
+      openEnded: b.year_ended == null || b.status === 'active',
+      action: canonAction(b.action_type),
+    }))
+    .sort((a, b) => a.start - b.start)
+
+  const segments: TimelineSegment[] = []
+  for (const it of items) {
+    const cur = segments[segments.length - 1]
+    if (cur && it.start <= cur.end + GAP_TOLERANCE_YEARS) {
+      // Overlaps or abuts the current segment → fuse into it.
+      cur.end = Math.max(cur.end, it.end)
+      cur.isActive = cur.isActive || it.isActive
+      cur.openEnded = cur.openEnded || it.openEnded
+      if (SEVERITY[it.action] > SEVERITY[cur.action]) cur.action = it.action
+      cur.count += 1
+    } else {
+      segments.push({ ...it, count: 1 })
+    }
+  }
+  return segments
 }
 
 export default function BanTimeline({
@@ -360,16 +384,16 @@ export default function BanTimeline({
                       strokeWidth="0.5"
                     />
                   )}
-                  {(() => {
-                    // One envelope bar per country (see collapseRow). Hue = the
-                    // most severe action, matching the table's BanActionBadge
-                    // palette (banned = red, restricted = amber, challenged =
-                    // grey); opacity = status (active full, historical faded);
-                    // the fill SHAPE (solid / hatched / outline) redundantly
-                    // re-encodes the action for colour-blind readers.
-                    const env = collapseRow(row.bans, currentYear)
-                    if (!env) return null
-                    const { start, end, isActive, openEnded, action, count } = env
+                  {/* One bar per merged segment (see mergeBans): overlapping /
+                      back-to-back bans fuse, but a real interruption stays a
+                      separate bar. Hue = the segment's most severe action,
+                      matching the table's BanActionBadge palette (banned = red,
+                      restricted = amber, challenged = grey); opacity = status
+                      (active full, historical faded); the fill SHAPE (solid /
+                      hatched / outline) redundantly re-encodes the action for
+                      colour-blind readers. */}
+                  {mergeBans(row.bans, currentYear).map((seg, segIdx) => {
+                    const { start, end, isActive, openEnded, action, count } = seg
                     const x1 = x(start)
                     const x2 = x(end)
                     const w = Math.max(6, x2 - x1)
@@ -402,7 +426,7 @@ export default function BanTimeline({
                     const titleText = `${row.label} — ${action}${countLabel} ${start}–${endLabel}, status: ${isActive ? 'active' : 'historical'}`
 
                     return (
-                      <g className={colorClass} opacity={isActive ? 1 : 0.4}>
+                      <g key={`${row.key}-${segIdx}`} className={colorClass} opacity={isActive ? 1 : 0.4}>
                         <title>{titleText}</title>
                         <rect
                           x={x1}
@@ -418,7 +442,7 @@ export default function BanTimeline({
                         />
                       </g>
                     )
-                  })()}
+                  })}
                 </g>
               )
             })}

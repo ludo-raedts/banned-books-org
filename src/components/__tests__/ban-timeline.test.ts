@@ -89,11 +89,11 @@ describe('BanTimeline', () => {
   it('renders an edge-case book with exactly 3 bans, one open-ended', () => {
     const out = render({ rows: edgeRows, firstPublishedYear: 1985, currentYear: 2026 })
     expect(out).toMatchSnapshot()
-    // Envelope model: the US row collapses its two bans (banned 1990–1995 +
-    // active challenged 2010–) into one bar — earliest start to present,
-    // coloured by the most severe action (banned). Canada keeps its single
-    // closed span.
-    expect(out).toContain('banned (2 bans) 1990–present')
+    // Interruption model: the US row has a real gap (banned ended 1995, the
+    // challenge began 2010), so it stays as TWO bars rather than one envelope.
+    // Canada keeps its single closed span.
+    expect(out).toContain('banned 1990–1995')
+    expect(out).toContain('challenged 2010–present')
     expect(out).toContain('2005–2008')
   })
 
