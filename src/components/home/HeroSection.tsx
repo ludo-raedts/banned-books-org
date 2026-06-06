@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Eyebrow from '@/components/section/Eyebrow'
+import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import HeroSearch from './HeroSearch'
 
 type Stat = { value: string; label: string }
@@ -101,6 +102,21 @@ export default function HeroSection({
           <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
             Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.
           </p>
+
+          {ZENODO_DOI_URL && (
+            <p className="mt-2 text-xs text-neutral-500">
+              Citable dataset ·{' '}
+              <a
+                href={ZENODO_DOI_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-oxblood hover:underline"
+              >
+                Zenodo DOI {ZENODO_CONCEPT_DOI}
+              </a>{' '}
+              (CC-BY-4.0)
+            </p>
+          )}
 
           <div className="mt-6">
             <HeroSearch bookCount={totalBooks} />

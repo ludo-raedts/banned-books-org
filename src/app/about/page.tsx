@@ -10,6 +10,7 @@ import { adminClient } from '@/lib/supabase'
 import ContactForm from '@/components/contact-form'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import ZenodoCitation from '@/components/zenodo-citation'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -249,8 +250,11 @@ export default async function AboutPage() {
             </p>
             <p>
               For systematic analysis, the entire catalogue is available as a{' '}
-              <Link href="/dataset">downloadable dataset</Link>{' '}— CSV, JSON, and SQLite — under a personal/research-use license.
+              <Link href="/dataset">downloadable dataset</Link>. The open censorship core is also published on Zenodo under CC-BY-4.0 with a permanent DOI — free to cite and reuse.
             </p>
+            <div className="mt-8">
+              <ZenodoCitation />
+            </div>
             <p>
               Boilerplate copy, live stats, logos, and story angles are collected on the{' '}
               <Link href="/press">press &amp; media kit page</Link>.

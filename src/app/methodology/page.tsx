@@ -4,6 +4,7 @@ import CitationBlock from '@/components/citation-block'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import ZenodoCitation from '@/components/zenodo-citation'
 import { ZENODO_DOI_URL } from '@/lib/zenodo'
 
 const METHODOLOGY_CANONICAL = 'https://www.banned-books.org/methodology'
@@ -143,6 +144,7 @@ export default function MethodologyPage() {
       {/* ── Citation ──────────────────────────────────────────────────── */}
       <SectionShell tone="cream">
         <div className="max-w-3xl mx-auto">
+          <ZenodoCitation />
           <CitationBlock
             entityType="methodology"
             entity={{

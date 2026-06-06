@@ -48,3 +48,40 @@ export const ZENODO_VERSIONS: ZenodoVersion[] = [
       'Initial public release: the verifiable censorship core — every published ban with at least one source citation, plus the reason taxonomy, country dimensions, and author records — as CSV under CC-BY-4.0.',
   },
 ]
+
+// ─── Academic citation ─────────────────────────────────────────────────────
+// Always cite the CONCEPT DOI (resolves to the latest version), never a
+// per-version DOI. Single source for the citation strings rendered site-wide.
+export const ZENODO_DATASET_TITLE = 'Banned Books — Open Censorship Core'
+export const ZENODO_FIRST_PUBLISHED_YEAR = 2026
+export const ZENODO_ORCID_URL = 'https://orcid.org/0009-0006-8358-7119'
+
+export type ZenodoCitationFormat = { id: 'apa' | 'mla' | 'bibtex'; label: string; text: string }
+
+/**
+ * APA, MLA, and BibTeX citation strings for the open dataset, built from the
+ * concept DOI. Returns null while no DOI is set, so every consumer renders
+ * nothing until the deposit is live.
+ */
+export function zenodoCitations(): ZenodoCitationFormat[] | null {
+  if (!ZENODO_CONCEPT_DOI || !ZENODO_DOI_URL) return null
+  const y = ZENODO_FIRST_PUBLISHED_YEAR
+  const t = ZENODO_DATASET_TITLE
+  const url = ZENODO_DOI_URL
+  return [
+    { id: 'apa', label: 'APA', text: `Raedts, L. (${y}). ${t} [Data set]. Zenodo. ${url}` },
+    { id: 'mla', label: 'MLA', text: `Raedts, Ludo. ${t}. Zenodo, ${y}, ${url}.` },
+    {
+      id: 'bibtex',
+      label: 'BibTeX',
+      text: `@dataset{raedts_${y}_banned_books,
+  author    = {Raedts, Ludo},
+  title     = {${t}},
+  year      = {${y}},
+  publisher = {Zenodo},
+  doi       = {${ZENODO_CONCEPT_DOI}},
+  url       = {${url}}
+}`,
+    },
+  ]
+}
