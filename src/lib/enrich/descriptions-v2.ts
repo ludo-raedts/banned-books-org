@@ -43,7 +43,7 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../supabase'
-import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION } from './google-books'
+import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError } from './google-books'
 
 type SourceType =
   | 'wikipedia'
@@ -745,6 +745,13 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
         }).eq('id', row.id)
       }
     } catch (e) {
+      if (e instanceof GbQuotaError) {
+        // Quota wall: drain the queue so all workers exit cleanly. The throw
+        // happens before any DB write, so this row keeps whatever it had.
+        log(`  ⚠ Google Books daily quota exhausted — stopping; ${queue.length} rows left unprocessed. Resume after the quota resets / is raised.`)
+        queue.length = 0
+        return
+      }
       result.errors++
       log(`  ! ${row.id} ${row.title}: ${(e as Error).message}`)
     }

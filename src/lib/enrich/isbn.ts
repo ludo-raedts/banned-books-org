@@ -37,7 +37,7 @@
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
-import { gbVolumesByTitleAuthor, gbIsbn13, GB_FIELDS_ISBN } from './google-books'
+import { gbVolumesByTitleAuthor, gbIsbn13, GB_FIELDS_ISBN, GbQuotaError } from './google-books'
 
 const OL_DELAY_MS = 400
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
@@ -397,28 +397,38 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
     // is added when the winning variant isn't canonical.
     let rejectedSim = 0
     let rejectedEd = 0
-    outer: for (const variant of ladder) {
-      const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
+    try {
+      outer: for (const variant of ladder) {
+        const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
 
-      for (const [name, fn] of [
-        ['OL', searchOL] as const,
-        ['GB', searchGoogleBooks] as const,
-      ]) {
-        const hit = await fn(variant.title, author)
-        if (name === 'OL') await sleep(OL_DELAY_MS)
-        if (!hit) continue
-        const sim = titleContainment(variant.title, hit.matchedTitle)
-        if (sim < TITLE_MATCH_THRESHOLD) { rejectedSim++; continue }
-        const cov = queryCoverage(variant.title, hit.matchedTitle)
-        if (cov < QUERY_COVERAGE_THRESHOLD) { rejectedSim++; continue }
-        if (!authorAgrees(author, hit.matchedAuthors)) { rejectedSim++; continue }
-        const ed = await verifyEdition(hit.isbn, variant.title, book.original_language)
-        await sleep(OL_DELAY_MS)
-        if (!ed.ok) { rejectedEd++; continue }
-        isbn = hit.isbn
-        source = `${name}${tag}`
-        break outer
+        for (const [name, fn] of [
+          ['OL', searchOL] as const,
+          ['GB', searchGoogleBooks] as const,
+        ]) {
+          const hit = await fn(variant.title, author)
+          if (name === 'OL') await sleep(OL_DELAY_MS)
+          if (!hit) continue
+          const sim = titleContainment(variant.title, hit.matchedTitle)
+          if (sim < TITLE_MATCH_THRESHOLD) { rejectedSim++; continue }
+          const cov = queryCoverage(variant.title, hit.matchedTitle)
+          if (cov < QUERY_COVERAGE_THRESHOLD) { rejectedSim++; continue }
+          if (!authorAgrees(author, hit.matchedAuthors)) { rejectedSim++; continue }
+          const ed = await verifyEdition(hit.isbn, variant.title, book.original_language)
+          await sleep(OL_DELAY_MS)
+          if (!ed.ok) { rejectedEd++; continue }
+          isbn = hit.isbn
+          source = `${name}${tag}`
+          break outer
+        }
       }
+    } catch (e) {
+      if (e instanceof GbQuotaError) {
+        // Quota wall: STOP cleanly. Do not stamp this book — a 429 is not a
+        // "not found" verdict. Already-processed books keep their real results.
+        log(`  ⚠ Google Books daily quota exhausted — stopping at ${i}/${limit}; "${book.title.slice(0, 40)}" left unstamped. Resume after the quota resets / is raised.`)
+        break
+      }
+      throw e
     }
     if (!isbn && rejectedSim > 0) rejectedLowSimilarity++
     if (!isbn && rejectedEd > 0) rejectedEditionMismatch++

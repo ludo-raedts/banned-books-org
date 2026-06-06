@@ -88,20 +88,53 @@ export type GbQueryOpts = {
   signal?: AbortSignal
 }
 
+// Thrown when Google Books returns HTTP 429 (per-project daily query quota
+// exhausted — the default is only ~1,000/day). This is DISTINCT from an empty
+// result: callers must treat it as "stop the run", never as "not found", or a
+// quota wall mid-sweep would stamp thousands of books with false-negative
+// verdicts (isbn_status='not_found', cover rejected, etc.).
+export class GbQuotaError extends Error {
+  constructor() {
+    super('Google Books daily quota exceeded (HTTP 429)')
+    this.name = 'GbQuotaError'
+  }
+}
+
+// Once any call hits 429 we latch this: every subsequent gbVolumes() throws
+// immediately without a network round-trip, so a long sweep aborts fast instead
+// of hammering a dead quota.
+let quotaTripped = false
+export function gbQuotaTripped(): boolean {
+  return quotaTripped
+}
+
 // Low-level: run a raw Google Books volumes query and return the items array.
-// Never throws — returns [] on any network/HTTP/parse failure (callers treat a
-// miss and an error identically). Sleeps `delayMs` AFTER the call so a tight
-// caller loop stays within quota.
+// Returns [] on a genuine miss or transient network/parse failure, but THROWS
+// GbQuotaError on 429 (quota) — see the class doc for why these must differ.
+// Sleeps `delayMs` AFTER the call so a tight caller loop stays within rate.
 export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
+  if (quotaTripped) throw new GbQuotaError()
   const { maxResults = 5, fields = GB_FIELDS_FULL, delayMs = DEFAULT_DELAY_MS } = opts
   const keyParam = GB_KEY ? `&key=${GB_KEY}` : ''
   const url =
     `${GB_BASE}?q=${encodeURIComponent(query)}` +
     `&maxResults=${maxResults}&fields=${fields}${keyParam}`
+
+  let res: Response
   try {
-    const res = await fetch(url, opts.signal ? { signal: opts.signal } : undefined)
+    res = await fetch(url, opts.signal ? { signal: opts.signal } : undefined)
+  } catch {
     if (delayMs > 0) await sleep(delayMs)
-    if (!res.ok) return []
+    return [] // transient network failure — treat as a miss
+  }
+  if (delayMs > 0) await sleep(delayMs)
+
+  if (res.status === 429) {
+    quotaTripped = true
+    throw new GbQuotaError()
+  }
+  if (!res.ok) return []
+  try {
     const json = (await res.json()) as { items?: GbVolume[] }
     return json.items ?? []
   } catch {

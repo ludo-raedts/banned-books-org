@@ -16,7 +16,7 @@ import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
 import { titlesMatch } from './title-match'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
-import { gbVolumesByTitle, gbVolumesByIsbn, resolveGbCover, GB_FIELDS_COVER } from './google-books'
+import { gbVolumesByTitle, gbVolumesByIsbn, resolveGbCover, GB_FIELDS_COVER, GbQuotaError } from './google-books'
 
 const OL_DELAY_MS   = 200
 const GB_DELAY_MS   = 600
@@ -325,6 +325,12 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         if (wikiUrl) { coverUrl = wikiUrl; source = `Wikipedia${tag}`; break }
       }
     } catch (err) {
+      if (err instanceof GbQuotaError) {
+        // Quota wall: stop cleanly. covers.ts never stamps a verdict in this
+        // catch, so nothing is corrupted — just stop burning the loop.
+        log(`  ⚠ Google Books daily quota exhausted — stopping at ${i}/${limit}. Resume after the quota resets / is raised.`)
+        break
+      }
       const msg = err instanceof Error ? err.message : String(err)
       log(`  [${i + 1}/${limit}] ${book.title.slice(0, 50)} → ERROR: ${msg}`)
       errCount++
