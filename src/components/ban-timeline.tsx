@@ -83,6 +83,41 @@ function edgeAnchor(
   return { textAnchor: 'middle', xOffset: 0 }
 }
 
+// Canonical action folding + severity ranking, mirroring BanActionBadge:
+// banned (most severe) > restricted > challenged. Legacy values fold the same
+// way the badge folds them (removed → restricted, blocked → banned).
+type CanonAction = 'banned' | 'restricted' | 'challenged'
+const SEVERITY: Record<CanonAction, number> = { challenged: 0, restricted: 1, banned: 2 }
+function canonAction(action: string): CanonAction {
+  if (action === 'restricted' || action === 'removed') return 'restricted'
+  if (action === 'challenged') return 'challenged'
+  return 'banned' // banned, blocked, and any unknown → treated as the strongest
+}
+
+// Collapse a country's bans into a single "envelope" bar. The timeline is an
+// at-a-glance overview — multiple bans per country merge into one span
+// (earliest start → latest end), coloured by the most severe action and shown
+// active if any of them is still active. The per-ban breakdown lives in the
+// table below. This stops overlapping bars from compounding into muddy darker
+// reds or banned/restricted mixes, and scales to large PEN clusters (×17 etc.).
+function collapseRow(
+  bans: TimelineBan[],
+  currentYear: number,
+): { start: number; end: number; isActive: boolean; openEnded: boolean; action: CanonAction; count: number } | null {
+  if (bans.length === 0) return null
+  const start = Math.min(...bans.map(b => b.year_started))
+  const isActive = bans.some(b => b.status === 'active')
+  // Open-ended = still active, or a recorded ban with no end year (e.g. a ban
+  // marked lifted but missing its end date). Either way the bar runs to today
+  // and the label reads "present" rather than asserting a false end year.
+  const openEnded = isActive || bans.some(b => b.year_ended == null)
+  const end = openEnded ? currentYear : Math.max(...bans.map(b => b.year_ended ?? currentYear))
+  const action = bans
+    .map(b => canonAction(b.action_type))
+    .reduce<CanonAction>((worst, a) => (SEVERITY[a] > SEVERITY[worst] ? a : worst), 'challenged')
+  return { start, end, isActive, openEnded, action, count: bans.length }
+}
+
 export default function BanTimeline({
   rows,
   firstPublishedYear,
@@ -325,21 +360,27 @@ export default function BanTimeline({
                       strokeWidth="0.5"
                     />
                   )}
-                  {row.bans.map((ban) => {
-                    const start = ban.year_started
-                    const end = ban.year_ended ?? currentYear
+                  {(() => {
+                    // One envelope bar per country (see collapseRow). Hue = the
+                    // most severe action, matching the table's BanActionBadge
+                    // palette (banned = red, restricted = amber, challenged =
+                    // grey); opacity = status (active full, historical faded);
+                    // the fill SHAPE (solid / hatched / outline) redundantly
+                    // re-encodes the action for colour-blind readers.
+                    const env = collapseRow(row.bans, currentYear)
+                    if (!env) return null
+                    const { start, end, isActive, openEnded, action, count } = env
                     const x1 = x(start)
                     const x2 = x(end)
                     const w = Math.max(6, x2 - x1)
                     const barY = yMid - barH / 2
 
-                    const isActive = ban.status === 'active'
-                    const colorClass = isActive
-                      ? 'text-red-500'
-                      : 'text-gray-400'
-                    const action = ban.action_type
-                    const endLabel = ban.year_ended ?? 'present'
-                    const titleText = `${row.label} — ${action} ${start}–${endLabel}, status: ${ban.status}`
+                    const colorClass =
+                      action === 'challenged'
+                        ? 'text-gray-500'
+                        : action === 'restricted'
+                          ? 'text-amber-500'
+                          : 'text-red-600'
 
                     let fill = 'currentColor'
                     let stroke = 'currentColor'
@@ -356,8 +397,12 @@ export default function BanTimeline({
                       strokeWidth = 1.5
                     }
 
+                    const endLabel = openEnded ? 'present' : String(end)
+                    const countLabel = count > 1 ? ` (${count} bans)` : ''
+                    const titleText = `${row.label} — ${action}${countLabel} ${start}–${endLabel}, status: ${isActive ? 'active' : 'historical'}`
+
                     return (
-                      <g key={ban.id} className={colorClass}>
+                      <g className={colorClass} opacity={isActive ? 1 : 0.4}>
                         <title>{titleText}</title>
                         <rect
                           x={x1}
@@ -373,7 +418,7 @@ export default function BanTimeline({
                         />
                       </g>
                     )
-                  })}
+                  })()}
                 </g>
               )
             })}
@@ -381,21 +426,14 @@ export default function BanTimeline({
         </div>
       </div>
 
-      {/* Legend */}
+      {/* Legend — colour (hue) tracks the action/severity, matching the bans
+          table's BanActionBadge palette; opacity tracks the status. */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-2 text-[11px] text-gray-500 border-t border-gray-200 bg-gray-50/60">
-        <span className="font-medium text-gray-600 mr-1">Status:</span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-red-500" /> active
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-400" /> historical
-        </span>
-        <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
         <span className="font-medium text-gray-600 mr-1">Action:</span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-500" /> banned
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-red-600" /> banned
         </span>
-        <span className="inline-flex items-center gap-1.5 text-gray-500">
+        <span className="inline-flex items-center gap-1.5 text-amber-500">
           <svg width="14" height="10" aria-hidden="true" className="overflow-visible">
             <rect width="14" height="10" fill={`url(#${stripeId})`} stroke="currentColor" strokeWidth="0.5" />
           </svg>
@@ -404,6 +442,14 @@ export default function BanTimeline({
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block w-3 h-2.5 rounded-sm border-[1.5px] border-gray-500" />
           challenged
+        </span>
+        <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
+        <span className="font-medium text-gray-600 mr-1">Status:</span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600" /> active
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600 opacity-40" /> historical
         </span>
       </div>
     </figure>
