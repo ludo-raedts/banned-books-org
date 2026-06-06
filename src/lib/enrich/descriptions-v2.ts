@@ -43,7 +43,7 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../supabase'
-import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError } from './google-books'
+import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError, gbQuotaTripped } from './google-books'
 
 type SourceType =
   | 'wikipedia'
@@ -88,6 +88,12 @@ export type EnrichDescriptionsV2Opts = {
    * e.g. a random sample — where the caller has already chosen the rows.
    */
   ids?: number[]
+  /**
+   * Skip the Google Books source entirely. Use when the GB daily quota is
+   * already exhausted and the other sources (Wikipedia/OpenLibrary) suffice —
+   * avoids a guaranteed 429 on the first row aborting the whole run.
+   */
+  skipGoogleBooks?: boolean
   /**
    * Number of books processed concurrently. Defaults to 1 (sequential).
    * Each worker does its own Wikipedia/OL/GB lookups, so concurrency=5
@@ -188,6 +194,21 @@ async function wikiSummary(pageTitle: string, lang: string): Promise<WikiSummary
   } catch { return null }
 }
 
+// explaintext extracts keep section headings ("== Plot ==", "== References ==")
+// and run on for ~1200 chars. The lead paragraph before the first heading is the
+// canonical summary; everything after it is article body noise. Keep the lead,
+// drop heading markers, and flatten to a single clean paragraph.
+export function cleanWikiExtract(raw: string): string {
+  let t = raw.replace(/\r/g, '')
+  const h = t.search(/\n+\s*={2,}/) // first section heading
+  if (h !== -1) t = t.slice(0, h)
+  return t
+    .replace(/={2,}/g, '')          // stray heading markers
+    .replace(/\n+/g, ' ')           // flatten paragraph breaks
+    .replace(/\s{2,}/g, ' ')        // collapse runs of whitespace
+    .trim()
+}
+
 async function wikiFullExtract(pageTitle: string, lang: string): Promise<string | null> {
   // Wikipedia caps exchars at 1200 for the action=query / prop=extracts API
   // (passing more silently truncates with a warning). For our verification
@@ -203,7 +224,10 @@ async function wikiFullExtract(pageTitle: string, lang: string): Promise<string 
     for (const k of Object.keys(pages)) {
       if (pages[k].missing !== undefined) return null
       const ex = pages[k].extract
-      if (ex && ex.length >= MIN_DESC_CHARS) return ex
+      if (ex) {
+        const cleaned = cleanWikiExtract(ex)
+        if (cleaned.length >= MIN_DESC_CHARS) return cleaned
+      }
     }
     return null
   } catch { return null }
@@ -377,6 +401,11 @@ async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
 // ──────────────────────────────────────────────────────────────────────
 
 async function googleBooks(title: string, author: string): Promise<SourceExtract | null> {
+  // If the GB daily quota is already known-dead, GB is just one optional source
+  // of several — skip it and let Wikipedia/OL carry the row, rather than throwing
+  // and aborting the whole run. (A fresh 429 mid-run still throws inside gbVolumes,
+  // preserving the existing clean-stop-and-resume behaviour.)
+  if (gbQuotaTripped()) return null
   const volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION, delayMs: 0 })
   for (const item of volumes) {
     const desc = item.volumeInfo.description
@@ -516,8 +545,9 @@ async function enrichOne(
   }
   if (ol) collected.push(ol)
 
-  // 3. Google Books — useful to verify, especially when Wikipedia is empty
-  const gb = await googleBooks(titleClean, author)
+  // 3. Google Books — useful to verify, especially when Wikipedia is empty.
+  //    Skipped when explicitly disabled or when the daily quota is already dead.
+  const gb = (opts.skipGoogleBooks || gbQuotaTripped()) ? null : await googleBooks(titleClean, author)
   if (gb) collected.push(gb)
 
   // 4. Non-English Wikipedia, only when we still don't have ≥2 sources
