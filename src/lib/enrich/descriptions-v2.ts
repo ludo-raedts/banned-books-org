@@ -43,6 +43,7 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../supabase'
+import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION } from './google-books'
 
 type SourceType =
   | 'wikipedia'
@@ -376,26 +377,21 @@ async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
 // ──────────────────────────────────────────────────────────────────────
 
 async function googleBooks(title: string, author: string): Promise<SourceExtract | null> {
-  try {
-    const q = encodeURIComponent(`intitle:${title}${author ? ` inauthor:${author}` : ''}`)
-    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=3`)
-    if (!res.ok) return null
-    const json = await res.json() as { items?: Array<{ id: string; volumeInfo: { description?: string; infoLink?: string; title?: string; authors?: string[] } }> }
-    for (const item of json.items ?? []) {
-      const desc = item.volumeInfo.description
-      if (!desc || desc.length < MIN_DESC_CHARS) continue
-      // Validate: GB's own metadata must mention our author surname.
-      const itemAuthors = (item.volumeInfo.authors ?? []).join(' ')
-      if (!sourceMatches(`${desc} ${item.volumeInfo.title ?? ''} ${itemAuthors}`, title, author)) continue
-      return {
-        type: 'google_books',
-        url: item.volumeInfo.infoLink ?? `https://books.google.com/books?id=${item.id}`,
-        text: desc,
-        pageLang: 'en',
-      }
+  const volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION, delayMs: 0 })
+  for (const item of volumes) {
+    const desc = item.volumeInfo.description
+    if (!desc || desc.length < MIN_DESC_CHARS) continue
+    // Validate: GB's own metadata must mention our author surname.
+    const itemAuthors = (item.volumeInfo.authors ?? []).join(' ')
+    if (!sourceMatches(`${desc} ${item.volumeInfo.title ?? ''} ${itemAuthors}`, title, author)) continue
+    return {
+      type: 'google_books',
+      url: item.volumeInfo.infoLink ?? `https://books.google.com/books?id=${item.id}`,
+      text: desc,
+      pageLang: 'en',
     }
-    return null
-  } catch { return null }
+  }
+  return null
 }
 
 // ──────────────────────────────────────────────────────────────────────

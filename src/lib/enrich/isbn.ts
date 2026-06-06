@@ -37,6 +37,7 @@
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
+import { gbVolumesByTitleAuthor, gbIsbn13, GB_FIELDS_ISBN } from './google-books'
 
 const OL_DELAY_MS = 400
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
@@ -263,29 +264,13 @@ async function searchOL(title: string, author: string): Promise<SearchHit | null
 }
 
 async function searchGoogleBooks(title: string, author: string): Promise<SearchHit | null> {
-  try {
-    const q = encodeURIComponent(`intitle:${title}${author ? ` inauthor:${author}` : ''}`)
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=5`
-    const res = await fetch(url)
-    if (!res.ok) return null
-    const json = (await res.json()) as {
-      items?: Array<{
-        volumeInfo: {
-          title?: string
-          authors?: string[]
-          industryIdentifiers?: Array<{ type: string; identifier: string }>
-        }
-      }>
-    }
-    for (const item of json.items ?? []) {
-      for (const id of item.volumeInfo?.industryIdentifiers ?? []) {
-        if (id.type === 'ISBN_13') return { isbn: id.identifier, matchedTitle: item.volumeInfo?.title ?? '', matchedAuthors: item.volumeInfo?.authors ?? [] }
-      }
-    }
-    return null
-  } catch {
-    return null
+  // delayMs: 0 — the caller's outer loop already sleeps OL_DELAY_MS after this.
+  const volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 5, fields: GB_FIELDS_ISBN, delayMs: 0 })
+  for (const item of volumes) {
+    const isbn = gbIsbn13(item.volumeInfo)
+    if (isbn) return { isbn, matchedTitle: item.volumeInfo.title ?? '', matchedAuthors: item.volumeInfo.authors ?? [] }
   }
+  return null
 }
 
 export type EnrichIsbnOpts = {

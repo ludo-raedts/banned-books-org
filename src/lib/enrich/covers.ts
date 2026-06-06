@@ -13,10 +13,10 @@
 // are skipped unless `force` is true.
 
 import { adminClient } from '../supabase'
-import { checkImageUrl, repairGbStrip } from './_placeholder'
 import { titleLadder } from './_title-ladder'
 import { titlesMatch } from './title-match'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
+import { gbVolumesByTitle, gbVolumesByIsbn, resolveGbCover, GB_FIELDS_COVER } from './google-books'
 
 const OL_DELAY_MS   = 200
 const GB_DELAY_MS   = 600
@@ -24,7 +24,7 @@ const WIKI_DELAY_MS = 200
 const BOOK_DELAY_MS = 200
 
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
-const NEW_SOURCES = ['ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia']
+const NEW_SOURCES = ['gb_isbn', 'ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia']
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -95,39 +95,6 @@ export async function olSearch(title: string, author: string): Promise<{ coverUr
   return first.workId ? first : retry
 }
 
-function transformGBUrl(url: string): string {
-  return url
-    .replace('http://', 'https://')
-    .replace('zoom=1', 'zoom=3')
-    .replace('&edge=curl', '')
-    .replace('edge=curl&', '')
-    .replace('edge=curl', '')
-}
-
-async function gbSearch(query: string, expectedTitle: string): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=3&fields=items(volumeInfo(title,imageLinks))`
-    )
-    await sleep(GB_DELAY_MS)
-    if (!res.ok) return null
-    const json = await res.json() as {
-      items?: Array<{ volumeInfo: { title?: string; imageLinks?: { large?: string; medium?: string; thumbnail?: string } } }>
-    }
-    for (const item of json.items ?? []) {
-      // Title-search returns the most-popular sibling for an obscure query;
-      // require the volume's own title to contain every significant word of
-      // ours before trusting its cover.
-      if (!titlesMatch(expectedTitle, item.volumeInfo?.title ?? '')) continue
-      const img = item.volumeInfo?.imageLinks?.large
-        ?? item.volumeInfo?.imageLinks?.medium
-        ?? item.volumeInfo?.imageLinks?.thumbnail
-      if (img) return transformGBUrl(img)
-    }
-    return null
-  } catch { return null }
-}
-
 async function wikipediaCover(title: string, author: string): Promise<string | null> {
   try {
     const q = encodeURIComponent(`${title} ${author} book`.trim())
@@ -165,6 +132,7 @@ type BookRow = {
   title_english_meaningful: string | null
   original_language: string | null
   openlibrary_work_id: string | null
+  isbn13: string | null
   author: string | null
   prevSources: string[]
 }
@@ -201,6 +169,7 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     title_english_meaningful: string | null
     original_language: string | null
     openlibrary_work_id: string | null
+    isbn13: string | null
     cover_status: string | null
     // PostgREST returns this embed as a single object (1-to-1: cover_search_attempts.book_id
     // is unique), not an array. Tolerate either shape for safety.
@@ -214,7 +183,7 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     let q = supabase
       .from('books')
       .select(`
-        id, slug, title, openlibrary_work_id, cover_status,
+        id, slug, title, openlibrary_work_id, isbn13, cover_status,
         title_native, title_transliterated, title_english_meaningful, original_language,
         cover_search_attempts!left(sources_tried),
         book_authors!left(authors!left(display_name))
@@ -259,6 +228,7 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
       title_english_meaningful: row.title_english_meaningful,
       original_language: row.original_language,
       openlibrary_work_id: row.openlibrary_work_id,
+      isbn13: row.isbn13,
       author: row.book_authors?.[0]?.authors?.display_name ?? null,
       prevSources,
     })
@@ -274,17 +244,12 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   log(`${opts.apply ? `Processing ${limit}…` : `DRY-RUN — sampling ${limit}`}`)
 
   async function gbSearchVerified(q: string, expectedTitle: string, tracker: { sawPlaceholder: boolean }): Promise<string | null> {
-    const url = await gbSearch(q, expectedTitle)
-    if (!url) return null
-    const check = await checkImageUrl(url)
-    if (check.ok === false) {
-      if (check.reason === 'placeholder') tracker.sawPlaceholder = true
-      else return url // transient fetch failure — keep prior lenient behaviour
-      return null
-    }
-    // Reject/repair degenerate horizontal strips (top sliver of the cover that
-    // Google returns at zoom=3 for some books). Falls back to zoom=1 or null.
-    return repairGbStrip(url, check.width, check.height)
+    const volumes = await gbVolumesByTitle(q, { maxResults: 3, fields: GB_FIELDS_COVER, delayMs: GB_DELAY_MS })
+    // resolveGbCover applies the title-match guard, the pHash placeholder check,
+    // and the strip repair in one place (see google-books.ts).
+    const result = await resolveGbCover(volumes, expectedTitle)
+    if (result.kind === 'placeholder') { tracker.sawPlaceholder = true; return null }
+    return result.kind === 'cover' ? result.url : null
   }
 
   let found = 0, stillFailed = 0, rejectedPlaceholder = 0, errCount = 0
@@ -301,6 +266,19 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
     const placeholderTracker = { sawPlaceholder: false }
 
     try {
+      // ISBN-direct first: when the book has a (validated) ISBN-13, ask Google
+      // Books for that exact edition. The ISBN binds the edition, so this is the
+      // highest-precision source and needs no title guard — but the placeholder
+      // and strip checks in resolveGbCover still run. This bypasses the
+      // title-search "most-popular sibling" failure mode entirely.
+      if (book.isbn13) {
+        newSources.push('gb_isbn')
+        const isbnVolumes = await gbVolumesByIsbn(book.isbn13, { fields: GB_FIELDS_COVER, delayMs: GB_DELAY_MS })
+        const isbnResult = await resolveGbCover(isbnVolumes, book.title, { requireTitleMatch: false })
+        if (isbnResult.kind === 'placeholder') placeholderTracker.sawPlaceholder = true
+        else if (isbnResult.kind === 'cover') { coverUrl = isbnResult.url; source = 'GB-isbn' }
+      }
+
       // Walk the title ladder; for each variant try GB → OL → OL-stripped →
       // Wikipedia in order. First hit (across all variants) wins. The
       // `newSources` list is annotated with the variant tag (e.g.
