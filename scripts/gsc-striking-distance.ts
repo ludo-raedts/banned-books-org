@@ -7,11 +7,18 @@
  * clicks gained if the page moved to position 3 (a conservative target —
  * pos 1 would inflate the numbers and is rarely realistic).
  *
+ * BY DEFAULT excludes templated/bot queries (e.g. `"<title>" challenged
+ * banned`) — those have 0% CTR by construction, pollute the opportunity
+ * list, and would fill it with non-actionable noise. Pass --include-bots
+ * to see them (e.g. when investigating whether a specific page is
+ * dominated by bot traffic).
+ *
  * Usage:
  *   pnpm tsx scripts/gsc-striking-distance.ts
  *   pnpm tsx scripts/gsc-striking-distance.ts --days=90 --min-impr=50
  *   pnpm tsx scripts/gsc-striking-distance.ts --pos-min=4 --pos-max=15
  *   pnpm tsx scripts/gsc-striking-distance.ts --target-pos=2
+ *   pnpm tsx scripts/gsc-striking-distance.ts --include-bots
  */
 import { promises as fs } from 'fs'
 import path from 'path'
@@ -84,6 +91,17 @@ function arg(name: string, fallback?: string) {
   const a = process.argv.slice(2).find(x => x.startsWith(`--${name}=`))
   return a ? a.split('=').slice(1).join('=') : fallback
 }
+function flag(name: string) { return process.argv.slice(2).includes(`--${name}`) }
+
+/**
+ * Templated / bot query signature (mirrors scripts/gsc-diagnose.ts). These
+ * are machine-generated lookups of the form `"<title>" <author?> challenged
+ * banned [word permutations]`. No human searches this way; the queries
+ * carry ~0 CTR by construction, so they would dominate any "striking
+ * distance" view despite being non-actionable. RE2 form is for GSC's
+ * server-side excludingRegex; the value mirrors gsc-diagnose.ts.
+ */
+const BOT_QUERY_RE2 = '(?i)(challenged banned|banned challenged)'
 
 async function main() {
   const site = arg('site', 'sc-domain:banned-books.org')!
@@ -93,6 +111,7 @@ async function main() {
   const minImpr = Number(arg('min-impr', '100'))
   const targetPos = Number(arg('target-pos', '3'))
   const limit = Number(arg('limit', '25'))
+  const includeBots = flag('include-bots')
 
   const auth = await authorize()
   const sc = google.searchconsole({ version: 'v1', auth })
@@ -100,14 +119,21 @@ async function main() {
   const endDate = isoDate(daysAgo(2))
   const startDate = isoDate(daysAgo(days + 2))
   console.log(`\n${site}  (${startDate} → ${endDate})`)
-  console.log(`Striking distance: pos ${posMin}–${posMax}, ≥${minImpr} impr, target pos ${targetPos}\n`)
+  const botLabel = includeBots ? ' (including bot/templated queries)' : ' (organic queries only)'
+  console.log(`Striking distance: pos ${posMin}–${posMax}, ≥${minImpr} impr, target pos ${targetPos}${botLabel}\n`)
+
+  // Server-side filter — drop the templated-bot pattern via excludingRegex
+  // before pagination. Saves quota and keeps the candidate list actionable.
+  const dimensionFilterGroups = includeBots
+    ? undefined
+    : [{ filters: [{ dimension: 'query', operator: 'excludingRegex', expression: BOT_QUERY_RE2 }] }]
 
   // Pull [query × page] in pages of 5000 until exhausted or 25k rows.
   const allRows: { keys?: string[] | null; clicks?: number | null; impressions?: number | null; ctr?: number | null; position?: number | null }[] = []
   for (let startRow = 0; startRow < 25000; startRow += 5000) {
     const { data } = await sc.searchanalytics.query({
       siteUrl: site,
-      requestBody: { startDate, endDate, dimensions: ['query', 'page'], rowLimit: 5000, startRow },
+      requestBody: { startDate, endDate, dimensions: ['query', 'page'], rowLimit: 5000, startRow, dimensionFilterGroups },
     })
     const rows = data.rows ?? []
     allRows.push(...rows)
