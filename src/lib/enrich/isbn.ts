@@ -47,7 +47,7 @@ const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.o
 // 0.5 = at least half the smaller set's significant words must overlap.
 // Tuned by walking the 2026-05-18 run: catches "The Bible → Far Eastern Art"
 // and the 9798-POD collisions while passing series-Vol matches.
-const TITLE_MATCH_THRESHOLD = 0.5
+export const TITLE_MATCH_THRESHOLD = 0.5
 
 // Minimum fraction of the QUERY title's significant words that must appear in
 // the matched record's title. This is the OTHER direction from
@@ -59,7 +59,7 @@ const TITLE_MATCH_THRESHOLD = 0.5
 // scores that 0.5 and the 0.6 gate rejects it, while genuine subtitle/volume
 // matches keep coverage 1.0 ("1984" → "1984: A Novel", "Soul Eater" → "Soul
 // Eater, Vol. 1") because every query word still appears.
-const QUERY_COVERAGE_THRESHOLD = 0.6
+export const QUERY_COVERAGE_THRESHOLD = 0.6
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -203,7 +203,7 @@ export function editionLanguageAcceptable(
 // outages don't block all enrichment.
 type EditionCheck = { ok: true } | { ok: false; reason: string }
 
-async function verifyEdition(
+export async function verifyEdition(
   isbn: string,
   queryTitle: string,
   dbLang: string | null,
