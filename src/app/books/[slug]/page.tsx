@@ -660,6 +660,19 @@ export default async function BookPage({
       .map(({ earliest: _, ...row }) => row)
   })()
 
+  // Countries whose bans carry no start year can't be placed on the time axis,
+  // so they're absent from the timeline above. Surface them as a footnote so the
+  // chart's country count doesn't silently disagree with the table below.
+  const undatedTimelineLabels: string[] = (() => {
+    const plotted = new Set(timelineRows.map((r) => r.key))
+    const undated = new Map<string, string>()
+    for (const ban of book.bans) {
+      if (ban.year_started != null || plotted.has(ban.country_code)) continue
+      undated.set(ban.country_code, ban.countries?.name_en ?? ban.country_code)
+    }
+    return [...undated.values()]
+  })()
+
   // ── Pick primary country & reason for contextual link sections ───────────────
   const countryFreqInBook = new Map<string, { count: number; name: string }>()
   for (const b of book.bans) {
@@ -1205,6 +1218,7 @@ export default async function BookPage({
             firstPublishedYear={book.first_published_year}
             firstPublishedLabel="Published"
             caption={`${book.title}: ${book.bans.length} bans across ${timelineRows.length} ${timelineRows.length === 1 ? 'country' : 'countries'}.`}
+            undatedLabels={undatedTimelineLabels}
           />
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">

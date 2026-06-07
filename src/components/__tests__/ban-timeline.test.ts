@@ -97,6 +97,42 @@ describe('BanTimeline', () => {
     expect(out).toContain('2005–2008')
   })
 
+  it('fades out a lifted ban with no recorded end year and labels it "unknown"', () => {
+    const rows: TimelineRow[] = [
+      {
+        key: 'ES', label: 'Spain', flag: '🇪🇸',
+        bans: [{ id: 1, year_started: 1939, year_ended: null, status: 'historical', action_type: 'banned' }],
+      },
+      {
+        key: 'US', label: 'United States', flag: '🇺🇸',
+        bans: [{ id: 2, year_started: 2023, year_ended: null, status: 'active', action_type: 'restricted' }],
+      },
+    ]
+    const out = render({ rows, firstPublishedYear: 1862, currentYear: 2026 })
+    // Historical + open-ended → "unknown" label, fade-gradient fill, and the
+    // footnote that explains the fade. The active US ban stays "present".
+    expect(out).toContain('banned 1939–unknown')
+    expect(out).toContain('url(#ban-timeline-fade)')
+    expect(out).toContain('lifted, end year unknown')
+    expect(out).toContain('2023–present')
+  })
+
+  it('lists countries whose bans have no year as a "not shown" footnote', () => {
+    const rows: TimelineRow[] = [
+      {
+        key: 'ES', label: 'Spain', flag: '🇪🇸',
+        bans: [{ id: 1, year_started: 1939, year_ended: 1975, status: 'historical', action_type: 'banned' }],
+      },
+      {
+        key: 'US', label: 'United States', flag: '🇺🇸',
+        bans: [{ id: 2, year_started: 2023, year_ended: null, status: 'active', action_type: 'restricted' }],
+      },
+    ]
+    const out = render({ rows, currentYear: 2026, undatedLabels: ['Vatican City (Holy See)', 'Russia'] })
+    expect(out).toContain('Not shown')
+    expect(out).toContain('Vatican City (Holy See), Russia')
+  })
+
   it('renders nothing when bans.length < 3', () => {
     const out = render({
       rows: [

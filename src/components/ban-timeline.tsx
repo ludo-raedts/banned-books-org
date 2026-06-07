@@ -28,6 +28,9 @@ export type BanTimelineProps = {
   minBansToRender?: number
   /** Optional override of "today" — primarily for deterministic snapshot tests. */
   currentYear?: number
+  /** Country labels whose bans have no start year and so can't be plotted —
+   * listed as a footnote so the chart doesn't silently disagree with the table. */
+  undatedLabels?: string[]
 }
 
 const BASE_ROW_H = 28
@@ -149,6 +152,7 @@ export default function BanTimeline({
   caption,
   minBansToRender = 2,
   currentYear = new Date().getUTCFullYear(),
+  undatedLabels = [],
 }: BanTimelineProps) {
   // Measure the available width so the SVG coordinate space matches the rendered
   // width 1:1. Hooks must run unconditionally, so they precede the early returns.
@@ -202,6 +206,12 @@ export default function BanTimeline({
   const titleId = 'ban-timeline-title'
   const descId = 'ban-timeline-desc'
   const stripeId = 'ban-timeline-stripe'
+  const fadeId = 'ban-timeline-fade'
+
+  // Merge each country's bans once, up front, so the render loop and the
+  // "end year unknown" footnote read from the same segments.
+  const segmentsByRow = rows.map(r => mergeBans(r.bans, currentYear))
+  const hasUnknownEnd = segmentsByRow.some(segs => segs.some(s => !s.isActive && s.openEnded))
 
   const summary =
     caption ??
@@ -275,6 +285,18 @@ export default function BanTimeline({
                 <rect width="6" height="6" fill="currentColor" opacity="0.18" />
                 <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" strokeWidth="2.5" opacity="0.95" />
               </pattern>
+              {/* Right-fading overlay for bans that are lifted but have no
+                  recorded end year. Laid on TOP of a normal coloured bar, it
+                  dissolves the right side into the white background so the bar
+                  keeps its action colour (red/amber/grey) yet never reads as
+                  still in force today. Explicit white — currentColor does not
+                  resolve inside gradient stops, which is why it must not encode
+                  the bar's hue. */}
+              <linearGradient id={fadeId} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="white" stopOpacity="0" />
+                <stop offset="0.45" stopColor="white" stopOpacity="0" />
+                <stop offset="1" stopColor="white" stopOpacity="1" />
+              </linearGradient>
             </defs>
 
             {/* Axis: ticks + decade gridlines */}
@@ -392,12 +414,17 @@ export default function BanTimeline({
                       (active full, historical faded); the fill SHAPE (solid /
                       hatched / outline) redundantly re-encodes the action for
                       colour-blind readers. */}
-                  {mergeBans(row.bans, currentYear).map((seg, segIdx) => {
+                  {segmentsByRow[rowIdx].map((seg, segIdx) => {
                     const { start, end, isActive, openEnded, action, count } = seg
                     const x1 = x(start)
                     const x2 = x(end)
                     const w = Math.max(6, x2 - x1)
                     const barY = yMid - barH / 2
+
+                    // Lifted but no recorded end year: we know it started, not
+                    // when it ended. Fade the bar out to the right so it doesn't
+                    // assert it still holds today, and mark it with an asterisk.
+                    const endUnknown = !isActive && openEnded
 
                     const colorClass =
                       action === 'challenged'
@@ -410,7 +437,15 @@ export default function BanTimeline({
                     let stroke = 'currentColor'
                     let fillOpacity = 0.85
                     let strokeWidth = 0
-                    if (action === 'restricted') {
+                    if (endUnknown) {
+                      // Keep the action hue (currentColor); dim it like other
+                      // historical bars. The white fade overlay (below) handles
+                      // the dissolve toward "today".
+                      fill = 'currentColor'
+                      fillOpacity = 0.4
+                      stroke = 'none'
+                      strokeWidth = 0
+                    } else if (action === 'restricted') {
                       fill = `url(#${stripeId})`
                       fillOpacity = 1
                       stroke = 'currentColor'
@@ -421,12 +456,12 @@ export default function BanTimeline({
                       strokeWidth = 1.5
                     }
 
-                    const endLabel = openEnded ? 'present' : String(end)
+                    const endLabel = isActive ? 'present' : openEnded ? 'unknown' : String(end)
                     const countLabel = count > 1 ? ` (${count} bans)` : ''
                     const titleText = `${row.label} — ${action}${countLabel} ${start}–${endLabel}, status: ${isActive ? 'active' : 'historical'}`
 
                     return (
-                      <g key={`${row.key}-${segIdx}`} className={colorClass} opacity={isActive ? 1 : 0.4}>
+                      <g key={`${row.key}-${segIdx}`} className={colorClass} opacity={isActive || endUnknown ? 1 : 0.4}>
                         <title>{titleText}</title>
                         <rect
                           x={x1}
@@ -440,6 +475,29 @@ export default function BanTimeline({
                           stroke={stroke}
                           strokeWidth={strokeWidth}
                         />
+                        {endUnknown && (
+                          <rect
+                            x={x1}
+                            y={barY}
+                            width={w}
+                            height={barH}
+                            rx={2}
+                            ry={2}
+                            fill={`url(#${fadeId})`}
+                          />
+                        )}
+                        {endUnknown && (
+                          <text
+                            x={x1 + Math.min(w * 0.4, 40)}
+                            y={yMid + 3.5}
+                            fontSize="11"
+                            fontWeight="700"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            *
+                          </text>
+                        )}
                       </g>
                     )
                   })}
@@ -452,29 +510,44 @@ export default function BanTimeline({
 
       {/* Legend — colour (hue) tracks the action/severity, matching the bans
           table's BanActionBadge palette; opacity tracks the status. */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-2 text-[11px] text-gray-500 border-t border-gray-200 bg-gray-50/60">
-        <span className="font-medium text-gray-600 mr-1">Action:</span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-red-600" /> banned
-        </span>
-        <span className="inline-flex items-center gap-1.5 text-amber-500">
-          <svg width="14" height="10" aria-hidden="true" className="overflow-visible">
-            <rect width="14" height="10" fill={`url(#${stripeId})`} stroke="currentColor" strokeWidth="0.5" />
-          </svg>
-          restricted
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm border-[1.5px] border-gray-500" />
-          challenged
-        </span>
-        <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
-        <span className="font-medium text-gray-600 mr-1">Status:</span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600" /> active
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600 opacity-40" /> historical
-        </span>
+      <div className="border-t border-gray-200 bg-gray-50/60">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-2 text-[11px] text-gray-500">
+          <span className="font-medium text-gray-600 mr-1">Action:</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block w-3 h-2.5 rounded-sm bg-red-600" /> banned
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-amber-500">
+            <svg width="14" height="10" aria-hidden="true" className="overflow-visible">
+              <rect width="14" height="10" fill={`url(#${stripeId})`} stroke="currentColor" strokeWidth="0.5" />
+            </svg>
+            restricted
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block w-3 h-2.5 rounded-sm border-[1.5px] border-gray-500" />
+            challenged
+          </span>
+          <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
+          <span className="font-medium text-gray-600 mr-1">Status:</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600" /> active
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-600 opacity-40" /> historical
+          </span>
+          {hasUnknownEnd && (
+            <>
+              <span className="hidden sm:inline-block w-px h-3 bg-gray-300" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1">
+                <span aria-hidden="true" className="font-bold text-gray-600">*</span> lifted, end year unknown (bar fades out)
+              </span>
+            </>
+          )}
+        </div>
+        {undatedLabels.length > 0 && (
+          <div className="px-3 pb-2 text-[11px] text-gray-400">
+            Not shown — year unknown: {undatedLabels.join(', ')}
+          </div>
+        )}
       </div>
     </figure>
   )
