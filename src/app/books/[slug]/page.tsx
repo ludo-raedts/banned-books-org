@@ -1112,6 +1112,9 @@ export default async function BookPage({
               <span className="text-gray-400"> · {book.first_published_year}</span>
             )}
           </p>
+          {book.isbn13 && (
+            <p className="text-xs text-gray-400">ISBN {book.isbn13}</p>
+          )}
           {book.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {book.genres.map((slug) => (
