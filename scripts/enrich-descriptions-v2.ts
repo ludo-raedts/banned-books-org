@@ -48,6 +48,7 @@ const OVERWRITE        = process.argv.includes('--overwrite')
 const ALLOW_LLM        = process.argv.includes('--allow-llm')
 const PROCESS_FLAGGED  = process.argv.includes('--process-flagged')
 const REGROUND         = process.argv.includes('--reground-ungrounded')
+const SKIP_GB          = process.argv.includes('--skip-google-books')
 const limitArg         = process.argv.find(a => a.startsWith('--limit='))
 const slugArg          = process.argv.find(a => a.startsWith('--slug='))
 const concArg          = process.argv.find(a => a.startsWith('--concurrency='))
@@ -61,6 +62,7 @@ async function main() {
   if (OVERWRITE)       console.log(`  --overwrite: replacing existing description_book too`)
   if (PROCESS_FLAGGED) console.log(`  --process-flagged: include rows the judge flagged`)
   if (REGROUND)        console.log(`  --reground-ungrounded: re-source ISBN rows with untracked synopses (overwrite, backed up)`)
+  if (SKIP_GB)         console.log(`  --skip-google-books: Wikipedia/OpenLibrary only (use when the GB daily quota is spent)`)
   if (ALLOW_LLM)       console.log(`  --allow-llm: grounded LLM synthesis ENABLED`)
   if (LIMIT)           console.log(`  --limit=${LIMIT}`)
   if (CONCURRENCY > 1) console.log(`  --concurrency=${CONCURRENCY}`)
@@ -74,6 +76,7 @@ async function main() {
     allowLlm: ALLOW_LLM,
     processFlagged: PROCESS_FLAGGED,
     regroundUngrounded: REGROUND,
+    skipGoogleBooks: SKIP_GB,
     concurrency: CONCURRENCY,
     onProgress: msg => console.log(msg),
   })
