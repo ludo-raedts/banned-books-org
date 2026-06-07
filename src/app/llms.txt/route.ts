@@ -128,7 +128,10 @@ export async function GET() {
 
   return new Response(lines.join('\n'), {
     headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
+      // text/markdown (the file *is* markdown per the llms.txt convention) so
+      // the homepage's `Accept: text/markdown` negotiation — which rewrites
+      // `/` here — serves a valid markdown content-type to agents.
+      'Content-Type': 'text/markdown; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',
     },
   })
