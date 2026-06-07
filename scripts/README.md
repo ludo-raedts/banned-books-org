@@ -56,6 +56,7 @@ Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='govern
 | `import-nipissing-challenges.ts` | Freedom to Read CA (JSON) | **Template voor school/library challenges:** per-entry scope, action_type, meerdere reasons, regio, instituut + per-entry bron | `--apply` (`--input=`) |
 | `add-ala-2025.ts` | ALA-lijst (hardcoded slugs) | Voegt **alleen bans** toe aan bestaande boeken — geen boek-creatie. Template voor "bestaande boeken aanvullen" | `--apply` |
 | `add-bulk-books.ts` | inline lijst | Bulk nieuwe boeken + OpenLibrary cover-fetch, direct via `adminClient()` | n.v.t. |
+| `import-russia-bans.ts` | `data/russia-articles-batch1.json` + `data/russia-minjust-batch1.json` | RU: hand-curated onafhankelijke-pers cases + Минюст Federal List of Extremist Materials; alles `country='RU'`/`scope='government'`; dedup op (book_slug, year_started); minjust-rijen auto-`needs_review` | `--apply` (`--only=articles\|minjust`) |
 
 **Vuistregel:** JSON met standaard government-bans → `import-africa` als template ·
 school/library challenges → `import-nipissing` · bans bij bestaande boeken → `add-ala-2025`.
@@ -119,14 +120,17 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | `enrich-descriptions-gpt.ts` | GPT-fallback voor wat OL/Google Books niet vond |
 | `enrich-ban-descriptions-gpt.ts` | GPT: concrete `description_ban` per boek |
 | `enrich-censorship-context-gpt.ts` | GPT: `censorship_context` waar die ontbreekt |
+| `enrich-descriptions-consensus.ts` | Recovery via **cross-model consensus** (GPT-4o-mini + Gemini-2.5-flash + judge) voor boeken die de v2-ladder niet kon gronden maar de modellen wél kennen; schrijft `description_source_type='ai_consensus'` (eigen tier, geen geciteerde bron). UNKNOWN/onenigheid → rij blijft onaangeroerd. Valideer eerst met `validate-consensus-descriptions.ts` |
 | **Covers** | |
 | `enrich-covers-continuous.ts` | Continu missende covers; tracking in `cover_search_attempts` |
 | `enrich-covers-v2.ts` | Re-try van eerder gefaalde cover-searches |
+| `enrich-russia-recognizable.ts` | Handmatig-geverifieerde cover + Engelse-titel pass voor de herkenbare subset Russia FSEM-boeken (internationaal-gepubliceerde werken met OL-cover); obscure regionale tracts blijven coverless |
 | **Auteurs** | |
 | `enrich-author-bios.ts` | Bios via Wikipedia (incl. `--photos-only`) |
 | `enrich-author-photos-v2.ts` | 2e-pass foto's voor auteurs zonder Wikipedia-hit |
 | **Identifiers / overig** | |
 | `enrich-isbn.ts` | Missende `isbn13` via OpenLibrary + Google Books |
+| `enrich-gb-harvest.ts` | **Gebundelde Google-Books harvester**: één GB-call per boek vult isbn13 + cover_url + original_language tegelijk (GB is ~1.000 queries/dag — losse per-veld scripts kosten ~3× quota). Deliberate GB-*residu* ná OL/Wikipedia. Logt year/categories/pages/publisher naar `data/gb-harvest-proposals.jsonl` (niet geschreven). Resumebaar; draait via launchd |
 | `enrich-archive-org.ts` | archive.org identifiers via Advanced Search API |
 | `enrich-gutenberg.ts` | Project Gutenberg IDs via Gutendex |
 | `enrich-genres-gpt.ts` | GPT genre-enrichment (lege `genres`) |
@@ -163,6 +167,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
 | `audit-study-guide-covers.ts` | SparkNotes/CliffsNotes-covers (zie memory study-guide audit) |
 | `_audit_shared_enrichment.ts` | "Most-popular hit"-contaminatie: covers én descriptions die een titel-search op het verkeerde boek plakte → `data/shared-cover-audit.md`, `data/shared-description-audit.md`, `public/shared-cover-suspects.html` (bron-guard zit in `src/lib/enrich/title-match.ts`) |
+| `_audit_ol_title_mismatch.ts` | Sibling van `_audit_shared_enrichment`: vangt het geval waar één boek's `openlibrary_work_id` naar een ánder werk wijst zónder dat een sibling de asset deelt (groepering mist het). Twee-tier (token-overlap + OL-auteur) onderscheidt CONFIRMED van LIKELY_TRANSLATION → `data/ol-title-mismatch-audit.md`. Lokaal-only |
 | `_audit_ol_contamination.ts` | "Poisoned guard"-incident (2026-06-04): herpast de gecorrigeerde OL-guard op elke opgeslagen `openlibrary`-description en bucketet afwijzingen per binding (isbn / work_id / search) → `data/ol-contamination-audit.md`. Read-only. |
 | `remediate-ol-contamination.ts` | Schoont de bevestigde "poisoned guard"-contaminatie op: nullt+flagt OL-descriptions die de gecorrigeerde guard afwijst **én** search-bound zijn of een blurb delen over inconsistente titels. Back-upt origineel naar CSV; `--apply` schrijft. |
 | `_audit_llm_ol_contamination.ts` | Follow-up op "poisoned guard": checkt of search-only `llm_grounded_*`-descriptions uit een fout OL-search source zijn gesynthetiseerd. Read-only. Resultaat 2026-06-04: 15 rijen, **0 besmet** (allen Wikipedia-gegrond). |
@@ -175,6 +180,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `_audit_keep_narrative_groundedness.ts` | 2e-pass op de ban-vs-context audit |
 | `_sample_keep_narrative.ts` / `_peek_censorship_context.ts` | Steekproef/inspectie-helpers |
 | `_measure_isbn_description_winrate.ts` | Meting (geen writes) |
+| `validate-consensus-descriptions.ts` | Read-only recall/false-positive-meting van de cross-model consensus-pijplijn (3 buckets: known/anonymous/target) — draai dit om een scope te vetten vóór `enrich-descriptions-consensus.ts --apply` |
 | **CSAM / editorial flags** | |
 | `_audit_csam_red_flags.ts` | Telt CSAM-red-flag treffers |
 | `_detect_nazi_warning_candidates.ts` | Kandidaten voor `context`/`extended` warning_level |
@@ -190,7 +196,14 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 | `cleanup-iran-titles.ts` | Iran-records met transliteratie als primaire titel → doctrine | gericht |
 | `cleanup-non-person-authors.ts` | Ruimt non-persoon authors op (uit `audit-non-person-authors.ts`) | gericht |
 | `apply-publication-year-fixes.ts` | Past high-conf jaar-correcties toe (uit `audit-publication-years.ts`) | apply |
-| `_apply_google_cover_fixes.ts` | zoom=3→1 fix; onherstelbare covers nullen | one-off |
+| `_apply_google_cover_fixes.ts` | zoom=3→1 fix; onherstelbare covers nullen (visuele preview vooraf: `_montage_google_covers.ts` → `public/cover-montage.html`) | one-off |
+| `cleanup-other-cotag.ts` | Strip redundante `'other'` ban-reason van bans die óók een specifieke reason dragen (repareert `enrich-reasons.ts`-artefact); bans met enkel `'other'` blijven | generiek |
+| `cleanup-shared-enrichment.ts` | Apply-zijde van `_audit_shared_enrichment`: nullt cover/description op alle leden van een SUSPECT shared-group; de geguarde enrichers herstellen daarna de rechtmatige eigenaar | gericht |
+| `normalize-russia-titles.ts` | RU FSEM Cyrillic-titels: zet `title_native_script='cyrillic'` + BGN/PCGN-transliteratie + `original_language`; raakt canonieke titel/slug niet aan; idempotent | generiek |
+| `source-orphan-canonical-bans.ts` | Hangt elk boek's eigen (HTTP-geverifieerde) EN-Wikipedia-artikel als bron aan ~46 canonieke seed-bans zonder `ban_source_links`; find-or-create op source_url; idempotent | gericht |
+| `source-orphan-cluster-bans.ts` | Bron-citaten voor twee schone wees-clusters: VA → Index Librorum Prohibitorum, IL → B'Tselem-lijst (veel bans → één gedeelde `ban_sources`-rij); idempotent | gericht |
+| `verify-pen-school-bans.ts` | Grondt PEN-school-bans tegen de upstream Index-bestanden (src#2131/#2068) en zet `bans.confidence='verified'` bij district-match via `titlesMatch()`; title+state-only matches → review, nooit auto | gericht |
+| `_fix_orphan_author_books.ts` | One-off: linkt de 37 boeken die `audit-integrity` als "0 gelinkte auteurs" flag'te (PERSON/VARIOUS/ANON/RENAME/REMOVE-buckets) | one-off |
 | `_apply_csam_block.ts` | ⚠️ DESTRUCTIEF one-time: blokkeert 2 CSAM-adjacent works | one-off |
 | `_apply_fr_nazi_warning_tiers.ts` | warning_level/rationale op 6 Nazi/Holocaust-denial boeken | one-off |
 | `_apply_ban_vs_context_cleanup.ts` | Past verdict van `_audit_ban_vs_context_overlap.ts` toe | apply |
@@ -211,6 +224,7 @@ Genummerde stages voor het opschonen/hergronden van bestaande descriptions.
 | Stage | Script | Doet |
 |---|---|---|
 | audit | `score-descriptions.ts` | Scoort `description_ban`/`censorship_context` op concreetheid (0–3) → CSV |
+| 1 | `wipe-ungrounded-filler-descriptions.ts` | Phase 1 QA: `description_book = NULL` voor `decision='WIPE'`-rijen (ai_drafted, geen ISBN/source, ≥2 filler-tells) uit `_audit_ungrounded_descriptions`; guard `description_source_type IS NULL`; CSV-backup → omkeerbaar. REGROUND-rijen blijven (Phase 2) |
 | 2 | `rewrite-descriptions-grounded.ts` | Herschrijft zwakke boeken op basis van de audit-CSV |
 | 2.5 | `flag-filler-rewrites.ts` | Flag't filler-phrasing → fake-audit CSV |
 | 2.6 | `strip-filler-sentences.ts` | Strip filler-zinnen/clausules (behoudt named cases) |
@@ -229,6 +243,7 @@ Verwerking van `import_review_queue` (legacy/idle — zie memory "Import queue i
 | `remap-unmapped-queue.ts` | Re-run reason-mapping over rows met `unmapped_reason` (3 passes) |
 | `llm-classify-unmapped-reasons.ts` | LLM 2e-pass voor rows die de regex-mapper niet aankon |
 | `salvage-stale-queue-bans.ts` | One-off salvage van 37 stale rows (2026-05-14 batch) |
+| `finish-deferred-review-queue.ts` | One-off (2026-06-06): rondt de laatste 4 `deferred` queue-rows af (2× approve, 2× blanket-works) + één boek-merge (Dwikhandita #799←#6331) |
 
 ---
 
