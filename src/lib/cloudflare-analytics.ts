@@ -19,9 +19,23 @@ type StatusBuckets = {
   other: number
 }
 
+// Splits the raw "threats" count into "blocks from our own WAF rules" (bots we
+// deliberately keep out — scrapers / AI-training crawlers / empty UA) vs. blocks
+// that came from Cloudflare's own threat detection (managed ruleset / Bot Fight
+// Mode) — i.e. genuinely suspicious traffic. Without this, the bare threats
+// number reads as "under attack" when it's mostly our own bot policy at work.
+export type ThreatBreakdown = {
+  ownRules: number   // source = firewallCustom (our rules)
+  managed: number    // source = firewallManaged (CF managed ruleset — exploits)
+  botFight: number   // source = botFight (legacy Bot Fight Mode)
+  other: number      // anything else (rate limit, etc.)
+  truncated: boolean // hit the pagination safety cap → counts are a floor
+}
+
 export type CloudflareSnapshot = {
   totals: Totals
   prevTotals: Totals
+  threatBreakdown: ThreatBreakdown
   topIPs: Array<{
     clientIP: string
     country: string | null
@@ -96,6 +110,66 @@ const QUERY = `
     }
   }
 `
+
+// Per-event firewall log. We can't use firewallEventsAdaptiveGroups (the
+// aggregating variant needs a broader token scope than our Analytics:Read and
+// returns an authz error), so we page through the raw events instead. Each page
+// caps at 200; we walk datetime_lt backwards until a short page or the safety cap.
+const FW_QUERY = `
+  query Threats($zone: String!, $since: Time!, $until: Time!) {
+    viewer {
+      zones(filter: { zoneTag: $zone }) {
+        firewallEventsAdaptive(
+          limit: 200
+          filter: { datetime_geq: $since, datetime_lt: $until }
+          orderBy: [datetime_DESC]
+        ) {
+          datetime
+          source
+        }
+      }
+    }
+  }
+`
+
+type FWEvent = { datetime: string; source: string }
+type FWResponse = {
+  data?: { viewer?: { zones?: Array<{ firewallEventsAdaptive: FWEvent[] }> } }
+  errors?: Array<{ message: string }>
+}
+
+async function fetchThreatBreakdown(token: string, zone: string, since: string): Promise<ThreatBreakdown> {
+  const out: ThreatBreakdown = { ownRules: 0, managed: 0, botFight: 0, other: 0, truncated: false }
+  let until = new Date().toISOString()
+  const MAX_PAGES = 10 // 10 × 200 = 2000 events ceiling; far above normal daily volume
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: FW_QUERY, variables: { zone, since, until } }),
+      cache: 'no-store',
+    })
+    if (!res.ok) break
+    const json = (await res.json()) as FWResponse
+    if (json.errors?.length) {
+      console.error('[cloudflare] firewall events errors', json.errors)
+      break
+    }
+    const events = json.data?.viewer?.zones?.[0]?.firewallEventsAdaptive ?? []
+    for (const e of events) {
+      if (e.source === 'firewallCustom') out.ownRules++
+      else if (e.source === 'firewallManaged') out.managed++
+      else if (e.source === 'botFight') out.botFight++
+      else out.other++
+    }
+    if (events.length < 200) return out
+    const oldest = events[events.length - 1].datetime
+    if (oldest <= since) return out
+    until = oldest
+    if (page === MAX_PAGES - 1) out.truncated = true
+  }
+  return out
+}
 
 type HourBucket = { sum: Totals }
 type AdaptiveStatusRow = { count: number; dimensions: { edgeResponseStatus: number } }
@@ -215,6 +289,10 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
   const totals = sumHourBuckets(zoneData.now)
   const prevTotals = sumHourBuckets(zoneData.prev)
 
+  // Categorise the threats into our-own-rules vs genuinely-suspicious. Best-effort:
+  // if this fails it stays all-zero and the card falls back to the bare count.
+  const threatBreakdown = await fetchThreatBreakdown(token, zone, since)
+
   const topIPs = zoneData.topIPs.map(r => ({
     clientIP: r.dimensions.clientIP,
     country: r.dimensions.clientCountryName,
@@ -226,11 +304,11 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
   const statusBuckets = bucketStatusRows(zoneData.statusCodes)
   const prevStatusBuckets = bucketStatusRows(zoneData.prevStatusCodes ?? [])
 
-  return { totals, prevTotals, topIPs, statusBuckets, prevStatusBuckets }
+  return { totals, prevTotals, threatBreakdown, topIPs, statusBuckets, prevStatusBuckets }
 }
 
 export const getCloudflareSnapshot = unstable_cache(
   fetchSnapshot,
-  ['cloudflare-snapshot-v8'],
+  ['cloudflare-snapshot-v9'],
   { revalidate: 300 },
 )

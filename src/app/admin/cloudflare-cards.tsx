@@ -1,5 +1,5 @@
 import { Cloud, Network, BarChart3 } from 'lucide-react'
-import { getCloudflareSnapshot } from '@/lib/cloudflare-analytics'
+import { getCloudflareSnapshot, type ThreatBreakdown } from '@/lib/cloudflare-analytics'
 
 const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
@@ -42,9 +42,18 @@ function VerdictLine({ verdict }: { verdict: Verdict }) {
   )
 }
 
-function healthVerdict(threats: number, cacheHitPct: number, requests: number): Verdict {
+// "Suspicious" = threats NOT from our own bot rules (CF managed ruleset, Bot
+// Fight Mode, etc). That's the number that actually warrants attention — blocks
+// from our own scraper/AI rules are policy, not an attack.
+function suspiciousThreats(b: ThreatBreakdown): number {
+  return b.managed + b.botFight + b.other
+}
+
+function healthVerdict(threats: number, breakdown: ThreatBreakdown, cacheHitPct: number, requests: number): Verdict {
   if (requests === 0) return { tone: 'info', message: 'No traffic in the last 24h.' }
-  if (threats >= 100) return { tone: 'warn', message: `${threats} threats blocked — high. Check the CF firewall events.` }
+  const suspicious = suspiciousThreats(breakdown)
+  if (suspicious >= 50) return { tone: 'warn', message: `${suspicious} genuinely suspicious requests (CF managed/exploit rules) — worth a look in the firewall events.` }
+  if (threats >= 100) return { tone: 'good', message: `${threats} threats blocked, but ${breakdown.ownRules} are your own bot rules — only ${suspicious} genuinely suspicious. Healthy.` }
   if (cacheHitPct < 20) return { tone: 'info', message: 'Low cache hit — expected, the site is mostly dynamic.' }
   return { tone: 'good', message: 'Healthy. CF is doing its job.' }
 }
@@ -126,7 +135,8 @@ export default async function CloudflareCards() {
     )
   }
 
-  const { totals, prevTotals, topIPs, statusBuckets, prevStatusBuckets } = snapshot
+  const { totals, prevTotals, threatBreakdown, topIPs, statusBuckets, prevStatusBuckets } = snapshot
+  const suspicious = suspiciousThreats(threatBreakdown)
   const cacheHitPct = totals.requests > 0 ? Math.round((totals.cachedRequests / totals.requests) * 100) : 0
   const prevCacheHitPct = prevTotals.requests > 0 ? Math.round((prevTotals.cachedRequests / prevTotals.requests) * 100) : 0
 
@@ -146,7 +156,7 @@ export default async function CloudflareCards() {
     statusRows.push({ label: 'Other', tooltip: 'Non-standard codes (1xx informational, etc.).', value: statusBuckets.other, prevValue: prevStatusBuckets.other, color: 'bg-gray-400', pct: pct(statusBuckets.other), direction: 'neutral' })
   }
 
-  const cardOneVerdict = healthVerdict(totals.threats, cacheHitPct, totals.requests)
+  const cardOneVerdict = healthVerdict(totals.threats, threatBreakdown, cacheHitPct, totals.requests)
   const cardThreeVerdict = statusVerdict(statusBuckets, statusTotal)
 
   return (
@@ -185,14 +195,29 @@ export default async function CloudflareCards() {
           />
           <Metric
             label="Threats"
-            tooltip="Requests CF auto-blocked (bots, exploits, WAF rules). <100/day is background noise. >1000/day suggests an active attack."
+            tooltip="Requests CF blocked. Split below into your own bot rules (scrapers / AI-training crawlers / empty UA — deliberate policy) vs. genuinely suspicious (CF's managed ruleset & Bot Fight Mode catching exploits)."
             value={compactNumber(totals.threats)}
-            valueClassName={totals.threats > 0 ? 'text-amber-600' : undefined}
+            valueClassName={suspicious > 0 ? 'text-amber-600' : 'text-gray-900'}
             current={totals.threats}
             previous={prevTotals.threats}
             direction="up-bad"
           />
         </dl>
+        {totals.threats > 0 && (
+          <p className="text-[11px] text-gray-500 leading-snug -mt-1">
+            of which{' '}
+            <span className="font-medium text-gray-700" title="firewallCustom — scrapers, AI-training crawlers, empty UA. Deliberate policy, not an attack.">
+              {compactNumber(threatBreakdown.ownRules)} your bot rules
+            </span>{' '}·{' '}
+            <span
+              className={suspicious > 0 ? 'font-medium text-amber-700' : 'text-gray-700'}
+              title="firewallManaged / Bot Fight Mode — Cloudflare's own threat detection (exploits, known-bad). This is the number that matters."
+            >
+              {compactNumber(suspicious)} genuinely suspicious
+            </span>
+            {threatBreakdown.truncated && <span className="text-gray-400"> (sampled)</span>}
+          </p>
+        )}
         <VerdictLine verdict={cardOneVerdict} />
       </div>
 
