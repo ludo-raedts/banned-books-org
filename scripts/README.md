@@ -127,6 +127,7 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | `enrich-russia-recognizable.ts` | Handmatig-geverifieerde cover + Engelse-titel pass voor de herkenbare subset Russia FSEM-boeken (internationaal-gepubliceerde werken met OL-cover); obscure regionale tracts blijven coverless |
 | **Auteurs** | |
 | `enrich-author-bios.ts` | Bios via Wikipedia (incl. `--photos-only`) |
+| `enrich-author-ol.ts` | **Long-tail bio/birth-year/death-year via OpenLibrary Authors API** voor auteurs die Wikipedia miste. Exact-key: leidt de OL-author-id af uit de work-records van de eigen boeken (naam-search + gedeelde-titel-fallback). Vult ook `name_native` uit een niet-Latijns `alternate_name`. Foto's blijven bij v2; sticky via `ol_checked_at`. Draai ná enrich-author-bios.ts |
 | `enrich-author-photos-v2.ts` | 2e-pass foto's voor auteurs zonder Wikipedia-hit |
 | **Identifiers / overig** | |
 | `enrich-isbn.ts` | Missende `isbn13` via OpenLibrary + Google Books |

@@ -741,6 +741,34 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
           />
 
           <Script
+            name="enrich-author-ol.ts"
+            what="Verrijkt auteurs uit de Open Library Authors API — de long-tail-bron voor auteurs die enrich-author-bios.ts niet via Wikipedia vond. Exact-key resolutie: leidt de OL-author-id af uit de OL-work-records van de eigen boeken van de auteur (het gedeelde werk is het bewijs, geen blinde naam-gok), met naam-search + gedeelde-titel-verificatie als fallback. Vult bio, birth_year, death_year en name_native (uit een niet-Latijns alternate_name). Raakt photo_url NIET aan — dat blijft bij enrich-author-photos-v2. birth_country is geen OL-veld en wordt niet gevuld."
+            tags={['free']}
+            meta={{
+              coverage: <>sticky-checked-at + only-empty: <code className="font-mono">ol_checked_at IS NULL</code> AND (<code className="font-mono">bio</code> OF <code className="font-mono">birth_year</code> NULL), excl. <code className="font-mono">is_placeholder</code>. Met --recheck vervalt de sticky-gate.</>,
+              cadence: 'one-off long-tail-sweep ná enrich-author-bios.ts (Wikipedia eerst)',
+              writes: <><code className="font-mono">authors.bio</code> / <code className="font-mono">birth_year</code> / <code className="font-mono">death_year</code> / <code className="font-mono">name_native</code> (NULL-guarded) + altijd <code className="font-mono">openlibrary_author_id</code> (cache) en <code className="font-mono">ol_checked_at</code> (sticky stamp, ook bij miss)</>,
+              idempotent: 'ja — NULL-guarded + misses sticky; bestaande/Wikipedia-waarden worden nooit overschreven',
+              cost: 'gratis (geen dagcap)',
+            }}
+            command={`# Dry-run — sample 15 (of --limit=N zonder te schrijven)
+npx tsx --env-file=.env.local scripts/enrich-author-ol.ts --limit=50
+
+# Apply (lange run; resumebaar via ol_checked_at)
+npx tsx --env-file=.env.local scripts/enrich-author-ol.ts --apply
+
+# Eén auteur, bypass gates
+npx tsx --env-file=.env.local scripts/enrich-author-ol.ts --slug=george-orwell`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf naar DB (anders dry-run)' },
+              { flag: '--limit=N', desc: 'Cap op N auteurs (geldt ook voor dry-run sample)' },
+              { flag: '--recheck', desc: 'Negeer ol_checked_at sticky-gate' },
+              { flag: '--slug=X', desc: 'Eén auteur; bypass alle gates' },
+            ]}
+            note="Draai NA enrich-author-bios.ts (Wikipedia is de sterkere primaire bron). OL vindt het author-record betrouwbaar (~94%), maar birth_date/bio zijn dun voor moderne auteurs — de winst zit in oudere/klassieke/non-Westerse auteurs + name_native voor niet-Latijns schrift."
+          />
+
+          <Script
             name="enrich-author-photos-v2.ts"
             what="Tweede-pass photo backfill — wat enrich-author-bios.ts niet via Wikipedia-articlesearch vond. Drie bronnen op volgorde: (1) Wikidata (P31=Q5 human + writer-ish P106 → P18 → Commons thumbnail); (2) OpenLibrary /search/authors fallback (HEAD-gechecked); (3) author personal site (gegate op P31=Q5 + writer-ish P106; JSON-LD Person.image + <img> tags gescoord op author-naam-tokens, met denylist voor logos/banners/book covers). og:image is precision-over-recall geskipt (te veel false positives). Logt elke poging naar data/photo-enrichment-{ts}.csv."
             tags={['free']}
