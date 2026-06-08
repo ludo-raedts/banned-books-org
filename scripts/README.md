@@ -130,7 +130,8 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | `enrich-author-photos-v2.ts` | 2e-pass foto's voor auteurs zonder Wikipedia-hit |
 | **Identifiers / overig** | |
 | `enrich-isbn.ts` | Missende `isbn13` via OpenLibrary + Google Books |
-| `enrich-gb-harvest.ts` | **Gebundelde Google-Books harvester**: één GB-call per boek vult isbn13 + cover_url + original_language tegelijk (GB is ~1.000 queries/dag — losse per-veld scripts kosten ~3× quota). Deliberate GB-*residu* ná OL/Wikipedia. Logt year/categories/pages/publisher naar `data/gb-harvest-proposals.jsonl` (niet geschreven). Resumebaar; draait via launchd |
+| `enrich-gb-harvest.ts` | **Gebundelde Google-Books harvester**, **wezen-only** (geen isbn13 én geen work_id): één GB-call per boek vult isbn13 + cover_url + original_language via title-search (de enige route voor sleutelloze boeken). GB is ~1.000 queries/dag. Logt year/categories/pages/publisher naar `data/gb-harvest-proposals.jsonl` (niet geschreven). Resumebaar; draait via launchd |
+| `enrich-ol-harvest.ts` | **Exact-key OL harvester** (gratis tegenhanger van gb-harvest, géén dagcap): voor *keybare* boeken (work_id óf isbn13) haalt het cover, `first_published_year` (uit work `first_publish_date` — de enige bron hiervoor) en sibling-ISBN direct uit het OL-record, zónder fuzzy title-search. Title-agreement guard weert vervuilde keys. Disjunct van gb-harvest → mag gelijktijdig draaien. Resumebaar via `data/ol-harvest-cursor.json` |
 | `enrich-archive-org.ts` | archive.org identifiers via Advanced Search API |
 | `enrich-gutenberg.ts` | Project Gutenberg IDs via Gutendex |
 | `enrich-genres-gpt.ts` | GPT genre-enrichment (lege `genres`) |

@@ -13,6 +13,15 @@
  * OpenLibrary/Wikipedia (which have no quota), so this pass is deliberately the
  * GB *residual* — it only touches books still missing a field after those.
  *
+ * Wezen-only scope (2026-06-08): this harvest is now restricted to ORPHAN books
+ * — no isbn13 AND no openlibrary_work_id. Books that hold either key are
+ * handled offline, quota-free, by scripts/enrich-ol-harvest.ts (exact-key OL
+ * fetch). The two selections are exact complements, so GB's ~1k/day budget is
+ * never spent on a row OL can key for free, and the two harvests can run
+ * concurrently without ever touching the same row. GB's unique value here is
+ * the title-search path: it's the only way to recover an ISBN/cover for a book
+ * that has no key at all.
+ *
  * Per book (1 GB call):
  *   • has isbn13  → gbVolumesByIsbn (exact edition; cover needs no title guard)
  *   • no isbn13   → gbVolumesByTitleAuthor → may also recover an ISBN, applying
@@ -129,7 +138,10 @@ async function main() {
   const cursor = readCursor()
   console.log(`\n── enrich-gb-harvest (${APPLY ? 'APPLY' : 'DRY-RUN'}) budget=${BUDGET} cursor.lastId=${cursor.lastId} pass=${cursor.pass} ──\n`)
 
-  // Eligible: still missing a GB-fillable field, id beyond the cursor.
+  // Eligible: ORPHANS only — no isbn13 AND no openlibrary_work_id — id beyond
+  // the cursor. Keyable books (work_id or isbn13 present) are OL's job; keeping
+  // them out of this selection means GB quota only ever buys title-search
+  // recovery, the one thing OL's exact-key path can't do for an orphan.
   const PAGE = 1000
   const books: BookRow[] = []
   for (let from = cursor.lastId; ; ) {
@@ -140,7 +152,8 @@ async function main() {
       )
       .eq('is_blanket_works', false)
       .gt('id', from)
-      .or('cover_url.is.null,isbn13.is.null,original_language.is.null,first_published_year.is.null')
+      .is('isbn13', null)
+      .is('openlibrary_work_id', null)
       .order('id')
       .limit(PAGE)
     if (error) throw new Error(`DB read: ${error.message}`)
