@@ -30,9 +30,11 @@
  *   (default without --apply is dry-run; --limit=N caps the batch)
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+
+const CKPT = 'data/year-llm-verification.jsonl'
 
 const APPLY = process.argv.includes('--apply')
 const LIMIT = (() => { const a = process.argv.find(x => x.startsWith('--limit=')); return a ? parseInt(a.split('=')[1], 10) : Infinity })()
@@ -165,6 +167,18 @@ async function loadSkipSet(): Promise<Set<number>> {
   return skip
 }
 
+// Resume support: ids already written to the JSONL checkpoint are skipped.
+function loadProcessed(): { ids: Set<number>; rows: Result[] } {
+  const ids = new Set<number>()
+  const rows: Result[] = []
+  if (!existsSync(CKPT)) return { ids, rows }
+  for (const line of readFileSync(CKPT, 'utf8').split('\n')) {
+    if (!line.trim()) continue
+    try { const r = JSON.parse(line) as Result; ids.add(r.id); rows.push(r) } catch { /* skip partial line */ }
+  }
+  return { ids, rows }
+}
+
 async function fetchTargets(skip: Set<number>): Promise<Book[]> {
   const sb = adminClient()
   const PAGE = 1000
@@ -193,24 +207,29 @@ async function fetchTargets(skip: Set<number>): Promise<Book[]> {
 async function main() {
   const sb = adminClient()
   const skip = await loadSkipSet()
-  console.log(`Skip set (OL-confirmed/fixed): ${skip.size}`)
+  // Resume only applies to real (apply) runs; dry-runs neither read nor write the checkpoint.
+  const { ids: processedIds, rows: priorRows } = APPLY ? loadProcessed() : { ids: new Set<number>(), rows: [] as Result[] }
+  for (const id of processedIds) skip.add(id)
+  console.log(`Skip set: ${skip.size}  (OL-confirmed/fixed + ${processedIds.size} already-checkpointed)`)
   let targets = await fetchTargets(skip)
-  console.log(`Targets: ${targets.length}  (with year: ${targets.filter(t => t.db_year != null).length}, NULL backfill: ${targets.filter(t => t.db_year == null).length})`)
+  console.log(`Remaining targets: ${targets.length}  (with year: ${targets.filter(t => t.db_year != null).length}, NULL backfill: ${targets.filter(t => t.db_year == null).length})`)
   if (LIMIT !== Infinity) { targets = targets.slice(0, LIMIT); console.log(`--limit ${LIMIT} → processing ${targets.length}`) }
   console.log(`Mode: ${APPLY ? 'APPLY (writes high-confidence changes)' : 'DRY-RUN (no writes)'}\n`)
 
-  const results: Result[] = []
+  const fresh: Result[] = []
   let done = 0
   for (let i = 0; i < targets.length; i += CONCURRENCY) {
     const batch = targets.slice(i, i + CONCURRENCY)
     const res = await Promise.all(batch.map(b => processBook(sb, b)))
-    results.push(...res)
+    fresh.push(...res)
+    // checkpoint immediately (crash-safe) — apply runs only
+    if (APPLY) appendFileSync(CKPT, res.map(r => JSON.stringify(r)).join('\n') + '\n')
     done += batch.length
-    // log changes live
     for (const r of res) if (r.action === 'changed' || r.action === 'backfilled') console.log(`  ${APPLY ? '✓' : '•'} #${r.id} ${r.note} | ${r.title} — ${r.author ?? '?'}`)
     if (done % 120 === 0 || done === targets.length) process.stdout.write(`\r  processed ${done}/${targets.length}\n`)
   }
 
+  const results = [...priorRows, ...fresh]
   const by = (a: Result['action']) => results.filter(r => r.action === a)
   writeFileSync('data/year-llm-verification.json', JSON.stringify(results, null, 2))
 
