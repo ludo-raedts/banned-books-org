@@ -112,6 +112,11 @@ export function gbQuotaTripped(): boolean {
 // Returns [] on a genuine miss or transient network/parse failure, but THROWS
 // GbQuotaError on 429 (quota) — see the class doc for why these must differ.
 // Sleeps `delayMs` AFTER the call so a tight caller loop stays within rate.
+// 429 disambiguation: the per-day quota body says "Queries per day"; a
+// short-window rate limit does not. Retry rate limits, fail fatally on daily.
+const DAILY_QUOTA_RE = /per day|perday|dailylimit/i
+const MAX_RATE_RETRIES = 6
+
 export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
   if (quotaTripped) throw new GbQuotaError()
   const { maxResults = 5, fields = GB_FIELDS_FULL, delayMs = DEFAULT_DELAY_MS } = opts
@@ -120,25 +125,44 @@ export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<
     `${GB_BASE}?q=${encodeURIComponent(query)}` +
     `&maxResults=${maxResults}&fields=${fields}${keyParam}`
 
-  let res: Response
-  try {
-    res = await fetch(url, opts.signal ? { signal: opts.signal } : undefined)
-  } catch {
-    if (delayMs > 0) await sleep(delayMs)
-    return [] // transient network failure — treat as a miss
-  }
-  if (delayMs > 0) await sleep(delayMs)
+  for (let attempt = 0; ; attempt++) {
+    let res: Response
+    try {
+      res = await fetch(url, opts.signal ? { signal: opts.signal } : undefined)
+    } catch {
+      if (delayMs > 0) await sleep(delayMs)
+      return [] // transient network failure — treat as a miss
+    }
 
-  if (res.status === 429) {
-    quotaTripped = true
-    throw new GbQuotaError()
-  }
-  if (!res.ok) return []
-  try {
-    const json = (await res.json()) as { items?: GbVolume[] }
-    return json.items ?? []
-  } catch {
-    return []
+    if (res.status === 429) {
+      // 429 has TWO meanings; tell them apart by the body:
+      //   - per-day quota exhausted → fatal, throw GbQuotaError (caller stops).
+      //   - short-window rate limit ("per minute"/"per 100 seconds") → transient;
+      //     back off (2s,4s,8s,16s,32s,60s) and RETRY. Latching this as fatal was
+      //     a bug: a run aborted after ~100 calls and wasted the daily quota.
+      const body = await res.text().catch(() => '')
+      if (DAILY_QUOTA_RE.test(body)) {
+        quotaTripped = true
+        throw new GbQuotaError()
+      }
+      if (attempt < MAX_RATE_RETRIES) {
+        await sleep(Math.min(60_000, 2_000 * 2 ** attempt))
+        continue
+      }
+      // Still rate-limited after full backoff — stop cleanly; the cursor lets the
+      // next scheduled run resume where we left off.
+      quotaTripped = true
+      throw new GbQuotaError()
+    }
+
+    if (delayMs > 0) await sleep(delayMs)
+    if (!res.ok) return []
+    try {
+      const json = (await res.json()) as { items?: GbVolume[] }
+      return json.items ?? []
+    } catch {
+      return []
+    }
   }
 }
 
