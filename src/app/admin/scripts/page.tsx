@@ -198,6 +198,9 @@ export default function ScriptsPage() {
             <a href="#master" className="hover:underline">→ Master sweep — enrich-all.ts</a>
           </li>
           <li>
+            <a href="#harvesters" className="hover:underline">→ Bulk harvesters (OL + Google Books)</a>
+          </li>
+          <li>
             <a href="#per-field" className="hover:underline">→ Per veld verrijken (boek / ban / auteur)</a>
           </li>
           <li>
@@ -294,6 +297,78 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
               { flag: '--gpt-limit=N', desc: 'Cap elke GPT-stap op N boeken (default 150)' },
             ]}
             note="Cover-step gebruikt pHash om Google Books 'image not available' placeholders te detecteren — boeken die hierop falen krijgen cover_status='rejected_placeholder' en worden voortaan overgeslagen tenzij je --force op de cover-step meegeeft."
+          />
+        </div>
+
+        {/* 2b — Bulk harvesters */}
+        <div id="harvesters" className={`${cardCls} scroll-mt-4`}>
+          <SectionHeader
+            icon={Database}
+            title="Bulk harvesters — OpenLibrary + Google Books"
+            blurb={
+              <>
+                Twee cursor-resumebare sweeps die de hele catalogus langslopen om <code className="font-mono text-xs">isbn13</code> /{' '}
+                <code className="font-mono text-xs">cover_url</code> / <code className="font-mono text-xs">first_published_year</code> /{' '}
+                <code className="font-mono text-xs">original_language</code> te vullen. Bewust <strong>gesplitst op sleutel</strong>: OL
+                pakt alle <em>keybare</em> boeken (work-id óf ISBN) exact en gratis; Google Books pakt alleen de <em>wezen</em> (geen
+                sleutel) via title-search, want dat is het enige dat z&apos;n ~1.000/dag-quota nog moet kosten. De selecties zijn exacte
+                complementen — ze raken nooit dezelfde rij en mogen gelijktijdig draaien.
+              </>
+            }
+          />
+
+          <Script
+            name="enrich-ol-harvest.ts"
+            what="Exact-key OpenLibrary harvester voor KEYBARE boeken (openlibrary_work_id óf isbn13). Haalt het OL work/edition-record rechtstreeks op — geen fuzzy title-search — en vult cover (work covers[0]), first_published_year (work first_publish_date — de enige bron hiervoor), en een sibling-ISBN uit de edities (taal-guard + dup-check). Een title-agreement guard tegen de OL work-titel weert vervuilde keys (study-guide works, oude title-search-misser) voordat ze nieuwe velden zaaien. Geen dagcap; alleen beleefdheids-delays."
+            tags={['free']}
+            meta={{
+              coverage: <>keybaar (<code className="font-mono">openlibrary_work_id</code> OF <code className="font-mono">isbn13</code> NOT NULL) AND nog missend (<code className="font-mono">cover_url</code> / <code className="font-mono">first_published_year</code> / <code className="font-mono">isbn13</code> NULL). Cursor-resumebaar via <code className="font-mono">data/ol-harvest-cursor.json</code>.</>,
+              cadence: 'bulk-sweep in eigen terminal (lange run; cursor hervat na onderbreking)',
+              writes: <><code className="font-mono">books.cover_url</code> + <code className="font-mono">cover_status</code>, <code className="font-mono">books.first_published_year</code>, <code className="font-mono">books.isbn13</code> + <code className="font-mono">isbn_status</code>, <code className="font-mono">books.openlibrary_work_id</code> (isbn-pad backfill) — allemaal NULL-guarded, nooit overschreven</>,
+              output: <><code className="font-mono">data/ol-harvest-proposals.jsonl</code> (incl. <code className="font-mono">title_ok:false</code> voor vervuilde keys + subjects voor toekomstige genres) + <code className="font-mono">data/ol-harvest-cursor.json</code></>,
+              idempotent: 'ja — NULL-guarded + title-agreement guard; dup-ISBN → dup_collision-stamp',
+              cost: 'gratis (géén dagcap — dit is de brede primaire sweep)',
+            }}
+            command={`# Dry-run — sample 15 (of --limit=N zonder te schrijven)
+npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --limit=60
+
+# Volledige apply-sweep (lange run; resumebaar)
+npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --apply
+
+# In stukken (cursor hervat vanzelf)
+npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --apply --limit=2000`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf naar DB (anders dry-run)' },
+              { flag: '--limit=N', desc: 'Cap op N boeken (geldt ook voor dry-run sample)' },
+              { flag: '--reset-cursor', desc: 'Begin opnieuw vanaf id 0' },
+            ]}
+            note="Echte residu-waarde zit in first_published_year (geen ander script vult dit) + work-id backfill; covers/ISBN leveren weinig omdat de per-veld-pijplijn OL daar al heeft uitgeput. Disjunct van enrich-gb-harvest.ts → veilig gelijktijdig."
+          />
+
+          <Script
+            name="enrich-gb-harvest.ts"
+            what="Gebundelde Google-Books harvester, WEZEN-ONLY (geen isbn13 én geen openlibrary_work_id). Eén GB-call per boek vult isbn13 + cover_url + original_language tegelijk via title-search — de enige route voor een boek zónder sleutel. GB is hard-gecapt op ~1.000 queries/dag; de client latcht op een 429 en stopt schoon. Draait via launchd."
+            tags={['free']}
+            meta={{
+              coverage: <>wezen-only: <code className="font-mono">isbn13 IS NULL AND openlibrary_work_id IS NULL</code>. Cursor-resumebaar via <code className="font-mono">data/gb-harvest-cursor.json</code>; wrapt naar een nieuwe pass aan het einde.</>,
+              cadence: 'dagelijks via launchd (10:00 + 14:00), budget ~900 calls/run',
+              writes: <><code className="font-mono">books.isbn13</code> + <code className="font-mono">isbn_status</code>, <code className="font-mono">books.cover_url</code> + <code className="font-mono">cover_status</code>, <code className="font-mono">books.original_language</code> — NULL-guarded</>,
+              output: <><code className="font-mono">data/gb-harvest-proposals.jsonl</code> (year/categories/pages/publisher = review-only, niet geschreven) + <code className="font-mono">data/gb-harvest-runs.log</code></>,
+              idempotent: 'ja — NULL-guarded + dup-collision-safe; 429 stopt zonder mis-stempel',
+              cost: 'gratis maar GB-quota ~1.000/dag (residu ná OL)',
+            }}
+            command={`# Dry-run — sample 15 GB-calls
+npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts
+
+# Apply, budget 900 (zo draait de launchd-job)
+npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts --apply
+npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts --apply --budget=500`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf naar DB (anders dry-run)' },
+              { flag: '--budget=N', desc: 'Cap GB-calls per run (default 900, headroom onder 1k)' },
+              { flag: '--reset-cursor', desc: 'Begin opnieuw vanaf id 0' },
+            ]}
+            note="Sinds 2026-06-08 wezen-only: keybare boeken zijn OL's werk (enrich-ol-harvest.ts). Draait via ~/.banned-books-gb-harvest.sh + launchd-plist org.banned-books.gb-harvest; logt naar data/gb-harvest-runs.log."
           />
         </div>
 
