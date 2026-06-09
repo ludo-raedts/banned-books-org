@@ -49,6 +49,37 @@ const EXCLUDED_REASON_SLUGS = new Set(['other'])
 const WIKI_API = 'https://en.wikipedia.org/w/api.php'
 const USER_AGENT = 'banned-books.org-enrichment-bot (ludo.raedts@voys.nl)'
 
+// ─── CLI scope flags ─────────────────────────────────────────────────────────
+// Default scope (no flags): top 50 globally + top 10 per ban reason.
+// Country scope:  --countries=US,MY,FR,CA [--top-per-country=25]
+//   Selects, per country, the books banned there ranked by within-country ban
+//   rows, then by global distinct_countries, then global total bans. This
+//   tiebreak matters for countries (MY/FR/CA) where almost every book carries
+//   exactly one ban row — there raw within-country count is uninformative and
+//   global significance surfaces the titles that actually have Wikipedia
+//   articles. is_blanket_works rows ("Toutes ses œuvres" author-level Otto bans)
+//   are excluded — they are not real titles.
+const ARGV = process.argv.slice(2)
+function argVal(name: string): string | null {
+  const pref = `--${name}=`
+  const hit = ARGV.find(a => a.startsWith(pref))
+  return hit ? hit.slice(pref.length) : null
+}
+const SCOPE_COUNTRIES = (argVal('countries') ?? '')
+  .split(',')
+  .map(s => s.trim().toUpperCase())
+  .filter(Boolean)
+const TOP_PER_COUNTRY = Number(argVal('top-per-country') ?? '25')
+
+// Explicit book-id scope:  --book-ids=6464,209,7234,...
+//   Runs the matcher on exactly these books, in the given order. Used for
+//   demand-driven batches (e.g. the GSC most-searched list). is_blanket_works
+//   rows are still excluded.
+const SCOPE_BOOK_IDS = (argVal('book-ids') ?? '')
+  .split(',')
+  .map(s => Number(s.trim()))
+  .filter(n => Number.isFinite(n) && n > 0)
+
 type BookRow = {
   id: number
   title: string
@@ -465,97 +496,275 @@ async function main() {
   const targetReasons = (reasons ?? []).filter(r => !EXCLUDED_REASON_SLUGS.has(r.slug))
   console.log(`reasons: ${targetReasons.length} (excluding ${[...EXCLUDED_REASON_SLUGS].join(', ')})`)
 
-  // ─── Top 50 globally ───────────────────────────────────────────────────────
-  const { data: topGlobal, error: topErr } = await sb
-    .from('v_top_banned_books')
-    .select('entity_id, total_bans, distinct_countries')
-    .order('distinct_countries', { ascending: false })
-    .order('total_bans', { ascending: false })
-    .limit(TOP_N_GLOBAL)
-  if (topErr) throw topErr
-
   const inLists = new Map<number, Set<string>>()
   const banStats = new Map<number, { total: number; countries: number }>()
-  for (const r of topGlobal ?? []) {
-    inLists.set(r.entity_id, new Set(['top50']))
-    banStats.set(r.entity_id, { total: r.total_bans, countries: r.distinct_countries })
-  }
 
-  // ─── Top 10 per reason ─────────────────────────────────────────────────────
-  for (const reason of targetReasons) {
-    // Fetch all bans linked to this reason (book_id, country_code).
-    // Paginate to handle reasons with many ban rows.
+  if (SCOPE_BOOK_IDS.length > 0) {
+    // ─── Explicit book-id scope ─────────────────────────────────────────────────
+    const candidateIds = [...new Set(SCOPE_BOOK_IDS)]
+    console.log(`book-id scope: ${candidateIds.length} books`)
+
+    // Exclude blanket-works (not real titles).
+    const blanket = new Set<number>()
+    {
+      const CHUNK = 300
+      for (let i = 0; i < candidateIds.length; i += CHUNK) {
+        const chunk = candidateIds.slice(i, i + CHUNK)
+        const { data, error } = await sb
+          .from('books')
+          .select('id, is_blanket_works')
+          .in('id', chunk)
+        if (error) throw error
+        for (const b of data ?? []) if (b.is_blanket_works) blanket.add(b.id)
+      }
+    }
+    if (blanket.size > 0) console.log(`excluding ${blanket.size} is_blanket_works book(s)`)
+
+    // Global ban stats (total rows + distinct countries) for display, paginated.
     const PAGE = 1000
-    const seen = new Map<number, Set<string>>()
-    const eventCount = new Map<number, number>()
-    let from = 0
-    while (true) {
-      const { data, error } = await sb
-        .from('ban_reason_links')
-        .select('ban_id, bans!inner(book_id, country_code)')
-        .eq('reason_id', reason.id)
-        .order('ban_id', { ascending: true })
-        .range(from, from + PAGE - 1)
-      if (error) throw error
-      if (!data || data.length === 0) break
-      for (const row of data) {
-        // bans is the joined ban row(s).
-        const ban = (row as unknown as { bans: { book_id: number; country_code: string } }).bans
-        if (!ban) continue
-        const bookId = ban.book_id
-        if (!seen.has(bookId)) seen.set(bookId, new Set())
-        seen.get(bookId)!.add(ban.country_code)
-        eventCount.set(bookId, (eventCount.get(bookId) ?? 0) + 1)
-      }
-      if (data.length < PAGE) break
-      from += PAGE
-    }
-
-    const ranked = [...seen.entries()]
-      .map(([bookId, countrySet]) => ({
-        bookId,
-        countries: countrySet.size,
-        events: eventCount.get(bookId) ?? 0,
-      }))
-      .sort((a, b) => b.countries - a.countries || b.events - a.events)
-      .slice(0, TOP_N_PER_REASON)
-
-    for (const e of ranked) {
-      if (!inLists.has(e.bookId)) inLists.set(e.bookId, new Set())
-      inLists.get(e.bookId)!.add(`reason:${reason.slug}`)
-      if (!banStats.has(e.bookId)) {
-        // Stats from per-reason aggregation are partial — get the global numbers in a follow-up.
-        banStats.set(e.bookId, { total: e.events, countries: e.countries })
-      }
-    }
-    console.log(`reason ${reason.slug}: ${ranked.length} books ranked, ${seen.size} candidates`)
-  }
-
-  const allBookIds = [...inLists.keys()]
-  console.log(`unique books across all lists: ${allBookIds.length}`)
-
-  // ─── Global ban stats fallback for reason-only books ───────────────────────
-  const missingStats = allBookIds.filter(id => !topGlobal?.some(r => r.entity_id === id))
-  if (missingStats.length > 0) {
-    const CHUNK = 100
-    for (let i = 0; i < missingStats.length; i += CHUNK) {
-      const chunk = missingStats.slice(i, i + CHUNK)
-      const { data } = await sb
-        .from('bans')
-        .select('book_id, country_code')
-        .in('book_id', chunk)
+    const CHUNK = 200
+    const ids = candidateIds.filter(id => !blanket.has(id))
+    for (let i = 0; i < ids.length; i += CHUNK) {
+      const chunk = ids.slice(i, i + CHUNK)
       const acc = new Map<number, { total: number; countries: Set<string> }>()
-      for (const r of data ?? []) {
-        if (!acc.has(r.book_id)) acc.set(r.book_id, { total: 0, countries: new Set() })
-        const a = acc.get(r.book_id)!
-        a.total += 1
-        a.countries.add(r.country_code)
+      let from = 0
+      while (true) {
+        const { data, error } = await sb
+          .from('bans')
+          .select('book_id, country_code')
+          .in('book_id', chunk)
+          .order('id', { ascending: true })
+          .range(from, from + PAGE - 1)
+        if (error) throw error
+        if (!data || data.length === 0) break
+        for (const r of data) {
+          if (!acc.has(r.book_id)) acc.set(r.book_id, { total: 0, countries: new Set() })
+          const a = acc.get(r.book_id)!
+          a.total += 1
+          a.countries.add(r.country_code)
+        }
+        if (data.length < PAGE) break
+        from += PAGE
       }
       for (const [id, a] of acc.entries()) {
         banStats.set(id, { total: a.total, countries: a.countries.size })
       }
     }
+
+    // Preserve the requested order via an index suffix on the source list.
+    ids.forEach((id, idx) => {
+      inLists.set(id, new Set([`gsc:${String(idx + 1).padStart(2, '0')}`]))
+      if (!banStats.has(id)) banStats.set(id, { total: 0, countries: 0 })
+    })
+  } else if (SCOPE_COUNTRIES.length > 0) {
+    // ─── Country scope ────────────────────────────────────────────────────────
+    if (!Number.isFinite(TOP_PER_COUNTRY) || TOP_PER_COUNTRY < 1) {
+      throw new Error(`--top-per-country must be a positive integer (got "${argVal('top-per-country')}")`)
+    }
+    console.log(`country scope: ${SCOPE_COUNTRIES.join(', ')} — top ${TOP_PER_COUNTRY} per country`)
+
+    // 1. Per-country within-country ban-row counts.
+    const withinByCountry = new Map<string, Map<number, number>>()
+    const allCandidates = new Set<number>()
+    const PAGE = 1000
+    for (const cc of SCOPE_COUNTRIES) {
+      const within = new Map<number, number>()
+      let from = 0
+      while (true) {
+        const { data, error } = await sb
+          .from('bans')
+          .select('book_id')
+          .eq('country_code', cc)
+          .order('id', { ascending: true })
+          .range(from, from + PAGE - 1)
+        if (error) throw error
+        if (!data || data.length === 0) break
+        for (const r of data) {
+          within.set(r.book_id, (within.get(r.book_id) ?? 0) + 1)
+          allCandidates.add(r.book_id)
+        }
+        if (data.length < PAGE) break
+        from += PAGE
+      }
+      withinByCountry.set(cc, within)
+      console.log(`${cc}: ${within.size} candidate books`)
+    }
+
+    const candidateIds = [...allCandidates]
+
+    // 2. Exclude blanket-works ("Toutes ses œuvres") author-level Otto bans —
+    //    not real titles, and isolated from enrichers elsewhere.
+    const blanket = new Set<number>()
+    {
+      const CHUNK = 300
+      for (let i = 0; i < candidateIds.length; i += CHUNK) {
+        const chunk = candidateIds.slice(i, i + CHUNK)
+        const { data, error } = await sb
+          .from('books')
+          .select('id, is_blanket_works')
+          .in('id', chunk)
+        if (error) throw error
+        for (const b of data ?? []) if (b.is_blanket_works) blanket.add(b.id)
+      }
+    }
+    if (blanket.size > 0) console.log(`excluding ${blanket.size} is_blanket_works book(s)`)
+
+    // 3. Global ban stats (total rows + distinct countries) for the tiebreaker.
+    //    Paginate each .in() chunk so district-heavy books don't trip the
+    //    1000-row select cap.
+    const global = new Map<number, { total: number; countries: number }>()
+    {
+      const CHUNK = 200
+      for (let i = 0; i < candidateIds.length; i += CHUNK) {
+        const chunk = candidateIds.slice(i, i + CHUNK)
+        const acc = new Map<number, { total: number; countries: Set<string> }>()
+        let from = 0
+        while (true) {
+          const { data, error } = await sb
+            .from('bans')
+            .select('book_id, country_code')
+            .in('book_id', chunk)
+            .order('id', { ascending: true })
+            .range(from, from + PAGE - 1)
+          if (error) throw error
+          if (!data || data.length === 0) break
+          for (const r of data) {
+            if (!acc.has(r.book_id)) acc.set(r.book_id, { total: 0, countries: new Set() })
+            const a = acc.get(r.book_id)!
+            a.total += 1
+            a.countries.add(r.country_code)
+          }
+          if (data.length < PAGE) break
+          from += PAGE
+        }
+        for (const [id, a] of acc.entries()) {
+          global.set(id, { total: a.total, countries: a.countries.size })
+        }
+      }
+    }
+
+    // 4. Rank per country and assign the top-N to the worklist.
+    for (const cc of SCOPE_COUNTRIES) {
+      const within = withinByCountry.get(cc)!
+      const ranked = [...within.entries()]
+        .filter(([bookId]) => !blanket.has(bookId))
+        .map(([bookId, withinCount]) => ({
+          bookId,
+          withinCount,
+          gCountries: global.get(bookId)?.countries ?? 0,
+          gTotal: global.get(bookId)?.total ?? 0,
+        }))
+        .sort(
+          (a, b) =>
+            b.withinCount - a.withinCount ||
+            b.gCountries - a.gCountries ||
+            b.gTotal - a.gTotal ||
+            a.bookId - b.bookId,
+        )
+        .slice(0, TOP_PER_COUNTRY)
+
+      for (const e of ranked) {
+        if (!inLists.has(e.bookId)) inLists.set(e.bookId, new Set())
+        inLists.get(e.bookId)!.add(`country:${cc}`)
+        if (!banStats.has(e.bookId)) {
+          banStats.set(e.bookId, { total: e.gTotal, countries: e.gCountries })
+        }
+      }
+      console.log(`${cc}: ${ranked.length} books selected`)
+    }
+  } else {
+    // ─── Default scope: top 50 globally + top 10 per reason ─────────────────────
+    const { data: topGlobal, error: topErr } = await sb
+      .from('v_top_banned_books')
+      .select('entity_id, total_bans, distinct_countries')
+      .order('distinct_countries', { ascending: false })
+      .order('total_bans', { ascending: false })
+      .limit(TOP_N_GLOBAL)
+    if (topErr) throw topErr
+
+    for (const r of topGlobal ?? []) {
+      inLists.set(r.entity_id, new Set(['top50']))
+      banStats.set(r.entity_id, { total: r.total_bans, countries: r.distinct_countries })
+    }
+
+    // ─── Top 10 per reason ─────────────────────────────────────────────────────
+    for (const reason of targetReasons) {
+      // Fetch all bans linked to this reason (book_id, country_code).
+      // Paginate to handle reasons with many ban rows.
+      const PAGE = 1000
+      const seen = new Map<number, Set<string>>()
+      const eventCount = new Map<number, number>()
+      let from = 0
+      while (true) {
+        const { data, error } = await sb
+          .from('ban_reason_links')
+          .select('ban_id, bans!inner(book_id, country_code)')
+          .eq('reason_id', reason.id)
+          .order('ban_id', { ascending: true })
+          .range(from, from + PAGE - 1)
+        if (error) throw error
+        if (!data || data.length === 0) break
+        for (const row of data) {
+          // bans is the joined ban row(s).
+          const ban = (row as unknown as { bans: { book_id: number; country_code: string } }).bans
+          if (!ban) continue
+          const bookId = ban.book_id
+          if (!seen.has(bookId)) seen.set(bookId, new Set())
+          seen.get(bookId)!.add(ban.country_code)
+          eventCount.set(bookId, (eventCount.get(bookId) ?? 0) + 1)
+        }
+        if (data.length < PAGE) break
+        from += PAGE
+      }
+
+      const ranked = [...seen.entries()]
+        .map(([bookId, countrySet]) => ({
+          bookId,
+          countries: countrySet.size,
+          events: eventCount.get(bookId) ?? 0,
+        }))
+        .sort((a, b) => b.countries - a.countries || b.events - a.events)
+        .slice(0, TOP_N_PER_REASON)
+
+      for (const e of ranked) {
+        if (!inLists.has(e.bookId)) inLists.set(e.bookId, new Set())
+        inLists.get(e.bookId)!.add(`reason:${reason.slug}`)
+        if (!banStats.has(e.bookId)) {
+          // Stats from per-reason aggregation are partial — get the global numbers in a follow-up.
+          banStats.set(e.bookId, { total: e.events, countries: e.countries })
+        }
+      }
+      console.log(`reason ${reason.slug}: ${ranked.length} books ranked, ${seen.size} candidates`)
+    }
+
+    // ─── Global ban stats fallback for reason-only books ───────────────────────
+    const missingStats = [...inLists.keys()].filter(
+      id => !(topGlobal ?? []).some(r => r.entity_id === id),
+    )
+    if (missingStats.length > 0) {
+      const CHUNK = 100
+      for (let i = 0; i < missingStats.length; i += CHUNK) {
+        const chunk = missingStats.slice(i, i + CHUNK)
+        const { data } = await sb
+          .from('bans')
+          .select('book_id, country_code')
+          .in('book_id', chunk)
+        const acc = new Map<number, { total: number; countries: Set<string> }>()
+        for (const r of data ?? []) {
+          if (!acc.has(r.book_id)) acc.set(r.book_id, { total: 0, countries: new Set() })
+          const a = acc.get(r.book_id)!
+          a.total += 1
+          a.countries.add(r.country_code)
+        }
+        for (const [id, a] of acc.entries()) {
+          banStats.set(id, { total: a.total, countries: a.countries.size })
+        }
+      }
+    }
   }
+
+  const allBookIds = [...inLists.keys()]
+  console.log(`unique books across all lists: ${allBookIds.length}`)
 
   // ─── Resolve book metadata + author display name ───────────────────────────
   const books: Map<number, BookRow> = new Map()
@@ -665,7 +874,12 @@ async function main() {
     JSON.stringify(
       {
         generated_at: new Date().toISOString(),
-        params: { top_n_global: TOP_N_GLOBAL, top_n_per_reason: TOP_N_PER_REASON },
+        params:
+          SCOPE_BOOK_IDS.length > 0
+            ? { scope: 'book-ids', book_ids: SCOPE_BOOK_IDS }
+            : SCOPE_COUNTRIES.length > 0
+              ? { scope: 'country', countries: SCOPE_COUNTRIES, top_per_country: TOP_PER_COUNTRY }
+              : { scope: 'default', top_n_global: TOP_N_GLOBAL, top_n_per_reason: TOP_N_PER_REASON },
         total_books: entries.length,
         entries,
       },
@@ -683,6 +897,13 @@ async function main() {
   md.push(`# Wikipedia enrichment worklist`)
   md.push('')
   md.push(`Generated ${new Date().toISOString()}.`)
+  md.push(
+    SCOPE_BOOK_IDS.length > 0
+      ? `Scope: **book-ids** — ${SCOPE_BOOK_IDS.length} explicit books.`
+      : SCOPE_COUNTRIES.length > 0
+        ? `Scope: **country** — ${SCOPE_COUNTRIES.join(', ')}, top ${TOP_PER_COUNTRY} per country.`
+        : `Scope: **default** — top ${TOP_N_GLOBAL} globally + top ${TOP_N_PER_REASON} per reason.`,
+  )
   md.push(`Total unique books: **${entries.length}**`)
   md.push('')
   md.push(`## Match confidence`)
