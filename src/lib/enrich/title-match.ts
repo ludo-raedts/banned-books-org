@@ -60,3 +60,42 @@ export function titlesMatch(ourTitle: string, candidateTitle: string): boolean {
   }
   return true
 }
+
+// Name tokens for author matching: accent-stripped, lowercased, alnum-split.
+// Single-character tokens are dropped so a lone initial ("J.") doesn't produce
+// spurious overlaps.
+function nameTokens(s: string): Set<string> {
+  return new Set(
+    s
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter((t) => t.length > 1),
+  )
+}
+
+/**
+ * Lenient author-agreement guard for *title-search* cover/description matches.
+ *
+ * Title containment alone let a wrong but same-word book through — e.g.
+ * "A Feast for the Seaweeds" (Haidar Haidar) picked up the cover of "Seaweed:
+ * A Global History" (Kaori O'Connor). Requiring a shared author token kills
+ * that class of contamination.
+ *
+ * Deliberately lenient — returns TRUE (can't disprove) when we have no author
+ * or the candidate volume lists none, so it never rejects a correct cover over
+ * missing metadata. Rejects ONLY when both sides have author tokens and NONE
+ * overlap.
+ */
+export function authorsAgree(ourAuthor: string, candidateAuthors: string[]): boolean {
+  if (!ourAuthor.trim() || candidateAuthors.length === 0) return true
+  const ours = nameTokens(ourAuthor)
+  if (ours.size === 0) return true
+  for (const a of candidateAuthors) {
+    for (const t of nameTokens(a)) if (ours.has(t)) return true
+  }
+  return false
+}

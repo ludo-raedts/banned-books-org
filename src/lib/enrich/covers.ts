@@ -243,11 +243,11 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   log(`Eligible:           ${toSearch.length}`)
   log(`${opts.apply ? `Processing ${limit}…` : `DRY-RUN — sampling ${limit}`}`)
 
-  async function gbSearchVerified(q: string, expectedTitle: string, tracker: { sawPlaceholder: boolean }): Promise<string | null> {
+  async function gbSearchVerified(q: string, expectedTitle: string, tracker: { sawPlaceholder: boolean }, expectedAuthor?: string): Promise<string | null> {
     const volumes = await gbVolumesByTitle(q, { maxResults: 3, fields: GB_FIELDS_COVER, delayMs: GB_DELAY_MS })
-    // resolveGbCover applies the title-match guard, the pHash placeholder check,
-    // and the strip repair in one place (see google-books.ts).
-    const result = await resolveGbCover(volumes, expectedTitle)
+    // resolveGbCover applies the title-match guard, the author-agreement guard,
+    // the pHash placeholder check, and the strip repair in one place.
+    const result = await resolveGbCover(volumes, expectedTitle, { expectedAuthor })
     if (result.kind === 'placeholder') { tracker.sawPlaceholder = true; return null }
     return result.kind === 'cover' ? result.url : null
   }
@@ -290,8 +290,8 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         const stripped = stripSubtitle(variant.title)
 
         newSources.push(`gb_title_only${tag}`)
-        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker)
-          ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker)
+        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker, author)
+          ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker, author)
         if (coverUrl) { source = `GB-title-only${tag}`; break }
 
         newSources.push(`ol_title_only${tag}`)

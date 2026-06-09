@@ -246,7 +246,7 @@ async function main() {
     let coverUrl: string | null = null
     let coverPlaceholder = false
     if (needCover) {
-      const r = await resolveGbCover(volumes, book.title, { requireTitleMatch: !viaIsbnDirect })
+      const r = await resolveGbCover(volumes, book.title, { requireTitleMatch: !viaIsbnDirect, expectedAuthor: author })
       if (r.kind === 'cover') coverUrl = r.url
       else if (r.kind === 'placeholder') coverPlaceholder = true
       if (coverUrl && !isAllowedImageUrl(coverUrl)) coverUrl = null // structural gate

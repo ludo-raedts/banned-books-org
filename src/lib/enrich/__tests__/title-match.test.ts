@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { titlesMatch } from '../title-match'
+import { titlesMatch, authorsAgree } from '../title-match'
 
 describe('titlesMatch', () => {
   it('rejects siblings that differ by a distinctive word', () => {
@@ -39,5 +39,30 @@ describe('titlesMatch', () => {
     // "Volume 3" and "Vol. 3" carry the same distinctive token (3).
     expect(titlesMatch('Some Manga Volume 3', 'Some Manga Vol. 3')).toBe(true)
     expect(titlesMatch('Some Manga Volume 3', 'Some Manga Vol. 4')).toBe(false)
+  })
+})
+
+describe('authorsAgree', () => {
+  it('rejects a same-word wrong book by a different author', () => {
+    // The real contamination: "A Feast for the Seaweeds" (Haidar Haidar) picked
+    // up the cover of "Seaweed: A Global History" (Kaori O'Connor).
+    expect(authorsAgree('Haidar Haidar', ['Kaori O’Connor'])).toBe(false)
+    // "The Future of Us" (Jay Asher) vs "The Future of the American Negro".
+    expect(authorsAgree('Jay Asher', ['Booker T. Washington'])).toBe(false)
+  })
+
+  it('accepts when an author token overlaps (incl. order/case/accents)', () => {
+    expect(authorsAgree('Jay Asher', ['Jay Asher', 'Carolyn Mackler'])).toBe(true)
+    expect(authorsAgree('George Orwell', ['orwell, george'])).toBe(true)
+    expect(authorsAgree('Gabriel García Márquez', ['Gabriel Garcia Marquez'])).toBe(true)
+  })
+
+  it('is lenient: never rejects when author or candidates are missing', () => {
+    expect(authorsAgree('', ['Anyone'])).toBe(true)
+    expect(authorsAgree('Jane Doe', [])).toBe(true)
+  })
+
+  it('ignores lone initials so they cannot cause spurious matches', () => {
+    expect(authorsAgree('J. Smith', ['J. Brown'])).toBe(false)
   })
 })

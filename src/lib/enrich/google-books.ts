@@ -17,7 +17,7 @@
 // quota of 0). Routing every call through here fixes that.
 
 import { checkImageUrl, repairGbStrip } from './_placeholder'
-import { titlesMatch } from './title-match'
+import { titlesMatch, authorsAgree } from './title-match'
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -57,7 +57,7 @@ export type GbVolume = { id: string; volumeInfo: GbVolumeInfo }
 // embedded raw (NOT url-encoded) — the proven-working covers.ts pattern — so
 // Google's field parser sees the literal parens/commas.
 
-export const GB_FIELDS_COVER = 'items(volumeInfo(title,imageLinks))'
+export const GB_FIELDS_COVER = 'items(volumeInfo(title,authors,imageLinks))'
 export const GB_FIELDS_ISBN = 'items(volumeInfo(title,authors,industryIdentifiers,language))'
 export const GB_FIELDS_DESCRIPTION = 'items(id,volumeInfo(title,authors,description,infoLink))'
 export const GB_FIELDS_FULL =
@@ -239,12 +239,18 @@ export type GbCoverResult =
 export async function resolveGbCover(
   volumes: GbVolume[],
   expectedTitle: string,
-  opts: { requireTitleMatch?: boolean } = {},
+  opts: { requireTitleMatch?: boolean; expectedAuthor?: string } = {},
 ): Promise<GbCoverResult> {
   const requireTitleMatch = opts.requireTitleMatch ?? true
   let sawPlaceholder = false
   for (const v of volumes) {
     if (requireTitleMatch && !titlesMatch(expectedTitle, v.volumeInfo?.title ?? '')) continue
+    // Author guard for title/free-text searches: title containment alone lets a
+    // same-word wrong book through (e.g. "A Feast for the Seaweeds" → "Seaweed:
+    // A Global History"). Lenient — only rejects when both sides name authors
+    // and none overlap. Skipped for ISBN-direct lookups (requireTitleMatch off),
+    // where the ISBN already binds the exact edition.
+    if (requireTitleMatch && opts.expectedAuthor && !authorsAgree(opts.expectedAuthor, v.volumeInfo?.authors ?? [])) continue
     const raw = pickGbImageLink(v.volumeInfo)
     if (!raw) continue
     const check = await checkImageUrl(raw)
