@@ -715,7 +715,7 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --o
 
           <Script
             name="enrich-author-bios.ts"
-            what="Vult missende author bios, birth/death year, birth country, en photos vanuit Wikipedia. Raakt alleen authors zonder bio aan. Gebruik --photos-only om foto's te backfillen voor authors die al een bio hebben (bv. wanneer hun Wikipedia-page nu een infobox-image heeft)."
+            what="Vult missende author bios + birth/death year + birth country (en photos) vanuit Wikipedia. Zoekt de top-6 Wikipedia-resultaten (was: alleen de eerste — de srlimit=1 naamgenoot-bug) en accepteert er één alléén als de auteur het ONDERWERP van de intro is, de pagina als schrijver gecategoriseerd is, én de volledige naam matcht (≥2 tokens). Zo worden boek-blurbs en gelijknamige andere personen (een songwriter/acteur met dezelfde achternaam) geweigerd. --photos-only backfilt alleen foto's voor authors die al een bio hebben."
             tags={['free']}
             meta={{
               coverage: <><strong>default:</strong> only-empty <code className="font-mono">bio</code>. <strong>--photos-only:</strong> only-empty <code className="font-mono">photo_url</code> (alleen auteurs mét bio).</>,
@@ -737,7 +737,7 @@ npx tsx --env-file=.env.local scripts/enrich-author-bios.ts --photos-only --appl
               { flag: '--limit=N', desc: 'Cap (default 50)' },
               { flag: '--photos-only', desc: 'Alleen auteurs mét bio en zonder foto' },
             ]}
-            note="Waarschuwing: in default mode kunnen manuele waarden op birth_year / death_year / birth_country / photo_url overschreven worden bij auteurs die nog geen bio hadden."
+            note="Sinds 2026-06-09: top-6 kandidaten + subject/schrijver-categorie/volledige-naam-gate stoppen de oude naamgenoot-besmetting. Wat het NIET kan: twee personen met exact dezelfde volledige naam scheiden (een historische vs. de auteur) — draai daarom ná een recovery-run remediate-author-bios.ts (LLM-poort) hieronder. Default-mode kan nog manuele birth/death/country overschrijven bij auteurs zónder bio."
           />
 
           <Script
@@ -792,6 +792,35 @@ npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --reche
               { flag: '--slug=X', desc: 'Eén auteur; bypass beide gates' },
             ]}
             note="Draai NA enrich-author-bios.ts --photos-only — dat is de goedkope eerste sweep. V2 levert nog een paar % extra. Mirror is content-type + size + magic-byte gegated (5KB–5MB, jpg/png/webp/gif)."
+          />
+
+          <Script
+            name="remediate-author-bios.ts"
+            what="LLM-poort die besmette author-bio's opruimt — bio's die enrich-author-bios.ts (vóór de gate) uit het verkeerde Wikipedia-artikel haalde. Vier foutklassen die alléén een LLM betrouwbaar scheidt: wrong_person (andere persoon, zelfde naam — bv. de microbioloog Suzanne Walker i.p.v. de comics-auteur), not_a_bio (boek/film/band i.p.v. persoon), own_book_blurb, en llm_artifact. gpt-4o-mini classificeert elke bio tegen naam + onze boektitels (correct / wrong_person / not_a_bio / uncertain). Dit is de verplichte verificatie-stap ná een enrich-author-bios recovery-run."
+            tags={['gpt', 'destructive']}
+            meta={{
+              coverage: <>alle auteurs met een <code className="font-mono">bio</code> (of <code className="font-mono">--slugs=</code> voor gerichte test). Bij <code className="font-mono">--apply</code> zonder <code className="font-mono">--limit</code>: de volledige set.</>,
+              cadence: 'ná elke enrich-author-bios recovery-run (recover → verify)',
+              writes: <><strong>nullt</strong> <code className="font-mono">bio</code> + verdacht <code className="font-mono">birth_year</code>/<code className="font-mono">death_year</code>/<code className="font-mono">birth_country</code> voor wrong_person + not_a_bio. correct behouden; uncertain naar review-lijst. Backup-CSV vóór elke null.</>,
+              output: <><code className="font-mono">data/author-bio-remediation-applied-&lt;ts&gt;.jsonl</code> (alle oordelen) + <code className="font-mono">-backup-&lt;ts&gt;.csv</code> (herstelbron) + <code className="font-mono">-uncertain-&lt;ts&gt;.jsonl</code></>,
+              idempotent: 'ja — genullde rijen vallen weg uit de bio-set; classificatie, geen generatie (lage confabulatie)',
+              cost: '~$1-2 voor de volledige set (gpt-4o-mini, classificatie)',
+            }}
+            command={`# Dry-run — verdeling correct/wrong_person/not_a_bio/uncertain (sample 40)
+npx tsx --env-file=.env.local scripts/remediate-author-bios.ts
+
+# Valideer op bekende gevallen
+npx tsx --env-file=.env.local scripts/remediate-author-bios.ts --slugs=suzanne-walker,george-orwell
+
+# Volledige run — backup-CSV, dan null
+npx tsx --env-file=.env.local scripts/remediate-author-bios.ts --apply`}
+            flags={[
+              { flag: '--apply', desc: 'Schrijf (backup → null voor wrong_person/not_a_bio)' },
+              { flag: '--slugs=a,b', desc: 'Gerichte set op slug (validatie)' },
+              { flag: '--limit=N', desc: 'Cap op N auteurs' },
+              { flag: '--concurrency=N', desc: 'Parallelle LLM-calls (default 6)' },
+            ]}
+            note="Deterministische naam-matching kan zelfde-vólledige-naam-personen niet scheiden — daarom is dit de poort ná enrich-author-bios.ts. Read-only verkenning vooraf kan met de gitignored scripts/_audit_author_bio_contamination.ts (deterministische pre-filter, geen LLM)."
           />
         </div>
 
