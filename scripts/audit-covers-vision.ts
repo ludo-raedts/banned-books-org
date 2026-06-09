@@ -50,7 +50,7 @@ async function olCandidate(b: Book): Promise<{ url: string; coverId: number } | 
   const params = new URLSearchParams({ title: b.title, fields: 'key,cover_i,author_name', limit: '5' })
   if (b.author) params.set('author', b.author)
   try {
-    const r = await fetch(`https://openlibrary.org/search.json?${params}`)
+    const r = await fetch(`https://openlibrary.org/search.json?${params}`, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' } })
     if (!r.ok) return null
     const j: any = await r.json()
     const docs: { cover_i?: number; author_name?: string[] }[] = j.docs ?? []

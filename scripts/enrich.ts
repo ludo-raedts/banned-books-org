@@ -5,7 +5,7 @@ const supabase = adminClient()
 async function fetchCover(title: string, author: string): Promise<{ coverUrl: string | null; workId: string | null }> {
   try {
     const q = encodeURIComponent(`${title} ${author}`)
-    const res = await fetch(`https://openlibrary.org/search.json?q=${q}&fields=key,cover_i&limit=1`)
+    const res = await fetch(`https://openlibrary.org/search.json?q=${q}&fields=key,cover_i&limit=1`, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' } })
     const json = await res.json() as { docs: Array<{ key?: string; cover_i?: number }> }
     const doc = json.docs?.[0]
     return {

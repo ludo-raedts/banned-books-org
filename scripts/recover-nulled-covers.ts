@@ -46,7 +46,7 @@ async function candidates(b: Book): Promise<string[]> {
   const p = new URLSearchParams({ title: b.title, fields: 'key,cover_i,author_name', limit: '5' })
   if (b.author) p.set('author', b.author)
   try {
-    const r = await fetch(`https://openlibrary.org/search.json?${p}`)
+    const r = await fetch(`https://openlibrary.org/search.json?${p}`, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' } })
     if (r.ok) {
       const j: any = await r.json()
       const authorLc = (b.author ?? '').toLowerCase()
@@ -56,7 +56,7 @@ async function candidates(b: Book): Promise<string[]> {
       })
       if (doc) {
         if (doc.cover_i) urls.push(`https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`)
-        const er = await fetch(`https://openlibrary.org${doc.key}/editions.json?limit=50`)
+        const er = await fetch(`https://openlibrary.org${doc.key}/editions.json?limit=50`, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' } })
         if (er.ok) {
           const ed: any = await er.json()
           for (const e of ed.entries ?? []) { const c = (e.covers ?? [])[0]; if (c && c > 0) urls.push(`https://covers.openlibrary.org/b/id/${c}-L.jpg`) }

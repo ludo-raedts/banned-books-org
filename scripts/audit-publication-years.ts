@@ -56,7 +56,7 @@ async function olYear(b: Book): Promise<{ year: number | null; matched: boolean 
   const params = new URLSearchParams({ title: b.title, fields: 'key,first_publish_year', limit: '5' })
   if (b.author) params.set('author', b.author)
   try {
-    const r = await fetch(`https://openlibrary.org/search.json?${params}`)
+    const r = await fetch(`https://openlibrary.org/search.json?${params}`, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' } })
     if (!r.ok) return { year: null, matched: false }
     const j: any = await r.json()
     const docs: { key?: string; first_publish_year?: number }[] = j.docs ?? []
