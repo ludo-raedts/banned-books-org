@@ -77,15 +77,19 @@ interface WikiFullExtract {
 
 // ─── Wikipedia helpers ────────────────────────────────────────────────────────
 
-async function searchWikipedia(name: string): Promise<number | null> {
-  const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&format=json&srlimit=1`
+// Return up to 6 candidate page ids (was: only the top hit, srlimit=1). The
+// single-hit search was the root cause of same-name-wrong-person bios — for an
+// obscure author it returned the most-famous namesake (a footballer, singer,
+// the Where's-Wally author …). The caller now walks these candidates and picks
+// the first that is actually about this author (see the selection loop).
+async function searchWikipedia(name: string): Promise<number[]> {
+  const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&format=json&srlimit=6`
   try {
     const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
-    if (!res.ok) return null
+    if (!res.ok) return []
     const data = await res.json() as WikiSearchResult
-    const hit = data?.query?.search?.[0]
-    return hit?.pageid ?? null
-  } catch { return null }
+    return (data?.query?.search ?? []).map(h => h.pageid).filter((p): p is number => typeof p === 'number')
+  } catch { return [] }
 }
 
 async function fetchPageDetails(pageId: number): Promise<{
@@ -484,30 +488,77 @@ async function main() {
       //    or native-script forms. First variant that returns a page wins;
       //    subsequent ones aren't tried so we don't waste API quota.
       const ladder = authorLadder(author)
-      let pageId: number | null = null
+
+      // 1a. Gather candidate pages from the first ladder variant that hits.
+      let candidates: number[] = []
       let usedVariant = ''
       for (const variant of ladder) {
-        pageId = await searchWikipedia(variant.name)
+        candidates = await searchWikipedia(variant.name)
         await sleep(DELAY_MS)
-        if (pageId !== null) {
+        if (candidates.length) {
           usedVariant = variant.source === 'canonical' ? '' : ` [via ${variant.source}]`
           break
         }
       }
-      if (!pageId) {
+      if (!candidates.length) {
         console.log(`✗ ${author.display_name} — not found on Wikipedia`)
         cacheSkip(author.id)
         skipped++
         continue
       }
 
-      // 2. Fetch page details (extract + photo + categories)
-      const { extract, photo: photoRaw, categories } = await fetchPageDetails(pageId)
+      // 1b. Walk the candidates and pick the page that is actually about THIS
+      // author — not the most-famous namesake. Bio path: must pass
+      // looksLikeAuthorBio (author is the subject + writer-categorised) AND the
+      // author's FULL name (every significant token, not just the surname) must
+      // be the subject — so a same-surname songwriter (Carrie vs Deborah
+      // Underwood) is rejected. Photos-only: first candidate that's a person.
+      // Disambig pages skipped either way.
+      type Picked = { pageId: number; extract: string | null; photo: string | null; categories: string[] }
+      let picked: Picked | null = null
+      for (const pid of candidates) {
+        const d = await fetchPageDetails(pid)
+        await sleep(DELAY_MS)
+        if (!!d.extract && (isDisambigExtract(d.extract) || hasDisambigCategory(d.categories))) continue
+        if (PHOTOS_ONLY) {
+          const personSignal =
+            extractYearFromCategories(d.categories, 'births') !== null ||
+            extractYearFromCategories(d.categories, 'deaths') !== null ||
+            hasWriterCategory(d.categories)
+          if (personSignal) { picked = d; break }
+          continue
+        }
+        if (!d.extract || !looksLikeAuthorBio(d.extract, author.display_name, d.categories)) continue
+        // Require the author's FULL name to be the subject — every significant
+        // token (≥3 chars), not just the surname. Rejects same-surname people
+        // (Carrie Underwood for Deborah Underwood) that pass looksLikeAuthorBio.
+        const intro240 = stripHtml(d.extract).slice(0, 240)
+        const cut = intro240.search(/\s+(is|was|are|were)\b|\s*\((?:born|b\.|c\.|\d)|,\s+(better )?known\b|,\s+who\b/i)
+        const subjN = bioNorm(cut > 0 ? intro240.slice(0, cut) : intro240.slice(0, 60))
+        const authToks = [...new Set(bioNorm(author.display_name).split(' ').filter(w => w.length >= 3))]
+        // Require ≥2 significant tokens ALL present in the subject. With only a
+        // surname (initials/mononym names like "A.M. Jenkins"), name-matching
+        // can't disambiguate same-surname people — so don't recover those by
+        // name; leave them bio-less (safe) rather than risk a wrong Jenkins.
+        const fullNameMatch = authToks.length >= 2 && authToks.every(t => subjN.includes(t))
+        if (!fullNameMatch) continue
+        picked = d // first candidate whose full name is the subject wins
+        break
+      }
+      if (!picked) {
+        console.log(`✗ ${author.display_name} — no candidate Wikipedia page is about this author`)
+        cacheSkip(author.id)
+        skipped++
+        continue
+      }
+
+      // 2. Use the picked page's details downstream.
+      const pageId = picked.pageId
+      const { extract, categories } = picked
       // Gate photo URL through the allowlist — Wikipedia thumbnails are
       // upload.wikimedia.org so this should be a no-op in practice, but the
       // guarantee belongs here at the boundary, not in render.
-      const photo = isAllowedImageUrl(photoRaw) ? photoRaw : null
-      await sleep(DELAY_MS)
+      const photo = isAllowedImageUrl(picked.photo) ? picked.photo : null
 
       // ── Not-a-person guards (incident 2026-05-23) ────────────────────
       // Wikipedia search resolves short / ambiguous author names to the
