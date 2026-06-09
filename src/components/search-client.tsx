@@ -563,7 +563,7 @@ export default function SearchClient({
             {displayBooks.map(book => {
               const reasons = getReasons(book.bans)
               return (
-                <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-row gap-3 items-start sm:flex-col sm:gap-0">
+                <Link key={book.id} href={`/books/${book.slug}`} className="group flex flex-row gap-3 items-start sm:flex-col sm:items-stretch sm:gap-0">
                   <div className="shrink-0 w-[60px] h-[90px] sm:w-full sm:h-auto sm:aspect-[2/3] sm:mb-2 relative overflow-hidden rounded shadow-sm">
                     {book.cover_url ? (
                       <Image src={book.cover_url} alt={coverAlt(book.title, authorName(book), book.first_published_year)} fill
@@ -576,7 +576,7 @@ export default function SearchClient({
                     <h3 className="text-sm font-semibold leading-snug group-hover:underline line-clamp-2">{book.title}</h3>
                     <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{authorName(book)}</p>
                     {book.description_book && (
-                      <p className="max-sm:hidden text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3">{book.description_book}</p>
+                      <p className="max-sm:hidden text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3 break-words">{book.description_book}</p>
                     )}
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {book.genres.slice(0, 2).map(slug => <GenreBadge key={slug} slug={slug} />)}
