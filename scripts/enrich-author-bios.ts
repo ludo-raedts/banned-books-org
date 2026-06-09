@@ -246,6 +246,46 @@ function hasWriterCategory(categories: string[]): boolean {
   })
 }
 
+// ── Wrong-subject / wrong-person guard (2026-06-09) ──────────────────────────
+// The name search used to accept whatever article it returned. That let two
+// classes of garbage in: (a) the intro is about a WORK, not a person ("The
+// Gender Fairy is a 2015 picture book …"); (b) the intro is about a DIFFERENT
+// real person who shares the name (a microbiologist named Suzanne Walker, not
+// the comics author). Require both: the author is the SUBJECT of the opening
+// clause (or a legal/pen-name construction names them), AND the page is
+// categorised as a writer. Conservative by design — a skip leaves the bio NULL,
+// which is strictly safer than a confidently-wrong bio. Only affects new runs.
+const BIO_WORK_NOUN =
+  /\b(book|novel|picture book|memoir|play|film|movie|series|album|band|award|prize|poem|anthology|short story|comic|manga|graphic novel|song|magazine|newspaper|biography|autobiography|story|video game|tv series|sitcom|documentary|painting|sculpture|opera|musical)\b/i
+
+function bioNorm(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function looksLikeAuthorBio(extractHtml: string, displayName: string, categories: string[]): boolean {
+  const intro = stripHtml(extractHtml).slice(0, 240)
+  const introNorm = bioNorm(intro)
+  // Subject = text before the first copula / "(born …)" / "better known" aside
+  // (robust to initials like "D. H." that a sentence-splitter chokes on).
+  const cut = intro.search(/\s+(is|was|are|were)\b|\s*\((?:born|b\.|c\.|\d)|,\s+(better )?known\b|,\s+who\b/i)
+  const subjectNorm = bioNorm(cut > 0 ? intro.slice(0, cut) : intro.slice(0, 60))
+  const toks = new Set(bioNorm(displayName).split(' ').filter(w => w.length >= 3))
+
+  const nameIsSubject = [...toks].some(t => subjectNorm.includes(t))
+  const nameInIntro = [...toks].some(t => introNorm.includes(t))
+  const legalName =
+    /\(born|\(b\.|known (by|as)|better known|pen name|pen-name|pseudonym|real name|birth name|née/i.test(intro) && nameInIntro
+
+  // Subject is a work, not the author → blurb (e.g. "The Gender Fairy is …").
+  if (BIO_WORK_NOUN.test(subjectNorm) && !nameIsSubject) return false
+  // Not about our author at all.
+  if (!nameIsSubject && !legalName) return false
+  // A real person, but not categorised as a writer → likely a same-name other
+  // person (the microbiologist case). Skip rather than risk a wrong bio.
+  if (!hasWriterCategory(categories)) return false
+  return true
+}
+
 // Disambiguation-page detector. Wikipedia extracts for disambig pages
 // follow a stable pattern: "X may refer to:" (sometimes "X or Y may refer
 // to:") near the top. Stripping HTML first, then checking the first
@@ -525,6 +565,16 @@ async function main() {
 
       if (!extract) {
         console.log(`✗ ${author.display_name} — no extract from Wikipedia`)
+        cacheSkip(author.id)
+        skipped++
+        continue
+      }
+
+      // Wrong-subject / wrong-person guard: the intro must be about this author
+      // (subject or legal/pen-name) AND categorised as a writer. Blocks book/film
+      // blurbs and same-name-different-people before they become a bio.
+      if (!looksLikeAuthorBio(extract, author.display_name, categories)) {
+        console.log(`✗ ${author.display_name} — Wikipedia intro isn't about this author (wrong subject or not a writer)`)
         cacheSkip(author.id)
         skipped++
         continue
