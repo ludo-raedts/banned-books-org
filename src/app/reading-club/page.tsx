@@ -196,6 +196,16 @@ export default async function ReadingClubHubPage() {
           </article>
         </SectionShell>
       )}
+
+      <div className="px-6 md:px-9 pb-12">
+        <p className="max-w-3xl mx-auto text-center text-sm text-neutral-500">
+          Do you enjoy the reading club?{' '}
+          <Link href="/support" className="text-oxblood font-medium hover:underline">
+            Support the project
+          </Link>{' '}
+          to help keep it free.
+        </p>
+      </div>
     </main>
   )
 }

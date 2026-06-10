@@ -268,6 +268,13 @@ export default async function DatasetPage() {
             </div>
 
           </div>
+          <p className="mt-6 text-center text-sm text-neutral-500">
+            Do you find this useful?{' '}
+            <Link href="/support" className="text-oxblood font-medium hover:underline">
+              Support the project
+            </Link>{' '}
+            to help keep the data free and growing.
+          </p>
         </div>
       </SectionShell>
 
