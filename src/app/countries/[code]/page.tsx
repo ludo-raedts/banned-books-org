@@ -16,6 +16,7 @@ import SectionShell from '@/components/section/SectionShell'
 import SectionHeader from '@/components/section/SectionHeader'
 import Eyebrow from '@/components/section/Eyebrow'
 import FaqSection from '@/components/home/FaqSection'
+import UsCourtCasesSection from '@/components/country/UsCourtCasesSection'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
@@ -592,6 +593,9 @@ export default async function CountryPage({
           </div>
         </SectionShell>
       )}
+
+      {/* ── In the courts: live U.S. book-ban litigation (US only) ───────── */}
+      {upperCode === 'US' && <UsCourtCasesSection />}
 
       {/* ── Full catalogue (A–Z, dedup vs the top-12 row) ────────────── */}
       {books.length > 0 && (
