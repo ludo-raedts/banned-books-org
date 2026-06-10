@@ -256,6 +256,12 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
   const foundBySource: Record<string, number> = {}
   const samples: EnrichCoversResult['samples'] = []
 
+  // Once Google Books returns its daily-quota error, every further GB call
+  // would throw the same. Instead of halting the whole run we flip this flag
+  // and skip the GB steps for the rest of the run, continuing with the free
+  // sources (OL / OL-stripped / Wikipedia). Reset only by a new process.
+  let gbExhausted = false
+
   for (let i = 0; i < limit; i++) {
     const book = toSearch[i]
     const author = book.author ?? ''
@@ -271,12 +277,18 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
       // highest-precision source and needs no title guard — but the placeholder
       // and strip checks in resolveGbCover still run. This bypasses the
       // title-search "most-popular sibling" failure mode entirely.
-      if (book.isbn13) {
+      if (book.isbn13 && !gbExhausted) {
         newSources.push('gb_isbn')
-        const isbnVolumes = await gbVolumesByIsbn(book.isbn13, { fields: GB_FIELDS_COVER, delayMs: GB_DELAY_MS })
-        const isbnResult = await resolveGbCover(isbnVolumes, book.title, { requireTitleMatch: false })
-        if (isbnResult.kind === 'placeholder') placeholderTracker.sawPlaceholder = true
-        else if (isbnResult.kind === 'cover') { coverUrl = isbnResult.url; source = 'GB-isbn' }
+        try {
+          const isbnVolumes = await gbVolumesByIsbn(book.isbn13, { fields: GB_FIELDS_COVER, delayMs: GB_DELAY_MS })
+          const isbnResult = await resolveGbCover(isbnVolumes, book.title, { requireTitleMatch: false })
+          if (isbnResult.kind === 'placeholder') placeholderTracker.sawPlaceholder = true
+          else if (isbnResult.kind === 'cover') { coverUrl = isbnResult.url; source = 'GB-isbn' }
+        } catch (e) {
+          if (!(e instanceof GbQuotaError)) throw e
+          if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
+          gbExhausted = true
+        }
       }
 
       // Walk the title ladder; for each variant try GB → OL → OL-stripped →
@@ -289,10 +301,18 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         const tag = variant.source === 'canonical' ? '' : `:${variant.source}`
         const stripped = stripSubtitle(variant.title)
 
-        newSources.push(`gb_title_only${tag}`)
-        coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker, author)
-          ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker, author)
-        if (coverUrl) { source = `GB-title-only${tag}`; break }
+        if (!gbExhausted) {
+          newSources.push(`gb_title_only${tag}`)
+          try {
+            coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker, author)
+              ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker, author)
+            if (coverUrl) { source = `GB-title-only${tag}`; break }
+          } catch (e) {
+            if (!(e instanceof GbQuotaError)) throw e
+            if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
+            gbExhausted = true
+          }
+        }
 
         newSources.push(`ol_title_only${tag}`)
         // Pass the author into the title-only branch too. Previously this

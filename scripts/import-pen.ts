@@ -26,10 +26,56 @@ import { join } from 'path'
 
 const APPLY = process.argv.includes('--apply')
 const LIMIT = parseInt(process.argv.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0') || Infinity
-const CSV_PATH = join(process.cwd(), 'data/pen-2024-25.csv')
+const YEAR = process.argv.find(a => a.startsWith('--year='))?.split('=')[1] ?? '2024-25'
 
-const SOURCE_NAME = 'PEN America Index of School Book Bans 2024-2025'
-const SOURCE_URL  = 'https://pen.org/book-bans/pen-america-index-of-school-book-bans-2024-2025/'
+// Positional column layout per PEN-year file. The school-year datasets differ:
+// 2024-25 is header-on-line-1 with Title first; the legacy Google-Sheets exports
+// have different column order, no/late header rows, and an older ban-status vocab.
+// `dataStart` = 0-based index of the first DATA line (banner+header rows skipped).
+// `series` is null for files (2021-22) that omit a Series column.
+interface YearConfig {
+  csv: string
+  sourceName: string
+  sourceUrl: string
+  dataStart: number
+  cols: { title: number; author: number; series: number | null; state: number; district: number; date: number; status: number }
+}
+
+const YEAR_CONFIGS: Record<string, YearConfig> = {
+  '2024-25': {
+    csv: 'data/pen-2024-25.csv',
+    sourceName: 'PEN America Index of School Book Bans 2024-2025',
+    sourceUrl: 'https://pen.org/book-bans/pen-america-index-of-school-book-bans-2024-2025/',
+    dataStart: 1,
+    cols: { title: 0, author: 1, series: 5, state: 6, district: 7, date: 8, status: 9 },
+  },
+  // No header row in the export; same column order as 2023-24.
+  '2022-23': {
+    csv: 'data/pen-2022-23.csv',
+    sourceName: 'PEN America Index of School Book Bans 2022-2023',
+    sourceUrl: 'https://pen.org/book-bans/2023-banned-book-list/',
+    dataStart: 0,
+    cols: { title: 0, author: 1, series: 5, state: 6, district: 7, date: 8, status: 9 },
+  },
+  // Two banner rows + header on line 3; Author BEFORE Title; no Series column;
+  // status column is "Type of Ban".
+  '2021-22': {
+    csv: 'data/pen-2021-22.csv',
+    sourceName: 'PEN America Index of School Book Bans 2021-2022',
+    sourceUrl: 'https://pen.org/book-bans/banned-book-list-2021-2022/',
+    dataStart: 3,
+    cols: { title: 1, author: 0, series: null, state: 6, district: 7, date: 8, status: 2 },
+  },
+}
+
+const CONFIG = YEAR_CONFIGS[YEAR]
+if (!CONFIG) {
+  console.error(`Unknown --year=${YEAR}. Choose one of: ${Object.keys(YEAR_CONFIGS).join(', ')}`)
+  process.exit(1)
+}
+const CSV_PATH = join(process.cwd(), CONFIG.csv)
+const SOURCE_NAME = CONFIG.sourceName
+const SOURCE_URL = CONFIG.sourceUrl
 
 const BOOK_FUZZY_THRESHOLD = 0.7    // pg_trgm similarity for title fallback
 const AUTHOR_FUZZY_THRESHOLD = 0.75
@@ -39,10 +85,19 @@ const OL_DELAY_MS = 350
 // PEN's "Professionally Weeded" is routine library curation, not an ideological ban.
 const SKIP_BAN_STATUSES = new Set(['Banned - Professionally Weeded'])
 
+// Maps PEN's ban-status text → our action_type. Spans all school-year vocabs:
+// 2024-25 uses "Banned"/"Banned by Restriction"; 2022-23 "Banned from …";
+// 2021-22 "Banned in …". "Pending Investigation" is the one provisional status.
 const ACTION_TYPE_MAP: Record<string, 'banned' | 'restricted'> = {
   'Banned': 'banned',
   'Banned by Restriction': 'restricted',
   'Banned Pending Investigation': 'restricted',
+  'Banned from Libraries and Classrooms': 'banned',
+  'Banned from Libraries': 'banned',
+  'Banned from Classrooms': 'banned',
+  'Banned in Libraries and Classrooms': 'banned',
+  'Banned in Libraries': 'banned',
+  'Banned in Classrooms': 'banned',
 }
 
 // Editorial overrides for the 1 case the fuzzy matcher couldn't pick uniquely.
@@ -75,19 +130,6 @@ function parseRow(line: string): string[] {
   return fields
 }
 
-function parseCSV(content: string): Record<string, string>[] {
-  const lines = content.replace(/\r/g, '').split('\n')
-  const headers = parseRow(lines[0].replace(/^﻿/, ''))
-  const out: Record<string, string>[] = []
-  for (let i = 1; i < lines.length; i++) {
-    if (!lines[i].trim()) continue
-    const values = parseRow(lines[i])
-    const row: Record<string, string> = {}
-    headers.forEach((h, j) => { row[h] = (values[j] ?? '').trim() })
-    out.push(row)
-  }
-  return out
-}
 
 // ── Field helpers ───────────────────────────────────────────────────────────
 
@@ -375,27 +417,30 @@ interface Event {
   actionType: 'banned' | 'restricted'
 }
 
-function buildEvents(rows: Record<string, string>[]): { events: Event[]; skipped: number; unmappedStatuses: Map<string, number> } {
+function buildEvents(rows: string[][]): { events: Event[]; skipped: number; unmappedStatuses: Map<string, number> } {
+  const c = CONFIG.cols
+  const at = (r: string[], i: number) => (r[i] ?? '').trim()
   const events: Event[] = []
   let skipped = 0
   const unmapped = new Map<string, number>()
   for (const r of rows) {
-    const banStatus = r['Ban Status']
+    const banStatus = at(r, c.status)
     if (SKIP_BAN_STATUSES.has(banStatus)) { skipped++; continue }
     const actionType = ACTION_TYPE_MAP[banStatus]
     if (!actionType) {
       unmapped.set(banStatus, (unmapped.get(banStatus) ?? 0) + 1)
       continue
     }
-    const district = r['District'] && r['District'].trim() ? r['District'].trim() : null
+    const rawTitle = at(r, c.title)
+    const district = at(r, c.district) || null
     events.push({
-      rawTitle: r['Title'],
-      title: cleanTitle(r['Title']),
-      author: formatAuthor(r['Author']),
-      series: r['Series'] && r['Series'].trim() ? r['Series'].trim() : null,
-      state: r['State'],
+      rawTitle,
+      title: cleanTitle(rawTitle),
+      author: formatAuthor(at(r, c.author)),
+      series: c.series !== null ? (at(r, c.series) || null) : null,
+      state: at(r, c.state),
       district,
-      year: extractYear(r['Date of Challenge/Removal']),
+      year: extractYear(at(r, c.date)),
       banStatus,
       actionType,
     })
@@ -406,9 +451,11 @@ function buildEvents(rows: Record<string, string>[]): { events: Event[]; skipped
 // ── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log(`\n── import-pen 2024-25 ── (${APPLY ? 'APPLY' : 'DRY-RUN'})\n`)
+  console.log(`\n── import-pen ${YEAR} ── (${APPLY ? 'APPLY' : 'DRY-RUN'})\n`)
+  console.log(`Source: ${SOURCE_NAME}`)
 
-  const raw = parseCSV(readFileSync(CSV_PATH, 'utf-8'))
+  const lines = readFileSync(CSV_PATH, 'utf-8').replace(/\r/g, '').split('\n')
+  const raw = lines.slice(CONFIG.dataStart).filter(l => l.trim()).map(parseRow)
   console.log(`CSV rows:                  ${raw.length}`)
 
   const { events, skipped, unmappedStatuses } = buildEvents(raw)

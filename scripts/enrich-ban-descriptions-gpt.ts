@@ -67,7 +67,14 @@ function buildPrompt(book: BookRow): string {
   const banLines = sorted.map(ban => {
     const country   = ban.countries?.name_en ?? ban.country_code
     const scope     = ban.scopes?.label_en ?? 'unknown scope'
-    const reasons   = ban.ban_reason_links.map(l => l.reasons?.label_en).filter(Boolean).join(', ') || 'unspecified'
+    // 'other' is our fallback bucket, NOT a reason an authority actually cited.
+    // Feeding it as "reason: Other" makes GPT fabricate 'the official reason
+    // cited as "Other"'. Drop it so undocumented reasons read as such.
+    const reasons   = ban.ban_reason_links
+      .map(l => l.reasons)
+      .filter((r): r is { slug: string; label_en: string } => !!r && r.slug !== 'other')
+      .map(r => r.label_en)
+      .join(', ') || 'not publicly documented'
     const year      = ban.year_started ? ` ${ban.year_started}` : ''
     const ended     = ban.year_ended   ? ` (lifted ${ban.year_ended})`
                     : ban.status === 'historical' ? ' (historical)' : ''
@@ -90,12 +97,12 @@ Write 2–3 sentences of maximally concrete, journalistic ban history. Follow th
 1. Lead with the most notable or earliest documented ban. Name the specific school district, library system, prison, or government authority.
 2. If there was a lawsuit, court case, or formal board proceeding — name the jurisdiction, the case, or the outcome (upheld / overturned / settled).
 3. If the author or publisher made a notable public statement or legal response — include it.
-4. State the official reason given by the banning authority.
+4. State the official reason ONLY if one is documented above. If the reason reads "not publicly documented", do NOT invent one and do NOT write the word "Other" — either omit the reason entirely or state plainly that no specific reason was made public.
 5. If the ban was later lifted or the book reinstated, note it with the year.
 
 Rules:
 - Use only facts you are confident about from the historical record
-- When you have no specific named case, describe accurately what the documented data shows: country, year, scope, and stated reason
+- When you have no specific named case, describe accurately what the documented data shows: country, year, scope, and (only if documented) the stated reason
 - Never invent institution names, case names, official names, or reactions you are not certain about
 - Do not start with "This book", "The book", or "It"
 - Do not use vague constructions like "has been banned in multiple countries"
