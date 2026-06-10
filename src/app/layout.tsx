@@ -153,6 +153,7 @@ export default function RootLayout({
                 <h2 className="text-[11px] uppercase tracking-wider font-semibold text-gray-700 mb-2">About</h2>
                 <ul className="space-y-1.5">
                   <li><Link href="/about" className="hover:text-gray-800 transition-colors">About</Link></li>
+                  <li><Link href="/support" className="hover:text-gray-800 transition-colors">Support this project</Link></li>
                   <li><Link href="/press" className="hover:text-gray-800 transition-colors">Press</Link></li>
                   <li><Link href="/privacy" className="hover:text-gray-800 transition-colors">Privacy</Link></li>
                   <li><Link href="/accessibility" className="hover:text-gray-800 transition-colors">Accessibility</Link></li>

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import type Stripe from 'stripe'
 import crypto from 'crypto'
-import { stripe } from '@/lib/stripe'
+import { stripe, STRIPE_PRICE_ID } from '@/lib/stripe'
 import { adminClient } from '@/lib/supabase'
 import { sendDownloadEmail } from '@/lib/email'
 
@@ -39,8 +39,24 @@ export async function POST(req: NextRequest) {
   return Response.json({ received: true })
 }
 
+// checkout.session.completed events don't carry line_items, so fetch them and
+// check whether the dataset price is among them. Returns false (skip fulfilment)
+// for support/donation payments or any other product. Lets Stripe API errors
+// throw so the webhook 500s and Stripe retries — fulfilment is idempotent.
+async function isDatasetCheckout(sessionId: string): Promise<boolean> {
+  if (!STRIPE_PRICE_ID) return false
+  const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 100 })
+  return lineItems.data.some((item) => item.price?.id === STRIPE_PRICE_ID)
+}
+
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session, baseUrl: string) {
   if (session.payment_status !== 'paid') return
+
+  // Guard: only fulfil dataset purchases. Support/donation payments (and any
+  // future product) emit the same checkout.session.completed event and would
+  // otherwise mint a download token + email the paid dataset for free. Positively
+  // identify the dataset by its price ID on the line items; skip anything else.
+  if (!(await isDatasetCheckout(session.id))) return
 
   const supabase = adminClient()
   const expiresAt = new Date(Date.now() + DOWNLOAD_TTL_DAYS * 24 * 60 * 60 * 1000)
