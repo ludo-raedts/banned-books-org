@@ -52,38 +52,33 @@ export default async function DatasetPage() {
   // an era marker, which reads like a typo. Tag them "AD" in the prose; the
   // ISO 8601 temporalCoverage below stays 4-digit-padded for validators.
   const minYearLabel = minYear < 1000 ? `${minYear} AD` : String(minYear)
-  const datasetSchema: Record<string, unknown> = {
+  const datasetKeywords = [
+    'book censorship',
+    'banned books',
+    'library censorship',
+    'intellectual freedom',
+    'challenged books',
+    'school book bans',
+    'government censorship',
+    'international censorship',
+    'free expression',
+  ]
+  const temporalCoverage = `${String(minYear).padStart(4, '0')}/${String(maxYear).padStart(4, '0')}`
+
+  // The paid, full dataset is a commercial PRODUCT (with an Offer) — deliberately
+  // NOT a second Dataset. Two Dataset entities sharing this page's URL/DOI made
+  // Google Dataset Search drop the record; the open CC-BY-4.0 Dataset below is
+  // now this page's sole Dataset entity.
+  const productSchema: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': 'Dataset',
-    name: 'Banned Books: International Censorship Database',
-    alternateName: 'banned-books.org dataset',
-    description: `A structured, citation-backed dataset of ${stats.books.toLocaleString('en')} books banned, challenged, or restricted across ${stats.countries} countries (${stats.bans.toLocaleString('en')} total ban records, ${minYearLabel}–${maxYear}). Every ban record carries a verifiable source citation. Includes books, authors, bans (with year, scope, status, reasons), source citations, and country dimensions. CSV, JSON, and SQLite formats. International scope; includes defunct states (USSR, East Germany, Czechoslovakia, Yugoslavia).`,
+    '@type': 'Product',
+    name: 'Banned Books — Full Dataset',
+    description: `The full Banned Books dataset: ${stats.books.toLocaleString('en')} books banned, challenged, or restricted across ${stats.countries} countries (${stats.bans.toLocaleString('en')} ban records, ${minYearLabel}–${maxYear}), adding editorial prose, enrichment (ISBN-13, cover images, author bios) and convenience formats (denormalised JSON + ready-to-query SQLite) on top of the open core. CSV, JSON, and SQLite.`,
     url: 'https://www.banned-books.org/dataset',
-    sameAs: 'https://www.banned-books.org',
-    keywords: [
-      'book censorship',
-      'banned books',
-      'library censorship',
-      'intellectual freedom',
-      'challenged books',
-      'school book bans',
-      'government censorship',
-      'international censorship',
-      'free expression',
-    ],
-    creator: {
-      '@type': 'Person',
-      name: 'Ludo Raedts',
-      url: 'https://www.banned-books.org/about',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Banned Books',
-      url: 'https://www.banned-books.org',
-      logo: 'https://www.banned-books.org/brand/compact-bb.png',
-    },
-    license: 'https://www.banned-books.org/dataset',
-    isAccessibleForFree: false,
+    image: 'https://www.banned-books.org/brand/compact-bb.png',
+    brand: { '@type': 'Brand', name: 'Banned Books' },
+    category: 'Dataset',
+    keywords: datasetKeywords,
     offers: {
       '@type': 'Offer',
       price: DATASET_PRICE_USD.toFixed(2),
@@ -91,35 +86,6 @@ export default async function DatasetPage() {
       url: 'https://www.banned-books.org/dataset',
       availability: 'https://schema.org/InStock',
     },
-    distribution: [
-      { '@type': 'DataDownload', encodingFormat: 'text/csv', name: 'CSV files (books, bans, sources, countries, authors, reasons)', contentUrl: 'https://www.banned-books.org/dataset' },
-      { '@type': 'DataDownload', encodingFormat: 'application/json', name: 'Single-file JSON dataset', contentUrl: 'https://www.banned-books.org/dataset' },
-      { '@type': 'DataDownload', encodingFormat: 'application/vnd.sqlite3', name: 'SQLite database', contentUrl: 'https://www.banned-books.org/dataset' },
-    ],
-    temporalCoverage: `${String(minYear).padStart(4, '0')}/${String(maxYear).padStart(4, '0')}`,
-    spatialCoverage: { '@type': 'Place', name: 'Global (worldwide)' },
-    variableMeasured: [
-      'book title',
-      'author name',
-      'first published year',
-      'ISBN',
-      'country of ban',
-      'ban year (start, end)',
-      'ban scope (school, government, prison)',
-      'ban status (active, historical)',
-      'ban action type (banned, restricted, challenged)',
-      'ban reason taxonomy',
-      'source citation URL',
-    ],
-    datePublished: '2026-04-24',
-    inLanguage: 'en',
-  }
-  if (stats.dataLastChanged) datasetSchema.dateModified = stats.dataLastChanged
-  // The open CC-BY-4.0 core is deposited on Zenodo with a citeable DOI. Once
-  // ZENODO_CONCEPT_DOI is set, advertise it as the dataset identifier so search
-  // engines and citation tools can resolve it. Stays absent until then.
-  if (ZENODO_CONCEPT_DOI) {
-    datasetSchema.identifier = ZENODO_DOI_URL
   }
 
   // Second Dataset entity: the OPEN, free, CC-BY-4.0 censorship core deposited on
@@ -151,8 +117,8 @@ export default async function DatasetPage() {
           url: 'https://www.banned-books.org',
           logo: 'https://www.banned-books.org/brand/compact-bb.png',
         },
-        keywords: datasetSchema.keywords,
-        temporalCoverage: datasetSchema.temporalCoverage,
+        keywords: datasetKeywords,
+        temporalCoverage,
         spatialCoverage: { '@type': 'Place', name: 'Global (worldwide)' },
         variableMeasured: [
           'book title',
@@ -206,7 +172,7 @@ export default async function DatasetPage() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: ldHtml(datasetSchema) }}
+        dangerouslySetInnerHTML={{ __html: ldHtml(productSchema) }}
       />
       {openDatasetSchema && (
         <script
