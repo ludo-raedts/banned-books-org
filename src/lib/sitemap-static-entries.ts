@@ -1,6 +1,12 @@
 import { SITEMAP_BASE_URL, type SitemapEntry } from './sitemap-xml'
 import { publishedEssays } from './essays-data'
-import { THEME_REASON_MAP } from './reading-club-data'
+import {
+  THEME_REASON_MAP,
+  getInternationalTrack,
+  getClassicsTrack,
+  getYoungReadersTrack,
+  getThemeBooks,
+} from './reading-club-data'
 import { isBannedBooksWeekActive } from '@/config/banned-books-week'
 import { adminClient } from '@/lib/supabase'
 
@@ -20,6 +26,67 @@ async function getAuthorsLastModified(): Promise<string | null> {
     .limit(1)
     .maybeSingle()
   return (data?.updated_at as string | undefined) ?? null
+}
+
+// Reading Club per-book guide pages. Unlike the hub/track landing pages (which
+// are static literals above), these are DB-driven — the annual
+// currently-challenged lists plus the curated single-slug tracks and theme
+// books — so they're enumerated here. Returning them from this shared helper
+// means they flow through sitemap-static.xml AND getAllCanonicalUrls (IndexNow
+// bulk + delta) at once, exactly like the essay entries. We only emit the
+// publicly-visible set: the currently-challenged query filters to published
+// rows, and the track/theme fetchers default to the non-admin (published-only)
+// path, so unpublished drafts never reach the sitemap.
+async function getReadingClubDetailEntries(): Promise<SitemapEntry[]> {
+  const entries: SitemapEntry[] = []
+
+  // currently-challenged/{year}/{position} — one URL per published list entry,
+  // across every year present (not just the current one).
+  const { data: ccRows } = await adminClient()
+    .from('reading_club_currently_challenged')
+    .select('year, position')
+    .not('published_at', 'is', null)
+  for (const r of (ccRows ?? []) as { year: number; position: number }[]) {
+    entries.push({
+      loc: `${base}/reading-club/currently-challenged/${r.year}/${r.position}`,
+      changefreq: 'monthly',
+      priority: 0.6,
+    })
+  }
+
+  // Curated single-slug tracks: /reading-club/<track>/<bookSlug>.
+  const tracks: Array<[string, () => Promise<{ bookSlug: string | null }[]>]> = [
+    ['international', getInternationalTrack],
+    ['classics', getClassicsTrack],
+    ['young-readers', getYoungReadersTrack],
+  ]
+  for (const [track, fetchTrack] of tracks) {
+    for (const r of await fetchTrack()) {
+      if (r.bookSlug) {
+        entries.push({
+          loc: `${base}/reading-club/${track}/${r.bookSlug}`,
+          changefreq: 'monthly',
+          priority: 0.6,
+        })
+      }
+    }
+  }
+
+  // by-theme/{themeSlug}/{bookSlug} — the publicly-surfaced set per theme
+  // (curator overrides, else auto-pull), mirroring the theme listing page.
+  for (const themeSlug of Object.keys(THEME_REASON_MAP)) {
+    for (const r of await getThemeBooks(themeSlug)) {
+      if (r.bookSlug) {
+        entries.push({
+          loc: `${base}/reading-club/by-theme/${themeSlug}/${r.bookSlug}`,
+          changefreq: 'monthly',
+          priority: 0.6,
+        })
+      }
+    }
+  }
+
+  return entries
 }
 
 // Returns the static sitemap entries. Async because the BBW changefreq /
@@ -120,5 +187,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     priority: e.slug === 'history' ? 0.8 : 0.5,
   }))
 
-  return [...STATIC_ENTRIES, ...ESSAY_ENTRIES]
+  const READING_CLUB_DETAIL_ENTRIES = await getReadingClubDetailEntries()
+
+  return [...STATIC_ENTRIES, ...ESSAY_ENTRIES, ...READING_CLUB_DETAIL_ENTRIES]
 }
