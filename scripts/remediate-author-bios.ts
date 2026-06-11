@@ -20,6 +20,13 @@
  * same bad article, so they're suspect too). "correct" rows are untouched;
  * "uncertain" rows are left in place and logged for human review.
  *
+ * Loop guard: nulling a bio sets bio IS NULL again, which is exactly what
+ * enrich-author-bios.ts selects on — left alone it would refetch the same wrong
+ * Wikipedia page and rewrite the same bad bio forever. So on --apply every
+ * nulled author id is added to the enricher's `bios.skippedIds`
+ * (data/enrich-author-bios.state.json), which the enricher already excludes.
+ * Recover a wrongly-blocked author with the enricher's --retry-skipped.
+ *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/remediate-author-bios.ts                          # dry-run, sample 40
  *   npx tsx --env-file=.env.local scripts/remediate-author-bios.ts --slugs=suzanne-walker,jo-hirst,george-orwell,eva-darrows
@@ -27,8 +34,39 @@
  *   npx tsx --env-file=.env.local scripts/remediate-author-bios.ts --apply                   # full run, writes
  */
 import fs from 'node:fs'
+import path from 'node:path'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+
+// Shared with enrich-author-bios.ts. When we NULL a bio here, the enricher would
+// otherwise re-select it (bio IS NULL), re-run the SAME deterministic Wikipedia
+// search, and rewrite the SAME wrong bio — an endless enrich↔remediate pingpong.
+// We close the loop by adding every nulled author id to the enricher's
+// `bios.skippedIds`, which it already excludes. (`--retry-skipped` / `--reset-cache`
+// on the enricher remain the escape hatch if a remediation was too strict.)
+const ENRICH_CACHE_PATH = path.resolve(process.cwd(), 'data/enrich-author-bios.state.json')
+
+function blockInEnrichCache(ids: number[]): number {
+  if (!ids.length) return 0
+  let cache: { bios?: { skippedIds?: number[] }; photosOnly?: { skippedIds?: number[] }; updatedAt?: string } = {}
+  try {
+    cache = JSON.parse(fs.readFileSync(ENRICH_CACHE_PATH, 'utf8'))
+  } catch {
+    /* missing/unreadable → start fresh */
+  }
+  cache.bios ??= { skippedIds: [] }
+  cache.bios.skippedIds ??= []
+  cache.photosOnly ??= { skippedIds: [] }
+  cache.photosOnly.skippedIds ??= []
+  const merged = new Set<number>(cache.bios.skippedIds)
+  const before = merged.size
+  for (const id of ids) merged.add(id)
+  cache.bios.skippedIds = [...merged]
+  cache.updatedAt = new Date().toISOString()
+  fs.mkdirSync(path.dirname(ENRICH_CACHE_PATH), { recursive: true })
+  fs.writeFileSync(ENRICH_CACHE_PATH, JSON.stringify(cache, null, 2) + '\n', 'utf8')
+  return merged.size - before
+}
 
 const APPLY = process.argv.includes('--apply')
 const arg = (k: string) => process.argv.find((x) => x.startsWith(`--${k}=`))?.split('=')[1]
@@ -140,6 +178,7 @@ async function main() {
   console.log(`Authors with a bio: ${rows.length}; classifying ${batch.length}\n`)
 
   const counts: Record<Verdict, number> = { correct: 0, wrong_person: 0, not_a_bio: 0, uncertain: 0 }
+  const nulledIds: number[] = []
   let errors = 0,
     nulled = 0
   const propStream = fs.createWriteStream(PROPOSALS, { flags: 'a' })
@@ -176,9 +215,13 @@ async function main() {
           .update({ bio: null, birth_year: null, death_year: null, birth_country: null })
           .eq('id', r.id)
         if (error) errors++
-        else nulled++
+        else {
+          nulled++
+          nulledIds.push(r.id)
+        }
       } else {
         nulled++
+        nulledIds.push(r.id)
       }
     }
   })
@@ -186,6 +229,10 @@ async function main() {
   propStream.end()
   reviewStream.end()
   backupStream?.end()
+
+  // Close the enrich↔remediate loop: pin every nulled author so the enricher
+  // won't refetch the same wrong Wikipedia page next run.
+  const newlyBlocked = APPLY ? blockInEnrichCache(nulledIds) : 0
 
   console.log(`
 ── Summary ──────────────────────────────
@@ -196,6 +243,7 @@ async function main() {
   uncertain (review):         ${counts.uncertain}
   classify errors:            ${errors}
   rows ${APPLY ? 'nulled' : 'to null'}:              ${nulled}
+  ${APPLY ? `enrich-cache blocked:        +${newlyBlocked} (won't be re-enriched)` : 'enrich-cache:                (apply blocks nulled ids from re-enrichment)'}
   proposals → ${PROPOSALS}
   uncertain → ${REVIEW}
   ${APPLY ? `backup → ${BACKUP}\n  Written ✓ (bio+birth/death/country nulled for wrong_person/not_a_bio)` : 'DRY-RUN — add --apply to write (backs up before nulling)'}
