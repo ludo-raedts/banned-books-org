@@ -1233,6 +1233,26 @@ npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
             note={<>Werkwijze bij nieuwe audit-run: kopieer het script, vul de drie lijsten met IDs uit de nieuwste <code className="font-mono">data/non-person-authors-review.md</code>, en draai dry-run → apply. De verificatie-stap aborteert als een display_name niet matcht — beschermt tegen accidentele wijzigingen na een ander script al een rij hernoemde.</>}
           />
 
+          <Script
+            name="cleanup-vague-pen-rollups.ts"
+            what="Verwijdert vage PEN-aggregaat roll-up bans: institution NULL + region NULL, enige bron = de generieke pen.org/book-bans/ landingspagina (source 190), én gedekt door ≥1 concrete districtrij van hetzelfde boek/land binnen jaar±1. Roll-ups zónder concrete dekking zijn de enige PEN-record voor dat boek en blijven staan; rijen met extra bronnen worden geflagd, nooit verwijderd. Eerste run (2026-06-11): 3.399 verwijderd, 310 keepers, 1 geflagd (ban 225). Achtergrond: een vroege PEN-aggregaat-import (~2026-05-03) maakte één vage rij per boek; de latere index-imports (23-24, 24-25) dedupten daar niet tegen."
+            tags={['destructive']}
+            meta={{
+              coverage: 'alle bans gelinkt aan de generieke PEN-bron',
+              cadence: 'na elke aggregaat-achtige PEN-import',
+              writes: <>DELETE <code className="font-mono">bans</code> + <code className="font-mono">ban_source_links</code> + <code className="font-mono">ban_reason_links</code>; JSON-backup naar <code className="font-mono">data/vague-pen-rollups-backup-&lt;datum&gt;.json</code></>,
+              idempotent: 'ja — tweede run vindt 0 deletable rijen',
+              cost: 'gratis',
+            }}
+            command={`# Dry-run eerst — toont deletable / flagged / keepers
+pnpm tsx --env-file=.env.local scripts/cleanup-vague-pen-rollups.ts
+
+# Apply (één transactie) + daarna MV's verversen
+pnpm tsx --env-file=.env.local scripts/cleanup-vague-pen-rollups.ts --apply
+pnpm tsx --env-file=.env.local scripts/refresh-mv.ts`}
+            note={<>Twee rijen uit verschillende PEN-indexen op één boek in hetzelfde kalenderjaar zijn meestal <em>géén</em> dupes: PEN publiceert per schooljaar, dus 23-24 en 24-25 raken allebei 2024 met verschillende districten.</>}
+          />
+
           <p className="text-xs text-gray-500 mt-2">
             Voor description / ban-description fixes per boek: gebruik{' '}
             <code className="font-mono">enrich-descriptions-v2.ts --apply --allow-llm --slug=X</code>,{' '}
