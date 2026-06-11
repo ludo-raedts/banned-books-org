@@ -1,8 +1,8 @@
 # Non-person author audit
 
-_Gegenereerd 2026-06-03 door `scripts/_audit_non_person_authors.ts`._
+_Gegenereerd 2026-06-08 door `scripts/_audit_non_person_authors.ts`._
 
-Totaal authors: 8664. Verdachte rijen: **40**.
+Totaal authors: 8739. Verdachte rijen: **40**.
 
 | categorie | aantal |
 |---|---:|
