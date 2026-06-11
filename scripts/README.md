@@ -93,6 +93,14 @@ dupe before enrich on unique fields"): KEEP = canoniek, DROP = duplicaat. Per pa
 | `merge-orwell-1984-dupes.ts` | Eén geval (hardcoded) | Dedupt op (country, scope) i.p.v. volledige key (zelfde SU-ban, afwijkend jaar); incl. slug-aliasing | `--write` |
 | `merge-iran-duplicates.ts` | 4 hardcoded paren | Simpelst: herhangt ban, verwijdert book_authors + boek. Geen enrichment/aliassen | `--apply` |
 
+### Ban-merges (dezelfde boek, dubbele ban-rij)
+Twee `bans`-rijen op één boek die hetzelfde event zijn, niet twee boeken. Doctrine: KEEP behoudt de canonieke institution-string; union van `ban_source_links` + `ban_reason_links` (on conflict do nothing), enrich KEEP's NULL-velden, DELETE DROP. KEEP's UNIQUE-key (`bans_unique_per_scope`) wordt nooit gemuteerd → geen conflict.
+| Script | Scope | Bijzonder | Flag |
+|---|---|---|---|
+| `merge-institution-variant-dupes.ts` | **Generiek, data-gedreven** | Dedupt op genormaliseerde institution-**core** (`normalizeInstitution`: strip filler public/school(s)/district/isd) binnen jaar±1. KEEP = langste institution-string. Veiligheidsrail: clusters met jaar-spanning >1 worden **geflagd, niet gemerged**. **Start hier voor institution-spellingsvarianten.** | `--apply` |
+| `merge-multiyear-pen-dupes.ts` | 7 hardcoded paren | Doorlopende PEN-ban die in meerdere jaarindexen opduikt (jaar-spanning >1, dus door de rail van het generieke script geflagd). KEEP = vroegste-jaar rij; union beide PEN-bronnen + per-jaar reasons. Eén event i.p.v. dubbeltelling | `--apply` |
+| `merge-marlon-bundo-broward-dupe.ts` | Eén geval (hardcoded) | Wiki-enrichment-dupe ("Broward County Schools" vs "… Public Schools"); KEEP houdt fuller institution, krijgt description + Wikipedia-bron van DROP. Sjabloon voor één-paar ban-merge | `--apply` |
+
 ### Auteur-merges
 | Script | Scope | Bijzonder | Flag |
 |---|---|---|---|

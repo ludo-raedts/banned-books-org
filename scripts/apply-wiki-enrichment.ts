@@ -264,6 +264,32 @@ async function linkSource(
 }
 
 /**
+ * Normalize an institution string to its identifying core so that the common
+ * US-district phrasings collapse to the same value:
+ *   "Broward County Public Schools" / "Broward County Schools" /
+ *   "Broward County School District"  →  "broward county"
+ *
+ * Lowercase, strip punctuation, then drop filler/type tokens (public, unified,
+ * school(s), district, isd). Returns '' when the string is ALL filler
+ * (e.g. "Public Schools") — callers must treat an empty core as "no usable
+ * normalization", never as a match, or every all-filler row would collide.
+ *
+ * Note: it deliberately keeps distinguishing nouns like "library", so a
+ * "Broward County Public Library" ban ("broward county library") does NOT
+ * collapse onto a "Broward County Public Schools" ban ("broward county").
+ */
+const INSTITUTION_FILLER = new Set(['public', 'unified', 'school', 'schools', 'district', 'isd'])
+function normalizeInstitution(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter((tok) => tok && !INSTITUTION_FILLER.has(tok))
+    .join(' ')
+    .trim()
+}
+
+/**
  * Dedup. Two passes:
  *   1. Same country + scope + year window ±1. Within the window, institution
  *      match (when both sides have one) is required; otherwise any match
@@ -294,9 +320,17 @@ async function findNearDuplicate(
   const { data } = await q
   for (const row of data ?? []) {
     if (candidate.institution && row.institution) {
+      const candLc = candidate.institution.toLowerCase()
+      const rowLc = row.institution.toLowerCase()
+      const candCore = normalizeInstitution(candidate.institution)
+      const rowCore = normalizeInstitution(row.institution)
       if (
-        candidate.institution.toLowerCase() === row.institution.toLowerCase() ||
-        row.institution.toLowerCase().includes(candidate.institution.toLowerCase())
+        candLc === rowLc ||
+        rowLc.includes(candLc) ||
+        candLc.includes(rowLc) || // bidirectional: "X Schools" ⊃/⊂ "X County Schools"
+        // identifying-core match: collapses "X Public Schools" vs "X Schools"
+        // vs "X School District". Empty core = all-filler → never a match.
+        (candCore !== '' && candCore === rowCore)
       ) {
         return { id: row.id, description: row.description }
       }
