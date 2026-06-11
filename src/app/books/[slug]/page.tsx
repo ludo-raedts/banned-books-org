@@ -421,10 +421,13 @@ type BanCluster = {
   bans: Ban[]
   // action_type → count of bans of that type within the cluster.
   action_counts: Map<string, number>
-  // Locations: bans with region === 'Nation' (statewide/federal) accumulate
+  // Locations: bans with region === 'Nation' (federal/system-wide) accumulate
   // into nation_count; everything else groups by region (state) and lists
   // institutions (districts) within.
   nation_count: number
+  // Institution names of the region='Nation' bans (e.g. DoDEA). When present we
+  // label by the institution rather than the generic "Nationwide / statewide".
+  nation_institutions: string[]
   by_state: Map<string, string[]>  // state → [district names]
 }
 
@@ -477,6 +480,18 @@ function authorName(book: BookDetail): string {
     .join(', ')
 }
 
+// A region='Nation' ban is system-wide rather than tied to a state. DoDEA (the
+// Department of Defense Education Activity) is a single federal school system
+// spanning U.S. military bases worldwide — not a state, and not a sovereign
+// national ban — so it gets a descriptive label instead of the generic
+// "Nationwide / statewide".
+function nationInstitutionLabel(institution: string): string {
+  if (institution === 'Department of Defense Education Activity') {
+    return 'U.S. Department of Defense schools (worldwide)'
+  }
+  return institution
+}
+
 // Group bans into clusters keyed on (country, year, action, scope, source).
 // Members of a cluster share everything except their (region, institution),
 // which the sub-row will list. Returns clusters sorted by year_started for
@@ -502,6 +517,7 @@ function clusterBans(bans: Ban[]): BanCluster[] {
         bans: [],
         action_counts: new Map<string, number>(),
         nation_count: 0,
+        nation_institutions: [],
         by_state: new Map<string, string[]>(),
       }
       map.set(key, c)
@@ -520,6 +536,7 @@ function clusterBans(bans: Ban[]): BanCluster[] {
 
     if (ban.region === 'Nation') {
       c.nation_count++
+      if (ban.institution) c.nation_institutions.push(ban.institution)
     } else if (ban.region) {
       const list = c.by_state.get(ban.region) ?? []
       if (ban.institution) list.push(ban.institution)
@@ -1302,14 +1319,18 @@ export default async function BookPage({
                         {hasLocations && (
                           <tr className="bg-gray-50/60">
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 leading-relaxed">
-                              {c.nation_count > 0 && (
-                                <div>
-                                  <span className="font-medium text-gray-700">Nationwide / statewide</span>
-                                  {c.nation_count > 1 && (
-                                    <span className="ml-1 text-gray-500">({c.nation_count} actions)</span>
-                                  )}
-                                </div>
-                              )}
+                              {c.nation_count > 0 && (() => {
+                                const labels = [...new Set(c.nation_institutions.map(nationInstitutionLabel))]
+                                const heading = labels.length > 0 ? labels.join(', ') : 'Nationwide / statewide'
+                                return (
+                                  <div>
+                                    <span className="font-medium text-gray-700">{heading}</span>
+                                    {c.nation_count > 1 && (
+                                      <span className="ml-1 text-gray-500">({c.nation_count} actions)</span>
+                                    )}
+                                  </div>
+                                )
+                              })()}
                               {sortedStates.map(([state, districts]) => (
                                 <div key={state}>
                                   <span className="font-medium text-gray-700">{state}</span>
