@@ -240,10 +240,10 @@ export default function ScriptsPage() {
         </code>{' '}
         blokje boven elk script om te weten of het alle rijen langsloopt of alleen NULL, en waar de output landt. Alle
         commando&apos;s draaien dry-run; voeg{' '}
-        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--apply</code> (of
-        {' '}
-        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--write</code> voor
-        add-scripts) toe om te schrijven.
+        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--apply</code> toe om te
+        schrijven (canoniek sinds 2026-06-11 via <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">scripts/lib/cli.ts</code>;{' '}
+        <code className="text-[11px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">--write</code> werkt in de
+        gemigreerde oudere scripts nog als alias).
       </p>
 
       <div className="flex flex-col gap-6">
@@ -488,7 +488,7 @@ npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply --offset=100
 
           <Script
             name="enrich-descriptions-v2.ts"
-            what="Vult missende book-descriptions met gegronde bronnen: Wikipedia (EN + langlinks) + Open Library (by-ISBN eerst — exacte editie → work, sterkste binding; dan work-id; dan title/author search) + Google Books, met title-fuzz + author-surname cross-check op elke geaccepteerde bron. LLM wordt alleen gebruikt voor 'grounded synthesis' (samenvatten uit aangereikte bron-tekst, nooit free-form generation). Schrijft description_source_url + description_source_type voor provenance. Vervangt de oude enrich-descriptions.ts (v1) — die had GPT free-form fallback en is gedeprecaard 2026-05-28 na een hallucinatie-incident."
+            what="Vult missende book-descriptions met gegronde bronnen: Wikipedia (EN + langlinks) + Open Library (by-ISBN eerst — exacte editie → work, sterkste binding; dan work-id; dan title/author search) + Google Books, met title-fuzz + author-surname cross-check op elke geaccepteerde bron. LLM wordt alleen gebruikt voor 'grounded synthesis' (samenvatten uit aangereikte bron-tekst, nooit free-form generation). Schrijft description_source_url + description_source_type voor provenance. Vervangt de oude enrich-descriptions.ts (v1) — die had GPT free-form fallback, is gedeprecaard 2026-05-28 na een hallucinatie-incident en verwijderd 2026-06-11."
             tags={['free', 'gpt', 'destructive']}
             meta={{
               coverage: <><strong>default:</strong> only-empty <code className="font-mono">description_book</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows. <strong>Met --process-flagged:</strong> ook door judge gewiste rijen meenemen. <strong>Met --reground-ungrounded:</strong> ISBN-rijen waarvan de synopsis nog géén tracked bron heeft (pre-v2 ongegronde tekst) — overschrijft alleen waar een geverifieerde bron resolvet, backup naar <code className="font-mono">data/description-book-reground-backup-&lt;ts&gt;.csv</code>.</>,
@@ -1263,7 +1263,7 @@ npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
             meta={{
               coverage: 'all-rows: alle books + authors',
               cadence: 'na elke bulk-enrichment, mark-cover-override sweep of import',
-              writes: <>met <code className="font-mono">--write</code>: <code className="font-mono">books.data_quality_status</code>, <code className="font-mono">authors.data_quality_status</code>, <code className="font-mono">data_quality_evaluated_at</code></>,
+              writes: <>met <code className="font-mono">--apply</code>: <code className="font-mono">books.data_quality_status</code>, <code className="font-mono">authors.data_quality_status</code>, <code className="font-mono">data_quality_evaluated_at</code></>,
               output: <><code className="font-mono">data/data-quality-report.md</code> (altijd)</>,
               idempotent: 'ja — re-run met unchanged data geeft zelfde verdicts',
               cost: 'gratis',
@@ -1272,11 +1272,11 @@ npx tsx --env-file=.env.local scripts/cleanup-non-person-authors.ts --apply`}
 npx tsx --env-file=.env.local scripts/score-data-quality.ts
 
 # Apply — persisteert ook verdicts
-npx tsx --env-file=.env.local scripts/score-data-quality.ts --write`}
+npx tsx --env-file=.env.local scripts/score-data-quality.ts --apply`}
             flags={[
-              { flag: '--write', desc: 'Persist data_quality_status naar DB (default: dry-run, report-only)' },
+              { flag: '--apply', desc: 'Persist data_quality_status naar DB (default: dry-run, report-only); --write werkt nog als alias' },
             ]}
-            note="Heuristics leven in het script. Tune door scoring-functions te editen, run dry-run, kijk naar de canary-table, dan --write."
+            note="Heuristics leven in het script. Tune door scoring-functions te editen, run dry-run, kijk naar de canary-table, dan --apply."
           />
 
           <Script
@@ -1476,9 +1476,9 @@ npx tsx --env-file=.env.local scripts/import-<your-source>.ts --apply`}</Code>
                 <p className="text-xs text-gray-500 mt-2">
                   Scripts schrijven via <code className="font-mono">commitParsedRow()</code> /{' '}
                   <code className="font-mono">commitNewBanForBook()</code> rechtstreeks naar books, authors, bans,
-                  ban-reason links en source rows — in één pass, idempotent waar het kan. Oudere{' '}
-                  <code className="font-mono">add-*.ts</code> scripts gebruiken <code className="font-mono">--write</code>{' '}
-                  i.p.v. <code className="font-mono">--apply</code>; check de header van het script.
+                  ban-reason links en source rows — in één pass, idempotent waar het kan.{' '}
+                  <code className="font-mono">--apply</code> is de canonieke schrijf-flag (helper:{' '}
+                  <code className="font-mono">scripts/lib/cli.ts</code>); bij twijfel: check de header van het script.
                 </p>
               </li>
 
