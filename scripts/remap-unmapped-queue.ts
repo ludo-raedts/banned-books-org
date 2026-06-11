@@ -26,14 +26,15 @@
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts          # dry-run
- *   npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts --write
+ *   npx tsx --env-file=.env.local scripts/remap-unmapped-queue.ts --apply  # (--write werkt nog als alias)
  */
 import { adminClient } from '../src/lib/supabase'
 import { mapReason } from '../src/lib/wikipedia/reason-mapper'
 import { findWikipediaSourceConfig } from '../src/lib/imports/review-approve'
 import type { SectionConfig } from '../src/lib/wikipedia/types'
+import { isApply } from './lib/cli'
 
-const WRITE = process.argv.includes('--write')
+const WRITE = isApply()
 
 // Broader keyword heuristic, ported from scripts/reclassify-other-reasons.ts.
 // Looser than the strict wikipedia mapper — used only as a fallback for rows

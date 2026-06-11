@@ -7,12 +7,13 @@
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts            # dry-run
- *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --write
+ *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --apply    # (--write werkt nog als alias)
  */
 import { readFileSync } from 'fs'
 import { adminClient } from '../src/lib/supabase'
+import { isApply } from './lib/cli'
 
-const WRITE = process.argv.includes('--write')
+const WRITE = isApply()
 const FILE = 'data/publication-year-fixes-highconf.json'
 
 type Fix = { id: number; slug: string; title: string; first_published_year: number; ol_year: number }

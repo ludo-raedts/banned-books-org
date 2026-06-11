@@ -52,6 +52,9 @@ interface Finding {
   severity: Severity
   count: number
   threshold?: number // invariants only; default 0
+  // drift only: which direction is the regression. Default 'up' (growth = WARN);
+  // 'down' for breadth metrics (e.g. country coverage) where shrinkage = WARN.
+  badDirection?: 'up' | 'down'
   samples: string[]
 }
 
@@ -107,7 +110,7 @@ async function load() {
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
     paginate<{ book_id: number; author_id: number }>('book_authors', 'book_id, author_id', 'book_id'),
-    paginate<{ id: number; book_id: number; year_started: number | null }>('bans', 'id, book_id, year_started', 'id'),
+    paginate<{ id: number; book_id: number; year_started: number | null; country_code: string | null }>('bans', 'id, book_id, year_started, country_code', 'id'),
     paginate<{ ban_id: number }>('ban_source_links', 'ban_id', 'ban_id'),
   ])
   return { books, authors, bookAuthors, banBookIds: bans, bans, banSourceLinks }
@@ -330,6 +333,21 @@ async function runChecks(): Promise<Finding[]> {
     samples: noDesc.slice(0, SAMPLE_CAP).map((b) => b.slug),
   })
 
+  // 14. country coverage breadth (absorbed from the retired check-coverage.ts /
+  //     audit-db.ts, which undercounted on the 1000-row .select() cap). A country
+  //     disappearing from the bans table means an import/merge dropped rows.
+  const countryCounts = new Map<string, number>()
+  for (const ban of bans) {
+    const c = ban.country_code ?? '??'
+    countryCounts.set(c, (countryCounts.get(c) ?? 0) + 1)
+  }
+  const topCountries = [...countryCounts.entries()].sort((a, b) => b[1] - a[1])
+  findings.push({
+    id: 'country-coverage', label: 'distinct countries with at least one ban',
+    severity: 'drift', count: countryCounts.size, badDirection: 'down',
+    samples: topCountries.slice(0, SAMPLE_CAP).map(([c, n]) => `${c}: ${n} bans`),
+  })
+
   return findings
 }
 
@@ -357,10 +375,15 @@ function main() {
       const base = baseline?.metrics[f.id]
       let status: string
       // Live enrichers shift these counts a few points between runs, so only flag
-      // growth past a small tolerance (max of 2 rows or 2% of baseline) as a regression.
+      // movement in the bad direction past a small tolerance (max of 2 rows or 2%
+      // of baseline) as a regression. badDirection 'down' inverts the comparison
+      // for breadth metrics where shrinkage is the problem.
       const tolerance = base == null ? 0 : Math.max(2, Math.ceil(base * 0.02))
+      const regressed = base != null && (f.badDirection === 'down'
+        ? f.count < base - tolerance
+        : f.count > base + tolerance)
       if (base == null) status = 'NEW' // no baseline recorded yet
-      else if (f.count > base + tolerance) { status = 'WARN'; regressions++ }
+      else if (regressed) { status = 'WARN'; regressions++ }
       else status = 'OK'
       return { ...f, status, baseline: base }
     })

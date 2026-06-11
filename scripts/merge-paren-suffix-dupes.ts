@@ -29,14 +29,14 @@
 //
 // Usage:
 //   npx tsx --env-file=.env.local scripts/merge-paren-suffix-dupes.ts          # dry-run
-//   npx tsx --env-file=.env.local scripts/merge-paren-suffix-dupes.ts --write
+//   npx tsx --env-file=.env.local scripts/merge-paren-suffix-dupes.ts --apply  # (--write werkt nog als alias)
 
 import { readFileSync } from 'fs'
 import { adminClient } from '../src/lib/supabase'
+import { isApply, flagValue } from './lib/cli'
 
-const WRITE = process.argv.includes('--write')
-const FILE_ARG = process.argv.find(a => a.startsWith('--file='))
-const PAIRS_FILE = FILE_ARG ? FILE_ARG.split('=')[1] : 'data/paren-suffix-dupes.json'
+const WRITE = isApply()
+const PAIRS_FILE = flagValue('file') ?? 'data/paren-suffix-dupes.json'
 
 type Pair = {
   keep: number

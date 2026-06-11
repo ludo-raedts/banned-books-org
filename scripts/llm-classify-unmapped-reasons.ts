@@ -23,15 +23,16 @@
 //
 // Usage:
 //   npx tsx --env-file=.env.local scripts/llm-classify-unmapped-reasons.ts            # dry-run
-//   npx tsx --env-file=.env.local scripts/llm-classify-unmapped-reasons.ts --write
+//   npx tsx --env-file=.env.local scripts/llm-classify-unmapped-reasons.ts --apply    # (--write werkt nog als alias)
 //   npx tsx --env-file=.env.local scripts/llm-classify-unmapped-reasons.ts --limit=5  # sample first
 import { GoogleGenAI } from '@google/genai'
 import { z } from 'zod'
 import { adminClient } from '../src/lib/supabase'
+import { isApply, flagValue } from './lib/cli'
 
-const WRITE = process.argv.includes('--write')
-const limitFlag = process.argv.find(a => a.startsWith('--limit='))
-const LIMIT = limitFlag ? Number(limitFlag.split('=')[1]) : null
+const WRITE = isApply()
+const limitRaw = flagValue('limit')
+const LIMIT = limitRaw ? Number(limitRaw) : null
 
 const REASON_SLUGS = [
   'drugs', 'language', 'lgbtq', 'moral', 'obscenity',

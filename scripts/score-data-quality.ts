@@ -11,18 +11,19 @@
  *
  * Always writes the markdown report to data/data-quality-report.md.
  *
- * Pass `--write` to additionally persist the verdicts to the DB
- * (data_quality_status + data_quality_evaluated_at columns added by
- * migration 20260518065314_data_quality_status.sql).
+ * Pass `--apply` (or the legacy `--write` alias) to additionally persist the
+ * verdicts to the DB (data_quality_status + data_quality_evaluated_at columns
+ * added by migration 20260518065314_data_quality_status.sql).
  *
  *   npx tsx --env-file=.env.local scripts/score-data-quality.ts            # dry run
- *   npx tsx --env-file=.env.local scripts/score-data-quality.ts --write    # persist
+ *   npx tsx --env-file=.env.local scripts/score-data-quality.ts --apply    # persist
  */
 import { adminClient } from '../src/lib/supabase'
 import { writeFileSync } from 'fs'
+import { isApply } from './lib/cli'
 
 const supabase = adminClient()
-const WRITE_TO_DB = process.argv.includes('--write')
+const WRITE_TO_DB = isApply()
 
 type Quality = 'confident' | 'default' | 'flagged'
 

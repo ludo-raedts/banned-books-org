@@ -3,8 +3,9 @@
 > Doel: **"ik wil X (importeren, verrijken, opschonen, controleren) → welk script?"**
 > beantwoorden zonder door alle ~100 scripts te zoeken.
 >
-> - Alle data-schrijvende scripts draaien standaard **dry-run**; pas wordt geschreven
->   met `--apply` óf `--write` (conventie verschilt per script — zie de flag-kolom).
+> - Alle data-schrijvende scripts draaien standaard **dry-run**; schrijven gebeurt
+>   met `--apply` (canoniek; helper: `scripts/lib/cli.ts` — `--write` werkt in de
+>   gemigreerde oudere scripts nog als alias).
 > - Aanroep: `pnpm tsx --env-file=.env.local scripts/<naam>.ts [...]`
 >   (Python: `_parse_apm_pdf.py`; `.tsx`: zie het script zelf).
 > - Lees altijd de header-comment van een script vóór je het draait.
@@ -20,6 +21,16 @@
 - `enrich-*` — bestaande records met extra velden vullen.
 - Leidende `_` = doorgaans **one-off / wegwerp** (specifieke batch of meting), niet herbruikbaar.
 - `_tmp_*` = scratch/prototype — wordt **niet** in deze catalogus opgenomen (genegeerd door de freshness-check).
+
+## Uitstroom: `scripts/archive/`
+Afgeronde one-offs blijven niet in `scripts/` liggen: zodra het werk gedaan én
+geverifieerd is, verhuist het script naar `scripts/archive/` (git bewaart de
+historie; gearchiveerde `_`-scripts worden bij archivering alsnog gecommit als
+audit-trail). De archiefmap valt buiten de freshness-check en buiten deze
+catalogus — wat daar staat is referentiemateriaal, geen gereedschap. Kopieer
+gerust een gearchiveerd script als sjabloon voor een nieuwe one-off, maar draai
+ze niet opnieuw zonder de header te lezen (sommige waren destructief en
+eenmalig, bv. `_apply_csam_block.ts`).
 
 > **Catalogus actueel houden:** `scripts/audit-scripts-catalog.ts` flag't elk script dat
 > hier niet genoemd wordt. Het draait automatisch als slotboodschap van `enrich-all.ts`, of los:
@@ -89,17 +100,18 @@ dupe before enrich on unique fields"): KEEP = canoniek, DROP = duplicaat. Per pa
 ### Boek-merges
 | Script | Scope | Bijzonder | Flag |
 |---|---|---|---|
-| `merge-paren-suffix-dupes.ts` | **Generiek, data-gedreven** | Leest paren uit `data/paren-suffix-dupes.json` (`--file=` override). **Referentie-implementatie — start hier.** | `--write` |
-| `merge-orwell-1984-dupes.ts` | Eén geval (hardcoded) | Dedupt op (country, scope) i.p.v. volledige key (zelfde SU-ban, afwijkend jaar); incl. slug-aliasing | `--write` |
-| `merge-iran-duplicates.ts` | 4 hardcoded paren | Simpelst: herhangt ban, verwijdert book_authors + boek. Geen enrichment/aliassen | `--apply` |
+| `merge-paren-suffix-dupes.ts` | **Generiek, data-gedreven** | Leest paren uit `data/paren-suffix-dupes.json` (`--file=` override). **Referentie-implementatie — start hier.** | `--apply` |
+
+Afgeronde hardcoded boek-merges (orwell-1984, iran-duplicates) staan in `scripts/archive/` als sjabloon.
 
 ### Ban-merges (dezelfde boek, dubbele ban-rij)
 Twee `bans`-rijen op één boek die hetzelfde event zijn, niet twee boeken. Doctrine: KEEP behoudt de canonieke institution-string; union van `ban_source_links` + `ban_reason_links` (on conflict do nothing), enrich KEEP's NULL-velden, DELETE DROP. KEEP's UNIQUE-key (`bans_unique_per_scope`) wordt nooit gemuteerd → geen conflict.
 | Script | Scope | Bijzonder | Flag |
 |---|---|---|---|
 | `merge-institution-variant-dupes.ts` | **Generiek, data-gedreven** | Dedupt op genormaliseerde institution-**core** (`normalizeInstitution`: strip filler public/school(s)/district/isd) binnen jaar±1. KEEP = langste institution-string. Veiligheidsrail: clusters met jaar-spanning >1 worden **geflagd, niet gemerged**. **Start hier voor institution-spellingsvarianten.** | `--apply` |
-| `merge-multiyear-pen-dupes.ts` | 7 hardcoded paren | Doorlopende PEN-ban die in meerdere jaarindexen opduikt (jaar-spanning >1, dus door de rail van het generieke script geflagd). KEEP = vroegste-jaar rij; union beide PEN-bronnen + per-jaar reasons. Eén event i.p.v. dubbeltelling | `--apply` |
-| `merge-marlon-bundo-broward-dupe.ts` | Eén geval (hardcoded) | Wiki-enrichment-dupe ("Broward County Schools" vs "… Public Schools"); KEEP houdt fuller institution, krijgt description + Wikipedia-bron van DROP. Sjabloon voor één-paar ban-merge | `--apply` |
+
+Afgeronde hardcoded ban-merges (multiyear-pen: doorlopende PEN-ban over meerdere
+jaarindexen; marlon-bundo-broward: sjabloon voor één-paar ban-merge) staan in `scripts/archive/`.
 
 ### Auteur-merges
 | Script | Scope | Bijzonder | Flag |
@@ -107,8 +119,8 @@ Twee `bans`-rijen op één boek die hetzelfde event zijn, niet twee boeken. Doct
 | `merge-honorific-author-dupes.ts` | Hardcoded paren | Maleisisch import-artefact. Migreert `book_authors` + author-FK-tabellen | `--write` |
 
 **Vuistregel:** generieke boek-dupes → vul `data/paren-suffix-dupes.json` + draai
-`merge-paren-suffix-dupes.ts` · eenmalig bijzonder geval → kopieer dichtstbijzijnde hardcoded
-script · auteur-dupes → `merge-honorific-author-dupes.ts`.
+`merge-paren-suffix-dupes.ts` · eenmalig bijzonder geval → kopieer het dichtstbijzijnde
+hardcoded sjabloon uit `scripts/archive/` · auteur-dupes → `merge-honorific-author-dupes.ts`.
 
 > ⚠️ `books.isbn13 UNIQUE` (e.a.): verwijder DROP vóór KEEP enrich't op een uniek veld.
 
@@ -120,10 +132,9 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | Script | Vult |
 |---|---|
 | `enrich-all.ts` | Master-pipeline: alle open velden over de hele catalogus |
-| `enrich.ts` / `enrich.js` | Oudere/seed-achtige enrichment (referentiedata + bestaande data) |
+| `enrich.ts` | Oudere/seed-achtige enrichment (referentiedata + bestaande data); het `enrich.js`-compilaat is verwijderd |
 | **Descriptions** | |
-| `enrich-descriptions-v2.ts` | 2e-generatie CLI — **voorkeur voor nieuwe runs** |
-| `enrich-descriptions.ts` | ⚠️ **DEPRECATED** — gebruik v2 |
+| `enrich-descriptions-v2.ts` | 2e-generatie CLI — **voorkeur voor nieuwe runs**. v1 (`enrich-descriptions.ts`) is verwijderd 2026-06-11; `/api/admin/enrich/run` draait in-process op v2 |
 | `enrich-descriptions-continuous.ts` | Continu missende `description_book` vullen; tracking in `description_search_attempts` |
 | `enrich-descriptions-gpt.ts` | GPT-fallback voor wat OL/Google Books niet vond |
 | `enrich-ban-descriptions-gpt.ts` | GPT: concrete `description_ban` per boek |
@@ -132,7 +143,7 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | **Covers** | |
 | `enrich-covers-continuous.ts` | Continu missende covers; tracking in `cover_search_attempts` |
 | `enrich-covers-v2.ts` | Re-try van eerder gefaalde cover-searches |
-| `enrich-russia-recognizable.ts` | Handmatig-geverifieerde cover + Engelse-titel pass voor de herkenbare subset Russia FSEM-boeken (internationaal-gepubliceerde werken met OL-cover); obscure regionale tracts blijven coverless |
+| `enrich-russia-recognizable.ts` | → `scripts/archive/` (afgeronde FSEM-subset pass) |
 | **Auteurs** | |
 | `enrich-author-bios.ts` | Bios via Wikipedia (incl. `--photos-only`) |
 | `enrich-author-ol.ts` | **Long-tail bio/birth-year/death-year via OpenLibrary Authors API** voor auteurs die Wikipedia miste. Exact-key: leidt de OL-author-id af uit de work-records van de eigen boeken (naam-search + gedeelde-titel-fallback). Vult ook `name_native` uit een niet-Latijns `alternate_name`. Foto's blijven bij v2; sticky via `ol_checked_at`. Draai ná enrich-author-bios.ts |
@@ -159,41 +170,38 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 
 | Script | Controleert |
 |---|---|
-| `audit-integrity.ts` | **Staande integriteits-toets** — consolideert de goedkope SQL/regex-detectoren tot één herhaalbare check. Invarianten (image-host, mojibake, boek-zonder-auteur, onmogelijke jaren) → drempel 0, **exit 1** bij overtreding (cron/CI-gate). Drift-metrics (non-person, gedeelde-cover/desc-contaminatie, slug-drift, wezen, coverage) → vergeleken met `data/integrity-baseline.json`. Flags: `--json`, `--verbose`, `--update-baseline`. Dure audits (perceptual-hash, LLM) blijven los — zie footer van het script. |
-| `audit-db.ts` | Algemene DB-health (boeken zonder cover/description, …) |
-| `_audit_site_health.ts` | Data-integriteit voor de site-audit (alleen SELECTs). ⚠️ checkt `publication_year` (bestaat niet) — gebruik `audit-integrity.ts` |
+| `audit-integrity.ts` | **Staande integriteits-toets** — consolideert de goedkope SQL/regex-detectoren tot één herhaalbare check. Invarianten (image-host, mojibake, boek-zonder-auteur, onmogelijke jaren) → drempel 0, **exit 1** bij overtreding (cron/CI-gate). Drift-metrics (non-person, gedeelde-cover/desc-contaminatie, slug-drift, wezen, cover/description-coverage, landendekking) → vergeleken met `data/integrity-baseline.json`. Vervangt `audit-db.ts` en `check-coverage.ts` (verwijderd 2026-06-11: beide braken op de Supabase 1000-row cap) en `_audit_site_health.ts`. Flags: `--json`, `--verbose`, `--update-baseline`. Dure audits (perceptual-hash, LLM) blijven los — zie footer van het script. |
 | `score-data-quality.ts` | Data-quality classifier over de catalogus |
 | `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
-| `check-coverage.ts` / `check-no-desc.ts` | Snelle coverage-checks |
+| `check-no-desc.ts` | Snelle description-coverage check |
 | **Jaren** | |
 | `audit-publication-years.ts` | `first_published_year` vs OpenLibrary → review-artifact |
 | `audit-impossible-years.ts` | Onmogelijke/verdachte publicatiejaren |
 | `audit-author-years.ts` | Onmogelijke birth/death years |
-| `verify-years-llm.ts` | LLM-cascade die `first_published_year` verifieert/backfillt voor rijen die OpenLibrary niet kon bevestigen (vervolg op `audit-publication-years.ts`) |
+| `verify-years-llm.ts` | LLM-cascade die `first_published_year` verifieert/backfillt voor rijen die OpenLibrary niet kon bevestigen (vervolg op `audit-publication-years.ts`); cache in `data/year-llm-verification.json(l)` (lokaal, niet gecommit) |
+| `resolve-proposed-years.ts` | Vervolg op `verify-years-llm.ts`: lost de "unsure"-rijen (zonder OL work-id) op met de OpenLibrary API als derde signaal → `data/resolve-proposed-years.*` |
 | **Auteurs** | |
 | `audit-non-person-authors.ts` | Author-rijen die geen persoon zijn (uitgevers/comités/…) |
+| `_audit_author_bio_contamination.ts` | Classificeert author-bios op contaminatie door `enrich-author-bios.ts` (verkeerd Wikipedia-artikel geaccepteerd: boek/film/band/andere persoon) → `data/author-bio-contamination-audit.md`; apply-zijde: `remediate-author-bios.ts` |
 | **Covers** | |
 | `audit-covers-for-placeholders.ts` | Google Books "image not available" placeholders |
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
 | `audit-study-guide-covers.ts` | SparkNotes/CliffsNotes-covers (zie memory study-guide audit) |
+| `audit-covers-vision.ts` | Vision-audit + auto-remediatie van title-search-gecontamineerde Google-covers (verkeerd boek / interieurpagina) → `data/cover-vision-audit.*`; recovery-zijde: `recover-nulled-covers.ts` |
+| `_montage_google_covers.ts` | Visuele preview-montage van Google-covers → `public/cover-montage.html` (altijd checken vóór cover-fixes appliën) |
 | `_audit_shared_enrichment.ts` | "Most-popular hit"-contaminatie: covers én descriptions die een titel-search op het verkeerde boek plakte → `data/shared-cover-audit.md`, `data/shared-description-audit.md`, `public/shared-cover-suspects.html` (bron-guard zit in `src/lib/enrich/title-match.ts`) |
 | `_audit_ol_title_mismatch.ts` | Sibling van `_audit_shared_enrichment`: vangt het geval waar één boek's `openlibrary_work_id` naar een ánder werk wijst zónder dat een sibling de asset deelt (groepering mist het). Twee-tier (token-overlap + OL-auteur) onderscheidt CONFIRMED van LIKELY_TRANSLATION → `data/ol-title-mismatch-audit.md`. Lokaal-only |
 | `_audit_ol_contamination.ts` | "Poisoned guard"-incident (2026-06-04): herpast de gecorrigeerde OL-guard op elke opgeslagen `openlibrary`-description en bucketet afwijzingen per binding (isbn / work_id / search) → `data/ol-contamination-audit.md`. Read-only. |
-| `remediate-ol-contamination.ts` | Schoont de bevestigde "poisoned guard"-contaminatie op: nullt+flagt OL-descriptions die de gecorrigeerde guard afwijst **én** search-bound zijn of een blurb delen over inconsistente titels. Back-upt origineel naar CSV; `--apply` schrijft. |
-| `_audit_llm_ol_contamination.ts` | Follow-up op "poisoned guard": checkt of search-only `llm_grounded_*`-descriptions uit een fout OL-search source zijn gesynthetiseerd. Read-only. Resultaat 2026-06-04: 15 rijen, **0 besmet** (allen Wikipedia-gegrond). |
+| `remediate-ol-contamination.ts` | Schoont de bevestigde "poisoned guard"-contaminatie op: nullt+flagt OL-descriptions die de gecorrigeerde guard afwijst **én** search-bound zijn of een blurb delen over inconsistente titels. Back-upt origineel naar CSV; `--apply` schrijft. (LLM-follow-up `_audit_llm_ol_contamination.ts` → archief: 0 besmet.) |
 | **Slugs** | |
 | `audit-slugs.ts` | Bestaande slugs vs huidige `slugify()` |
 | `filter-nfd-subset.ts` | Filtert slug-audit naar de NFD-bug subset |
 | **Descriptions / context** | |
 | `_audit_ungrounded_descriptions.ts` | Ongegronde ai-drafted descriptions (read-only sizing) |
-| `_audit_ban_vs_context_overlap.ts` | Overlap `description_ban` ↔ `censorship_context` |
-| `_audit_keep_narrative_groundedness.ts` | 2e-pass op de ban-vs-context audit |
-| `_sample_keep_narrative.ts` / `_peek_censorship_context.ts` | Steekproef/inspectie-helpers |
-| `_measure_isbn_description_winrate.ts` | Meting (geen writes) |
 | `validate-consensus-descriptions.ts` | Read-only recall/false-positive-meting van de cross-model consensus-pijplijn (3 buckets: known/anonymous/target) — draai dit om een scope te vetten vóór `enrich-descriptions-consensus.ts --apply` |
-| **CSAM / editorial flags** | |
-| `_audit_csam_red_flags.ts` | Telt CSAM-red-flag treffers |
-| `_detect_nazi_warning_candidates.ts` | Kandidaten voor `context`/`extended` warning_level |
+
+Afgeronde audits/metingen (ban-vs-context-overlap + keep-narrative 2e-pass + steekproef-helpers,
+ISBN-winrate-meting, CSAM-red-flags-telling, Nazi-warning-kandidaten) → `scripts/archive/`.
 
 ---
 
@@ -203,28 +211,21 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 | Script | Doet | Type |
 |---|---|---|
 | `cleanup-bans-action-type.ts` | Normaliseert niet-canonieke `bans.action_type` | generiek |
-| `cleanup-iran-titles.ts` | Iran-records met transliteratie als primaire titel → doctrine | gericht |
 | `cleanup-non-person-authors.ts` | Ruimt non-persoon authors op (uit `audit-non-person-authors.ts`) | gericht |
 | `apply-publication-year-fixes.ts` | Past high-conf jaar-correcties toe (uit `audit-publication-years.ts`) | apply |
-| `_apply_google_cover_fixes.ts` | zoom=3→1 fix; onherstelbare covers nullen (visuele preview vooraf: `_montage_google_covers.ts` → `public/cover-montage.html`) | one-off |
 | `cleanup-other-cotag.ts` | Strip redundante `'other'` ban-reason van bans die óók een specifieke reason dragen (repareert `enrich-reasons.ts`-artefact); bans met enkel `'other'` blijven | generiek |
 | `cleanup-shared-enrichment.ts` | Apply-zijde van `_audit_shared_enrichment`: nullt cover/description op alle leden van een SUSPECT shared-group; de geguarde enrichers herstellen daarna de rechtmatige eigenaar | gericht |
+| `recover-nulled-covers.ts` | Hervindt covers die `audit-covers-vision.ts` nullde: work-cover → edition-covers → ISBN-cover, met dezelfde safety-gates (nooit contaminatie herintroduceren) | gericht |
+| `remediate-author-bios.ts` | Apply-zijde van `_audit_author_bio_contamination`: LLM-classificatie (gpt-4o-mini) nullt wrong_entity/wrong_person-bios; CSV-backup per run; deelt skip-cache met `enrich-author-bios.ts` zodat de enricher gerepareerde rijen niet opnieuw vervuilt | gericht |
 | `normalize-russia-titles.ts` | RU FSEM Cyrillic-titels: zet `title_native_script='cyrillic'` + BGN/PCGN-transliteratie + `original_language`; raakt canonieke titel/slug niet aan; idempotent | generiek |
-| `source-orphan-canonical-bans.ts` | Hangt elk boek's eigen (HTTP-geverifieerde) EN-Wikipedia-artikel als bron aan ~46 canonieke seed-bans zonder `ban_source_links`; find-or-create op source_url; idempotent | gericht |
-| `source-orphan-cluster-bans.ts` | Bron-citaten voor twee schone wees-clusters: VA → Index Librorum Prohibitorum, IL → B'Tselem-lijst (veel bans → één gedeelde `ban_sources`-rij); idempotent | gericht |
 | `verify-pen-school-bans.ts` | Grondt PEN-school-bans tegen de upstream Index-bestanden (src#2131/#2068) en zet `bans.confidence='verified'` bij district-match via `titlesMatch()`; title+state-only matches → review, nooit auto | gericht |
-| `_fix_orphan_author_books.ts` | One-off: linkt de 37 boeken die `audit-integrity` als "0 gelinkte auteurs" flag'te (PERSON/VARIOUS/ANON/RENAME/REMOVE-buckets) | one-off |
-| `_apply_csam_block.ts` | ⚠️ DESTRUCTIEF one-time: blokkeert 2 CSAM-adjacent works | one-off |
-| `_apply_fr_nazi_warning_tiers.ts` | warning_level/rationale op 6 Nazi/Holocaust-denial boeken | one-off |
-| `_apply_ban_vs_context_cleanup.ts` | Past verdict van `_audit_ban_vs_context_overlap.ts` toe | apply |
-| `_apply_keep_narrative_groundedness.ts` | Past verdict van bijbehorende audit toe | apply |
-| `_fix_blanket_author_names.ts` | Corrigeert Liste-Otto "Toutes ses œuvres" auteursnamen | one-off |
-| `_fix_south_korea_bans.ts` | Data-quality fix KR historische bans | one-off |
-| `_improve_north_korea.ts` | Verbetert KP-coverage | one-off |
-| `_scope_fr_otto_bans.ts` / `_scope_fr_wikipedia_bans.ts` | Scope/verken FR ban-bronnen (read-only) | scope |
-| `_update_fr_country_description.ts` | Herschrijft `countries.description` voor Frankrijk | one-off |
-| `_strip_dark_mode.ts` | Strip dode `dark:` Tailwind-tokens uit de codebase | one-off |
+| `_scope_fr_otto_bans.ts` / `_scope_fr_wikipedia_bans.ts` | Scope/verken FR ban-bronnen (read-only; Sprint-A Taak 5 FR is nog open) | scope |
 | `mark-cover-override.ts` | Markeert cover als handmatige override (clear cover_url) | tool |
+
+Afgeronde one-off fixes (cleanup-iran-titles, source-orphan-{canonical,cluster}-bans,
+`_apply_google_cover_fixes`, `_apply_csam_block` ⚠️ destructief-eenmalig, `_apply_fr_nazi_warning_tiers`,
+`_apply_ban_vs_context_cleanup`, `_apply_keep_narrative_groundedness`, `_fix_*`-batchcorrecties,
+`_improve_north_korea`, `_update_fr_country_description`, `_strip_dark_mode`) → `scripts/archive/`.
 
 ---
 
@@ -239,7 +240,7 @@ Genummerde stages voor het opschonen/hergronden van bestaande descriptions.
 | 2.5 | `flag-filler-rewrites.ts` | Flag't filler-phrasing → fake-audit CSV |
 | 2.6 | `strip-filler-sentences.ts` | Strip filler-zinnen/clausules (behoudt named cases) |
 | wrapper | `clean-descriptions.ts` | Één commando dat de remediation-stappen aaneenrijgt |
-| — | `rewrite-descriptions-grounded.ts` | (zie stage 2) |
+| 2 (no-ISBN) | `_reground_noisbn.ts` | Fase-2 reground van de no-ISBN REGROUND-rijen uit de ungrounded-audit die wél via title+author naar een OL/Wikipedia-bron resolven |
 
 > Volgorde: `score-descriptions` → `clean-descriptions` (of los 2 → 2.5 → 2.6).
 
@@ -252,8 +253,9 @@ Verwerking van `import_review_queue` (legacy/idle — zie memory "Import queue i
 |---|---|
 | `remap-unmapped-queue.ts` | Re-run reason-mapping over rows met `unmapped_reason` (3 passes) |
 | `llm-classify-unmapped-reasons.ts` | LLM 2e-pass voor rows die de regex-mapper niet aankon |
-| `salvage-stale-queue-bans.ts` | One-off salvage van 37 stale rows (2026-05-14 batch) |
-| `finish-deferred-review-queue.ts` | One-off (2026-06-06): rondt de laatste 4 `deferred` queue-rows af (2× approve, 2× blanket-works) + één boek-merge (Dwikhandita #799←#6331) |
+
+Afgeronde queue-one-offs (salvage-stale-queue-bans 2026-05-14, finish-deferred-review-queue
+2026-06-06) → `scripts/archive/`.
 
 ---
 
@@ -285,6 +287,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 | `gsc-query.ts` | Snapshot-query |
 | `gsc-diagnose.ts` | Dagelijkse traffic-breakdown (sitewide + gefilterd) |
 | `gsc-striking-distance.ts` | "Striking distance" queries (net niet pagina 1) |
+| `bing-diagnose.ts` | Bing Webmaster Tools traffic-breakdown (Bing/Yahoo/DDG/Ecosia, ~5-10% non-Google) |
 
 ---
 
@@ -299,7 +302,11 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 
 ---
 
-## Flag-conventie (let op: inconsistent)
-- `--apply` → import-scripts + `merge-iran-duplicates.ts` + meeste `apply-*`/cleanup-scripts.
-- `--write` → `merge-paren-suffix`, `merge-orwell`, `merge-honorific`.
+## Flag-conventie
+- **`--apply` is de canonieke schrijf-flag.** Gebruik in nieuwe scripts
+  `isApply()` / `hasFlag()` / `flagValue()` / `intFlag()` uit `scripts/lib/cli.ts`.
+- De oudere `--write`-scripts (merge-paren-suffix, merge-honorific,
+  apply-publication-year-fixes, remap-unmapped-queue, llm-classify-unmapped-reasons,
+  score-data-quality) zijn gemigreerd naar `isApply()`; `--write` blijft daar als
+  alias werken maar print een deprecation-waarschuwing.
 - Alles data-schrijvend default **dry-run**. Bij twijfel: lees de header-comment.

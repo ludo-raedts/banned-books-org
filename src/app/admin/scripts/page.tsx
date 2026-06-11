@@ -525,7 +525,7 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungro
               { flag: '--overwrite', desc: 'Vervangt ook bestaande descriptions' },
               { flag: '--reground-ungrounded', desc: 'Her-gront ISBN-rijen met ongetrackte synopsis; overschrijft alleen bij geverifieerde bron, backupt originelen' },
             ]}
-            note="V2 vervangt v1 (enrich-descriptions.ts) én de losse GPT-fallback (enrich-descriptions-gpt.ts). Beide zijn gedeprecaard, blijven werken voor backwards compat. Gebruik --slug voor sanity-checks vóór een grote overwrite. --reground-ungrounded laat rijen waar geen bron resolvet ongemoeid (nooit een gevulde synopsis naar 'flagged' degraderen)."
+            note="V2 vervangt v1 (enrich-descriptions.ts, verwijderd 2026-06-11 — het /api/admin/enrich/run endpoint draait al sinds 2026-05-28 in-process op v2) én de losse GPT-fallback (enrich-descriptions-gpt.ts, gedeprecaard maar nog aanwezig). Gebruik --slug voor sanity-checks vóór een grote overwrite. --reground-ungrounded laat rijen waar geen bron resolvet ongemoeid (nooit een gevulde synopsis naar 'flagged' degraderen)."
           />
 
           <Script
@@ -1346,19 +1346,16 @@ npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply -
           />
 
           <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-2.5">
-            <dt className="text-sm font-mono text-gray-700">audit-db.ts</dt>
-            <dd className="text-sm text-gray-600 self-center">full database audit, missing fields, FK checks</dd>
+            <dt className="text-sm font-mono text-gray-700">audit-integrity.ts</dt>
+            <dd className="text-sm text-gray-600 self-center">staande integriteits-toets: invarianten (exit 1) + drift-metrics incl. cover/description/landendekking vs baseline — vervangt audit-db.ts en check-coverage.ts (verwijderd: braken op de Supabase 1000-row cap)</dd>
             <dt className="text-sm font-mono text-gray-700">check-dupes.ts</dt>
             <dd className="text-sm text-gray-600 self-center">duplicate books (same title + author)</dd>
             <dt className="text-sm font-mono text-gray-700">check-no-desc.ts</dt>
             <dd className="text-sm text-gray-600 self-center">boeken die nog een description missen</dd>
-            <dt className="text-sm font-mono text-gray-700">check-coverage.ts</dt>
-            <dd className="text-sm text-gray-600 self-center">ISBN / cover / description / ban-desc coverage %</dd>
           </dl>
-          <Code>{`npx tsx --env-file=.env.local scripts/audit-db.ts
+          <Code>{`npx tsx --env-file=.env.local scripts/audit-integrity.ts
 npx tsx --env-file=.env.local scripts/check-dupes.ts
-npx tsx --env-file=.env.local scripts/check-no-desc.ts
-npx tsx --env-file=.env.local scripts/check-coverage.ts`}</Code>
+npx tsx --env-file=.env.local scripts/check-no-desc.ts`}</Code>
         </div>
 
         {/* 9 — Maintenance */}

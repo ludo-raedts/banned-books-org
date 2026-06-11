@@ -20,10 +20,11 @@
 // Idempotent: if DROP is already gone, the pair is a no-op.
 //
 //   npx tsx --env-file=.env.local scripts/merge-honorific-author-dupes.ts          # dry-run
-//   npx tsx --env-file=.env.local scripts/merge-honorific-author-dupes.ts --write
+//   npx tsx --env-file=.env.local scripts/merge-honorific-author-dupes.ts --apply  # (--write werkt nog als alias)
 import { adminClient } from '../src/lib/supabase'
+import { isApply } from './lib/cli'
 
-const WRITE = process.argv.includes('--write')
+const WRITE = isApply()
 
 // keep = canonical (plain / fuller name); drop = honorific-prefixed twin.
 const PAIRS: { keep: number; drop: number; note: string }[] = [
