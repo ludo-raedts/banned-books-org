@@ -290,10 +290,62 @@ function normalizeInstitution(s: string): string {
 }
 
 /**
+ * Do two institution strings identify the same institution? Exact match,
+ * bidirectional substring ("X Schools" ⊂ "X County Schools"), or
+ * identifying-core match via normalizeInstitution ("X Public Schools" =
+ * "X School District"). Empty core never matches.
+ */
+function institutionsCorrespond(a: string, b: string): boolean {
+  const aLc = a.toLowerCase()
+  const bLc = b.toLowerCase()
+  if (aLc === bLc || aLc.includes(bLc) || bLc.includes(aLc)) return true
+  const aCore = normalizeInstitution(a)
+  return aCore !== '' && aCore === normalizeInstitution(b)
+}
+
+/**
+ * Wrong-row guard (2026-06-11, after the Broward #34760 / Collierville #34627
+ * contamination): does the wiki evidence text actually mention this
+ * institution? Every identifying-core token of the institution must appear
+ * as a whole word in the text. An all-filler institution ("Public Schools")
+ * has no core and counts as NOT mentioned, so generic state/country-level
+ * prose can never claim a per-district row.
+ */
+function institutionMentionedInText(text: string, institution: string): boolean {
+  const core = normalizeInstitution(institution)
+  if (!core) return false
+  const normText = ` ${text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ')} `
+  return core.split(' ').every(tok => normText.includes(` ${tok} `))
+}
+
+type NearDupe = {
+  id: number
+  description: string | null
+  region: string | null
+  institution: string | null
+  scope_id: number
+  // How the match was made — drives whether the apply loop may promote
+  // (fill a bare row) or must merely skip the insert:
+  //   'institution'       same institution within ±1 yr (scope/action may differ)
+  //   'same_scope_bucket' same scope within ±1 yr, at least one side lacks an institution
+  //   'scope_variant'     different scope within ±1 yr, both sides generic (no institution)
+  //   'summary'           country-level summary collision (pass 2)
+  match: 'institution' | 'same_scope_bucket' | 'scope_variant' | 'summary'
+}
+
+/**
  * Dedup. Two passes:
- *   1. Same country + scope + year window ±1. Within the window, institution
- *      match (when both sides have one) is required; otherwise any match
- *      counts.
+ *   1. Same country + year window ±1 (school-year boundaries make off-by-one
+ *      years common), across ALL scopes. Within the window:
+ *        - institutions on both sides that correspond → duplicate, even when
+ *          scope_id/action_type were coded differently (the Tintin GB-2007 /
+ *          Katy ISD shape: same real-world event, different coding);
+ *        - same scope and at least one side without an institution →
+ *          same-bucket duplicate (pre-existing behavior);
+ *        - different scope and BOTH sides without an institution → duplicate
+ *          only when the regions don't disagree (scope/action variant of a
+ *          generic event).
+ *      Per-institution rows whose institutions differ are never duplicates.
  *   2. If the candidate has NO institution, also search for "summary" rows
  *      at the same country + scope with institution=null, regardless of
  *      year. These are country-level summary rows that should not coexist
@@ -306,39 +358,55 @@ async function findNearDuplicate(
   sb: ReturnType<typeof adminClient>,
   bookId: number,
   candidate: StagedNewBan,
-): Promise<{ id: number; description: string | null } | null> {
+): Promise<NearDupe | null> {
   const yr = candidate.year_started
 
-  // Pass 1: same year ±1.
+  // Pass 1: same year ±1, any scope.
   let q = sb
     .from('bans')
     .select('id, year_started, scope_id, region, institution, description')
     .eq('book_id', bookId)
     .eq('country_code', candidate.country_code)
-    .eq('scope_id', candidate.scope_id)
   if (yr !== null) q = q.gte('year_started', yr - 1).lte('year_started', yr + 1)
   const { data } = await q
+
+  const toDupe = (row: NonNullable<typeof data>[number], match: NearDupe['match']): NearDupe => ({
+    id: row.id,
+    description: row.description,
+    region: row.region,
+    institution: row.institution,
+    scope_id: row.scope_id,
+    match,
+  })
+
+  let bucketMatch: NearDupe | null = null
+  let variantMatch: NearDupe | null = null
   for (const row of data ?? []) {
     if (candidate.institution && row.institution) {
-      const candLc = candidate.institution.toLowerCase()
-      const rowLc = row.institution.toLowerCase()
-      const candCore = normalizeInstitution(candidate.institution)
-      const rowCore = normalizeInstitution(row.institution)
-      if (
-        candLc === rowLc ||
-        rowLc.includes(candLc) ||
-        candLc.includes(rowLc) || // bidirectional: "X Schools" ⊃/⊂ "X County Schools"
-        // identifying-core match: collapses "X Public Schools" vs "X Schools"
-        // vs "X School District". Empty core = all-filler → never a match.
-        (candCore !== '' && candCore === rowCore)
-      ) {
-        return { id: row.id, description: row.description }
+      if (institutionsCorrespond(candidate.institution, row.institution)) {
+        // Strongest signal — same institution within the window is the same
+        // real-world event regardless of scope/action coding.
+        return toDupe(row, 'institution')
       }
       continue // different institution → not a dupe within window
     }
-    // candidate or row has no institution → treat as same-bucket within window.
-    return { id: row.id, description: row.description }
+    if (row.scope_id === candidate.scope_id) {
+      // candidate or row has no institution → treat as same-bucket within window.
+      if (!bucketMatch) bucketMatch = toDupe(row, 'same_scope_bucket')
+      continue
+    }
+    // Different scope: only a dupe when both sides are generic (no
+    // institution) and the regions don't disagree.
+    if (!candidate.institution && !row.institution) {
+      const regionsCompatible =
+        !candidate.region ||
+        !row.region ||
+        candidate.region.toLowerCase() === row.region.toLowerCase()
+      if (regionsCompatible && !variantMatch) variantMatch = toDupe(row, 'scope_variant')
+    }
   }
+  if (bucketMatch) return bucketMatch
+  if (variantMatch) return variantMatch
 
   // Pass 2: summary-row collision (institution=null on both sides, any year).
   if (!candidate.institution) {
@@ -352,9 +420,9 @@ async function findNearDuplicate(
     // Prefer a bare row (no description) so the candidate fills it; else
     // fall back to the first summary row so we don't double-insert.
     const bare = (summary ?? []).find(r => !r.description)
-    if (bare) return { id: bare.id, description: null }
+    if (bare) return toDupe({ ...bare, description: null }, 'summary')
     if (summary && summary.length > 0) {
-      return { id: summary[0].id, description: summary[0].description }
+      return toDupe(summary[0], 'summary')
     }
   }
 
@@ -400,8 +468,24 @@ async function applyStaged(staged: Staged): Promise<{
       skipped++
       continue
     }
-    if (existing.country_code !== existing.country_code) {
-      /* placeholder for stronger consistency check */
+    // Wrong-row guard (2026-06-11): the staged ban_id comes from an LLM that
+    // has targeted the wrong row before — generic statewide events patched
+    // onto PEN per-district rows (And Tango Makes Three #34760 Broward,
+    // Heartstopper #34627 Collierville). When the existing row names an
+    // institution, the supporting article quote must mention that
+    // institution; otherwise we leave the row untouched (no description/
+    // region overwrite, no Wikipedia source link). The quote is gated, not
+    // the rationale/description, because those are LLM prose that can echo
+    // the institution name straight from the DB context it was shown.
+    if (
+      existing.institution &&
+      !institutionMentionedInText(u.wikipedia_quote ?? '', existing.institution)
+    ) {
+      log(
+        `  skip update ban_id=${u.ban_id}: institution "${existing.institution}" not mentioned in wikipedia_quote — wrong-row guard`,
+      )
+      skipped++
+      continue
     }
     const { sanitized, reasons } = patchHasNewInfo(
       existing as Record<string, unknown>,
@@ -434,18 +518,36 @@ async function applyStaged(staged: Staged): Promise<{
     await ensureCountry(sb, nb.country_code, nb.country_name)
     const dupe = await findNearDuplicate(sb, staged.book_id, nb)
     if (dupe) {
-      // If existing row has no description AND we haven't touched it yet this run,
-      // promote to update (fill in the bare row). If already touched OR has desc,
-      // fall through to insert as a separate granular event.
-      if (!dupe.description && nb.description && !claimedForUpdate.has(dupe.id)) {
+      // Promote (fill a bare existing row) only when the dupe is safely the
+      // SAME row: same scope, and — when the existing row names an
+      // institution — the candidate either names a corresponding institution
+      // or its article quote explicitly mentions the row's institution.
+      // Without this, a generic state-level candidate overwrote PEN
+      // per-district rows (Heartstopper #34627 Collierville got a Florida/
+      // Oregon region + copied description). Scope/action variants are
+      // skipped, never promoted across.
+      const institutionSafe =
+        !dupe.institution ||
+        (nb.institution
+          ? institutionsCorrespond(nb.institution, dupe.institution)
+          : institutionMentionedInText(nb.wikipedia_quote ?? '', dupe.institution))
+      if (
+        !dupe.description &&
+        nb.description &&
+        !claimedForUpdate.has(dupe.id) &&
+        dupe.scope_id === nb.scope_id &&
+        institutionSafe
+      ) {
         log(`  promote new ban → update ban_id=${dupe.id}: existing was bare, candidate has description`)
         if (APPLY) {
           const patch: Record<string, unknown> = {
             description: nb.description,
             confidence: 'verified',
           }
-          if (nb.region) patch.region = nb.region
-          if (nb.institution) patch.institution = nb.institution
+          // Fill-only: never overwrite a non-null region/institution — the
+          // existing row's locality is authoritative (PEN district rows).
+          if (nb.region && !dupe.region) patch.region = nb.region
+          if (nb.institution && !dupe.institution) patch.institution = nb.institution
           if (nb.actor) patch.actor = nb.actor
           if (nb.year_ended) patch.year_ended = nb.year_ended
           const { error } = await sb.from('bans').update(patch).eq('id', dupe.id)
@@ -460,7 +562,9 @@ async function applyStaged(staged: Staged): Promise<{
         log(`  insert (not promote): ban_id=${dupe.id} already claimed this run; treating as distinct granular event`)
         // Fall through to insert path below.
       } else {
-        log(`  skip new ban (${nb.country_code} ${nb.year_started} scope=${nb.scope_id}): near-dupe of ban_id=${dupe.id} (existing has description)`)
+        log(
+          `  skip new ban (${nb.country_code} ${nb.year_started} scope=${nb.scope_id}): near-dupe of ban_id=${dupe.id} (match=${dupe.match}${!dupe.description ? ', bare but not promotable' : ''})`,
+        )
         skipped++
         continue
       }

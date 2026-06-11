@@ -188,12 +188,16 @@ export const NEARBY_BAN_YEAR_WINDOW = 3
 
 export type NearbyBan = { ban_id: number; year_started: number }
 
-// Returns the closest existing ban on `bookId` matching `(country_code, scope)`
-// within ±NEARBY_BAN_YEAR_WINDOW of `year`, or `null` if none. The strict
-// year-exact case is handled separately by the SELECT-first guard in
-// commitNewBanForBook + the bans_unique_per_scope UNIQUE constraint; we
-// deliberately skip year-equal rows here so this helper only flags the
-// soft-dup case the constraint cannot see.
+// Returns the closest existing ban on `bookId` in `country_code` within
+// ±NEARBY_BAN_YEAR_WINDOW of `year`, ACROSS ALL SCOPES, or `null` if none.
+// Scope-agnostic since 2026-06-11: the same real-world event is frequently
+// coded under a different scope or action_type by a second source (the
+// Tintin in the Congo GB-2007 shape), and neither commitNewBanForBook's
+// SELECT-first guard nor the bans_unique_per_scope UNIQUE constraint sees
+// across scopes — so a same-scope-only check let auto_add_ban insert
+// near-dupes. The only rows skipped are year-exact SAME-scope matches,
+// which the exact guard/constraint already handles; a year-exact row in a
+// DIFFERENT scope is flagged here (it would otherwise auto-insert).
 export async function findNearbyBanForBook(
   sb: Sb,
   bookId: number,
@@ -207,10 +211,9 @@ export async function findNearbyBanForBook(
 
   const { data, error } = await sb
     .from('bans')
-    .select('id, year_started')
+    .select('id, year_started, scope_id')
     .eq('book_id', bookId)
     .eq('country_code', countryCode)
-    .eq('scope_id', scopeId)
     .gte('year_started', year - NEARBY_BAN_YEAR_WINDOW)
     .lte('year_started', year + NEARBY_BAN_YEAR_WINDOW)
   if (error) throw new Error(`findNearbyBanForBook: ${error.message}`)
@@ -218,7 +221,8 @@ export async function findNearbyBanForBook(
   let best: NearbyBan | null = null
   for (const r of data ?? []) {
     if (r.year_started == null) continue
-    if (r.year_started === year) continue // exact-match handled by UNIQUE constraint
+    // year-exact same-scope is handled by the exact guard + UNIQUE constraint
+    if (r.year_started === year && r.scope_id === scopeId) continue
     const candidate = { ban_id: r.id as number, year_started: r.year_started as number }
     if (!best || Math.abs(candidate.year_started - year) < Math.abs(best.year_started - year)) {
       best = candidate
