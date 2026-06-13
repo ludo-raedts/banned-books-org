@@ -61,8 +61,8 @@ function lastName(s: string): string {
 }
 
 // ---------- sources ----------
-async function fetchNobel(): Promise<{ year: number; name: string }[]> {
-  const out: { year: number; name: string }[] = []
+async function fetchNobel(): Promise<{ year: number; name: string; motivation?: string }[]> {
+  const out: { year: number; name: string; motivation?: string }[] = []
   let offset = 0
   for (;;) {
     const r = await fetch(
@@ -77,7 +77,10 @@ async function fetchNobel(): Promise<{ year: number; name: string }[]> {
         (l.nobelPrizes || []).find((p: any) => (p.category?.en || '').toLowerCase() === 'literature') ||
         l.nobelPrizes?.[0]
       const name = l.knownName?.en || l.fullName?.en
-      if (name && prize?.awardYear) out.push({ year: Number(prize.awardYear), name })
+      // The citation carries occasional inline HTML (<I>Buddenbrooks</I>); strip
+      // tags so it renders as plain prose.
+      const motivation = (prize?.motivation?.en || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() || undefined
+      if (name && prize?.awardYear) out.push({ year: Number(prize.awardYear), name, motivation })
     }
     offset += batch.length
     if (batch.length < 100) break
@@ -152,7 +155,11 @@ async function main() {
   const authorTargets = new Map<number, Award>() // author id -> Nobel award
   for (const n of nobel) {
     for (const a of authorsByNorm.get(norm(n.name)) || []) {
-      authorTargets.set(a.id, { award: 'Nobel Prize in Literature', year: n.year })
+      authorTargets.set(a.id, {
+        award: 'Nobel Prize in Literature',
+        year: n.year,
+        ...(n.motivation ? { motivation: n.motivation } : {}),
+      })
     }
   }
 

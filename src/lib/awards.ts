@@ -9,6 +9,7 @@ export type Award = {
   award: string // e.g. "Nobel Prize in Literature", "Pulitzer Prize"
   year: number
   category?: string // Pulitzer sub-prize: "Fiction" | "Novel" | "Special Citation"
+  motivation?: string // the prize citation ("why awarded") — Nobel only (CC0)
 }
 
 /** Human label for an award, without the year. */

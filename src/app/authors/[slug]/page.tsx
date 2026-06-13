@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import PageviewTracker from '@/components/pageview-tracker'
 import Breadcrumb from '@/components/breadcrumb'
@@ -29,7 +29,7 @@ import {
   type DataQualityStatus,
 } from '@/components/data-quality'
 import AwardBadge from '@/components/award-badge'
-import { parseAwards, awardSchemaText } from '@/lib/awards'
+import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 
 type Author = {
   id: number
@@ -199,7 +199,23 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     .eq('slug', slug)
     .single()
 
-  if (!author) notFound()
+  if (!author) {
+    // Alias fallback: maybe this slug points to an author via
+    // author_slug_aliases (e.g. a slug merged away into a canonical author).
+    // If so, 308 permanent-redirect to the canonical /authors/<canonical_slug>
+    // so search engines and link-juice consolidate on the survivor's URL.
+    const { data: alias } = await supabase
+      .from('author_slug_aliases')
+      .select('authors(slug)')
+      .eq('slug', slug)
+      .maybeSingle()
+    type AliasRow = { authors: { slug: string } | null } | null
+    const canonicalSlug = (alias as AliasRow)?.authors?.slug ?? null
+    if (canonicalSlug && canonicalSlug !== slug) {
+      permanentRedirect(`/authors/${canonicalSlug}`)
+    }
+    notFound()
+  }
   const a = author as unknown as Author
 
   const { data: bookLinks } = await supabase
@@ -719,6 +735,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               ))}
             </div>
           )}
+          {authorAwards
+            .filter((aw) => aw.motivation)
+            .map((aw, i) => (
+              <p key={i} className="text-sm italic text-gray-600 leading-snug mt-1 max-w-2xl">
+                &ldquo;{aw.motivation}&rdquo;{' '}
+                <span className="not-italic text-gray-400">— {awardName(aw)}, {aw.year}</span>
+              </p>
+            ))}
           {/* Supporting stats — distinct-book count already lives in the
               topical subtitle above (per ban-metric doctrine: rank on
               distinct books, not raw events). What's surfaced here is the

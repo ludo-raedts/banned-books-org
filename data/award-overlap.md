@@ -15,7 +15,7 @@ First-pass hand-verification of the machine matches:
 
 - **Pulitzer false positive — discard:** "A Fable" (Faulkner, 1955) matched book `fable` is *Fable* by **Adrienne Young** (2020) — a title collision, NOT Faulkner's novel. Faulkner's "A Fable" is not in the DB. → 26 real Pulitzer books, not 27.
 - **Pulitzer real-but-flagged:** "Lonesome Dove" shows ⚠️ only because the DB author is mistyped **"Larry McMurty"** (missing the second *r*). The match is real. → fix the author typo as a byproduct.
-- **Nobel duplicate author:** V. S. Naipaul appears twice — `vs-naipaul` (id 172) and `v-s-naipaul` (id 8048). Same person, two author rows. → merge candidate (use merge-doctrine script).
+- **Nobel duplicate author:** V. S. Naipaul appeared twice — `vs-naipaul` (id 172) and `v-s-naipaul` (id 8048). Same person, two author rows. → **RESOLVED 2026-06-13:** merged #8048 into canonical #172 via `scripts/archive/merge-vs-naipaul-authors.ts`; both titles (An Area of Darkness + Among the Believers) now under #172, Nobel-2001 tag deduped, dropped slug kept as an `author_slug_aliases` row (308-redirects to `/authors/vs-naipaul`).
 - **Blanket-works inflate the Nobel book count:** several listed "books" are Liste-Otto blanket entries, not real titles — "Maurice Maeterlinck — All works", "Anatole France — All works", "André Gide — All works", "Toutes ses œuvres (Thomas Mann)", "Jean-Paul Sartre — All works". The author-level Nobel tag is valid; these pseudo-titles should NOT get a book-level tag (they carry `is_blanket_works`).
 - **Known miss — add manually:** **Maus** (Spiegelman, 1992 Pulitzer **Special Citation**) is not in Q833633/Q1155483 (special awards are a separate Wikidata entity) — add by hand; it's the single highest-profile prize×ban overlap.
 
@@ -97,9 +97,7 @@ _Author-level: the laureate is in your `authors` table; listed books are their b
       _“whose frolicsome black fables portray the forgotten face of history”_
 - [ ] **Gao Xingjian** (Nobel 2000) → author `gao-xingjian` (id 145), 3 book(s): Soul Mountain [soul-mountain]; One Man's Bible [one-mans-bible]; Buying a Fishing Rod for My Grandfather [buying-a-fishing-rod-for-my-grandfather]
       _“for an œuvre of universal validity, bitter insights and linguistic ingenuity, which has opened new paths for the Chinese novel and drama”_
-- [ ] **V. S. Naipaul** (Nobel 2001) → author `vs-naipaul` (id 172), 1 book(s): An Area of Darkness [an-area-of-darkness]
-      _“for having united perceptive narrative and incorruptible scrutiny in works that compel us to see the presence of suppressed histories”_
-- [ ] **V. S. Naipaul** (Nobel 2001) → author `v-s-naipaul` (id 8048), 1 book(s): Among the Believers [among-the-believers]
+- [x] **V. S. Naipaul** (Nobel 2001) → author `vs-naipaul` (id 172), 2 book(s): An Area of Darkness [an-area-of-darkness]; Among the Believers [among-the-believers] _(merged from former dup #8048 `v-s-naipaul`, 2026-06-13)_
       _“for having united perceptive narrative and incorruptible scrutiny in works that compel us to see the presence of suppressed histories”_
 - [ ] **J. M. Coetzee** (Nobel 2003) → author `j-m-coetzee` (id 6637), 1 book(s): Disgrace [disgrace]
       _“who in innumerable guises portrays the surprising involvement of the outsider”_

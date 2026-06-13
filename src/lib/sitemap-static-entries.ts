@@ -109,6 +109,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/trending-banned-books`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/rising-banned-books`, changefreq: 'daily', priority: 0.8 },
     { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9, lastmod: authorsLastMod },
+    { loc: `${base}/award-winning-banned-books`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2026`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/banned-books/2025`, changefreq: 'weekly', priority: 0.9 },
