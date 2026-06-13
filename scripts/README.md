@@ -118,6 +118,10 @@ jaarindexen; marlon-bundo-broward: sjabloon voor één-paar ban-merge) staan in 
 |---|---|---|---|
 | `merge-honorific-author-dupes.ts` | Hardcoded paren | Maleisisch import-artefact. Migreert `book_authors` + author-FK-tabellen | `--write` |
 
+Afgeronde één-paar auteur-merge (`merge-vs-naipaul-authors.ts`: V. S. Naipaul-dubbel,
+introduceerde óók `author_slug_aliases` + de alias-fallback op de author-pagina, sjabloon
+voor "merge + dropped-slug-redirect") staat in `scripts/archive/`.
+
 **Vuistregel:** generieke boek-dupes → vul `data/paren-suffix-dupes.json` + draai
 `merge-paren-suffix-dupes.ts` · eenmalig bijzonder geval → kopieer het dichtstbijzijnde
 hardcoded sjabloon uit `scripts/archive/` · auteur-dupes → `merge-honorific-author-dupes.ts`.
