@@ -29,37 +29,40 @@ type RankedBook = BookRow & { distinct_countries: number; total_bans: number }
 
 async function fetchTop100(): Promise<RankedBook[]> {
   const supabase = adminClient()
-  const SELECT = 'id, title, slug, cover_url, book_authors(authors(display_name)), bans(country_code, countries(name_en))'
 
-  let all: BookRow[] = []
-  let offset = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('books')
-      .select(SELECT)
-      // Stable order across pages — without it .range() skips/dupes rows past
-      // 1000 and corrupts the ranking on this flagship page.
-      .order('id')
-      .range(offset, offset + 999)
-    // Throw rather than render a partial/empty ranking on a transient error.
-    if (error) throw error
-    if (!data || data.length === 0) break
-    all = all.concat(data as unknown as BookRow[])
-    if (data.length < 1000) break
-    offset += 1000
-  }
+  // Ranking comes pre-aggregated from the canonical leaderboard view: it ranks
+  // by geographic spread (distinct countries) with raw ban-event count as the
+  // tiebreaker — the ban-metric doctrine that keeps PEN America's per-district
+  // records from dominating — and is already LIMIT 100. Reading the rank here
+  // (rather than scanning all ~16k books and ranking in JS) keeps this flagship
+  // page off a full-table scan that was tripping the Postgres statement_timeout
+  // during the build prerender.
+  const { data: ranking, error: rankErr } = await supabase
+    .from('v_top_banned_books')
+    .select('entity_id, total_bans, distinct_countries')
+    .order('distinct_countries', { ascending: false })
+    .order('total_bans', { ascending: false })
+  if (rankErr) throw rankErr
+  if (!ranking || ranking.length === 0) return []
 
-  // Rank by geographic spread, with raw ban-event count as tiebreaker. Sorting
-  // on b.bans.length alone made PEN America's per-district records dominate
-  // the top of the list (a US-only book with 200 district records outranking
-  // a classic banned in 6 countries).
-  const ranked: RankedBook[] = all.map(b => ({
-    ...b,
-    distinct_countries: new Set(b.bans.map(x => x.country_code)).size,
-    total_bans: b.bans.length,
-  }))
-  ranked.sort((a, b) => b.distinct_countries - a.distinct_countries || b.total_bans - a.total_bans)
-  return ranked.slice(0, 100)
+  const ids = ranking.map(r => r.entity_id as number)
+
+  // Display details for only the top 100 — bans are kept for the "top
+  // countries" chips. Bounded by the 100 ids, so no full-table scan.
+  const { data: books, error: bookErr } = await supabase
+    .from('books')
+    .select('id, title, slug, cover_url, book_authors(authors(display_name)), bans(country_code, countries(name_en))')
+    .in('id', ids)
+  if (bookErr) throw bookErr
+
+  // Re-attach the view's counts and preserve its ranking order.
+  const byId = new Map((books as unknown as BookRow[]).map(b => [b.id, b]))
+  return ranking
+    .map(r => {
+      const b = byId.get(r.entity_id as number)
+      return b ? { ...b, distinct_countries: r.distinct_countries as number, total_bans: r.total_bans as number } : null
+    })
+    .filter((b): b is RankedBook => b !== null)
 }
 
 function topCountries(bans: BookRow['bans'], n = 3): string[] {
