@@ -17,6 +17,8 @@ import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import BanActionBadge from '@/components/ban-action-badge'
 import GenreBadge from '@/components/genre-badge'
+import AwardBadge from '@/components/award-badge'
+import { parseAwards, awardSchemaText } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
@@ -469,7 +471,8 @@ type BookDetail = {
   updated_at: string | null
   data_quality_status: DataQualityStatus
   data_quality_evaluated_at: string | null
-  book_authors: { authors: { display_name: string; slug: string | null } | null }[]
+  awards: unknown
+  book_authors: { authors: { display_name: string; slug: string | null; awards: unknown } | null }[]
   bans: Ban[]
 }
 
@@ -578,7 +581,8 @@ export default async function BookPage({
       title_native, title_transliterated, title_english_meaningful,
       created_at, updated_at,
       data_quality_status, data_quality_evaluated_at,
-      book_authors(authors(display_name, slug)),
+      awards,
+      book_authors(authors(display_name, slug, awards)),
       bans(
         id, year_started, year_ended, action_type, status, country_code, region, institution, description,
         countries(name_en),
@@ -621,6 +625,15 @@ export default async function BookPage({
   }
 
   const author = authorName(book)
+
+  // Literary awards: Pulitzer is book-level (book.awards); the Nobel Prize is
+  // author-level, so a banned book by a laureate surfaces its author's award
+  // too. Both render as gold badges in the header and feed schema.org `award`.
+  const bookAwards = parseAwards(book.awards)
+  const authorAwards = book.book_authors
+    .map((ba) => ba.authors)
+    .filter((a): a is NonNullable<typeof a> => !!a)
+    .flatMap((a) => parseAwards(a.awards))
 
   // Bucket B (gated): an opaque interstitial covers the record until the reader
   // continues, and every commercial/free path + the cover is suppressed at
@@ -902,7 +915,7 @@ export default async function BookPage({
   const canonicalUrl = `https://www.banned-books.org/books/${book.slug}`
   const authorList = book.book_authors
     .map(ba => ba.authors)
-    .filter((a): a is { display_name: string; slug: string | null } => !!a)
+    .filter((a): a is { display_name: string; slug: string | null; awards: unknown } => !!a)
   const alternateNames = [book.title_native, book.title_english_meaningful, book.title_transliterated]
     .filter((t): t is string => !!t && t.trim() !== '' && t.trim().toLowerCase() !== book.title.trim().toLowerCase())
   const bookJsonLd: Record<string, unknown> = {
@@ -917,11 +930,17 @@ export default async function BookPage({
     bookJsonLd.alternateName = alternateNames.length === 1 ? alternateNames[0] : alternateNames
   }
   if (authorList.length > 0) {
-    bookJsonLd.author = authorList.map(a => ({
-      '@type': 'Person',
-      name: a.display_name,
-      ...(a.slug ? { url: `https://www.banned-books.org/authors/${a.slug}` } : {}),
-    }))
+    bookJsonLd.author = authorList.map(a => {
+      const personAwards = parseAwards(
+        book.book_authors.find(ba => ba.authors?.display_name === a.display_name)?.authors?.awards,
+      )
+      return {
+        '@type': 'Person',
+        name: a.display_name,
+        ...(a.slug ? { url: `https://www.banned-books.org/authors/${a.slug}` } : {}),
+        ...(personAwards.length > 0 ? { award: personAwards.map(awardSchemaText) } : {}),
+      }
+    })
   }
   if (book.original_language) bookJsonLd.inLanguage = book.original_language
   if (book.first_published_year) bookJsonLd.datePublished = String(book.first_published_year)
@@ -929,6 +948,12 @@ export default async function BookPage({
   if (book.cover_url && !gated) bookJsonLd.image = book.cover_url
   if (book.isbn13) bookJsonLd.isbn = book.isbn13
   if (book.genres && book.genres.length > 0) bookJsonLd.genre = book.genres
+  // Pulitzer is book-level → schema.org `award` on the Book; Nobel is
+  // author-level → `award` on the author Person above.
+  if (bookAwards.length > 0) {
+    const aw = bookAwards.map(awardSchemaText)
+    bookJsonLd.award = aw.length === 1 ? aw[0] : aw
+  }
   // dateModified bumps on every UPDATE via the public.set_updated_at trigger
   // installed in migration 20260515143605. Crawlers (especially Bing &
   // AI-Overview reranking) use this as a freshness signal — without it our
@@ -1129,6 +1154,16 @@ export default async function BookPage({
               <span className="text-gray-400"> · {book.first_published_year}</span>
             )}
           </p>
+          {(bookAwards.length > 0 || authorAwards.length > 0) && (
+            <div className="flex flex-wrap gap-1.5">
+              {bookAwards.map((a, i) => (
+                <AwardBadge key={`b${i}`} award={a} />
+              ))}
+              {authorAwards.map((a, i) => (
+                <AwardBadge key={`a${i}`} award={a} />
+              ))}
+            </div>
+          )}
           {book.isbn13 && (
             <p className="text-xs text-gray-400">ISBN {book.isbn13}</p>
           )}

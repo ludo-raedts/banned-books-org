@@ -28,6 +28,8 @@ import {
   QualityFooterLine,
   type DataQualityStatus,
 } from '@/components/data-quality'
+import AwardBadge from '@/components/award-badge'
+import { parseAwards, awardSchemaText } from '@/lib/awards'
 
 type Author = {
   id: number
@@ -47,6 +49,7 @@ type Author = {
   is_placeholder: boolean | null
   data_quality_status: DataQualityStatus
   data_quality_evaluated_at: string | null
+  awards: unknown
 }
 
 type Ban = {
@@ -192,7 +195,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards')
     .eq('slug', slug)
     .single()
 
@@ -417,6 +420,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // mode for these records.
   const isPlaceholder = a.is_placeholder === true
 
+  // Author-level literary awards (Nobel Prize in Literature). Rendered as a
+  // gold badge in the header and emitted as schema.org `award` on the Person.
+  const authorAwards = parseAwards(a.awards)
+
   // ── Schema.org Person + BreadcrumbList JSON-LD ──────────────────────────────
   // Sits alongside the citation_* meta tags built in generateMetadata above.
   // The Person type lets Google build entity-graph relations between this
@@ -443,6 +450,10 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
     if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
     if (a.original_language) personJsonLd.knowsLanguage = a.original_language
+    if (authorAwards.length > 0) {
+      const aw = authorAwards.map(awardSchemaText)
+      personJsonLd.award = aw.length === 1 ? aw[0] : aw
+    }
     if (realBooks.length > 0) {
       personJsonLd.workExample = realBooks.slice(0, 50).map(b => ({
         '@type': 'Book',
@@ -700,6 +711,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             )}
           {lifespan && (
             <p className="text-sm text-gray-500">{lifespan}</p>
+          )}
+          {authorAwards.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {authorAwards.map((aw, i) => (
+                <AwardBadge key={i} award={aw} />
+              ))}
+            </div>
           )}
           {/* Supporting stats — distinct-book count already lives in the
               topical subtitle above (per ban-metric doctrine: rank on
