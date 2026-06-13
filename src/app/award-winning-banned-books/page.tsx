@@ -293,6 +293,9 @@ export default async function AwardWinningBannedBooksPage() {
                       </span>
                     )}
                   </div>
+                  {b.award.motivation && (
+                    <p className="mt-1 text-xs italic text-gray-600 leading-snug">&ldquo;{b.award.motivation}&rdquo;</p>
+                  )}
                 </div>
               </Link>
             </li>

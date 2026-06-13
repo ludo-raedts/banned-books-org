@@ -9,9 +9,8 @@ import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { TopListBookCard } from '@/components/top-list-card'
 import {
-  TOP_LIST_BOOK_SELECT,
   type TopListBookRow,
-  banContext,
+  banContextFromCounts,
   toBookCard,
 } from '@/lib/top-list-data'
 import SectionShell from '@/components/section/SectionShell'
@@ -33,17 +32,46 @@ export default async function TrendingBannedBooksPage() {
   )
   const trendingIds = ((trendingRes ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
 
+  // Display details for the bounded trending set. No bans(country_code) embed:
+  // a popular title carries hundreds of PEN per-district records, and bundling
+  // them into this statement just to count them in JS pushed it ~6s cold —
+  // close to the 8s per-statement statement_timeout. The counts come from
+  // v_book_ban_counts in a separate, bounded statement below.
+  const BOOK_SELECT =
+    'id, title, slug, cover_url, cover_status, original_language, first_published_year, ' +
+    'book_authors(authors(display_name))'
+
   const { data: booksRaw } = trendingIds.length > 0
     ? await timer.wrap('books', () =>
-        supabase.from('books').select(TOP_LIST_BOOK_SELECT).eq('is_gated', false).in('id', trendingIds),
+        supabase.from('books').select(BOOK_SELECT).eq('is_gated', false).in('id', trendingIds),
       )
     : { data: null }
   const bookById = new Map(((booksRaw ?? []) as unknown as TopListBookRow[]).map(b => [b.id, b]))
 
+  // Pre-aggregated ban counts for just the trending ids. Filtering by a literal
+  // id list pushes the predicate down to an index scan on bans (~1ms); the
+  // payload is one row per book regardless of how many bans each carries.
+  const { data: countsRaw } = trendingIds.length > 0
+    ? await timer.wrap('ban_counts', () =>
+        supabase
+          .from('v_book_ban_counts')
+          .select('entity_id, total_bans, distinct_countries')
+          .in('entity_id', trendingIds),
+      )
+    : { data: null }
+  const countsById = new Map(
+    ((countsRaw ?? []) as { entity_id: number; total_bans: number; distinct_countries: number }[]).map(
+      c => [Number(c.entity_id), c],
+    ),
+  )
+
   const books = trendingIds
     .map(id => bookById.get(id))
     .filter((b): b is TopListBookRow => !!b)
-    .map(b => toBookCard(b, banContext(b)))
+    .map(b => {
+      const c = countsById.get(b.id)
+      return toBookCard(b, banContextFromCounts(c?.total_bans ?? 0, c?.distinct_countries ?? 0))
+    })
 
   timer.end()
 

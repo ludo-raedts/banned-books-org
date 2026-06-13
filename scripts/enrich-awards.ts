@@ -88,6 +88,30 @@ async function fetchNobel(): Promise<{ year: number; name: string; motivation?: 
   return out
 }
 
+// Pulitzer citations live on the Wikipedia "Pulitzer Prize for Fiction" list as
+// {{efn|group=notes|"…"}} footnotes, sourced to pulitzer.org. NOTE: the Pulitzer
+// only began publishing a per-winner citation sentence ~2010s, so only the
+// modern winners carry one — older classics simply have no citation to fetch
+// (from any source). Returns normTitle -> citation for whatever exists.
+async function fetchPulitzerCitations(): Promise<Map<string, string>> {
+  const r = await fetch(
+    'https://en.wikipedia.org/w/api.php?action=parse&page=Pulitzer_Prize_for_Fiction&prop=wikitext&format=json&formatversion=2',
+    { headers: { 'User-Agent': UA } },
+  )
+  const wt = ((await r.json()) as any)?.parse?.wikitext as string | undefined
+  const out = new Map<string, string>()
+  if (!wt) return out
+  const re = /\[\[([^\]]+?)\]\]'+\{\{efn\|group=notes\|"([^"]+?)"/g
+  let m: RegExpExecArray | null
+  while ((m = re.exec(wt))) {
+    const link = m[1]
+    const display = link.includes('|') ? link.split('|').pop()! : link
+    const citation = m[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+    if (citation) out.set(normTitle(display), citation)
+  }
+  return out
+}
+
 async function fetchPulitzer(): Promise<{ year: number; title: string; author: string; category: string }[]> {
   const query = `
     SELECT ?awardLabel ?workLabel ?authorLabel ?year WHERE {
@@ -130,8 +154,14 @@ async function main() {
   const apply = isApply()
   const db = adminClient()
 
-  const [nobel, pulitzer] = await Promise.all([fetchNobel(), fetchPulitzer()])
-  console.error(`Nobel laureates: ${nobel.length}, Pulitzer statements: ${pulitzer.length}`)
+  const [nobel, pulitzer, pulitzerCitations] = await Promise.all([
+    fetchNobel(),
+    fetchPulitzer(),
+    fetchPulitzerCitations(),
+  ])
+  console.error(
+    `Nobel laureates: ${nobel.length}, Pulitzer statements: ${pulitzer.length}, Pulitzer citations: ${pulitzerCitations.size}`,
+  )
 
   const authors = await loadAll<{ id: number; display_name: string; awards: Award[] }>('authors', 'id,display_name,awards')
   const books = await loadAll<{ id: number; title: string; awards: Award[] }>('books', 'id,title,awards')
@@ -180,7 +210,14 @@ async function main() {
       const key = `${b.id}`
       if (pulSeen.has(key)) continue
       pulSeen.add(key)
-      bookTargets.set(b.id, { award: 'Pulitzer Prize', category: p.category, year: p.year })
+      // Citation only exists for modern (~2010s+) winners; older classics have none.
+      const citation = pulitzerCitations.get(normTitle(b.title))
+      bookTargets.set(b.id, {
+        award: 'Pulitzer Prize',
+        category: p.category,
+        year: p.year,
+        ...(citation ? { motivation: citation } : {}),
+      })
     }
   }
 

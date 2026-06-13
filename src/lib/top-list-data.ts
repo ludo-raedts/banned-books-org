@@ -73,15 +73,20 @@ export function authorNameOf(b: TopListBookRow): string {
   return b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
 }
 
-export function banContext(b: TopListBookRow): string {
-  const total = b.bans.length
-  const countries = new Set(b.bans.map(x => x.country_code)).size
+// Format the card context from pre-aggregated counts. Surfaces that read the
+// counts from v_book_ban_counts (rather than embedding bans(country_code) and
+// counting in JS) call this directly — see /trending-banned-books.
+export function banContextFromCounts(total: number, countries: number): string {
   if (total === 0) return ''
   // Lead with country count — that's the meaningful "global reach" signal.
   // Append raw ban-event count only when it exceeds country count (mostly US
   // PEN-style per-district records), where it adds genuine information.
   const headline = `${countries} ${countries === 1 ? 'country' : 'countries'}`
   return total > countries ? `${headline} · ${total} bans` : headline
+}
+
+export function banContext(b: TopListBookRow): string {
+  return banContextFromCounts(b.bans.length, new Set(b.bans.map(x => x.country_code)).size)
 }
 
 export function langName(code: string | null): string | null {

@@ -18,7 +18,7 @@ import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import BanActionBadge from '@/components/ban-action-badge'
 import GenreBadge from '@/components/genre-badge'
 import AwardBadge from '@/components/award-badge'
-import { parseAwards, awardSchemaText } from '@/lib/awards'
+import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
@@ -1164,6 +1164,14 @@ export default async function BookPage({
               ))}
             </div>
           )}
+          {bookAwards
+            .filter((a) => a.motivation)
+            .map((a, i) => (
+              <p key={i} className="text-sm italic text-gray-600 leading-snug max-w-2xl">
+                &ldquo;{a.motivation}&rdquo;{' '}
+                <span className="not-italic text-gray-400">— {awardName(a)}, {a.year}</span>
+              </p>
+            ))}
           {book.isbn13 && (
             <p className="text-xs text-gray-400">ISBN {book.isbn13}</p>
           )}
