@@ -24,6 +24,12 @@ import { resolve } from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 
 const APPLY = process.argv.includes('--apply')
+// A1c mode: wipe EVERY remaining ungrounded AI description (ai_drafted, no
+// source_type, non-null text), all languages, ISBN or not — the keep-vs-wipe
+// cohort that A1/A1b confirmed has no findable source and that cross-model
+// consensus confirmed the models don't know (100% UNKNOWN). Selects by DB
+// signature instead of the phase-1 audit jsonl.
+const NO_SOURCE_ALL = process.argv.includes('--no-source-all')
 const sb = adminClient()
 const JSONL = resolve(__dirname, '../data/ungrounded-desc-dryrun.jsonl')
 
@@ -41,25 +47,57 @@ function loadWipeIds(): number[] {
   return ids
 }
 
-async function run() {
-  console.log(APPLY ? '=== APPLY ===' : '=== DRY RUN (pass --apply to write) ===')
-  const ids = loadWipeIds()
-  console.log(`heavy-filler WIPE candidates in report: ${ids.length}`)
-  if (!ids.length) return
-
-  // Pull current state — only rows that are STILL ungrounded get cleared.
+// A1c selection: paginate the full ungrounded-no-source-with-text population.
+async function loadNoSourceAllRows(): Promise<{ id: number; slug: string; description_book: string | null }[]> {
   const rows: { id: number; slug: string; description_book: string | null }[] = []
-  for (let i = 0; i < ids.length; i += 300) {
-    const slice = ids.slice(i, i + 300)
+  let from = 0
+  const PAGE = 1000
+  for (;;) {
     const { data, error } = await sb
       .from('books')
-      .select('id, slug, description_book, description_source_type')
-      .in('id', slice)
+      .select('id, slug, description_book')
+      .eq('ai_drafted', true)
       .is('description_source_type', null)
       .not('description_book', 'is', null)
+      .eq('is_blanket_works', false)
+      .order('id')
+      .range(from, from + PAGE - 1)
     if (error) throw error
-    for (const r of data as { id: number; slug: string; description_book: string; description_source_type: null }[]) {
+    if (!data?.length) break
+    for (const r of data as { id: number; slug: string; description_book: string }[]) {
       rows.push({ id: r.id, slug: r.slug, description_book: r.description_book })
+    }
+    if (data.length < PAGE) break
+    from += PAGE
+  }
+  return rows
+}
+
+async function run() {
+  console.log(APPLY ? '=== APPLY ===' : '=== DRY RUN (pass --apply to write) ===')
+  console.log(NO_SOURCE_ALL ? 'mode: --no-source-all (A1c, full DB signature)' : 'mode: phase-1 heavy-filler (audit jsonl)')
+
+  // Pull current state — only rows that are STILL ungrounded get cleared.
+  let rows: { id: number; slug: string; description_book: string | null }[] = []
+  const backupName = NO_SOURCE_ALL ? 'wiped-a1c-no-source-backup.csv' : 'wiped-ungrounded-descriptions-backup.csv'
+  if (NO_SOURCE_ALL) {
+    rows = await loadNoSourceAllRows()
+  } else {
+    const ids = loadWipeIds()
+    console.log(`heavy-filler WIPE candidates in report: ${ids.length}`)
+    if (!ids.length) return
+    for (let i = 0; i < ids.length; i += 300) {
+      const slice = ids.slice(i, i + 300)
+      const { data, error } = await sb
+        .from('books')
+        .select('id, slug, description_book, description_source_type')
+        .in('id', slice)
+        .is('description_source_type', null)
+        .not('description_book', 'is', null)
+      if (error) throw error
+      for (const r of data as { id: number; slug: string; description_book: string; description_source_type: null }[]) {
+        rows.push({ id: r.id, slug: r.slug, description_book: r.description_book })
+      }
     }
   }
   console.log(`still ungrounded & non-null (will clear): ${rows.length}`)
@@ -74,7 +112,7 @@ async function run() {
   // Reversible: back up before clearing.
   const backup = 'id,slug,description_book\n' +
     rows.map((r) => `${r.id},${r.slug},${JSON.stringify(r.description_book ?? '')}`).join('\n')
-  const backupPath = resolve(__dirname, '../data/wiped-ungrounded-descriptions-backup.csv')
+  const backupPath = resolve(__dirname, `../data/${backupName}`)
   writeFileSync(backupPath, backup + '\n')
   console.log(`backed up ${rows.length} descriptions → ${backupPath}`)
 

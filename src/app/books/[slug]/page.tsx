@@ -1228,7 +1228,18 @@ export default async function BookPage({
       )}
 
       {/* About the book */}
-      {(book.description_book ?? book.description) && (
+      {!(book.description_book ?? book.description) ? (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
+          {/* We only publish descriptions backed by a citable source. This book
+              has none yet — better an honest note than an unverifiable AI synopsis.
+              View-layer only: description_book stays NULL so JSON-LD omits it. */}
+          <p className="text-sm text-gray-400 italic leading-relaxed">
+            We only publish book descriptions backed by a citable source, and we
+            haven&rsquo;t found one for this title yet.
+          </p>
+        </section>
+      ) : (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
           <p className="text-gray-700 leading-relaxed">

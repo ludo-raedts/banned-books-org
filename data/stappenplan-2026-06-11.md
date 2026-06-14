@@ -24,9 +24,16 @@ Volgorde = leverage. Gratis bronnen eerst, betaalde API's alleen op gescopete wo
       (GOOGLE_BOOKS_API_KEY → KEY2, 2 GCP-projecten = 2.000/dag) + harde 30s fetch-timeout
       op alle bron-fetchers (voorkwam de 2u-hang). Geen nieuwe audit nodig: 0 van de 1.890
       imports sinds 06-04 droeg de ongegronde signatuur.
-- [ ] **A1c. Beslispunt NO-SOURCE-restant** (na A1+A1b): ~1.4xx no-ISBN-rijen houden
-      ongegronde tekst (bevestigd onvindbaar via title-search, of nooit REGROUND-eligible).
-      Kiezen: laten staan vs. wipen conform fase 1-doctrine. Eerst omvang exact meten.
+- [x] **A1c. Beslispunt NO-SOURCE-restant** — ✅ 2026-06-11: WIPEN gekozen, na bewijs.
+      Cross-model consensus-validatie (`validate-consensus-descriptions.ts --a1c`,
+      nieuwe modus) gaf 40/40 = 100% UNKNOWN: de LLM's kennen deze obscure (grotendeels
+      niet-Engelse) boeken aantoonbaar niet → de bestaande tekst is noodzakelijk verzonnen.
+      2.283 ongegronde `description_book` gewist via `wipe-ungrounded-filler-descriptions.ts
+      --no-source-all --apply` (backup data/wiped-a1c-no-source-backup.csv, omkeerbaar).
+      View-laag fallback toegevoegd in books/[slug]/page.tsx ("We only publish book
+      descriptions backed by a citable source…") — buiten de JSON-LD gehouden (geverifieerd
+      op localhost). 2.257 tonen de fallback, 26 onthullen een ouder `description`-veld.
+      Restje voor later: die 26 legacy-descriptions tonen zonder bronattributie (mini-QA).
 - [ ] **A2. Volle OL-harvest pass** — `enrich-ol-harvest.ts` (gratis, geen dagcap, exact-key).
       Doelvelden: cover (6.854 missend), `first_published_year` (5.501), sibling-ISBN (6.196).
       Daarna coverage opnieuw meten en het verschil noteren.

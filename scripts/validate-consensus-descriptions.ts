@@ -98,17 +98,39 @@ async function judge(title: string, a: string, b: string): Promise<any> {
   try { return JSON.parse(r.choices[0]?.message?.content ?? '{}') } catch { return { verdict: 'disagree', confidence: 0, reason: 'parse-fail' } }
 }
 
-type Outcome = { id: number; slug: string; bucket: string; decision: string; conf?: number; facts?: string[]; a?: string; b?: string; reason?: string }
+type Outcome = { id: number; slug: string; bucket: string; decision: string; lang?: string; conf?: number; facts?: string[]; a?: string; b?: string; reason?: string }
 
 async function runBook(b: any, bucket: string): Promise<Outcome> {
   const ctx = bookContext(b)
+  const lang = b.original_language ?? null
   const [a, g] = await Promise.all([genOpenAI(ctx), genGemini(ctx)])
   if (isUnknown(a) || isUnknown(g)) {
-    return { id: b.id, slug: b.slug, bucket, decision: 'UNKNOWN', a: isUnknown(a) ? 'UNKNOWN' : a.slice(0, 80), b: isUnknown(g) ? 'UNKNOWN' : g.slice(0, 80) }
+    return { id: b.id, slug: b.slug, bucket, lang, decision: 'UNKNOWN', a: isUnknown(a) ? 'UNKNOWN' : a.slice(0, 80), b: isUnknown(g) ? 'UNKNOWN' : g.slice(0, 80) }
   }
   const v = await judge(b.title, a, g)
   const accepted = v.verdict === 'agree' && (v.confidence ?? 0) >= ACCEPT_CONF
-  return { id: b.id, slug: b.slug, bucket, decision: accepted ? 'ACCEPT' : `REJECT(${v.verdict})`, conf: v.confidence, facts: v.specific_agreed_facts, a, b: g, reason: v.reason }
+  return { id: b.id, slug: b.slug, bucket, lang, decision: accepted ? 'ACCEPT' : `REJECT(${v.verdict})`, conf: v.confidence, facts: v.specific_agreed_facts, a, b: g, reason: v.reason }
+}
+
+// Full A1c population: rows still SHOWING ungrounded AI text with no source,
+// ALL languages, with or without ISBN (the real keep-vs-wipe scope).
+async function pickA1c(): Promise<any[]> {
+  const rows: any[] = []
+  let from = 0
+  const PAGE = 1000
+  for (;;) {
+    const { data, error } = await sb.from('books')
+      .select('id, slug, title, first_published_year, original_language, censorship_context, book_authors(authors(display_name)), bans(countries(name_en))')
+      .eq('ai_drafted', true).is('description_source_type', null).not('description_book', 'is', null).eq('is_blanket_works', false)
+      .order('id').range(from, from + PAGE - 1)
+    if (error) throw error
+    if (!data?.length) break
+    rows.push(...data)
+    if (data.length < PAGE) break
+    from += PAGE
+  }
+  console.log(`A1c population (ungrounded AI text, no source, all langs): ${rows.length}`)
+  return shuffle(rows).slice(0, PER_BUCKET)
 }
 
 async function pickKnown(): Promise<any[]> {
@@ -169,7 +191,10 @@ async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Prom
 
 async function main() {
   const SCOPED = process.argv.includes('--scoped')
-  const buckets: [string, any[]][] = SCOPED
+  const A1C = process.argv.includes('--a1c')
+  const buckets: [string, any[]][] = A1C
+    ? [['a1c', await pickA1c()], ['anonymous', await pickAnonymous()]]
+    : SCOPED
     ? [['scoped-en-recent', await pickScoped()]]
     : [
         ['known', await pickKnown()],
@@ -196,6 +221,20 @@ async function main() {
   const an = all.filter(o => o.bucket === 'anonymous')
   const anAcc = an.filter(o => o.decision === 'ACCEPT').length
   console.log(`\nFALSE-POSITIVE rate (anonymous accepted): ${an.length ? Math.round(anAcc / an.length * 100) : 0}%  ← want near 0`)
+
+  // A1c yield split by language (EN vs non-EN) — the decisive number: how many
+  // of the keep-vs-wipe cohort the consensus pipeline would actually rescue.
+  const a1c = all.filter(o => o.bucket === 'a1c')
+  if (a1c.length) {
+    const split = (rows: Outcome[], label: string) => {
+      const acc = rows.filter(o => o.decision === 'ACCEPT').length
+      const pct = rows.length ? Math.round(acc / rows.length * 100) : 0
+      console.log(`  ${label.padEnd(10)} n=${rows.length}  ACCEPT ${acc} (${pct}%)`)
+    }
+    console.log(`\nA1c ACCEPT (rescue) rate by language:`)
+    split(a1c.filter(o => o.lang === 'en'), 'en')
+    split(a1c.filter(o => o.lang !== 'en'), 'non-en')
+  }
   console.log(`Full per-book report: data/consensus-desc-validation.jsonl`)
 }
 main().catch(e => { console.error(e); process.exit(1) })
