@@ -69,12 +69,19 @@ export const GB_FIELDS_FULL =
 const GB_BASE = 'https://www.googleapis.com/books/v1/volumes'
 const DEFAULT_DELAY_MS = 600
 
-// GOOGLE_BOOKS_API_KEY (dedicated) → GOOGLE_AI_API_KEY (Gemini, same GCP
-// project) → '' (keyless; will 429 once the per-project daily quota is hit).
-const GB_KEY = process.env.GOOGLE_BOOKS_API_KEY ?? process.env.GOOGLE_AI_API_KEY ?? ''
+// Dedicated keys, in rotation order: GOOGLE_BOOKS_API_KEY → GOOGLE_BOOKS_API_KEY2.
+// The daily quota is PER GCP PROJECT, so a second key only adds quota when it
+// belongs to a different project. On a per-day 429 the client advances to the
+// next key and retries; GbQuotaError is only thrown once the LAST key is
+// exhausted. Falls back to GOOGLE_AI_API_KEY (Gemini — same project as key 1,
+// so no extra quota) only when no dedicated key is set; '' = keyless (quota 0).
+const GB_KEYS = [process.env.GOOGLE_BOOKS_API_KEY, process.env.GOOGLE_BOOKS_API_KEY2]
+  .filter((k): k is string => typeof k === 'string' && k.length > 0)
+if (GB_KEYS.length === 0 && process.env.GOOGLE_AI_API_KEY) GB_KEYS.push(process.env.GOOGLE_AI_API_KEY)
+let keyIdx = 0
 
 export function hasGbKey(): boolean {
-  return GB_KEY.length > 0
+  return GB_KEYS.length > 0
 }
 
 function sleep(ms: number) {
@@ -100,9 +107,9 @@ export class GbQuotaError extends Error {
   }
 }
 
-// Once any call hits 429 we latch this: every subsequent gbVolumes() throws
-// immediately without a network round-trip, so a long sweep aborts fast instead
-// of hammering a dead quota.
+// Once a daily-quota 429 lands on the LAST key we latch this: every subsequent
+// gbVolumes() throws immediately without a network round-trip, so a long sweep
+// aborts fast instead of hammering a dead quota.
 let quotaTripped = false
 export function gbQuotaTripped(): boolean {
   return quotaTripped
@@ -120,18 +127,23 @@ const MAX_RATE_RETRIES = 6
 export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
   if (quotaTripped) throw new GbQuotaError()
   const { maxResults = 5, fields = GB_FIELDS_FULL, delayMs = DEFAULT_DELAY_MS } = opts
-  const keyParam = GB_KEY ? `&key=${GB_KEY}` : ''
-  const url =
-    `${GB_BASE}?q=${encodeURIComponent(query)}` +
-    `&maxResults=${maxResults}&fields=${fields}${keyParam}`
 
   for (let attempt = 0; ; attempt++) {
+    // URL is rebuilt per attempt: a daily-quota 429 can rotate keyIdx mid-loop.
+    const key = GB_KEYS[keyIdx] ?? ''
+    const keyParam = key ? `&key=${key}` : ''
+    const url =
+      `${GB_BASE}?q=${encodeURIComponent(query)}` +
+      `&maxResults=${maxResults}&fields=${fields}${keyParam}`
+
     let res: Response
     try {
-      res = await fetch(url, opts.signal ? { signal: opts.signal } : undefined)
+      // Default 30s timeout: a stalled connection must never hang a caller's
+      // worker pool (a fetch without signal waits indefinitely).
+      res = await fetch(url, { signal: opts.signal ?? AbortSignal.timeout(30_000) })
     } catch {
       if (delayMs > 0) await sleep(delayMs)
-      return [] // transient network failure — treat as a miss
+      return [] // transient network failure / timeout — treat as a miss
     }
 
     if (res.status === 429) {
@@ -142,6 +154,12 @@ export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<
       //     a bug: a run aborted after ~100 calls and wasted the daily quota.
       const body = await res.text().catch(() => '')
       if (DAILY_QUOTA_RE.test(body)) {
+        if (keyIdx < GB_KEYS.length - 1) {
+          keyIdx++
+          console.warn(`[google-books] daily quota exhausted on key ${keyIdx}/${GB_KEYS.length} — rotating to key ${keyIdx + 1}`)
+          attempt = -1 // fresh backoff budget on the new key
+          continue
+        }
         quotaTripped = true
         throw new GbQuotaError()
       }

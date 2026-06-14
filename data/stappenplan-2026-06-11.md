@@ -7,20 +7,23 @@ Volgorde = leverage. Gratis bronnen eerst, betaalde API's alleen op gescopete wo
 
 ## A. Datakwaliteit & verrijking (gratis eerst)
 
-- [ ] **A1. Maak de gestrande re-ground run af** (no-ISBN REGROUND-batch, 512 rijen).
-      Status 06-11: 409/512 verwerkt; laatste 103 draaien in user-terminal (run 3,
-      `data/_reground_noisbn_run3.log`). Timestamp-resume was kapot (score-data-quality
-      herstempelde de catalogus) → `--ids-file` toegevoegd + log-gebaseerde reconstructie
-      (`scripts/_tmp_reground_remaining2.ts`). Afvinken zodra run 3 klaar is.
-- [ ] **A1b. Fase 2: re-ground de ISBN-rijen** — gemeten 06-11: **1.954 rijen** met
-      ongegronde AI-tekst én isbn13. Route bestaat en selecteert zelf op de DB-signatuur
-      (geen audit-artifact nodig): `enrich-descriptions-v2.ts --reground-ungrounded
-      --allow-llm --apply` (auto-backup; NO-SOURCE-rijen blijven onaangeroerd). OL-by-ISBN
-      is gratis; GB deelt de 1.000/dag-quota met de launchd gb-harvest → zo nodig
-      `--skip-google-books`. Verwachte hitrate veel hoger dan de ~8% van de no-ISBN-staart.
-      ~16–30 uur looptijd → in delen draaien met `--limit`.
-      NB geen nieuwe audit nodig: 0 van de 1.890 boeken geïmporteerd sinds 06-04 draagt
-      de ongegronde signatuur — nieuwe imports komen schoon binnen, de pool krimpt alleen.
+- [x] **A1. Maak de gestrande re-ground run af** — ✅ 2026-06-11. Alle 512 no-ISBN
+      REGROUND-rijen verwerkt (runs 1–3). ~109 dragen nu een gegronde beschrijving
+      (~89 via de reground-ladder + 20 via het consensus-spoor); ~403 bevestigd
+      "geen bron via title-search" → beslispunt A1c. Timestamp-resume was kapot
+      (score-data-quality herstempelde de catalogus) → `--ids-file` toegevoegd +
+      log-gebaseerde reconstructie. Run-3 kosten: $0,0007.
+- [x] **A1b. Fase 2: re-ground de ISBN-rijen** — ✅ 2026-06-11. Selectie isbn13 NOT NULL
+      + source_type NULL = 4.317 kandidaten (ongegronde-tekst + lege-beschrijving ISBN-rijen,
+      bewust samen). Volledig afgewerkt over meerdere runs op één dag; laatste run liep tot
+      echte completion (geen quota-stop). Resultaat: **boeken zonder description_book
+      5.868 → 4.511** (−1.357 nieuwe beschrijvingen) plus ~1.950 ongegronde AI-teksten
+      vervangen door bronvaste tekst. Restpool = **1.009 ISBN-rijen** bevestigd zonder
+      vindbare bron (de vloer; niet opnieuw draaien — re-grindt alleen missers). LLM-kosten
+      verwaarloosbaar (~$0,03/run). Twee infra-fixes onderweg: GB-key-rotatie
+      (GOOGLE_BOOKS_API_KEY → KEY2, 2 GCP-projecten = 2.000/dag) + harde 30s fetch-timeout
+      op alle bron-fetchers (voorkwam de 2u-hang). Geen nieuwe audit nodig: 0 van de 1.890
+      imports sinds 06-04 droeg de ongegronde signatuur.
 - [ ] **A1c. Beslispunt NO-SOURCE-restant** (na A1+A1b): ~1.4xx no-ISBN-rijen houden
       ongegronde tekst (bevestigd onvindbaar via title-search, of nooit REGROUND-eligible).
       Kiezen: laten staan vs. wipen conform fase 1-doctrine. Eerst omvang exact meten.

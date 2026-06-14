@@ -114,6 +114,13 @@ export type EnrichDescriptionsV2Result = {
 }
 
 const UA = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
+
+// Every source fetch gets a hard timeout. Without one, a single stalled TCP
+// connection (OpenLibrary especially) hangs a worker forever — with a small
+// worker pool that freezes the whole run (observed 2026-06-11: 2h stall).
+// Aborts surface as exceptions inside the existing try/catch → treated as a
+// miss, so the ladder simply moves on.
+const FETCH_TIMEOUT_MS = 30_000
 const WIKI_DELAY_MS = 300
 const OL_DELAY_MS = 600
 const MIN_DESC_CHARS = 80
@@ -188,7 +195,7 @@ type WikiSummary = { title: string; description?: string; extract?: string; type
 
 async function wikiSummary(pageTitle: string, lang: string): Promise<WikiSummary | null> {
   try {
-    const res = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`, { headers: UA, redirect: 'follow' })
+    const res = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`, { headers: UA, redirect: 'follow', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return null
     return await res.json() as WikiSummary
   } catch { return null }
@@ -216,7 +223,7 @@ async function wikiFullExtract(pageTitle: string, lang: string): Promise<string 
   // canonical book summary.
   const url = `https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=true&exchars=1200&redirects=1&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`
   try {
-    const res = await fetch(url, { headers: UA })
+    const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return null
     const json = await res.json() as { query?: { pages?: Record<string, { extract?: string; missing?: '' }> } }
     const pages = json.query?.pages
@@ -235,7 +242,7 @@ async function wikiFullExtract(pageTitle: string, lang: string): Promise<string 
 
 async function wikiOpensearch(query: string, lang: string): Promise<string[]> {
   try {
-    const res = await fetch(`https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&format=json&origin=*`, { headers: UA })
+    const res = await fetch(`https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&format=json&origin=*`, { headers: UA, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return []
     const json = await res.json() as [string, string[], string[], string[]]
     return json[1] ?? []
@@ -326,7 +333,7 @@ function extractOlDesc(json: Record<string, unknown>): string | null {
  */
 async function olWorks(workId: string, title: string, author: string, lenient: boolean): Promise<SourceExtract | null> {
   try {
-    const res = await fetch(`https://openlibrary.org/works/${workId}.json`, { headers: UA })
+    const res = await fetch(`https://openlibrary.org/works/${workId}.json`, { headers: UA, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return null
     const text = extractOlDesc(await res.json() as Record<string, unknown>)
     if (!text || text.length < MIN_DESC_CHARS) return null
@@ -338,7 +345,7 @@ async function olWorks(workId: string, title: string, author: string, lenient: b
 async function olSearch(title: string, author: string): Promise<SourceExtract | null> {
   try {
     const q = encodeURIComponent(`${title} ${author}`)
-    const res = await fetch(`https://openlibrary.org/search.json?q=${q}&fields=key&limit=1`, { headers: UA })
+    const res = await fetch(`https://openlibrary.org/search.json?q=${q}&fields=key&limit=1`, { headers: UA, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return null
     const json = await res.json() as { docs: Array<{ key?: string }> }
     const workId = json.docs?.[0]?.key?.replace('/works/', '')
@@ -367,7 +374,7 @@ async function olSearch(title: string, author: string): Promise<SourceExtract | 
  */
 async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
   try {
-    const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`, { headers: UA, redirect: 'follow' })
+    const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`, { headers: UA, redirect: 'follow', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     if (!res.ok) return null
     const edition = await res.json() as Record<string, unknown>
 
@@ -378,7 +385,7 @@ async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
     const workKey = works?.[0]?.key   // "/works/OL...W"
     if (workKey) {
       await sleep(OL_DELAY_MS)
-      const wr = await fetch(`https://openlibrary.org${workKey}.json`, { headers: UA })
+      const wr = await fetch(`https://openlibrary.org${workKey}.json`, { headers: UA, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
       if (wr.ok) {
         const work = await wr.json() as Record<string, unknown>
         const wDesc = extractOlDesc(work)
