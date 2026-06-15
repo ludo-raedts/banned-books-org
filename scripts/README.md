@@ -84,6 +84,7 @@ die een merge-script daarna inleest.
 | `_audit_split_authors.ts` | Canonieke detector voor gesplitste auteurs → `data/hk-split-authors-review.md` |
 | `_audit_honorific_author_dupes.ts` | Honorific-twin auteurs (Ustaz/Haji-prefix) → input voor `merge-honorific-author-dupes.ts` |
 | `_audit_mojibake_authors.ts` | U+FFFD-corrupte auteursnamen (draai vóór nieuwe KDN-batch) |
+| `_audit_cross_script_dupes.ts` | Cross-script auteur-twins: niet-Latijnse auteur die een bestaande Latijnse auteur dubbelt (name_english-match of identieke bio) → fold via `merge-cross-language-dupes.ts`. Draai ná elke vreemdtalige ban-import (FSEM/KDN/Iran). Under-count: name_english is schaars |
 | `check-dupes.ts` | Ad-hoc: print info voor een **hardcoded** sluglijst om te beoordelen óf het dupes zijn. Schrijft niets |
 
 > Detectoren **vinden**, merge-scripts **voeren uit**. Draai altijd eerst de audit.
@@ -117,6 +118,7 @@ jaarindexen; marlon-bundo-broward: sjabloon voor één-paar ban-merge) staan in 
 | Script | Scope | Bijzonder | Flag |
 |---|---|---|---|
 | `merge-honorific-author-dupes.ts` | Hardcoded paren | Maleisisch import-artefact. Migreert `book_authors` + author-FK-tabellen | `--write` |
+| `merge-cross-language-dupes.ts` | Hardcoded paren (auteur + evt. boek) | **Cross-script dupes** uit vreemdtalige ban-imports. Foreign DROP levert ALLEEN ban + URL-alias + taal-neutrale velden (datums/land/IDs); nooit name/title/`original_language`/description (= vertaling, niet het origineel). Boek mee-mergen alléén als het dezelfde *work* is. Input: `_audit_cross_script_dupes.ts` | `--apply` |
 
 Afgeronde één-paar auteur-merge (`merge-vs-naipaul-authors.ts`: V. S. Naipaul-dubbel,
 introduceerde óók `author_slug_aliases` + de alias-fallback op de author-pagina, sjabloon
@@ -162,7 +164,8 @@ Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-variante
 | `enrich-genres-retry-gpt.ts` | Retry-pass voor wat gpt-4o-mini niet plaatste |
 | `enrich-reasons.ts` | Classificeert ban-reasons die nu alleen 'other' zijn (GPT-4o-mini) |
 | `enrich-pending-non-latin.ts` | Backfill non-Latin review-queue items (Model 3 title-velden) |
-| `generate-discussion-questions.ts` | Reading-Club discussievragen (Claude Opus) |
+| `generate-discussion-questions.ts` | Reading-Club discussievragen, **alleen-lege-rijen** vulling (Claude Opus/gpt-4o). ⚠ Voedt de LLM enkel `{title, author}` → geen grounding, hallucinatie-risico (thema's/personen/gebeurtenissen). Gebruik voor *nieuwe* boeken liever `regenerate-discussion-questions-grounded.ts` |
+| `regenerate-discussion-questions-grounded.ts` | **Voorkeur** voor reading-club-vragen. Twee modi: `--export` dumpt een gronding-worklist (description_book + auteur-bio + echte ban-records) naar `data/_rc_questions_grounding.json`; `--apply` schrijft hand-geauthorde Engelse vragen uit `data/rc-questions-authored.json` weg mét validatie (telcheck 5–15, Engels-heuristiek, dubbele-vraag-guard) en emit een before/after review (`data/rc-questions-review.md`). Vragen worden gegrond in eigen content geschreven, nooit door een onbewaakt zwakker model. Alle 110 bestaande sets hier 2026-06-15 mee herschreven. `--only=<source>` beperkt tot één track |
 | `update-ban-descriptions.ts` | Voegt/updates ban-descriptions voor goed-gedocumenteerde bans |
 
 > Voorkeur descriptions = `-v2` / `-continuous`. `-gpt` zijn fallbacks. Let op de DEPRECATED-marker.
