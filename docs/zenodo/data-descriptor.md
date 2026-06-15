@@ -35,10 +35,10 @@ the written description paragraph that interprets a ban is commercial.
 **Coverage at the snapshot used to write this descriptor** (figures move as the
 catalogue grows — the deposited files are the authority):
 
-- ~14,400 books, ~8,700 authors
-- ~29,060 ban events across 119 countries (including defunct states: USSR, East
+- ~15,900 books, ~9,500 authors
+- ~31,400 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
-- ~52,200 ban–reason links and ~29,300 ban–source citations
+- ~59,300 ban–reason links and ~31,600 ban–source citations
 
 **Scope.** This deposit covers *books*. Records must describe a real
 removal/restriction with an institutional actor and a documented decision (see
@@ -145,7 +145,7 @@ decision.
 
 **Verification.** Sources carry a `verification_status`. Archive-verification is
 an ongoing process and the field is mostly unpopulated so far. At the snapshot
-used here, of ~950 source rows the distribution is roughly: `unverified` ≈ 79%,
+used here, of ~960 source rows the distribution is roughly: `unverified` ≈ 79%,
 empty/`(null)` ≈ 20%, `verified` = 7 rows, `pending` = 2 rows, and `broken` = 0.
 **In practical terms, filtering on `verification_status = 'verified'` currently
 returns a near-empty subset (a handful of rows) and is not yet a usable quality
