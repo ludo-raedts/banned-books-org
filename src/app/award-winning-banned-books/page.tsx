@@ -175,11 +175,15 @@ export default async function AwardWinningBannedBooksPage() {
             </div>
 
             <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
-              The world&apos;s two most celebrated literary honours are no shield against the censor. The books and authors
-              below have all been awarded a <strong>Nobel Prize in Literature</strong> or a <strong>Pulitzer Prize</strong> —
-              and all have also been banned, removed, or challenged somewhere in the world. The Nobel is given for a writer&apos;s
-              whole body of work, so it appears here as an author-level honour; the Pulitzer is awarded to a single book.
-              Each entry shows when the prize was awarded and, where available, the prize committee&apos;s own citation.
+              The world&apos;s two most celebrated literary honours are no shield against the censor. Every author and book
+              below has won a <strong>Nobel Prize in Literature</strong> or a <strong>Pulitzer Prize</strong> — and every one
+              has also been banned, removed, or challenged somewhere. The scale varies enormously: for a few, like Toni
+              Morrison or John Steinbeck, that means hundreds of challenges across many countries; for many it is a single
+              removal in one school district, sometimes decades ago. The point isn&apos;t a worldwide suppression of great
+              literature — it is something quieter and, in its way, more telling: even literature&apos;s highest honours are no
+              guarantee against a censor. The Nobel honours a writer&apos;s whole body of work, so it appears here at the
+              author level; the Pulitzer is awarded to a single book. Each entry shows when the prize was awarded and, where
+              available, the committee&apos;s own citation.
             </p>
           </div>
         </div>
