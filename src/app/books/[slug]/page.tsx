@@ -483,6 +483,54 @@ function authorName(book: BookDetail): string {
     .join(', ')
 }
 
+// Both `description_ban` ("Why it was banned") and `censorship_context`
+// ("Censorship history") are AI-generated. In ~16% of cases the context is a
+// near-paraphrase of the same single ban event (token-overlap ≥45%, sometimes
+// verbatim), and another slice is generic editorialising with no concrete
+// anchor ("books like this are often challenged…"). Rendering either next to
+// the ban description is duplicate/thin content — exactly what the May-2026
+// core update punished. So we only show the context when it is FACTUALLY
+// ADDITIVE: low overlap with the ban text AND carrying at least one concrete
+// anchor (a year, a named institution/proper noun, or a statute reference).
+const CTX_STOPWORDS = new Set([
+  'the', 'a', 'an', 'and', 'or', 'but', 'of', 'to', 'in', 'on', 'at', 'for', 'with', 'by',
+  'was', 'were', 'is', 'are', 'be', 'been', 'it', 'its', 'that', 'this', 'as', 'from',
+  'which', 'who', 'whom', 'their', 'his', 'her', 'has', 'had', 'have', 'not', 'no', 'also',
+  'after', 'before', 'when', 'where', 'book', 'banned', 'ban',
+])
+
+function contextTokens(s: string): Set<string> {
+  return new Set(
+    s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+      .filter((w) => w.length > 2 && !CTX_STOPWORDS.has(w)),
+  )
+}
+
+function isContextAdditive(banText: string | null, context: string | null): boolean {
+  if (!context || context.trim().length === 0) return false
+  // No ban text to compare against → context is the only narrative, always keep.
+  if (!banText || banText.trim().length === 0) return true
+
+  // Token-overlap (Jaccard). High overlap = paraphrase of the same event → drop.
+  const a = contextTokens(banText)
+  const b = contextTokens(context)
+  if (b.size > 0) {
+    let inter = 0
+    for (const t of b) if (a.has(t)) inter++
+    const jaccard = inter / (a.size + b.size - inter)
+    if (jaccard >= 0.45) return false
+  }
+
+  // Concrete-anchor check, catches low-overlap-but-vacuous editorialising:
+  // require a 4-digit year, a statute/gazette reference, or a capitalised
+  // multi-word proper noun (court, library, district, act, board…).
+  const hasYear = /\b(1[5-9]\d\d|20\d\d)\b/.test(context)
+  const hasStatuteRef = /\b(act|law|statute|code|decree|gazette|ordinance|§|p\.u\.|l\.n\.)\b/i.test(context)
+  const hasProperNoun = /\b[A-Z][a-z]+(?:\s+(?:of\s+|the\s+)?[A-Z][a-z]+)+\b/.test(context)
+  return hasYear || hasStatuteRef || hasProperNoun
+}
+
 // A region='Nation' ban is system-wide rather than tied to a state. DoDEA (the
 // Department of Defense Education Activity) is a single federal school system
 // spanning U.S. military bases worldwide — not a state, and not a sovereign
@@ -1271,8 +1319,9 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Censorship history (AI-generated context) */}
-      {book.censorship_context && (
+      {/* Censorship history (AI-generated context) — only when factually
+          additive vs. the ban description, never a near-duplicate paragraph. */}
+      {isContextAdditive(book.description_ban, book.censorship_context) && (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Censorship history</h2>
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
