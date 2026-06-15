@@ -120,9 +120,14 @@ async function run() {
   const clearIds = rows.map((r) => r.id)
   for (let i = 0; i < clearIds.length; i += 300) {
     const slice = clearIds.slice(i, i + 300)
+    // Reset ai_drafted alongside the wipe — the row no longer carries an AI
+    // description, so leaving ai_drafted=true falsely fires the
+    // `ai-drafted-empty-desc` flag in score-data-quality (book lands in
+    // `flagged` instead of `default`). Caused two manual repair rounds before
+    // this fix.
     const { error } = await sb
       .from('books')
-      .update({ description_book: null })
+      .update({ description_book: null, ai_drafted: false })
       .in('id', slice)
       .is('description_source_type', null) // guard: never blank a since-grounded row
     if (error) throw error
