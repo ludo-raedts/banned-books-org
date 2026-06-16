@@ -2,25 +2,35 @@
  * Master enrichment pipeline — fills all open fields across the catalogue.
  *
  * Run this after adding new books, or periodically to keep data fresh.
- * Executes each enrichment step in order; every step only touches records
- * that still have empty fields (idempotent).
+ * Idempotent — every step only touches records with empty fields. Wraps the
+ * whole run in a before/after coverage snapshot and a confidence-rollback pass.
+ * nohup-safe: `nohup npx tsx --env-file=.env.local scripts/enrich-all.ts --apply &`.
  *
- * Steps
- * ─────
- *  Free (no API cost, always run):
- *   1. ISBN-13              — Open Library + Google Books
- *   2. Cover images         — Open Library + Google Books (first-pass)
- *   3. Cover images (v2)    — title-only / Wikipedia retries with pHash placeholder rejection
- *   4. Gutenberg IDs        — Gutendex API  (slow; skip with --no-gutenberg)
- *   5. archive.org IDs      — Advanced Search API (slow; skip with --no-archive)
- *   6. Descriptions (v2)    — Wikipedia + Open Library + Google Books with
+ * Phase 1 — PARALLEL free-harvest (concurrent, process-isolated; a quota stop
+ * or crash in one source never aborts the others):
+ *   • OL harvest      — cover / first-published-year / sibling-ISBN, exact-key, free
+ *   • GB harvest      — orphan ISBN / cover, Google Books, daily-cap-aware
+ *   • Native titles   — title_native + script, Wikidata, non-English books
+ *
+ * Phase 2 — SEQUENTIAL steps:
+ *  Free (no API cost):
+ *   1. Cover images (v2)    — title-only / Wikipedia retries with pHash placeholder rejection
+ *   2. Gutenberg IDs        — Gutendex API  (slow; skip with --no-gutenberg)
+ *   3. archive.org IDs      — Advanced Search API (slow; skip with --no-archive)
+ *   4. Descriptions (v2)    — Wikipedia + Open Library + Google Books with
  *                             title-fuzz + author-surname cross-check.
  *                             Includes grounded LLM synthesis unless --free-only.
- *
  *  GPT (skipped with --free-only, costs API credits):
- *   7. Ban descriptions
- *   8. Censorship context
- *   9. Ban reason classification
+ *   5. Genres   6. Ban descriptions   7. Censorship context   8. Ban reason classification
+ *
+ * Then: confidence audit + auto-rollback (native-title namesake/leading-article
+ * scoring + isbn/cover structural re-verify) → before/after coverage report
+ * (data/enrichment-coverage-report-<date>.md). Per-run logs/snapshots go to the
+ * gitignored data/enrich-run/<stamp>/.
+ *
+ * History (2026-06-16): folded the standalone parallel supervisor
+ * (enrich-parallel.sh) in here as Phase 1; dropped the old sequential enrich-isbn
+ * + covers-continuous first-pass (the harvesters supersede them).
  *
  * History (2026-05-28): the previous step 6 (v1 OL/GB only) + step 7
  * (free-form GPT fallback) caused widespread hallucination across the
@@ -40,12 +50,16 @@
  *     → skip the slow archive.org lookup step
  *   npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50
  *     → cap each GPT step at 50 books (useful for incremental runs)
+ *   --native-limit=N   cap the Phase-1 native-titles sweep (default 99999 = full)
+ *   --threshold=0.5    confidence threshold for the rollback auditor
  */
 
-import { spawnSync } from 'child_process'
+import { spawn, spawnSync } from 'child_process'
+import fs from 'node:fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { catalogReminder } from './audit-scripts-catalog'
+import { captureCoverage } from './enrich-coverage-snapshot'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -74,21 +88,35 @@ type Step = {
   archive?: boolean       // skipped with --no-archive
 }
 
+// ── Phase 1: parallel free-harvest ─────────────────────────────────────────────
+// ISBN + cover + first-published-year + native-title, from three sources that
+// are DISJOINT by construction (ol-harvest = keyable books, gb-harvest =
+// orphans, native-titles = non-English), so they run CONCURRENTLY with zero
+// write contention. Each is skip-cached (only-when-NULL + *_checked_at) and
+// cursor-checkpointed → interruption never reprocesses a completed row; and
+// each is its OWN process, so a quota stop (gb 429) or crash in one never
+// aborts the others. This phase replaces the old sequential enrich-isbn +
+// covers-continuous first-pass (the harvesters supersede them — no double
+// ISBN/cover path) and adds native-titles, which enrich-all never ran.
+const NATIVE_LIMIT = (() => {
+  const a = process.argv.find(x => x.startsWith('--native-limit='))
+  return a ? a.split('=')[1] : '99999'
+})()
+const CONFIDENCE_THRESHOLD = (() => {
+  const a = process.argv.find(x => x.startsWith('--threshold='))
+  return a ? a.split('=')[1] : '0.5'
+})()
+
+const harvestSteps: Array<{ name: string; logName: string; script: string; args: string[] }> = [
+  { name: 'OL harvest (cover/year/isbn, exact-key, free)', logName: 'ol-harvest',
+    script: 'enrich-ol-harvest.ts', args: APPLY ? ['--apply'] : [] },
+  { name: 'GB harvest (orphan isbn/cover, daily-cap-aware)', logName: 'gb-harvest',
+    script: 'enrich-gb-harvest.ts', args: APPLY ? ['--apply'] : [] },
+  { name: 'Native titles (Wikidata, non-English)', logName: 'native-titles',
+    script: 'enrich-native-titles.ts', args: APPLY ? ['--apply', `--limit=${NATIVE_LIMIT}`] : [] },
+]
+
 const steps: Step[] = [
-  {
-    name: 'ISBN-13',
-    script: 'enrich-isbn.ts',
-    args: APPLY ? ['--apply'] : [],
-    gpt: false,
-  },
-  {
-    name: 'Cover images (first-pass)',
-    script: 'enrich-covers-continuous.ts',
-    // --once = single pass (don't loop); also uses ISBN-13 which we enrich in step 1
-    args: APPLY ? ['--once'] : ['--once'],
-    gpt: false,
-    alwaysWrites: true,
-  },
   {
     name: 'Cover images (v2 retries + placeholder rejection)',
     script: 'enrich-covers-v2.ts',
@@ -195,6 +223,31 @@ function run(step: Step, index: number, total: number): boolean {
   return true
 }
 
+// Run the harvest sources concurrently, each detached to its own log file
+// (interleaved console stdio would be unreadable). Returns per-source exit
+// codes; a non-zero code (e.g. gb quota stop) is reported, never fatal.
+function runParallelPhase(runDir: string): Promise<Array<{ name: string; pid: number; log: string; code: number | null }>> {
+  const procs = harvestSteps.map(s => {
+    const log = `${runDir}/${s.logName}.log`
+    const fd = fs.openSync(log, 'w')
+    const child = spawn(TSX, [`--env-file=${ENV}`, resolve(ROOT, 'scripts', s.script), ...s.args], {
+      stdio: ['ignore', fd, fd],
+    })
+    console.log(`  ⟶  ${s.name}  (pid ${child.pid}, log ${log})`)
+    return { s, child, log }
+  })
+  return Promise.all(
+    procs.map(({ s, child, log }) =>
+      new Promise<{ name: string; pid: number; log: string; code: number | null }>(res => {
+        child.on('close', code => {
+          console.log(`     ${s.logName}: ${code === 0 ? 'done' : `stopped (exit ${code}) — continuing`}`)
+          res({ name: s.name, pid: child.pid ?? -1, log, code })
+        })
+      }),
+    ),
+  )
+}
+
 async function main() {
   const modeBase = APPLY
     ? (FREE_ONLY ? 'APPLY — free steps only' : `APPLY — all steps (GPT limit: ${GPT_LIMIT}/step)`)
@@ -216,6 +269,28 @@ async function main() {
   `)
   }
 
+  // Per-run artifacts (logs, manifest, before/after snapshots) live here; the
+  // dir is gitignored. Only the report .md is committed.
+  const stamp = new Date().toISOString().replace(/[:.]/g, '').replace(/-/g, '')
+  const since = new Date().toISOString()
+  const runDir = resolve(ROOT, 'data/enrich-run', stamp)
+  fs.mkdirSync(runDir, { recursive: true })
+
+  // ── BEFORE snapshot ──
+  banner('Coverage snapshot (before)')
+  const before = await captureCoverage()
+  fs.writeFileSync(`${runDir}/coverage-before.json`, JSON.stringify(before, null, 2))
+  for (const d of before.dims) console.log(`  ${d.label.padEnd(24)} ${d.have}/${d.denom}`)
+
+  // ── PHASE 1: parallel free-harvest ──
+  banner('Phase 1 — parallel free-harvest (ol + gb + native-titles, concurrent)')
+  const harvest = await runParallelPhase(runDir)
+  fs.writeFileSync(
+    `${runDir}/manifest.json`,
+    JSON.stringify({ startedAt: since, apply: APPLY, sources: harvest.map(h => ({ name: h.name, pid: h.pid, log: h.log })) }, null, 2),
+  )
+
+  // ── PHASE 2: sequential steps (covers-v2, gutenberg, archive, descriptions, GPT) ──
   const activeSteps = steps.filter(s => !(s.gpt && FREE_ONLY))
   let failed = 0
 
@@ -244,6 +319,35 @@ async function main() {
     console.log(`  ✗ ${failed} step(s) failed — check output above`)
   }
   console.log(`${'═'.repeat(60)}\n`)
+
+  // ── AFTER snapshot ──
+  banner('Coverage snapshot (after)')
+  const after = await captureCoverage()
+  fs.writeFileSync(`${runDir}/coverage-after.json`, JSON.stringify(after, null, 2))
+
+  // ── Confidence audit + auto-rollback (writes confidence.json for the report) ──
+  banner('Confidence audit + rollback')
+  const nativeReview = resolve(ROOT, `data/native-title-enrichment-${new Date().toISOString().slice(0, 10)}.json`)
+  const auditArgs = [
+    `--env-file=${ENV}`, resolve(ROOT, 'scripts/audit-enrichment-confidence.ts'),
+    `--since=${since}`, `--threshold=${CONFIDENCE_THRESHOLD}`,
+  ]
+  if (APPLY) auditArgs.push('--apply', `--native-review=${nativeReview}`)
+  const audit = spawnSync(TSX, auditArgs, { encoding: 'utf-8' })
+  if (audit.stdout) {
+    process.stdout.write(audit.stdout)
+    const jsonLine = audit.stdout.split('\n').filter(l => l.startsWith('JSON ')).pop()
+    if (jsonLine) fs.writeFileSync(`${runDir}/confidence.json`, jsonLine.slice(5))
+  }
+  if (audit.stderr) process.stderr.write(audit.stderr)
+
+  // ── Report (before/after %) ──
+  banner('Coverage report')
+  spawnSync(TSX, [
+    `--env-file=${ENV}`, resolve(ROOT, 'scripts/enrich-coverage-report.ts'),
+    `--before=${runDir}/coverage-before.json`, `--after=${runDir}/coverage-after.json`,
+    `--run-dir=${runDir}`, `--out=${resolve(ROOT, `data/enrichment-coverage-report-${new Date().toISOString().slice(0, 10)}.md`)}`,
+  ], { stdio: 'inherit' })
 
   // Catalog freshness — last thing you see, so new scripts don't rot out of
   // scripts/README.md. Read-only; never affects exit status on its own.

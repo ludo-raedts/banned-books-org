@@ -135,26 +135,25 @@ hardcoded sjabloon uit `scripts/archive/` · auteur-dupes → `merge-honorific-a
 ## 4. Enrichment
 Vullen van ontbrekende velden op bestaande records. **Veel `-gpt`/`-v2`-varianten — let op deprecaties.**
 
-### Parallelle verrijking (supervisor over de drie per-boek-bronnen)
-`enrich-parallel.sh` is de **nohup-veilige orkestrator**: het draait de drie
-disjuncte per-boek-enrichers (`enrich-ol-harvest`, `enrich-gb-harvest`,
-`enrich-native-titles`) **gelijktijdig** als losse processen, meet coverage
-vóór/ná, draait de confidence-auditor en schrijft een rapport. Procesisolatie =
-gratis graceful per-bron-skip: een quota-stop (gb 429 → `GbQuotaError`) of crash
-in één bron breekt de andere twee niet af. Elke bron is al skip-cached
-(only-when-NULL + `*_checked_at`) en checkpoint-baar (cursor) → een onderbreking
-herverwerkt nooit een afgeronde rij. CourtListener doet **niet** mee: dat is een
-render-time live feed (`src/lib/courtlistener.ts`), geen per-boek-kolom.
+### Parallelle verrijking (zit in `enrich-all.ts`)
+De orkestratie is **niet** een los script maar **Fase 1 van `enrich-all.ts`**:
+het draait de drie disjuncte gratis-harvesters (`enrich-ol-harvest`,
+`enrich-gb-harvest`, `enrich-native-titles`) **gelijktijdig** als losse
+processen, daarna sequentieel de rest (covers-v2, gutenberg, archive,
+descriptions, GPT), en sluit af met de confidence-auditor + before/after-rapport.
+Procesisolatie = gratis graceful per-bron-skip: een quota-stop (gb 429 →
+`GbQuotaError`) of crash in één bron breekt de andere twee niet af. Elke bron is
+al skip-cached (only-when-NULL + `*_checked_at`) en checkpoint-baar (cursor) →
+een onderbreking herverwerkt nooit een afgeronde rij. nohup-veilig:
+`nohup npx tsx --env-file=.env.local scripts/enrich-all.ts --apply &`.
+CourtListener doet **niet** mee: dat is een render-time live feed
+(`src/lib/courtlistener.ts`), geen per-boek-kolom.
 
-| Script | Doet | Flag |
-|---|---|---|
-| `enrich-parallel.sh` | Supervisor. `nohup bash scripts/enrich-parallel.sh --apply > data/enrich-run/supervisor.log 2>&1 &`. `--commit` = run-artifacts stagen + pushen; `--threshold=` confidence-drempel; `--native-limit=/--ol-limit=/--gb-budget=` per-bron caps | `--apply` |
-| `enrich-coverage-snapshot.ts` | Read-only coverage-meting (isbn13 / cover / description / native-title-non-EN) via `count(head:true)` (1000-row-cap-veilig). `--snapshot=<path>` schrijft JSON voor de before/after-diff. Exporteert `captureCoverage()` | — |
-| `enrich-coverage-report.ts` | Rendert het before/after-rapport (`data/enrichment-coverage-report-<date>.md`) uit twee snapshots + de run-manifest + `confidence.json` | — |
-
-| Script | Vult |
+| Script | Doet |
 |---|---|
-| `enrich-all.ts` | Master-pipeline: alle open velden over de hele catalogus |
+| `enrich-all.ts` | **Master-pipeline.** Fase 1 = parallelle gratis-harvest (ol/gb/native-titles concurrent — verving de oude sequentiële `enrich-isbn` + covers-continuous first-pass), Fase 2 = sequentieel covers-v2 + gutenberg + archive + descriptions-v2 + GPT. Wrapt alles in een before/after coverage-snapshot + confidence-rollback. Flags: `--apply`, `--free-only`, `--no-gutenberg`, `--no-archive`, `--gpt-limit=N`, `--native-limit=N`, `--threshold=` |
+| `enrich-coverage-snapshot.ts` | Read-only coverage-meting (isbn13 / cover / description / native-title-non-EN) via `count(head:true)` (1000-row-cap-veilig). `--snapshot=<path>` schrijft JSON. Exporteert `captureCoverage()` (gebruikt door enrich-all) |
+| `enrich-coverage-report.ts` | Rendert het before/after-rapport (`data/enrichment-coverage-report-<date>.md`) uit twee snapshots + de run-manifest + `confidence.json` |
 | `enrich.ts` | Oudere/seed-achtige enrichment (referentiedata + bestaande data); het `enrich.js`-compilaat is verwijderd |
 | **Descriptions** | |
 | `enrich-descriptions-v2.ts` | 2e-generatie CLI — **voorkeur voor nieuwe runs**. v1 (`enrich-descriptions.ts`) is verwijderd 2026-06-11; `/api/admin/enrich/run` draait in-process op v2 |
@@ -198,7 +197,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 |---|---|
 | `audit-integrity.ts` | **Staande integriteits-toets** — consolideert de goedkope SQL/regex-detectoren tot één herhaalbare check. Invarianten (image-host, mojibake, boek-zonder-auteur, onmogelijke jaren) → drempel 0, **exit 1** bij overtreding (cron/CI-gate). Drift-metrics (non-person, gedeelde-cover/desc-contaminatie, slug-drift, wezen, cover/description-coverage, landendekking) → vergeleken met `data/integrity-baseline.json`. Vervangt `audit-db.ts` en `check-coverage.ts` (verwijderd 2026-06-11: beide braken op de Supabase 1000-row cap) en `_audit_site_health.ts`. Flags: `--json`, `--verbose`, `--update-baseline`. Dure audits (perceptual-hash, LLM) blijven los — zie footer van het script. |
 | `score-data-quality.ts` | Data-quality classifier over de catalogus |
-| `audit-enrichment-confidence.ts` | **Post-batch confidence + auto-rollback** voor een `enrich-parallel.sh`-run (read-only; `--apply` reverteert, CSV-backup vooraf). Native-titels: scoort elke geschreven proposal uit de review-JSON op namesake/leidend-lidwoord-risico (−0.5 geen auteur-gate, −0.2 leidend lidwoord) en reverteert <`--threshold` (default 0.5) — reverteert alléén rijen waarvan `title_native` nog gelijk is aan de proposal (nooit een latere handmatige edit). ISBN/cover: structurele her-verificatie van de this-run writes (`--since=<ISO>`) op host-allowlist + dup-collision. ISBN/cover-semantiek zit al hard-gated vóór de write, dus de echte rollback-waarde zit bij native-titels |
+| `audit-enrichment-confidence.ts` | **Post-batch confidence + auto-rollback** voor een `enrich-all.ts`-run (laatste fase) (read-only; `--apply` reverteert, CSV-backup vooraf). Native-titels: scoort elke geschreven proposal uit de review-JSON op namesake/leidend-lidwoord-risico (−0.5 geen auteur-gate, −0.2 leidend lidwoord) en reverteert <`--threshold` (default 0.5) — reverteert alléén rijen waarvan `title_native` nog gelijk is aan de proposal (nooit een latere handmatige edit). ISBN/cover: structurele her-verificatie van de this-run writes (`--since=<ISO>`) op host-allowlist + dup-collision. ISBN/cover-semantiek zit al hard-gated vóór de write, dus de echte rollback-waarde zit bij native-titels |
 | `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
 | `check-no-desc.ts` | Snelle description-coverage check |
 | **Jaren** | |
