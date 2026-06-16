@@ -1,7 +1,9 @@
-// ISR: regenerate author detail pages every hour. Pageview-tracking
-// moved client-side (see <PageviewTracker> below) so the page itself can
-// cache. Same migration as book/country/reason detail pages.
-export const revalidate = 3600
+// ISR: regenerate author detail pages daily. Pageview-tracking moved
+// client-side (see <PageviewTracker> below) so the page itself can cache.
+// Daily (not hourly) keeps ISR Writes — the largest Vercel infra line — low;
+// author data changes slowly, and POST /api/admin/revalidate busts a single
+// page on demand when needed. Same cadence as book detail pages.
+export const revalidate = 86400
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
