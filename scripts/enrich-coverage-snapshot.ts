@@ -1,7 +1,8 @@
 /**
  * enrich-coverage-snapshot.ts — read-only coverage snapshot across the three
  * per-book enrichment dimensions. The before/after measurement primitive for
- * the parallel-enrichment supervisor (scripts/enrich-parallel.sh).
+ * enrich-all.ts (its Phase-1 parallel harvest is wrapped in two
+ * captureCoverage() calls).
  *
  * Uses count(head:true) queries (NOT row fetches) so it is immune to the
  * Supabase 1000-row .select() cap (see memory: "Supabase plain .select() capped
