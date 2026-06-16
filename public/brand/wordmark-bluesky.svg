@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500" role="img" aria-label="Banned Books - International Archive of Censored Publications">
+  <rect width="1500" height="500" fill="#ffffff"/>
+  <g transform="translate(750 0)" text-anchor="middle">
+    <text x="0" y="240" fill="#5C1010" font-family="Georgia, 'Times New Roman', Times, serif" font-size="96" font-weight="600" letter-spacing="11">BANNED BOOKS</text>
+    <line x1="-540" y1="290" x2="540" y2="290" stroke="#5C1010" stroke-width="3"/>
+    <text x="0" y="345" fill="#080808" font-family="Georgia, 'Times New Roman', Times, serif" font-size="24" font-weight="400" letter-spacing="7.5">INTERNATIONAL ARCHIVE OF CENSORED PUBLICATIONS</text>
+  </g>
+</svg>
