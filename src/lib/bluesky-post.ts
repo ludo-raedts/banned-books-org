@@ -76,6 +76,14 @@ function pickIndex(day: number, poolSize: number): number {
   return ((day * 7919) % poolSize + poolSize) % poolSize
 }
 
+// Notability gate: a book enters the pool if it has multiple recorded bans
+// (MIN_BANS) OR at least one non-US ban. This drops the long tail of single-
+// event US school removals (often niche/educational one-offs) while keeping
+// every international case — even single-ban ones — so the feed stays globally
+// varied rather than collapsing into US-only school-board bans (~91% if gated
+// on ban count alone; ~58% US with this hybrid).
+const MIN_BANS = 2
+
 /** Fetch the eligible book ids (postable + grounded ban context), id-ordered. */
 async function eligibleBookIds(): Promise<number[]> {
   const supabase = adminClient()
@@ -84,7 +92,7 @@ async function eligibleBookIds(): Promise<number[]> {
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, original_language, book_authors!inner(author_id)')
+      .select('id, book_authors!inner(author_id), bans(country_code)')
       .eq('is_gated', false)
       .eq('is_blanket_works', false)
       .not('cover_url', 'is', null)
@@ -93,8 +101,12 @@ async function eligibleBookIds(): Promise<number[]> {
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw new Error(`eligibleBookIds: ${error.message}`)
-    const rows = data ?? []
-    for (const r of rows) ids.push(Number((r as { id: number }).id))
+    const rows = (data ?? []) as Array<{ id: number; bans: Array<{ country_code: string | null }> | null }>
+    for (const r of rows) {
+      const bans = r.bans ?? []
+      const hasNonUs = bans.some(b => b.country_code && b.country_code !== 'US')
+      if (bans.length >= MIN_BANS || hasNonUs) ids.push(Number(r.id))
+    }
     if (rows.length < PAGE) break
   }
   // Dedup: the !inner join multiplies rows for multi-author books.
