@@ -91,19 +91,45 @@ export async function createPost(
   })
 }
 
+// Public AppView — no auth needed to read a profile's feed.
+const APPVIEW = 'https://public.api.bsky.app'
+
+type FeedItem = { post?: { uri?: string; record?: { createdAt?: string; text?: string }; embed?: { external?: { title?: string; thumb?: string } } } }
+
 /**
  * Latest post timestamp (ISO) on an account's feed, or null if none / on error.
  * Used as a same-day idempotency guard so a cron retry can't double-post.
  */
 export async function latestPostCreatedAt(handle: string): Promise<string | null> {
+  const posts = await getRecentPosts(handle, 1)
+  return posts[0]?.createdAt ?? null
+}
+
+export type RecentPost = { uri: string; webUrl: string; text: string; createdAt: string | null; cardTitle: string | null; thumb: string | null }
+
+/** Recent (non-reply) posts from a handle's feed, newest first. Empty on error. */
+export async function getRecentPosts(handle: string, limit = 15): Promise<RecentPost[]> {
   try {
     const res = await fetch(
-      `${PDS}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=1&filter=posts_no_replies`,
+      `${APPVIEW}/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=${limit}&filter=posts_no_replies`,
+      { cache: 'no-store' },
     )
-    if (!res.ok) return null
-    const j = (await res.json()) as { feed?: Array<{ post?: { record?: { createdAt?: string } } }> }
-    return j.feed?.[0]?.post?.record?.createdAt ?? null
+    if (!res.ok) return []
+    const j = (await res.json()) as { feed?: FeedItem[] }
+    return (j.feed ?? []).flatMap(item => {
+      const p = item.post
+      if (!p?.uri) return []
+      const rkey = p.uri.split('/').pop()
+      return [{
+        uri: p.uri,
+        webUrl: `https://bsky.app/profile/${handle}/post/${rkey}`,
+        text: p.record?.text ?? '',
+        createdAt: p.record?.createdAt ?? null,
+        cardTitle: p.embed?.external?.title ?? null,
+        thumb: p.embed?.external?.thumb ?? null,
+      }]
+    })
   } catch {
-    return null
+    return []
   }
 }
