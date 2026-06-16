@@ -15,6 +15,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'the-line-we-pretend-not-to-draw',
+    href: '/essays/the-line-we-pretend-not-to-draw',
+    title: 'The line we pretend not to draw',
+    dek: 'Every school library is already censored — someone always chooses. So the honest fight was never “ban or freedom.” It is who decides, by what standard, and what happens when they get it wrong. Why the line that matters is drawn by process, not by content.',
+    publishedAt: '2026-06-16',
+    readingTimeMin: 13,
+    relatedBookSlugs: ['night', 'the-handmaids-tale', '1984', 'the-bluest-eye', 'the-rape-of-nanking'],
+  },
+  {
     slug: 'in-whose-name',
     href: '/essays/in-whose-name',
     title: 'In whose name: the reasons people give for banning books',

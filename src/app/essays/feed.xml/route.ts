@@ -15,8 +15,10 @@ import { body as whatWeDocumentBody } from '@/lib/markdown-pages/what-we-documen
 import { body as forbiddenKnowledgeIcebergBody } from '@/lib/markdown-pages/forbidden-knowledge-iceberg'
 import { body as theGreyZoneBody } from '@/lib/markdown-pages/the-grey-zone'
 import { body as firstAmendmentParadoxBody } from '@/lib/markdown-pages/first-amendment-paradox'
+import { body as theLineWePretendNotToDrawBody } from '@/lib/markdown-pages/the-line-we-pretend-not-to-draw'
 
 const ESSAY_BODIES: Record<string, string> = {
+  'the-line-we-pretend-not-to-draw': theLineWePretendNotToDrawBody,
   'in-whose-name': inWhoseNameBody,
   'history': historyBody,
   'why-not-amazon': whyNotAmazonBody,

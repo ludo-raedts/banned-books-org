@@ -178,6 +178,8 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/essays/what-we-document.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/essays/forbidden-knowledge-iceberg.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/essays/the-grey-zone.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/first-amendment-paradox.md`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/essays/the-line-we-pretend-not-to-draw.md`, changefreq: 'monthly', priority: 0.5 },
   ]
 
   // Essay routes are derived from the registry so /essays index, sitemap, and

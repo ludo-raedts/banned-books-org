@@ -19,6 +19,8 @@ const BASE = 'https://www.banned-books.org'
 // neutral summary works better. Falls back to dek when a slug isn't listed
 // so newly-added essays don't disappear from /llms.txt until updated here.
 const ESSAY_DESCRIPTIONS: Record<string, string> = {
+  'the-line-we-pretend-not-to-draw':
+    'Why the "ban vs. age-appropriate selection" binary is a false choice, and why a legitimate removal is defined by process — transparency, consistent standards across viewpoints, judging the whole work, surviving appeal — not by content. Uses Iowa SF 496, Tennessee, and Germany\'s pluralistic index as cases.',
   'in-whose-name':
     'A data analysis of the stated reasons for banning books: how justifications stack, how the vocabulary shifted from "danger to the state" to "danger to the child" after 2000, and how the same book draws different reasons in different countries.',
   history:
