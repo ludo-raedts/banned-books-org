@@ -235,38 +235,76 @@ function TombstoneNotice() {
   )
 }
 
-// Prebuild EVERY indexable book page at build time. Previously only the top
-// 100 were prebuilt and the ~15.7k-strong long tail was generated cold on
-// first visit (ISR MISS → several Supabase queries per render). On 2026-06-16
-// a distributed scraper-swarm enumerated the sitemap's full slug list; every
-// hit was a cache MISS, so thousands of cold renders fired at the DB at once
-// and drained the PostgREST pool (Cloudflare 524 / Supabase 522). Prebuilding
-// the whole indexable set makes those crawls 100% CDN-HIT — they never reach
-// the DB. dynamicParams stays true, so a genuinely new book (added after the
-// build) still renders on first visit and is then ISR-cached; revalidate=3600
-// keeps prebuilt pages fresh via one background render per page per hour.
+// Prebuild the top-N most-banned book pages at build time.
 //
-// Scope mirrors sitemap-books.xml: not gated, not blanket-works (the pseudo-
-// books for Liste-Otto author-level bans, which 308 to the author anyway).
+// Background: the 2026-06-16 scraper-swarm enumerated the sitemap's full slug
+// list; every long-tail hit was a cold ISR MISS, so thousands of renders fired
+// at the DB at once and drained the PostgREST pool (Cloudflare 524 / Supabase
+// 522). The instinct was to prebuild the ENTIRE indexable set (~15.8k) so every
+// crawl is a CDN-HIT — and `next build` does that fine (16,056 pages in ~8.6
+// min). But Vercel's *deployment finalisation* (processing the prerendered
+// routes into the build output / routing config) overflows its call stack at
+// that route count ("Maximum call stack size exceeded", after the build itself
+// reports success). So the full long-tail prebuild is not deployable here.
+//
+// Platform-idiomatic design instead: prebuild the hot set (which is also the
+// only part that gets meaningful organic traffic), and defend the long tail
+// with the other two levers we already shipped — the per-render query count is
+// halved (~14→~7, see getBookBySlug + the reading-club membership cache), and a
+// crawl swarm is absorbed by the Cloudflare managed-challenge before it reaches
+// origin. dynamicParams stays true: any non-prebuilt slug still renders on
+// first visit (now cheap) and is ISR-cached for 24h thereafter.
+//
+// PREBUILD_LIMIT is well below the ~16k count that broke the Vercel deploy, so
+// the build is reliable. It can be raised cautiously, but each probe costs a
+// ~14-min build and risks the same finalisation crash.
+const PREBUILD_LIMIT = 2000
 export async function generateStaticParams() {
   const sb = adminClient()
-  const slugs: { slug: string }[] = []
+
+  // Rank books by ban-row count to pick the hot set. v_top_banned_books only
+  // holds 100 rows (it IS the top-100), so it can't drive a larger cap; instead
+  // tally the bans table directly. This is a raw-event count (PEN per-district
+  // listings inflate it — see the distinct-books doctrine), which is fine as a
+  // *prominence proxy for what to prebuild*, not as a public metric. Build-time
+  // only, runs once per deploy.
+  const counts = new Map<number, number>()
   let offset = 0
   for (;;) {
-    // .order('id') is load-bearing: without a stable sort, .range() pagination
-    // duplicates/skips rows once the table exceeds the page size.
+    // .order('id') keeps .range() pagination stable past the 1000-row page size.
+    const { data } = await sb
+      .from('bans')
+      .select('book_id')
+      .not('book_id', 'is', null)
+      .order('id', { ascending: true })
+      .range(offset, offset + 999)
+    if (!data || data.length === 0) break
+    for (const r of data as { book_id: number }[]) {
+      counts.set(r.book_id, (counts.get(r.book_id) ?? 0) + 1)
+    }
+    if (data.length < 1000) break
+    offset += 1000
+  }
+
+  const topIds = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, PREBUILD_LIMIT)
+    .map(([id]) => id)
+  if (topIds.length === 0) return []
+
+  // Resolve to slugs, excluding gated + blanket-works (pseudo-books for
+  // Liste-Otto author-level bans, which 308 to the author) — same exclusions
+  // as sitemap-books.xml. Paginated because .in() can exceed the 1000-row cap.
+  const slugs: { slug: string }[] = []
+  for (let i = 0; i < topIds.length; i += 1000) {
     const { data } = await sb
       .from('books')
       .select('slug')
       .eq('is_gated', false)
       .eq('is_blanket_works', false)
       .not('slug', 'is', null)
-      .order('id', { ascending: true })
-      .range(offset, offset + 999)
-    if (!data || data.length === 0) break
-    for (const r of data as { slug: string }[]) slugs.push({ slug: r.slug })
-    if (data.length < 1000) break
-    offset += 1000
+      .in('id', topIds.slice(i, i + 1000))
+    for (const r of (data ?? []) as { slug: string }[]) slugs.push({ slug: r.slug })
   }
   return slugs
 }
