@@ -156,3 +156,9 @@ next-env.d.ts
 /data/wiped-*-backup.csv
 # press-release source/draft material (local-only)
 /data/press-release-data-*
+
+# parallel-enrichment per-run artifacts (logs, manifest, before/after snapshots);
+# the coverage REPORT (data/enrichment-coverage-report-*.md) is committed, the
+# rollback backups stay local
+/data/enrich-run/
+/data/enrichment-rollback-*-backup.csv
