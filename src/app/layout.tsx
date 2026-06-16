@@ -162,8 +162,31 @@ export default function RootLayout({
                 </ul>
               </div>
             </nav>
-            <div className="mt-8 pt-4 border-t border-gray-100 text-gray-400">
+            <div className="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between gap-4 text-gray-400">
               <span>Banned Books — an open catalogue of censored literature</span>
+              <div className="flex items-center gap-4 shrink-0">
+                <a
+                  href="https://bsky.app/profile/banned-books.org"
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  aria-label="Banned Books on Bluesky — a banned book of the day"
+                  className="hover:text-gray-700 transition-colors"
+                >
+                  <svg viewBox="0 0 600 530" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                    <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.72 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.45-163.25-81.433C10.155 217.616 0 86.536 0 68.825c0-88.687 77.742-60.816 125.72-24.795z" />
+                  </svg>
+                </a>
+                <a
+                  href="/feed.xml"
+                  type="application/rss+xml"
+                  aria-label="RSS feed"
+                  className="hover:text-gray-700 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                    <path d="M4 11a9 9 0 0 1 9 9h-2.5A6.5 6.5 0 0 0 4 13.5V11zm0-5a14 14 0 0 1 14 14h-2.5A11.5 11.5 0 0 0 4 8.5V6zm1.5 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" />
+                  </svg>
+                </a>
+              </div>
             </div>
             <p className="mt-2 leading-relaxed text-gray-400">
               Some outbound book links may be affiliate links. They help support this project at no extra cost to you.
