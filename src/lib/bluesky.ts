@@ -94,7 +94,7 @@ export async function createPost(
 // Public AppView — no auth needed to read a profile's feed.
 const APPVIEW = 'https://public.api.bsky.app'
 
-type FeedItem = { post?: { uri?: string; record?: { createdAt?: string; text?: string }; embed?: { external?: { title?: string; thumb?: string } } } }
+type FeedItem = { post?: { uri?: string; record?: { createdAt?: string; text?: string }; embed?: { external?: { title?: string; thumb?: string } }; likeCount?: number; repostCount?: number; replyCount?: number; quoteCount?: number } }
 
 /**
  * Latest post timestamp (ISO) on an account's feed, or null if none / on error.
@@ -105,7 +105,7 @@ export async function latestPostCreatedAt(handle: string): Promise<string | null
   return posts[0]?.createdAt ?? null
 }
 
-export type RecentPost = { uri: string; webUrl: string; text: string; createdAt: string | null; cardTitle: string | null; thumb: string | null }
+export type RecentPost = { uri: string; webUrl: string; text: string; createdAt: string | null; cardTitle: string | null; thumb: string | null; likes: number; reposts: number; replies: number }
 
 /** Recent (non-reply) posts from a handle's feed, newest first. Empty on error. */
 export async function getRecentPosts(handle: string, limit = 15): Promise<RecentPost[]> {
@@ -127,6 +127,9 @@ export async function getRecentPosts(handle: string, limit = 15): Promise<Recent
         createdAt: p.record?.createdAt ?? null,
         cardTitle: p.embed?.external?.title ?? null,
         thumb: p.embed?.external?.thumb ?? null,
+        likes: p.likeCount ?? 0,
+        reposts: p.repostCount ?? 0,
+        replies: p.replyCount ?? 0,
       }]
     })
   } catch {

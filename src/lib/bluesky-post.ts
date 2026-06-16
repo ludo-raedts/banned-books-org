@@ -159,10 +159,18 @@ async function hydrate(id: number): Promise<DailyBook | null> {
 /** Pick the book of the day for the given date (defaults to today, UTC). */
 export async function pickDailyBook(dateYmd?: string): Promise<DailyBook | null> {
   const ymd = dateYmd ?? new Date().toISOString().slice(0, 10)
+  return (await pickForDates([ymd]))[0]
+}
+
+/**
+ * Pick the book for several dates at once — fetches the eligible-id list a
+ * single time and hydrates each day's pick (cheap vs. one id-scan per date).
+ * Used by the admin "upcoming" view. Returns one entry per input date, in order.
+ */
+export async function pickForDates(datesYmd: string[]): Promise<(DailyBook | null)[]> {
   const ids = await eligibleBookIds()
-  if (ids.length === 0) return null
-  const id = ids[pickIndex(dayNumber(ymd), ids.length)]
-  return hydrate(id)
+  if (ids.length === 0) return datesYmd.map(() => null)
+  return Promise.all(datesYmd.map(ymd => hydrate(ids[pickIndex(dayNumber(ymd), ids.length)])))
 }
 
 function graphemeLength(s: string): number {
@@ -188,7 +196,9 @@ export type BuiltPost = {
  * fits inside Bluesky's 300-grapheme limit.
  */
 export function buildPost(book: DailyBook): BuiltPost {
-  const url = `${SITE}/books/${book.slug}`
+  // The clickable target (facet + card) carries UTM so Bluesky traffic is
+  // attributable in our analytics; the displayed text stays clean (no query).
+  const url = `${SITE}/books/${book.slug}?utm_source=bluesky&utm_medium=social&utm_campaign=book-of-the-day`
   const display = `banned-books.org/books/${book.slug}`
   const yearPart = book.year ? ` (${book.year})` : ''
   const head = `📚 Banned book of the day\n\n${book.title} — ${book.author}${yearPart}`
