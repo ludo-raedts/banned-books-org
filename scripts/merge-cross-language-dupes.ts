@@ -28,8 +28,8 @@
  *   author merge: re-point book_authors (delete on PK clash), union awards,
  *                 enrich KEEP's language-NEUTRAL nulls only, author_slug_aliases
  *                 (DROP.slug→KEEP), DELETE DROP (CASCADE).
- *   NB: title_*/name_*/original_language/description_* are NEVER copied from a
- *   foreign DROP — they describe the translation, not the canonical work.
+ *   NB: title, name, original_language and description fields are NEVER copied
+ *   from a foreign DROP — they describe the translation, not the canonical work.
  * Whole run is ONE transaction under --apply. Idempotent: gone rows = no-op.
  *
  *   pnpm tsx --env-file=.env.local scripts/merge-cross-language-dupes.ts          # dry-run
@@ -92,7 +92,7 @@ const BOOK_ENRICH = ['first_published_year', 'isbn13', 'openlibrary_work_id',
 const AUTHOR_ENRICH = ['birth_year', 'death_year', 'birth_country', 'photo_url',
   'openlibrary_author_id'] as const
 
-/** Book merge: DROP → KEEP. nativeTitle carried explicitly (DROP.title is the native form). */
+/** Book merge: DROP → KEEP. Foreign DROP contributes only its ban + URL alias. */
 async function mergeBook(pg: Client, KEEP: number, DROP: number) {
   const keepRow = (await pg.query(`select * from books where id=$1`, [KEEP])).rows[0]
   const dropRow = (await pg.query(`select * from books where id=$1`, [DROP])).rows[0]
@@ -178,7 +178,7 @@ async function mergeAuthor(pg: Client, KEEP: number, DROP: number) {
     if (APPLY) await pg.query(`update authors set awards=$1 where id=$2`, [JSON.stringify(merged), KEEP])
   }
 
-  // 3. enrich KEEP nulls (KEEP-set wins) — this is how the native name reaches the canonical author.
+  // 3. enrich KEEP's language-NEUTRAL nulls only (dates/country/photo/IDs); never names.
   const enrich: Record<string, unknown> = {}
   for (const f of AUTHOR_ENRICH) if (keep[f] == null && drop[f] != null) enrich[f] = drop[f]
   if (Object.keys(enrich).length) {

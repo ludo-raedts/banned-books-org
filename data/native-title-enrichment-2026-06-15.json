@@ -1,0 +1,5412 @@
+{
+  "generatedAt": "2026-06-15",
+  "applied": true,
+  "proposals": [
+    {
+      "id": 840,
+      "title": "Theologico-Political Treatise",
+      "author": "Baruch Spinoza",
+      "lang": "la",
+      "qid": "Q970102",
+      "nativeTitle": "Tractatus theologico-politicus",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q970102"
+    },
+    {
+      "id": 866,
+      "title": "Goat Days",
+      "author": "Benyamin",
+      "lang": "ml",
+      "qid": "Q5575276",
+      "nativeTitle": "ആടുജീവിതം",
+      "script": "malayalam",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q5575276"
+    },
+    {
+      "id": 885,
+      "title": "Too Loud a Solitude",
+      "author": "Bohumil Hrabal",
+      "lang": "cs",
+      "qid": "Q2461792",
+      "nativeTitle": "Příliš hlučná samota",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2461792"
+    },
+    {
+      "id": 952,
+      "title": "Bread and Wine",
+      "author": "Ignazio Silone",
+      "lang": "it",
+      "qid": "Q4013723",
+      "nativeTitle": "Vino e pane",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q4013723"
+    },
+    {
+      "id": 6249,
+      "title": "The Tiananmen Papers",
+      "author": "Zhang Liang",
+      "lang": "zh",
+      "qid": "Q835967",
+      "nativeTitle": "天安门文件",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q835967"
+    },
+    {
+      "id": 6265,
+      "title": "Quotations from Chairman Mao Tse-tung",
+      "author": "Mao Zedong",
+      "lang": "zh",
+      "qid": "Q36393",
+      "nativeTitle": "毛主席语录",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q36393"
+    },
+    {
+      "id": 6416,
+      "title": "Gone with the Wind",
+      "author": "Margaret Mitchell",
+      "lang": "fr",
+      "qid": "Q2870",
+      "nativeTitle": "Autant en emporte le vent",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2870"
+    },
+    {
+      "id": 16980,
+      "title": "Risale-i Nur",
+      "author": "Said Nursi",
+      "lang": "tr",
+      "qid": "Q1718830",
+      "nativeTitle": "Risale-i Nur Kulliyatı",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1718830"
+    },
+    {
+      "id": 96,
+      "title": "The House of the Spirits",
+      "author": "Isabel Allende",
+      "lang": "es",
+      "qid": "Q1168267",
+      "nativeTitle": "La casa de los espíritus",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1168267"
+    },
+    {
+      "id": 158,
+      "title": "A Feast for the Seaweeds",
+      "author": "Haidar Haidar",
+      "lang": "ar",
+      "qid": "Q12251298",
+      "nativeTitle": "وليمة لأعشاب البحر",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q12251298"
+    },
+    {
+      "id": 591,
+      "title": "The Blind Owl",
+      "author": "Sadeq Hedayat",
+      "lang": "fa",
+      "qid": "Q1211660",
+      "nativeTitle": "بوف کور",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1211660"
+    },
+    {
+      "id": 733,
+      "title": "Touba and the Meaning of Night",
+      "author": "Shahrnush Parsipur",
+      "lang": "fa",
+      "qid": "Q17014219",
+      "nativeTitle": "طوبا و معنای شب",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q17014219"
+    },
+    {
+      "id": 57,
+      "title": "The Master and Margarita",
+      "author": "Mikhail Bulgakov",
+      "lang": "ru",
+      "qid": "Q188538",
+      "nativeTitle": "Мастер и Маргарита",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q188538"
+    },
+    {
+      "id": 86,
+      "title": "One Day in the Life of Ivan Denisovich",
+      "author": "Aleksandr Solzhenitsyn",
+      "lang": "ru",
+      "qid": "Q27321",
+      "nativeTitle": "Один день Ивана Денисовича",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q27321"
+    },
+    {
+      "id": 97,
+      "title": "The War of the End of the World",
+      "author": "Mario Vargas Llosa",
+      "lang": "es",
+      "qid": "Q1194969",
+      "nativeTitle": "La Guerra Del Fin Del Mundo",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1194969"
+    },
+    {
+      "id": 103,
+      "title": "Children of the Alley",
+      "author": "Naguib Mahfouz",
+      "lang": "ar",
+      "qid": "Q2275911",
+      "nativeTitle": "أولاد حارتنا",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q2275911"
+    },
+    {
+      "id": 104,
+      "title": "To Live",
+      "author": "Yu Hua",
+      "lang": "zh",
+      "qid": "Q151919",
+      "nativeTitle": "活着",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q151919"
+    },
+    {
+      "id": 105,
+      "title": "Red Sorghum",
+      "author": "Mo Yan",
+      "lang": "zh",
+      "qid": "Q1766205",
+      "nativeTitle": "红高粱家族",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1766205"
+    },
+    {
+      "id": 112,
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "lang": "pt",
+      "qid": "Q179021",
+      "nativeTitle": "O Alquimista",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q179021"
+    },
+    {
+      "id": 146,
+      "title": "Soul Mountain",
+      "author": "Gao Xingjian",
+      "lang": "zh",
+      "qid": "Q1760054",
+      "nativeTitle": "靈山",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1760054"
+    },
+    {
+      "id": 157,
+      "title": "How to Read Donald Duck",
+      "author": "Ariel Dorfman",
+      "lang": "es",
+      "qid": "Q5918732",
+      "nativeTitle": "Para leer al Pato Donald",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q5918732"
+    },
+    {
+      "id": 161,
+      "title": "Hind Swaraj",
+      "author": "Mahatma Gandhi",
+      "lang": "gu",
+      "qid": "Q4996905",
+      "nativeTitle": "હિંદ સ્વરાજ",
+      "script": "gujarati",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q4996905"
+    },
+    {
+      "id": 164,
+      "title": "Shanghai Baby",
+      "author": "Wei Hui",
+      "lang": "zh",
+      "qid": "Q976946",
+      "nativeTitle": "上海宝贝",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q976946"
+    },
+    {
+      "id": 168,
+      "title": "Dream of Ding Village",
+      "author": "Yan Lianke",
+      "lang": "zh",
+      "qid": "Q2606475",
+      "nativeTitle": "丁庄梦",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q2606475"
+    },
+    {
+      "id": 172,
+      "title": "Will the Boat Sink the Water",
+      "author": "Chen Guidi",
+      "lang": "zh",
+      "qid": "Q230319",
+      "nativeTitle": "中國農民調查",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q230319"
+    },
+    {
+      "id": 174,
+      "title": "The Hive",
+      "author": "Camilo José Cela",
+      "lang": "es",
+      "qid": "Q3212510",
+      "nativeTitle": "La colmena",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3212510"
+    },
+    {
+      "id": 190,
+      "title": "Mother Courage and Her Children",
+      "author": "Bertolt Brecht",
+      "lang": "de",
+      "qid": "Q62407",
+      "nativeTitle": "Mutter Courage und ihre Kinder",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q62407"
+    },
+    {
+      "id": 575,
+      "title": "Life and Fate",
+      "author": "Vasily Grossman",
+      "lang": "ru",
+      "qid": "Q979609",
+      "nativeTitle": "Жизнь и судьба",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q979609"
+    },
+    {
+      "id": 584,
+      "title": "Heart of a Dog",
+      "author": "Mikhail Bulgakov",
+      "lang": "ru",
+      "qid": "Q1345004",
+      "nativeTitle": "Собачье сердце",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1345004"
+    },
+    {
+      "id": 585,
+      "title": "The White Guard",
+      "author": "Mikhail Bulgakov",
+      "lang": "ru",
+      "qid": "Q1219874",
+      "nativeTitle": "Белая гвардия",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1219874"
+    },
+    {
+      "id": 586,
+      "title": "The First Circle",
+      "author": "Aleksandr Solzhenitsyn",
+      "lang": "ru",
+      "qid": "Q599585",
+      "nativeTitle": "В круге первом",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q599585"
+    },
+    {
+      "id": 609,
+      "title": "My Name Is Red",
+      "author": "Orhan Pamuk",
+      "lang": "tr",
+      "qid": "Q470464",
+      "nativeTitle": "Benim Adım Kırmızı",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q470464"
+    },
+    {
+      "id": 611,
+      "title": "The Bastard of Istanbul",
+      "author": "Elif Şafak",
+      "lang": "tr",
+      "qid": "Q3821400",
+      "nativeTitle": "Baba ve Piç",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3821400"
+    },
+    {
+      "id": 621,
+      "title": "Girls of Riyadh",
+      "author": "Rajaa Alsanea",
+      "lang": "ar",
+      "qid": "Q4120154",
+      "nativeTitle": "بنات الرياض",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q4120154"
+    },
+    {
+      "id": 638,
+      "title": "Embers",
+      "author": "Sándor Márai",
+      "lang": "hu",
+      "qid": "Q366726",
+      "nativeTitle": "A gyertyák csonkig égnek",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q366726"
+    },
+    {
+      "id": 640,
+      "title": "The Case Worker",
+      "author": "György Konrád",
+      "lang": "hu",
+      "qid": "Q135843273",
+      "nativeTitle": "A látogató",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q135843273"
+    },
+    {
+      "id": 642,
+      "title": "Blue Lard",
+      "author": "Vladimir Sorokin",
+      "lang": "ru",
+      "qid": "Q4142541",
+      "nativeTitle": "Голубое сало",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q4142541"
+    },
+    {
+      "id": 651,
+      "title": "Dialogue Concerning the Two Chief World Systems",
+      "author": "Galileo Galilei",
+      "lang": "it",
+      "qid": "Q1768303",
+      "nativeTitle": "Dialogo Doue ne i congreſſi di quattro giornate ſi discorre ſopra i due massimi sistemi del mondo Tolemaico, e Copernicappellano",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1768303"
+    },
+    {
+      "id": 652,
+      "title": "Meditations on First Philosophy",
+      "author": "René Descartes",
+      "lang": "la",
+      "qid": "Q605790",
+      "nativeTitle": "Meditationes de prima philosophia",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q605790"
+    },
+    {
+      "id": 663,
+      "title": "Book of Songs",
+      "author": "Heinrich Heine",
+      "lang": "de",
+      "qid": "Q24052907",
+      "nativeTitle": "Buch der Lieder",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q24052907"
+    },
+    {
+      "id": 664,
+      "title": "Three Comrades",
+      "author": "Erich Maria Remarque",
+      "lang": "de",
+      "qid": "Q1257081",
+      "nativeTitle": "Drei Kameraden",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1257081"
+    },
+    {
+      "id": 666,
+      "title": "The World of Yesterday",
+      "author": "Stefan Zweig",
+      "lang": "de",
+      "qid": "Q1217507",
+      "nativeTitle": "Die Welt von Gestern",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1217507"
+    },
+    {
+      "id": 667,
+      "title": "Round Heads and Pointed Heads",
+      "author": "Bertolt Brecht",
+      "lang": "de",
+      "qid": "Q116777435",
+      "nativeTitle": "Die Rundköpfe und die Spitzköpfe",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q116777435"
+    },
+    {
+      "id": 668,
+      "title": "Masses Man",
+      "author": "Ernst Toller",
+      "lang": "de",
+      "qid": "Q1669407",
+      "nativeTitle": "Masse Mensch",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1669407"
+    },
+    {
+      "id": 692,
+      "title": "The Land of Green Plums",
+      "author": "Herta Müller",
+      "lang": "de",
+      "qid": "Q1615525",
+      "nativeTitle": "Herztier",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1615525"
+    },
+    {
+      "id": 694,
+      "title": "The Garden Party",
+      "author": "Václav Havel",
+      "lang": "cs",
+      "qid": "Q3645585",
+      "nativeTitle": "Zahradní slavnost",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3645585"
+    },
+    {
+      "id": 697,
+      "title": "The Book of Laughter and Forgetting",
+      "author": "Milan Kundera",
+      "lang": "cs",
+      "qid": "Q2723517",
+      "nativeTitle": "Kniha smíchu a zapomnění",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2723517"
+    },
+    {
+      "id": 703,
+      "title": "The Wonderful Years",
+      "author": "Reiner Kunze",
+      "lang": "de",
+      "qid": "Q1219910",
+      "nativeTitle": "Die wunderbaren Jahre",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1219910"
+    },
+    {
+      "id": 709,
+      "title": "Three Trapped Tigers",
+      "author": "Guillermo Cabrera Infante",
+      "lang": "es",
+      "qid": "Q3540053",
+      "nativeTitle": "Tres tristes tigres",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3540053"
+    },
+    {
+      "id": 710,
+      "title": "Before Night Falls",
+      "author": "Reinaldo Arenas",
+      "lang": "es",
+      "qid": "Q15094143",
+      "nativeTitle": "Antes que anochezca",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q15094143"
+    },
+    {
+      "id": 711,
+      "title": "The Palace of the White Skunks",
+      "author": "Reinaldo Arenas",
+      "lang": "es",
+      "qid": "Q7126281",
+      "nativeTitle": "El palacio de las blanquísimas mofetas",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q7126281"
+    },
+    {
+      "id": 715,
+      "title": "The Gospel According to Jesus Christ",
+      "author": "José Saramago",
+      "lang": "pt",
+      "qid": "Q1351463",
+      "nativeTitle": "O Evangelho segundo Jesus Cristo",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1351463"
+    },
+    {
+      "id": 732,
+      "title": "Haji Agha",
+      "author": "Sadegh Hedayat",
+      "lang": "fa",
+      "qid": "Q5678538",
+      "nativeTitle": "حاجی آقا",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q5678538"
+    },
+    {
+      "id": 737,
+      "title": "Beijing Coma",
+      "author": "Ma Jian",
+      "lang": "zh",
+      "qid": "Q4881114",
+      "nativeTitle": "北京植物人",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q4881114"
+    },
+    {
+      "id": 744,
+      "title": "Epitaphios",
+      "author": "Yannis Ritsos",
+      "lang": "el",
+      "qid": "Q1347431",
+      "nativeTitle": "Επιτάφιος",
+      "script": "greek",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1347431"
+    },
+    {
+      "id": 745,
+      "title": "Axion Esti",
+      "author": "Odysseas Elytis",
+      "lang": "el",
+      "qid": "Q47467255",
+      "nativeTitle": "Το Άξιον Εστί",
+      "script": "greek",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q47467255"
+    },
+    {
+      "id": 751,
+      "title": "The Dwarf",
+      "author": "Cho Se-hui",
+      "lang": "ko",
+      "qid": "Q7731270",
+      "nativeTitle": "난장이가 쏘아올린 작은 공",
+      "script": "hangul",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q7731270"
+    },
+    {
+      "id": 769,
+      "title": "Christ Stopped at Eboli",
+      "author": "Carlo Levi",
+      "lang": "it",
+      "qid": "Q1087239",
+      "nativeTitle": "Cristo si è fermato a Eboli",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1087239"
+    },
+    {
+      "id": 770,
+      "title": "The Moon and the Bonfires",
+      "author": "Cesare Pavese",
+      "lang": "it",
+      "qid": "Q3822884",
+      "nativeTitle": "La luna e i falò",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3822884"
+    },
+    {
+      "id": 777,
+      "title": "Don Quixote",
+      "author": "Miguel de Cervantes",
+      "lang": "es",
+      "qid": "Q480",
+      "nativeTitle": "Don Quijote de la Mancha",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q480"
+    },
+    {
+      "id": 787,
+      "title": "The Death of Artemio Cruz",
+      "author": "Carlos Fuentes",
+      "lang": "es",
+      "qid": "Q2030203",
+      "nativeTitle": "La muerte de Artemio Cruz",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2030203"
+    },
+    {
+      "id": 804,
+      "title": "The General in His Labyrinth",
+      "author": "Gabriel García Márquez",
+      "lang": "es",
+      "qid": "Q1193847",
+      "nativeTitle": "El general en su laberinto",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1193847"
+    },
+    {
+      "id": 820,
+      "title": "Conversations in Sicily",
+      "author": "Elio Vittorini",
+      "lang": "it",
+      "qid": "Q584423",
+      "nativeTitle": "Conversazione in Sicilia",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q584423"
+    },
+    {
+      "id": 823,
+      "title": "Gypsy Ballads",
+      "author": "Federico García Lorca",
+      "lang": "es",
+      "qid": "Q584556",
+      "nativeTitle": "Romancero gitano",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q584556"
+    },
+    {
+      "id": 825,
+      "title": "The Tragic Sense of Life",
+      "author": "Miguel de Unamuno",
+      "lang": "es",
+      "qid": "Q3227098",
+      "nativeTitle": "Del sentimiento trágico de la vida",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3227098"
+    },
+    {
+      "id": 827,
+      "title": "Marks of Identity",
+      "author": "Juan Goytisolo",
+      "lang": "es",
+      "qid": "Q2276058",
+      "nativeTitle": "Señas de identidad",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2276058"
+    },
+    {
+      "id": 833,
+      "title": "The Palace of Dreams",
+      "author": "Ismail Kadare",
+      "lang": "sq",
+      "qid": "Q1647139",
+      "nativeTitle": "Pallati i ëndrrave",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1647139"
+    },
+    {
+      "id": 834,
+      "title": "The General of the Dead Army",
+      "author": "Ismail Kadare",
+      "lang": "sq",
+      "qid": "Q2334830",
+      "nativeTitle": "Gjenerali i ushtrisë së vdekur",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q2334830"
+    },
+    {
+      "id": 836,
+      "title": "My Happy Days in Hell",
+      "author": "György Faludy",
+      "lang": "hu",
+      "qid": "Q47259132",
+      "nativeTitle": "Pokolbéli víg napjaim",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q47259132"
+    },
+    {
+      "id": 844,
+      "title": "The Philosophy of the Teachings of Islam",
+      "author": "Mirza Ghulam Ahmad",
+      "lang": "ur",
+      "qid": "Q7756940",
+      "nativeTitle": "اسلامی اصول کی فلاسفی",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q7756940"
+    },
+    {
+      "id": 853,
+      "title": "Paradise of the Blind",
+      "author": "Dương Thu Hương",
+      "lang": "vi",
+      "qid": "Q7134400",
+      "nativeTitle": "Những thiên đường mù",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q7134400"
+    },
+    {
+      "id": 856,
+      "title": "House of Glass",
+      "author": "Pramoedya Ananta Toer",
+      "lang": "id",
+      "qid": "Q42185205",
+      "nativeTitle": "Rumah Kaca",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q42185205"
+    },
+    {
+      "id": 860,
+      "title": "We Killed Mangy-Dog and Other Stories",
+      "author": "Luís Bernardo Honwana",
+      "lang": "pt",
+      "qid": "Q7977634",
+      "nativeTitle": "Nós Matámos o Cão-Tinhoso",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q7977634"
+    },
+    {
+      "id": 876,
+      "title": "Looking on Darkness",
+      "author": "André Brink",
+      "lang": "af",
+      "qid": "Q25217822",
+      "nativeTitle": "Kennis van die aand",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q25217822"
+    },
+    {
+      "id": 884,
+      "title": "The Joke",
+      "author": "Milan Kundera",
+      "lang": "cs",
+      "qid": "Q1156065",
+      "nativeTitle": "Žert",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1156065"
+    },
+    {
+      "id": 886,
+      "title": "The Memorandum",
+      "author": "Václav Havel",
+      "lang": "cs",
+      "qid": "Q7750966",
+      "nativeTitle": "Vyrozumění",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q7750966"
+    },
+    {
+      "id": 887,
+      "title": "Nadirs",
+      "author": "Herta Müller",
+      "lang": "de",
+      "qid": "Q1988700",
+      "nativeTitle": "Niederungen",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1988700"
+    },
+    {
+      "id": 890,
+      "title": "In Praise of Hatred",
+      "author": "Khaled Khalifa",
+      "lang": "ar",
+      "qid": "Q20423881",
+      "nativeTitle": "مديح الكراهية",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q20423881"
+    },
+    {
+      "id": 892,
+      "title": "My Uncle Napoleon",
+      "author": "Iraj Pezeshkzad",
+      "lang": "fa",
+      "qid": "Q3119212",
+      "nativeTitle": "دایی جان ناپلئون",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q3119212"
+    },
+    {
+      "id": 895,
+      "title": "The Foundation Pit",
+      "author": "Andrei Platonov",
+      "lang": "ru",
+      "qid": "Q4236059",
+      "nativeTitle": "Котлован",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q4236059"
+    },
+    {
+      "id": 903,
+      "title": "Memed, My Hawk",
+      "author": "Yaşar Kemal",
+      "lang": "tr",
+      "qid": "Q1919989",
+      "nativeTitle": "İnce Memed",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1919989"
+    },
+    {
+      "id": 906,
+      "title": "Zinky Boys",
+      "author": "Svetlana Alexievich",
+      "lang": "ru",
+      "qid": "Q21078219",
+      "nativeTitle": "Цинковые мальчики",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q21078219"
+    },
+    {
+      "id": 907,
+      "title": "Voices from Chernobyl",
+      "author": "Svetlana Alexievich",
+      "lang": "ru",
+      "qid": "Q7939693",
+      "nativeTitle": "Чернобыльская молитва",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q7939693"
+    },
+    {
+      "id": 911,
+      "title": "Oromay",
+      "author": "Bealu Girma",
+      "lang": "am",
+      "qid": "Q7103761",
+      "nativeTitle": "ኦሮማይ",
+      "script": "ethiopic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q7103761"
+    },
+    {
+      "id": 913,
+      "title": "Serve the People!",
+      "author": "Yan Lianke",
+      "lang": "zh",
+      "qid": "Q10877419",
+      "nativeTitle": "为人民服务",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q10877419"
+    },
+    {
+      "id": 914,
+      "title": "Kolyma Tales",
+      "author": "Varlam Shalamov",
+      "lang": "ru",
+      "qid": "Q138508365",
+      "nativeTitle": "Колымские рассказы",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q138508365"
+    },
+    {
+      "id": 926,
+      "title": "The Incoherence of the Incoherence",
+      "author": "Ibn Rushd (Averroës)",
+      "lang": "ar",
+      "qid": "Q3675181",
+      "nativeTitle": "تهافت التهافت",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q3675181"
+    },
+    {
+      "id": 927,
+      "title": "The Winter Queen",
+      "author": "Boris Akunin",
+      "lang": "ru",
+      "qid": "Q2631397",
+      "nativeTitle": "Азазель",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q2631397"
+    },
+    {
+      "id": 928,
+      "title": "Metro 2033",
+      "author": "Dmitry Glukhovsky",
+      "lang": "ru",
+      "qid": "Q916423",
+      "nativeTitle": "Метро 2033",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q916423"
+    },
+    {
+      "id": 929,
+      "title": "Captains of the Sands",
+      "author": "Jorge Amado",
+      "lang": "pt",
+      "qid": "Q154766",
+      "nativeTitle": "Capitães da Areia",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q154766"
+    },
+    {
+      "id": 941,
+      "title": "The Fat Years",
+      "author": "Chan Koonchung",
+      "lang": "zh",
+      "qid": "Q7733522",
+      "nativeTitle": "盛世 中國 2013年",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q7733522"
+    },
+    {
+      "id": 947,
+      "title": "Hopscotch",
+      "author": "Julio Cortázar",
+      "lang": "es",
+      "qid": "Q1755351",
+      "nativeTitle": "Rayuela",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1755351"
+    },
+    {
+      "id": 948,
+      "title": "Kiss of the Spider Woman",
+      "author": "Manuel Puig",
+      "lang": "es",
+      "qid": "Q646668",
+      "nativeTitle": "El beso de la mujer araña",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q646668"
+    },
+    {
+      "id": 949,
+      "title": "Kobzar",
+      "author": "Taras Shevchenko",
+      "lang": "uk",
+      "qid": "Q2658157",
+      "nativeTitle": "Кобзар",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q2658157"
+    },
+    {
+      "id": 957,
+      "title": "They Burn the Thistles",
+      "author": "Yaşar Kemal",
+      "lang": "tr",
+      "qid": "Q16956332",
+      "nativeTitle": "İnce Memed II",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q16956332"
+    },
+    {
+      "id": 974,
+      "title": "All the Kremlin's Men",
+      "author": "Mikhail Zygar",
+      "lang": "ru",
+      "qid": "Q116962530",
+      "nativeTitle": "Vsi︠a︡ kremlevskai︠a︡ ratʹ",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q116962530"
+    },
+    {
+      "id": 975,
+      "title": "The Turkish Gambit",
+      "author": "Boris Akunin",
+      "lang": "ru",
+      "qid": "Q1886719",
+      "nativeTitle": "Турецкий гамбит",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1886719"
+    },
+    {
+      "id": 977,
+      "title": "Wuhan Diary",
+      "author": "Fang Fang",
+      "lang": "zh",
+      "qid": "Q91452788",
+      "nativeTitle": "武汉日记",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q91452788"
+    },
+    {
+      "id": 1010,
+      "title": "The Interpretation of Dreams",
+      "author": "Sigmund Freud",
+      "lang": "de",
+      "qid": "Q726382",
+      "nativeTitle": "Die Traumdeutung",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q726382"
+    },
+    {
+      "id": 1085,
+      "title": "The Global Trap",
+      "author": "Hans-Peter Martin",
+      "lang": "de",
+      "qid": "Q1213076",
+      "nativeTitle": "Die Globalisierungsfalle",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1213076"
+    },
+    {
+      "id": 1630,
+      "title": "Steppenwolf",
+      "author": "Hermann Hesse",
+      "lang": "de",
+      "qid": "Q217073",
+      "nativeTitle": "Der Steppenwolf",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q217073"
+    },
+    {
+      "id": 3596,
+      "title": "And Quiet Flows the Don",
+      "author": "Mikhail Sholokhov",
+      "lang": "ru",
+      "qid": "Q75840",
+      "nativeTitle": "Тихий Дон",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q75840"
+    },
+    {
+      "id": 6221,
+      "title": "The Sorrow of War",
+      "author": "Bảo Ninh",
+      "lang": "vi",
+      "qid": "Q5224283",
+      "nativeTitle": "Thân phận của tình yêu",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q5224283"
+    },
+    {
+      "id": 6230,
+      "title": "The New Class",
+      "author": "Milovan Đilas",
+      "lang": "sr",
+      "qid": "Q7753547",
+      "nativeTitle": "Nova klasa (knjiga)",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q7753547"
+    },
+    {
+      "id": 6232,
+      "title": "Dialogo sopra i due massimi sistemi del mondo",
+      "author": "Galileo Galilei",
+      "lang": "it",
+      "qid": "Q1768303",
+      "nativeTitle": "Dialogo Doue ne i congreſſi di quattro giornate ſi discorre ſopra i due massimi sistemi del mondo Tolemaico, e Copernicappellano",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1768303"
+    },
+    {
+      "id": 6242,
+      "title": "Norwegian Wood",
+      "author": "Haruki Murakami",
+      "lang": "ja",
+      "qid": "Q751348",
+      "nativeTitle": "ノルウェイの森",
+      "script": "katakana",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q751348"
+    },
+    {
+      "id": 6246,
+      "title": "Yellow Peril",
+      "author": "Wang Lixiong",
+      "lang": "zh",
+      "qid": "Q16924726",
+      "nativeTitle": "黄禍",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q16924726"
+    },
+    {
+      "id": 6247,
+      "title": "One Man's Bible",
+      "author": "Gao Xingjian",
+      "lang": "zh",
+      "qid": "Q390176",
+      "nativeTitle": "213234412",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q390176"
+    },
+    {
+      "id": 6248,
+      "title": "How the Red Sun Rose",
+      "author": "Gao Hua",
+      "lang": "zh",
+      "qid": "Q60996446",
+      "nativeTitle": "紅太陽是怎樣升起的",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q60996446"
+    },
+    {
+      "id": 6255,
+      "title": "One Part Woman",
+      "author": "Perumal Murugan",
+      "lang": "ta",
+      "qid": "Q19894906",
+      "nativeTitle": "மாதொருபாகன்",
+      "script": "tamil",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q19894906"
+    },
+    {
+      "id": 6262,
+      "title": "Emil and the Detectives",
+      "author": "Erich Kästner",
+      "lang": "de",
+      "qid": "Q19746010",
+      "nativeTitle": "Emil und die Detektive",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q19746010"
+    },
+    {
+      "id": 6264,
+      "title": "The Radetzky March",
+      "author": "Joseph Roth",
+      "lang": "de",
+      "qid": "Q610428",
+      "nativeTitle": "Radetzkymarsch",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q610428"
+    },
+    {
+      "id": 6367,
+      "title": "The Spanish Labyrinth",
+      "author": "Gerald Brenan",
+      "lang": "es",
+      "qid": "Q3534845",
+      "nativeTitle": "El laberinto español",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q3534845"
+    },
+    {
+      "id": 6395,
+      "title": "One Day of Life",
+      "author": "Manlio Argueta",
+      "lang": "es",
+      "qid": "Q17013025",
+      "nativeTitle": "Un día en la vida",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q17013025"
+    },
+    {
+      "id": 7347,
+      "title": "My Gun Is Quick",
+      "author": "Mickey Spillane",
+      "lang": "ru",
+      "qid": "Q6945600",
+      "nativeTitle": "Мой револьвер быстр",
+      "script": "cyrillic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q6945600"
+    },
+    {
+      "id": 7354,
+      "title": "The Poverty of Philosophy",
+      "author": "Karl Marx",
+      "lang": "fr",
+      "qid": "Q1167658",
+      "nativeTitle": "Misère de la philosophie",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q1167658"
+    },
+    {
+      "id": 7374,
+      "title": "Përbindëshi",
+      "author": "Ismail Kadare",
+      "lang": "sq",
+      "qid": "Q11825458",
+      "nativeTitle": "Përbindëshi (Roman)",
+      "script": "latin",
+      "needsTransliteration": false,
+      "source": "https://www.wikidata.org/wiki/Q11825458"
+    },
+    {
+      "id": 7447,
+      "title": "The Zahir",
+      "author": "Paulo Coelho",
+      "lang": "fa",
+      "qid": "Q1474612",
+      "nativeTitle": "زهیر",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1474612"
+    },
+    {
+      "id": 7459,
+      "title": "The Gods Laugh on Mondays",
+      "author": "Reza Khoshnazar",
+      "lang": "fa",
+      "qid": "Q20987809",
+      "nativeTitle": "و خدایان دوشنبه‌ها می‌خندند",
+      "script": "arabic",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q20987809"
+    },
+    {
+      "id": 10334,
+      "title": "Capitalism",
+      "author": "Anonymous",
+      "lang": "zh",
+      "qid": "Q1074682",
+      "nativeTitle": "資本主義、社會主義與民主",
+      "script": "han",
+      "needsTransliteration": true,
+      "source": "https://www.wikidata.org/wiki/Q1074682"
+    }
+  ],
+  "unconfirmed": [
+    {
+      "id": 7327,
+      "title": "Quran",
+      "author": "Unknown",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q428",
+        "Q18563360",
+        "Q132834",
+        "Q3595924",
+        "Q5949151",
+        "Q188219",
+        "Q2370897"
+      ]
+    },
+    {
+      "id": 605,
+      "title": "The Sorrows of Young Werther",
+      "author": "Johann Wolfgang von Goethe",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q151883",
+        "Q139878849",
+        "Q1214365",
+        "Q117156777",
+        "Q47852074"
+      ]
+    },
+    {
+      "id": 861,
+      "title": "A Banquet for Seaweed",
+      "author": "Haidar Haidar",
+      "lang": "ar",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 870,
+      "title": "Rangila Rasul",
+      "author": "M.A. Chamupati",
+      "lang": "hi",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7292833"
+      ]
+    },
+    {
+      "id": 6438,
+      "title": "Sex",
+      "author": "Madonna",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10525",
+        "Q44148",
+        "Q101208452",
+        "Q290",
+        "Q5873",
+        "Q98040930",
+        "Q43445"
+      ]
+    },
+    {
+      "id": 95,
+      "title": "Canto General",
+      "author": "Pablo Neruda",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1033840",
+        "Q5033848",
+        "Q5747857",
+        "Q1033833",
+        "Q138676654"
+      ]
+    },
+    {
+      "id": 151,
+      "title": "Lysistrata",
+      "author": "Aristophanes",
+      "lang": "el",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q55109467",
+        "Q753907",
+        "Q157705",
+        "Q6710250",
+        "Q83758109",
+        "Q21198600",
+        "Q109650806"
+      ]
+    },
+    {
+      "id": 160,
+      "title": "23 Years: A Study of the Prophetic Career of Mohammad",
+      "author": "Ali Dashti",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 620,
+      "title": "Fractured Destinies",
+      "author": "Rabai al-Madhoun",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q136145572"
+      ]
+    },
+    {
+      "id": 624,
+      "title": "The Hidden Face of Eve",
+      "author": "Nawal El Saadawi",
+      "lang": "ar",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 768,
+      "title": "The House of Bernarda Alba",
+      "author": "Federico García Lorca",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q822850",
+        "Q5966029",
+        "Q7740585",
+        "Q60777818",
+        "Q63248578",
+        "Q64526320",
+        "Q63119560"
+      ]
+    },
+    {
+      "id": 771,
+      "title": "Fontamara",
+      "author": "Ignazio Silone",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3747310",
+        "Q1435803",
+        "Q56483429",
+        "Q17623871",
+        "Q121940112",
+        "Q65568257",
+        "Q65568262"
+      ]
+    },
+    {
+      "id": 821,
+      "title": "Agostino",
+      "author": "Alberto Moravia",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q18645188",
+        "Q18645215",
+        "Q108572682",
+        "Q108485318",
+        "Q113017561",
+        "Q296796",
+        "Q316269"
+      ]
+    },
+    {
+      "id": 838,
+      "title": "Ars Amatoria",
+      "author": "Ovid",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q704019",
+        "Q12721005",
+        "Q57511887",
+        "Q57512909",
+        "Q3202369"
+      ]
+    },
+    {
+      "id": 954,
+      "title": "I, the Supreme",
+      "author": "Augusto Roa Bastos",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6341,
+      "title": "My Secret Garden",
+      "author": "Nancy Friday",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q6035032",
+        "Q6946355",
+        "Q125021203",
+        "Q139392549",
+        "Q135908929",
+        "Q108918025",
+        "Q110529177"
+      ]
+    },
+    {
+      "id": 6451,
+      "title": "Women on Top",
+      "author": "Nancy Friday",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q106978094",
+        "Q8031621",
+        "Q40382016",
+        "Q39214010"
+      ]
+    },
+    {
+      "id": 10720,
+      "title": "Lenin",
+      "author": "Ngai Ming Chi",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1394",
+        "Q656",
+        "Q3830179",
+        "Q27621",
+        "Q518626",
+        "Q2191",
+        "Q19454631"
+      ]
+    },
+    {
+      "id": 11050,
+      "title": "Origin of Family, Private Property and State",
+      "author": "Friedrich Engels",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 11255,
+      "title": "Aspects of China's Anti- Japanese Struggle",
+      "author": "Mao Zedong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 16316,
+      "title": "Main basse sur le Cameroun",
+      "author": "Mongo Béti",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42192569"
+      ]
+    },
+    {
+      "id": 16734,
+      "title": "Luuanda",
+      "author": "José Luandino Vieira",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10321103"
+      ]
+    },
+    {
+      "id": 180,
+      "title": "The Fugitive",
+      "author": "Pramoedya Ananta Toer",
+      "lang": "id",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q137034",
+        "Q156309",
+        "Q140044112",
+        "Q1618982",
+        "Q3794037",
+        "Q2537394",
+        "Q3648433",
+        "Q2917380",
+        "Q28453403",
+        "Q5507262",
+        "Q48626354",
+        "Q97367411"
+      ]
+    },
+    {
+      "id": 580,
+      "title": "Siddhartha",
+      "author": "Hermann Hesse",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5936052",
+        "Q457289",
+        "Q9441",
+        "Q104141867",
+        "Q1815339",
+        "Q18579001",
+        "Q505260"
+      ]
+    },
+    {
+      "id": 592,
+      "title": "Women Without Men",
+      "author": "Shahrnush Parsipur",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q139691117",
+        "Q327667",
+        "Q8031346",
+        "Q138590379",
+        "Q139264184",
+        "Q59024233",
+        "Q8031345"
+      ]
+    },
+    {
+      "id": 841,
+      "title": "De Monarchia",
+      "author": "Dante Alighieri",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q134221",
+        "Q42188543",
+        "Q137605521"
+      ]
+    },
+    {
+      "id": 855,
+      "title": "Politics for Everyone",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1070,
+      "title": "Koleksi Puisi Masturbasi",
+      "author": "Benz Ali",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1077,
+      "title": "A Handbook of How to Support Prisoners of Conscience",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1088,
+      "title": "Respect: Everything a Guy Needs to Know About Sex",
+      "author": "Inti Chávez Pérez",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q135067519"
+      ]
+    },
+    {
+      "id": 6471,
+      "title": "His Dark Materials (series)",
+      "author": "Philip Pullman",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10295,
+      "title": "Malayan Monitor",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q121536373"
+      ]
+    },
+    {
+      "id": 10380,
+      "title": "Chen Hsien Pao",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10518,
+      "title": "Progressive Youth",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q11969860",
+        "Q12958663",
+        "Q7248831",
+        "Q7248828",
+        "Q7248830",
+        "Q132175370",
+        "Q30644629"
+      ]
+    },
+    {
+      "id": 10940,
+      "title": "New Times",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7186938",
+        "Q7012105",
+        "Q10600265",
+        "Q4326487",
+        "Q106975251",
+        "Q98313060",
+        "Q100278371"
+      ]
+    },
+    {
+      "id": 11097,
+      "title": "Men and Women",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q11491601",
+        "Q1936436",
+        "Q1771921",
+        "Q6816236",
+        "Q6816235",
+        "Q6816237",
+        "Q6816234"
+      ]
+    },
+    {
+      "id": 11639,
+      "title": "Suara Demokrasi",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 11750,
+      "title": "Nafsu Syaitan",
+      "author": "Nik Abdullah",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 11779,
+      "title": "Penyerahan",
+      "author": "Azizan Ahmad",
+      "lang": "ms",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q115797143",
+        "Q76903164",
+        "Q15251",
+        "Q6540361",
+        "Q3769366",
+        "Q13578439",
+        "Q847839"
+      ]
+    },
+    {
+      "id": 11783,
+      "title": "Seksologi",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q170912",
+        "Q2920595",
+        "Q13149251",
+        "Q12959791"
+      ]
+    },
+    {
+      "id": 11835,
+      "title": "Men",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q15978631",
+        "Q8441",
+        "Q9289",
+        "Q19038764",
+        "Q239080",
+        "Q1553018",
+        "Q44797"
+      ]
+    },
+    {
+      "id": 11914,
+      "title": "Perempuan Yang Gilakan Seks",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 11966,
+      "title": "Neraka",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q564",
+        "Q22700079",
+        "Q3243384",
+        "Q58418",
+        "Q3276239",
+        "Q2081312",
+        "Q20983642"
+      ]
+    },
+    {
+      "id": 12141,
+      "title": "Baru dan Ganjil",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 12276,
+      "title": "Gigolo",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q138683661",
+        "Q1089730",
+        "Q2099032",
+        "Q569337",
+        "Q1749789",
+        "Q107722320",
+        "Q18669481"
+      ]
+    },
+    {
+      "id": 12473,
+      "title": "Permata Gemilang",
+      "author": "Ibnu Yusof",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 12512,
+      "title": "Gadis Miang",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 12550,
+      "title": "Bangkit Dari Kubur",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q12474217"
+      ]
+    },
+    {
+      "id": 14330,
+      "title": "Чему на самом деле учит Библия?",
+      "author": "Anonymous",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 17126,
+      "title": "В свете священного Корана",
+      "author": "Anonymous",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 17302,
+      "title": "Личность мусульманина, в том виде, который стремится придать ей ислам с помощью Корана и Сунны",
+      "author": "Anonymous",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 17331,
+      "title": "Книга единобожия",
+      "author": "Anonymous",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3197634",
+        "Q12234456"
+      ]
+    },
+    {
+      "id": 101,
+      "title": "Shame",
+      "author": "Taslima Nasrin",
+      "lang": "bn",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q48700714",
+        "Q23599",
+        "Q152282",
+        "Q126005202",
+        "Q117453935",
+        "Q909445",
+        "Q23605"
+      ]
+    },
+    {
+      "id": 102,
+      "title": "Snow",
+      "author": "Orhan Pamuk",
+      "lang": "tr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q13557582",
+        "Q7561",
+        "Q94708",
+        "Q41576",
+        "Q178131",
+        "Q22019787",
+        "Q48779524"
+      ]
+    },
+    {
+      "id": 147,
+      "title": "Tombstone",
+      "author": "Yang Jisheng",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q203443",
+        "Q11832720",
+        "Q79873",
+        "Q1420651",
+        "Q59643",
+        "Q22513777",
+        "Q9391599"
+      ]
+    },
+    {
+      "id": 176,
+      "title": "Z",
+      "author": "Vassilis Vassilikos",
+      "lang": "el",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q258",
+        "Q6574",
+        "Q9751",
+        "Q954",
+        "Q953",
+        "Q14870299",
+        "Q72"
+      ]
+    },
+    {
+      "id": 189,
+      "title": "The Sleepwalkers",
+      "author": "Stefan Zweig",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q91930033",
+        "Q1216006",
+        "Q1151691",
+        "Q103828580",
+        "Q130336924",
+        "Q135398505",
+        "Q134604126",
+        "Q1631822",
+        "Q3962771",
+        "Q3281733",
+        "Q114550526",
+        "Q48989932",
+        "Q20741760",
+        "Q11893887"
+      ]
+    },
+    {
+      "id": 573,
+      "title": "We",
+      "author": "Yevgeny Zamyatin",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q128",
+        "Q9309",
+        "Q713750",
+        "Q134411",
+        "Q3955",
+        "Q158856",
+        "Q41304"
+      ]
+    },
+    {
+      "id": 587,
+      "title": "Requiem",
+      "author": "Anna Akhmatova",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q54807239",
+        "Q1153121",
+        "Q1510137",
+        "Q54802871",
+        "Q21021559",
+        "Q110812089",
+        "Q3933286"
+      ]
+    },
+    {
+      "id": 610,
+      "title": "Endgame",
+      "author": "Ahmet Altan",
+      "lang": "tr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q54802817",
+        "Q30309914",
+        "Q54825261",
+        "Q23781155",
+        "Q332225",
+        "Q1235448",
+        "Q5376099"
+      ]
+    },
+    {
+      "id": 612,
+      "title": "We Are Arrested",
+      "author": "Can Dündar",
+      "lang": "tr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 613,
+      "title": "Kurdistan: An Interstate Colony",
+      "author": "İsmail Beşikçi",
+      "lang": "tr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 639,
+      "title": "One Sentence About Tyranny",
+      "author": "Gyula Illyés",
+      "lang": "hu",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 650,
+      "title": "De Revolutionibus Orbium Coelestium",
+      "author": "Nicolaus Copernicus",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q845981",
+        "Q20951088",
+        "Q9162544",
+        "Q42188607"
+      ]
+    },
+    {
+      "id": 661,
+      "title": "Magnus Hirschfeld: A Portrait",
+      "author": "Magnus Hirschfeld",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 662,
+      "title": "The Sleepless World",
+      "author": "Erich Kästner",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 665,
+      "title": "Sexual Ethics",
+      "author": "Auguste Forel",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q967177",
+        "Q115681470",
+        "Q5686046",
+        "Q136233002",
+        "Q39460653",
+        "Q114987794",
+        "Q115019116"
+      ]
+    },
+    {
+      "id": 685,
+      "title": "Bells in Winter",
+      "author": "Czesław Miłosz",
+      "lang": "pl",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 686,
+      "title": "The Seizure of Power",
+      "author": "Czesław Miłosz",
+      "lang": "pl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q56271777"
+      ]
+    },
+    {
+      "id": 687,
+      "title": "My Century",
+      "author": "Aleksander Wat",
+      "lang": "pl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1669964",
+        "Q136232818"
+      ]
+    },
+    {
+      "id": 688,
+      "title": "The Canary and Other Tales of Martial Law",
+      "author": "Marek Nowakowski",
+      "lang": "pl",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 689,
+      "title": "Tango",
+      "author": "Sławomir Mrożek",
+      "lang": "pl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3980846",
+        "Q14390274",
+        "Q6138641",
+        "Q2392522",
+        "Q16637747",
+        "Q110157304",
+        "Q12058307"
+      ]
+    },
+    {
+      "id": 690,
+      "title": "The Passive Organ",
+      "author": "Paul Goma",
+      "lang": "ro",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 691,
+      "title": "Nostalgia",
+      "author": "Mircea Cărtărescu",
+      "lang": "ro",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7061937",
+        "Q17508536",
+        "Q45319652",
+        "Q7061935",
+        "Q12151852",
+        "Q123481453",
+        "Q137168328"
+      ]
+    },
+    {
+      "id": 693,
+      "title": "On Clowns: The Dictator and the Artist",
+      "author": "Norman Manea",
+      "lang": "ro",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 699,
+      "title": "The Guinea Pigs",
+      "author": "Ludvík Vaculík",
+      "lang": "cs",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q51619356",
+        "Q57644454",
+        "Q52722439",
+        "Q122934460",
+        "Q119020421",
+        "Q126078352",
+        "Q40715148",
+        "Q34412409",
+        "Q34538168"
+      ]
+    },
+    {
+      "id": 700,
+      "title": "The Wire Harp",
+      "author": "Wolf Biermann",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 701,
+      "title": "Dialektik ohne Dogma",
+      "author": "Robert Havemann",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q116233910"
+      ]
+    },
+    {
+      "id": 702,
+      "title": "Was bleibt",
+      "author": "Christa Wolf",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q127222820",
+        "Q127227582",
+        "Q56199771",
+        "Q131575941",
+        "Q66764978",
+        "Q2550128",
+        "Q108664485"
+      ]
+    },
+    {
+      "id": 704,
+      "title": "The Truth That Killed",
+      "author": "Georgi Markov",
+      "lang": "bg",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 705,
+      "title": "Sumatoha",
+      "author": "Yordan Radichkov",
+      "lang": "bg",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 706,
+      "title": "The New Class: An Analysis of the Communist System",
+      "author": "Milovan Đilas",
+      "lang": "sh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7753547"
+      ]
+    },
+    {
+      "id": 707,
+      "title": "Conversations with Stalin",
+      "author": "Milovan Đilas",
+      "lang": "sh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5166446"
+      ]
+    },
+    {
+      "id": 708,
+      "title": "A Tomb for Boris Davidovich",
+      "author": "Danilo Kiš",
+      "lang": "sh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q4660193"
+      ]
+    },
+    {
+      "id": 712,
+      "title": "El Monte",
+      "author": "Lydia Cabrera",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q595550",
+        "Q20251291",
+        "Q117156969",
+        "Q49130534",
+        "Q126127468",
+        "Q124622634",
+        "Q119133285"
+      ]
+    },
+    {
+      "id": 713,
+      "title": "Las palabras perdidas",
+      "author": "Jesús Díaz",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 714,
+      "title": "Fuera del juego",
+      "author": "Heberto Padilla",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42190206",
+        "Q138678096"
+      ]
+    },
+    {
+      "id": 716,
+      "title": "The Crime of Father Amaro",
+      "author": "José Maria de Eça de Queirós",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1217263",
+        "Q3221980",
+        "Q1180471"
+      ]
+    },
+    {
+      "id": 718,
+      "title": "Livro Sexto",
+      "author": "Sophia de Mello Breyner Andresen",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10319362"
+      ]
+    },
+    {
+      "id": 719,
+      "title": "O Delfim",
+      "author": "José Cardoso Pires",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10338986",
+        "Q10338985"
+      ]
+    },
+    {
+      "id": 721,
+      "title": "Imperialism: The Spectre of the Twentieth Century",
+      "author": "Kōtoku Shūsui",
+      "lang": "ja",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 723,
+      "title": "A Handful of Sand",
+      "author": "Ishikawa Takuboku",
+      "lang": "ja",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q11352700",
+        "Q57680835"
+      ]
+    },
+    {
+      "id": 724,
+      "title": "The Factory Ship",
+      "author": "Takiji Kobayashi",
+      "lang": "ja",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q431858"
+      ]
+    },
+    {
+      "id": 729,
+      "title": "Memory for Forgetfulness",
+      "author": "Mahmoud Darwish",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q6815728",
+        "Q136204573",
+        "Q139930287"
+      ]
+    },
+    {
+      "id": 730,
+      "title": "On Islam",
+      "author": "Ahmad Kasravi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q119115087",
+        "Q119682144",
+        "Q118506780",
+        "Q120517111",
+        "Q118648518"
+      ]
+    },
+    {
+      "id": 731,
+      "title": "Reborn",
+      "author": "Forough Farrokhzad",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q60741035",
+        "Q60379811",
+        "Q110429849",
+        "Q125931309",
+        "Q135060067",
+        "Q862850",
+        "Q6105351"
+      ]
+    },
+    {
+      "id": 735,
+      "title": "Satan's Stones",
+      "author": "Moniru Ravanipur",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 736,
+      "title": "The Colonel",
+      "author": "Mahmoud Dowlatabadi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q471811",
+        "Q1144668",
+        "Q3631401",
+        "Q20188661",
+        "Q56087567",
+        "Q7726806",
+        "Q16746297",
+        "Q104680",
+        "Q2984198",
+        "Q37024531",
+        "Q21074077",
+        "Q12799162",
+        "Q3756713",
+        "Q94770492"
+      ]
+    },
+    {
+      "id": 738,
+      "title": "The Corpse Walker",
+      "author": "Liao Yiwu",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q131621767"
+      ]
+    },
+    {
+      "id": 739,
+      "title": "Forbidden Memory: Tibet During the Cultural Revolution",
+      "author": "Tsering Woeser",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q136160992"
+      ]
+    },
+    {
+      "id": 741,
+      "title": "Prisoners of the State: The Inside Story of China's Secret System",
+      "author": "Xu Zhiyong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 746,
+      "title": "Journals of Resistance",
+      "author": "Mikis Theodorakis",
+      "lang": "el",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 758,
+      "title": "The Little Red Schoolbook",
+      "author": "Søren Hansen",
+      "lang": "da",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q311399"
+      ]
+    },
+    {
+      "id": 766,
+      "title": "Nada",
+      "author": "Carmen Laforet",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q20084189",
+        "Q27126815",
+        "Q37046242",
+        "Q25917001",
+        "Q1623656",
+        "Q82310095",
+        "Q1154555"
+      ]
+    },
+    {
+      "id": 767,
+      "title": "Bodas de sangre",
+      "author": "Federico García Lorca",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q951501",
+        "Q127162264",
+        "Q886624",
+        "Q744693",
+        "Q4927740",
+        "Q5731045",
+        "Q1462616"
+      ]
+    },
+    {
+      "id": 778,
+      "title": "Quarup",
+      "author": "Antonio Callado",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q746947",
+        "Q10355958",
+        "Q131297447",
+        "Q10355955"
+      ]
+    },
+    {
+      "id": 779,
+      "title": "Zero",
+      "author": "Ignácio de Loyola Brandão",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q2323933",
+        "Q16282884",
+        "Q8069488",
+        "Q204",
+        "Q96138356",
+        "Q2142",
+        "Q1543615"
+      ]
+    },
+    {
+      "id": 794,
+      "title": "Milo Manara: The Harem",
+      "author": "Milo Manara",
+      "lang": "it",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 822,
+      "title": "Ragazzi di vita",
+      "author": "Pier Paolo Pasolini",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3929379",
+        "Q124001692"
+      ]
+    },
+    {
+      "id": 824,
+      "title": "Fields of Castile",
+      "author": "Antonio Machado",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 826,
+      "title": "Marinero en tierra",
+      "author": "Rafael Alberti",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5998360",
+        "Q128339693",
+        "Q23930701",
+        "Q128339704",
+        "Q118827681",
+        "Q55351328"
+      ]
+    },
+    {
+      "id": 828,
+      "title": "The Forging of a Rebel",
+      "author": "Arturo Barea",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q18761351"
+      ]
+    },
+    {
+      "id": 830,
+      "title": "Campo cerrado",
+      "author": "Max Aub",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q278512",
+        "Q5976818",
+        "Q113187255"
+      ]
+    },
+    {
+      "id": 831,
+      "title": "Time of Silence",
+      "author": "Luis Martín-Santos",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42196521",
+        "Q120983661",
+        "Q7801018"
+      ]
+    },
+    {
+      "id": 837,
+      "title": "Niki: The Story of a Dog",
+      "author": "Tibor Déry",
+      "lang": "hu",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 839,
+      "title": "The Prince",
+      "author": "Niccolò Machiavelli",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q131719",
+        "Q267538",
+        "Q27148824",
+        "Q11975",
+        "Q43274",
+        "Q133151",
+        "Q27230909",
+        "Q2747456",
+        "Q7542",
+        "Q16881414",
+        "Q16280695",
+        "Q1809799",
+        "Q1978",
+        "Q241381"
+      ]
+    },
+    {
+      "id": 842,
+      "title": "The Patience Stone",
+      "author": "Atiq Rahimi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5604823",
+        "Q513663",
+        "Q75668735"
+      ]
+    },
+    {
+      "id": 843,
+      "title": "Adama",
+      "author": "Turki al-Hamad",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q21096165",
+        "Q10400884",
+        "Q16158225",
+        "Q351514",
+        "Q56239717",
+        "Q337514",
+        "Q11380"
+      ]
+    },
+    {
+      "id": 846,
+      "title": "Barefoot Gen",
+      "author": "Keiji Nakazawa",
+      "lang": "ja",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q4347",
+        "Q4117048",
+        "Q16207026",
+        "Q16164379",
+        "Q4117046",
+        "Q16164415",
+        "Q16164399"
+      ]
+    },
+    {
+      "id": 847,
+      "title": "El Eternauta",
+      "author": "Héctor Germán Oesterheld",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5821922",
+        "Q5821919",
+        "Q92564",
+        "Q136197168",
+        "Q114769724",
+        "Q129231494",
+        "Q127408145"
+      ]
+    },
+    {
+      "id": 850,
+      "title": "El Filibusterismo",
+      "author": "José Rizal",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1249199",
+        "Q1846774",
+        "Q85845869",
+        "Q136270992",
+        "Q113250453",
+        "Q113250742",
+        "Q107576531"
+      ]
+    },
+    {
+      "id": 854,
+      "title": "Novel Without a Name",
+      "author": "Dương Thu Hương",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 857,
+      "title": "Hoa Kiau",
+      "author": "Pramoedya Ananta Toer",
+      "lang": "id",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q779191",
+        "Q115660258",
+        "Q985755",
+        "Q700814"
+      ]
+    },
+    {
+      "id": 858,
+      "title": "I Will Marry When I Want",
+      "author": "Ngũgĩ wa Thiong'o",
+      "lang": "sw",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42191293",
+        "Q130570599"
+      ]
+    },
+    {
+      "id": 859,
+      "title": "Matigari",
+      "author": "Ngũgĩ wa Thiong'o",
+      "lang": "sw",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q96392267",
+        "Q125523611",
+        "Q133882363"
+      ]
+    },
+    {
+      "id": 863,
+      "title": "Stray Memories",
+      "author": "Abdullah Al Busais",
+      "lang": "ar",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 867,
+      "title": "Feliz Ano Novo",
+      "author": "Rubem Fonseca",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q9351232",
+        "Q10281037",
+        "Q128714566",
+        "Q116702046"
+      ]
+    },
+    {
+      "id": 869,
+      "title": "Tessa, a Gata",
+      "author": "Cassandra Rios",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q135492305"
+      ]
+    },
+    {
+      "id": 871,
+      "title": "Angarey",
+      "author": "Sajjad Zaheer",
+      "lang": "ur",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q12472085",
+        "Q104830453",
+        "Q117846107",
+        "Q118130750"
+      ]
+    },
+    {
+      "id": 877,
+      "title": "A Dry White Season",
+      "author": "André Brink",
+      "lang": "af",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q636356",
+        "Q3549751"
+      ]
+    },
+    {
+      "id": 881,
+      "title": "Memoirs",
+      "author": "Pablo Neruda",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q112983",
+        "Q272530",
+        "Q29043854",
+        "Q2963729",
+        "Q6815260",
+        "Q21385269",
+        "Q114510309"
+      ]
+    },
+    {
+      "id": 883,
+      "title": "Five Bandits",
+      "author": "Kim Chi-ha",
+      "lang": "ko",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 891,
+      "title": "A Woman in the Crossfire",
+      "author": "Samar Yazbek",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q58110016"
+      ]
+    },
+    {
+      "id": 894,
+      "title": "Everything Flows",
+      "author": "Vasily Grossman",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q139870411",
+        "Q86341497",
+        "Q98282600",
+        "Q57750266",
+        "Q122689400",
+        "Q60922086",
+        "Q41893301"
+      ]
+    },
+    {
+      "id": 900,
+      "title": "The Last Day of Summer",
+      "author": "Chen Yingzhen",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1199393",
+        "Q29638307",
+        "Q3280348",
+        "Q17096488",
+        "Q106725759",
+        "Q10891901",
+        "Q15903995",
+        "Q6494280",
+        "Q33171980",
+        "Q63727286",
+        "Q16571233",
+        "Q6494281",
+        "Q28453139"
+      ]
+    },
+    {
+      "id": 901,
+      "title": "Human Landscapes from My Country",
+      "author": "Nâzım Hikmet",
+      "lang": "tr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 902,
+      "title": "The Epic of Sheikh Bedreddin",
+      "author": "Nâzım Hikmet",
+      "lang": "tr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 912,
+      "title": "For a Song and a Hundred Songs",
+      "author": "Liao Yiwu",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 915,
+      "title": "The Mushroom-Picker",
+      "author": "Zinovy Zinik",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q98286873",
+        "Q135081062",
+        "Q76424104"
+      ]
+    },
+    {
+      "id": 930,
+      "title": "Cacau",
+      "author": "Jorge Amado",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q57148",
+        "Q21286055",
+        "Q105393577",
+        "Q48549395",
+        "Q72761743",
+        "Q1402523",
+        "Q61879087"
+      ]
+    },
+    {
+      "id": 931,
+      "title": "Suor",
+      "author": "Jorge Amado",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q48844",
+        "Q24309703",
+        "Q47303402",
+        "Q47303410",
+        "Q23761427",
+        "Q101420422",
+        "Q3551499"
+      ]
+    },
+    {
+      "id": 932,
+      "title": "No Enemies, No Hatred",
+      "author": "Liu Xiaobo",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q39046677",
+        "Q136234748",
+        "Q64410902"
+      ]
+    },
+    {
+      "id": 933,
+      "title": "1000 Years of Joys and Sorrows",
+      "author": "Ai Weiwei",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q116148165"
+      ]
+    },
+    {
+      "id": 934,
+      "title": "Quando os Lobos Uivam",
+      "author": "Aquilino Ribeiro",
+      "lang": "pt",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 938,
+      "title": "A Minor Apocalypse",
+      "author": "Tadeusz Konwicki",
+      "lang": "pl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q136285984",
+        "Q127801022",
+        "Q129614297"
+      ]
+    },
+    {
+      "id": 939,
+      "title": "Red Dust",
+      "author": "Ma Jian",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q120693756",
+        "Q1262188",
+        "Q7304073",
+        "Q688848",
+        "Q11349752",
+        "Q7304071",
+        "Q15909069"
+      ]
+    },
+    {
+      "id": 940,
+      "title": "The Noodle Maker",
+      "author": "Ma Jian",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q29531528"
+      ]
+    },
+    {
+      "id": 942,
+      "title": "God Is Red",
+      "author": "Liao Yiwu",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5575889"
+      ]
+    },
+    {
+      "id": 945,
+      "title": "Clandestine Poems",
+      "author": "Roque Dalton",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 955,
+      "title": "Son of Man",
+      "author": "Augusto Roa Bastos",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q302",
+        "Q116771588",
+        "Q616342",
+        "Q3793961",
+        "Q7560691",
+        "Q7560655",
+        "Q17167744"
+      ]
+    },
+    {
+      "id": 956,
+      "title": "Zemestan (Winter)",
+      "author": "Mehdi Akhavan-Sales",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 958,
+      "title": "Stalingrad",
+      "author": "Vasily Grossman",
+      "lang": "ru",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q914",
+        "Q1418821",
+        "Q4050009",
+        "Q27910202",
+        "Q38601028",
+        "Q2577891",
+        "Q552725"
+      ]
+    },
+    {
+      "id": 976,
+      "title": "Viral: China's COVID Coverups",
+      "author": "Murong Xuecun",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 979,
+      "title": "On the Hong Kong City-State",
+      "author": "Wan Chin",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 980,
+      "title": "Hong Kong Nationalism",
+      "author": "HKU Undergrad / HKUSU",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q19847386",
+        "Q19854047"
+      ]
+    },
+    {
+      "id": 982,
+      "title": "I Am Not a Kid",
+      "author": "Joshua Wong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 983,
+      "title": "I Am Not a Hero",
+      "author": "Joshua Wong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 984,
+      "title": "My Journeys for Food and Justice",
+      "author": "Tanya Chan",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 985,
+      "title": "Under the Keystone: 18 Years in Politics",
+      "author": "Margaret Ng",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 986,
+      "title": "An Oral History of the Democratic Movement of Hong Kong in the 1980s",
+      "author": "Ma Ngok",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 987,
+      "title": "Big Rivers Going to the East",
+      "author": "Szeto Wah",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 988,
+      "title": "The Inside Information of the Bloody Crackdown on Tiananmen on June 4",
+      "author": "Wu Renhua",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 989,
+      "title": "There Is a Kind of Happiness Called Forgetting",
+      "author": "Roy Kwong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1011,
+      "title": "The Perfumed Garden",
+      "author": "Richard Francis Burton",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1199496",
+        "Q7756720",
+        "Q139690599",
+        "Q139301471",
+        "Q115315436",
+        "Q7679361"
+      ]
+    },
+    {
+      "id": 1035,
+      "title": "Click",
+      "author": "Milo Manara",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5132414",
+        "Q37495000",
+        "Q74026383",
+        "Q107370303",
+        "Q427013",
+        "Q912270",
+        "Q28457"
+      ]
+    },
+    {
+      "id": 1037,
+      "title": "Diva Obsexion",
+      "author": "Anonymous",
+      "lang": "it",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1055,
+      "title": "Mengenal Allah Melalui Agama-Agama Purba: Gautama Buddha Seorang Nabi?",
+      "author": "Kamaludin Endol",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1057,
+      "title": "Islam Dan Teologi Pembebasan",
+      "author": "Asghar Ali Engineer",
+      "lang": "id",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1058,
+      "title": "The Road To Muhammad",
+      "author": "Jalaluddin Rakhmat",
+      "lang": "id",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1061,
+      "title": "Agama Masa Depan: Perspektif Filsafat Perennial",
+      "author": "Komaruddin Hidayat",
+      "lang": "id",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q133260001"
+      ]
+    },
+    {
+      "id": 1069,
+      "title": "Marx Sang Pendidik Revolusioner",
+      "author": "Robin Smalls",
+      "lang": "id",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1071,
+      "title": "Memoir Shamsiah Fakeh: Dari AWAS ke Rejimen ke-10",
+      "author": "Shamsiah Fakeh",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1072,
+      "title": "Komrad Asi Rejimen 10: Dalam Denyut Nihilisme Sejarah",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1073,
+      "title": "Politics for the Common People",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1074,
+      "title": "Politics of a Police State",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1075,
+      "title": "A Handbook of Non-violent Resistance Techniques",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1076,
+      "title": "An Overview of Marine Life Disaster in Vietnam",
+      "author": "Pham Doan Trang",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1078,
+      "title": "The Winning Side",
+      "author": "Huy Đức",
+      "lang": "vi",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7775168",
+        "Q132526780"
+      ]
+    },
+    {
+      "id": 1083,
+      "title": "A Spoon on Earth",
+      "author": "Hyeon Gi-yeong",
+      "lang": "ko",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1084,
+      "title": "Guerillas of the Kingdom of Samsung",
+      "author": "Anonymous",
+      "lang": "ko",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 1087,
+      "title": "Slots",
+      "author": "Shin Gyeong-jin",
+      "lang": "ko",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q54601790",
+        "Q55259587",
+        "Q923130",
+        "Q12336088",
+        "Q136996532",
+        "Q63228442",
+        "Q101069112"
+      ]
+    },
+    {
+      "id": 1627,
+      "title": "Berlin Alexanderplatz",
+      "author": "Alfred Döblin",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q698497",
+        "Q111324900",
+        "Q694245",
+        "Q67400758",
+        "Q705694",
+        "Q4892355",
+        "Q111324700"
+      ]
+    },
+    {
+      "id": 1659,
+      "title": "Operacion Masacre",
+      "author": "Rodolfo Walsh",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7096669",
+        "Q6051408",
+        "Q132323202",
+        "Q7539012"
+      ]
+    },
+    {
+      "id": 3578,
+      "title": "Can the Palestinian Problem be Solved?",
+      "author": "Alouph Har Even",
+      "lang": "he",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3579,
+      "title": "The Battle for Peace",
+      "author": "Ezer Weizman",
+      "lang": "he",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q136138130",
+        "Q66322357",
+        "Q66326132"
+      ]
+    },
+    {
+      "id": 3580,
+      "title": "Studies in the History of Palestine During the Middle Ages",
+      "author": "P.P. Bartholdy",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3581,
+      "title": "At the End of the Night",
+      "author": "Mahmoud Darwish",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q15831672",
+        "Q131916788",
+        "Q451242"
+      ]
+    },
+    {
+      "id": 3582,
+      "title": "Selected Poems",
+      "author": "Mahmoud Darwish",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q138021647",
+        "Q12346902",
+        "Q77002510",
+        "Q20596426",
+        "Q76955230",
+        "Q60228609",
+        "Q105268096"
+      ]
+    },
+    {
+      "id": 3585,
+      "title": "Watergate",
+      "author": "Adnan al-Maluhi",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42761",
+        "Q2323517",
+        "Q1419538",
+        "Q6166545",
+        "Q9095629",
+        "Q62471127",
+        "Q7974107"
+      ]
+    },
+    {
+      "id": 3586,
+      "title": "Afghanistan - The Revolution",
+      "author": "Hanna Salah",
+      "lang": "ar",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3587,
+      "title": "The Lover",
+      "author": "Ghassan Kanafani",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q602927",
+        "Q1195257",
+        "Q7749036",
+        "Q7749035",
+        "Q12406676",
+        "Q19645060",
+        "Q19858498",
+        "Q64596218",
+        "Q66382926",
+        "Q37475445",
+        "Q96622990",
+        "Q104804838",
+        "Q96064725",
+        "Q625369"
+      ]
+    },
+    {
+      "id": 3588,
+      "title": "Gush Emunim, The True Face of Zionism",
+      "author": "Danny Rubinstein",
+      "lang": "he",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3592,
+      "title": "Constitutional Law",
+      "author": "Amnon Rubinstein",
+      "lang": "he",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q11206",
+        "Q3829739",
+        "Q489127",
+        "Q2325224",
+        "Q7892395",
+        "Q2801632",
+        "Q13407957"
+      ]
+    },
+    {
+      "id": 3593,
+      "title": "August, 1914",
+      "author": "Aleksandr Solzhenitsyn",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3597,
+      "title": "Virgin Ground Upturned",
+      "author": "Mikhail Sholokhov",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 3598,
+      "title": "The Young Guardia",
+      "author": "Alexander Fadeyev",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6233,
+      "title": "Meditationes de prima philosophia",
+      "author": "René Descartes",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q605790",
+        "Q67934098",
+        "Q67933897",
+        "Q67933371"
+      ]
+    },
+    {
+      "id": 6234,
+      "title": "Ethica ordine geometrico demonstrata",
+      "author": "Baruch Spinoza",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q862816"
+      ]
+    },
+    {
+      "id": 6241,
+      "title": "Kritik der reinen Vernunft",
+      "author": "Immanuel Kant",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q139893710",
+        "Q220002"
+      ]
+    },
+    {
+      "id": 6243,
+      "title": "Summer in a Pioneer Tie",
+      "author": "Elena Malisova",
+      "lang": "ru",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6245,
+      "title": "The Red Sari",
+      "author": "Javier Moro",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q18814119"
+      ]
+    },
+    {
+      "id": 6250,
+      "title": "Candy",
+      "author": "Mian Mian",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q20800069",
+        "Q16275152",
+        "Q61985927",
+        "Q94970495",
+        "Q185583",
+        "Q109147032",
+        "Q139371645"
+      ]
+    },
+    {
+      "id": 6251,
+      "title": "Lingren Wangshi",
+      "author": "Zhang Yihe",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q9385916"
+      ]
+    },
+    {
+      "id": 6252,
+      "title": "The Killing Wind: A Chinese County's Descent into Madness during the Cultural Revolution",
+      "author": "Tan Hecheng",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6253,
+      "title": "Moving Away from the Imperial Regime",
+      "author": "Qin Hui",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q106645665"
+      ]
+    },
+    {
+      "id": 6314,
+      "title": "Korkai",
+      "author": "Joe D'Cruz",
+      "lang": "ta",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q31317383",
+        "Q3523812",
+        "Q23742128",
+        "Q70123199",
+        "Q3595693"
+      ]
+    },
+    {
+      "id": 6327,
+      "title": "Ramayana: A True Reading",
+      "author": "Periyar E. V. Ramasamy",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6338,
+      "title": "Uitgeverij Guggenheimer (\"Guggenheimer Publishers\")",
+      "author": "Herman Brusselmans",
+      "lang": "nl",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6340,
+      "title": "Berlin Garden of Erotic Delights",
+      "author": "Erwin von Busse under the pseudonym \"Granand\"",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6345,
+      "title": "Fra Kristiania-Bohêmen",
+      "author": "Hans Jæger",
+      "lang": "no",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q5477438",
+        "Q65526448",
+        "Q18890369",
+        "Q18890368"
+      ]
+    },
+    {
+      "id": 6368,
+      "title": "The Spanish Civil War",
+      "author": "Hugh Thomas",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10859",
+        "Q85808518",
+        "Q5963703",
+        "Q87283277",
+        "Q136223731",
+        "Q56816367",
+        "Q114005082",
+        "Q2341073",
+        "Q957532",
+        "Q3025312",
+        "Q130420611",
+        "Q3815226",
+        "Q5887633"
+      ]
+    },
+    {
+      "id": 6375,
+      "title": "Thời của thánh thần",
+      "author": "Hoàng Minh Tường",
+      "lang": "vi",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10826664"
+      ]
+    },
+    {
+      "id": 6376,
+      "title": "Nguyên khí",
+      "author": "Hoàng Minh Tường",
+      "lang": "vi",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10799211"
+      ]
+    },
+    {
+      "id": 6377,
+      "title": "Những mảnh rồng",
+      "author": "Hoàng Minh Tường",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6389,
+      "title": "A Dusty Wind (Một Cơn Gió Bụi)",
+      "author": "Trần Trọng Kim",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6393,
+      "title": "Le roi prédateur",
+      "author": "Catherine Graciet",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q19930448"
+      ]
+    },
+    {
+      "id": 6425,
+      "title": "Less than Zero",
+      "author": "Bret Easton Ellis",
+      "lang": "nl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q403830",
+        "Q1815659",
+        "Q29600830",
+        "Q61037589",
+        "Q114535584",
+        "Q114479241",
+        "Q6531435"
+      ]
+    },
+    {
+      "id": 6430,
+      "title": "The New Joy of Gay Sex",
+      "author": "Charles Silverstein",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7753653"
+      ]
+    },
+    {
+      "id": 6436,
+      "title": "The Rules of Attraction",
+      "author": "Bret Easton Ellis",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1543439",
+        "Q1307153",
+        "Q60412188",
+        "Q58122009",
+        "Q128247557",
+        "Q2414025",
+        "Q29605789",
+        "Q7379021",
+        "Q47391324",
+        "Q83032094",
+        "Q72620313",
+        "Q88344483"
+      ]
+    },
+    {
+      "id": 6448,
+      "title": "The Upstairs Room",
+      "author": "Johanna Reiss",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q7771804",
+        "Q60386250",
+        "Q64169876"
+      ]
+    },
+    {
+      "id": 6477,
+      "title": "Make Something Up",
+      "author": "Chuck Palahniuk",
+      "lang": "es",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q20856968"
+      ]
+    },
+    {
+      "id": 6478,
+      "title": "Mummy Laid an Egg",
+      "author": "Babette Cole",
+      "lang": "it",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q6935457",
+        "Q133046647"
+      ]
+    },
+    {
+      "id": 6534,
+      "title": "Corinne ou l'Italie",
+      "author": "Madame de Staël",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3693562"
+      ]
+    },
+    {
+      "id": 6544,
+      "title": "Lettres Persanes",
+      "author": "Montesquieu",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1050479",
+        "Q19216461",
+        "Q110226660",
+        "Q19216456"
+      ]
+    },
+    {
+      "id": 6547,
+      "title": "De l'esprit des lois",
+      "author": "Montesquieu",
+      "lang": "iw",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q514727",
+        "Q19152132",
+        "Q19152133",
+        "Q43291658"
+      ]
+    },
+    {
+      "id": 6552,
+      "title": "Traité sur la tolérance",
+      "author": "Voltaire",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q122336230",
+        "Q111286022",
+        "Q968588"
+      ]
+    },
+    {
+      "id": 6563,
+      "title": "Encyclopédie, ou dictionnaire raisonné des sciences, des arts et des métiers (1751–72)",
+      "author": "d'Alembert",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6567,
+      "title": "Notre ami le roi",
+      "author": "Gilles Perrault",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q60767343"
+      ]
+    },
+    {
+      "id": 6573,
+      "title": "De Imperio summarum potestatum circa sacra",
+      "author": "Hugo Grotius",
+      "lang": "la",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6577,
+      "title": "Grand dictionnaire universel du XIXe siècle (1866–76)",
+      "author": "Pierre Larousse",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6580,
+      "title": "Annales et historiae de rebus belgicis",
+      "author": "Hugo Grotius",
+      "lang": "la",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q42187135"
+      ]
+    },
+    {
+      "id": 6585,
+      "title": "De l'Esprit",
+      "author": "Claude Adrien Helvétius",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q514727",
+        "Q75437918",
+        "Q75437915",
+        "Q3976845",
+        "Q19955995",
+        "Q19152127",
+        "Q3302924"
+      ]
+    },
+    {
+      "id": 6608,
+      "title": "Julie, ou la nouvelle Héloïse",
+      "author": "Jean-Jacques Rousseau",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q129289"
+      ]
+    },
+    {
+      "id": 6613,
+      "title": "De originibus et usu perpetuo potestatis legislatoriae circa sacra apostolicorum regum Ungariae",
+      "author": "Kollár",
+      "lang": "la",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6626,
+      "title": "Matière et mémoire; essai sur la relation du corps à l'esprit",
+      "author": "Henri Bergson",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6636,
+      "title": "Gregorio Leti — All works",
+      "author": "Gregorio Leti",
+      "lang": "it",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6641,
+      "title": "De dignitate et augmentis scientiarum libri IX. Donec corrig.",
+      "author": "Bacon",
+      "lang": "la",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6650,
+      "title": "Het volkomen huwelijk",
+      "author": "van de Velde",
+      "lang": "nl",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q2512338"
+      ]
+    },
+    {
+      "id": 6657,
+      "title": "Nepal",
+      "author": "Toni Hagen",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q837",
+        "Q33823",
+        "Q1078602",
+        "Q6647",
+        "Q6890",
+        "Q1291627",
+        "Q33979"
+      ]
+    },
+    {
+      "id": 6663,
+      "title": "Gabriele D'Annunzio — All love stories",
+      "author": "Gabriele D'Annunzio",
+      "lang": "tr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6664,
+      "title": "De divisione naturae libri quinque diu desiderati",
+      "author": "Eriugena",
+      "lang": "la",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6675,
+      "title": "Mémoires",
+      "author": "Giacomo Casanova",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q27712069",
+        "Q6950087",
+        "Q101531972",
+        "Q51377562",
+        "Q84321325",
+        "Q6950086",
+        "Q111721009"
+      ]
+    },
+    {
+      "id": 6678,
+      "title": "Alberto Moravia — All works",
+      "author": "Alberto Moravia",
+      "lang": "it",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6682,
+      "title": "Literae pseudo-senatus anglicani, Cromwellii reliquorumque perduellium nomine ac iussu conscriptae",
+      "author": "John Milton",
+      "lang": "la",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 6684,
+      "title": "The Mandarins",
+      "author": "de Beauvoir",
+      "lang": "ar",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1214721",
+        "Q139663296",
+        "Q58501792",
+        "Q129109299",
+        "Q84178157",
+        "Q125337",
+        "Q139933046",
+        "Q139933048",
+        "Q19380979",
+        "Q190024",
+        "Q727694",
+        "Q16950448"
+      ]
+    },
+    {
+      "id": 6686,
+      "title": "Reisebilder",
+      "author": "Heinrich Heine",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q64511029",
+        "Q104121688",
+        "Q104121695"
+      ]
+    },
+    {
+      "id": 6688,
+      "title": "De l'Allemagne",
+      "author": "Heinrich Heine",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q105200610",
+        "Q18633317",
+        "Q101237504",
+        "Q137396490",
+        "Q133247877",
+        "Q21045013",
+        "Q50328613"
+      ]
+    },
+    {
+      "id": 7258,
+      "title": "XYZ Comics",
+      "author": "Rand Holmes",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7279,
+      "title": "A History of Eroticism",
+      "author": "Joseph-Marie Lo Duca",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7298,
+      "title": "My Bed is not for Sleeping",
+      "author": "Gerty Agoston",
+      "lang": "es",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7323,
+      "title": "Tawid diwa sa pananagisag ni Bienvenido Lumbera: Ang Bayan, ang Nanunulat at ang Magasing Sagisag sa Imahinatibong Yugto ng Batas Militar 1975–1979",
+      "author": "Dexter Cayanes",
+      "lang": "tl",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7325,
+      "title": "Labas: Mga Palabas ng Sentro",
+      "author": "Reuel Aguilla",
+      "lang": "tl",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7326,
+      "title": "História do Mundo para as Crianças",
+      "author": "Monteiro Lobato",
+      "lang": "pt",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q10297612"
+      ]
+    },
+    {
+      "id": 7332,
+      "title": "Mourning Headband for Hue: An Account of the Battle for Hue, Vietnam 1968 (Một lần nhân vật Mậu Thân trong \"Giải Khăn Sô Cho Huế\")",
+      "author": "Nhã Ca",
+      "lang": "vi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7334,
+      "title": "Amar Fashi Chai",
+      "author": "Motiur Rahman Rentu",
+      "lang": "bn",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q129513248"
+      ]
+    },
+    {
+      "id": 7382,
+      "title": "Les Mœurs",
+      "author": "François-Vincent Toussaint",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q43569100",
+        "Q124639871",
+        "Q64961129",
+        "Q19211875",
+        "Q17360148",
+        "Q17360151",
+        "Q17360153"
+      ]
+    },
+    {
+      "id": 7390,
+      "title": "Psychopathia Sexualis",
+      "author": "Richard von Krafft-Ebing",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1431871",
+        "Q7256458",
+        "Q18153355",
+        "Q7256457",
+        "Q7256459",
+        "Q77082",
+        "Q19224716"
+      ]
+    },
+    {
+      "id": 7433,
+      "title": "Ecstasy and Me",
+      "author": "Hedy Lamarr",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q16874920",
+        "Q43230639"
+      ]
+    },
+    {
+      "id": 7437,
+      "title": "A Collection of Poems of Ahmad Shamlu",
+      "author": "Ahmad Shamlu",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7439,
+      "title": "A Girl with a Silver String",
+      "author": "Jamal Mirsadeqi",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7440,
+      "title": "Memories of My Melancholy Whores (Persian translation)",
+      "author": "Gabriel García Márquez",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7441,
+      "title": "Scorpion on the Railroad Stairways of Andimeshk",
+      "author": "Hossein Mortezaeian Abkenar",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7442,
+      "title": "The Ceremonies of Impatience",
+      "author": "Yaghub Yadali",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7443,
+      "title": "Social History of Iran",
+      "author": "Morteza Ravandi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3488432"
+      ]
+    },
+    {
+      "id": 7445,
+      "title": "Gay Relations in Persian Literature",
+      "author": "Sirus Shamisa",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7446,
+      "title": "The Veiled Women and the Armoured Elite",
+      "author": "Fatemeh Marnisi",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7448,
+      "title": "The Year Zero",
+      "author": "Ardalan Sarafraz",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q20258162",
+        "Q23104",
+        "Q681439",
+        "Q8050879",
+        "Q10394592",
+        "Q25219002",
+        "Q126091569"
+      ]
+    },
+    {
+      "id": 7449,
+      "title": "The Shout of No Shout",
+      "author": "Vida Hajebi",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7450,
+      "title": "Poverty and Adultery",
+      "author": "Masood Dehnamaki",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7451,
+      "title": "Opium",
+      "author": "Shiva Arastooi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q114727322",
+        "Q66808182",
+        "Q1608715",
+        "Q46452",
+        "Q131584",
+        "Q146391",
+        "Q116129130"
+      ]
+    },
+    {
+      "id": 7452,
+      "title": "The Book of Genies",
+      "author": "Houshang Golshiri",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7453,
+      "title": "He Learned from Satan and Burnt It",
+      "author": "Farkhondeh Aghaii",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7455,
+      "title": "The Book of Sadegh Hedayat",
+      "author": "Mahmoud Katiraie",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7456,
+      "title": "The Last Temptation of Christ (Persian translation)",
+      "author": "Nikos Kazantzakis",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7458,
+      "title": "Cockcrow",
+      "author": "Ebrahim Golestan",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q64537575",
+        "Q83645537",
+        "Q21937056"
+      ]
+    },
+    {
+      "id": 7460,
+      "title": "The Monkey Whose Owner Had Died",
+      "author": "Sadeq Chubak",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7461,
+      "title": "Towards Destiny",
+      "author": "Akbar Hashemi Rafsanjani",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7462,
+      "title": "The Patient Stone",
+      "author": "Sadeq Chubak",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7464,
+      "title": "The Mourners of Bayal",
+      "author": "Gholam-Hossein Saedi",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7465,
+      "title": "Night of Fear",
+      "author": "Hormoz Shahdadi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q17119588",
+        "Q7033649",
+        "Q125606888"
+      ]
+    },
+    {
+      "id": 7466,
+      "title": "Dandyl",
+      "author": "Gholam-Hossein Saedi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q26509832"
+      ]
+    },
+    {
+      "id": 7467,
+      "title": "Fear and Trembling",
+      "author": "Gholam-Hossein Saedi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1193229",
+        "Q1638148",
+        "Q2579990",
+        "Q50414164",
+        "Q130279736",
+        "Q137273570",
+        "Q138649365"
+      ]
+    },
+    {
+      "id": 7468,
+      "title": "The Ball",
+      "author": "Gholam-Hossein Saedi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q107446684",
+        "Q107090258",
+        "Q135055001",
+        "Q129114",
+        "Q2504431",
+        "Q981082",
+        "Q17492718",
+        "Q805107",
+        "Q9384",
+        "Q482",
+        "Q5185279",
+        "Q17856",
+        "Q18545",
+        "Q805122"
+      ]
+    },
+    {
+      "id": 7469,
+      "title": "Censoring an Iranian Love Story",
+      "author": "Shahriar Mandanipour",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7470,
+      "title": "Her Eyes",
+      "author": "Bozorg Alavi",
+      "lang": "fa",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q131490907",
+        "Q14755958",
+        "Q131490833",
+        "Q42187808",
+        "Q113674851",
+        "Q125228717",
+        "Q131490606"
+      ]
+    },
+    {
+      "id": 7471,
+      "title": "A Tombstone on a Grave",
+      "author": "Jalal Al-e-Ahmad",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7472,
+      "title": "Mourning for Qasem",
+      "author": "Amir Hossein Cheheltan",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7473,
+      "title": "The Man Lost in Dust",
+      "author": "Nosrat Rahmani",
+      "lang": "fa",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7497,
+      "title": "Gaie France",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3094362"
+      ]
+    },
+    {
+      "id": 7498,
+      "title": "Gay Defi",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7499,
+      "title": "Conspiracy",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1445169",
+        "Q930164",
+        "Q3627314",
+        "Q3280032",
+        "Q159535",
+        "Q3191393",
+        "Q846940"
+      ]
+    },
+    {
+      "id": 7500,
+      "title": "Le Nouveau Lettres de femmes",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7501,
+      "title": "Les Meilleures Histoires drôles de Carlos",
+      "author": "Carlos",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7502,
+      "title": "Lesbian Licks",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7503,
+      "title": "Tabou Spécial",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7504,
+      "title": "Connex Mag",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7505,
+      "title": "Débande dessinée",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7506,
+      "title": "Couples",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q771750",
+        "Q16262311",
+        "Q13499715",
+        "Q11194956",
+        "Q114551923",
+        "Q21072507",
+        "Q1423426"
+      ]
+    },
+    {
+      "id": 7507,
+      "title": "Mes voisines hors série",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7508,
+      "title": "Pur Hentaï",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7509,
+      "title": "l'Echangiste",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7510,
+      "title": "Black Extrême",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7511,
+      "title": "Brut",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q741415",
+        "Q118215183",
+        "Q172248",
+        "Q16860603",
+        "Q994776",
+        "Q1090030",
+        "Q19962497"
+      ]
+    },
+    {
+      "id": 7512,
+      "title": "Charme noir",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7513,
+      "title": "Love show",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3837782",
+        "Q20747344",
+        "Q17112501"
+      ]
+    },
+    {
+      "id": 7514,
+      "title": "Newcummers",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7515,
+      "title": "Club Exhib",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7516,
+      "title": "Club Est",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q214940",
+        "Q54900",
+        "Q5774249",
+        "Q60969301",
+        "Q12386241",
+        "Q54810077",
+        "Q8347000"
+      ]
+    },
+    {
+      "id": 7517,
+      "title": "Club Nord et Belgique",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7518,
+      "title": "Club Ouest et Centre",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7519,
+      "title": "Indécent",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q14926562",
+        "Q21276823",
+        "Q98381356",
+        "Q30606398",
+        "Q43426",
+        "Q603448",
+        "Q3149994"
+      ]
+    },
+    {
+      "id": 7520,
+      "title": "Marc Dorcel Magazine",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7521,
+      "title": "Honcho et All Man",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7522,
+      "title": "RDV mecs",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7523,
+      "title": "Union",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q3812392",
+        "Q1810731",
+        "Q178790",
+        "Q35572",
+        "Q15180",
+        "Q836",
+        "Q2494649"
+      ]
+    },
+    {
+      "id": 7524,
+      "title": "Apprendre le Tawhid aux enfants",
+      "author": "Muhammad Ibn'Adi-I-Wahhâb",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7525,
+      "title": "Bien trop petit",
+      "author": "Manu Causse",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7526,
+      "title": "Moi, la jeune Musulmane",
+      "author": "Ahmad Ibn Moubarak ibn Qadhlan Al Mazru'i",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 7531,
+      "title": "Annales de philosophie chrétienne",
+      "author": "Anonymous",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q51294448"
+      ]
+    },
+    {
+      "id": 10269,
+      "title": "Der König David Bericht",
+      "author": "Stefan Heym",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1195077"
+      ]
+    },
+    {
+      "id": 10270,
+      "title": "Ahasver",
+      "author": "Stefan Heym",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q1370497",
+        "Q4695009",
+        "Q2663107",
+        "Q33513321",
+        "Q51170251",
+        "Q1859507",
+        "Q23851023"
+      ]
+    },
+    {
+      "id": 10271,
+      "title": "Bewerbung bei Hofe",
+      "author": "Joachim Walther",
+      "lang": "de",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10272,
+      "title": "Der König und sein Narr",
+      "author": "Martin Stade",
+      "lang": "de",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q15805151",
+        "Q15805150"
+      ]
+    },
+    {
+      "id": 10275,
+      "title": "Sikh Mat Khandan, Part 1",
+      "author": "Harnam Das",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10276,
+      "title": "Bhoomika Nazam Sikh Mat Khandan",
+      "author": "Harnam Das",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10277,
+      "title": "Nawa-i-Kashmir",
+      "author": "Ghulam Sarwar Figar",
+      "lang": "ur",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10278,
+      "title": "Gandhi-hatya Ani Mee",
+      "author": "Gopal Vinayak Godse",
+      "lang": "mr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10280,
+      "title": "Kranti Kiyon Aur Kaise",
+      "author": "Virendra Bandhu",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10281,
+      "title": "Munaqib-e-Ahle Bait",
+      "author": "Maulana Azizul Haq Kausar Naqvi",
+      "lang": "ur",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10282,
+      "title": "Mareechika",
+      "author": "Vasireddy Seeta Devi",
+      "lang": "te",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q140089192"
+      ]
+    },
+    {
+      "id": 10283,
+      "title": "Vishwa Itihas",
+      "author": "Dhanpati Pandey",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10284,
+      "title": "Madhyakalin Arab",
+      "author": "Dhanpati Pandey",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10286,
+      "title": "Islam Rajnaitik Vishwa Par Muslim Akraman Ki Avadharana",
+      "author": "R. V. Bhasin",
+      "lang": "hi",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10287,
+      "title": "Venthar Kulathin Iruppidam Ethu?",
+      "author": "K. Senthil Mallar",
+      "lang": "ta",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10292,
+      "title": "Beating Up Gongs & Drums, and Sing",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10294,
+      "title": "Folk Songs of the World",
+      "author": "Yip Lo",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10296,
+      "title": "Before Entering the New Society",
+      "author": "Huang Yu",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10297,
+      "title": "Voice of Liberation",
+      "author": "Sin Huai",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10299,
+      "title": "Big Parade in Red Square",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10300,
+      "title": "The Functions of Progressive Ideas in the Development of Socialism",
+      "author": "Kong Sze Tan",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10302,
+      "title": "Biography of Lo Shun",
+      "author": "Wong Sze Ching",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10303,
+      "title": "Heroes of the Thai Thoo River",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10304,
+      "title": "Johnson Go Home",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10305,
+      "title": "Biography of World's Greatest Soviet Writer",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10306,
+      "title": "Historical Materialism History of Social Expansion",
+      "author": "Ngoi Szkhie",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10307,
+      "title": "Unite Together and Give Johnson a Frontal Assault",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10308,
+      "title": "Book-keeping",
+      "author": "Various",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q117750221",
+        "Q73205106",
+        "Q93772169",
+        "Q43778629",
+        "Q76418097"
+      ]
+    },
+    {
+      "id": 10310,
+      "title": "The People of South Vietnam Must Win the American Troops Must Lose",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10311,
+      "title": "Briefcourse of Chinese History",
+      "author": "Fan Man Lan",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10313,
+      "title": "How Marx Studied",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10314,
+      "title": "Letter to the Public a Strong Protest to the Alliance Government Against the Shooting of Comrade Ong Chong of Our Party to Death",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10315,
+      "title": "Brief Course of Chinese History",
+      "author": "Lui Chun Yu",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10316,
+      "title": "Where Can the K.M.T Spies Go?",
+      "author": "Fan San",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10317,
+      "title": "Aid Vietnam Resist America",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10318,
+      "title": "Brief History of Social Development",
+      "author": "Friedrich Engels",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10319,
+      "title": "How to Make General Summary on Works",
+      "author": "Hun Yen Lam",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10320,
+      "title": "National Hero Nguyen Van Troi",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10321,
+      "title": "Bulgaria",
+      "author": "Konstanchinoff",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q219",
+        "Q3655997",
+        "Q7918",
+        "Q11913",
+        "Q77286328",
+        "Q180845",
+        "Q133255"
+      ]
+    },
+    {
+      "id": 10323,
+      "title": "Rang Undang-undang Bahasa Kebangsaan Menuju ke Arah Penggunaan Berbilang Bahasa ke Mana Arah Tujuan Bahasa Melayu",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10324,
+      "title": "Burma",
+      "author": "Yee Pui",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q836",
+        "Q1016710",
+        "Q141307",
+        "Q450765",
+        "Q503963",
+        "Q1307674",
+        "Q27124573"
+      ]
+    },
+    {
+      "id": 10325,
+      "title": "How to Think Correctly",
+      "author": "Woo Seng",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10326,
+      "title": "Ketetapan Rang Undang-undang Bahasa Kebangsaan 1967",
+      "author": "Anonymous",
+      "lang": "ms",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10327,
+      "title": "Business Management & Professional Training",
+      "author": "To Fam",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10331,
+      "title": "Call of the People",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10332,
+      "title": "I Got Chiang Kai Shek Alive",
+      "author": "Suen Ming Wan",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10337,
+      "title": "Wong Chung Nam's Expedition",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10339,
+      "title": "Charge",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q681245",
+        "Q54839652",
+        "Q1111",
+        "Q1274115",
+        "Q217713",
+        "Q1424805",
+        "Q1543615"
+      ]
+    },
+    {
+      "id": 10341,
+      "title": "Introducing Communist Leaders in Various Countries",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10343,
+      "title": "Chart of Evolution of Socialism",
+      "author": "Siu Tong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10347,
+      "title": "Chart of Structure of Socialism",
+      "author": "Siu Tong",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10348,
+      "title": "In the Old House",
+      "author": "Hon Meng",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10350,
+      "title": "Cheung Cho Purchases a Cow",
+      "author": "Wong Ah Ping",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10354,
+      "title": "Child of the Brigade",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10356,
+      "title": "Kai Meng Youth",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10358,
+      "title": "Chinese People, Unite",
+      "author": "Kwo Chieh",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10360,
+      "title": "Workmen's Paradise",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10362,
+      "title": "Chinese Workers Pictorial",
+      "author": "All China Federation of Labour",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10366,
+      "title": "Chuan Min Fao (people's Newspaper)",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10368,
+      "title": "Young Life of Mao Tze Tung",
+      "author": "Siu Sum",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 10369,
+      "title": "Every Red Flower Is Facing the Sun",
+      "author": "Anonymous",
+      "lang": "zh",
+      "reason": "no-search-hit",
+      "triedQids": []
+    }
+  ]
+}
