@@ -1,7 +1,8 @@
 import AdminBackLink from '@/components/admin-back-link'
-import { pickForDates, buildPost, type DailyBook } from '@/lib/bluesky-post'
+import { pickForDates, buildPost, listExcludedBooks, type DailyBook } from '@/lib/bluesky-post'
 import { getRecentPosts } from '@/lib/bluesky'
-import { Send, Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircle, CalendarDays } from 'lucide-react'
+import UpcomingManager from './upcoming-manager'
+import { Send, Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircle } from 'lucide-react'
 
 // Live view — always fresh: upcoming generated posts + the account's real feed.
 export const dynamic = 'force-dynamic'
@@ -46,9 +47,12 @@ export default async function BlueskyAdminPage() {
   }
   const today = books[0]
   const todayPost = today ? buildPost(today) : null
-  const upcoming = dates.slice(1).map((ymd, i) => ({ ymd, book: books[i + 1] ?? null }))
+  const upcoming = dates.slice(1).map((ymd, i) => {
+    const b = books[i + 1] ?? null
+    return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, title: b.title, author: b.author, why: whyLine(b) } : null }
+  })
 
-  const recent = await getRecentPosts(HANDLE, 20)
+  const [recent, excluded] = await Promise.all([getRecentPosts(HANDLE, 20), listExcludedBooks()])
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
@@ -118,30 +122,8 @@ export default async function BlueskyAdminPage() {
           )}
         </div>
 
-        {/* ── Upcoming queue ─────────────────────────────────────── */}
-        <div className={cardCls}>
-          <div className="flex items-center gap-2">
-            <CalendarDays className="w-5 h-5 text-gray-400 shrink-0" />
-            <h2 className="font-semibold text-gray-900">Upcoming</h2>
-            <span className="text-xs text-gray-400">next {UPCOMING_DAYS - 1} days</span>
-          </div>
-          <ul className="flex flex-col divide-y divide-gray-100">
-            {upcoming.map(({ ymd, book }) => (
-              <li key={ymd} className="py-2.5 flex gap-3 items-start">
-                <span className="text-xs text-gray-400 w-20 shrink-0 pt-0.5 tabular-nums">{dayLabel(ymd)}</span>
-                {book ? (
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-800">{book.title} <span className="font-normal text-gray-500">— {book.author}</span></p>
-                    <p className="text-xs text-gray-500">{whyLine(book)}</p>
-                  </div>
-                ) : (
-                  <span className="text-sm text-gray-400">—</span>
-                )}
-              </li>
-            ))}
-          </ul>
-          <p className="text-[11px] text-gray-400">Deterministic per date — the queue is stable unless the catalogue changes.</p>
-        </div>
+        {/* ── Upcoming queue + exclusion management ──────────────── */}
+        <UpcomingManager upcoming={upcoming} excluded={excluded} />
 
         {/* ── Recent posts (live from the account) ───────────────── */}
         <div className={cardCls}>

@@ -67,13 +67,32 @@ export function dayNumber(dateYmd: string): number {
 }
 
 /**
- * Deterministically pick the book id for a given day from the eligible pool.
- * Striding by a large prime spreads consecutive days across the (id-ordered)
- * pool so adjacent days don't land on adjacent import rows. Coprime with any
- * realistic pool size, so it walks the whole pool before repeating.
+ * Deterministically pick the book id for a day, skipping excluded books.
+ * The k=0 index strides by a large prime so consecutive days land far apart in
+ * the (id-ordered) pool. If that book is excluded, a second prime rerolls to
+ * another book — so excluding one title only changes its own day, leaving the
+ * rest of the queue stable. Falls back to the k=0 pick if everything is
+ * excluded (shouldn't happen).
  */
-function pickIndex(day: number, poolSize: number): number {
-  return ((day * 7919) % poolSize + poolSize) % poolSize
+function pickIdForDate(ids: number[], excluded: Set<number>, day: number): number {
+  const n = ids.length
+  for (let k = 0; k < n; k++) {
+    const id = ids[((day * 7919 + k * 104729) % n + n) % n]
+    if (!excluded.has(id)) return id
+  }
+  return ids[((day * 7919) % n + n) % n]
+}
+
+/** Book ids an editor has removed from the rotation. Empty if none / on error
+ *  (incl. before the migration is applied), so posting never breaks. */
+export async function loadExcludedIds(): Promise<Set<number>> {
+  try {
+    const { data, error } = await adminClient().from('bluesky_excluded_books').select('book_id')
+    if (error || !data) return new Set()
+    return new Set(data.map(r => Number((r as { book_id: number }).book_id)))
+  } catch {
+    return new Set()
+  }
 }
 
 // Notability gate: a book enters the pool if it has multiple recorded bans
@@ -180,9 +199,24 @@ export async function pickDailyBook(dateYmd?: string): Promise<DailyBook | null>
  * Used by the admin "upcoming" view. Returns one entry per input date, in order.
  */
 export async function pickForDates(datesYmd: string[]): Promise<(DailyBook | null)[]> {
-  const ids = await eligibleBookIds()
+  const [ids, excluded] = await Promise.all([eligibleBookIds(), loadExcludedIds()])
   if (ids.length === 0) return datesYmd.map(() => null)
-  return Promise.all(datesYmd.map(ymd => hydrate(ids[pickIndex(dayNumber(ymd), ids.length)])))
+  return Promise.all(datesYmd.map(ymd => hydrate(pickIdForDate(ids, excluded, dayNumber(ymd)))))
+}
+
+/** Excluded books with display fields, newest exclusion first — for the admin view. */
+export async function listExcludedBooks(): Promise<Array<{ id: number; title: string; author: string }>> {
+  const { data, error } = await adminClient()
+    .from('bluesky_excluded_books')
+    .select('book_id, books(title, book_authors(authors(display_name)))')
+    .order('created_at', { ascending: false })
+  if (error || !data) return []
+  return data.flatMap(r => {
+    const row = r as unknown as { book_id: number; books: { title: string; book_authors: Array<{ authors: { display_name: string } | null }> | null } | null }
+    if (!row.books) return []
+    const author = row.books.book_authors?.map(ba => ba.authors?.display_name).filter(Boolean).join(', ') || 'Unknown'
+    return [{ id: Number(row.book_id), title: row.books.title, author }]
+  })
 }
 
 function graphemeLength(s: string): number {
