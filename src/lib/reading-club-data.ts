@@ -7,6 +7,7 @@
 // convention as BBW: `published_at IS NULL` means draft.
 
 import { adminClient, serverClient } from './supabase'
+import { unstable_cache } from 'next/cache'
 import type { SuggesterBook } from './bbw-suggester'
 
 // ── Theme → reason-slug mapping ──────────────────────────────────────────────
@@ -671,99 +672,87 @@ export type ReadingClubLink = {
   href: string
 }
 
+// Reading-club membership is a tiny, curated set (~95 published rows across
+// all five tracks). The old implementation probed those five tables with five
+// SEQUENTIAL round-trips on every /books/[slug] render — so the ~15.7k books
+// that are in NO club still paid all five just to learn they match nothing.
+// Under the 2026-06-16 scraper-swarm those wasted round-trips were a real
+// slice of the per-render DB load that drained the PostgREST pool. Instead we
+// load the whole membership set once and cache it (1h — the same TTL as the
+// book-page ISR window); per render this collapses to an in-memory lookup.
+type ClubMembership =
+  | { track: 'international' }
+  | { track: 'classics' }
+  | { track: 'young-readers' }
+  | { track: 'by-theme'; themeSlug: string }
+  | { track: 'currently-challenged'; year: number; position: number }
+
+const TRACK_LABELS: Record<ClubMembership['track'], string> = {
+  'international': 'International cases',
+  'classics': 'Banned classics',
+  'young-readers': 'For young readers',
+  'by-theme': 'By theme',
+  'currently-challenged': 'Currently challenged',
+}
+
+// Record keyed by book_id (as string — unstable_cache serialises to JSON, so a
+// Map wouldn't survive). When a book sits in more than one track the
+// highest-priority one wins, matching the order the old sequential probe used:
+// international → classics → young-readers → by-theme → currently-challenged.
+const loadReadingClubMemberships = unstable_cache(
+  async (): Promise<Record<string, ClubMembership>> => {
+    const supabase = serverClient()
+    const out: Record<string, ClubMembership> = {}
+    const claim = (bookId: number | null, m: ClubMembership) => {
+      if (bookId == null) return
+      const k = String(bookId)
+      if (!(k in out)) out[k] = m // first writer (= higher priority) wins
+    }
+
+    const [intl, classics, young, theme, cc] = await Promise.all([
+      supabase.from('reading_club_international').select('book_id').not('published_at', 'is', null),
+      supabase.from('reading_club_classics').select('book_id').not('published_at', 'is', null),
+      supabase.from('reading_club_young_readers').select('book_id').not('published_at', 'is', null),
+      supabase.from('reading_club_theme_books').select('book_id, theme_slug').not('published_at', 'is', null),
+      supabase.from('reading_club_currently_challenged').select('book_id, year, position')
+        .not('published_at', 'is', null)
+        .order('year', { ascending: false }), // most-recent year first → claim() keeps it
+    ])
+
+    for (const r of (intl.data ?? []) as { book_id: number | null }[]) claim(r.book_id, { track: 'international' })
+    for (const r of (classics.data ?? []) as { book_id: number | null }[]) claim(r.book_id, { track: 'classics' })
+    for (const r of (young.data ?? []) as { book_id: number | null }[]) claim(r.book_id, { track: 'young-readers' })
+    for (const r of (theme.data ?? []) as { book_id: number | null; theme_slug: string | null }[]) {
+      if (r.theme_slug) claim(r.book_id, { track: 'by-theme', themeSlug: r.theme_slug })
+    }
+    for (const r of (cc.data ?? []) as { book_id: number | null; year: number; position: number }[]) {
+      claim(r.book_id, { track: 'currently-challenged', year: r.year, position: r.position })
+    }
+    return out
+  },
+  ['reading-club-memberships'],
+  { revalidate: 3600, tags: ['reading-club'] },
+)
+
 export async function getReadingClubLinkForBook(
   bookId: number,
   bookSlug: string | null,
 ): Promise<ReadingClubLink | null> {
-  if (!bookSlug && bookId == null) return null
-  const supabase = serverClient()
+  if (bookId == null) return null
+  const m = (await loadReadingClubMemberships())[String(bookId)]
+  if (!m) return null
 
-  // International
-  if (bookSlug) {
-    const { data } = await supabase
-      .from('reading_club_international')
-      .select('book_id, published_at')
-      .eq('book_id', bookId)
-      .not('published_at', 'is', null)
-      .maybeSingle()
-    if (data) {
-      return {
-        track: 'international',
-        trackLabel: 'International cases',
-        href: `/reading-club/international/${bookSlug}`,
-      }
-    }
+  // Tracks whose URL needs the canonical book slug bail out if it's missing
+  // (defensive — the book page always passes a non-null slug). The currently-
+  // challenged URL is slug-free (year/position), so it always resolves.
+  switch (m.track) {
+    case 'international':
+    case 'classics':
+    case 'young-readers':
+      return bookSlug ? { track: m.track, trackLabel: TRACK_LABELS[m.track], href: `/reading-club/${m.track}/${bookSlug}` } : null
+    case 'by-theme':
+      return bookSlug ? { track: m.track, trackLabel: TRACK_LABELS[m.track], href: `/reading-club/by-theme/${m.themeSlug}/${bookSlug}` } : null
+    case 'currently-challenged':
+      return { track: m.track, trackLabel: TRACK_LABELS[m.track], href: `/reading-club/currently-challenged/${m.year}/${m.position}` }
   }
-
-  // Classics
-  if (bookSlug) {
-    const { data } = await supabase
-      .from('reading_club_classics')
-      .select('book_id, published_at')
-      .eq('book_id', bookId)
-      .not('published_at', 'is', null)
-      .maybeSingle()
-    if (data) {
-      return {
-        track: 'classics',
-        trackLabel: 'Banned classics',
-        href: `/reading-club/classics/${bookSlug}`,
-      }
-    }
-  }
-
-  // Young Readers
-  if (bookSlug) {
-    const { data } = await supabase
-      .from('reading_club_young_readers')
-      .select('book_id, published_at')
-      .eq('book_id', bookId)
-      .not('published_at', 'is', null)
-      .maybeSingle()
-    if (data) {
-      return {
-        track: 'young-readers',
-        trackLabel: 'For young readers',
-        href: `/reading-club/young-readers/${bookSlug}`,
-      }
-    }
-  }
-
-  // By Theme — first matching published row wins. We need the theme slug to
-  // build the URL, so select that here too.
-  if (bookSlug) {
-    const { data } = await supabase
-      .from('reading_club_theme_books')
-      .select('theme_slug, published_at')
-      .eq('book_id', bookId)
-      .not('published_at', 'is', null)
-      .limit(1)
-      .maybeSingle()
-    if (data?.theme_slug) {
-      return {
-        track: 'by-theme',
-        trackLabel: 'By theme',
-        href: `/reading-club/by-theme/${data.theme_slug}/${bookSlug}`,
-      }
-    }
-  }
-
-  // Currently Challenged — most recent year first.
-  const { data: cc } = await supabase
-    .from('reading_club_currently_challenged')
-    .select('year, position, published_at')
-    .eq('book_id', bookId)
-    .not('published_at', 'is', null)
-    .order('year', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-  if (cc) {
-    return {
-      track: 'currently-challenged',
-      trackLabel: 'Currently challenged',
-      href: `/reading-club/currently-challenged/${cc.year}/${cc.position}`,
-    }
-  }
-
-  return null
 }

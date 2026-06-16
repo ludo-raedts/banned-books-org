@@ -5,7 +5,7 @@
 // Drops TTFB on cached hits from ~500ms to ~50ms (CWV ranking signal).
 export const revalidate = 3600
 
-import React from 'react'
+import React, { cache } from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
@@ -168,14 +168,45 @@ function buildBanSummary(
 // Bucket A blocklist (CSAM-adjacent policy §5b / §6). Read server-side via
 // adminClient() because blocked_works has RLS with no public policy — the
 // public page only ever learns *that* a slug is blocked, never title/reason.
-async function isBlockedSlug(slug: string): Promise<boolean> {
+// Wrapped in React cache() so the generateMetadata and the page-component
+// calls within a single request dedupe to ONE DB round-trip instead of two.
+const isBlockedSlug = cache(async (slug: string): Promise<boolean> => {
   const { data } = await adminClient()
     .from('blocked_works')
     .select('slug')
     .eq('slug', slug)
     .maybeSingle()
   return !!data
-}
+})
+
+// Single canonical book-detail fetch, shared (via React cache()) between
+// generateMetadata and the page component — same request → one query. The
+// column set is a superset of what either consumer needs; metadata reads its
+// subset off the same row. Extracted from BookPage so both go through it.
+const BOOK_DETAIL_SELECT = `
+  id, title, slug, cover_url, description, description_book, description_ban,
+  description_source_url, description_source_type,
+  censorship_context, first_published_year, genres, gutenberg_id, isbn13,
+  bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
+  warning_level, inclusion_rationale, extended_context,
+  is_gated, gating_country, is_blanket_works,
+  original_language,
+  title_native, title_transliterated, title_english_meaningful,
+  created_at, updated_at,
+  data_quality_status, data_quality_evaluated_at,
+  awards,
+  book_authors(authors(display_name, slug, awards)),
+  bans(
+    id, year_started, year_ended, action_type, status, country_code, region, institution, description,
+    countries(name_en),
+    scopes(label_en),
+    ban_reason_links(reasons(id, slug)),
+    ban_source_links(ban_sources(source_name, source_url))
+  )
+`
+const getBookBySlug = cache(async (slug: string) =>
+  adminClient().from('books').select(BOOK_DETAIL_SELECT).eq('slug', slug).single()
+)
 
 // Content-free tombstone (policy §5b). No title-specific detail, no ISBN, no
 // alternative titles, no external links — nothing that helps locate the work.
@@ -198,21 +229,40 @@ function TombstoneNotice() {
   )
 }
 
-// Prebuild the 100 most-banned books at build time; the long tail is
-// generated + ISR-cached on first visit (dynamicParams defaults to true).
-// Without any generateStaticParams the route renders fully dynamically
-// (no-store, MISS on every request) and revalidate=3600 never engages.
+// Prebuild EVERY indexable book page at build time. Previously only the top
+// 100 were prebuilt and the ~15.7k-strong long tail was generated cold on
+// first visit (ISR MISS → several Supabase queries per render). On 2026-06-16
+// a distributed scraper-swarm enumerated the sitemap's full slug list; every
+// hit was a cache MISS, so thousands of cold renders fired at the DB at once
+// and drained the PostgREST pool (Cloudflare 524 / Supabase 522). Prebuilding
+// the whole indexable set makes those crawls 100% CDN-HIT — they never reach
+// the DB. dynamicParams stays true, so a genuinely new book (added after the
+// build) still renders on first visit and is then ISR-cached; revalidate=3600
+// keeps prebuilt pages fresh via one background render per page per hour.
+//
+// Scope mirrors sitemap-books.xml: not gated, not blanket-works (the pseudo-
+// books for Liste-Otto author-level bans, which 308 to the author anyway).
 export async function generateStaticParams() {
   const sb = adminClient()
-  const { data: top } = await sb
-    .from('v_top_banned_books')
-    .select('entity_id')
-    .order('total_bans', { ascending: false })
-    .limit(100)
-  const ids = ((top ?? []) as { entity_id: number }[]).map((r) => r.entity_id)
-  if (ids.length === 0) return []
-  const { data } = await sb.from('books').select('slug').in('id', ids)
-  return ((data ?? []) as { slug: string }[]).map((b) => ({ slug: b.slug }))
+  const slugs: { slug: string }[] = []
+  let offset = 0
+  for (;;) {
+    // .order('id') is load-bearing: without a stable sort, .range() pagination
+    // duplicates/skips rows once the table exceeds the page size.
+    const { data } = await sb
+      .from('books')
+      .select('slug')
+      .eq('is_gated', false)
+      .eq('is_blanket_works', false)
+      .not('slug', 'is', null)
+      .order('id', { ascending: true })
+      .range(offset, offset + 999)
+    if (!data || data.length === 0) break
+    for (const r of data as { slug: string }[]) slugs.push({ slug: r.slug })
+    if (data.length < 1000) break
+    offset += 1000
+  }
+  return slugs
 }
 
 export async function generateMetadata({
@@ -232,15 +282,9 @@ export async function generateMetadata({
     }
   }
 
-  const { data } = await adminClient()
-    .from('books')
-    .select(`
-      title, cover_url, first_published_year, is_gated,
-      book_authors(authors(display_name)),
-      bans(country_code, countries(name_en), ban_reason_links(reasons(slug)))
-    `)
-    .eq('slug', slug)
-    .single()
+  // Shared with the page component via getBookBySlug's React cache() — this is
+  // not a second query.
+  const { data } = await getBookBySlug(slug)
 
   if (!data) return {}
 
@@ -616,31 +660,9 @@ export default async function BookPage({
     return <TombstoneNotice />
   }
 
-  const { data, error } = await supabase
-    .from('books')
-    .select(`
-      id, title, slug, cover_url, description, description_book, description_ban,
-      description_source_url, description_source_type,
-      censorship_context, first_published_year, genres, gutenberg_id, isbn13,
-      bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
-      warning_level, inclusion_rationale, extended_context,
-      is_gated, gating_country, is_blanket_works,
-      original_language,
-      title_native, title_transliterated, title_english_meaningful,
-      created_at, updated_at,
-      data_quality_status, data_quality_evaluated_at,
-      awards,
-      book_authors(authors(display_name, slug, awards)),
-      bans(
-        id, year_started, year_ended, action_type, status, country_code, region, institution, description,
-        countries(name_en),
-        scopes(label_en),
-        ban_reason_links(reasons(id, slug)),
-        ban_source_links(ban_sources(source_name, source_url))
-      )
-    `)
-    .eq('slug', slug)
-    .single()
+  // Shared with generateMetadata via getBookBySlug's React cache() — one query
+  // per request, not two.
+  const { data, error } = await getBookBySlug(slug)
 
   if (error || !data) {
     // Alias fallback: maybe this slug points to a book via book_slug_aliases.

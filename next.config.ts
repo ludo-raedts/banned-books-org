@@ -3,6 +3,15 @@ import { ALLOWED_IMAGE_HOSTS } from "./src/lib/allowed-image-hosts";
 import { NFD_REDIRECTS } from "./src/lib/redirects/nfd-bulk";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // /books/[slug] now prebuilds the full ~15.8k indexable catalogue at build
+    // time (see generateStaticParams there). Across that many renders a single
+    // transient Supabase/PostgREST blip shouldn't fail the whole build, so
+    // retry a failed page generation before giving up. If a deploy build ever
+    // pressures the prod PostgREST pool (it shares the same instance), throttle
+    // it with `staticGenerationMaxConcurrency` (default 8 pages/worker).
+    staticGenerationRetryCount: 2,
+  },
   // Include the generated dataset zip in the dataset download route's bundle.
   // private/ sits outside public/ (intentional — must not be served statically),
   // so Next.js's file tracer needs an explicit hint to package it with the function.
