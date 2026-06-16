@@ -259,44 +259,46 @@ export default function ScriptsPage() {
             title="Master sweep — enrich-all.ts"
             blurb={
               <>
-                Eén script dat alle per-veld sweeps in de juiste volgorde draait. Dit is wat je draait na een import en
-                periodiek als onderhoudssweep — alle stappen zijn fill-only, dus re-runs zijn goedkoop.
+                Eén orkestrator die de hele catalogus door-verrijkt. <strong>Fase 1 draait de drie gratis-harvesters
+                gelijktijdig</strong> (OL + Google Books + native-titles), <strong>Fase 2 sequentieel</strong> de rest, en
+                wrapt alles in een before/after coverage-snapshot + een confidence-rollback. Dit is wat je draait na een
+                import en periodiek als onderhoudssweep — alle stappen zijn fill-only, dus re-runs zijn goedkoop.
               </>
             }
           />
           <Script
             name="enrich-all.ts"
-            what="Draait, in volgorde: ISBN → covers v2 (met placeholder-rejection) → Gutenberg IDs → archive.org IDs → descriptions v2 (Wikipedia + OpenLibrary-by-ISBN + Google Books, grounded; LLM alleen voor synthese uit ≥2 cited bronnen — geen free-form GPT-fallback meer) → genres → ban descriptions → censorship context → ban reasons. archive.org wordt eenmalig per boek bevraagd (sticky checked_at). Cover-step rejecteert Google Books placeholders via pHash."
+            what="Fase 1 (PARALLEL, procesgeïsoleerd — een quota-stop of crash in één bron breekt de andere twee niet af): enrich-ol-harvest (cover/jaar/ISBN, exact-key, gratis) + enrich-gb-harvest (wezen-ISBN/cover, GB, dagcap-bewust) + enrich-native-titles (title_native via Wikidata, anderstalige boeken) — concurrent. Fase 2 (SEQUENTIEEL): covers v2 (pHash placeholder-rejection) → Gutenberg IDs → archive.org IDs → descriptions v2 (Wikipedia + OpenLibrary-by-ISBN + Google Books, grounded; LLM alleen voor synthese uit ≥2 cited bronnen) → genres → ban descriptions → censorship context → ban reasons. Daarna: confidence-audit + auto-rollback (audit-enrichment-confidence: native-titel namesake/leidend-lidwoord-score + isbn/cover structurele her-verificatie) → before/after coverage-rapport in data/enrichment-coverage-report-<datum>.md."
             tags={['free', 'gpt']}
             meta={{
-              coverage: <>fill-only per stap (zie elk per-veld script). Uitzondering: reason-step <strong>vervangt</strong> ban_reason_links voor bans die uitsluitend &apos;other&apos; zijn (DELETE + INSERT).</>,
+              coverage: <>fill-only per stap (zie elk per-veld script). Fase 1 verving de oude sequentiële <code className="font-mono">enrich-isbn</code> + covers-first-pass (de harvesters lossen dat efficiënter op — géén dubbel ISBN/cover-pad) en voegde native-titles toe. Uitzondering: reason-step <strong>vervangt</strong> ban_reason_links voor bans die uitsluitend &apos;other&apos; zijn (DELETE + INSERT).</>,
               cadence: 'na elke import + ongoing-sweep (wekelijks/maandelijks)',
-              writes: 'zie individuele scripts onder Per veld verrijken',
-              idempotent: 'ja — bestaande waarden worden nooit overschreven (uitgezonderd exclusieve-other reasons)',
+              writes: 'zie individuele scripts onder Bulk harvesters + Per veld verrijken',
+              output: <>per-run logs/snapshots in het gitignored <code className="font-mono">data/enrich-run/&lt;stamp&gt;/</code>; alleen het rapport <code className="font-mono">data/enrichment-coverage-report-&lt;datum&gt;.md</code> wordt gecommit</>,
+              idempotent: 'ja — bestaande waarden worden nooit overschreven (uitgezonderd exclusieve-other reasons); rollback nullt alleen this-run writes onder de drempel, met CSV-backup',
               cost: 'gratis + GPT-mini (fallbacks); cap met --gpt-limit',
             }}
             command={`# Dry-run — toont per stap hoeveel rijen in aanmerking komen
 npx tsx --env-file=.env.local scripts/enrich-all.ts
 
-# Volledige sweep (free + GPT)
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply
+# Volledige sweep (free + GPT) — nohup-veilig, overleeft terminal/sessie-sluiting
+nohup npx tsx --env-file=.env.local scripts/enrich-all.ts --apply > data/enrich-all.log 2>&1 &
 
 # Goedkoopste eerst — alleen gratis APIs, geen Gutenberg / archive.org
 npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --free-only --no-gutenberg --no-archive
 
-# Alles behalve trage externe lookups
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --no-gutenberg --no-archive
-
-# GPT-stappen begrenzen (incrementele run)
-npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
+# GPT-stappen begrenzen + Fase-1 native-titel-sweep cappen (incrementele run)
+npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50 --native-limit=500`}
             flags={[
               { flag: '--apply', desc: 'Schrijf naar DB (anders dry-run)' },
               { flag: '--free-only', desc: 'Skip alle GPT-stappen' },
               { flag: '--no-gutenberg', desc: 'Skip Gutenberg lookup (traag; veilig om dagelijks over te slaan)' },
               { flag: '--no-archive', desc: 'Skip archive.org lookup (traag)' },
               { flag: '--gpt-limit=N', desc: 'Cap elke GPT-stap op N boeken (default 150)' },
+              { flag: '--native-limit=N', desc: 'Cap de Fase-1 native-titles sweep (default 99999 = volledig)' },
+              { flag: '--threshold=N', desc: 'Confidence-drempel voor de rollback-auditor (default 0.5)' },
             ]}
-            note="Cover-step gebruikt pHash om Google Books 'image not available' placeholders te detecteren — boeken die hierop falen krijgen cover_status='rejected_placeholder' en worden voortaan overgeslagen tenzij je --force op de cover-step meegeeft."
+            note="CourtListener doet bewust NIET mee: dat is een render-time live feed (src/lib/courtlistener.ts), geen per-boek-kolom. De rollback-waarde zit vooral bij native-titels (namesake / leidend lidwoord); isbn/cover zijn al hard-gegate vóór de write, dus daar is het alleen een structurele her-verificatie (host-allowlist + dup-collision)."
           />
         </div>
 
@@ -312,7 +314,9 @@ npx tsx --env-file=.env.local scripts/enrich-all.ts --apply --gpt-limit=50`}
                 <code className="font-mono text-xs">original_language</code> te vullen. Bewust <strong>gesplitst op sleutel</strong>: OL
                 pakt alle <em>keybare</em> boeken (work-id óf ISBN) exact en gratis; Google Books pakt alleen de <em>wezen</em> (geen
                 sleutel) via title-search, want dat is het enige dat z&apos;n ~1.000/dag-quota nog moet kosten. De selecties zijn exacte
-                complementen — ze raken nooit dezelfde rij en mogen gelijktijdig draaien.
+                complementen — ze raken nooit dezelfde rij en mogen gelijktijdig draaien. Beide vormen samen met{' '}
+                <code className="font-mono text-xs">enrich-native-titles</code> <strong>Fase 1 van <a href="#master" className="underline hover:no-underline">enrich-all.ts</a></strong>,
+                die ze concurrent start; je kunt ze ook los draaien (hieronder).
               </>
             }
           />

@@ -98,7 +98,7 @@ export default function PipelineCard({
         >
           <PhaseHeader Icon={Sparkles} n={3} label="Enrich" />
           <p className="text-xs text-gray-500 leading-snug">
-            Run <code className="font-mono text-[11px]">enrich-all.ts</code> to fill covers, ISBNs, descriptions, ban context, reasons.
+            Run <code className="font-mono text-[11px]">enrich-all.ts</code> to fill covers, ISBNs, native titles, descriptions, ban context, reasons — parallel harvest + before/after coverage report.
           </p>
           <p className="text-xs font-medium text-gray-700 mt-auto">
             {needsEnrichment.toLocaleString('en')} books missing fields →
