@@ -34,9 +34,18 @@ Volgorde = leverage. Gratis bronnen eerst, betaalde API's alleen op gescopete wo
       descriptions backed by a citable source…") — buiten de JSON-LD gehouden (geverifieerd
       op localhost). 2.257 tonen de fallback, 26 onthullen een ouder `description`-veld.
       Restje voor later: die 26 legacy-descriptions tonen zonder bronattributie (mini-QA).
-- [ ] **A2. Volle OL-harvest pass** — `enrich-ol-harvest.ts` (gratis, geen dagcap, exact-key).
-      Doelvelden: cover (6.854 missend), `first_published_year` (5.501), sibling-ISBN (6.196).
-      Daarna coverage opnieuw meten en het verschil noteren.
+- [x] **A2. Volle OL-harvest pass** — ✅ 2026-06-11: al uitgeput (geen actie meer nodig).
+      `enrich-ol-harvest.ts` blijkt al 2+ volledige passes gedraaid (cursor pass 3,
+      "full pass complete"); verse dry-run vanaf id 0 vond **0** vulbare covers/jaren.
+      Resterend keybaar-maar-leeg: ~1.807 zonder cover / ~1.210 zonder jaar — niet
+      harvestbaar: OL heeft de data niet, óf de sleutel is **contaminated** (OL-record-titel
+      ≠ onze titel → de guard skipt terecht, ~10/15 in de steekproef). Een `--apply`-run
+      zou ~0 opleveren. → echte cover/jaar-lever is nu A2b, niet de harvest.
+- [ ] **A2b. Contaminated-key cleanup** (nieuw, uit A2-bevinding) — de keybare boeken die
+      OL als title-mismatch skipt dragen een `openlibrary_work_id`/`isbn13` die naar een
+      ánder werk wijst. Bekend openstaand dossier (memory: OL/GB-harvest-split). Detector:
+      `_audit_ol_title_mismatch.ts`. Opschonen (verkeerde sleutel nullen) maakt die boeken
+      daarna alsnog (her)harvestbaar. Eerst omvang meten met de audit.
 - [ ] **A3. GB-harvest (launchd, ~1.000/dag) laten lopen** voor de wezen — geen actie,
       wel wekelijks `data/gb-harvest-proposals.jsonl` even checken op bruikbare year/categories.
 - [ ] **A4. Placeholder-auteurs herclassificeren** — grootste flag-driver (1.504 boeken;

@@ -27,3 +27,23 @@ re-deriving which script does what.
 # Reading large data files
 
 Files under `data/` can be multiple MB (e.g. `data/film/film-data.json`, `data/pen-america-*.json`). Do not read them in full. Use `jq`, `grep`, `wc`, or `Read` with `offset`/`limit` to pull only the slice you need. Reserve a full read for files you have confirmed are small.
+
+## Data & Database
+
+Always verify data changes with a read-only DB query before AND after applying them, and report exact row counts affected (e.g., "merged 14, kept 14, cleaned 3,399").
+
+## Git Workflow
+
+After any data enrichment/merge/cleanup, always commit AND push the result with a descriptive message summarizing counts and scope.
+
+## Enrichment Pipeline
+
+For cover/title enrichment, guard against namesake/leading-article mismatches and roll back batches that produce incorrect matches; verify a sample before bulk applying.
+
+## Long-Running Jobs
+
+Prefer interruption-resistant, checkpointed terminal commands for long batch jobs; avoid relying on background tasks/monitors that abort on session interruption.
+
+## Data Quality
+
+Double-check production data facts (publication years, country counts, framing) against authoritative sources before shipping; flag pre-existing errors found.

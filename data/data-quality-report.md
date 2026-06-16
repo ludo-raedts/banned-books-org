@@ -1,28 +1,28 @@
 # Data Quality Dry Run
 
-Run at: 2026-06-10T18:53:43.729Z
+Run at: 2026-06-15T06:03:44.118Z
 
 Drie buckets per record: `confident` (automatisch hoog vertrouwen), `default` (geïmporteerd, niets mis), `flagged` (minimaal één probleem).
 
 ## Books
 
-Totaal: **15890**
+Totaal: **15888**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 5121 | 32.2% |
-| default | 8447 | 53.2% |
-| flagged | 2322 | 14.6% |
+| confident | 5151 | 32.4% |
+| default | 8410 | 52.9% |
+| flagged | 2327 | 14.6% |
 
 ### Confident books — sample (top 25 by score, oudste eerst)
 
 | ID | Slug | Title | Auteur | Score | Signalen |
 |---:|---|---|---|---:|---|
 | 4 | 1984 | 1984 | George Orwell | 5/5 | canonical-id, bans:0v/25t/12c, sources:0v/25t, editorial-complete, author-legit |
-| 5 | the-bluest-eye | The Bluest Eye | Toni Morrison | 5/5 | canonical-id, bans:1v/118t/1c, sources:0v/118t, editorial-complete, author-legit |
+| 5 | the-bluest-eye | The Bluest Eye | Toni Morrison | 5/5 | canonical-id, bans:1v/115t/1c, sources:0v/118t, editorial-complete, author-legit |
 | 6 | the-satanic-verses | The Satanic Verses | Salman Rushdie | 5/5 | canonical-id, bans:15v/23t/22c, sources:0v/29t, editorial-complete, author-legit |
-| 7 | and-tango-makes-three | And Tango Makes Three | Justin Richardson, Peter Parnell | 5/5 | canonical-id, bans:2v/24t/4c, sources:0v/26t, editorial-complete, author-legit |
-| 8 | animal-farm | Animal Farm | George Orwell | 5/5 | canonical-id, bans:0v/14t/11c, sources:0v/14t, editorial-complete, author-legit |
+| 7 | and-tango-makes-three | And Tango Makes Three | Justin Richardson, Peter Parnell | 5/5 | canonical-id, bans:1v/23t/4c, sources:0v/24t, editorial-complete, author-legit |
+| 8 | animal-farm | Animal Farm | George Orwell | 5/5 | canonical-id, bans:0v/13t/11c, sources:0v/13t, editorial-complete, author-legit |
 | 9 | the-handmaids-tale | The Handmaid's Tale | Margaret Atwood | 5/5 | canonical-id, bans:1v/109t/2c, sources:0v/109t, editorial-complete, author-legit |
 | 10 | lady-chatterleys-lover | Lady Chatterley's Lover | D.H. Lawrence | 5/5 | canonical-id, bans:2v/13t/13c, sources:0v/14t, editorial-complete, author-legit |
 | 11 | the-da-vinci-code | The Da Vinci Code | Dan Brown | 5/5 | canonical-id, bans:1v/10t/9c, sources:0v/10t, editorial-complete, author-legit |
@@ -33,14 +33,14 @@ Totaal: **15890**
 | 18 | the-color-purple | The Color Purple | Alice Walker | 5/5 | canonical-id, bans:1v/65t/3c, sources:0v/65t, editorial-complete, author-legit |
 | 19 | beloved | Beloved | Toni Morrison | 5/5 | canonical-id, bans:0v/79t/2c, sources:0v/80t, editorial-complete, author-legit |
 | 20 | slaughterhouse-five | Slaughterhouse-Five | Kurt Vonnegut | 5/5 | canonical-id, bans:0v/60t/1c, sources:0v/60t, editorial-complete, author-legit |
-| 22 | a-clockwork-orange | A Clockwork Orange | Anthony Burgess | 5/5 | canonical-id, bans:4v/31t/1c, sources:0v/35t, editorial-complete, author-legit |
-| 23 | the-lord-of-the-flies | The Lord of the Flies | William Golding | 5/5 | canonical-id, bans:0v/8t/2c, sources:0v/8t, editorial-complete, author-legit |
+| 22 | a-clockwork-orange | A Clockwork Orange | Anthony Burgess | 5/5 | canonical-id, bans:3v/30t/1c, sources:0v/32t, editorial-complete, author-legit |
+| 23 | the-lord-of-the-flies | The Lord of the Flies | William Golding | 5/5 | canonical-id, bans:0v/7t/2c, sources:0v/7t, editorial-complete, author-legit |
 | 25 | i-know-why-the-caged-bird-sings | I Know Why the Caged Bird Sings | Maya Angelou | 5/5 | canonical-id, bans:0v/54t/2c, sources:0v/54t, editorial-complete, author-legit |
 | 26 | native-son | Native Son | Richard Wright | 5/5 | canonical-id, bans:0v/30t/1c, sources:0v/30t, editorial-complete, author-legit |
 | 27 | the-diary-of-a-young-girl | The Diary of a Young Girl | Anne Frank | 5/5 | canonical-id, bans:0v/4t/3c, sources:0v/5t, editorial-complete, author-legit |
 | 29 | the-perks-of-being-a-wallflower | The Perks of Being a Wallflower | Stephen Chbosky | 5/5 | canonical-id, bans:2v/139t/2c, sources:0v/139t, editorial-complete, author-legit |
-| 30 | speak | Speak | Laurie Halse Anderson | 5/5 | canonical-id, bans:0v/69t/1c, sources:0v/69t, editorial-complete, author-legit |
-| 31 | the-kite-runner | The Kite Runner | Khaled Hosseini | 5/5 | canonical-id, bans:0v/117t/2c, sources:0v/117t, editorial-complete, author-legit |
+| 30 | speak | Speak | Laurie Halse Anderson | 5/5 | canonical-id, bans:0v/68t/1c, sources:0v/68t, editorial-complete, author-legit |
+| 31 | the-kite-runner | The Kite Runner | Khaled Hosseini | 5/5 | canonical-id, bans:0v/116t/2c, sources:0v/117t, editorial-complete, author-legit |
 | 43 | the-house-on-mango-street | The House on Mango Street | Sandra Cisneros | 5/5 | canonical-id, bans:0v/10t/1c, sources:0v/10t, editorial-complete, author-legit |
 | 44 | catch-22 | Catch-22 | Joseph Heller | 5/5 | canonical-id, bans:0v/6t/1c, sources:0v/6t, editorial-complete, author-legit |
 
@@ -49,9 +49,8 @@ Totaal: **15890**
 | Flag | Count |
 |---|---:|
 | only-placeholder-authors | 1504 |
-| cover-placeholder | 836 |
+| cover-placeholder | 842 |
 | no-bans | 1 |
-| no-author | 1 |
 
 ### Flagged books — sample (eerste 30)
 
@@ -106,29 +105,29 @@ Totaal: **15890**
 | 146 | soul-mountain | Soul Mountain | Gao Xingjian | 3/5 | bans, editorial |
 | 156 | marriage-and-morals | Marriage and Morals | Bertrand Russell | 2/5 | bans, sources, editorial |
 | 162 | an-area-of-darkness | An Area of Darkness | V. S. Naipaul | 2/5 | bans, sources, editorial |
-| 178 | by-grand-central-station-i-sat-down-and-wept | By Grand Central Station I Sat Down and Wept | Elizabeth Smart | 2/5 | bans, sources, author-legit |
 | 187 | snow-falling-on-cedars | Snow Falling on Cedars | David Guterson | 4/5 | editorial |
 | 190 | mother-courage-and-her-children | Mother Courage and Her Children | Bertolt Brecht | 2/5 | bans, sources, editorial |
 | 200 | a-court-of-mist-and-fury | A Court of Mist and Fury | Sarah J. Maas | 4/5 | editorial |
 | 206 | perfect-eh | Perfect (EH) | Ellen Hopkins | 2/5 | bans, sources, editorial |
 | 215 | mondays-not-coming | Monday's Not Coming | Tiffany D. Jackson | 3/5 | editorial, author-legit |
+| 218 | shine | Shine | Lauren Myracle | 4/5 | editorial |
 
 ## Authors
 
-Totaal: **9535**
+Totaal: **9532**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 1374 | 14.4% |
-| default | 8138 | 85.3% |
-| flagged | 23 | 0.2% |
+| confident | 1484 | 15.6% |
+| default | 8028 | 84.2% |
+| flagged | 20 | 0.2% |
 
 ### Confident authors — sample (eerste 25)
 
 | ID | Slug | Name | Books | Confident books | Signalen |
 |---:|---|---|---:|---:|---|
 | 5 | george-orwell | George Orwell | 6 | 5 | birth-year, bio, photo, confident-books:5, birth-country |
-| 6 | toni-morrison | Toni Morrison | 8 | 5 | birth-year, bio, photo, confident-books:5, birth-country |
+| 6 | toni-morrison | Toni Morrison | 8 | 7 | birth-year, bio, photo, confident-books:7, birth-country |
 | 7 | salman-rushdie | Salman Rushdie | 3 | 3 | birth-year, bio, photo, confident-books:3, birth-country |
 | 8 | justin-richardson | Justin Richardson | 2 | 2 | birth-year, bio, confident-books:2, birth-country |
 | 9 | peter-parnell | Peter Parnell | 1 | 1 | birth-year, bio, confident-books:1, birth-country |
@@ -159,7 +158,6 @@ Totaal: **9535**
 |---|---:|
 | no-books | 13 |
 | placeholder | 7 |
-| death-before-birth | 3 |
 
 ### Flagged authors — sample (eerste 30)
 
@@ -180,13 +178,10 @@ Totaal: **9535**
 | 4599 | david-hamilton | David Hamilton | 0 | no-books |
 | 4611 | sade | Sade | 0 | no-books |
 | 5785 | shahrnoosh-parsipour | Shahrnoosh Parsipour | 0 | no-books |
-| 6499 | aeschylus | Aeschylus | 1 | death-before-birth |
 | 8176 | voon-ho-yin | Voon Ho Yin | 0 | no-books |
 | 9281 | gaidar-arkadi | Gaidar, Arkadi | 0 | no-books |
 | 9488 | roca-elena | Roca, Elena | 0 | no-books |
 | 9581 | walter-gerard | Walter, Gerard | 0 | no-books |
-| 12193 | sophocles | Sophocles | 1 | death-before-birth |
-| 12194 | plato | Plato | 1 | death-before-birth |
 | 12340 | fido-nesti | Fido Nesti | 1 | placeholder |
 
 ## Canary checks
@@ -197,9 +192,9 @@ Zoek bekende titels op om te zien of de heuristiek ze in `confident` plaatst:
 |---|---|---:|---|
 | 1984 (1984) | confident | 5/5 | canonical-id, bans:0v/25t/12c, sources:0v/25t, editorial-complete, author-legit |
 | Nineteen Eighty-Four | _niet gevonden_ | — | — |
-| Animal Farm (animal-farm) | confident | 5/5 | canonical-id, bans:0v/14t/11c, sources:0v/14t, editorial-complete, author-legit |
+| Animal Farm (animal-farm) | confident | 5/5 | canonical-id, bans:0v/13t/11c, sources:0v/13t, editorial-complete, author-legit |
 | Brave New World (brave-new-world) | confident | 5/5 | canonical-id, bans:0v/45t/5c, sources:0v/45t, editorial-complete, author-legit |
-| Lolita (lolita) | confident | 5/5 | canonical-id, bans:2v/19t/11c, sources:0v/21t, editorial-complete, author-legit |
+| Lolita (lolita) | confident | 5/5 | canonical-id, bans:1v/18t/11c, sources:0v/21t, editorial-complete, author-legit |
 | The Satanic Verses (the-satanic-verses) | confident | 5/5 | canonical-id, bans:15v/23t/22c, sources:0v/29t, editorial-complete, author-legit |
 | To Kill a Mockingbird (to-kill-a-mockingbird) | confident | 5/5 | canonical-id, bans:0v/7t/1c, sources:0v/7t, editorial-complete, author-legit |
 | Fahrenheit 451 (fahrenheit-451) | confident | 4/5 | canonical-id, sources:0v/4t, editorial-complete, author-legit |

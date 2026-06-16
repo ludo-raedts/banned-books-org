@@ -148,3 +148,11 @@ next-env.d.ts
 # reground (fase 2) run artifacts — backups, worklists, logs (timestamped per run)
 /data/_reground_*.log
 /data/reground-noisbn-*
+
+# leading-underscore = local scratch (run logs, snapshots, grounding dumps)
+/data/_*
+# row backups taken before destructive merges/wipes (local-only safety copies)
+/data/vague-pen-rollups-backup-*
+/data/wiped-*-backup.csv
+# press-release source/draft material (local-only)
+/data/press-release-data-*
