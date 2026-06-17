@@ -47,13 +47,14 @@ type ChildBook = {
   first_published_year: number | null
   genres: string[] | null
   book_authors: { authors: { display_name: string } | null }[]
-  bans: { country_code: string; countries: { name_en: string } | null }[]
+  bans: { country_code: string }[]
+  topCountryName?: string | null
 }
 
-function topCountry(bans: ChildBook['bans']): string | null {
+function topCountry(bans: ChildBook['bans'], names: Map<string, string>): string | null {
   const counts = new Map<string, number>()
   for (const ban of bans) {
-    const name = ban.countries?.name_en ?? ban.country_code
+    const name = names.get(ban.country_code) ?? ban.country_code
     counts.set(name, (counts.get(name) ?? 0) + 1)
   }
   if (counts.size === 0) return null
@@ -62,8 +63,17 @@ function topCountry(bans: ChildBook['bans']): string | null {
 
 async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: ChildBook[]; ya: ChildBook[] }> {
   const supabase = adminClient()
+  // Drop the per-ban countries(name_en) join from the embed — for heavily-banned
+  // titles that join-within-join multiplied the row work and tipped the prerender
+  // over the statement timeout. Resolve country names from one cheap lookup instead.
   const SELECT =
-    'id, title, slug, cover_url, first_published_year, genres, book_authors(authors(display_name)), bans(country_code, countries(name_en))'
+    'id, title, slug, cover_url, first_published_year, genres, book_authors(authors(display_name)), bans(country_code)'
+
+  const countryNames = new Map<string, string>()
+  {
+    const { data } = await supabase.from('countries').select('code, name_en')
+    for (const c of (data ?? []) as Array<{ code: string; name_en: string }>) countryNames.set(c.code, c.name_en)
+  }
 
   const filter = ALL_TAGS.map(t => `genres.cs.{${t}}`).join(',')
 
@@ -88,6 +98,7 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
   // /banned-childrens-books page is a banned-books page; if there's no ban
   // it doesn't belong here.
   const withBans = all.filter(b => (b.bans?.length ?? 0) >= 1)
+  for (const b of withBans) b.topCountryName = topCountry(b.bans, countryNames)
 
   // Bucket by most-specific tag. A book tagged with `picture-book` lands
   // in the picture-book section even if it also carries `young-adult`
@@ -353,7 +364,7 @@ function BookSection({
       <ol className="divide-y divide-neutral-200 bg-white border border-neutral-200 rounded-sm">
         {books.map((book, i) => {
           const author = book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
-          const top = topCountry(book.bans)
+          const top = book.topCountryName ?? null
           return (
             <li key={book.id}>
               <Link href={`/books/${book.slug}`} className="group flex items-center gap-4 px-4 py-3 hover:bg-cream/50 transition-colors">

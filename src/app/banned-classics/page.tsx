@@ -49,29 +49,59 @@ const ERA_LABELS: Record<string, string> = {
   '1945to1970': '1945 – 1970',
 }
 
+// Inclusion threshold. Every catalogue book has ≥1 ban (books only exist if
+// banned), so ">=1" admitted all ~4.9k pre-1970 books — including ~3.5k obscure
+// single-listing titles from the Nazi-1938 list import, which both bloated the
+// page and made the heavy bans-embed time out at prerender. This page is an
+// explicit "Top-list" of classics STILL banned, so we require ≥2 documented
+// bans (multiple events / countries), which both curates the list and bounds
+// the query to ~200 books.
+const MIN_BANS = 2
+
 async function fetchClassics(): Promise<ClassicBook[]> {
   const supabase = adminClient()
   const SELECT = 'id, title, slug, cover_url, first_published_year, book_authors(authors(display_name)), bans(country_code, countries(name_en))'
 
-  let all: ClassicBook[] = []
-  let offset = 0
-  while (true) {
+  // 1. Pre-1970 book ids (light; no embed).
+  const ids: number[] = []
+  for (let offset = 0; ; offset += 1000) {
     const { data, error } = await supabase
       .from('books')
-      .select(SELECT)
+      .select('id')
       .lt('first_published_year', 1970)
       .not('first_published_year', 'is', null)
-      // Stable order across pages or .range() skips/dupes past the 1000-row page.
       .order('id')
       .range(offset, offset + 999)
     if (error) throw error
     if (!data || data.length === 0) break
-    all = all.concat(data as unknown as ClassicBook[])
+    ids.push(...data.map(r => r.id as number))
     if (data.length < 1000) break
-    offset += 1000
   }
 
-  return all
+  // 2. Ban counts from the materialized view (cheap, pre-aggregated) — used to
+  //    identify the multiply-banned subset WITHOUT embedding every ban row.
+  const counts = new Map<number, number>()
+  for (let i = 0; i < ids.length; i += 300) {
+    const { data, error } = await supabase
+      .from('v_book_ban_counts')
+      .select('entity_id, total_bans')
+      .in('entity_id', ids.slice(i, i + 300))
+    if (error) throw error
+    for (const r of (data ?? []) as Array<{ entity_id: number; total_bans: number }>) {
+      counts.set(r.entity_id, r.total_bans)
+    }
+  }
+  const keep = ids.filter(id => (counts.get(id) ?? 0) >= MIN_BANS)
+
+  // 3. Hydrate full detail for the bounded set only.
+  const out: ClassicBook[] = []
+  for (let i = 0; i < keep.length; i += 300) {
+    const { data, error } = await supabase.from('books').select(SELECT).in('id', keep.slice(i, i + 300))
+    if (error) throw error
+    out.push(...(data as unknown as ClassicBook[]))
+  }
+
+  return out
     .filter(b => b.bans.length >= 1)
     .sort((a, b) => b.bans.length - a.bans.length)
 }
