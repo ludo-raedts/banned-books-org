@@ -359,6 +359,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['ushmm.org'],
       },
       {
+        name: 'Berlin.de — Liste der verbannten Bücher (Nazi 1938 list)',
+        url: 'https://www.berlin.de/geschichte/nationalsozialismus/verbannte-buecher/',
+        description:
+          'Official Land Berlin / BerlinOnline open dataset (Creative Commons Attribution) digitising the Nazi "Liste des schädlichen und unerwünschten Schrifttums", Stand 31 December 1938 — the Reichsschrifttumskammer\'s register of "harmful and undesirable writings". ~4,700 structured rows carry author, title, publisher and first-edition year; the source of our German 1938 ban records. Individual titles only — author-wide "Sämtliche Schriften" blanket bans and anonymous aggregate entries are held out, and these books are catalogued as censorship victims (no content warning), like the Liste Otto.',
+        match: ['berlin.de/verbannte-buecher'],
+      },
+      {
         name: 'South African History Archive — Banned books in South Africa',
         url: 'https://www.sahistory.org.za/article/banned-books-south-africa',
         description:
