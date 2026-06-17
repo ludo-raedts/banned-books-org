@@ -56,6 +56,13 @@ export type CommitInput = {
   title_native?: string | null
   title_transliterated?: string | null
   title_english_meaningful?: string | null
+  // Optional explicit slug. When set (non-empty), it overrides the
+  // title-derived slug. The shared slug derivation (pickSlugSource) is
+  // author-blind, so same-title-different-author imports (e.g. four distinct
+  // 1938-banned books all titled "Liebe und Ehe") must disambiguate the slug
+  // themselves — books.slug is UNIQUE. The caller owns uniqueness; this is the
+  // only sanctioned way to write a non-title slug through the shared committer.
+  slug_override?: string | null
   // ISO 639-1 two-letter code. books.original_language is `character(2)`.
   original_language?: string | null
   // Authors. Accepts the legacy `string[]` form (display_name only) for
@@ -116,11 +123,14 @@ export async function commitParsedRow(input: CommitInput, pg: Client): Promise<C
     const scopeId = scopeRes.rows[0].id as number
 
     // 3. Book
-    const slug = pickSlugSource(
-      input.title,
-      input.title_transliterated,
-      input.title_english_meaningful,
-    )
+    const slug =
+      input.slug_override && input.slug_override.trim()
+        ? input.slug_override.trim()
+        : pickSlugSource(
+            input.title,
+            input.title_transliterated,
+            input.title_english_meaningful,
+          )
     if (!slug) {
       throw new Error(
         `commitParsedRow: slugify produced empty slug for title '${input.title}' (no usable transliteration or English-meaningful fallback)`,
