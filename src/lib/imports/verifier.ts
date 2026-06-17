@@ -189,6 +189,37 @@ function noMatch(): DimensionMatch {
 
 type Sb = ReturnType<typeof adminClient>
 
+// Default pg_trgm book-title threshold for the standalone matcher. Mirrors every
+// SOURCE_REGISTRY entry's `book_title` threshold (all 0.85 today); one-off import
+// scripts have no SourceConfig, so they get this.
+const DEFAULT_BOOK_TITLE_FUZZY_THRESHOLD = 0.85
+
+// Canonical, queue-free match-before-create helper for one-off import scripts.
+// THE place to ask "is this book already in the DB?" before minting a row —
+// keeping cross-language duplicate prevention at ingest, not in after-the-fact
+// merges. Read-only (DB reads only); returns null on no_match.
+//
+// It reuses the exact same tiers as the LLM pipeline by delegating to the private
+// `matchBook` (slugify + exact slug → English-title slug → pg_trgm fuzzy on title
+// → fuzzy on English title). There is intentionally ONE matcher: do not
+// re-implement title matching in importers — call this.
+export async function matchExistingBook(opts: {
+  title: string
+  englishTitle?: string | null
+  threshold?: number
+}): Promise<{ id: number; status: 'exact' | 'fuzzy'; confidence: number | null } | null> {
+  const sb = adminClient()
+  const match = await matchBook(
+    sb,
+    slugify(opts.title),
+    opts.title,
+    opts.threshold ?? DEFAULT_BOOK_TITLE_FUZZY_THRESHOLD,
+    opts.englishTitle ?? null,
+  )
+  if (match.status === 'no_match' || typeof match.existing_id !== 'number') return null
+  return { id: match.existing_id, status: match.status, confidence: match.confidence }
+}
+
 // `englishTitle` is the LLM's `title_english_meaningful` — the work's English
 // title even when `title` is a foreign-language edition (e.g. title="La Casa en
 // Mango Street", englishTitle="The House on Mango Street"). It bridges the
