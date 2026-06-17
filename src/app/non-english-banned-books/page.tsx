@@ -23,30 +23,79 @@ export const metadata: Metadata = {
   alternates: { canonical: '/non-english-banned-books' },
 }
 
-export default async function NonEnglishBannedBooksPage() {
-  const timer = newTimer('non-english-destination')
+// How many top-ranked titles to render. Hydrate a small buffer above this so a
+// rare view/embed count drift can't drop a legitimately top-ranked book.
+const SHOW = 50
+const HYDRATE = 60
+
+// Rank-then-hydrate (same shape as /banned-classics): the global
+// v_top_banned_books view surfaces only ~33 non-English titles in its top 100
+// (English-language censorship dominates), too thin for a destination page, so
+// we rank the full non-English set ourselves. The old approach embedded bans()
+// for an unordered .limit(1000) slice of the ~5k candidates — a heavy join that
+// intermittently tripped statement_timeout AND silently ignored 80% of
+// candidates (no .order() on a >1000-row table). Now: collect candidate ids
+// (light), rank by pre-aggregated v_book_ban_counts, and embed bans only for
+// the bounded top set.
+async function fetchNonEnglish(timer: ReturnType<typeof newTimer>) {
   const supabase = adminClient()
 
-  // Strategy: query `books` directly with a non-English language filter, then
-  // sort by ban-count client-side. The global v_top_banned_books view only
-  // surfaces ~33 non-English titles in its top 100 (English-language censorship
-  // dominates), which is too thin for a destination page. Pulling from books
-  // table gives us the full long tail of non-English bans.
-  const { data: booksRaw } = await timer.wrap('books-non-english', () =>
-    supabase
-      .from('books')
-      .select(TOP_LIST_BOOK_SELECT)
-      .eq('is_gated', false)
-      .not('original_language', 'is', null)
-      .neq('original_language', 'en')
-      .limit(1000),
+  // 1. Candidate ids — non-English, public. Light select, fully paginated.
+  const ids = await timer.wrap('candidate-ids', async () => {
+    const out: number[] = []
+    for (let offset = 0; ; offset += 1000) {
+      const { data, error } = await supabase
+        .from('books')
+        .select('id')
+        .eq('is_gated', false)
+        .not('original_language', 'is', null)
+        .neq('original_language', 'en')
+        .order('id')
+        .range(offset, offset + 999)
+      if (error) throw error
+      if (!data || data.length === 0) break
+      out.push(...data.map(r => r.id as number))
+      if (data.length < 1000) break
+    }
+    return out
+  })
+
+  // 2. Pre-aggregated ban counts → rank, keep the top HYDRATE ids only.
+  const counts = await timer.wrap('ban-counts', async () => {
+    const m = new Map<number, number>()
+    for (let i = 0; i < ids.length; i += 300) {
+      const { data, error } = await supabase
+        .from('v_book_ban_counts')
+        .select('entity_id, total_bans')
+        .in('entity_id', ids.slice(i, i + 300))
+      if (error) throw error
+      for (const r of (data ?? []) as Array<{ entity_id: number; total_bans: number }>) {
+        m.set(r.entity_id, r.total_bans)
+      }
+    }
+    return m
+  })
+  const keep = ids
+    .filter(id => (counts.get(id) ?? 0) > 0)
+    .sort((a, b) => (counts.get(b) ?? 0) - (counts.get(a) ?? 0))
+    .slice(0, HYDRATE)
+
+  // 3. Hydrate full card detail (bans embed) for the bounded set only.
+  const { data: booksRaw } = await timer.wrap('hydrate-top', () =>
+    supabase.from('books').select(TOP_LIST_BOOK_SELECT).in('id', keep),
   )
-  const candidates = (booksRaw ?? []) as unknown as TopListBookRow[]
+  return (booksRaw ?? []) as unknown as TopListBookRow[]
+}
+
+export default async function NonEnglishBannedBooksPage() {
+  const timer = newTimer('non-english-destination')
+
+  const candidates = await fetchNonEnglish(timer)
 
   const books = candidates
     .filter(b => b.bans.length > 0)
     .sort((a, b) => b.bans.length - a.bans.length)
-    .slice(0, 50)
+    .slice(0, SHOW)
     .map(b => toBookCard(b, langContext(b)))
 
   timer.end()
