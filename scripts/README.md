@@ -85,9 +85,20 @@ die een merge-script daarna inleest.
 | `_audit_honorific_author_dupes.ts` | Honorific-twin auteurs (Ustaz/Haji-prefix) → input voor `merge-honorific-author-dupes.ts` |
 | `_audit_mojibake_authors.ts` | U+FFFD-corrupte auteursnamen (draai vóór nieuwe KDN-batch) |
 | `_audit_cross_script_dupes.ts` | Cross-script auteur-twins: niet-Latijnse auteur die een bestaande Latijnse auteur dubbelt (name_english-match of identieke bio) → fold via `merge-cross-language-dupes.ts`. Draai ná elke vreemdtalige ban-import (FSEM/KDN/Iran). Under-count: name_english is schaars |
+| `_audit_spanish_edition_dupes.ts` | **Latin-script** cross-language boek-dupes die `_audit_cross_script_dupes` mist: een vertaalde editie (Spaans/Frans-getiteld) van een werk dat al onder de Engelse titel staat. Gate = Spaanse titel + `original_language='en'` (de importer stempelt de taal van het Engelse *werk*) + zelfde-auteur Engelse rij → input voor de curated lijst in `merge-spanish-edition-dupes.ts`. Heuristiek over-telt (genuine `es/fr/it`-werken); handmatig filteren |
 | `check-dupes.ts` | Ad-hoc: print info voor een **hardcoded** sluglijst om te beoordelen óf het dupes zijn. Schrijft niets |
 
 > Detectoren **vinden**, merge-scripts **voeren uit**. Draai altijd eerst de audit.
+
+> **Ingest-doctrine — vreemdtalige imports.** Een one-off importer matcht op
+> titel-slug + pg_trgm en mint daardoor een **nieuwe** boekrij voor een vertaalde
+> editie (de Spaanse titel matcht de Engelse canonical niet) — de bron van de
+> cross-language dupe-klasse. De gedeelde LLM-pipeline (`src/lib/imports/verifier.ts`)
+> vangt dit nu af via een cross-language tier op `title_english_meaningful`, maar
+> CSV-one-offs (`import-pen.ts`) hebben dat signaal niet. **Verplicht na élke
+> import met mogelijk vreemdtalige titels:** draai `_audit_cross_script_dupes.ts`
+> (auteurs) én `_audit_spanish_edition_dupes.ts` (boeken), en fold de bevestigde
+> hits via de bijbehorende merge-scripts. Dit is het staande vangnet, niet optioneel.
 
 ---
 

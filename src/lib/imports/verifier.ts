@@ -3,7 +3,8 @@
 // decides whether the job auto-approves or queues for review.
 //
 // Match strategy per dimension:
-//   - book:    slug-lookup (exact)  ->  pg_trgm RPC (fuzzy >= threshold)
+//   - book:    slug-lookup (exact)  ->  English-title slug (cross-language exact)
+//              ->  pg_trgm RPC (fuzzy >= threshold) on title, then English title
 //   - author:  slug-lookup (exact)  ->  pg_trgm RPC (fuzzy >= threshold)
 //   - country: ISO code equality on `countries.code` (no fuzzy)
 //   - reason:  slug-lookup on `reasons.slug` (no fuzzy)
@@ -120,6 +121,7 @@ export async function verifyExtraction(
     bookSlug,
     extraction.title,
     sourceConfig.fuzzy_thresholds.book_title,
+    extraction.title_english_meaningful,
   )
 
   // ----- Author dimensions --------------------------------------------------
@@ -187,23 +189,53 @@ function noMatch(): DimensionMatch {
 
 type Sb = ReturnType<typeof adminClient>
 
+// `englishTitle` is the LLM's `title_english_meaningful` — the work's English
+// title even when `title` is a foreign-language edition (e.g. title="La Casa en
+// Mango Street", englishTitle="The House on Mango Street"). It bridges the
+// cross-language gap: a Spanish/translated edition slug never equals, nor
+// pg_trgm-matches, the English canonical's slug/title, so without this tier the
+// pipeline mints a fresh row for what is the same work — the root cause of the
+// cross-language (Spanish-edition) duplicate class. Resolution order is
+// precision-first: exact slug on the edition title, exact slug on the English
+// title (cheap + high-precision cross-language hit), then fuzzy on each.
 async function matchBook(
   sb: Sb,
   slug: string,
   title: string,
   threshold: number,
+  englishTitle: string | null = null,
 ): Promise<DimensionMatch> {
   if (slug) {
-    const { data: exact } = await sb
-      .from('books')
-      .select('id')
-      .eq('slug', slug)
-      .maybeSingle()
-    if (exact) {
-      return { status: 'exact', existing_id: exact.id, confidence: 1 }
-    }
+    const exact = await exactBookBySlug(sb, slug)
+    if (exact) return exact
   }
 
+  // Cross-language exact tier: try the English title's slug. Only when it
+  // differs from the edition slug (i.e. the title really is foreign), so an
+  // already-English book costs no extra query.
+  const englishSlug = englishTitle ? slugify(englishTitle) : ''
+  if (englishSlug && englishSlug !== slug) {
+    const exact = await exactBookBySlug(sb, englishSlug)
+    if (exact) return exact
+  }
+
+  const fuzzy = await fuzzyBookByTitle(sb, title, threshold)
+  if (fuzzy.status !== 'no_match') return fuzzy
+
+  // Cross-language fuzzy fallback: spelling/punctuation variants of the English
+  // title that the exact-slug tier missed.
+  if (englishTitle && englishTitle.trim() && slugify(englishTitle) !== slug) {
+    return fuzzyBookByTitle(sb, englishTitle, threshold)
+  }
+  return fuzzy
+}
+
+async function exactBookBySlug(sb: Sb, slug: string): Promise<DimensionMatch | null> {
+  const { data } = await sb.from('books').select('id').eq('slug', slug).maybeSingle()
+  return data ? { status: 'exact', existing_id: data.id, confidence: 1 } : null
+}
+
+async function fuzzyBookByTitle(sb: Sb, title: string, threshold: number): Promise<DimensionMatch> {
   const { data: candidates, error } = await sb.rpc('find_book_candidates_by_title', {
     q: title,
     threshold,
