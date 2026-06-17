@@ -1,0 +1,766 @@
+{
+  "generated_at": "2026-06-17",
+  "seed": "data/berlin-verbannte-1938-2026-06-17.json",
+  "tested": 3606,
+  "matched": 58,
+  "would_create": 3548,
+  "exact": 56,
+  "fuzzy": 2,
+  "via_english_tier": 0,
+  "matches": [
+    {
+      "source_row_id": 187,
+      "title": "Voici Adolf Hitler",
+      "english": null,
+      "matched_id": 15232,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Voici Adolf Hitler",
+        "slug": "voici-adolf-hitler"
+      }
+    },
+    {
+      "source_row_id": 235,
+      "title": "Rayons et ombres d'Allemagne",
+      "english": null,
+      "matched_id": 14753,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Rayons et ombres d’Allemagne",
+        "slug": "rayons-et-ombres-dallemagne"
+      }
+    },
+    {
+      "source_row_id": 315,
+      "title": "Hitler en Espagne",
+      "english": null,
+      "matched_id": 15202,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Hitler en Espagne",
+        "slug": "hitler-en-espagne"
+      }
+    },
+    {
+      "source_row_id": 322,
+      "title": "Chantage á la guerre",
+      "english": null,
+      "matched_id": 15227,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Chantage à la guerre",
+        "slug": "chantage-a-la-guerre"
+      }
+    },
+    {
+      "source_row_id": 461,
+      "title": "Süd-Ost-Europa",
+      "english": null,
+      "matched_id": 14805,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Süd-Ost-Europa",
+        "slug": "sud-ost-europa"
+      }
+    },
+    {
+      "source_row_id": 513,
+      "title": "Stalin",
+      "english": null,
+      "matched_id": 10548,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Stalin",
+        "slug": "stalin"
+      }
+    },
+    {
+      "source_row_id": 700,
+      "title": "Wir im fernen Vaterland geboren ...",
+      "english": null,
+      "matched_id": 15009,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Wir im fernen Vaterland geboren",
+        "slug": "wir-im-fernen-vaterland-geboren"
+      }
+    },
+    {
+      "source_row_id": 780,
+      "title": "Notre défense nationale intégrale",
+      "english": null,
+      "matched_id": 15304,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Notre défense nationale intégrale",
+        "slug": "notre-defense-nationale-integrale"
+      }
+    },
+    {
+      "source_row_id": 839,
+      "title": "Ahasver",
+      "english": null,
+      "matched_id": 10270,
+      "status": "fuzzy",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Ahasver",
+        "slug": "ahasver-stefan-heym"
+      }
+    },
+    {
+      "source_row_id": 972,
+      "title": "Civitavecchia, ein Friedhof der Lebenden",
+      "english": null,
+      "matched_id": 15133,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Civitavecchia, ein Friedhof der Lebenden",
+        "slug": "civitavecchia-ein-friedhof-der-lebenden"
+      }
+    },
+    {
+      "source_row_id": 1119,
+      "title": "Blut und Ehre",
+      "english": null,
+      "matched_id": 15172,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Blut und Ehre",
+        "slug": "blut-und-ehre"
+      }
+    },
+    {
+      "source_row_id": 1304,
+      "title": "Securité d'abord",
+      "english": null,
+      "matched_id": 15098,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Sécurité d’abord",
+        "slug": "securite-dabord"
+      }
+    },
+    {
+      "source_row_id": 1321,
+      "title": "Al Capone",
+      "english": null,
+      "matched_id": 4089,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Al Capone",
+        "slug": "al-capone"
+      }
+    },
+    {
+      "source_row_id": 1354,
+      "title": "Zuidersee",
+      "english": null,
+      "matched_id": 14903,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Zuidersee",
+        "slug": "zuidersee"
+      }
+    },
+    {
+      "source_row_id": 1403,
+      "title": "Au nom de la loi",
+      "english": null,
+      "matched_id": 15076,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Au nom de la loi",
+        "slug": "au-nom-de-la-loi"
+      }
+    },
+    {
+      "source_row_id": 1671,
+      "title": "Les Dictateurs",
+      "english": null,
+      "matched_id": 14414,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Les dictateurs",
+        "slug": "les-dictateurs"
+      }
+    },
+    {
+      "source_row_id": 1675,
+      "title": "Le Danger allemand",
+      "english": null,
+      "matched_id": 14590,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Le danger allemand",
+        "slug": "le-danger-allemand"
+      }
+    },
+    {
+      "source_row_id": 1721,
+      "title": "Das grosse Los im Spiegel der Statistik und Zahlen-Analyse",
+      "english": null,
+      "matched_id": 14680,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Das grosse Los im Spiegel der Statistik und Zahlen-Analyse",
+        "slug": "das-grosse-los-im-spiegel-der-statistik-und-zahlen-analyse"
+      }
+    },
+    {
+      "source_row_id": 1726,
+      "title": "Die Judenfrage der Gegenwart",
+      "english": null,
+      "matched_id": 14870,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Die Judenfrage der Gegenwart",
+        "slug": "die-judenfrage-der-gegenwart"
+      }
+    },
+    {
+      "source_row_id": 1958,
+      "title": "Le fléau de l'Europe",
+      "english": null,
+      "matched_id": 14940,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Le fléau de l’Europe",
+        "slug": "le-fleau-de-leurope"
+      }
+    },
+    {
+      "source_row_id": 2010,
+      "title": "Hanussen",
+      "english": null,
+      "matched_id": 14727,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Hanussen",
+        "slug": "hanussen"
+      }
+    },
+    {
+      "source_row_id": 2151,
+      "title": "La Crise morale du temps présent et l'éducation humaine",
+      "english": null,
+      "matched_id": 14950,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "La crise morale du temps présent et l’éducation humaine",
+        "slug": "la-crise-morale-du-temps-present-et-leducation-humaine"
+      }
+    },
+    {
+      "source_row_id": 2227,
+      "title": "Police politique hitlérienne",
+      "english": null,
+      "matched_id": 14795,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Police politique hitlérienne",
+        "slug": "police-politique-hitlerienne"
+      }
+    },
+    {
+      "source_row_id": 2313,
+      "title": "Opium",
+      "english": null,
+      "matched_id": 7451,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Opium",
+        "slug": "opium"
+      }
+    },
+    {
+      "source_row_id": 2364,
+      "title": "Là-bas dans les geôles",
+      "english": null,
+      "matched_id": 14982,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Là-bas dans les geôles.",
+        "slug": "la-bas-dans-les-geoles"
+      }
+    },
+    {
+      "source_row_id": 2423,
+      "title": "Griff über die Grenze",
+      "english": null,
+      "matched_id": 14541,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Griff über die Grenze",
+        "slug": "griff-uber-die-grenze"
+      }
+    },
+    {
+      "source_row_id": 2427,
+      "title": "Spanien",
+      "english": null,
+      "matched_id": 14514,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Spanien",
+        "slug": "spanien"
+      }
+    },
+    {
+      "source_row_id": 2807,
+      "title": "Hitlers motorisierte Stossarmee",
+      "english": null,
+      "matched_id": 15020,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Hitlers motorisierte Stossarmee",
+        "slug": "hitlers-motorisierte-stossarmee"
+      }
+    },
+    {
+      "source_row_id": 2843,
+      "title": "Idoles allemandes",
+      "english": null,
+      "matched_id": 14809,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Idoles allemandes",
+        "slug": "idoles-allemandes"
+      }
+    },
+    {
+      "source_row_id": 2962,
+      "title": "Alte und neue Prophezeiungen über den Weltkrieg der Zukunft",
+      "english": null,
+      "matched_id": 14679,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Alte und neue Prophezeiungen über den Weltkrieg der Zukunft",
+        "slug": "alte-und-neue-prophezeiungen-uber-den-weltkrieg-der-zukunft"
+      }
+    },
+    {
+      "source_row_id": 3053,
+      "title": "Hitler",
+      "english": null,
+      "matched_id": 13676,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Hitler",
+        "slug": "hitler"
+      }
+    },
+    {
+      "source_row_id": 3151,
+      "title": "Einstein",
+      "english": null,
+      "matched_id": 14626,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Einstein",
+        "slug": "einstein"
+      }
+    },
+    {
+      "source_row_id": 3302,
+      "title": "Auf zum Kampf gegen die Kriegs-Hetzer!",
+      "english": null,
+      "matched_id": 14463,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Auf zum Kampf gegen die Kriegs-Hetzer !",
+        "slug": "auf-zum-kampf-gegen-die-kriegs-hetzer"
+      }
+    },
+    {
+      "source_row_id": 3420,
+      "title": "Lenin",
+      "english": null,
+      "matched_id": 10720,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Lenin",
+        "slug": "lenin"
+      }
+    },
+    {
+      "source_row_id": 3440,
+      "title": "Der Zusammenstoss zweier Welten in Spanien",
+      "english": null,
+      "matched_id": 14491,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Der Zusammenstoss zweier Welten in Spanien",
+        "slug": "der-zusammenstoss-zweier-welten-in-spanien"
+      }
+    },
+    {
+      "source_row_id": 3452,
+      "title": "Die Glocken von Basel",
+      "english": null,
+      "matched_id": 14404,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Die Glocken von Basel",
+        "slug": "die-glocken-von-basel"
+      }
+    },
+    {
+      "source_row_id": 3459,
+      "title": "Assassins! Une documentation sur l'avènement de Hitler",
+      "english": null,
+      "matched_id": 14687,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Assassins ! Une documentation sur l’avènement de Hitler.",
+        "slug": "assassins-une-documentation-sur-lavenement-de-hitler"
+      }
+    },
+    {
+      "source_row_id": 3476,
+      "title": "Halte-la!",
+      "english": null,
+      "matched_id": 14565,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Halte-là",
+        "slug": "halte-la"
+      }
+    },
+    {
+      "source_row_id": 3514,
+      "title": "All quiet in Germany",
+      "english": null,
+      "matched_id": 14484,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "All quiet in Germany",
+        "slug": "all-quiet-in-germany"
+      }
+    },
+    {
+      "source_row_id": 3610,
+      "title": "Sous la vague hitlérienne",
+      "english": null,
+      "matched_id": 14430,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Sous la vague hitlérienne",
+        "slug": "sous-la-vague-hitlerienne"
+      }
+    },
+    {
+      "source_row_id": 3676,
+      "title": "L'Allemagne de Hitler",
+      "english": null,
+      "matched_id": 15054,
+      "status": "fuzzy",
+      "confidence": 0.869565,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "L’Allemagne d’Hitler.",
+        "slug": "lallemagne-dhitler"
+      }
+    },
+    {
+      "source_row_id": 3704,
+      "title": "Englands Schatten über Europa",
+      "english": null,
+      "matched_id": 14542,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Englands schatten über Europa",
+        "slug": "englands-schatten-uber-europa"
+      }
+    },
+    {
+      "source_row_id": 3974,
+      "title": "Die gute Ehe",
+      "english": null,
+      "matched_id": 15199,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Die gute Ehe",
+        "slug": "die-gute-ehe"
+      }
+    },
+    {
+      "source_row_id": 4215,
+      "title": "L'évangile de la force",
+      "english": null,
+      "matched_id": 14787,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "L’Évangile de la force",
+        "slug": "levangile-de-la-force"
+      }
+    },
+    {
+      "source_row_id": 4497,
+      "title": "Français, voici la guerre!",
+      "english": null,
+      "matched_id": 14860,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Français, voici la guerre.",
+        "slug": "francais-voici-la-guerre"
+      }
+    },
+    {
+      "source_row_id": 4555,
+      "title": "L'Allemagne fera-t-elle sombrer l'Europe?",
+      "english": null,
+      "matched_id": 15254,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "L’Allemagne fera-t-elle sombrer l’Europe ?",
+        "slug": "lallemagne-fera-t-elle-sombrer-leurope"
+      }
+    },
+    {
+      "source_row_id": 4700,
+      "title": "Les Allemands dans nos maisons",
+      "english": null,
+      "matched_id": 15091,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Les Allemands dans nos maisons.",
+        "slug": "les-allemands-dans-nos-maisons"
+      }
+    },
+    {
+      "source_row_id": 4825,
+      "title": "Die geistige Situation der Deutschen",
+      "english": null,
+      "matched_id": 14960,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Die geistige Situation der Deutschen",
+        "slug": "die-geistige-situation-der-deutschen"
+      }
+    },
+    {
+      "source_row_id": 4877,
+      "title": "Karl Marx",
+      "english": null,
+      "matched_id": 13952,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Karl Marx",
+        "slug": "karl-marx"
+      }
+    },
+    {
+      "source_row_id": 4967,
+      "title": "Le triomphe du germanisme",
+      "english": null,
+      "matched_id": 14502,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Le triomphe du germanisme",
+        "slug": "le-triomphe-du-germanisme"
+      }
+    },
+    {
+      "source_row_id": 5009,
+      "title": "Le vrai combat d'Hitler",
+      "english": null,
+      "matched_id": 14668,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Le vrai « Combat » d’Hitler",
+        "slug": "le-vrai-combat-dhitler"
+      }
+    },
+    {
+      "source_row_id": 5068,
+      "title": "En l'an III de la croix gammée",
+      "english": null,
+      "matched_id": 14554,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "En l’an III de la croix gammée.",
+        "slug": "en-lan-iii-de-la-croix-gammee"
+      }
+    },
+    {
+      "source_row_id": 5082,
+      "title": "L'opéra politique",
+      "english": null,
+      "matched_id": 15070,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "L’Opéra politique",
+        "slug": "lopera-politique"
+      }
+    },
+    {
+      "source_row_id": 5152,
+      "title": "Le temps du mépris",
+      "english": null,
+      "matched_id": 14970,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Le temps du mépris",
+        "slug": "le-temps-du-mepris"
+      }
+    },
+    {
+      "source_row_id": 5246,
+      "title": "Hitler gegen Christus",
+      "english": null,
+      "matched_id": 15005,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Hitler gegen Christus",
+        "slug": "hitler-gegen-christus"
+      }
+    },
+    {
+      "source_row_id": 5445,
+      "title": "La vie de famille",
+      "english": null,
+      "matched_id": 15131,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "La vie de famille",
+        "slug": "la-vie-de-famille"
+      }
+    },
+    {
+      "source_row_id": 5468,
+      "title": "Auf der Flucht erschossen",
+      "english": null,
+      "matched_id": 14690,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Auf der Flucht erschossen",
+        "slug": "auf-der-flucht-erschossen"
+      }
+    },
+    {
+      "source_row_id": 5485,
+      "title": "Ein Staat stirbt. Österreich 1934—38",
+      "english": null,
+      "matched_id": 15293,
+      "status": "exact",
+      "confidence": 1,
+      "via_english_tier": false,
+      "matched_book": {
+        "title": "Ein Staat stirbt, Österreich 1934-38",
+        "slug": "ein-staat-stirbt-osterreich-1934-38"
+      }
+    }
+  ]
+}

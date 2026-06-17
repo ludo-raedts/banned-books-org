@@ -114,6 +114,7 @@ Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='govern
 | `add-ala-2025.ts` | ALA-lijst (hardcoded slugs) | Voegt **alleen bans** toe aan bestaande boeken — geen boek-creatie. Template voor "bestaande boeken aanvullen" | `--apply` |
 | `add-bulk-books.ts` | inline lijst | Bulk nieuwe boeken + OpenLibrary cover-fetch, direct via `adminClient()` | n.v.t. |
 | `import-russia-bans.ts` | `data/russia-articles-batch1.json` + `data/russia-minjust-batch1.json` | RU: hand-curated onafhankelijke-pers cases + Минюст Federal List of Extremist Materials; alles `country='RU'`/`scope='government'`; dedup op (book_slug, year_started); minjust-rijen auto-`needs_review` | `--apply` (`--only=articles\|minjust`) |
+| `import-berlin-verbannte.ts` | `data/berlin-verbannte-1938-*.json` (Berlin.de CC-BY, Nazi 1938-lijst) | DE `government`/`banned`/`historical`-bans, `warning_level=none` (censuur-slachtoffers, als Liste Otto). **Match-before-create via `matchExistingBook` (cross-language tier), niet de queue.** Houdt intra-batch slug-collisies (zelfde titel, andere auteur) + ambigue generieke bestaande-matches vast als needs_review. Idempotent/resumebaar | `--apply` (`--limit=N`) |
 
 **Vuistregel:** JSON met standaard government-bans → `import-africa` als template ·
 school/library challenges → `import-nipissing` · bans bij bestaande boeken → `add-ala-2025`.
@@ -352,6 +353,7 @@ Afgeronde queue-one-offs (salvage-stale-queue-bans 2026-05-14, finish-deferred-r
 | `zenodo-descriptor-to-pdf.tsx` | `docs/zenodo/data-descriptor.md` → `data-descriptor.pdf` (marked + @react-pdf/renderer; Arial/Andale-Mono embedded) |
 | `zenodo-deposit-diff.ts` | Vergelijkt de huidige open export met de laatst-gedeponeerde baseline (`docs/zenodo/deposited-manifest.json`) en adviseert of een nieuwe Zenodo-versie nodig is. Leest alléén de open core (commerciële verrijking telt niet mee). `--mark-deposited` her-ankert de baseline ná een deposit. Re-deposit is bewust, niet automatisch — zie `/admin/zenodo`. |
 | `build-film-data.ts` | Events-layer voor de animated-world-map film-PoC |
+| `build-berlin-verbannte-stage0.ts` | **Read-only Stap-0 seed-builder** voor `import-berlin-verbannte.ts`: haalt de Berlin.de CC-BY-dataset (4.764 rijen), partitioneert (book/blanket/authorless), normaliseert de boek-rijen → `data/berlin-verbannte-1938-<date>.json`, en (`--enrich-english`) vult `title_english_meaningful` via Wikidata (omgekeerde `enrich-native-titles`) als cross-language match-signaal. Raakt Supabase NOOIT aan |
 | `build-wiki-enrichment-worklist.ts` | Worklist boeken voor Wikipedia ban-enrichment (Step A) |
 | `stage-wiki-enrichment.ts` | Step B van de Wikipedia-enrichment-pijplijn |
 | `apply-wiki-enrichment.ts` | Step C — past de wiki-enrichment toe |

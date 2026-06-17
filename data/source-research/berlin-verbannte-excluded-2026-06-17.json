@@ -1,0 +1,5798 @@
+{
+  "generated_at": "2026-06-17",
+  "note": "EXCLUDED from the book-level seed. blanket = author-wide (\"Sämtliche…\") → model as author-level later. authorless = anonymous/aggregate → manual review before any import.",
+  "blanket": [
+    {
+      "id": 33,
+      "ocr": "Stalin, Josif Vissarionovič: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 39,
+      "ocr": "Friedlaender, Salomo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 43,
+      "ocr": "Schneider, Josef: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 68,
+      "ocr": "Asch, Schalom: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 78,
+      "ocr": "Lipinski, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 115,
+      "ocr": "Plechanow, Georg V.: Die Grundprobleme des Marxismus. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 118,
+      "ocr": "Engels, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 119,
+      "ocr": "Winsloe, Christa: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 136,
+      "ocr": "Bienstock, Gregor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 141,
+      "ocr": "Kesser, Hermann: Die Peitsche. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 142,
+      "ocr": "Heller, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 148,
+      "ocr": "Sacher-Masoch, Leopold von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 151,
+      "ocr": "Loewenstein-Wertheim-Freudenberg, Hubertus Prinz zu: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 154,
+      "ocr": "Malraux, André: Die Zeit der Verachtung. — Sämtliche Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 159,
+      "ocr": "Baum, Vicki: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 166,
+      "ocr": "Tretjakow, Sergej Michajlovič: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 191,
+      "ocr": "Freuchen, Peter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 202,
+      "ocr": "Grosz, George: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 207,
+      "ocr": "Calwer, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 233,
+      "ocr": "Lunatscharskij, Anatolij: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 249,
+      "ocr": "Adler, Bruno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 263,
+      "ocr": "Bernhardt, Oskar Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 298,
+      "ocr": "Schwarzschild, Leopold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 301,
+      "ocr": "Koerber, Lenka von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 305,
+      "ocr": "Hegemann, Werner: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 310,
+      "ocr": "Liebknecht, Karl: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 311,
+      "ocr": "Bebel, August: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 324,
+      "ocr": "Frey, Lothar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 326,
+      "ocr": "Zweig, Arnold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 339,
+      "ocr": "Otten, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 345,
+      "ocr": "Marcuse, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 351,
+      "ocr": "London, Jack: Die eiserne Ferse. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 373,
+      "ocr": "Maslowski, Peter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 375,
+      "ocr": "Behrend, Alice: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 376,
+      "ocr": "Halle, Felix: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 387,
+      "ocr": "Schirokauer, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 398,
+      "ocr": "Elementarschule der Kommunistischen Partei Frankreichs. Sämtliche Kurse. — Strasbourg 1937ff.: Sedal; (ab 2:) Éditions Prométhée.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 399,
+      "ocr": "Bauer, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 407,
+      "ocr": "Wegner, Armin Theophil: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 411,
+      "ocr": "Werner, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 425,
+      "ocr": "Edgar, John: Wo sind die Toten? Sämtl. Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 426,
+      "ocr": "Marx, Magdeleine: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 427,
+      "ocr": "Werneke, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 450,
+      "ocr": "Roche, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 453,
+      "ocr": "Mann, Thomas: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 457,
+      "ocr": "Walden, Herwarth: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 470,
+      "ocr": "Zimmermann, Werner: Liebe, von ihrem dreifachen Sinn. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 473,
+      "ocr": "Blum, Edmund: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 477,
+      "ocr": "Schickele, René: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 491,
+      "ocr": "Achrem, Sergej: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 500,
+      "ocr": "Tureck, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 503,
+      "ocr": "Kuh, Anton: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 528,
+      "ocr": "Pieck, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 538,
+      "ocr": "Korsch, Karl: Sämtliche Schriften. Korst, Knud: Der Faszismus.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 542,
+      "ocr": "Fischer, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 544,
+      "ocr": "Rolland, Romain: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 553,
+      "ocr": "Senski, Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 570,
+      "ocr": "Hillquit, Morris: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 571,
+      "ocr": "Rutgers, J.: Das Sexualleben in seiner biologischen Bedeutung ... Sämtliche Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 575,
+      "ocr": "Blos, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 578,
+      "ocr": "Kornicker, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 580,
+      "ocr": "Doeblin (Döblin), Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 588,
+      "ocr": "Stein, Hans Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 589,
+      "ocr": "Preuss, Hugo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 592,
+      "ocr": "Schoenstedt, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 593,
+      "ocr": "Dobert, Eitel Wolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 601,
+      "ocr": "Schroeder-Devrient, Wilhelmine: Aus den Erlebnissen einer Sängerin. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 615,
+      "ocr": "Programm und Statut der kommunistischen Partei der Sowjetunion. Sämtliche Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 628,
+      "ocr": "Bucharin, Nikolaj Ivanovič: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 630,
+      "ocr": "Ihrer, Emma: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 650,
+      "ocr": "Kuttner, Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 656,
+      "ocr": "Wolf, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 666,
+      "ocr": "Rathenau, Walther: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 669,
+      "ocr": "Fischer, Ruth: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 673,
+      "ocr": "Brantôme, Pierre de Bourdeille de: Das Leben der galanten Damen. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 678,
+      "ocr": "Tuerk, Werner: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 679,
+      "ocr": "Bobinska, Elena: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 680,
+      "ocr": "Hoffmann, Adolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 684,
+      "ocr": "Kranold, Albert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 685,
+      "ocr": "Hodann, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 702,
+      "ocr": "Roehm, Ernst: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 707,
+      "ocr": "Deutsch, Julius: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 728,
+      "ocr": "Trotzki, Leo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 729,
+      "ocr": "Mantegazza, Paul: Die Hygiene der Liebe. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 732,
+      "ocr": "Herman, Lazar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 758,
+      "ocr": "Hermann, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 765,
+      "ocr": "Blos, Anna: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 771,
+      "ocr": "Henel, Hans Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 782,
+      "ocr": "Luschnat, David: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 783,
+      "ocr": "Olden, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 800,
+      "ocr": "Mehring, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 829,
+      "ocr": "Miljutin, Wladimir Paul: Die Organisation der Volkswirtschaft in Sowjetrussland. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 843,
+      "ocr": "Balk, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 844,
+      "ocr": "Kesten, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 862,
+      "ocr": "Mackay, John Henry: Die Bücher der namenlosen Liebe. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 863,
+      "ocr": "Puettmann, Eduard Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 867,
+      "ocr": "Braun, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 887,
+      "ocr": "Margueritte, Victor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 896,
+      "ocr": "Polgar, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 898,
+      "ocr": "Weltsch, Felix: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 899,
+      "ocr": "Kanitz, Otto Felix: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 912,
+      "ocr": "Bloch, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 926,
+      "ocr": "Luxemburg, Rosa: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 929,
+      "ocr": "Marx, Karl: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 935,
+      "ocr": "Tarassow-Rodionow, Alexander: Schwere Schritte. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 949,
+      "ocr": "Schaxel, Julius: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 956,
+      "ocr": "Zietz, Luise: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 964,
+      "ocr": "Pjatnitzki, Osip: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 977,
+      "ocr": "Coudenhove-Kalergi, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 990,
+      "ocr": "Wassermann, Jakob: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 991,
+      "ocr": "Diószeghy, Tibor: Sämtliche Schriften. Diotima: Schule der Liebe. Jena: Diederichs 1930.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1003,
+      "ocr": "Sachse, Willy Richard: Alaska Jim. Ein Held der kanadischen Polizei. Sämtl. Bände. Heidenau: Verlagshaus Freya 1935.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1009,
+      "ocr": "Ottwalt, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1013,
+      "ocr": "Greulich, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1042,
+      "ocr": "Schwechten, Eduard: Das Lied vom Levi. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 1057,
+      "ocr": "Wandt, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1065,
+      "ocr": "Herrmann-Neisse, Max: Sämtliche Werke.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1073,
+      "ocr": "Issaieff, A. A.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1075,
+      "ocr": "Losowsky, Alexander: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1079,
+      "ocr": "Marcu, Valeriu: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1095,
+      "ocr": "Zwing, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1104,
+      "ocr": "Kautsky, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1114,
+      "ocr": "Grzesinski, Albert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1115,
+      "ocr": "Friedrich, Ernst [sozialist. Schriftsteller]: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1133,
+      "ocr": "Rocker, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1138,
+      "ocr": "Hirsch, Werner: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1146,
+      "ocr": "Schlamm, Willi: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1155,
+      "ocr": "Erdmann, August: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1165,
+      "ocr": "Verfassung der UdSSR und der RSFSR. Sämtliche Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1168,
+      "ocr": "Wehberg, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1173,
+      "ocr": "Mueller, Emil Reinhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1183,
+      "ocr": "Alsberg, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1186,
+      "ocr": "Siemsen, Anna: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1197,
+      "ocr": "Dietzgen, Josef: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1200,
+      "ocr": "Frischauer, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1209,
+      "ocr": "Jaroslawski, Emelian E.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1212,
+      "ocr": "Haenisch, Konrad: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1224,
+      "ocr": "Henry, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1225,
+      "ocr": "Masereel, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1228,
+      "ocr": "Adler, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1230,
+      "ocr": "Strasser, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1231,
+      "ocr": "Kantorowicz, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1244,
+      "ocr": "Fontana, Oskar Maurus: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1245,
+      "ocr": "Berdiajew, Nikolai: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1257,
+      "ocr": "Wolff, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1262,
+      "ocr": "Nicolai, Georg Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1267,
+      "ocr": "Reed, John: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1271,
+      "ocr": "Panferow, Fedor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1285,
+      "ocr": "Hallgarten, Wolfgang: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1291,
+      "ocr": "Stern, Maurice Reinhold von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1298,
+      "ocr": "Harden, Maximilian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1326,
+      "ocr": "Seehof, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1329,
+      "ocr": "Wittfogel, Karl August: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1344,
+      "ocr": "Domela Nieuwenhuis, Ferdinand: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1356,
+      "ocr": "Krantz, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1376,
+      "ocr": "Nelson, Leonhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1382,
+      "ocr": "Heitsch, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1388,
+      "ocr": "Adler, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1392,
+      "ocr": "Remmele, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1395,
+      "ocr": "Tschitscherin, G. V.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1396,
+      "ocr": "Paneth, Philipp: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1409,
+      "ocr": "Marchionini, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1412,
+      "ocr": "Hilferding, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1432,
+      "ocr": "Kramer, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1440,
+      "ocr": "Epstein, Julius: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1453,
+      "ocr": "Stratil, Karl: Die Memoiren der Fanny Hill. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 1466,
+      "ocr": "Breitscheid, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1473,
+      "ocr": "Tschuppik, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1476,
+      "ocr": "Popp, Adelheid: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1484,
+      "ocr": "Handmann, Bernhard: Der Diktator. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 1486,
+      "ocr": "Edel, Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1529,
+      "ocr": "Tucholski, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1533,
+      "ocr": "Eisner, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1534,
+      "ocr": "Thaelmann, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1544,
+      "ocr": "Becher, Johannes Robert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1559,
+      "ocr": "Rubiner, Frida: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1560,
+      "ocr": "Langenscheidt, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1562,
+      "ocr": "Ollenhauer, Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1573,
+      "ocr": "Unruh, Fritz von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1580,
+      "ocr": "Kind, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1583,
+      "ocr": "Heine, Thomas Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1589,
+      "ocr": "Roth, Joseph: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1598,
+      "ocr": "Seydewitz, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1606,
+      "ocr": "Hertz, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1610,
+      "ocr": "Westheim, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1620,
+      "ocr": "Sawinkow, Boris: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1625,
+      "ocr": "Sochaczewer, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1637,
+      "ocr": "Dreiser, Theodore: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1646,
+      "ocr": "Jacob, Heinrich Eduard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1674,
+      "ocr": "Mueller(-Franken), Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1680,
+      "ocr": "Faldi, Heinz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1690,
+      "ocr": "Babel, Isaak: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1691,
+      "ocr": "Reich, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1706,
+      "ocr": "Braun, Adolf: Sämtliche Gewerkschaftsschriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1711,
+      "ocr": "Boesser, Friedrich Karl: Dauerheilung der Herzschwäche. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 1728,
+      "ocr": "Klaeber, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1737,
+      "ocr": "Neumann, Robert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1764,
+      "ocr": "Mann, Klaus: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1769,
+      "ocr": "Bogdanow, Nikolai: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1784,
+      "ocr": "Thomas, Adrienne: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1788,
+      "ocr": "Iwanow, Wsjowolod: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1791,
+      "ocr": "Zetkin, Klara: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1902,
+      "ocr": "Fedin, Konstantin: Brüder. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 1906,
+      "ocr": "Kaganowitsch, Lazar M.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1917,
+      "ocr": "Hildebrand, Dietrich von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1923,
+      "ocr": "Einstein, Albert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1942,
+      "ocr": "Most, Johann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1952,
+      "ocr": "Boehme, Margarete: Tagebuch einer Verlorenen. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 1959,
+      "ocr": "Gitta, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1960,
+      "ocr": "Kawerau, Siegfried: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1964,
+      "ocr": "Beck, Maximilian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1966,
+      "ocr": "Apfel, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1972,
+      "ocr": "Haringer, Jacob: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1973,
+      "ocr": "London, Jack: Martin Eden. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 1979,
+      "ocr": "Pertinax (Pseud.): Sämtliche Schriften.",
+      "additionalinfos": "Sämtliche Schriften"
+    },
+    {
+      "id": 1993,
+      "ocr": "Frank, Bruno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1994,
+      "ocr": "Kaus, Gina: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 1998,
+      "ocr": "Paillot, Fortuné: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2012,
+      "ocr": "Ott, August: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2023,
+      "ocr": "Wendler, Otto Bernhard: Sämtliche Schriften (bis 1933) ausser: Jochen sucht den Sender ROK. — Zirkuspaul. — Peter macht das Rennen.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2033,
+      "ocr": "Sternberg, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2037,
+      "ocr": "Sinowjew, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2038,
+      "ocr": "Jellinek, Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2041,
+      "ocr": "Pohl, Gerhart: Sämtliche Schriften (vor 1933).",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2044,
+      "ocr": "Jenssen, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2052,
+      "ocr": "Stilgebauer, Edward: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2069,
+      "ocr": "Hoelz, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2081,
+      "ocr": "Jaurès, Jean: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2087,
+      "ocr": "Hiller, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2096,
+      "ocr": "Seeliger, Ewald Gerhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2101,
+      "ocr": "Friends of Europe (London): Sämtliche Veröffentlichungen.",
+      "additionalinfos": "Sämtliche Veröffentlichungen"
+    },
+    {
+      "id": 2107,
+      "ocr": "Rutherford, John Frédérick: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2122,
+      "ocr": "Lohmann, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2135,
+      "ocr": "Molotow, W. M.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2144,
+      "ocr": "Sills-Fuchs, Martha: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2163,
+      "ocr": "Dodel, Arnold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2179,
+      "ocr": "Stekel, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2181,
+      "ocr": "Meyrink, Gustav: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2202,
+      "ocr": "Stroh, Heinz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2212,
+      "ocr": "Philipp, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2215,
+      "ocr": "Kerr, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2221,
+      "ocr": "Huxley, Aldous: Nach dem Feuerwerk. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 2225,
+      "ocr": "Auer, Erhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2251,
+      "ocr": "Rosenfeld, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2259,
+      "ocr": "Kabaktschieff, Christian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2271,
+      "ocr": "Loewenstein, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2292,
+      "ocr": "Tschumandrin, Michael F.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2294,
+      "ocr": "Bettauer, Hugo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2295,
+      "ocr": "Katzenstein, Julius: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2305,
+      "ocr": "Jung, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2314,
+      "ocr": "Sinclair, Upton: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2369,
+      "ocr": "Freud, Anna: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2373,
+      "ocr": "Weiss, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2380,
+      "ocr": "Sonnenschein, Hugo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2396,
+      "ocr": "Falk, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2411,
+      "ocr": "Pokrowski, Michail N.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2426,
+      "ocr": "Sander, Martin Christian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2428,
+      "ocr": "Rosen, Erwin: In der Fremdenlegion. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 2431,
+      "ocr": "Jerusalem, Else: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2436,
+      "ocr": "Muehsam, Kreszentia: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2460,
+      "ocr": "Ruehle, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2461,
+      "ocr": "Herzfeld, Helmut: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2464,
+      "ocr": "Levy-Lenz, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2467,
+      "ocr": "Pfemfert, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2471,
+      "ocr": "Herzog, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2473,
+      "ocr": "Graf, Oskar Maria: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2481,
+      "ocr": "Leviné, Eugen: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2483,
+      "ocr": "Coudenhove-Kalergi, Richard Nikolaus: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2518,
+      "ocr": "Wendel, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2523,
+      "ocr": "Beisswanger, Konrad: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2541,
+      "ocr": "Varga, Eugen: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2590,
+      "ocr": "Hirschfeld, Magnus: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2604,
+      "ocr": "Zur Muehlen, Hermynia: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2609,
+      "ocr": "Andersen-Nexö, Martin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2610,
+      "ocr": "Hoffmann, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2613,
+      "ocr": "Broido, Vera: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2627,
+      "ocr": "Seger, Gerhart: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2631,
+      "ocr": "Marck, Siegfried: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2651,
+      "ocr": "Jottka, Johannes: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2665,
+      "ocr": "Kafka, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2675,
+      "ocr": "Renner, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2690,
+      "ocr": "Lazarsfeld, Sofie: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2691,
+      "ocr": "Marès, Jolanthe: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2694,
+      "ocr": "Renner, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2697,
+      "ocr": "Freud, Sigmund: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2716,
+      "ocr": "Winder, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2735,
+      "ocr": "Heymann, Robert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2751,
+      "ocr": "Rode, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2753,
+      "ocr": "Crispien, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2760,
+      "ocr": "Scott, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2770,
+      "ocr": "Heiden, Konrad: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2783,
+      "ocr": "Wogau, W.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2788,
+      "ocr": "Ewers, Hanns Heinz: Sämtliche Schriften ausser: Horst Wessel u. Reiter in deutscher Nacht.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2792,
+      "ocr": "Geist, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2794,
+      "ocr": "Kreutz, Rudolf Jeremias: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2797,
+      "ocr": "Salomon, Berthold Jacob: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2800,
+      "ocr": "Bauer, Viktor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2815,
+      "ocr": "Schnitzler, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2819,
+      "ocr": "Wolf, Lothar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2824,
+      "ocr": "Hoernle, Edwin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2826,
+      "ocr": "Remarque, Erich Maria: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2829,
+      "ocr": "Zapp, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2833,
+      "ocr": "Schroeder, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2844,
+      "ocr": "Goll, Claire: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2845,
+      "ocr": "Aléra, Don Brennus: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2888,
+      "ocr": "Scheitel, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2892,
+      "ocr": "Fuchs, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2903,
+      "ocr": "Hey, Friedrich: Gesundheitsquell. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 2906,
+      "ocr": "Brod, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2910,
+      "ocr": "Graf, Georg Engelbert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2911,
+      "ocr": "Fischer, Zyrill: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2920,
+      "ocr": "Cohn, Willy: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2928,
+      "ocr": "Weinert, Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2931,
+      "ocr": "Doberer, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2934,
+      "ocr": "Cassau, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2940,
+      "ocr": "Scheidemann, Philipp: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2944,
+      "ocr": "Balabanoff, Angelica: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2946,
+      "ocr": "Brunner, Konstantin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2960,
+      "ocr": "Koch, Adolf: Sämtliche Schriften über Körper- u. Nacktkultur.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2968,
+      "ocr": "Wangenheim, Gustav von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2974,
+      "ocr": "Theilhaber, Felix Aaron: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2989,
+      "ocr": "Guidony, Alexander: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2990,
+      "ocr": "Reese, Maria: Sämtliche Schriften (vor 1933).",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2994,
+      "ocr": "Scharrer, Adam: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 2999,
+      "ocr": "Metzler, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3001,
+      "ocr": "Bettauer, Fritz Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3007,
+      "ocr": "Meyenberg, Anna: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3009,
+      "ocr": "Majakowsky, Wladimir: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3011,
+      "ocr": "Lorbeer, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3012,
+      "ocr": "Schwarz, Karl: Die Juden in der Kunst. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 3036,
+      "ocr": "Fink, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3037,
+      "ocr": "Becker, Bernhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3043,
+      "ocr": "Kisch, Egon Erwin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3055,
+      "ocr": "Roland-Holst van der Schalk, Henriette: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3063,
+      "ocr": "Serner, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3081,
+      "ocr": "Wendel, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3084,
+      "ocr": "Mura (Pseud.): Sämtliche Schriften.",
+      "additionalinfos": "Sämtliche Schriften"
+    },
+    {
+      "id": 3089,
+      "ocr": "Reissner, Larissa: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3095,
+      "ocr": "Snessareff, Nikolai V.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3098,
+      "ocr": "Olberg, Oda: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3120,
+      "ocr": "Hasenclever, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3122,
+      "ocr": "Alexan, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3126,
+      "ocr": "Plivier, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3132,
+      "ocr": "Kautsky, Luise: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3142,
+      "ocr": "Hirsch, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3143,
+      "ocr": "Fuchs, Eduard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3149,
+      "ocr": "Kropotkin, Peter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3159,
+      "ocr": "Figner, Vera: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3179,
+      "ocr": "Jarcho, Gregor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3188,
+      "ocr": "Lengyel, Emil: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3192,
+      "ocr": "Beer, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3208,
+      "ocr": "Forster, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3210,
+      "ocr": "Libedinsky, Jurij: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3228,
+      "ocr": "Kessler, Harry Graf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3230,
+      "ocr": "Kaestner (Kästner), Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3233,
+      "ocr": "Sternheim, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3263,
+      "ocr": "Woytinski, Wladimir: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3266,
+      "ocr": "Scholochow, Michail: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3279,
+      "ocr": "Blei, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3292,
+      "ocr": "Gorki, Maxim: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3304,
+      "ocr": "Gunther, John: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3309,
+      "ocr": "Ruehle-Gerstel, Alice: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3315,
+      "ocr": "Credé(-Hoerder), Karl A.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3337,
+      "ocr": "Gerlach, Irene: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3352,
+      "ocr": "Alsen, Ola: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3353,
+      "ocr": "Marty, André: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3372,
+      "ocr": "Krische, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3374,
+      "ocr": "Mann, Erika: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3392,
+      "ocr": "Bernstein, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3429,
+      "ocr": "Geyer, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3436,
+      "ocr": "Zarek, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3446,
+      "ocr": "Asch, Nathan: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3455,
+      "ocr": "Stevenson, Robert Louis: Der Selbstmörderklub. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 3472,
+      "ocr": "Wels, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3483,
+      "ocr": "Schoenlank, Bruno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3517,
+      "ocr": "Beimler, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3521,
+      "ocr": "Ameringer, Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3522,
+      "ocr": "Neumann, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3548,
+      "ocr": "Dolorosa (Pseud.): Sämtliche Schriften.",
+      "additionalinfos": "Sämtliche Schriften"
+    },
+    {
+      "id": 3566,
+      "ocr": "Berendsohn, Walter Artur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3568,
+      "ocr": "Rubiner, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3595,
+      "ocr": "Polano, Luigi: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3597,
+      "ocr": "Abraham, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3598,
+      "ocr": "Radvanyi, Netty: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3599,
+      "ocr": "Lasker-Schueler, Else: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3613,
+      "ocr": "Bernstein, Eduard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3616,
+      "ocr": "Kraemer, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3632,
+      "ocr": "Barbusse, Henri: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3636,
+      "ocr": "Bjedny, Demian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3648,
+      "ocr": "Ludwig, Emil: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3650,
+      "ocr": "Weiskopf, Franz Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3658,
+      "ocr": "Tagger, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3691,
+      "ocr": "Kollontay, Alexandra M.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3700,
+      "ocr": "Wieber, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3706,
+      "ocr": "Erckner, S.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3714,
+      "ocr": "Mann, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3722,
+      "ocr": "Leitner, Emmy: Sämtliche Schriften. Leitner, Marie: Hotel Amerika. Berlin: Neuer dt. Verl. 1930.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3755,
+      "ocr": "Ziegler, Bernhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3756,
+      "ocr": "Ferch, Johann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3757,
+      "ocr": "Salten, Felix: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3759,
+      "ocr": "Sollmann, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3816,
+      "ocr": "Stoelting, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3822,
+      "ocr": "Pitigrilli: Sämtliche Schriften.",
+      "additionalinfos": "Sämtliche Schriften"
+    },
+    {
+      "id": 3827,
+      "ocr": "Vanek, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3849,
+      "ocr": "Wiener, Oskar: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3868,
+      "ocr": "Goll, Iwan: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3880,
+      "ocr": "Uhse, Bodo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3883,
+      "ocr": "Marie Madeleine (Pseud.): Sämtliche Schriften.",
+      "additionalinfos": "Sämtliche Schriften"
+    },
+    {
+      "id": 3885,
+      "ocr": "Wolf, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3896,
+      "ocr": "Grossmann, Rudolf [Sozialist. Schriftsteller]: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3902,
+      "ocr": "Frank, Leonhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3953,
+      "ocr": "Traven, Bruno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3966,
+      "ocr": "Petzler, Johann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 3996,
+      "ocr": "Zweig, Stephan: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4000,
+      "ocr": "Torberg, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4001,
+      "ocr": "Hamburger, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4017,
+      "ocr": "Gladkow, Fjodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4018,
+      "ocr": "Gerlach, Hellmut von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4026,
+      "ocr": "Friedrich, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4048,
+      "ocr": "Rohmer, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4054,
+      "ocr": "Gide, André: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4069,
+      "ocr": "Lenz, Josef: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4083,
+      "ocr": "Zern an, Kamil: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4092,
+      "ocr": "Grossmann, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4099,
+      "ocr": "Helphand, Alexander: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4105,
+      "ocr": "Silone, Ignazio: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4132,
+      "ocr": "Aufhaeuser, Siegfried: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4139,
+      "ocr": "Popov, Aleksandr S.: Der eiserne Strom. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 4140,
+      "ocr": "Michaelis, Karin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4144,
+      "ocr": "Braunthal, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4166,
+      "ocr": "Landsberger, Artur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4193,
+      "ocr": "Brupbacher, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4210,
+      "ocr": "Klotz, Helmut: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4213,
+      "ocr": "Glaser, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4254,
+      "ocr": "Eichacker, Reinhold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4268,
+      "ocr": "Lassalle, Ferdinand: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4280,
+      "ocr": "Kraus, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4282,
+      "ocr": "Sowjetmacht, Zwanzig Jahre ~. 1917—1937. Sämtliche Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4295,
+      "ocr": "Faerber, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4305,
+      "ocr": "Kolb, Annette: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4316,
+      "ocr": "Gruber, Max von: Hygiene des Geschlechtslebens. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 4318,
+      "ocr": "Daudistel, Albert: Sämtliche Schriften bis 1933.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4338,
+      "ocr": "Hoellein, Emil: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4346,
+      "ocr": "David, Eduard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4348,
+      "ocr": "Landauer, Gustav: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4351,
+      "ocr": "Zuckmayer, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4367,
+      "ocr": "Neumann, Heinz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4371,
+      "ocr": "Schirokauer, Arno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4372,
+      "ocr": "Speyer, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4378,
+      "ocr": "Godard d'Aucourt, Claude: Themidor. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 4383,
+      "ocr": "Lewinsohn, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4394,
+      "ocr": "Piscator, Erwin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4397,
+      "ocr": "Bakunin, Michael: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4398,
+      "ocr": "Kersten, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4407,
+      "ocr": "Pol, Heinz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4409,
+      "ocr": "Steinfeld, Justin: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4428,
+      "ocr": "Liebknecht, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4452,
+      "ocr": "Lieb, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4460,
+      "ocr": "Hermes, Gertrud: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4467,
+      "ocr": "Lackner, Stephan: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4494,
+      "ocr": "Cleland, John: Die Memoiren der Fanny Hill. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 4498,
+      "ocr": "Goldschmidt, Alfons: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4499,
+      "ocr": "Roberts, Stephen H.: The house that Hitler built. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 4513,
+      "ocr": "Dos Passos, John Roderigo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4541,
+      "ocr": "Schlegel, Josef Carl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4551,
+      "ocr": "Herzfelde, Wieland: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4552,
+      "ocr": "Weisengruen, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4556,
+      "ocr": "Lask, Berta: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4563,
+      "ocr": "Dimitroff, Georgi: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4564,
+      "ocr": "Auernheimer, Raoul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4576,
+      "ocr": "Eça de Queiroz, José Maria: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4580,
+      "ocr": "Adler, Viktor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4584,
+      "ocr": "Cadivec, Edith: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4600,
+      "ocr": "Werthauer, Johannes: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4604,
+      "ocr": "Wang Shih Chêng: Djin Ping Meh. Sämtl. Ausgaben.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4614,
+      "ocr": "Plaettner, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4616,
+      "ocr": "Schmitz, Alexander: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4637,
+      "ocr": "Wells, Herbert George: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4646,
+      "ocr": "Bauer, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4654,
+      "ocr": "Lenin, Wladimir Iljitsch: Sämtliche Schriften von und über ~.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4665,
+      "ocr": "Ehrenstein, Albert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4673,
+      "ocr": "Leviné, Rosa: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4679,
+      "ocr": "Ebert, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4692,
+      "ocr": "Smedley, Agnes: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4706,
+      "ocr": "Muenzenberg, Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4721,
+      "ocr": "Schneiderfranken, Josef Anton: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4728,
+      "ocr": "Hotopp, Albert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4763,
+      "ocr": "Kenn, Irmgard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4766,
+      "ocr": "Gurian, Waldemar: Sämtliche Schriften. Gurk, Paul: Tresoreinbruch. Berlin: Holle 1935.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4793,
+      "ocr": "Ehrhardt, Justus: Sämtliche Schriften (vor 1933).",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4798,
+      "ocr": "Nouissimbaum, Leo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4811,
+      "ocr": "Heilbut, Iwan: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4812,
+      "ocr": "+ Comité voor bijzondere Joodsche belangen (Amsterdam): Sämtliche Veröffentlichungen.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4815,
+      "ocr": "Trebitsch, Siegfried: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4816,
+      "ocr": "Bruegel, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4830,
+      "ocr": "Bauer, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4835,
+      "ocr": "Schacher, Gerhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4854,
+      "ocr": "Menne, Bernhard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4892,
+      "ocr": "Rosenfeld, Fritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4899,
+      "ocr": "Jacobsen, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4911,
+      "ocr": "Wollenberg, Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4912,
+      "ocr": "Tesarek, Anton: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4924,
+      "ocr": "Laufenberg, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4938,
+      "ocr": "Liepmann, Heinz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4942,
+      "ocr": "Bauer, Walter: Sämtliche Schriften (vor 1933).",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4949,
+      "ocr": "Lissagaray, Hippolyte Prosper Olivier: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4959,
+      "ocr": "Strasser, Charlot: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4963,
+      "ocr": "Mehring, Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4972,
+      "ocr": "Quidde, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4978,
+      "ocr": "Hillmann, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4980,
+      "ocr": "Neufeld, Siegbert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4981,
+      "ocr": "Nielsen, Fritz Walter: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 4992,
+      "ocr": "Kampffmeyer, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5006,
+      "ocr": "Lessing, Theodor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5017,
+      "ocr": "Brandt, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5025,
+      "ocr": "Olden, Balder: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5029,
+      "ocr": "Traenker, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5063,
+      "ocr": "Buttenstedt, Karl: Die Glücksehe. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 5079,
+      "ocr": "Lawrence, David Herbert: Lady Chatterley und ihre Liebhaber. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 5093,
+      "ocr": "Liebermann, Matjew: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5094,
+      "ocr": "Thorez, Maurice: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5098,
+      "ocr": "Fried, Alfred Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5103,
+      "ocr": "Marchwitza, Hans: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5104,
+      "ocr": "Rubinstein, Alexander: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5113,
+      "ocr": "La Boëtie, Etienne de: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5137,
+      "ocr": "Holitscher, Arthur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5144,
+      "ocr": "Langhoff, Wolfgang: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5159,
+      "ocr": "Winter, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5163,
+      "ocr": "Hasek, Jaroslav: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5165,
+      "ocr": "Lothar, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5167,
+      "ocr": "Latzko, Adolf Andreas: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5173,
+      "ocr": "Budzislawski, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5200,
+      "ocr": "Winter, Gustav: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5244,
+      "ocr": "Schiff, Victor: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5267,
+      "ocr": "Erzberger, Matthias: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5273,
+      "ocr": "Frey, Alexander Moritz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5276,
+      "ocr": "Schueller, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5297,
+      "ocr": "Schuetzinger, Hermann: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5298,
+      "ocr": "Stahl, Herbert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5300,
+      "ocr": "Hoeltermann, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5309,
+      "ocr": "Heller, Artur: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5316,
+      "ocr": "Weiskopf, Grete: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5327,
+      "ocr": "Adler, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5328,
+      "ocr": "Danneberg, Robert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5356,
+      "ocr": "Aretino, Pietro: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5365,
+      "ocr": "Weiss, Bernhard: Sämtliche Schriften, auch Vorworte zu Werken anderer Verfasser.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5383,
+      "ocr": "Tetzner, Lisa: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5391,
+      "ocr": "Moreck, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5392,
+      "ocr": "Noske, Gustav: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5408,
+      "ocr": "Selke, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5412,
+      "ocr": "Radek, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5414,
+      "ocr": "Foerster, Friedrich Wilhelm: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5477,
+      "ocr": "Schmitt, Heinrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5479,
+      "ocr": "Regler, Gustav: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5481,
+      "ocr": "Adler, Friedrich (Wolfgang): Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5483,
+      "ocr": "Brentano, Bernard von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5484,
+      "ocr": "Renn, Ludwig: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5486,
+      "ocr": "Vogel, Bruno: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5514,
+      "ocr": "Dekobra, Maurice: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5515,
+      "ocr": "Suttner, Bertha: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5516,
+      "ocr": "Frucht, Berthold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5522,
+      "ocr": "Wolfenstein, Alfred: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5536,
+      "ocr": "Heartfield, John: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5545,
+      "ocr": "Lennhoff, Eugen: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5553,
+      "ocr": "Krupskaja, Nadezda K.: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5567,
+      "ocr": "Schippel, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5575,
+      "ocr": "Robitschek, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5582,
+      "ocr": "Hochdorf, Max: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5605,
+      "ocr": "Muehsam, Erich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5607,
+      "ocr": "Martin, Kurt: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5615,
+      "ocr": "Kun, Béla: Sämtliche Werke.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5620,
+      "ocr": "Decker, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5623,
+      "ocr": "Lafargue, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5628,
+      "ocr": "Bermann, Richard Arnold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5650,
+      "ocr": "Mueller, Richard: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5651,
+      "ocr": "Lehmann-Russbueldt, Otto: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5653,
+      "ocr": "Blank, Herbert: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5665,
+      "ocr": "Werfel, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5669,
+      "ocr": "Stampfer, Friedrich: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5676,
+      "ocr": "Urbantschitsch, Rudolf: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5692,
+      "ocr": "Koerber, Lilli: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5697,
+      "ocr": "Bretholz, Wolfgang: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5700,
+      "ocr": "Efferoth, Hugo: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5701,
+      "ocr": "Oppenheimer, Franz: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5715,
+      "ocr": "Stern, Josef Luitpold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5722,
+      "ocr": "Tokunaga, Naoshi: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5723,
+      "ocr": "Lensch, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5727,
+      "ocr": "Laserstein, Botho: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5737,
+      "ocr": "Erenburg, Ilja: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5745,
+      "ocr": "Schoenaich, Paul Frh. von: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5746,
+      "ocr": "Bernhard, Georg: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5755,
+      "ocr": "Brecht, Bertold: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5771,
+      "ocr": "Corvin-Wiersbitzki, Otto von: Der Pfaffenspiegel. Sämtliche Ausgaben aus Freidenker- u. SPD.-Verlagen.",
+      "additionalinfos": "Sämtliche Ausgaben aus Freidenker- u. SPD.-Verlagen"
+    },
+    {
+      "id": 5775,
+      "ocr": "Goehre, Paul: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5781,
+      "ocr": "Toller, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5786,
+      "ocr": "Golding, Louis: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5793,
+      "ocr": "Barth, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5797,
+      "ocr": "Gumbel, Emil Julius: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5800,
+      "ocr": "Leder, Zenon: Sämtliche Schriften. Legien, Karl: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5814,
+      "ocr": "Schuschnigg, Kurt: Dreimal Österreich. Sämtliche Ausgaben.",
+      "additionalinfos": "Sämtliche Ausgaben"
+    },
+    {
+      "id": 5820,
+      "ocr": "Corvin-Wiersbitzki, Otto von: Die Geissler. Sämtliche Ausgaben aus Freidenker- u. SPD.-Verlagen.",
+      "additionalinfos": "Sämtliche Ausgaben aus Freidenker- u. SPD.-Verlagen"
+    },
+    {
+      "id": 5822,
+      "ocr": "Glaeser, Ernst: Sämtliche Schriften (bis 1933).",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5831,
+      "ocr": "Barbey d'Aurevilly, Jules A.: Die Besessenen. Sämtl. Ausgaben.",
+      "additionalinfos": "Sämtl. Ausgaben"
+    },
+    {
+      "id": 5835,
+      "ocr": "Niekisch, Ernst: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5842,
+      "ocr": "Feuchtwanger, Lion: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5860,
+      "ocr": "Borchardt, Julian: Sämtliche Schriften.",
+      "additionalinfos": ""
+    },
+    {
+      "id": 5868,
+      "ocr": "Bredel, Willi: Sämtliche Schriften.",
+      "additionalinfos": ""
+    }
+  ],
+  "authorless": [
+    {
+      "id": 3,
+      "title": "Erinnerungen der Miss Barbara",
+      "ocr": "Erinnerungen der Miss Barbara. Paris: Kuriosa-Verl. 1925."
+    },
+    {
+      "id": 9,
+      "title": "Sowjetunion, 15 Jahre ~.",
+      "ocr": "Sowjetunion, 15 Jahre ~. o. O. 1932."
+    },
+    {
+      "id": 26,
+      "title": "Azana, Manuel. — Azana spricht",
+      "ocr": "Azana, Manuel. — Azana spricht. Paris: Ed. du Carrefour 1937."
+    },
+    {
+      "id": 29,
+      "title": "Liebe und Leidenschaft. Flagell.-erot. Roman.",
+      "ocr": "Liebe und Leidenschaft. Flagell.-erot. Roman. o. O. 1930."
+    },
+    {
+      "id": 47,
+      "title": "Sinne, Die fünf ~. Ihr Einfluss auf die Sexualität des Menschen. Bd 1—5",
+      "ocr": "Sinne, Die fünf ~. Ihr Einfluss auf die Sexualität des Menschen. Bd 1—5. Wien: Verl. f. Kulturforschung 1930/32."
+    },
+    {
+      "id": 63,
+      "title": "Lebensjahrfuehrer, Ihr ~",
+      "ocr": "Lebensjahrfuehrer, Ihr ~. Trier: Lerwin-Verl. 1938."
+    },
+    {
+      "id": 64,
+      "title": "Streik, Der ~ der Berliner Verkehrsarbeiter",
+      "ocr": "Streik, Der ~ der Berliner Verkehrsarbeiter. Düsseldorf: Westdt. Buchdruckwerkstätten 1932."
+    },
+    {
+      "id": 67,
+      "title": "Spruch, Der ~ von London. Der Reichstagsbrand im Spiegel des Urteils ...",
+      "ocr": "Spruch, Der ~ von London. Der Reichstagsbrand im Spiegel des Urteils ... Prag: L. Twrdik 1933."
+    },
+    {
+      "id": 91,
+      "title": "Nationalismus, Sozialrevolutionärer ~. Flarchheim i",
+      "ocr": "Nationalismus, Sozialrevolutionärer ~. Flarchheim i. Thür.: Die Kommenden 1930."
+    },
+    {
+      "id": 96,
+      "title": "Protokolle der Weisen von Zion, die grösste Fälschung des Jahrhunderts",
+      "ocr": "Protokolle der Weisen von Zion, die grösste Fälschung des Jahrhunderts. Glarus: Glarner Nachrichten 1933."
+    },
+    {
+      "id": 102,
+      "title": "Braunbuch über Reichstagsbrand und Hitler-Terror",
+      "ocr": "Braunbuch über Reichstagsbrand und Hitler-Terror. Paris: Ed. du Carrefour 1933."
+    },
+    {
+      "id": 114,
+      "title": "Wir werden wohlhabend",
+      "ocr": "Wir werden wohlhabend. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 133,
+      "title": "Arbeiterschaft, Die ~ im neuen Deutschland",
+      "ocr": "Arbeiterschaft, Die ~ im neuen Deutschland. Leipzig: Hirzel 1915."
+    },
+    {
+      "id": 144,
+      "title": "Arzt oder Totengräber",
+      "ocr": "Arzt oder Totengräber. Berlin: Betrieb u. Gewerkschaft 1931."
+    },
+    {
+      "id": 145,
+      "title": "Lebendig begraben. Tatsachen aus deutschen Zuchthäusern u. Gefängnissen",
+      "ocr": "Lebendig begraben. Tatsachen aus deutschen Zuchthäusern u. Gefängnissen. Berlin: Tribunal-Verl. 1932."
+    },
+    {
+      "id": 146,
+      "title": "Spot, The yellow ~",
+      "ocr": "Spot, The yellow ~. London: Gollancz 1936."
+    },
+    {
+      "id": 155,
+      "title": "Mit uns zieht die neue Zeit",
+      "ocr": "Mit uns zieht die neue Zeit! Düsseldorf: Westdt. Verlagsdr. 1930."
+    },
+    {
+      "id": 170,
+      "title": "Auftrag an die Deputierten des 14. Leningrader Sowjets",
+      "ocr": "+ Auftrag an die Deputierten des 14. Leningrader Sowjets ... Moskau: Verlagsgen, ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 192,
+      "title": "Zetkin, Clara ~. Kämpferin für die proletarische Weltrevolution",
+      "ocr": "Zetkin, Clara ~. Kämpferin für die proletarische Weltrevolution. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 200,
+      "title": "Sowjetunion, 20 Jahre ~. 1917—1937",
+      "ocr": "Sowjetunion, 20 Jahre ~. 1917—1937. Basel: Freie Schweiz 1938."
+    },
+    {
+      "id": 201,
+      "title": "Geheimnisse, Die ~ meines Alkovens",
+      "ocr": "Geheimnisse, Die ~ meines Alkovens. München: Eros-Ges. 1920."
+    },
+    {
+      "id": 203,
+      "title": "Kirche und Welt in ökumenischer Sicht. Bericht der Weltkirchenkonferenz von Oxford",
+      "ocr": "Kirche und Welt in ökumenischer Sicht. Bericht der Weltkirchenkonferenz von Oxford. Frauenfeld: Huber 1938."
+    },
+    {
+      "id": 220,
+      "title": "Wer kommandiert die NSDAP",
+      "ocr": "Wer kommandiert die NSDAP? Berlin: Verl. Betrieb u. Gewerkschaft 1932."
+    },
+    {
+      "id": 234,
+      "title": "Pervers in Hamburg und Berlin",
+      "ocr": "Pervers in Hamburg und Berlin. Hamburg: Baum 1931."
+    },
+    {
+      "id": 248,
+      "title": "Sittengeschichte des Intimsten",
+      "ocr": "Sittengeschichte des Intimsten. Wien: Verl. f. Kulturforschung 1929."
+    },
+    {
+      "id": 272,
+      "title": "Frauenschicksale, Deutsche ~. Hrsg. v. d. Union f. Recht u. Freiheit in Prag",
+      "ocr": "Frauenschicksale, Deutsche ~. Hrsg. v. d. Union f. Recht u. Freiheit in Prag. London: Malik-Verl. 1937."
+    },
+    {
+      "id": 292,
+      "title": "Schlump. Geschichten und Abenteuer aus d. Leben d. unbekannten Musketiers Emil Schulz",
+      "ocr": "Schlump. Geschichten und Abenteuer aus d. Leben d. unbekannten Musketiers Emil Schulz. München: Wolff 1928."
+    },
+    {
+      "id": 299,
+      "title": "Geschlecht, Das dritte ~",
+      "ocr": "Geschlecht, Das dritte ~ Berlin: Radszuweit 1928."
+    },
+    {
+      "id": 306,
+      "title": "Formes nues",
+      "ocr": "Formes nues. Paris: Ed. d'Art graphique 1935."
+    },
+    {
+      "id": 316,
+      "title": "Genosse, Mein",
+      "ocr": "Genosse, Mein ~. Berlin: Junge Garde 1921. — Berlin: Verl. d. Jugendinternationale 1929."
+    },
+    {
+      "id": 331,
+      "title": "Bestimmungen über die Wahlen zum Obersten Sowjet der UdSSR",
+      "ocr": "Bestimmungen über die Wahlen zum Obersten Sowjet der UdSSR. Moskau: Verlagsgen. ausländ. Arbeiter 1937."
+    },
+    {
+      "id": 335,
+      "title": "Mussert's veertien punten",
+      "ocr": "Mussert's veertien punten. Amsterdam: De Arbeiderspers 1935."
+    },
+    {
+      "id": 340,
+      "title": "Mussolini, Benito. — Mussolinis Gespräche mit Emil Ludwig",
+      "ocr": "Mussolini, Benito. — Mussolinis Gespräche mit Emil Ludwig. Wien: Zsolnay 1932."
+    },
+    {
+      "id": 343,
+      "title": "Gefaehrdung, Die ~ des Christentums durch Rassenwahn und Judenverfolgung",
+      "ocr": "Gefaehrdung, Die ~ des Christentums durch Rassenwahn und Judenverfolgung. Luzern: Vita Nova-Verl. 1935."
+    },
+    {
+      "id": 350,
+      "title": "",
+      "ocr": "Madeleine, Marie s. Marie Madeleine."
+    },
+    {
+      "id": 359,
+      "title": "Schule, Die weltliche ~. Hrsg. von Gustav Radbruch",
+      "ocr": "Schule, Die weltliche ~. Hrsg. von Gustav Radbruch. Kiel: Haase & Co. 1920."
+    },
+    {
+      "id": 370,
+      "title": "Hirne hinter Stacheldraht",
+      "ocr": "Hirne hinter Stacheldraht. Basel: Universum-Bücherei 1934."
+    },
+    {
+      "id": 385,
+      "title": "Wirtschaftsverderber, Verräter an Volk und Heimat",
+      "ocr": "Wirtschaftsverderber, Verräter an Volk und Heimat. Wien: Oesterr. Heimatdienst 1934."
+    },
+    {
+      "id": 422,
+      "title": "Gleichwertigkeit, Die ~ der europäischen Rassen und die Wege zu ihrer Vervollkommnung",
+      "ocr": "Gleichwertigkeit, Die ~ der europäischen Rassen und die Wege zu ihrer Vervollkommnung. Prag: Tschechoslow. Akad. d. Wissenschaften 1935."
+    },
+    {
+      "id": 423,
+      "title": "Sowjetgesetzgebung, Die ~ über das Erfindungswesen",
+      "ocr": "Sowjetgesetzgebung, Die ~ über das Erfindungswesen. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 434,
+      "title": "Schutzbundkaempfer erzählen vom Februar 1934 in Österreich",
+      "ocr": "Schutzbundkaempfer erzählen vom Februar 1934 in Österreich. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 455,
+      "title": "Prozessbericht über die Strafsache des Trotzkistisch-Sinowjewistischen terroristischen Zentrums",
+      "ocr": "Prozessbericht über die Strafsache des Trotzkistisch-Sinowjewistischen terroristischen Zentrums. Moskau: Volkskommissariat f. Justizwesen 1936."
+    },
+    {
+      "id": 462,
+      "title": "Aufrichtung, Die ~ des Reiches der Gerechtigkeit",
+      "ocr": "Aufrichtung, Die ~ des Reiches der Gerechtigkeit. Frankfurt a/M.: Bibel- u. Traktat-Ges. 1920."
+    },
+    {
+      "id": 464,
+      "title": "Hakenkreuzterror in Braunschweig",
+      "ocr": "Hakenkreuzterror in Braunschweig. Zürich: Sozialistische Arbeiterinternationale 1933."
+    },
+    {
+      "id": 493,
+      "title": "Koerperbildung — Nacktkultur. Anklagen und Bekenntnisse",
+      "ocr": "Koerperbildung — Nacktkultur. Anklagen und Bekenntnisse. Leipzig: Oldenburg 1924."
+    },
+    {
+      "id": 494,
+      "title": "Almanach der nationalsozialistischen Revolution",
+      "ocr": "Almanach der nationalsozialistischen Revolution. Berlin: Brunnenverl. 1933."
+    },
+    {
+      "id": 521,
+      "title": "Liebestempel, Der ~",
+      "ocr": "Liebestempel, Der ~. Leipzig: Elite-Verl. 1929."
+    },
+    {
+      "id": 525,
+      "title": "Sittengeschichte der jüngsten Zeit",
+      "ocr": "Sittengeschichte der jüngsten Zeit. Wien: Schneider 1931."
+    },
+    {
+      "id": 540,
+      "title": "Deutschland. Deutschlands doppeltes Gesicht — Die Hilfsstellung der Republikaner",
+      "ocr": "Deutschland. Deutschlands doppeltes Gesicht — Die Hilfsstellung der Republikaner. Berlin: Das andere Deutschland 1932."
+    },
+    {
+      "id": 548,
+      "title": "",
+      "ocr": "Brahma, Mahatma Arkaja s. Arkaja Brahma, Mahatma."
+    },
+    {
+      "id": 549,
+      "title": "",
+      "ocr": "Nowak, Měrćin s. Neumann, Martin."
+    },
+    {
+      "id": 561,
+      "title": "Arbeit, Rote ~. Der neue Arbeiter in der Sowjetunion",
+      "ocr": "Arbeit, Rote ~. Der neue Arbeiter in der Sowjetunion. Berlin: Historia-Foto 1931."
+    },
+    {
+      "id": 584,
+      "title": "Nazifuehrer sehen dich an",
+      "ocr": "Nazifuehrer sehen dich an! Paris: Ed. du Carrefour 1934."
+    },
+    {
+      "id": 586,
+      "title": "Schulze, Der tote ~ gegen den lebenden Lassalle",
+      "ocr": "Schulze, Der tote ~ gegen den lebenden Lassalle. Berlin: Vorwärts 1886."
+    },
+    {
+      "id": 606,
+      "title": "Fuenfjahrplan, Der zweite ~ der Entwicklung der Volkswirtschaft der UdSSR",
+      "ocr": "Fuenfjahrplan, Der zweite ~ der Entwicklung der Volkswirtschaft der UdSSR. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 610,
+      "title": "Kloester der Christenheit.",
+      "ocr": "Kloester der Christenheit. Pressburg 1901."
+    },
+    {
+      "id": 625,
+      "title": "Weib, Allmacht ~. Erotische Typologie der Frau. Bd 1—6",
+      "ocr": "Weib, Allmacht ~. Erotische Typologie der Frau. Bd 1—6. Wien: Verl. f. Kulturforschung 1928."
+    },
+    {
+      "id": 633,
+      "title": "Dollfuss, Engelbert. — Dollfuss an Österreich. Reden",
+      "ocr": "Dollfuss, Engelbert. — Dollfuss an Österreich. Reden. Wien: Reinhold 1935."
+    },
+    {
+      "id": 638,
+      "title": "Was uns der Weihnachtsmann erzählt ...",
+      "ocr": "Was uns der Weihnachtsmann erzählt ... Berlin: Schoknecht 1935."
+    },
+    {
+      "id": 657,
+      "title": "Spartakus im Kriege",
+      "ocr": "Spartakus im Kriege. Berlin: Vereinigung internat. Verl.Anst. 1927."
+    },
+    {
+      "id": 660,
+      "title": "Bergg, Franz ~. Ein Proletarierleben",
+      "ocr": "Bergg, Franz ~. Ein Proletarierleben. Frankfurt a/M.: Neuer Frankf. Verl. 1913."
+    },
+    {
+      "id": 674,
+      "title": "Hail Hitler! The Nazi speaks to the world",
+      "ocr": "Hail Hitler! The Nazi speaks to the world. London: Christophers 1934."
+    },
+    {
+      "id": 677,
+      "title": "Sonnenschein, Hugo ~ war ein Anarchist",
+      "ocr": "Sonnenschein, Hugo ~ war ein Anarchist. Berlin: Rowohlt 1921."
+    },
+    {
+      "id": 683,
+      "title": "Praxis, Die ~ der bürgerlichen Klassenjustiz im Kampfe gegen die revolutionären Bewegungen der Werktätigen",
+      "ocr": "Praxis, Die ~ der bürgerlichen Klassenjustiz im Kampfe gegen die revolutionären Bewegungen der Werktätigen. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 693,
+      "title": "Hindurch zur Kirche",
+      "ocr": "Hindurch zur Kirche! Berlin: Weber 1933."
+    },
+    {
+      "id": 696,
+      "title": "Entwicklung, Die sozialistische ~ der Schiffahrt in der UdSSR",
+      "ocr": "Entwicklung, Die sozialistische ~ der Schiffahrt in der UdSSR. Moskau: Verlagsgen. ausländ. Arbeiter 1931."
+    },
+    {
+      "id": 711,
+      "title": "Volk von morgen",
+      "ocr": "Volk von morgen. Berlin: Arbeiterjugendverl. 1925."
+    },
+    {
+      "id": 718,
+      "title": "Abrechnung! Der Weg der dt. Politik",
+      "ocr": "Abrechnung! Der Weg der dt. Politik. Köln: Gilde-Verl. 1929."
+    },
+    {
+      "id": 719,
+      "title": "Fuenfjahresplan an der Kulturfront",
+      "ocr": "Fuenfjahresplan an der Kulturfront. Berlin: Verl. f. Arbeiterkultur 1932."
+    },
+    {
+      "id": 724,
+      "title": "Deutschland glaub' ans Glück! Liederbuch",
+      "ocr": "Deutschland glaub' ans Glück! Liederbuch. Berlin: Schmidt 1933."
+    },
+    {
+      "id": 725,
+      "title": "Ehekultur, Die ~",
+      "ocr": "Ehekultur, Die ~. Berlin: Ges. f. Ehekultur 1919."
+    },
+    {
+      "id": 755,
+      "title": "Education, L'~ musicale — trait d'union entre les peuples",
+      "ocr": "Education, L'~ musicale — trait d'union entre les peuples. Prag: Orbis-Verl. 1937."
+    },
+    {
+      "id": 756,
+      "title": "Wirtschaftsdemokratie. Ihr Wesen, Weg und Ziel",
+      "ocr": "Wirtschaftsdemokratie. Ihr Wesen, Weg und Ziel. Berlin: Allg. Dt. Gewerkschaftsbund 1931."
+    },
+    {
+      "id": 766,
+      "title": "Judastat, Die ~ der Austro-Nazi",
+      "ocr": "Judastat, Die ~ der Austro-Nazi. Wien: Österr. Heimatdienst 1934."
+    },
+    {
+      "id": 777,
+      "title": "Siegfried oder Christus. Predigten u. Ansprachen",
+      "ocr": "Siegfried oder Christus. Predigten u. Ansprachen. Münster: Regensberg 1935."
+    },
+    {
+      "id": 790,
+      "title": "Doctrine, La nouvelle ~ de guerre allemande",
+      "ocr": "Doctrine, La nouvelle ~ de guerre allemande. Paris: Berger-Levrault 1934."
+    },
+    {
+      "id": 792,
+      "title": "Prozess, Der ~ gegen die trotzkistischen Agenten des Faschismus",
+      "ocr": "Prozess, Der ~ gegen die trotzkistischen Agenten des Faschismus. Strassburg: Ed. Prométhée 1937."
+    },
+    {
+      "id": 799,
+      "title": "Kulturvolk, Ein ~ protestiert. Die öffentliche Meinung Englands über den Hitler-Terror",
+      "ocr": "Kulturvolk, Ein ~ protestiert. Die öffentliche Meinung Englands über den Hitler-Terror. Zürich: Verl. d. Verbandes d. Personals öffentl. Dienste 1933."
+    },
+    {
+      "id": 805,
+      "title": "Wir kämpfen für ein rotes Preussen im sozialistischen Rätedeutschland",
+      "ocr": "Wir kämpfen für ein rotes Preussen im sozialistischen Rätedeutschland. Berlin: Jugendinternationale 1932."
+    },
+    {
+      "id": 830,
+      "title": "Juden, Christen, Heiden im III. Reich",
+      "ocr": "Juden, Christen, Heiden im III. Reich. Prag: Simpl.-Verl. 1935."
+    },
+    {
+      "id": 845,
+      "title": "Weihnacht, Neue ~",
+      "ocr": "Weihnacht, Neue ~. Berlin: Freier Schulverl. 1930."
+    },
+    {
+      "id": 846,
+      "title": "Spanien. Sammelband über den Freiheitskampf des span. Volkes",
+      "ocr": "Spanien. Sammelband über den Freiheitskampf des span. Volkes. Paris: Ed. Prométhée 1938."
+    },
+    {
+      "id": 859,
+      "title": "Wirtschaft, Freie ~. Sammelbuch aus d. dt. Emigration",
+      "ocr": "Wirtschaft, Freie ~. Sammelbuch aus d. dt. Emigration. Strassburg: Ed. Sebastian Brant 1938."
+    },
+    {
+      "id": 877,
+      "title": "Deutsch für Deutsche",
+      "ocr": "Deutsch für Deutsche. Leipzig: Verl. f. Kunst u. Wissenschaft A. O. Paul 1935. (Miniaturbibliothek, 481—483.) — Getarnte Emigrantenschrift!"
+    },
+    {
+      "id": 885,
+      "title": "Anangaranga. Die Bühne des Liebesgottes",
+      "ocr": "Anangaranga. Die Bühne des Liebesgottes. Wien: Schneider 1929."
+    },
+    {
+      "id": 894,
+      "title": "Technik der geistigen Arbeit. Handbuch in 15 Lieferungen",
+      "ocr": "Technik der geistigen Arbeit. Handbuch in 15 Lieferungen. Berlin: Hans Bort 1934."
+    },
+    {
+      "id": 910,
+      "title": "Anklage gegen die Ankläger. Die Widerlegung der geheimen Anklageschrift des Reichstagsbrand-Prozesses. (Nachtrag zum Braunbuch I.)",
+      "ocr": "Anklage gegen die Ankläger. Die Widerlegung der geheimen Anklageschrift des Reichstagsbrand-Prozesses. (Nachtrag zum Braunbuch I.). Paris: Ed. du Carrefour 1933."
+    },
+    {
+      "id": 918,
+      "title": "Familien, Bei den ~ der Februar-Kämpfer in Wien",
+      "ocr": "Familien, Bei den ~ der Februar-Kämpfer in Wien. Paris: Ed. du SRI. 1934."
+    },
+    {
+      "id": 943,
+      "title": "Dollfuss, Engelbert. — So sprach der Kanzler. Dollfuss' Vermächtnis",
+      "ocr": "Dollfuss, Engelbert. — So sprach der Kanzler. Dollfuss' Vermächtnis. Wien: Baumgartner 1935."
+    },
+    {
+      "id": 945,
+      "title": "Abirrungen, Die geschlechtlichen ~ des Menschen",
+      "ocr": "Abirrungen, Die geschlechtlichen ~ des Menschen ... Wien: Eos-Verl. 1928."
+    },
+    {
+      "id": 952,
+      "title": "Lexikon des geheimen Wissens",
+      "ocr": "Lexikon des geheimen Wissens. Wien: Hutter 1934."
+    },
+    {
+      "id": 971,
+      "title": "Staat und Parteien",
+      "ocr": "Staat und Parteien. Zürich: Niehans 1935."
+    },
+    {
+      "id": 982,
+      "title": "Nicht ich allein klage an",
+      "ocr": "+ Nicht ich allein klage an ... Moskau: Verlagsgen. ausländ. Arbeiter 1937."
+    },
+    {
+      "id": 995,
+      "title": "Aussenseiter des Sexuallebens",
+      "ocr": "Aussenseiter des Sexuallebens. Berlin: Renatus-Verl. 1931."
+    },
+    {
+      "id": 1008,
+      "title": "Vollendung, Die ~ des Fünfjahrplans in 4 Jahren. Reden u. Beschlüsse",
+      "ocr": "+ Vollendung, Die ~ des Fünfjahrplans in 4 Jahren. Reden u. Beschlüsse ... Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 1020,
+      "title": "Briefe, Magische ~. Brief 1—8",
+      "ocr": "Briefe, Magische ~. Brief 1—8. Wolfenbüttel: Verl. der Freude 1925."
+    },
+    {
+      "id": 1024,
+      "title": "Stachanow, Alexej ~",
+      "ocr": "Stachanow, Alexej ~. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 1026,
+      "title": "Kampflieder, Internationale ~",
+      "ocr": "Kampflieder, Internationale ~. Engels: Dt. Staatsverl. 1935."
+    },
+    {
+      "id": 1035,
+      "title": "Dnjeprogres in Betrieb",
+      "ocr": "Dnjeprogres in Betrieb. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 1046,
+      "title": "Das ist Faschismus",
+      "ocr": "Das ist Faschismus. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 1058,
+      "title": "Landagitation, Zur ~",
+      "ocr": "Landagitation, Zur ~. Berlin: Vorwärts 1891."
+    },
+    {
+      "id": 1067,
+      "title": "Kaempfer, Dem ~ für Frieden und Freiheit — Ernst Thälmann",
+      "ocr": "Kaempfer, Dem ~ für Frieden und Freiheit — Ernst Thälmann. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 1085,
+      "title": "Reitzel, Robert. — Robert Reitzel, des »Armen Teufels« gesammelte Werke",
+      "ocr": "Reitzel, Robert. — Robert Reitzel, des »Armen Teufels« gesammelte Werke. Berlin: Der Syndikalist 1919/23."
+    },
+    {
+      "id": 1088,
+      "title": "Gestapo. Ein Tatsachenbericht aus den Kerkern und Konzentrationslagern Deutschlands",
+      "ocr": "Gestapo. Ein Tatsachenbericht aus den Kerkern und Konzentrationslagern Deutschlands. Zürich-Paris: Mopr-Verl. 1934."
+    },
+    {
+      "id": 1102,
+      "title": "Kinderherz und Kindersinn. Erzählungen u. Gedichte",
+      "ocr": "Kinderherz und Kindersinn. Erzählungen u. Gedichte. Hamburg: Advent-Verl. 1912—1923."
+    },
+    {
+      "id": 1121,
+      "title": "Geschichte, Illustrierte ~ der russischen Revolution",
+      "ocr": "Geschichte, Illustrierte ~ der russischen Revolution. Berlin: Neuer dt. Verl. 1928."
+    },
+    {
+      "id": 1137,
+      "title": "Deutschland erwache! 3 Monate dt. Geschichte. Oesterreicher lernt daraus!",
+      "ocr": "Deutschland erwache! 3 Monate dt. Geschichte. Oesterreicher lernt daraus!. Wien: Pichler 1933."
+    },
+    {
+      "id": 1140,
+      "title": "Terror, Fünf Jahre weisser ~ in Bulgarien",
+      "ocr": "Terror, Fünf Jahre weisser ~ in Bulgarien. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 1142,
+      "title": "Sonnenburg, Folterhölle ~",
+      "ocr": "Sonnenburg, Folterhölle ~. Zürich-Paris: Mopr-Verl. 1934."
+    },
+    {
+      "id": 1147,
+      "title": "Kalle, der Lausbubenkönig",
+      "ocr": "Kalle, der Lausbubenkönig. Berlin: Zeitschriften-Verl. 1935."
+    },
+    {
+      "id": 1163,
+      "title": "Weib, Das lasterhafte ~. Hrsg. v. Agnes Esterhazy",
+      "ocr": "Weib, Das lasterhafte ~. Hrsg. v. Agnes Esterhazy. Wien: Verl. f. Kulturforschung 1930."
+    },
+    {
+      "id": 1171,
+      "title": "Stimmen aus aller Welt zum 20. Jahrestag der Sowjetunion",
+      "ocr": "Stimmen aus aller Welt zum 20. Jahrestag der Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1938."
+    },
+    {
+      "id": 1179,
+      "title": "Memoiren, Aus den ~ eines Flagellanten oder vom Flagellanten zum Masochisten",
+      "ocr": "Memoiren, Aus den ~ eines Flagellanten oder vom Flagellanten zum Masochisten. Wien: Welkhammer 1928."
+    },
+    {
+      "id": 1188,
+      "title": "Rivera, Diego. — Das Werk des Malers Diego Rivera",
+      "ocr": "Rivera, Diego. — Das Werk des Malers Diego Rivera. Berlin: Neuer dt. Verl. 1928."
+    },
+    {
+      "id": 1192,
+      "title": "Jud, Der ~ ist schuld. Diskussionsbuch über die Judenfrage",
+      "ocr": "Jud, Der ~ ist schuld. Diskussionsbuch über die Judenfrage. Basel: Zinnen-Verl. 1932."
+    },
+    {
+      "id": 1194,
+      "title": "Liebe glücklich: lebe glücklich",
+      "ocr": "Liebe glücklich: lebe glücklich! Berlin: Berolina 1932."
+    },
+    {
+      "id": 1203,
+      "title": "Zeitgeist, Der ~",
+      "ocr": "Zeitgeist, Der ~. Berlin: Vorwärts. 1893."
+    },
+    {
+      "id": 1207,
+      "title": "Dichter helfen. Novellen",
+      "ocr": "Dichter helfen. Novellen. Zürich: Oprecht 1936."
+    },
+    {
+      "id": 1208,
+      "title": "Goetter, Wider die falschen ~",
+      "ocr": "Goetter, Wider die falschen ~. Essen: »Unter dem Wort« 1935."
+    },
+    {
+      "id": 1211,
+      "title": "Geheimdokumente. Hrsg. vom »Bund Deutscher Aufbau«",
+      "ocr": "Geheimdokumente. Hrsg. vom »Bund Deutscher Aufbau«. Berlin: Lindemann & Lüdecke 1930."
+    },
+    {
+      "id": 1235,
+      "title": "Klassenjustiz, Ein Jahr ~ und Rote Hilfe",
+      "ocr": "Klassenjustiz, Ein Jahr ~ und Rote Hilfe. Berlin: Mopr-Verl. 1926."
+    },
+    {
+      "id": 1241,
+      "title": "Geheimnisse eines Grafenschlosses",
+      "ocr": "Geheimnisse eines Grafenschlosses. o. O. u. J."
+    },
+    {
+      "id": 1242,
+      "title": "Sowjetgesetzgebung, Die ~ über Ehe, Familie und Vormundschaft",
+      "ocr": "Sowjetgesetzgebung, Die ~ über Ehe, Familie und Vormundschaft. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 1246,
+      "title": "Lesebuch für Arbeiterkinder. 1926",
+      "ocr": "Lesebuch für Arbeiterkinder. 1926. Berlin: Junge Garde 1925."
+    },
+    {
+      "id": 1268,
+      "title": "Erlebnisse, Günthers ~. Aus d. Tagebuch eines Flagellanten",
+      "ocr": "Erlebnisse, Günthers ~. Aus d. Tagebuch eines Flagellanten. Berlin: Schwalbe 1932."
+    },
+    {
+      "id": 1279,
+      "title": "Schutzbuendler über die Februarkämpfe und das Internationale Solidaritätswerk der IRH",
+      "ocr": "Schutzbuendler über die Februarkämpfe und das Internationale Solidaritätswerk der IRH. Zürich: Mopr-Verl. 1934."
+    },
+    {
+      "id": 1287,
+      "title": "Urteil gegen die Mai-Mörder",
+      "ocr": "Urteil gegen die Mai-Mörder. Berlin: Mopr-Verl. 1929."
+    },
+    {
+      "id": 1301,
+      "title": "Mussolini und sein Faschismus. Hrsg. von Curt Sigmar Gutkind",
+      "ocr": "Mussolini und sein Faschismus. Hrsg. von Curt Sigmar Gutkind. Heidelberg: Merlinverl. 1928."
+    },
+    {
+      "id": 1310,
+      "title": "Revolutionsfilm, Der russische ~",
+      "ocr": "Revolutionsfilm, Der russische ~. Zürich: Orell Füssli 1929."
+    },
+    {
+      "id": 1315,
+      "title": "Geheimnis, Das ~ meines Schlafzimmers.",
+      "ocr": "Geheimnis, Das ~ meines Schlafzimmers. o. O. 1920."
+    },
+    {
+      "id": 1328,
+      "title": "Traktorenwerke, Die Stalingrader ~",
+      "ocr": "Traktorenwerke, Die Stalingrader ~. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 1366,
+      "title": "Zeitgenossen. Prosadichtung unserer Zeit",
+      "ocr": "Zeitgenossen. Prosadichtung unserer Zeit. Zutphen: Thieme & Co. 1935/36."
+    },
+    {
+      "id": 1372,
+      "title": "Fédération, La ~ universelle. World federation. Die Weltföderation",
+      "ocr": "Fédération, La ~ universelle. World federation. Die Weltföderation. Örebro, Schweden: Centerbladet 1938."
+    },
+    {
+      "id": 1383,
+      "title": "Protokoll des 18. Zionistenkongresses",
+      "ocr": "Protokoll des 18. Zionistenkongresses. Wien: Fiba-Verl. 1933."
+    },
+    {
+      "id": 1385,
+      "title": "Volkstum und Kulturpolitik. Georg Schreiber zum 50. Geburtstag",
+      "ocr": "Volkstum und Kulturpolitik. Georg Schreiber zum 50. Geburtstag. Köln: Gilde-Verl. 1932."
+    },
+    {
+      "id": 1390,
+      "title": "Kollektivbauern über sich selbst",
+      "ocr": "Kollektivbauern über sich selbst. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 1393,
+      "title": "Schwarzbuch, Das ~. Tatsachen u. Dokumente. Die Lage der Juden in Deutschland 1933",
+      "ocr": "Schwarzbuch, Das ~. Tatsachen u. Dokumente. Die Lage der Juden in Deutschland 1933. Paris: Ed. du Rond Point 1934."
+    },
+    {
+      "id": 1407,
+      "title": "Warum »Deutscher Christ«",
+      "ocr": "Warum »Deutscher Christ«? Stuttgart: Dt. Sonntag 1935."
+    },
+    {
+      "id": 1411,
+      "title": "",
+      "ocr": "Bazan, Heinrich Banniza von s. Banniza von Bazan, Heinrich."
+    },
+    {
+      "id": 1418,
+      "title": "Sittengeschichte des Intimen",
+      "ocr": "Sittengeschichte des Intimen. Wien: Verl. f. Kulturforschung 1926."
+    },
+    {
+      "id": 1441,
+      "title": "Sittengeschichte des Geheimen und Verbotenen",
+      "ocr": "Sittengeschichte des Geheimen und Verbotenen. Wien: Verl. f. Kulturforschung 1929."
+    },
+    {
+      "id": 1452,
+      "title": "Solidarität, Die internationale ~ mit dem deutschen Proletariat. Die Hilfsaktion der JRH",
+      "ocr": "Solidarität, Die internationale ~ mit dem deutschen Proletariat. Die Hilfsaktion der JRH. Zürich: Mopr-Verl. 1933."
+    },
+    {
+      "id": 1464,
+      "title": "Braunbuch II. Dimitroff contra Goering",
+      "ocr": "Braunbuch II. Dimitroff contra Goering. Paris: Ed. du Garrefour 1934."
+    },
+    {
+      "id": 1468,
+      "title": "Paradies, Das wiedergefundene ~",
+      "ocr": "Paradies, Das wiedergefundene ~. Reutlingen: Storch-Verl. 1932."
+    },
+    {
+      "id": 1481,
+      "title": "Kampf, Der ~ für den Sturz der faschistischen Regierung Hitler-Papen-Hugenberg",
+      "ocr": "Kampf, Der ~ für den Sturz der faschistischen Regierung Hitler-Papen-Hugenberg. Berlin: City-Druckerei 1933."
+    },
+    {
+      "id": 1494,
+      "title": "Memoiren, Aus den ~ eines Frauenarztes.",
+      "ocr": "Memoiren, Aus den ~ eines Frauenarztes. Wien 1920."
+    },
+    {
+      "id": 1509,
+      "title": "Au rouge vif. Anecdotes intimes sur la flagellation",
+      "ocr": "Au rouge vif. Anecdotes intimes sur la flagellation. Paris: Office central de librairie 1911."
+    },
+    {
+      "id": 1521,
+      "title": "Eroberung, Die ~ des Nordpols",
+      "ocr": "Eroberung, Die ~ des Nordpols. London: Malik-Verl. 1938."
+    },
+    {
+      "id": 1531,
+      "title": "Gedichte, Menschliche ~ im Krieg. Ausgew. von René Schickele",
+      "ocr": "Gedichte, Menschliche ~ im Krieg. Ausgew. von René Schickele. Zürich: Rascher 1918."
+    },
+    {
+      "id": 1532,
+      "title": "Notverordnung — Hungerverordnung",
+      "ocr": "Notverordnung — Hungerverordnung. Berlin: Betrieb u. Gewerkschaft 1930."
+    },
+    {
+      "id": 1545,
+      "title": "Kirow, Sergej ~, der Kämpfer und Führer",
+      "ocr": "Kirow, Sergej ~, der Kämpfer und Führer. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 1557,
+      "title": "Erinnerungen eines Waisenknaben. Von ihm selbst erzählt",
+      "ocr": "Erinnerungen eines Waisenknaben. Von ihm selbst erzählt. München: Reinhard 1910."
+    },
+    {
+      "id": 1571,
+      "title": "Internationale, Die kommunistische ~ vor dem 7. Weltkongress. Materialien",
+      "ocr": "Internationale, Die kommunistische ~ vor dem 7. Weltkongress. Materialien. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 1577,
+      "title": "Ehebuch, Das ~. Hrsg. von Graf H. Keyserling",
+      "ocr": "Ehebuch, Das ~. Hrsg. von Graf H. Keyserling. Celle: Kampmann 1930."
+    },
+    {
+      "id": 1663,
+      "title": "Was haben die 107 Nazi-M. d. R.s im Reichstag geleistet?",
+      "ocr": "Was haben die 107 Nazi-M. d. R.s im Reichstag geleistet?. Berlin: Prolet-Verl. 1931."
+    },
+    {
+      "id": 1683,
+      "title": "Lexikon, Mitteleuropäisches internationales ~",
+      "ocr": "Lexikon, Mitteleuropäisches internationales ~. Budapest: Tibor Dénes 1938."
+    },
+    {
+      "id": 1688,
+      "title": "Mensch und Gemeinschaft. Bd 1—4",
+      "ocr": "Mensch und Gemeinschaft. Bd 1—4. Berlin: A. Hoffmann 1925/26."
+    },
+    {
+      "id": 1698,
+      "title": "Aufklaerungswerk, Das grosse~für Braut- u. Eheleute",
+      "ocr": "Aufklaerungswerk, Das grosse~für Braut- u. Eheleute. Dresden: Gutenberg 1933."
+    },
+    {
+      "id": 1723,
+      "title": "Dreieck, Das ~. Erotischer Roman.",
+      "ocr": "Dreieck, Das ~. Erotischer Roman. o. O. um 1930."
+    },
+    {
+      "id": 1744,
+      "title": "Backfische von heute.",
+      "ocr": "Backfische von heute. Frankfurt 1919."
+    },
+    {
+      "id": 1745,
+      "title": "Wahlbombe der Hitlerpresse",
+      "ocr": "Wahlbombe der Hitlerpresse. Stettin: Volksdruckerei 1932."
+    },
+    {
+      "id": 1750,
+      "title": "Hitler against the world. The world against Hitler",
+      "ocr": "Hitler against the world. The world against Hitler. New York: Workers Libr. Publ. 1935."
+    },
+    {
+      "id": 1761,
+      "title": "Waarheid, De ~ over Duitschland",
+      "ocr": "Waarheid, De ~ over Duitschland. Amsterdam: De Arbeiderspers. 1933."
+    },
+    {
+      "id": 1765,
+      "title": "Gepflücktes vom Pflaumenbaum.",
+      "ocr": "Gepflücktes vom Pflaumenbaum. o. O. 1905."
+    },
+    {
+      "id": 1792,
+      "title": "Arbeiterinnen erzählen. Kampf u. Leben in Erez Jisrael",
+      "ocr": "Arbeiterinnen erzählen. Kampf u. Leben in Erez Jisrael. Berlin: Kedem 1935."
+    },
+    {
+      "id": 1799,
+      "title": "Sittengeschichte des Weltkriegs",
+      "ocr": "Sittengeschichte des Weltkriegs. Wien: Schneider 1930."
+    },
+    {
+      "id": 1808,
+      "title": "Oeffnet die Speicher und Halden",
+      "ocr": "Oeffnet die Speicher und Halden! Düsseldorf: Westdt. Buchdruckwerkstätten 1932."
+    },
+    {
+      "id": 1810,
+      "title": "Frauen unter faschistischem Terror",
+      "ocr": "Frauen unter faschistischem Terror. Zürich: Mopr-Verl. 1934."
+    },
+    {
+      "id": 1816,
+      "title": "Liebe verboten",
+      "ocr": "Liebe verboten. Berlin: Verl. f. Arbeiterkultur 1931."
+    },
+    {
+      "id": 1824,
+      "title": "Niemoeller, Martin ~ und sein Bekenntnis",
+      "ocr": "Niemoeller, Martin ~ und sein Bekenntnis. Zollikon: Evang. Buchh. 1938."
+    },
+    {
+      "id": 1871,
+      "title": "Wahrheit, Die ~ über den Reichstagsbrand.",
+      "ocr": "Wahrheit, Die ~ über den Reichstagsbrand. o. O. 1933."
+    },
+    {
+      "id": 1890,
+      "title": "Liebesorakel, Das untrügliche ~",
+      "ocr": "Liebesorakel, Das untrügliche ~. Dresden: Buchversand Gutenberg 1931."
+    },
+    {
+      "id": 1892,
+      "title": "Claire. Erot.-sadist. Roman,",
+      "ocr": "Claire. Erot.-sadist. Roman, o. O. 1930."
+    },
+    {
+      "id": 1900,
+      "title": "Pieck, Wilhelm ~. Ein Kampferleben im Dienste der Arbeiterklasse",
+      "ocr": "Pieck, Wilhelm ~. Ein Kampferleben im Dienste der Arbeiterklasse. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 1907,
+      "title": "Kampfgenoss. Ein Buch für die proletarische Jugend",
+      "ocr": "Kampfgenoss. Ein Buch für die proletarische Jugend. Berlin: Jugendinternationale 1928."
+    },
+    {
+      "id": 1908,
+      "title": "Jungbanner, Das ~",
+      "ocr": "Jungbanner, Das ~. Magdeburg: Bundesvorstand d. Reichsbanners 1930."
+    },
+    {
+      "id": 1909,
+      "title": "Spectator (Pseud.): Was wird aus Deutschland",
+      "ocr": "Spectator (Pseud.): Was wird aus Deutschland? Innsbruck: Zentralbildungsstelle f. Tirol 1934."
+    },
+    {
+      "id": 1913,
+      "title": "Freund, Lieber ~, Genosse Stalin",
+      "ocr": "Freund, Lieber ~, Genosse Stalin. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 1919,
+      "title": "Kaiser, Der ~. Wie er war — wie er ist. Hrsg. v. Fr. Everling u. A. Günther",
+      "ocr": "Kaiser, Der ~. Wie er war — wie er ist. Hrsg. v. Fr. Everling u. A. Günther. Berlin: Traditions-Verl. 1934."
+    },
+    {
+      "id": 1928,
+      "title": "Liederbuch der Tatgemeinschaften im Dt. Verein gegen den Alkoholismus",
+      "ocr": "Liederbuch der Tatgemeinschaften im Dt. Verein gegen den Alkoholismus. Berlin: Führeramt d. Tatgemeinschaften 1932."
+    },
+    {
+      "id": 1929,
+      "title": "Kinderrepublik, Die rote ~. Zsgest. v. Andreas Gayk",
+      "ocr": "Kinderrepublik, Die rote ~. Zsgest. v. Andreas Gayk. Berlin: Arbeiterjugend-Verl. 1928."
+    },
+    {
+      "id": 1939,
+      "title": "Gewalt und Gewaltlosigkeit. Handbuch des aktiven Pazifismus",
+      "ocr": "Gewalt und Gewaltlosigkeit. Handbuch des aktiven Pazifismus. Zürich: Rotapfel-Verl. 1928."
+    },
+    {
+      "id": 1945,
+      "title": "Dichtung, Junge deutsche ~",
+      "ocr": "Dichtung, Junge deutsche ~. Berlin: Eigenbrödler-Verl. 1930."
+    },
+    {
+      "id": 1951,
+      "title": "Auszuege aus der Bibel.",
+      "ocr": "Auszuege aus der Bibel. Landsberg a. W.: K. Pfeiffer 1934."
+    },
+    {
+      "id": 1974,
+      "title": "Quell des Wissens. Eine deutsche Volkshochschule in 4 Bänden",
+      "ocr": "Quell des Wissens. Eine deutsche Volkshochschule in 4 Bänden. Berlin: Eigenbrödler-Verl. 1928."
+    },
+    {
+      "id": 1976,
+      "title": "Bruinboek van de Hitler-terreur en den Rijksdagbrand",
+      "ocr": "Bruinboek van de Hitler-terreur en den Rijksdagbrand. Amsterdam: Scheltens & Giltay 1933."
+    },
+    {
+      "id": 1981,
+      "title": "Weltuntergang — Weltrettung",
+      "ocr": "Weltuntergang — Weltrettung! Leutesdorf: Johannesbund 1922."
+    },
+    {
+      "id": 1997,
+      "title": "Brevier, Das ~ des Kardinals. Hrsg. v. Fl. Ilmer",
+      "ocr": "Brevier, Das ~ des Kardinals. Hrsg. v. Fl. Ilmer. München: Georg Müller 1920."
+    },
+    {
+      "id": 2011,
+      "title": "Helft! Russland in Not",
+      "ocr": "Helft! Russland in Not! Berlin: Malik-Verl. 1921."
+    },
+    {
+      "id": 2031,
+      "title": "Blick in das neue Preussen",
+      "ocr": "Blick in das neue Preussen. Berlin: Voco-Verl. 1932."
+    },
+    {
+      "id": 2032,
+      "title": "Aufbauwerk, Zwei Jahre ~ der Regierung Dollfuss",
+      "ocr": "Aufbauwerk, Zwei Jahre ~ der Regierung Dollfuss. Wien: Österr. Bundespressedienst 1934."
+    },
+    {
+      "id": 2054,
+      "title": "Pazifisten, Deutsche ~. Hrsg. von Georg Grosch",
+      "ocr": "Pazifisten, Deutsche ~. Hrsg. von Georg Grosch. Stuttgart: Dt. Friedensgesellschaft 1917."
+    },
+    {
+      "id": 2067,
+      "title": "Murder in Camp Hohenstein and other stories",
+      "ocr": "Murder in Camp Hohenstein and other stories. London: Lawrence 1934."
+    },
+    {
+      "id": 2077,
+      "title": "Dimitroff, Georgi ~. Eine Flamme in der Nacht",
+      "ocr": "Dimitroff, Georgi ~. Eine Flamme in der Nacht. Zürich-Paris: Mopr-Verl. 1933."
+    },
+    {
+      "id": 2079,
+      "title": "Reichsmietengesetz, Neues ~ und Mieterschutzgesetz vom 18. April 1936",
+      "ocr": "Reichsmietengesetz, Neues ~ und Mieterschutzgesetz vom 18. April 1936. Chemnitz: Hans Leupold 1936."
+    },
+    {
+      "id": 2080,
+      "title": "Fehler, Über die ~ der Parteiorganisationen beim Ausschluss von Kommunisten aus der Partei",
+      "ocr": "Fehler, Über die ~ der Parteiorganisationen beim Ausschluss von Kommunisten aus der Partei. Moskau: Verlagsgen. ausländ. Arbeiter 1938."
+    },
+    {
+      "id": 2088,
+      "title": "Was Eros erzählt",
+      "ocr": "Was Eros erzählt. Wien: Frisch 1927."
+    },
+    {
+      "id": 2100,
+      "title": "Hochverrat, Der literarische ~ von Joh. R. Becher",
+      "ocr": "Hochverrat, Der literarische ~ von Joh. R. Becher. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 2104,
+      "title": "Kuno: Weltbund der Jugend gegen den Krieg",
+      "ocr": "Kuno: Weltbund der Jugend gegen den Krieg? Berlin: Jugendinternationale 1929."
+    },
+    {
+      "id": 2113,
+      "title": "Hitler et Rosenberg ou le vrai visage du nationalsocialisme",
+      "ocr": "Hitler et Rosenberg ou le vrai visage du nationalsocialisme. Paris: Bonne Presse 1936."
+    },
+    {
+      "id": 2120,
+      "title": "Jugendfahnen, Rote ~ über Wien",
+      "ocr": "Jugendfahnen, Rote ~ über Wien. Berlin: Arbeiterjugend-Verl. 1929."
+    },
+    {
+      "id": 2156,
+      "title": "Blutarbeit, Die~ der Schwarzhemden",
+      "ocr": "Blutarbeit, Die~ der Schwarzhemden. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 2160,
+      "title": "Wenn Judenblut vom Messer spritzt",
+      "ocr": "Wenn Judenblut vom Messer spritzt. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 2166,
+      "title": "Frauen, Führende ~ Europas.",
+      "ocr": "Frauen, Führende ~ Europas. Hrsg. von Elga Kern. München: Reinhardt 1928. N. F. 1930."
+    },
+    {
+      "id": 2176,
+      "title": "Mallefille, Pierre J",
+      "ocr": "Mallefille, Pierre J. Felicien: Don Juan. Sämtliche Ausgaben."
+    },
+    {
+      "id": 2183,
+      "title": "Folterkammern, Aus den ~ Rumäniens. Dokumente u. Enthüllungen",
+      "ocr": "Folterkammern, Aus den ~ Rumäniens. Dokumente u. Enthüllungen. Wien: Kulturpolit. Verl. 1925."
+    },
+    {
+      "id": 2190,
+      "title": "Lieder der Tracht",
+      "ocr": "Lieder der Tracht. Plauen: Wolff 1934."
+    },
+    {
+      "id": 2198,
+      "title": "Ehe,Die ~ der Germanen. Flugschrift",
+      "ocr": "Ehe,Die ~ der Germanen. Flugschrift. Sensburg, Ostpr.: Wiedertäufer 1935."
+    },
+    {
+      "id": 2200,
+      "title": "Wagner, Richard ~ der Lebenserneuerer",
+      "ocr": "Wagner, Richard ~ der Lebenserneuerer. Dresden: Verl. d. Schönheit 1924."
+    },
+    {
+      "id": 2203,
+      "title": "Wer ist's",
+      "ocr": "Wer ist's. Berlin: Mopr-Verl. 1926."
+    },
+    {
+      "id": 2210,
+      "title": "Weimar, Das ~ der arbeitenden Jugend. Niederschriften vom 1. Reichsjugendtag",
+      "ocr": "Weimar, Das ~ der arbeitenden Jugend. Niederschriften vom 1. Reichsjugendtag. Berlin: Arbeiterjugendverl. 1920."
+    },
+    {
+      "id": 2224,
+      "title": "Verein, Der ~ »Das Kreidedreieck« erforscht die Geheimnisse der Erwachsenen",
+      "ocr": "Verein, Der ~ »Das Kreidedreieck« erforscht die Geheimnisse der Erwachsenen. Berlin: Verl. f. Sexualpolitik 1932."
+    },
+    {
+      "id": 2230,
+      "title": "Achtung! Hier sprechen deutsche Kumpels über die Sowjetunion",
+      "ocr": "Achtung! Hier sprechen deutsche Kumpels über die Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 2233,
+      "title": "Technik, Die naturgemässe ~ der Ehe",
+      "ocr": "Technik, Die naturgemässe ~ der Ehe. Wien: Eos-Verl. 1928."
+    },
+    {
+      "id": 2238,
+      "title": "Partei, Die kommunistische ~ Österreichs im Kampf um die Massen",
+      "ocr": "Partei, Die kommunistische ~ Österreichs im Kampf um die Massen. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 2245,
+      "title": "Arbeiterparadies, Das ~",
+      "ocr": "Arbeiterparadies, Das ~. Berlin: »Die russische Wirklichkeit« 1931."
+    },
+    {
+      "id": 2258,
+      "title": "Monistentag, Magdeburger ~",
+      "ocr": "Monistentag, Magdeburger ~. München: Reinhardt 1913."
+    },
+    {
+      "id": 2263,
+      "title": "Was ist die eiserne Front",
+      "ocr": "Was ist die eiserne Front? Berlin: Kommun. Partei Deutschlands 1932."
+    },
+    {
+      "id": 2269,
+      "title": "Denkschrift des Reichsjustizministers zu »4 Jahre politischer Mord«",
+      "ocr": "Denkschrift des Reichsjustizministers zu »4 Jahre politischer Mord« Berlin: Malik-Verl. 1924."
+    },
+    {
+      "id": 2283,
+      "title": "Joug, Sous le ~ hitlérien. La révolte des consciences",
+      "ocr": "Joug, Sous le ~ hitlérien. La révolte des consciences. Paris: Maison de la bonne presse 1937."
+    },
+    {
+      "id": 2322,
+      "title": "Denkwürdigkeiten des Herrn von H. Galantpikante Enthüllungen",
+      "ocr": "+ Denkwürdigkeiten des Herrn von H. Galantpikante Enthüllungen ... Paris-Wien: Moderner freier Verl. 1910."
+    },
+    {
+      "id": 2339,
+      "title": "Trotz faschistischem Terror illegal an der Solidaritätsfront",
+      "ocr": "Trotz faschistischem Terror illegal an der Solidaritätsfront. Zürich: Mopr-Verl. 1934."
+    },
+    {
+      "id": 2340,
+      "title": "Naziparadiese in den Gemeinden",
+      "ocr": "Naziparadiese in den Gemeinden. Berlin: Dietz 1932."
+    },
+    {
+      "id": 2367,
+      "title": "Revolution gegen Hitler",
+      "ocr": "Revolution gegen Hitler! Prag: Graphia 1933."
+    },
+    {
+      "id": 2371,
+      "title": "Sittenspiegel der Nacktheit",
+      "ocr": "Sittenspiegel der Nacktheit. Leipzig: Parthenon-Verl. 1930."
+    },
+    {
+      "id": 2378,
+      "title": "Sittengeschichte des Hafens und der Reise",
+      "ocr": "Sittengeschichte des Hafens und der Reise. Wien: Verl. f. Kulturforschung 1928."
+    },
+    {
+      "id": 2395,
+      "title": "Hitler, Adolf ~",
+      "ocr": "Hitler, Adolf ~. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 2408,
+      "title": "Chosrastschot-Brigade, Die erste ~",
+      "ocr": "Chosrastschot-Brigade, Die erste ~. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 2413,
+      "title": "Frau, Die ~ im heutigen Russland. Novellen",
+      "ocr": "Frau, Die ~ im heutigen Russland. Novellen. Leipzig: Fikentscher 1928."
+    },
+    {
+      "id": 2415,
+      "title": "Recht, Das ~ auf Bildung",
+      "ocr": "Recht, Das ~ auf Bildung. Strassburg: Ed. Prométhée 1937."
+    },
+    {
+      "id": 2453,
+      "title": "Wehrlos hinter der Front",
+      "ocr": "Wehrlos hinter der Front. Frankfurt a/M.: Societäts-Verl. 1931."
+    },
+    {
+      "id": 2466,
+      "title": "Durch Paulus von Gudrun zum Gretchen. (1. Ludendorff, Erich: Der Jude Paulus u. die Frau. — 2. Kurth, Hans: Von der Gudrun zum Gretchen.) M",
+      "ocr": "Durch Paulus von Gudrun zum Gretchen. (1. Ludendorff, Erich: Der Jude Paulus u. die Frau. — 2. Kurth, Hans: Von der Gudrun zum Gretchen.) München: Ludendorff-Verl. 1932."
+    },
+    {
+      "id": 2480,
+      "title": "Braunbuch, Das ~. Hakenkreuz gegen Österreich",
+      "ocr": "Braunbuch, Das ~. Hakenkreuz gegen Österreich. Wien: Staatsdruckerei 1933."
+    },
+    {
+      "id": 2489,
+      "title": "Germaine und Molly. Peitschen- u. Liebesorgien.",
+      "ocr": "Germaine und Molly. Peitschen- u. Liebesorgien. Budapest 1922."
+    },
+    {
+      "id": 2495,
+      "title": "Gehoer, Das ~. Bearb. v. Ernst Decsey u. a",
+      "ocr": "Gehoer, Das ~. Bearb. v. Ernst Decsey u. a. Wien: Verl. f. Kulturforschung 1931."
+    },
+    {
+      "id": 2502,
+      "title": "Hilfe, 5 Jahre Internationale Rote ~",
+      "ocr": "Hilfe, 5 Jahre Internationale Rote ~. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 2513,
+      "title": "Abenteuer, Rosy's ~",
+      "ocr": "Abenteuer, Rosy's ~. Hamburg: Eros-Verl. 1905."
+    },
+    {
+      "id": 2533,
+      "title": "Tag, Der ~ von Potsdam",
+      "ocr": "Tag, Der ~ von Potsdam. Peiskretscham: Cieslik 1933."
+    },
+    {
+      "id": 2539,
+      "title": "Reichsprogramm der allgemeinen deutschen Reichsbewegung für die Rechte der Gesamtheit",
+      "ocr": "Reichsprogramm der allgemeinen deutschen Reichsbewegung für die Rechte der Gesamtheit. Leipzig: Mazdaznan-Verl. 1932."
+    },
+    {
+      "id": 2543,
+      "title": "Lieder der Eisbrechermannschaft",
+      "ocr": "Lieder der Eisbrechermannschaft. Plauen: Wolff 1933."
+    },
+    {
+      "id": 2547,
+      "title": "Faelscherwerkstätten, Aus diplomatischen",
+      "ocr": "Faelscherwerkstätten, Aus diplomatischen Berlin: Neuer dt. Verl. 1926."
+    },
+    {
+      "id": 2553,
+      "title": "Arbeiterkinder erobern die Welt",
+      "ocr": "Arbeiterkinder erobern die Welt! Berlin: Reichsarbeitsgemeinschaft d. Kinderfreunde 1930."
+    },
+    {
+      "id": 2559,
+      "title": "Novellen deutscher Dichter der Gegenwart",
+      "ocr": "Novellen deutscher Dichter der Gegenwart. Amsterdam: A. de Lange 1933."
+    },
+    {
+      "id": 2567,
+      "title": "Netz, Das braune ~. Wie Hitlers Agenten im Auslande arbeiten",
+      "ocr": "Netz, Das braune ~. Wie Hitlers Agenten im Auslande arbeiten. Paris: Ed. du Carrefour 1935."
+    },
+    {
+      "id": 2572,
+      "title": "Nacktheit, Ideale ~",
+      "ocr": "Nacktheit, Ideale ~. Dresden: Verl. d. Schönheit 1915/28."
+    },
+    {
+      "id": 2579,
+      "title": "Hitler et sa doctrine",
+      "ocr": "Hitler et sa doctrine. Paris: Ed. de l'Ere nouvelle 1935."
+    },
+    {
+      "id": 2599,
+      "title": "Sittengeschichte des Theaters",
+      "ocr": "Sittengeschichte des Theaters. Wien: Verl. f. Kulturforschung 1925."
+    },
+    {
+      "id": 2622,
+      "title": "Streiksignal und Streikverrat",
+      "ocr": "Streiksignal und Streikverrat. Erfurt: Fortschritt 1932."
+    },
+    {
+      "id": 2626,
+      "title": "Sittengeschichte des Lasters",
+      "ocr": "Sittengeschichte des Lasters. Wien: Verl. f. Kulturforschung 1927."
+    },
+    {
+      "id": 2642,
+      "title": "Erotik, Die ~ in der Photographie",
+      "ocr": "Erotik, Die ~ in der Photographie. Wien: Verl. f. Kulturforschung 1931/32."
+    },
+    {
+      "id": 2652,
+      "title": "Elternsendung und Priesteraufgabe",
+      "ocr": "Elternsendung und Priesteraufgabe. Düsseldorf: Beratungsstelle f. pfarrgemeindl. Arbeit 1937."
+    },
+    {
+      "id": 2659,
+      "title": "Film, Der ~ »Im Westen nichts Neues« in Bildern",
+      "ocr": "Film, Der ~ »Im Westen nichts Neues« in Bildern. Berlin: Rowohlt 1931."
+    },
+    {
+      "id": 2666,
+      "title": "Nazikommunalpolitik. Irrungen, Wirrungen ...",
+      "ocr": "Nazikommunalpolitik. Irrungen, Wirrungen ... Berlin: Dietz 1931."
+    },
+    {
+      "id": 2671,
+      "title": "Meisterin der Liebe",
+      "ocr": "Meisterin der Liebe. Wien: Steinmann 1920."
+    },
+    {
+      "id": 2681,
+      "title": "Und die Schuldigen regieren weiter. Der Reichstagsbrand-Prozess.",
+      "ocr": "+ ... Und die Schuldigen regieren weiter. Der Reichstagsbrand-Prozess. Zürich-Paris: Mopr-Verl. 1934."
+    },
+    {
+      "id": 2700,
+      "title": "Wahrheit, Die ~ über den Prozess gegen die terroristischen Verschwörer in Moskau",
+      "ocr": "Wahrheit, Die ~ über den Prozess gegen die terroristischen Verschwörer in Moskau. Strassburg: Ed. Prométhée 1936."
+    },
+    {
+      "id": 2705,
+      "title": "Transvaal. Novellen aus dem neuen Russland",
+      "ocr": "Transvaal. Novellen aus dem neuen Russland. Berlin: Neuer dt. Verl. 1928."
+    },
+    {
+      "id": 2717,
+      "title": "Alice. Erotischer Roman,",
+      "ocr": "Alice. Erotischer Roman, o. O. 1926."
+    },
+    {
+      "id": 2740,
+      "title": "Forms, Ideal human ~",
+      "ocr": "Forms, Ideal human ~. Dresden: Verl. d. Schönheit 1923."
+    },
+    {
+      "id": 2755,
+      "title": "Hahnenschwanz, Hakenkreuz, Kaiserkrone",
+      "ocr": "Hahnenschwanz, Hakenkreuz, Kaiserkrone. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 2761,
+      "title": "Verhindert den Mord an Ernst Thälmann",
+      "ocr": "Verhindert den Mord an Ernst Thälmann! Zürich-Paris: Mopr-Verl. 1933."
+    },
+    {
+      "id": 2764,
+      "title": "Schuldige, Der ~. Die Mordnacht von Potempa",
+      "ocr": "Schuldige, Der ~. Die Mordnacht von Potempa. Berlin: Pieck 1932."
+    },
+    {
+      "id": 2774,
+      "title": "Lenin. Leben u. Werk",
+      "ocr": "Lenin. Leben u. Werk. Wien: Verl. f. Lit. u. Politik 1924."
+    },
+    {
+      "id": 2776,
+      "title": "Hitler, 1000 Worte ~",
+      "ocr": "Hitler, 1000 Worte ~. Berlin: Volksfunk-Verl. 1932."
+    },
+    {
+      "id": 2778,
+      "title": "Reichswehrgreuel, Die ~ in Sachsen im Okt./Nov. 1923. Unter dem weissen Terror",
+      "ocr": "Reichswehrgreuel, Die ~ in Sachsen im Okt./Nov. 1923. Unter dem weissen Terror. Berlin: Vereinigung internat. Verl.-Anst. 1924."
+    },
+    {
+      "id": 2799,
+      "title": "Raete-China",
+      "ocr": "Raete-China. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 2805,
+      "title": "Sowjetdorf, Das ~ in Zahlen und Diagrammen 1917—1927",
+      "ocr": "Sowjetdorf, Das ~ in Zahlen und Diagrammen 1917—1927. Berlin: Verl. f. Lit. u. Politik 1928."
+    },
+    {
+      "id": 2808,
+      "title": "Panoptikum der Erotik",
+      "ocr": "Panoptikum der Erotik. Leipzig: Eva-Verl. 1931."
+    },
+    {
+      "id": 2822,
+      "title": "Hitler, Zwischenspiel ~. Ziele u. Wirklichkeit des Nationalsozialismus",
+      "ocr": "Hitler, Zwischenspiel ~. Ziele u. Wirklichkeit des Nationalsozialismus. Leipzig: Reinhold-Verl. 1932."
+    },
+    {
+      "id": 2857,
+      "title": "Sacco und Vanzetti",
+      "ocr": "Sacco und Vanzetti. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 2873,
+      "title": "Eichhorn, Emil. — Emil Eichhorn über die Januarereignisse",
+      "ocr": "Eichhorn, Emil. — Emil Eichhorn über die Januarereignisse. Berlin: Freiheit 1919."
+    },
+    {
+      "id": 2876,
+      "title": "Reichstag, Der ~ tritt zusammen. Eingel. von Paul Kirschner",
+      "ocr": "Reichstag, Der ~ tritt zusammen. Eingel. von Paul Kirschner. Zürich: Orell Füssli 1931."
+    },
+    {
+      "id": 2894,
+      "title": "Benesch, Dr. Eduard ~ im Bild. Die Geschichte eines grossen Lebens",
+      "ocr": "Benesch, Dr. Eduard ~ im Bild. Die Geschichte eines grossen Lebens. Prag: Orbis-Verl. 1936."
+    },
+    {
+      "id": 2898,
+      "title": "Duitschland het land der Olympische spelen",
+      "ocr": "Duitschland het land der Olympische spelen? Amsterdam: L. J. Joachimsthal 1935."
+    },
+    {
+      "id": 2901,
+      "title": "Blueten des Humors. Meine Witze",
+      "ocr": "Blueten des Humors. Meine Witze. Leipzig: Schlothauer 1933."
+    },
+    {
+      "id": 2902,
+      "title": "Hilfe, 10 Jahre Internationale Rote ~",
+      "ocr": "Hilfe, 10 Jahre Internationale Rote ~. Berlin: Mopr-Verl. 1932."
+    },
+    {
+      "id": 2923,
+      "title": "Weissbuch über die schwarze Reichswehr",
+      "ocr": "Weissbuch über die schwarze Reichswehr. Berlin: Verl. d. neuen Gesellschaft 1925."
+    },
+    {
+      "id": 2936,
+      "title": "Lenin in den ersten Tagen der Sowjetmacht",
+      "ocr": "Lenin in den ersten Tagen der Sowjetmacht. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 2987,
+      "title": "Austerlitz, Friedrich.—Austerlitz spricht",
+      "ocr": "Austerlitz, Friedrich.—Austerlitz spricht. Wien: Wiener Volksbuchh. 1931."
+    },
+    {
+      "id": 2993,
+      "title": "Autarkie. Vorträge auf der 1. Kundgebung des Dt. Bundes für freie Wirtschaftspolitik",
+      "ocr": "Autarkie. Vorträge auf der 1. Kundgebung des Dt. Bundes für freie Wirtschaftspolitik. Berlin: Rowohlt 1932."
+    },
+    {
+      "id": 3004,
+      "title": "Fememord, das Verbrechen der Hitlerpartei",
+      "ocr": "Fememord, das Verbrechen der Hitlerpartei. Leipzig: Neudrag 1933."
+    },
+    {
+      "id": 3010,
+      "title": "Frauen rufen aus Kerkern",
+      "ocr": "Frauen rufen aus Kerkern. Berlin: Mopr-Verl. 1930."
+    },
+    {
+      "id": 3013,
+      "title": "Justiz, Weisse ~ und Rote Hilfe",
+      "ocr": "Justiz, Weisse ~ und Rote Hilfe. Berlin: Mopr-Verl. 1926."
+    },
+    {
+      "id": 3032,
+      "title": "",
+      "ocr": "Nieuwenhuis, Ferdinand Domela s.Domela Nieuwenhuis, Ferdinand."
+    },
+    {
+      "id": 3050,
+      "title": "Wissenschaft, Die ~ im Lichte des Marxismus",
+      "ocr": "Wissenschaft, Die ~ im Lichte des Marxismus. Zürich: Jean-Christophe-Verl. 1937."
+    },
+    {
+      "id": 3051,
+      "title": "Weltkampftag der Jugend",
+      "ocr": "Weltkampftag der Jugend. Berlin: Verl. d. Jugendinternationale 1930."
+    },
+    {
+      "id": 3052,
+      "title": "Play, Fair ~. Für ehrliches Spiel",
+      "ocr": "Play, Fair ~. Für ehrliches Spiel. Paris: Ed. du Carrefour 1935."
+    },
+    {
+      "id": 3056,
+      "title": "Pfarrer und Lehrer im Dorfe",
+      "ocr": "Pfarrer und Lehrer im Dorfe. Wien Seelsorger-Verl. 1935."
+    },
+    {
+      "id": 3058,
+      "title": "Buch, Das intime ~ der Frau",
+      "ocr": "Buch, Das intime ~ der Frau. Berlin: Krischel 1920."
+    },
+    {
+      "id": 3069,
+      "title": "Fechenbach, Der Fall ~. Jurist. Gutachten",
+      "ocr": "Fechenbach, Der Fall ~. Jurist. Gutachten. Tübingen: Mohr 1924."
+    },
+    {
+      "id": 3076,
+      "title": "Stimme, Die ~ aus Deutschland",
+      "ocr": "Stimme, Die ~ aus Deutschland. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 3106,
+      "title": "Schoenheit, Die ~ des Weibes in der Kunst",
+      "ocr": "Schoenheit, Die ~ des Weibes in der Kunst. Leipzig: Lippold 1925."
+    },
+    {
+      "id": 3112,
+      "title": "Mord im Lager Hohenstein",
+      "ocr": "Mord im Lager Hohenstein. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 3113,
+      "title": "Reichsparteitag in Nürnberg 1934",
+      "ocr": "Reichsparteitag in Nürnberg 1934. Dresden: M. O. Groh 1934."
+    },
+    {
+      "id": 3127,
+      "title": "Sittengeschichte der Revolution",
+      "ocr": "Sittengeschichte der Revolution. Wien: Verl. f. Kulturforschung 1930."
+    },
+    {
+      "id": 3141,
+      "title": "Nationalsozialismus, Wider den ~",
+      "ocr": "Nationalsozialismus, Wider den ~. Berlin: Voco-Verl. 1932."
+    },
+    {
+      "id": 3154,
+      "title": "Bildungsmappe des schweizerischen katholischen Jungmannschaftsverbandes",
+      "ocr": "Bildungsmappe des schweizerischen katholischen Jungmannschaftsverbandes. Luzern: Rex-Verlag 1938."
+    },
+    {
+      "id": 3185,
+      "title": "Zeichen, Im ~ des Kreuzes",
+      "ocr": "Zeichen, Im ~ des Kreuzes. Berlin: Colonialdruck 1933."
+    },
+    {
+      "id": 3225,
+      "title": "Ehrenchronik. Hrsg. v. Wilh. Oswald",
+      "ocr": "Ehrenchronik. Hrsg. v. Wilh. Oswald. Stuttgart: Bohnenberger 1937."
+    },
+    {
+      "id": 3231,
+      "title": "Was beim Mann so hässlich ist",
+      "ocr": "Was beim Mann so hässlich ist. Oranienburg: Orania-Verl. 1913."
+    },
+    {
+      "id": 3265,
+      "title": "Programm und Statut des Leninschen Kommunistischen Jugendverbandes der Sowjetunion",
+      "ocr": "Programm und Statut des Leninschen Kommunistischen Jugendverbandes der Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 3280,
+      "title": "Polska na Morzu [Polen auf dem Meere]",
+      "ocr": "Polska na Morzu [Polen auf dem Meere]. Warschau: Ksiegarnia Wojskowa 1935."
+    },
+    {
+      "id": 3294,
+      "title": "Tag der Freude",
+      "ocr": "Tag der Freude. Berlin: Arbeiterjugendverl. 1926."
+    },
+    {
+      "id": 3296,
+      "title": "Eros, Der moskowitische ~",
+      "ocr": "Eros, Der moskowitische ~. München: Orchis-Verl. 1924."
+    },
+    {
+      "id": 3322,
+      "title": "Tagung, 4. ~ der Evangelischen Bekenntnis-Synode im Rheinland. Hrsg. v. Karl Immer",
+      "ocr": "Tagung, 4. ~ der Evangelischen Bekenntnis-Synode im Rheinland. Hrsg. v. Karl Immer. Wuppertal-Barmen: E. Müller 1935."
+    },
+    {
+      "id": 3329,
+      "title": "Bilderlexikon der Erotik. Hrsg. vom Institut f. Sexualforschung in Wien",
+      "ocr": "Bilderlexikon der Erotik. Hrsg. vom Institut f. Sexualforschung in Wien. Wien: Verl. f. Kulturforschung 1928."
+    },
+    {
+      "id": 3336,
+      "title": "Ce qui se passe en Allemagne.",
+      "ocr": "Ce qui se passe en Allemagne. Paris: Maison de la Bonne Presse 1935."
+    },
+    {
+      "id": 3344,
+      "title": "Gemeindebetriebe, der Hort kapitalistischer Ausbeutung und Antreiberei",
+      "ocr": "Gemeindebetriebe, der Hort kapitalistischer Ausbeutung und Antreiberei. Berlin: Druck Peuvag 1932."
+    },
+    {
+      "id": 3354,
+      "title": "Foerster, Friedrich Wilhelm ~ und die wirkliche Welt. Hrsg. v. Alfred Dedo Müller",
+      "ocr": "Foerster, Friedrich Wilhelm ~ und die wirkliche Welt. Hrsg. v. Alfred Dedo Müller. Zürich: Rotapfelverl. 1927."
+    },
+    {
+      "id": 3361,
+      "title": "Jahre, Fünf ~! Flucht, Not und Rettung",
+      "ocr": "Jahre, Fünf ~! Flucht, Not und Rettung. Prag: Demokr. Flüchtlingsrürsorge 1938."
+    },
+    {
+      "id": 3362,
+      "title": "Vorwaerts trotz alledem",
+      "ocr": "Vorwaerts trotz alledem. Berlin: Kinderfreunde Deutschlands 1932."
+    },
+    {
+      "id": 3365,
+      "title": "Vasektomie — das Zaubermittel der Verjüngung! Liebe ohne Lasten",
+      "ocr": "Vasektomie — das Zaubermittel der Verjüngung! Liebe ohne Lasten. Stockholm: Internat. Bund f. Kontingentierung d. Bevölkerung 1931."
+    },
+    {
+      "id": 3367,
+      "title": "Abteilung, Die ~",
+      "ocr": "Abteilung, Die ~. Plauen: Wolff 1933."
+    },
+    {
+      "id": 3384,
+      "title": "Liebe und Wollust. Erzählungen.",
+      "ocr": "Liebe und Wollust. Erzählungen. o. O. 1905."
+    },
+    {
+      "id": 3388,
+      "title": "Gesundheitslexikon, Knaurs ~",
+      "ocr": "Gesundheitslexikon, Knaurs ~. Berlin: Knaur 1930."
+    },
+    {
+      "id": 3391,
+      "title": "Kampf dem Faschismus",
+      "ocr": "Kampf dem Faschismus. Berlin: Kommunist. Partei Deutschlands 1930."
+    },
+    {
+      "id": 3395,
+      "title": "Nazi-Spiegel",
+      "ocr": "Nazi-Spiegel. Wien: Bundeskommissär f. Propaganda 1934."
+    },
+    {
+      "id": 3412,
+      "title": "Heimat, Unsere ~",
+      "ocr": "Heimat, Unsere ~. Moskau: Verlagsgen. ausländ. Arbeiter 1937."
+    },
+    {
+      "id": 3425,
+      "title": "Streik, Der ~ der englischen Bergarbeiter und die internationale Arbeiterhilfe",
+      "ocr": "Streik, Der ~ der englischen Bergarbeiter und die internationale Arbeiterhilfe. Berlin: Internat. Arbeiterhilfe 1926."
+    },
+    {
+      "id": 3427,
+      "title": "Oppenheimer, Max. — Menschen finden ihren Maler. Text, Bilder u. Graphiken von Mopp",
+      "ocr": "Oppenheimer, Max. — Menschen finden ihren Maler. Text, Bilder u. Graphiken von Mopp. Zürich: Oprecht 1938."
+    },
+    {
+      "id": 3438,
+      "title": "Fehltritt, Lesbias ~",
+      "ocr": "Fehltritt, Lesbias ~. Wien: Kunz 1930."
+    },
+    {
+      "id": 3467,
+      "title": "»Greuelmaerchen«, Das ~",
+      "ocr": "»Greuelmaerchen«, Das ~. Cassarete: Libreria internazionale 1935."
+    },
+    {
+      "id": 3473,
+      "title": "Mann der Arbeit her zu uns",
+      "ocr": "Mann der Arbeit her zu uns! Berlin: Vorwärts 1912."
+    },
+    {
+      "id": 3479,
+      "title": "Krankheitsbekämpfung, Zeitgemäße ~ und Gesundheitspflege. Von Jenny Springer u. a",
+      "ocr": "Krankheitsbekämpfung, Zeitgemäße ~ und Gesundheitspflege. Von Jenny Springer u. a. Dresden: Groh 1936."
+    },
+    {
+      "id": 3490,
+      "title": "Hitler, Adolf ~, sein Weg zu den feinen Leuten",
+      "ocr": "Hitler, Adolf ~, sein Weg zu den feinen Leuten. Berlin: Tribunalverl. W. Pieck, o. J."
+    },
+    {
+      "id": 3493,
+      "title": "Abenteuer, Galante ~ eines Husaren-Offiziers.",
+      "ocr": "Abenteuer, Galante ~ eines Husaren-Offiziers. Budapest 1896."
+    },
+    {
+      "id": 3495,
+      "title": "Engels, Friedrich ~ der Denker und Revolutionär",
+      "ocr": "Engels, Friedrich ~ der Denker und Revolutionär. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 3497,
+      "title": "Sittengeschichte von Paris",
+      "ocr": "Sittengeschichte von Paris. Wien: Verl. f. Kulturforschung 1927."
+    },
+    {
+      "id": 3501,
+      "title": "Dolchstoss-Prozess, Der ~ in München",
+      "ocr": "Dolchstoss-Prozess, Der ~ in München. München: Birk 1925."
+    },
+    {
+      "id": 3518,
+      "title": "Garnisonen ohne Männer. Wollust u. Grausamkeit im Balkankrieg.",
+      "ocr": "Garnisonen ohne Männer. Wollust u. Grausamkeit im Balkankrieg. o. O. 1926."
+    },
+    {
+      "id": 3519,
+      "title": "Lieder der Südlegion",
+      "ocr": "Lieder der Südlegion. Plauen: Wolff 1932."
+    },
+    {
+      "id": 3525,
+      "title": "Sexual-Katastrophen",
+      "ocr": "Sexual-Katastrophen. Leipzig: Payne 1926."
+    },
+    {
+      "id": 3535,
+      "title": "Liebeslexikon von A bis Z",
+      "ocr": "Liebeslexikon von A bis Z. Wien: Verl. f. Kulturforschung 1932."
+    },
+    {
+      "id": 3538,
+      "title": "Frau, Die ~ im »Dritten« Reich",
+      "ocr": "Frau, Die ~ im »Dritten« Reich. Berlin: Internat. Arbeiterverl. 1931."
+    },
+    {
+      "id": 3541,
+      "title": "Ich kann nicht schweigen. Von **",
+      "ocr": "Ich kann nicht schweigen. Von **. Zürich: Europa-Verl. 1936."
+    },
+    {
+      "id": 3560,
+      "title": "Blut, Heißes ~. Die Tochter des Farmers",
+      "ocr": "Blut, Heißes ~. Die Tochter des Farmers. Dresden: Ad. Ander 1933."
+    },
+    {
+      "id": 3565,
+      "title": "Beitraege zur Vorgeschichte u. Geschichte der Julirevolte",
+      "ocr": "Beitraege zur Vorgeschichte u. Geschichte der Julirevolte. Wien: Heimatdienst 1934."
+    },
+    {
+      "id": 3653,
+      "title": "Volk, Ein ~ klagt an",
+      "ocr": "Volk, Ein ~ klagt an. Wien: Hess 1931."
+    },
+    {
+      "id": 3664,
+      "title": "Brown-book of the Hitler Terror and the burning of the Reichstag",
+      "ocr": "Brown-book of the Hitler Terror and the burning of the Reichstag. London: Gollancz 1933."
+    },
+    {
+      "id": 3680,
+      "title": "Hochverratsprozess, Der ~ wider Liebknecht, Bebel, Hepner vor d. Schwurgericht zu Leipzig vom 11.—26. März 1872",
+      "ocr": "Hochverratsprozess, Der ~ wider Liebknecht, Bebel, Hepner vor d. Schwurgericht zu Leipzig vom 11.—26. März 1872. Leipzig: Vorwärts 1894."
+    },
+    {
+      "id": 3681,
+      "title": "Stimmen, Bayerische ~ zum Antisemitismus. Hrsg. v. Richard Horlacher",
+      "ocr": "Stimmen, Bayerische ~ zum Antisemitismus. Hrsg. v. Richard Horlacher. Berlin: Verl. d. Abwehrblätter 1931."
+    },
+    {
+      "id": 3692,
+      "title": "Zigeunerkind, Das ~, oder die Geheimnisse eines Fürstenhauses",
+      "ocr": "Zigeunerkind, Das ~, oder die Geheimnisse eines Fürstenhauses. Berlin: Verl. f. Volkslit. u. Kunst 1927."
+    },
+    {
+      "id": 3699,
+      "title": "Hitler, der Eroberer. Die Entlarvung einer Legende",
+      "ocr": "Hitler, der Eroberer. Die Entlarvung einer Legende. Berlin: Malik-Verl. 1933."
+    },
+    {
+      "id": 3715,
+      "title": "Reich, Le troisième ~ et les juifs",
+      "ocr": "Reich, Le troisième ~ et les juifs. Antwerpen: Comité pour la défense des droits des juifs 1934."
+    },
+    {
+      "id": 3728,
+      "title": "Von der Brandstiftung zum Fememord. Glück und Ende d. Nat.-Soz. Bell",
+      "ocr": "Von der Brandstiftung zum Fememord. Glück und Ende d. Nat.-Soz. Bell. Hamburg: Prometheus-Verl. 1933."
+    },
+    {
+      "id": 3729,
+      "title": "Geheimnisse, Die ~ der Strandkabine",
+      "ocr": "Geheimnisse, Die ~ der Strandkabine. Berlin: Verl. d. »Kleinen Witzblatt« 1905."
+    },
+    {
+      "id": 3732,
+      "title": "Stunde, Die ~ der Entscheidung ist da. Ein Wort von der kirchlichen Lage",
+      "ocr": "Stunde, Die ~ der Entscheidung ist da. Ein Wort von der kirchlichen Lage. Berlin: Eisemann 1933."
+    },
+    {
+      "id": 3735,
+      "title": "Jugendbewegung, Die internationale sozialistische ~. Werdegang u. Ziele",
+      "ocr": "Jugendbewegung, Die internationale sozialistische ~. Werdegang u. Ziele. Berlin: Jugendinternationale 1924."
+    },
+    {
+      "id": 3741,
+      "title": "Anklage und Urteil gegen die illegale konterrevolutionäre Sinowjewgruppe",
+      "ocr": "Anklage und Urteil gegen die illegale konterrevolutionäre Sinowjewgruppe. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 3742,
+      "title": "Sitte und Sittlichkeit im Wandel der Jahrtausende",
+      "ocr": "Sitte und Sittlichkeit im Wandel der Jahrtausende. Leipzig: Ethosverl. 1928."
+    },
+    {
+      "id": 3772,
+      "title": "Wege zur Schönheit",
+      "ocr": "Wege zur Schönheit. Leipzig: Magazinges. 1927."
+    },
+    {
+      "id": 3778,
+      "title": "Briefe, 60 ~ über die Sowjetunion",
+      "ocr": "Briefe, 60 ~ über die Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 3815,
+      "title": "Fleck, Der gelbe ~",
+      "ocr": "Fleck, Der gelbe ~. Paris: Ed. du Carrefour 1936."
+    },
+    {
+      "id": 3820,
+      "title": "Reich, Das dritte ~ in der Karikatur",
+      "ocr": "Reich, Das dritte ~ in der Karikatur. Prag: Simpl.-Verl. 1934."
+    },
+    {
+      "id": 3823,
+      "title": "Anthologie der erotischen Literatur aller Zeiten u. Völker",
+      "ocr": "Anthologie der erotischen Literatur aller Zeiten u. Völker. Wien: Anakreon-Verl. 1932."
+    },
+    {
+      "id": 3835,
+      "title": "Austro-Nazi ohne Maske. Ein Gang durch den braunen Lügenwald",
+      "ocr": "Austro-Nazi ohne Maske. Ein Gang durch den braunen Lügenwald. Wien: österr. Heimatdienst 1933."
+    },
+    {
+      "id": 3836,
+      "title": "Amerika, Folterkammer ~. 7 Jahre Sacco-Vanzetti",
+      "ocr": "Amerika, Folterkammer ~. 7 Jahre Sacco-Vanzetti. Berlin: Mopr-Verl. 1927."
+    },
+    {
+      "id": 3845,
+      "title": "Herrin, Die ~. Vampir Yvonne. 2 Erzählungen.",
+      "ocr": "Herrin, Die ~. Vampir Yvonne. 2 Erzählungen. Berlin 1932."
+    },
+    {
+      "id": 3853,
+      "title": "Kirche unter dem Kreuz",
+      "ocr": "Kirche unter dem Kreuz. Göttingen: »Junge Kirche« 1934."
+    },
+    {
+      "id": 3854,
+      "title": "Lenin, Mit ~. 50 Kampflieder",
+      "ocr": "Lenin, Mit ~. 50 Kampflieder. Berlin: Verl. Junge Garde 1922."
+    },
+    {
+      "id": 3861,
+      "title": "",
+      "ocr": "Georges-Anquetil s. Anquetil."
+    },
+    {
+      "id": 3874,
+      "title": "Geschlechtsrichtung, Verkehrte ~",
+      "ocr": "Geschlechtsrichtung, Verkehrte ~. Leipzig: Spohr 1928."
+    },
+    {
+      "id": 3881,
+      "title": "Luethi, Walter, u. Robert Brunner: Schweigt die Kirche",
+      "ocr": "Luethi, Walter, u. Robert Brunner: Schweigt die Kirche? Bern: Gotthelf-Verl. 1936."
+    },
+    {
+      "id": 3887,
+      "title": "Bestehen, Zum 50jährigen ~ des Ordens Bne Briss in Deutschland",
+      "ocr": "Bestehen, Zum 50jährigen ~ des Ordens Bne Briss in Deutschland. Frankfurt: Kauffmann 1933."
+    },
+    {
+      "id": 3889,
+      "title": "Jugendgelände. Ein Buch vom neuen Menschen. Hrsg. v. Charly Straesser",
+      "ocr": "Jugendgelände. Ein Buch vom neuen Menschen. Hrsg. v. Charly Straesser. Rudolstadt: Greifenverl. 1926."
+    },
+    {
+      "id": 3899,
+      "title": "Weg, Der ~ zum Nationalsozialismus",
+      "ocr": "Weg, Der ~ zum Nationalsozialismus. Berlin: Militärverl. 1934/35."
+    },
+    {
+      "id": 3901,
+      "title": "Allemagne, L' ~ parle. Que veut-elle?",
+      "ocr": "Allemagne, L' ~ parle. Que veut-elle?. Paris: Paillard 1934."
+    },
+    {
+      "id": 3915,
+      "title": "Hanussen. Ein Abenteurer unserer Zeit",
+      "ocr": "Hanussen. Ein Abenteurer unserer Zeit. Berlin: Aufbau-Verl. 1933."
+    },
+    {
+      "id": 3928,
+      "title": "Benjamin: Tod den Schwachen",
+      "ocr": "Benjamin: Tod den Schwachen? Berlin: Internat. Arbeiterhilfe 1925."
+    },
+    {
+      "id": 3930,
+      "title": "Komintern, Die ~ und die werktätige Frau",
+      "ocr": "Komintern, Die ~ und die werktätige Frau. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 3936,
+      "title": "Faschismus, Der ~ in Deutschland",
+      "ocr": "Faschismus, Der ~ in Deutschland. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 3944,
+      "title": "Janine. Tagebuch einer Verjüngten",
+      "ocr": "Janine. Tagebuch einer Verjüngten. Berlin: Man-Verl. 1928."
+    },
+    {
+      "id": 3946,
+      "title": "Kampf, Unser ~. 200 Beispiele aus d. antifaschistischen Kampf in Deutschl.",
+      "ocr": "Kampf, Unser ~. 200 Beispiele aus d. antifaschistischen Kampf in Deutschl."
+    },
+    {
+      "id": 3957,
+      "title": "Erotik, Die legitime ~. Bd 1 u. 2",
+      "ocr": "Erotik, Die legitime ~. Bd 1 u. 2. Wien: Verl. f. Kulturforschung 1931."
+    },
+    {
+      "id": 3965,
+      "title": "Geschichte, Illustrierte ~ der deutschen Revolution",
+      "ocr": "Geschichte, Illustrierte ~ der deutschen Revolution. Berlin: Internat. Arbeiterverl. 1930."
+    },
+    {
+      "id": 3968,
+      "title": "Geschichte, Kurze ~ der KPdSU",
+      "ocr": "Geschichte, Kurze ~ der KPdSU. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 3987,
+      "title": "Wahrheit, Die ~ über Deutschland und den 30. Juni 1934. St",
+      "ocr": "Wahrheit, Die ~ über Deutschland und den 30. Juni 1934. St. Gallen: Schwarz 1935."
+    },
+    {
+      "id": 4019,
+      "title": "Hitler, Angeklagter ~. Augenzeugen- u. Tatsachenberichte aus der Faschisten Folterhöllen Deutschlands",
+      "ocr": "Hitler, Angeklagter ~. Augenzeugen- u. Tatsachenberichte aus der Faschisten Folterhöllen Deutschlands. Zürich-Paris: Mopr-Verl. 1933."
+    },
+    {
+      "id": 4028,
+      "title": "Handbuch für Funktionäre des Verbandes für Freidenkertum u. Feuerbestattung",
+      "ocr": "Handbuch für Funktionäre des Verbandes für Freidenkertum u. Feuerbestattung. Berlin: Freidenker 1929."
+    },
+    {
+      "id": 4029,
+      "title": "Hilfe, 5 Jahre Internationale Rote ~ im Bilde",
+      "ocr": "Hilfe, 5 Jahre Internationale Rote ~ im Bilde. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 4043,
+      "title": "Gloria-Dei-Lieder, 25 ~",
+      "ocr": "Gloria-Dei-Lieder, 25 ~. Basel: Nazareth-Verl. 1935."
+    },
+    {
+      "id": 4047,
+      "title": "Propheten in deutscher Krise. Das Wunderbare oder Die Verzauberten",
+      "ocr": "Propheten in deutscher Krise. Das Wunderbare oder Die Verzauberten. Berlin: Rowohlt 1932."
+    },
+    {
+      "id": 4056,
+      "title": "Deutschland ... Wohin?",
+      "ocr": "+ Deutschland ... Wohin?. Oldenzaal: Der Deutsche Weg 1934."
+    },
+    {
+      "id": 4063,
+      "title": "Iwanow, Iwan Ph. — Brief des Genossen Iwanow und Antwort des Genossen Stalin",
+      "ocr": "Iwanow, Iwan Ph. — Brief des Genossen Iwanow und Antwort des Genossen Stalin. Moskau: Verlagsgen. ausländ. Arbeiter 1938."
+    },
+    {
+      "id": 4068,
+      "title": "Buch, Das sechste und siebente ~ Mosis, sein wahrer Wert",
+      "ocr": "Buch, Das sechste und siebente ~ Mosis, sein wahrer Wert ... Dresden: Buchversand Gutenberg 1931."
+    },
+    {
+      "id": 4071,
+      "title": "Konzip-Ehekalender. Judendorf b",
+      "ocr": "Konzip-Ehekalender. Judendorf b. Graz: Konzip-Beratungsstelle 1932."
+    },
+    {
+      "id": 4086,
+      "title": "Faelschung, Gegen die ~ der Geschichte der bolschewistischen Partei",
+      "ocr": "Faelschung, Gegen die ~ der Geschichte der bolschewistischen Partei. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 4090,
+      "title": "§ 297,3. »Unzucht zwischen Männern?«",
+      "ocr": "§ 297,3. »Unzucht zwischen Männern?«. Berlin: Neuer dt. Verl. 1929."
+    },
+    {
+      "id": 4095,
+      "title": "Individualpsychologie und Pädagogik. Von Herbert Francke u. a",
+      "ocr": "Individualpsychologie und Pädagogik. Von Herbert Francke u. a. Berlin: Mittler 1927."
+    },
+    {
+      "id": 4116,
+      "title": "Sittengeschichte der Kulturwelt und ihre Entwicklung in Einzeldarstellungen",
+      "ocr": "Sittengeschichte der Kulturwelt und ihre Entwicklung in Einzeldarstellungen. Wien: Verl. f. Kulturforschung 1925/30."
+    },
+    {
+      "id": 4128,
+      "title": "Staatssicherheit, Die gefährdete ~",
+      "ocr": "Staatssicherheit, Die gefährdete ~. Berlin: Mopr-Verl. 1925."
+    },
+    {
+      "id": 4135,
+      "title": "Wenn wir die Macht haben",
+      "ocr": "Wenn wir die Macht haben. Berlin: Verl. Betrieb u. Gewerkschaft 1931."
+    },
+    {
+      "id": 4142,
+      "title": "Zuchthaus, Das ~, die politische Waffe. 8 Jahre polit. Justiz",
+      "ocr": "Zuchthaus, Das ~, die politische Waffe. 8 Jahre polit. Justiz. Berlin: Hensel 1927."
+    },
+    {
+      "id": 4143,
+      "title": "Lehren, Die ~ der Saarniederlage",
+      "ocr": "Lehren, Die ~ der Saarniederlage. Prag: Wehle 1935."
+    },
+    {
+      "id": 4161,
+      "title": "Ginster. Von ihm selbst geschrieben",
+      "ocr": "Ginster. Von ihm selbst geschrieben. Berlin: S. Fischer 1928."
+    },
+    {
+      "id": 4164,
+      "title": "Durango, Stadt des Leidens",
+      "ocr": "Durango, Stadt des Leidens. Paris: Ed. du Carrefour 1937."
+    },
+    {
+      "id": 4177,
+      "title": "Terror, Der braune ~ in Österreich",
+      "ocr": "Terror, Der braune ~ in Österreich. Wien: Vaterländ. Front 1935."
+    },
+    {
+      "id": 4181,
+      "title": "Blaubuch, Das ~ der Welt-Freimaurerei",
+      "ocr": "Blaubuch, Das ~ der Welt-Freimaurerei. Wien: Saturn-Verl. 1933."
+    },
+    {
+      "id": 4188,
+      "title": "Appellbuch mit SA.-Dienstabzeichenanhang",
+      "ocr": "Appellbuch mit SA.-Dienstabzeichenanhang. Erlangen: Ritter 1933."
+    },
+    {
+      "id": 4204,
+      "title": "Sejfullina, Lydia; Der Ausreisser",
+      "ocr": "Sejfullina, Lydia; Der Ausreisser. Berlin: Malik-Verl. 1925."
+    },
+    {
+      "id": 4224,
+      "title": "Dreissig neue Erzähler des neuen Deutschland",
+      "ocr": "Dreissig neue Erzähler des neuen Deutschland. Berlin: Malik-Verl. 1932."
+    },
+    {
+      "id": 4240,
+      "title": "Baenkelbuch. Hrsg. von Erich Singer",
+      "ocr": "Baenkelbuch. Hrsg. von Erich Singer. Leipzig: Tal 1920."
+    },
+    {
+      "id": 4245,
+      "title": "Roda-Roda. --~ und die 40 Schurken",
+      "ocr": "Roda-Roda. --~ und die 40 Schurken. Wien: Zsolnay 1932."
+    },
+    {
+      "id": 4261,
+      "title": "Verbrechen, Die ~ der faschistischen Inquisition",
+      "ocr": "Verbrechen, Die ~ der faschistischen Inquisition. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 4265,
+      "title": "Juden, Die ~ fordern Ermordung Hitlers",
+      "ocr": "Juden, Die ~ fordern Ermordung Hitlers. Berlin: Hochmuth 1933."
+    },
+    {
+      "id": 4271,
+      "title": "Helden der Ostmark",
+      "ocr": "Helden der Ostmark. Wien: Zoller & Co. 1937."
+    },
+    {
+      "id": 4276,
+      "title": "Zigeunerinnen-Traumbuch, Vollständiges ~",
+      "ocr": "Zigeunerinnen-Traumbuch, Vollständiges ~. Dresden: Rudolph 1929."
+    },
+    {
+      "id": 4298,
+      "title": "Ausgang, Lenchens ~ oder ein Blick durchs Schlüsselloch.",
+      "ocr": "Ausgang, Lenchens ~ oder ein Blick durchs Schlüsselloch. o. O. 1931."
+    },
+    {
+      "id": 4323,
+      "title": "Mit roten Lettern an den Zaun geschrieben. Anthologie sozialer Lyrik",
+      "ocr": "Mit roten Lettern an den Zaun geschrieben. Anthologie sozialer Lyrik. Berlin: Goldstein 1931."
+    },
+    {
+      "id": 4329,
+      "title": "Misswirtschaft oder Milchwirtschaft",
+      "ocr": "Misswirtschaft oder Milchwirtschaft. Zürich: Jean Christophe-Verl. 1936."
+    },
+    {
+      "id": 4337,
+      "title": "Nationallaster, Das amerikanische u. das deutsche ~",
+      "ocr": "Nationallaster, Das amerikanische u. das deutsche ~. Darmstadt: Hofmann 1932."
+    },
+    {
+      "id": 4368,
+      "title": "Offenbarung, Die ~ Jesu Christi. Bearb. von Samuel Lauper",
+      "ocr": "Offenbarung, Die ~ Jesu Christi. Bearb. von Samuel Lauper. Degersheim: Lauper 1925/29."
+    },
+    {
+      "id": 4374,
+      "title": "Eisner, Kurt. — Welt werde froh! Ein Kurt Eisner-Buch",
+      "ocr": "Eisner, Kurt. — Welt werde froh! Ein Kurt Eisner-Buch. Berlin: Buchmeister-Verl. 1929."
+    },
+    {
+      "id": 4395,
+      "title": "Wirtschaft, Die rote ~. Ein Sammelwerk. Hrsg. v. Gerhard Dobbert",
+      "ocr": "Wirtschaft, Die rote ~. Ein Sammelwerk. Hrsg. v. Gerhard Dobbert. Königsberg: Ost-Europa-Verl. 1932."
+    },
+    {
+      "id": 4401,
+      "title": "Mensch, Der schöne nackte ~",
+      "ocr": "Mensch, Der schöne nackte ~. Rudolstadt: Greifenverl. 1928."
+    },
+    {
+      "id": 4422,
+      "title": "Strick-Wochenzeitweiser",
+      "ocr": "Strick-Wochenzeitweiser. München: Ludendorff-Verl. 1932."
+    },
+    {
+      "id": 4426,
+      "title": "Wie kämpft das illegale Deutschland",
+      "ocr": "Wie kämpft das illegale Deutschland? Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 4433,
+      "title": "Kampf, Der ~ um ein Buch",
+      "ocr": "Kampf, Der ~ um ein Buch. Paris: Ed. du Carrefour 1934."
+    },
+    {
+      "id": 4439,
+      "title": "Streik, Der ~ in England und die Arbeiterklasse der Sowjet-Union",
+      "ocr": "Streik, Der ~ in England und die Arbeiterklasse der Sowjet-Union. Moskau: Rote Gewerkschafts-Internationale 1926."
+    },
+    {
+      "id": 4440,
+      "title": "Bekenntnissynode der Evangelischen Kirche der Altpreussischen Union. 2. In Dahlem am 4. u. 5. März 1935",
+      "ocr": "Bekenntnissynode der Evangelischen Kirche der Altpreussischen Union. 2. In Dahlem am 4. u. 5. März 1935. Wuppertal-Barmen: »Unter d. Wort« 1935."
+    },
+    {
+      "id": 4443,
+      "title": "Marxismus, Der lebendige ~",
+      "ocr": "Marxismus, Der lebendige ~. Jena: Thür. Verlagsanst. 1924."
+    },
+    {
+      "id": 4447,
+      "title": "Geschichte des Bürgerkrieges in der UdSSR",
+      "ocr": "Geschichte des Bürgerkrieges in der UdSSR. Moskau: Verlagsgen. ausländ. Arbeiter 1937ff. — Paris: Ed. Prométhée 1937ff."
+    },
+    {
+      "id": 4459,
+      "title": "Brueder in Not? Sowjetdeutsche Berichte",
+      "ocr": "Brueder in Not? Sowjetdeutsche Berichte. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 4462,
+      "title": "Buch, Das Deutsche ~ 1935—1936",
+      "ocr": "Buch, Das Deutsche ~ 1935—1936. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 4464,
+      "title": "Kirche, Die ~ vor ihrem Richter",
+      "ocr": "Kirche, Die ~ vor ihrem Richter. Wuppertal-Barmen: Müller 1934."
+    },
+    {
+      "id": 4471,
+      "title": "Handbuch der erotischen Literatur",
+      "ocr": "Handbuch der erotischen Literatur. Berlin: Küpper 1930."
+    },
+    {
+      "id": 4472,
+      "title": "Helden, Drei ~ des chinesischen Volkes",
+      "ocr": "Helden, Drei ~ des chinesischen Volkes. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 4473,
+      "title": "Schwarz-Rotbuch. Dokumente über den Hitlerimperialismus",
+      "ocr": "Schwarz-Rotbuch. Dokumente über den Hitlerimperialismus. Barcelona-Paris: Asy-Verl. 1937."
+    },
+    {
+      "id": 4474,
+      "title": "Fuehrer durch die Sowjetgewerkschaften für Arbeiterdelegationen",
+      "ocr": "Fuehrer durch die Sowjetgewerkschaften für Arbeiterdelegationen. Moskau: Verlagsgen. ausländ. Arbeiter 1937."
+    },
+    {
+      "id": 4488,
+      "title": "Gott — Volk — Heimat",
+      "ocr": "Gott — Volk — Heimat. Leitmeritz: Verband d. Gesellenvereine in der CSR 1936."
+    },
+    {
+      "id": 4504,
+      "title": "Geschichte der kommunistischen Jugendinternationale",
+      "ocr": "Geschichte der kommunistischen Jugendinternationale. Berlin: Verl. d. Jugendinternationale 1930."
+    },
+    {
+      "id": 4508,
+      "title": "Front, Klare 4 gegen Opportunismus",
+      "ocr": "Front, Klare 4 gegen Opportunismus. Reichenberg: Schwarzbach 1935."
+    },
+    {
+      "id": 4554,
+      "title": "Sittenlehre, Die ~ des Juden. Auszüge aus dem Talmud",
+      "ocr": "Sittenlehre, Die ~ des Juden. Auszüge aus dem Talmud. Stuttgart: Marby-Verl. 1934."
+    },
+    {
+      "id": 4560,
+      "title": "Wie sie hetzen",
+      "ocr": "Wie sie hetzen. Berlin: City Druckerei 1933."
+    },
+    {
+      "id": 4571,
+      "title": "Zigeunerinnen-Traumbuch, Das ~",
+      "ocr": "Zigeunerinnen-Traumbuch, Das ~. Dresden: Rudolph 1929."
+    },
+    {
+      "id": 4579,
+      "title": "Potpourri. Die interessante Lektüre",
+      "ocr": "Potpourri. Die interessante Lektüre ... Leipzig: Eva-Verl. 1930."
+    },
+    {
+      "id": 4585,
+      "title": "Kostbarkeiten, Galante ~",
+      "ocr": "Kostbarkeiten, Galante ~ Leipzig: Buchsbaum 1932."
+    },
+    {
+      "id": 4589,
+      "title": "Osthilfe, Um die ~. Hrsg. v. Theo Hieronimi",
+      "ocr": "Osthilfe, Um die ~. Hrsg. v. Theo Hieronimi. Gladbach-Rheydt: Rhein. Druckerei 1933."
+    },
+    {
+      "id": 4594,
+      "title": "Materie und Energie. Vom naturwiss. Weltbild der Gegenwart. Hrsg. von E. Wildhagen",
+      "ocr": "Materie und Energie. Vom naturwiss. Weltbild der Gegenwart. Hrsg. von E. Wildhagen. Berlin: Dt. Buchgemeinschaft 1932."
+    },
+    {
+      "id": 4595,
+      "title": "Gefangen. Erlebnisse in deutschen Zuchthäusern",
+      "ocr": "Gefangen. Erlebnisse in deutschen Zuchthäusern. Berlin: Mopr-Verl. 1928."
+    },
+    {
+      "id": 4597,
+      "title": "Jugend, Rote ~ auf roter Erde. Erinnerungsbuch an den 5. Reichsjugendtag",
+      "ocr": "Jugend, Rote ~ auf roter Erde. Erinnerungsbuch an den 5. Reichsjugendtag. Berlin: Arbeiterjugend-Verl. 1928"
+    },
+    {
+      "id": 4603,
+      "title": "Weg, Der ~ ins Freudenhaus.",
+      "ocr": "Weg, Der ~ ins Freudenhaus. Wien 1920."
+    },
+    {
+      "id": 4624,
+      "title": "Brautehe, Die ~ und ihre Liebeslehre",
+      "ocr": "Brautehe, Die ~ und ihre Liebeslehre. Leipzig: E. Fischer 1926."
+    },
+    {
+      "id": 4638,
+      "title": "Geschichte, Illustrierte ~ des Bürgerkrieges in Russland 1917—1921",
+      "ocr": "Geschichte, Illustrierte ~ des Bürgerkrieges in Russland 1917—1921. Berlin: Neuer dt. Verl. 1929."
+    },
+    {
+      "id": 4650,
+      "title": "Nieder mit dem Faschismus",
+      "ocr": "Nieder mit dem Faschismus! Berlin: Möpr-Verl. 1927."
+    },
+    {
+      "id": 4656,
+      "title": "Hunger in Deutschland",
+      "ocr": "Hunger in Deutschland. Berlin: Malik-Verl. 1923."
+    },
+    {
+      "id": 4688,
+      "title": "Fragen des Agrarprogramms und der Agrarpolitik",
+      "ocr": "Fragen des Agrarprogramms und der Agrarpolitik. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 4708,
+      "title": "Geschlechtsleben, Japanisches ~",
+      "ocr": "Geschlechtsleben, Japanisches ~. Leipzig: »Anthropophyteia« 1931."
+    },
+    {
+      "id": 4711,
+      "title": "Fahnen, Unter roten ~. Kampflieder",
+      "ocr": "Fahnen, Unter roten ~. Kampflieder. Berlin: Verl. Junge Garde 1932."
+    },
+    {
+      "id": 4752,
+      "title": "Jungenfahrten. Das österr. Jungenkorps",
+      "ocr": "Jungenfahrten. Das österr. Jungenkorps. Wien: Eichendorff-Haus 1932."
+    },
+    {
+      "id": 4756,
+      "title": "Rede und Schrift",
+      "ocr": "Rede und Schrift. Leipzig: Weimann 1930."
+    },
+    {
+      "id": 4765,
+      "title": "Experimental-Ehen",
+      "ocr": "Experimental-Ehen. München: Reinhardt 1906."
+    },
+    {
+      "id": 4775,
+      "title": "Koenigsroman, Der ~",
+      "ocr": "Koenigsroman, Der ~. Potsdam: Kiepenheuer 1923."
+    },
+    {
+      "id": 4784,
+      "title": "Kirche im Kampf. Hrsg. von Clemens Holzmeister",
+      "ocr": "Kirche im Kampf. Hrsg. von Clemens Holzmeister. Wien: Seelsorger-Verl. 1936."
+    },
+    {
+      "id": 4786,
+      "title": "Feind im Rücken",
+      "ocr": "Feind im Rücken! Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 4804,
+      "title": "Schlaechter des eigenen Volkes! Der weisse Schrecken in Bulgarien",
+      "ocr": "Schlaechter des eigenen Volkes! Der weisse Schrecken in Bulgarien. Berlin: Mopr-Verl. 1927."
+    },
+    {
+      "id": 4805,
+      "title": "Kaiser, Der ewige ~. Gedichte",
+      "ocr": "Kaiser, Der ewige ~. Gedichte. Graz: Schmidt-Dengler 1937."
+    },
+    {
+      "id": 4813,
+      "title": "Ruf, Clara Zetkins ~ zur internationalen Solidarität",
+      "ocr": "Ruf, Clara Zetkins ~ zur internationalen Solidarität. Zürich: Mopr-Verl. 1933."
+    },
+    {
+      "id": 4871,
+      "title": "Fuehrer im Olympiajahr",
+      "ocr": "Fuehrer im Olympiajahr. Berlin: Kultur-Verl. 1936."
+    },
+    {
+      "id": 4878,
+      "title": "Wohin des Weges",
+      "ocr": "Wohin des Weges? Zürich: Verl. d. Pers. öffentl. Dienste 1934."
+    },
+    {
+      "id": 4921,
+      "title": "Intimsten, Aus dem ~ des Ehelebens",
+      "ocr": "Intimsten, Aus dem ~ des Ehelebens. Nordhausen: Killinger 1922."
+    },
+    {
+      "id": 4929,
+      "title": "Kirow, Sergej Mironowitsch ~. 1886—1934",
+      "ocr": "Kirow, Sergej Mironowitsch ~. 1886—1934. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 4945,
+      "title": "Coburg unterm Hakenkreuz",
+      "ocr": "Coburg unterm Hakenkreuz. Coburg: Volksblatt 1932."
+    },
+    {
+      "id": 4952,
+      "title": "China im Kampf",
+      "ocr": "China im Kampf. Strassburg: Ed. Prométhée 1937."
+    },
+    {
+      "id": 4953,
+      "title": "Braut, Eine männliche ~. Aufzeichnungen eines Homosexuellen",
+      "ocr": "Braut, Eine männliche ~. Aufzeichnungen eines Homosexuellen. Berlin: Bartels. o. J."
+    },
+    {
+      "id": 4965,
+      "title": "Wie erlange ich eine vollendete Büste",
+      "ocr": "Wie erlange ich eine vollendete Büste? Berlin: »Aeskulap« 1933."
+    },
+    {
+      "id": 4970,
+      "title": "Erinnerungen, Die ~ der Demoiselle S ... <Memoiren einer Sängerin.>",
+      "ocr": "Erinnerungen, Die ~ der Demoiselle S ... <Memoiren einer Sängerin.> o. O. u. J."
+    },
+    {
+      "id": 4974,
+      "title": "Deutschland, Das stumme ~ redet",
+      "ocr": "Deutschland, Das stumme ~ redet. Zürich: Verl. Die Liga 1935."
+    },
+    {
+      "id": 4983,
+      "title": "Retter, Die ~ kommen",
+      "ocr": "Retter, Die ~ kommen. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 4984,
+      "title": "Memoiren, Die ~ des Stabschef Röhm",
+      "ocr": "Memoiren, Die ~ des Stabschef Röhm. Saarbrücken: Uranus-Verl. 1934."
+    },
+    {
+      "id": 4995,
+      "title": "Steiner, Rudolf ~ in der Waldorf-Schule. 2 Ansprachen",
+      "ocr": "Steiner, Rudolf ~ in der Waldorf-Schule. 2 Ansprachen. Stuttgart: Waldorf-Verl. 1927."
+    },
+    {
+      "id": 4999,
+      "title": "Persécution, La ~ des juifs en Allemagne",
+      "ocr": "Persécution, La ~ des juifs en Allemagne. Genève: Union suisse des communautés israélites 1933/34."
+    },
+    {
+      "id": 5002,
+      "title": "Jungenlieder, Deutsche ~",
+      "ocr": "Jungenlieder, Deutsche ~. Plauen: Wolff 1930/31."
+    },
+    {
+      "id": 5032,
+      "title": "Zeugnisse der bekennenden Kirche",
+      "ocr": "Zeugnisse der bekennenden Kirche. Bad Oeynhausen: Bekenntnis-Synode 1935."
+    },
+    {
+      "id": 5035,
+      "title": "Theater, Das deutsche ~ der Gegenwart",
+      "ocr": "Theater, Das deutsche ~ der Gegenwart. München: Rösl 1923."
+    },
+    {
+      "id": 5037,
+      "title": "Hakenkreuzjudas und seine Silberlinge",
+      "ocr": "Hakenkreuzjudas und seine Silberlinge. Wien: Wiener Volksbuchh. 1932."
+    },
+    {
+      "id": 5039,
+      "title": "Resolutionen und Beschlüsse und Ansprache Dimitrows auf der Schlusssitzung des 7. Weltkongresses",
+      "ocr": "Resolutionen und Beschlüsse und Ansprache Dimitrows auf der Schlusssitzung des 7. Weltkongresses. Strassburg: Ed. Prométhée 1935."
+    },
+    {
+      "id": 5045,
+      "title": "Sittengeschichte des Proletariats",
+      "ocr": "Sittengeschichte des Proletariats. Wien: Verl. f. Kulturforschung 1926."
+    },
+    {
+      "id": 5061,
+      "title": "Weltkriegsspionage, Die ~",
+      "ocr": "Weltkriegsspionage, Die ~. München: Moser 1931."
+    },
+    {
+      "id": 5076,
+      "title": "Liebe in London: Flagell.-masoch. Roman",
+      "ocr": "Liebe in London: Flagell.-masoch. Roman. o. O. u. J."
+    },
+    {
+      "id": 5085,
+      "title": "Sind die Deutschen in der Tschechoslowakei unterdrückt? Ministerantworten auf die SDP-Beschwerden",
+      "ocr": "Sind die Deutschen in der Tschechoslowakei unterdrückt? Ministerantworten auf die SDP-Beschwerden. Prag: Orbis-Verl. 1937."
+    },
+    {
+      "id": 5091,
+      "title": "Hitler, Adolf ~ und seine Getreuen an der Arbeit. Hrsg. v. A. Leitgen",
+      "ocr": "Hitler, Adolf ~ und seine Getreuen an der Arbeit. Hrsg. v. A. Leitgen. Berlin: Scherl 1933."
+    },
+    {
+      "id": 5110,
+      "title": "Sittengeschichte der Liebkosung und Strafe",
+      "ocr": "Sittengeschichte der Liebkosung und Strafe. Wien: Verl. f. Kulturforschung 1928."
+    },
+    {
+      "id": 5141,
+      "title": "Geschlechtsleben, Das ~ im zwanzigsten Jahrhundert",
+      "ocr": "Geschlechtsleben, Das ~ im zwanzigsten Jahrhundert. Berlin: Verl. Kommender Mensch 1927."
+    },
+    {
+      "id": 5146,
+      "title": "Hakenkreuz, Das ~",
+      "ocr": "Hakenkreuz, Das ~. Wien: Wiener Volksbuchh. 1931."
+    },
+    {
+      "id": 5147,
+      "title": "Arbeiter, Als sozialdemokratischer ~ im Konzentrationslager Papenburg",
+      "ocr": "Arbeiter, Als sozialdemokratischer ~ im Konzentrationslager Papenburg. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 5148,
+      "title": "Satzungen des Reichsverbandes Deutscher Schriftsteller <RDS>",
+      "ocr": "Satzungen des Reichsverbandes Deutscher Schriftsteller <RDS>. Paris: Coop. Etoile 1934. [Tarnungstitel.] Enthält: Bertold Brecht: 5 Schwierigkeiten beim Schreiben der Wahrheit."
+    },
+    {
+      "id": 5219,
+      "title": "Lieder des Bundes",
+      "ocr": "Lieder des Bundes. Plauen: Wolff 1933."
+    },
+    {
+      "id": 5223,
+      "title": "Wall, N. L. — Die Unbezähmbaren. Die Arbeiterjugend im Kampf gegen weissen Terror, Faschismus und Kriegsgefahr",
+      "ocr": "Wall, N. L. — Die Unbezähmbaren. Die Arbeiterjugend im Kampf gegen weissen Terror, Faschismus und Kriegsgefahr. Zürich: Mopr-Verl. 1933."
+    },
+    {
+      "id": 5237,
+      "title": "Kamera, Mit ~ und Palette",
+      "ocr": "Kamera, Mit ~ und Palette. Dresden: Verl. d. Schönheit 1922/28."
+    },
+    {
+      "id": 5259,
+      "title": "Lichtkleid, Im ~",
+      "ocr": "Lichtkleid, Im ~. Rudolstadt: Verl. Gesundes Leben 1924."
+    },
+    {
+      "id": 5268,
+      "title": "Schuldfrage, Die ~. Dokumente. Hrsg. von S. Grumbach",
+      "ocr": "Schuldfrage, Die ~. Dokumente. Hrsg. von S. Grumbach. Lausanne: Payot 1918."
+    },
+    {
+      "id": 5275,
+      "title": "Aktkunstmappen der Körperbildungsschule Adolf Koch",
+      "ocr": "Aktkunstmappen der Körperbildungsschule Adolf Koch. Leipzig: Oldenburg 1930."
+    },
+    {
+      "id": 5283,
+      "title": "Zetkin, Clara ~. Ein Sammelband zum Gedächtnis der grossen Kämpferin",
+      "ocr": "Zetkin, Clara ~. Ein Sammelband zum Gedächtnis der grossen Kämpferin. Moskau: Verlagsgen. ausländ. Arbeiter 1934."
+    },
+    {
+      "id": 5323,
+      "title": "Deutschland am Hakenkreuz. Dokumente des Hunnenfaschismus",
+      "ocr": "Deutschland am Hakenkreuz. Dokumente des Hunnenfaschismus. Prag: Dt. Sozialdemokrat. Arbeiterpartei 1933."
+    },
+    {
+      "id": 5342,
+      "title": "Leninismus. Lesehefte f. Schulen u. Selbstunterricht",
+      "ocr": "Leninismus. Lesehefte f. Schulen u. Selbstunterricht. Moskau: Verlagsgen. ausländ. Arbeiter 1935."
+    },
+    {
+      "id": 5346,
+      "title": "Bekenntnisse eines flagellantischen Erziehers",
+      "ocr": "Bekenntnisse eines flagellantischen Erziehers. Leipzig: Ferling 1921."
+    },
+    {
+      "id": 5350,
+      "title": "Manolescu. Der Fürst der Diebe. Bd 1—5",
+      "ocr": "Manolescu. Der Fürst der Diebe. Bd 1—5. Leipzig: Dietsch- u. Speka-Verl. 1928/30."
+    },
+    {
+      "id": 5380,
+      "title": "Danksteine am Morgenmeer",
+      "ocr": "Danksteine am Morgenmeer. Plauen: Wolff 1934."
+    },
+    {
+      "id": 5390,
+      "title": "Pruefet die Geister! Zitatenspiegel zur kirchlichen Lage",
+      "ocr": "Pruefet die Geister! Zitatenspiegel zur kirchlichen Lage. Essen: Ev. Bekenntnissynode 1938."
+    },
+    {
+      "id": 5394,
+      "title": "Sowjetunion 1935 u. 1936. Reden und Berichte",
+      "ocr": "+ Sowjetunion 1935 u. 1936. Reden und Berichte ... Moskau: Verlagsgen. ausländ. Arbeiter 1935/36."
+    },
+    {
+      "id": 5400,
+      "title": "Morgendaemmerung! Königreich Gottes auf Erden",
+      "ocr": "Morgendaemmerung! Königreich Gottes auf Erden. Degersheim, Schweiz: Lauper 1928."
+    },
+    {
+      "id": 5404,
+      "title": "Parteien, Die sozialdemokratischen ~",
+      "ocr": "Parteien, Die sozialdemokratischen ~. Hamburg: Hoym 1926."
+    },
+    {
+      "id": 5413,
+      "title": "Spartakusbriefe. Hrsg. von Ernst Meyer",
+      "ocr": "Spartakusbriefe. Hrsg. von Ernst Meyer. Berlin: Vereinigung internat. Verl.Anst. 1926."
+    },
+    {
+      "id": 5425,
+      "title": "Aufbau, Der sozialistische ~ in der Schiffahrt der Sowjetunion",
+      "ocr": "Aufbau, Der sozialistische ~ in der Schiffahrt der Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 5429,
+      "title": "Ascona. Bau-Buch",
+      "ocr": "Ascona. Bau-Buch. Zürich: Oprecht & Helbling 1934."
+    },
+    {
+      "id": 5442,
+      "title": "Was soll mit den Juden geschehen",
+      "ocr": "Was soll mit den Juden geschehen? Paris: Ed. du Carrefour 1936."
+    },
+    {
+      "id": 5446,
+      "title": "Deutsche, Das ~ Volk klagt an. Hitlers Krieg gegen die Friedenskämpfer in Deutschland",
+      "ocr": "Deutsche, Das ~ Volk klagt an. Hitlers Krieg gegen die Friedenskämpfer in Deutschland. Paris: Ed. du Carrefour 1936."
+    },
+    {
+      "id": 5465,
+      "title": "Lenin-Märchen",
+      "ocr": "Lenin-Märchen. Berlin: Verl. d. Jugendinternationale 1929."
+    },
+    {
+      "id": 5472,
+      "title": "Erinnerungen eines Kammersängers oder Ein Lehrbuch der Liebe.",
+      "ocr": "Erinnerungen eines Kammersängers oder Ein Lehrbuch der Liebe. Wien 1920."
+    },
+    {
+      "id": 5474,
+      "title": "Deutschnationalen, Die ~ und ihre Bundesgenossen. Hrsg. v. Theo Hieronimi",
+      "ocr": "Deutschnationalen, Die ~ und ihre Bundesgenossen. Hrsg. v. Theo Hieronimi. Berlin: Germania 1933."
+    },
+    {
+      "id": 5476,
+      "title": "Sowjetrussland und seine Kinder",
+      "ocr": "Sowjetrussland und seine Kinder. Berlin: Malik-Verl. 1921."
+    },
+    {
+      "id": 5497,
+      "title": "Selbstporträt, Das ~ Adolf Hitlers",
+      "ocr": "Selbstporträt, Das ~ Adolf Hitlers. Berlin: Dietz 1931."
+    },
+    {
+      "id": 5529,
+      "title": "Oesterreich und das Auslanddeutschtum",
+      "ocr": "Oesterreich und das Auslanddeutschtum. Wien: österr. Verband f. volksdt. Auslandsarbeit 1934."
+    },
+    {
+      "id": 5561,
+      "title": "Alltag im Kampf",
+      "ocr": "Alltag im Kampf. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 5562,
+      "title": "Preussen, die Gefahr Europas. Hrsg. von Anna Siemsen",
+      "ocr": "Preussen, die Gefahr Europas. Hrsg. von Anna Siemsen. Paris: Ed. Nouv. Internat. 1937."
+    },
+    {
+      "id": 5569,
+      "title": "Raederwerk der Weltenschicksalsuhr",
+      "ocr": "Raederwerk der Weltenschicksalsuhr. Dresden: Verl. zur Sonne 1925."
+    },
+    {
+      "id": 5570,
+      "title": "Dillinger, Banditenkönig John ~, die Bestie in Menschengestalt",
+      "ocr": "Dillinger, Banditenkönig John ~, die Bestie in Menschengestalt. Köln: P. Fries 1934."
+    },
+    {
+      "id": 5580,
+      "title": "Schicksalspiegel, Der ~ für jedermann",
+      "ocr": "Schicksalspiegel, Der ~ für jedermann. Strassburg: Verl. Neues Europa 1937."
+    },
+    {
+      "id": 5590,
+      "title": "Geheimverhandlungen, Die ~ zwischen Nazi-Röhm u. Reichsbanner-Mayer",
+      "ocr": "Geheimverhandlungen, Die ~ zwischen Nazi-Röhm u. Reichsbanner-Mayer. Berlin: Schneller 1932."
+    },
+    {
+      "id": 5594,
+      "title": "Gebieter, Der strenge ~. Sadist. Roman.",
+      "ocr": "Gebieter, Der strenge ~. Sadist. Roman. Leipzig 1928."
+    },
+    {
+      "id": 5599,
+      "title": "Abenteuer, Das grosse ~. Bd 3 s. Muenzer, Michael",
+      "ocr": "Abenteuer, Das grosse ~. Bd 3 s. Muenzer, Michael."
+    },
+    {
+      "id": 5603,
+      "title": "Okkupation, Die deutsche ~ der Ukraine",
+      "ocr": "Okkupation, Die deutsche ~ der Ukraine. Strassburg: Ed. Prométhée 1937."
+    },
+    {
+      "id": 5604,
+      "title": "Liebeslehre, Die ~",
+      "ocr": "Liebeslehre, Die ~. Berlin: Kultur-Verl. 1928."
+    },
+    {
+      "id": 5617,
+      "title": "Wunder, Das ~ der Marne-Schlacht. Wunder oder Verbrechen",
+      "ocr": "Wunder, Das ~ der Marne-Schlacht. Wunder oder Verbrechen? Berlin: P. Hochmuth 1933."
+    },
+    {
+      "id": 5632,
+      "title": "Leben, Unser ~ und unsere Arbeit in der Sowjetunion",
+      "ocr": "Leben, Unser ~ und unsere Arbeit in der Sowjetunion. Moskau: Verlagsgen. ausländ. Arbeiter 1932."
+    },
+    {
+      "id": 5654,
+      "title": "Was will die NSBO?",
+      "ocr": "Was will die NSBO? o. O. 1933."
+    },
+    {
+      "id": 5678,
+      "title": "Kampf dem Hakenkreuz",
+      "ocr": "Kampf dem Hakenkreuz. Berlin: Sozialdemokrat. Partei Deutschi. 1930."
+    },
+    {
+      "id": 5682,
+      "title": "Liebe im Orient. Bd 1—3",
+      "ocr": "Liebe im Orient. Bd 1—3. Wien: Schneider 1929."
+    },
+    {
+      "id": 5693,
+      "title": "Weltbund, Für einen ~ der Jugend",
+      "ocr": "Weltbund, Für einen ~ der Jugend. Frankfurt a/M.: Jugendweltbund 1928."
+    },
+    {
+      "id": 5710,
+      "title": "Arbeiter-Internationale, Die sozialistische ~",
+      "ocr": "Arbeiter-Internationale, Die sozialistische ~. Berlin: Vorwärts 1907."
+    },
+    {
+      "id": 5711,
+      "title": "Flagellation, Die ~ als Passion",
+      "ocr": "Flagellation, Die ~ als Passion. Budapest: Schneider & Kunert 1908."
+    },
+    {
+      "id": 5716,
+      "title": "Glueck und Ende des Nationalsozialisten Bell",
+      "ocr": "Glueck und Ende des Nationalsozialisten Bell. Moskau-Leningrad: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 5732,
+      "title": "Arbeit im Sowjetlande, eine Sache der Ehre und des Ruhmes",
+      "ocr": "Arbeit im Sowjetlande, eine Sache der Ehre und des Ruhmes. Moskau: Verlagsgen. ausländ. Arbeiter 1936."
+    },
+    {
+      "id": 5752,
+      "title": "Signale, Rote ~. Gedichte u. Lieder",
+      "ocr": "Signale, Rote ~. Gedichte u. Lieder. Berlin: Neuer dt. Verl. 1932."
+    },
+    {
+      "id": 5773,
+      "title": "Erna, Die schöne ~ oder Leben und Abenteuer einer jungen Modistin.",
+      "ocr": "Erna, Die schöne ~ oder Leben und Abenteuer einer jungen Modistin. Chicago 1920."
+    },
+    {
+      "id": 5774,
+      "title": "Maerchen, Das ~ vom Preisabbau",
+      "ocr": "Maerchen, Das ~ vom Preisabbau. Berlin: Allg. Dt. Gewerkschaftsbund 1925."
+    },
+    {
+      "id": 5784,
+      "title": "Buergerspiegel, Der ~",
+      "ocr": "Buergerspiegel, Der ~. Berlin: Malik-Verl. 1925."
+    },
+    {
+      "id": 5798,
+      "title": "Sind die Nazis Sozialisten",
+      "ocr": "Sind die Nazis Sozialisten? Saarbrücken: Volksstimme 1934."
+    },
+    {
+      "id": 5812,
+      "title": "Weltgericht über den Judenhass",
+      "ocr": "Weltgericht über den Judenhass. Prag: Kacha 1933."
+    },
+    {
+      "id": 5815,
+      "title": "Feinde, Dem ~ preisgegeben. Wollust u. Grausamkeit im Balkankrieg,",
+      "ocr": "Feinde, Dem ~ preisgegeben. Wollust u. Grausamkeit im Balkankrieg, o. O. 1926."
+    },
+    {
+      "id": 5818,
+      "title": "Hexenkessel der Liebe",
+      "ocr": "Hexenkessel der Liebe. Leipzig: Lykeion 1931."
+    },
+    {
+      "id": 5821,
+      "title": "Gefahr, Die zweite ~. Ein Weckruf an alle Österreicher",
+      "ocr": "Gefahr, Die zweite ~. Ein Weckruf an alle Österreicher. Wien: Österr. Heimatdienst 1933."
+    },
+    {
+      "id": 5824,
+      "title": "Antikrist v Nĕmecku",
+      "ocr": "Antikrist v Nĕmecku. Prag: Kropáč & Kucharský 1936."
+    },
+    {
+      "id": 5838,
+      "title": "Deutschland vom Feinde besetzt. Die Wahrheit über das Dritte Reich",
+      "ocr": "Deutschland vom Feinde besetzt. Die Wahrheit über das Dritte Reich. Paris: Ed. du Carrefour 1935."
+    },
+    {
+      "id": 5859,
+      "title": "Graziöses, Pikantes, Derbes, Galantes",
+      "ocr": "Graziöses, Pikantes, Derbes, Galantes. Leipzig: Oberländer 1925."
+    },
+    {
+      "id": 5864,
+      "title": "Kriegsspionin, Deutsche ~ und politische Propagandistin",
+      "ocr": "Kriegsspionin, Deutsche ~ und politische Propagandistin. Stuttgart: Lutz Nachf. 1930."
+    },
+    {
+      "id": 5869,
+      "title": "Sandheden om Tyskland",
+      "ocr": "Sandheden om Tyskland. Kopenhagen: Fremad 1933."
+    },
+    {
+      "id": 5877,
+      "title": "Erlebnisse eines Lebemannes.",
+      "ocr": "Erlebnisse eines Lebemannes. Chicago 1929."
+    },
+    {
+      "id": 5881,
+      "title": "Kampf, Hundert Tage illegaler ~",
+      "ocr": "Kampf, Hundert Tage illegaler ~. Moskau: Verlagsgen. ausländ. Arbeiter 1933."
+    },
+    {
+      "id": 5883,
+      "title": "Geschmack, Der ~. Bearb. v. H. v. Bernstorff u. a",
+      "ocr": "Geschmack, Der ~. Bearb. v. H. v. Bernstorff u. a. Wien: Verl. f. Kulturforschung 1932."
+    }
+  ]
+}
