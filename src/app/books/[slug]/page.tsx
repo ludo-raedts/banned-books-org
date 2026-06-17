@@ -487,7 +487,7 @@ type Ban = {
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
 }
 
-// A cluster groups bans that share (country, year, scope, source). Action
+// A cluster groups bans that share (country, year, scope). Action
 // type is NOT part of the key — a 2024-25 PEN cluster may contain a mix of
 // 'banned', 'restricted', and 'challenged' actions, surfaced as a per-type
 // count in the Where cell. PEN America's per-district data produces one ban
@@ -631,15 +631,19 @@ function nationInstitutionLabel(institution: string): string {
   return institution
 }
 
-// Group bans into clusters keyed on (country, year, action, scope, source).
+// Group bans into clusters keyed on (country, year, scope).
 // Members of a cluster share everything except their (region, institution),
 // which the sub-row will list. Returns clusters sorted by year_started for
 // stable display order (matches the previous sortedBans ordering).
 function clusterBans(bans: Ban[]): BanCluster[] {
   const map = new Map<string, BanCluster>()
   for (const ban of bans) {
-    const sourceUrl = ban.ban_source_links[0]?.ban_sources?.source_url ?? ''
-    const key = `${ban.country_code}|${ban.year_started ?? ''}|${ban.scopes?.label_en ?? ''}|${sourceUrl}`
+    // Source is NOT part of the key. PEN re-publishes the same bans across yearly
+    // report editions (SY2022-23, SY2023-24, SY2024-25), so keying on source split
+    // one real-world "US — 2023 — School" event into multiple visually-identical
+    // rows differing only by which PEN edition each district was harvested from.
+    // All cited sources are still accumulated into `sources[]` and shown in the cell.
+    const key = `${ban.country_code}|${ban.year_started ?? ''}|${ban.scopes?.label_en ?? ''}`
     let c = map.get(key)
     if (!c) {
       c = {
