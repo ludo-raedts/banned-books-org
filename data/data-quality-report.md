@@ -1,18 +1,18 @@
 # Data Quality Dry Run
 
-Run at: 2026-06-15T06:03:44.118Z
+Run at: 2026-06-17T07:48:41.528Z
 
 Drie buckets per record: `confident` (automatisch hoog vertrouwen), `default` (geïmporteerd, niets mis), `flagged` (minimaal één probleem).
 
 ## Books
 
-Totaal: **15888**
+Totaal: **15856**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 5151 | 32.4% |
-| default | 8410 | 52.9% |
-| flagged | 2327 | 14.6% |
+| confident | 5157 | 32.5% |
+| default | 8374 | 52.8% |
+| flagged | 2325 | 14.7% |
 
 ### Confident books — sample (top 25 by score, oudste eerst)
 
@@ -40,7 +40,7 @@ Totaal: **15888**
 | 27 | the-diary-of-a-young-girl | The Diary of a Young Girl | Anne Frank | 5/5 | canonical-id, bans:0v/4t/3c, sources:0v/5t, editorial-complete, author-legit |
 | 29 | the-perks-of-being-a-wallflower | The Perks of Being a Wallflower | Stephen Chbosky | 5/5 | canonical-id, bans:2v/139t/2c, sources:0v/139t, editorial-complete, author-legit |
 | 30 | speak | Speak | Laurie Halse Anderson | 5/5 | canonical-id, bans:0v/68t/1c, sources:0v/68t, editorial-complete, author-legit |
-| 31 | the-kite-runner | The Kite Runner | Khaled Hosseini | 5/5 | canonical-id, bans:0v/116t/2c, sources:0v/117t, editorial-complete, author-legit |
+| 31 | the-kite-runner | The Kite Runner | Khaled Hosseini | 5/5 | canonical-id, bans:0v/118t/2c, sources:0v/119t, editorial-complete, author-legit |
 | 43 | the-house-on-mango-street | The House on Mango Street | Sandra Cisneros | 5/5 | canonical-id, bans:0v/10t/1c, sources:0v/10t, editorial-complete, author-legit |
 | 44 | catch-22 | Catch-22 | Joseph Heller | 5/5 | canonical-id, bans:0v/6t/1c, sources:0v/6t, editorial-complete, author-legit |
 
@@ -49,7 +49,7 @@ Totaal: **15888**
 | Flag | Count |
 |---|---:|
 | only-placeholder-authors | 1504 |
-| cover-placeholder | 842 |
+| cover-placeholder | 840 |
 | no-bans | 1 |
 
 ### Flagged books — sample (eerste 30)
@@ -118,8 +118,8 @@ Totaal: **9532**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 1484 | 15.6% |
-| default | 8028 | 84.2% |
+| confident | 1486 | 15.6% |
+| default | 8026 | 84.2% |
 | flagged | 20 | 0.2% |
 
 ### Confident authors — sample (eerste 25)
@@ -149,7 +149,7 @@ Totaal: **9532**
 | 27 | suzanne-collins | Suzanne Collins | 3 | 2 | birth-year, bio, photo, confident-books:2, birth-country |
 | 28 | stephen-chbosky | Stephen Chbosky | 3 | 3 | birth-year, bio, photo, confident-books:3, birth-country |
 | 29 | laurie-halse-anderson | Laurie Halse Anderson | 10 | 8 | birth-year, bio, photo, confident-books:8, birth-country |
-| 30 | khaled-hosseini | Khaled Hosseini | 4 | 4 | birth-year, bio, photo, confident-books:4, birth-country |
+| 30 | khaled-hosseini | Khaled Hosseini | 3 | 3 | birth-year, bio, photo, confident-books:3, birth-country |
 | 31 | philip-pullman | Philip Pullman | 6 | 4 | birth-year, bio, photo, confident-books:4, birth-country |
 
 ### Flagged authors — flag-frequentie

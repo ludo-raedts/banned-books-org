@@ -82,6 +82,25 @@ const PAIRS: [number, number, string][] = [
   [4998, 5056, 'La teoría de lo perfecto → Perfect on Paper (Sophie Gonzales)'],
   // Jennifer Niven
   [6074, 330, 'Violet y Finch → All the Bright Places (Jennifer Niven)'],
+  // 2026-06-17 batch — surfaced by scripts/_audit_spanish_edition_dupes.ts
+  // (original_language='en' + Spanish title + same-author English row). Each
+  // DROP carries 1 ban + the Spanish edition's own scalars; each KEEP is the
+  // well-populated English canonical. Shared-author guard verified for all 8.
+  // Sandra Cisneros
+  [8391, 43, 'La Casa en Mango Street → The House on Mango Street (Sandra Cisneros)'],
+  // Rupi Kaur
+  [8605, 246, 'El Sol Y Sus Flores → The Sun and Her Flowers (Rupi Kaur)'],
+  // Ashley Herring Blake
+  [7949, 433, 'La carta de Ivy Aberdeen al mundo → Ivy Aberdeen\'s Letter to the World (Ashley Herring Blake)'],
+  // Todd Parr
+  [2731, 407, 'El Libro de la Familia → The Family Book (Todd Parr)'],
+  [18723, 9645, 'Esta bien ser diferente → It\'s Okay to Be Different (Todd Parr)'],
+  // Aida Salazar
+  [4997, 443, 'La luna dentro de mí → The Moon Within (Aida Salazar)'],
+  // Viola Canales
+  [5533, 6014, 'El Gusano de Tequila → The Tequila Worm (Viola Canales)'],
+  // Karen Katz — bilingual self-dupe (same book entered twice, EN-leading kept)
+  [18305, 18307, 'Los colores de nuestra piel/The Colors of Us → The Colors of Us/Los colores de nuestra piel (Karen Katz)'],
 ]
 
 const CURATED_BOOK_TABLES = [
