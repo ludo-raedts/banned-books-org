@@ -47,13 +47,59 @@ eenmalig, bv. `_apply_csam_block.ts`).
 
 ## 1. Import
 
-### Gedeelde pipeline (voorkeur) — `src/lib/imports/`
-De motor voor "nette" imports. `run-import-job.ts` orkestreert:
-`pending → fetched → archived → extracted → verified → gated → committed`.
-- `gate.ts` — pure auto-approve beslissing (Latin-script, geen author-collision, geen high-stakes bron, …).
-- `committer.ts` / `review-commit.ts` — één transactionele INSERT-plek; auto-approve én handmatige review leveren dezelfde DB-vorm.
+### Standaard werkwijze voor een nieuwe bron — LEES DIT EERST
+Eén vaste route, zodat niet elke bron zijn eigen script + werkwijze krijgt.
 
-**Gebruik dit (of `commitParsedRow` / `commitNewBanForBook`) als je ban standaard van vorm is.**
+**Stap 0 — Breng de bron naar een gestructureerd databestand.** Zet 'm om naar
+`data/<bron>-<datum>.json` (of CSV). Eén rij per **boek × jurisdictie × ban-event**.
+Normaliseer naar: `title`, `authors`, `country_code`, `year` (= **ban**-jaar, niet
+pub-jaar), `scope_slug`, `action_type` (`banned`/`restricted`/`challenged`),
+`reason_slug`, `source_url`, `source_name`. Heb je voor een **anderstalige editie**
+de Engelse werktitel? Zet die in `title_english_meaningful` — dát is het
+cross-language match-signaal (zie stap 2).
+
+**Stap 1 — Kies de route (géén nieuw script tenzij nodig).**
+
+| Je bron is… | Template |
+|---|---|
+| bans op boeken die **al** in de DB staan, geen nieuwe boeken | `add-ala-2025.ts` |
+| government/national bans (JSON, batch-brede bron) | `import-africa-criminalization-bans.ts` |
+| school/library **challenges** (per-entry scope/action/reasons/regio/instituut) | `import-nipissing-challenges.ts` |
+| groot, consistent CSV-catalogus (per-district) | `import-pen.ts` |
+
+De LLM-queue (`run-import-job.ts` / `import_jobs`) is **legacy/idle** — route nieuw
+werk daar NIET doorheen ([[project_import_queue_decommission]]). De herbruikbare kern
+is de gedeelde commit-lib **`commitParsedRow` / `commitNewBanForBook`**
+(`src/lib/imports/review-commit.ts`); een nieuw script is een dunne lezer die je
+databestand naar die functies voert — niet een eigen INSERT-implementatie.
+
+**Stap 2 — Match-before-create (VERPLICHT, dedup-veiligheid).** `commitParsedRow`
+INSERT *blind* een nieuw boek; de dedup is de verantwoordelijkheid van het
+aanroepende script. Vóór elke create: zoek een bestaand boek (exacte slug →
+pg_trgm-fuzzy → **Engelse-titel-slug** voor anderstalige edities — exact de tiers in
+`verifier.ts` `matchBook`). Match → voeg de ban toe aan het bestaande boek
+(`commitNewBanForBook`); geen match → create. Dit stopt de cross-language dupe-klasse
+aan de bron.
+
+**Stap 3 — Dry-run → tel → apply → tel.** Read-only telling vóór; dry-run; dan
+`--apply` (via `isApply()` uit `scripts/lib/cli.ts`); dan read-only telling erna.
+Rapporteer exacte rij-aantallen (CLAUDE.md-regel).
+
+**Stap 4 — Verplichte dubbelen-sweep ná de import.** Draai
+`_audit_cross_script_dupes.ts` (auteurs) + `_audit_spanish_edition_dupes.ts` (boeken)
+en fold bevestigde hits via de merge-scripts (§2/§3). Staand vangnet voor wat door
+stap 2 glipt — m.n. CSV-bronnen die geen Engelse titel meeleveren.
+
+**Stap 5 — Commit + push** met de exacte counts in de message.
+
+### Gedeelde commit-lib & LLM-queue — `src/lib/imports/`
+- **`commitParsedRow` / `commitNewBanForBook`** (`review-commit.ts`) — de herbruikbare,
+  transactionele INSERT-plek die directe scripts horen aan te roepen (stap 1). Auto-approve
+  én handmatige review leveren dezelfde DB-vorm. **Doet zelf GEEN match-before-create** —
+  dat hoort in de caller (stap 2).
+- **LLM-queue** (`run-import-job.ts`): `pending → fetched → archived → extracted → verified
+  → gated → committed`, met `gate.ts` (auto-approve-beslissing) en `verifier.ts` (match-stap,
+  incl. de cross-language tier). **Idle/legacy** — alleen relevant als de queue ooit heropent.
 
 ### One-off import-scripts
 Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='government'`
