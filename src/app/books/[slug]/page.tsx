@@ -26,6 +26,8 @@ import GenreBadge from '@/components/genre-badge'
 import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
+import BanContextCallout from '@/components/ban-context-callout'
+import { contextsForBook } from '@/lib/ban-contexts'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
@@ -769,6 +771,12 @@ export default async function BookPage({
   )
   const banClusters = clusterBans(sortedBans)
 
+  // Historical/legal context for the censorship event(s) this book belongs to.
+  // Matched against already-fetched ban source URLs (and an editorial slug
+  // allowlist) — no extra query. Often the most substantive content on an
+  // otherwise-sparse page.
+  const bookContexts = contextsForBook(book)
+
   // Distinct country count across all bans (includes bans with NULL year_started,
   // unlike timelineRows which filters those). Used for the headline label and
   // share-text so the displayed "country" count is always semantically correct.
@@ -872,8 +880,16 @@ export default async function BookPage({
     bookReasonIds.length >= 1
       ? supabase
           .from('ban_reason_links')
+          // Embed is already minimal (book_id only). For common reasons
+          // (political/sexual each ~11k links) this matches tens of thousands of
+          // rows; PostgREST's implicit 1000-row cap then truncated an ARBITRARY,
+          // unordered subset — non-deterministic "similar books" between renders.
+          // Bound it explicitly + deterministically by ban_id. 1000 links is
+          // ample to surface the ≥2-reason-overlap set below.
           .select('reason_id, bans!inner(book_id)')
           .in('reason_id', bookReasonIds)
+          .order('ban_id')
+          .limit(1000)
       : Promise.resolve({ data: null }),
     newsTitleVariants.length > 0
       ? supabase
@@ -1345,6 +1361,11 @@ export default async function BookPage({
         </p>
       )}
 
+      {/* Censorship-event context (Liste Otto, the 1938 Nazi list, the Russian
+          extremist register, the Loi Gayssot, …). Grounded, written once per
+          event — for sparse titles this is the substance of the page. */}
+      <BanContextCallout contexts={bookContexts} />
+
       {/* About the book */}
       {!(book.description_book ?? book.description) ? (
         <section className="mb-8">
@@ -1573,7 +1594,7 @@ export default async function BookPage({
           {bannedInFrance && (
             <p className="text-xs text-gray-500 leading-relaxed mb-2">
               Banned in France. On the statute behind it, see{' '}
-              <Link href="/laws/loi-gayssot" className="underline hover:no-underline">
+              <Link href="/contexts/loi-gayssot" className="underline hover:no-underline">
                 The Loi Gayssot — France’s Holocaust-denial law
               </Link>
               .

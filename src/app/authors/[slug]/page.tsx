@@ -389,42 +389,37 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   type RelatedAuthor = { id: number; display_name: string; slug: string; banCount: number }
   let relatedAuthors: RelatedAuthor[] = []
   try {
-    // Fetch top authors by ban count from mv_ban_counts is not available; use a join approach.
-    // Get all book_author links + their ban counts from our already-loaded books data for context,
-    // but we need the global top — so query directly.
-    const { data: topLinks } = await supabase
-      .from('book_authors')
-      .select('author_id, books(bans(id))')
-      .neq('author_id', author.id)
-      .limit(2000)
+    // Global top-banned authors come straight from v_top_banned_authors
+    // (entity_id, total_bans — pre-ranked, top 100). The previous approach
+    // embedded books(bans(id)) for 2000 book_author links on EVERY author-page
+    // render just to count — the #2 query site-wide (mean ~80ms, max 7.6s) —
+    // and only ever summed an arbitrary 2000 links, so it wasn't even the true
+    // global top. Pull a small buffer (placeholders / slug-less authors are
+    // filtered out below), then keep the top 5 real authors.
+    const { data: topRanked } = await supabase
+      .from('v_top_banned_authors')
+      .select('entity_id, total_bans')
+      .neq('entity_id', author.id)
+      .order('total_bans', { ascending: false })
+      .limit(20)
 
-    if (topLinks) {
-      const authorBanMap = new Map<number, number>()
-      for (const link of topLinks as unknown as { author_id: number; books: { bans: { id: number }[] } | null }[]) {
-        const count = link.books?.bans?.length ?? 0
-        authorBanMap.set(link.author_id, (authorBanMap.get(link.author_id) ?? 0) + count)
-      }
-      const top5Ids = [...authorBanMap.entries()]
-        .sort((a, b) => b[1] - a[1])
+    if (topRanked?.length) {
+      const countById = new Map(topRanked.map(r => [Number(r.entity_id), Number(r.total_bans)]))
+      const { data: authorDetails } = await supabase
+        .from('authors')
+        .select('id, display_name, slug')
+        .in('id', [...countById.keys()])
+        .not('slug', 'is', null)
+        .eq('is_placeholder', false)
+      relatedAuthors = (authorDetails ?? [])
+        .map(d => ({
+          id: d.id as number,
+          display_name: d.display_name as string,
+          slug: d.slug as string,
+          banCount: countById.get(d.id as number) ?? 0,
+        }))
+        .sort((x, y) => y.banCount - x.banCount)
         .slice(0, 5)
-        .map(([id, count]) => ({ id, count }))
-
-      if (top5Ids.length > 0) {
-        const { data: authorDetails } = await supabase
-          .from('authors')
-          .select('id, display_name, slug, is_placeholder')
-          .in('id', top5Ids.map(x => x.id))
-          .not('slug', 'is', null)
-          .eq('is_placeholder', false)
-        const nameMap = new Map((authorDetails ?? []).map(a => [a.id, a]))
-        relatedAuthors = top5Ids
-          .map(({ id, count }) => {
-            const det = nameMap.get(id)
-            if (!det?.slug) return null
-            return { id, display_name: det.display_name, slug: det.slug, banCount: count }
-          })
-          .filter((x): x is RelatedAuthor => x !== null)
-      }
     }
   } catch {
     // Non-fatal
