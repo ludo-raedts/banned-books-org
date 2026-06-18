@@ -21,6 +21,7 @@ import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
+import { contextsForCountry } from '@/lib/ban-contexts'
 
 // Return [] (not the full country list): an empty array still flips the route
 // to static + ISR — the key fix, so it's edge-cached (s-maxage) instead of
@@ -134,6 +135,7 @@ export default async function CountryPage({
   // casings collapse to one URL instead of splitting crawl/link signals.
   if (code !== lowerCode) permanentRedirect(`/countries/${lowerCode}`)
   const upperCode = code.toUpperCase()
+  const countryContexts = contextsForCountry(upperCode)
   const supabase = adminClient()
 
   // These reads are all independent (each keys only off upperCode), so run
@@ -495,21 +497,27 @@ export default async function CountryPage({
         </div>
       </section>
 
-      {/* ── Legal context: France's Holocaust-denial statute ─────────────── */}
-      {upperCode === 'FR' && (
-        <SectionShell tone="cream" eyebrow="Legal context">
-          <Link
-            href="/contexts/loi-gayssot"
-            className="group flex flex-col gap-1 px-5 py-4 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm max-w-2xl"
-          >
-            <span className="font-serif text-lg font-medium text-gray-900 group-hover:text-oxblood transition-colors">
-              The Loi Gayssot — France’s Holocaust-denial law →
-            </span>
-            <span className="text-sm text-neutral-600 leading-relaxed">
-              The 1990 statute under which several books here were banned or prosecuted for
-              Holocaust denial, and why documenting that is not endorsement.
-            </span>
-          </Link>
+      {/* ── Censorship-event context hubs for this country (Liste Otto, the
+          1938 Nazi list, the Russian extremist register, the Loi Gayssot, …),
+          driven by the ban-context registry. ─────────────────────────────── */}
+      {countryContexts.length > 0 && (
+        <SectionShell tone="cream" eyebrow="Censorship context">
+          <div className="grid gap-3 sm:grid-cols-2 max-w-3xl">
+            {countryContexts.map((ctx) => (
+              <Link
+                key={ctx.slug}
+                href={`/contexts/${ctx.slug}`}
+                className="group flex flex-col gap-1 px-5 py-4 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+              >
+                <span className="font-serif text-lg font-medium text-gray-900 group-hover:text-oxblood transition-colors">
+                  {ctx.countryCard!.title}
+                </span>
+                <span className="text-sm text-neutral-600 leading-relaxed">
+                  {ctx.countryCard!.blurb}
+                </span>
+              </Link>
+            ))}
+          </div>
         </SectionShell>
       )}
 

@@ -34,6 +34,13 @@ export type BanContext = {
   short: string
   /** When true, /contexts/<slug> renders a full long-form hub page. */
   hasHub: boolean
+  /**
+   * ISO-3166 alpha-2 of the jurisdiction this event belongs to. When set
+   * (alongside `countryCard`), the country page surfaces a link to the hub.
+   */
+  country?: string
+  /** Card copy for the link shown on the matching country page. */
+  countryCard?: { title: string; blurb: string }
   match: {
     sourceUrlIncludes?: string[]
     bookSlugs?: string[]
@@ -48,6 +55,12 @@ export const BAN_CONTEXTS: BanContext[] = [
     short:
       'This title appears on the Liste Otto — the list of books the German occupation authorities, with the agreement of French publishers, ordered withdrawn from sale in occupied France from September 1940. Its presence here marks the book as a target of Nazi censorship.',
     hasHub: true,
+    country: 'FR',
+    countryCard: {
+      title: 'The Liste Otto — books banned in occupied France →',
+      blurb:
+        'The Nazi occupation’s list of books withdrawn from sale in France from 1940, with the agreement of French publishers — the works of Jewish, anti-Nazi and émigré authors.',
+    },
     match: { sourceUrlIncludes: ['fr.wikisource.org/wiki/ouvrages_litt'] },
   },
   {
@@ -57,6 +70,12 @@ export const BAN_CONTEXTS: BanContext[] = [
     short:
       'This title was on the Nazi “Liste des schädlichen und unerwünschten Schrifttums” — the official register of “harmful and undesirable writing” as it stood on 31 December 1938. Its presence here marks the book as a target of Nazi censorship.',
     hasHub: true,
+    country: 'DE',
+    countryCard: {
+      title: 'The 1938 Nazi list of banned books →',
+      blurb:
+        'The Nazi regime’s register of “harmful and undesirable” writing as it stood at the end of 1938 — more than 4,500 condemned titles, often an author’s entire output.',
+    },
     match: { sourceUrlIncludes: ['berlin.de/verbannte-buecher'] },
   },
   {
@@ -66,6 +85,12 @@ export const BAN_CONTEXTS: BanContext[] = [
     short:
       'This title is on Russia’s Federal List of Extremist Materials, maintained by the Ministry of Justice: works that Russian courts have declared “extremist” and that are illegal to distribute in Russia.',
     hasHub: true,
+    country: 'RU',
+    countryCard: {
+      title: 'Russia’s Federal List of Extremist Materials →',
+      blurb:
+        'The state register of works Russian courts have ruled “extremist,” maintained by the Ministry of Justice since 2007 — illegal to produce, store or distribute.',
+    },
     match: {
       sourceUrlIncludes: ['minjust.gov.ru', 'federal_list_of_extremist_materials'],
     },
@@ -77,6 +102,12 @@ export const BAN_CONTEXTS: BanContext[] = [
     short:
       'This book was banned or prosecuted in France under the Loi Gayssot, the 1990 law that makes it a criminal offence to deny the Nazi crimes against humanity established at Nuremberg.',
     hasHub: true,
+    country: 'FR',
+    countryCard: {
+      title: 'The Loi Gayssot — France’s Holocaust-denial law →',
+      blurb:
+        'The 1990 statute under which several books here were banned or prosecuted for Holocaust denial, and why documenting that is not endorsement.',
+    },
     match: {
       bookSlugs: [
         'lholocauste-au-scanner',
@@ -90,6 +121,17 @@ export const BAN_CONTEXTS: BanContext[] = [
 
 export function getBanContext(slug: string): BanContext | undefined {
   return BAN_CONTEXTS.find((c) => c.slug === slug)
+}
+
+/**
+ * Hub contexts to surface on a country page, by ISO alpha-2 code (any case).
+ * Only entries with a `countryCard` and a hub are returned.
+ */
+export function contextsForCountry(code: string): BanContext[] {
+  const cc = code.toUpperCase()
+  return BAN_CONTEXTS.filter(
+    (c) => c.hasHub && c.countryCard && c.country?.toUpperCase() === cc,
+  )
 }
 
 // Minimal shape the matcher needs from a book — a subset of the book page's
