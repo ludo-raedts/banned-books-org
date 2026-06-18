@@ -44,6 +44,14 @@ const nextConfig: NextConfig = {
         destination: '/authors/dh-lawrence',
         permanent: true,
       },
+      // The Loi Gayssot page moved from /laws/ into the unified /contexts/
+      // section (censorship events: statutes, decrees, and historical lists),
+      // 2026-06-18. Preserve the old indexed URL.
+      {
+        source: '/laws/loi-gayssot',
+        destination: '/contexts/loi-gayssot',
+        permanent: true,
+      },
       // Canonical host enforcement. Google indexed both banned-books.org
       // (apex) and www.banned-books.org until 2026-05-16 — Search Console
       // shows 360 pages on the apex variant vs 640 on www, with click

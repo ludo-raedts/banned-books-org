@@ -499,7 +499,7 @@ export default async function CountryPage({
       {upperCode === 'FR' && (
         <SectionShell tone="cream" eyebrow="Legal context">
           <Link
-            href="/laws/loi-gayssot"
+            href="/contexts/loi-gayssot"
             className="group flex flex-col gap-1 px-5 py-4 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm max-w-2xl"
           >
             <span className="font-serif text-lg font-medium text-gray-900 group-hover:text-oxblood transition-colors">

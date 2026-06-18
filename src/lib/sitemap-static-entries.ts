@@ -136,8 +136,13 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     // Catalogue browse/search landing — the "Books" breadcrumb target on every
     // book page, previously discoverable only via internal links.
     { loc: `${base}/search`, changefreq: 'weekly', priority: 0.8 },
-    // Laws — long-form Article pages cross-linked from country/book pages.
-    { loc: `${base}/laws/loi-gayssot`, changefreq: 'monthly', priority: 0.7 },
+    // Censorship-event context hubs — long-form Article pages cross-linked from
+    // country/book pages and from the on-book context callouts. (The legacy
+    // /laws/loi-gayssot URL 301-redirects to /contexts/loi-gayssot.)
+    { loc: `${base}/contexts/loi-gayssot`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/liste-otto`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/berlin-1938-verbannte-buecher`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/russia-federal-extremist-list`, changefreq: 'monthly', priority: 0.7 },
     // Data-quality HTML page (the .md twin is listed below for AI crawlers).
     { loc: `${base}/data-quality`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },
