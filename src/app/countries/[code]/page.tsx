@@ -102,17 +102,13 @@ type Book = {
   title: string
   slug: string
   cover_url: string | null
-  description: string | null
   first_published_year: number | null
-  genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
-  bans: {
-    id: number
-    year_started: number | null
-    status: string
-    scopes: { label_en: string } | null
-    ban_reason_links: { reasons: { slug: string } | null }[]
-  }[]
+  // Only year_started is read (the decade/year timeline). The grid cards render
+  // cover/title/author only; the !inner join below is what scopes the books to
+  // this country. Embedding id/status/scopes/reasons here was pure dead weight
+  // and the #1 query cost site-wide (heavy nested LATERAL joins per ban row).
+  bans: { year_started: number | null }[]
 }
 
 function authorName(book: Book): string {
@@ -148,13 +144,9 @@ export default async function CountryPage({
   const booksGridQuery = supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, description, first_published_year, genres,
+      id, title, slug, cover_url, first_published_year,
       book_authors(authors(display_name)),
-      bans!inner(
-        id, year_started, status,
-        scopes(label_en),
-        ban_reason_links(reasons(slug))
-      )
+      bans!inner(year_started)
     `)
     .eq('bans.country_code', upperCode)
     .order('title')

@@ -46,13 +46,18 @@ export type BookSearchResult = {
   error?: string
 }
 
+// The catalogue cards render only: ban count (bans.length), the country label
+// (country_code + one countries.name_en), and up to two reason badges
+// (ban_reason_links → reasons.slug). id/status/year_started/scopes were embedded
+// but never read by any consumer (book-browser, search-client, ReasonCatalogue
+// doesn't even read bans) — dropping them removes a scopes LATERAL join per ban
+// row and ~halves the payload on heavily-banned titles.
 const SELECT = `
   id, title, slug, cover_url, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
   book_authors(authors(display_name)),
   bans(
-    id, status, country_code, year_started,
+    country_code,
     countries(name_en),
-    scopes(slug, label_en),
     ban_reason_links(reasons(slug))
   )
 `
