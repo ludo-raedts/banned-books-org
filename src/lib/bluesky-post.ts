@@ -19,6 +19,9 @@ import { LATIN_SCRIPT_LANGS } from './top-list-data'
 
 const SITE = 'https://www.banned-books.org'
 const MAX_GRAPHEMES = 300 // Bluesky's hard post limit
+// Trailing tag so each post is picked up by the BookSky feed (booksky.club),
+// which aggregates posts containing 📚💙 (or #booksky). Counted in the limit.
+const FEED_TAG = '\n\n📚💙'
 
 // Reason slug → label, mirroring the `reasons.label_en` column. Hardcoded so
 // the picker needs no extra round-trip; keep in sync if labels change.
@@ -247,7 +250,7 @@ export function buildPost(book: DailyBook): BuiltPost {
   const url = `${SITE}/books/${book.slug}?utm_source=bluesky&utm_medium=social&utm_campaign=book-of-the-day`
   const display = `banned-books.org/books/${book.slug}`
   const yearPart = book.year ? ` (${book.year})` : ''
-  const head = `📚 Banned book of the day\n\n${book.title} — ${book.author}${yearPart}`
+  const head = '📚 Banned book of the day'
 
   const reasonLabels = book.reasons.map(s => REASON_LABELS[s] ?? s).filter(s => s !== 'unspecified reasons')
 
@@ -269,24 +272,38 @@ export function buildPost(book: DailyBook): BuiltPost {
       ? ` · ${book.banCount.toLocaleString('en')} recorded ${book.banCount === 1 ? 'ban' : 'bans'}`
       : ''
 
-  const assemble = (maxReasons: number, withBanClause: boolean, useNamed: boolean): string => {
+  // The "Banned for …" line. An empty sliced reason list (e.g. maxReasons=0 or
+  // a book with no reason links) falls through to the reason-less form rather
+  // than emitting a dangling "Banned for  in …".
+  const whyLineFor = (maxReasons: number, withBanClause: boolean, useNamed: boolean): string => {
     const countryClause = useNamed ? namedClause : countedClause
-    let why = ''
-    if (reasonLabels.length > 0) {
-      why = `\n\nBanned for ${joinReasons(reasonLabels.slice(0, maxReasons))}${countryClause}${withBanClause ? banClause : ''}.`
-    } else if (countryClause) {
-      why = `\n\nBanned${countryClause}${withBanClause ? banClause : ''}.`
-    }
-    return `${head}${why}\n\n${display}`
+    const picked = reasonLabels.slice(0, maxReasons)
+    if (picked.length > 0) return `\n\nBanned for ${joinReasons(picked)}${countryClause}${withBanClause ? banClause : ''}.`
+    if (countryClause) return `\n\nBanned${countryClause}${withBanClause ? banClause : ''}.`
+    return ''
   }
+  const compose = (titleLine: string, why: string): string => `${head}\n\n${titleLine}${why}\n\n${display}${FEED_TAG}`
+
+  const fullTitleLine = `${book.title} — ${book.author}${yearPart}`
 
   // Step down detail until it fits: named countries → counted → fewer reasons
   // → drop ban count.
-  let text = assemble(3, true, true)
+  let why = whyLineFor(3, true, true)
   for (const [n, ban, named_] of [[3, true, true], [2, true, true], [3, true, false], [2, true, false], [1, true, false], [1, false, false], [0, false, false]] as Array<[number, boolean, boolean]>) {
-    text = assemble(n, ban, named_)
-    if (graphemeLength(text) <= MAX_GRAPHEMES) break
+    why = whyLineFor(n, ban, named_)
+    if (graphemeLength(compose(fullTitleLine, why)) <= MAX_GRAPHEMES) break
   }
+
+  // Hard guarantee: if a very long title/slug still blows the limit (the fixed
+  // URL + tag can't be trimmed), truncate the title line with an ellipsis. The
+  // full title remains on the linked page and the card.
+  let titleLine = fullTitleLine
+  if (graphemeLength(compose(titleLine, why)) > MAX_GRAPHEMES) {
+    const budget = MAX_GRAPHEMES - graphemeLength(compose('', why))
+    const chars = Array.from(fullTitleLine)
+    titleLine = budget > 1 ? chars.slice(0, budget - 1).join('').trimEnd() + '…' : chars.slice(0, 1).join('')
+  }
+  const text = compose(titleLine, why)
 
   // Byte offsets of the display URL for the clickable richtext facet.
   const enc = new TextEncoder()
