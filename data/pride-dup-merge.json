@@ -1,0 +1,15 @@
+[
+  {
+    "keep": 3219,
+    "drop": 17039,
+    "keep_title": "Pride: Celebrating Diversity and Community",
+    "drop_title": "Pride: Celebrating Diversity & Community",
+    "confidence": "high",
+    "reasons": [
+      "same author (Robin Stevenson, id 2080)",
+      "same work (Orca, 2016) — title differs only in '&' vs 'and'",
+      "DROP cover was wrong (Pride Puppy!); KEEP has correct ISBN/description/cover"
+    ],
+    "flags": []
+  }
+]
