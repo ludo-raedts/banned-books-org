@@ -532,7 +532,7 @@ export const CONTEXT_CONTENT: Record<string, ContextContent> = {
         </li>
       </ul>
     ),
-    backLink: { href: '/timeline', label: 'Censorship timeline' },
+    backLink: { href: '/countries/va', label: 'Books banned by the Holy See' },
     jsonLdAbout: {
       '@type': 'CreativeWork',
       name: 'Index Librorum Prohibitorum (1559–1966)',

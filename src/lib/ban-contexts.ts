@@ -154,6 +154,12 @@ export const BAN_CONTEXTS: BanContext[] = [
     short:
       'This work was placed on the Index Librorum Prohibitorum, the Catholic Church’s list of forbidden books. Catholics were barred from reading it without permission until the Index was abolished in 1966.',
     hasHub: true,
+    country: 'VA',
+    countryCard: {
+      title: 'The Index Librorum Prohibitorum →',
+      blurb:
+        'The Catholic Church’s list of forbidden books (1559–1966) — some 4,000 works Catholics were barred from reading, from Galileo to Sartre.',
+    },
     match: { sourceUrlIncludes: ['index_librorum_prohibitorum'] },
   },
 ]
