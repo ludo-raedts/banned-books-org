@@ -143,6 +143,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/contexts/liste-otto`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/contexts/berlin-1938-verbannte-buecher`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/contexts/russia-federal-extremist-list`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/malaysia-banned-publications`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/argentina-dictatorship-censorship`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/index-librorum-prohibitorum`, changefreq: 'monthly', priority: 0.7 },
     // Data-quality HTML page (the .md twin is listed below for AI crawlers).
     { loc: `${base}/data-quality`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },

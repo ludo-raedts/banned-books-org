@@ -117,6 +117,45 @@ export const BAN_CONTEXTS: BanContext[] = [
       ],
     },
   },
+  {
+    slug: 'malaysia-banned-publications',
+    title: 'Malaysia’s banned-publications register',
+    badge: 'Malaysia · ongoing',
+    short:
+      'This title has been banned in Malaysia by order of the Minister of Home Affairs under the Printing Presses and Publications Act 1984, which lets the minister prohibit any publication judged prejudicial to public order, morality or security.',
+    hasHub: true,
+    country: 'MY',
+    countryCard: {
+      title: 'Malaysia’s banned-publications register →',
+      blurb:
+        'Titles prohibited by the Minister of Home Affairs under the Printing Presses and Publications Act 1984 — gazetted bans spanning religious works, political writing and literature.',
+    },
+    match: { sourceUrlIncludes: ['epq.kdn.gov.my'] },
+  },
+  {
+    slug: 'argentina-dictatorship-censorship',
+    title: 'Argentina’s military dictatorship (1976–1983)',
+    badge: 'Argentina · 1976–1983',
+    short:
+      'This book was banned in Argentina under the 1976–1983 military dictatorship (the “Proceso”), which censored by decree — and in some cases burned by the ton — books it branded “subversive.”',
+    hasHub: true,
+    country: 'AR',
+    countryCard: {
+      title: 'Censorship under the military dictatorship (1976–1983) →',
+      blurb:
+        'Books banned by decree, and in 1980 burned by the ton, during Argentina’s last dictatorship — which treated literature it disliked as “subversive.”',
+    },
+    match: { sourceUrlIncludes: ['memoriaabierta', 'apm.gov.ar'] },
+  },
+  {
+    slug: 'index-librorum-prohibitorum',
+    title: 'The Index Librorum Prohibitorum',
+    badge: 'Catholic Church · 1559–1966',
+    short:
+      'This work was placed on the Index Librorum Prohibitorum, the Catholic Church’s list of forbidden books. Catholics were barred from reading it without permission until the Index was abolished in 1966.',
+    hasHub: true,
+    match: { sourceUrlIncludes: ['index_librorum_prohibitorum'] },
+  },
 ]
 
 export function getBanContext(slug: string): BanContext | undefined {

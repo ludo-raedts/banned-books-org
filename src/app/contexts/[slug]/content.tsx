@@ -301,6 +301,246 @@ export const CONTEXT_CONTENT: Record<string, ContextContent> = {
     dateModified: '2026-06-18',
   },
 
+  'malaysia-banned-publications': {
+    dek:
+      'In Malaysia the Minister of Home Affairs can ban a book outright by gazette order under the Printing Presses and Publications Act 1984. Hundreds of titles — religious works, political writing and literature — have been prohibited this way, and most are obscure outside the country. The books here are those caught by that register.',
+    body: (
+      <>
+        <h2>The law</h2>
+        <p>
+          The <strong>Printing Presses and Publications Act 1984</strong> (Act 301) gives
+          Malaysia’s <strong>Minister of Home Affairs</strong> (the{' '}
+          <em>Kementerian Dalam Negeri</em>, KDN) broad power to prohibit publications considered
+          likely to be prejudicial to public order, morality or national security. A banned title
+          is named in a gazette order and its printing, sale, distribution or possession becomes
+          an offence. The Act replaced the colonial-era Printing Presses Act 1948 and the Control
+          of Imported Publications Act 1958.
+        </p>
+
+        <h2>How far the minister’s discretion reaches</h2>
+        <p>
+          A 1987 amendment inserted an <strong>ouster clause</strong> that placed the minister’s
+          decisions beyond review by the courts — for years a ban was effectively final. A 2012
+          amendment rolled back the annual-licence requirement and the language of “absolute
+          discretion,” restoring a measure of judicial oversight. The power to prohibit
+          publications, however, remains.
+        </p>
+
+        <h2>What gets banned</h2>
+        <p>
+          The gazetted list ranges widely: religious works (including Christian material and texts
+          associated with Shia or liberal-reformist Islam), political writing, and general
+          literature. Many entries are pamphlets or single editions with little presence in
+          international catalogues — which is why, in this archive, the fact of the ban is often
+          all that is known about them.
+        </p>
+
+        <h2>The source</h2>
+        <p>
+          Entries here are drawn from the Malaysian Ministry of Home Affairs’ own{' '}
+          <strong>e-PQ register</strong> of prohibited publications.
+        </p>
+      </>
+    ),
+    listHeading: 'Books in this archive banned in Malaysia',
+    listIntro:
+      'Titles documented here that appear on the Malaysian Ministry of Home Affairs’ register of prohibited publications.',
+    sources: (
+      <ul className="list-disc pl-5 space-y-1">
+        <li>
+          Ministry of Home Affairs (KDN) — e-PQ register of prohibited publications:{' '}
+          <a
+            href="https://epq.kdn.gov.my/"
+            className="underline hover:no-underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            epq.kdn.gov.my
+          </a>
+          .
+        </li>
+        <li>
+          Printing Presses and Publications Act 1984 (Act 301) — overview on{' '}
+          <a
+            href="https://en.wikipedia.org/wiki/Printing_Presses_and_Publications_Act_1984"
+            className="underline hover:no-underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Wikipedia
+          </a>
+          .
+        </li>
+      </ul>
+    ),
+    backLink: { href: '/countries/my', label: 'Books banned in Malaysia' },
+    jsonLdAbout: {
+      '@type': 'Legislation',
+      name: 'Printing Presses and Publications Act 1984 (Malaysia)',
+    },
+    datePublished: '2026-06-19',
+    dateModified: '2026-06-19',
+  },
+
+  'argentina-dictatorship-censorship': {
+    dek:
+      'Argentina’s last military dictatorship (1976–1983) banned books by decree and, in 1980, burned a million and a half of them in a single operation. It branded as “subversive” not only political texts but children’s stories and literary fiction. The books here are among those it tried to suppress.',
+    body: (
+      <>
+        <h2>The “Proceso”</h2>
+        <p>
+          The military junta that seized power on 24 March 1976 called its regime the{' '}
+          <strong>Proceso de Reorganización Nacional</strong>. Alongside the forced
+          disappearance of tens of thousands of people, it ran a sweeping cultural censorship:
+          books were prohibited by government decree, removed from shops and libraries, and their
+          authors and publishers placed at risk.
+        </p>
+
+        <h2>Banning by decree</h2>
+        <p>
+          A notorious example is <strong>Decree 3155/77</strong>, which banned Elsa Bornemann’s
+          children’s book <em>Un elefante ocupa mucho espacio</em> — a story in which circus
+          animals organise a strike — on the grounds that it pursued “indoctrination” for
+          “subversive” ends and offended morality and the family. Other prohibited works included
+          Griselda Gambaro’s <em>Ganarse la muerte</em> (1976), titles by Julio Cortázar, and the
+          Spanish edition of Paulo Freire’s writing on education.
+        </p>
+
+        <h2>The 1980 book burning</h2>
+        <p>
+          On <strong>26 June 1980</strong>, in a vacant lot in <strong>Sarandí</strong>
+          (Avellaneda), roughly <strong>1.5 million books</strong> — some twenty-four tons — from
+          the publisher <strong>Centro Editor de América Latina</strong> were burned on the order
+          of a military judge who deemed them “dangerous” and “subversive.” It remains the largest
+          single act of book destruction of the dictatorship.
+        </p>
+
+        <h2>The sources</h2>
+        <p>
+          Entries here draw on Argentine memory archives — <strong>Memoria Abierta</strong> and
+          the <strong>Archivo Provincial de la Memoria</strong> (Comisión Provincial de la
+          Memoria, Córdoba) — which document the dictatorship’s censorship and its victims.
+        </p>
+      </>
+    ),
+    listHeading: 'Books in this archive banned under the dictatorship',
+    listIntro:
+      'Titles documented here that were censored in Argentina during the 1976–1983 military dictatorship.',
+    sources: (
+      <ul className="list-disc pl-5 space-y-1">
+        <li>
+          Memoria Abierta — Argentine human-rights memory archive:{' '}
+          <a
+            href="https://memoriaabierta.org.ar/"
+            className="underline hover:no-underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            memoriaabierta.org.ar
+          </a>
+          .
+        </li>
+        <li>
+          Comisión Provincial de la Memoria — Archivo Provincial de la Memoria, Córdoba (
+          <a
+            href="https://apm.gov.ar/"
+            className="underline hover:no-underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            apm.gov.ar
+          </a>
+          ).
+        </li>
+        <li>
+          On the 26 June 1980 Centro Editor de América Latina book burning at Sarandí (~1.5
+          million volumes).
+        </li>
+      </ul>
+    ),
+    backLink: { href: '/countries/ar', label: 'Books banned in Argentina' },
+    jsonLdAbout: {
+      '@type': 'Event',
+      name: 'Censorship under the Argentine military dictatorship (1976–1983)',
+    },
+    datePublished: '2026-06-19',
+    dateModified: '2026-06-19',
+  },
+
+  'index-librorum-prohibitorum': {
+    dek:
+      'For more than four centuries the Catholic Church maintained the Index Librorum Prohibitorum, a list of books the faithful were forbidden to read without permission. Its final edition named some 4,000 works — from Galileo to Sartre — before the Church abolished it in 1966. The books here are among those it once condemned.',
+    body: (
+      <>
+        <h2>What it was</h2>
+        <p>
+          The <strong>Index Librorum Prohibitorum</strong> (“List of Prohibited Books”) was the
+          Catholic Church’s official register of publications it judged heretical, anti-clerical
+          or morally corrupting. Catholics were forbidden to print, sell or read a listed work
+          without authorisation. Its purpose was to shield the faithful from books held to be
+          theologically erroneous or immoral.
+        </p>
+
+        <h2>Origins</h2>
+        <p>
+          The first Roman Index was issued in <strong>1559 under Pope Paul IV</strong>, condemning
+          the entire output of some 550 authors. After the Council of Trent, the milder{' '}
+          <strong>Tridentine Index</strong> followed in <strong>1564</strong> under Pius IV and
+          set the pattern for later lists. A dedicated <strong>Sacred Congregation of the
+          Index</strong> was created in 1571 to maintain it; in 1917 its work passed to the Holy
+          Office.
+        </p>
+
+        <h2>Who was on it</h2>
+        <p>
+          Over its history the Index ran to roughly <strong>4,000 titles</strong> by its final
+          (20th) edition in 1948. Condemned authors included <strong>Galileo</strong>, Giordano
+          Bruno, René Descartes, David Hume, Immanuel Kant, Voltaire, Rousseau, Victor Hugo, Émile
+          Zola, Jean-Paul Sartre and Simone de Beauvoir. (Notably, Darwin’s works were never
+          listed.)
+        </p>
+
+        <h2>Abolition</h2>
+        <p>
+          On <strong>14 June 1966</strong> the Congregation for the Doctrine of the Faith declared
+          that the Index no longer carried the force of Church law, ending more than four
+          centuries of formal prohibition — though the Church framed it as retaining moral weight
+          as a guide to conscience.
+        </p>
+      </>
+    ),
+    listHeading: 'Books in this archive on the Catholic Index',
+    listIntro:
+      'Titles documented here that were placed on the Index Librorum Prohibitorum during its centuries in force.',
+    sources: (
+      <ul className="list-disc pl-5 space-y-1">
+        <li>
+          “Index Librorum Prohibitorum” — overview and edition history on{' '}
+          <a
+            href="https://en.wikipedia.org/wiki/Index_Librorum_Prohibitorum"
+            className="underline hover:no-underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Wikipedia
+          </a>
+          .
+        </li>
+        <li>
+          Congregation for the Doctrine of the Faith, notification of 14 June 1966 (abolition of
+          the Index).
+        </li>
+      </ul>
+    ),
+    backLink: { href: '/timeline', label: 'Censorship timeline' },
+    jsonLdAbout: {
+      '@type': 'CreativeWork',
+      name: 'Index Librorum Prohibitorum (1559–1966)',
+    },
+    datePublished: '2026-06-19',
+    dateModified: '2026-06-19',
+  },
+
   'loi-gayssot': {
     dek:
       'France’s 1990 Gayssot Act made it a crime to deny the Nazi crimes against humanity established at Nuremberg. It is the legal basis under which several books in this archive were banned or prosecuted.',
