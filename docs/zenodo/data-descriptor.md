@@ -35,10 +35,10 @@ the written description paragraph that interprets a ban is commercial.
 **Coverage at the snapshot used to write this descriptor** (figures move as the
 catalogue grows — the deposited files are the authority):
 
-- ~15,900 books, ~9,500 authors
-- ~31,400 ban events across 119 countries (including defunct states: USSR, East
+- ~19,400 books, ~12,200 authors
+- ~35,000 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
-- ~59,300 ban–reason links and ~31,600 ban–source citations
+- ~62,900 ban–reason links and ~35,200 ban–source citations
 
 **Scope.** This deposit covers *books*. Records must describe a real
 removal/restriction with an institutional actor and a documented decision (see
