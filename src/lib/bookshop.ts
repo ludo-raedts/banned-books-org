@@ -53,8 +53,10 @@ export function getBookshopAuthorUrl(): string {
 }
 
 // rel value for outbound affiliate links — combines Google's "sponsored"
-// hint with the standard security flags for target="_blank".
-export const BOOKSHOP_REL = 'sponsored noopener noreferrer'
+// hint with "nofollow" (so crawlers don't follow the affiliate link and
+// inflate click counts / risk invalid-traffic flags) and the standard
+// security flags for target="_blank".
+export const BOOKSHOP_REL = 'sponsored nofollow noopener noreferrer'
 
 // Classify a Bookshop URL so analytics can split deep-link clicks (per-book
 // affiliate path) from storefront fallback clicks. Storefront URLs all live

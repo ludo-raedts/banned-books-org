@@ -47,6 +47,9 @@ export function getKoboUrl(query: string, subId?: string): string {
 }
 
 // rel value for outbound Kobo affiliate links — matches BOOKSHOP_REL: the
-// "sponsored" hint Google asks for on affiliate links, plus the standard
-// security flags for target="_blank".
-export const KOBO_REL = 'sponsored noopener noreferrer'
+// "sponsored" hint Google asks for on affiliate links, plus "nofollow" so
+// crawlers don't follow the link into Rakuten's redirect (bot clicks were
+// inflating the Rakuten dashboard to ~900/mo with 0 sales — invalid-traffic
+// risk for the affiliate account), plus the standard security flags for
+// target="_blank".
+export const KOBO_REL = 'sponsored nofollow noopener noreferrer'

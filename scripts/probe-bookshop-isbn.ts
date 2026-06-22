@@ -21,10 +21,19 @@
  *   npx tsx --env-file=.env.local scripts/probe-bookshop-isbn.ts --apply --limit=200
  *     → cap at 200 per run (useful for staged rollouts)
  *   npx tsx --env-file=.env.local scripts/probe-bookshop-isbn.ts --apply --reprobe
- *     → re-check every book regardless of existing bookshop_status
+ *     → re-check every book regardless of existing bookshop_status. NOTE: this
+ *       re-loads the full list from offset 0 on every run, so an interrupted
+ *       run restarts from scratch. For a full sweep (hours), prefer
+ *       --stale-before below, which is checkpoint-resumable.
+ *   npx tsx --env-file=.env.local scripts/probe-bookshop-isbn.ts --apply --stale-before=2026-06-22
+ *     → re-check every book whose bookshop_checked_at is NULL or older than the
+ *       given date/timestamp. Rows re-checked in this sweep get a fresh
+ *       bookshop_checked_at and are skipped on the next run with the same
+ *       cutoff — so an interrupted long sweep resumes where it stopped.
+ *       This is the recommended way to re-probe after an ISBN-enrichment batch.
  *
  * Throttling: ~1 request/second. Bookshop has no published rate limit; this
- * is conservative. A full sweep of ~3000 books takes roughly an hour.
+ * is conservative. A full sweep of ~10k books takes roughly 2.8 hours.
  */
 
 import { adminClient } from '../src/lib/supabase'
@@ -34,6 +43,15 @@ const APPLY = process.argv.includes('--apply')
 const REPROBE = process.argv.includes('--reprobe')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const MAX = LIMIT_ARG ? parseInt(LIMIT_ARG.split('=')[1], 10) : Infinity
+// Checkpoint-resumable re-probe: only rows whose bookshop_checked_at is NULL
+// or older than this cutoff. Rows probed during the sweep get a fresh
+// timestamp, so re-running with the same cutoff skips them and resumes.
+const STALE_ARG = process.argv.find(a => a.startsWith('--stale-before='))
+const STALE_BEFORE = STALE_ARG ? STALE_ARG.split('=')[1] : null
+if (STALE_ARG && !STALE_BEFORE) {
+  console.error('--stale-before requires a value, e.g. --stale-before=2026-06-22')
+  process.exit(1)
+}
 
 const REQUEST_DELAY_MS = 1000
 const HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
@@ -67,11 +85,18 @@ async function probe(isbn13: string): Promise<ProbeResult> {
 }
 
 async function main() {
-  console.log(`\n── probe-bookshop-isbn (${APPLY ? 'APPLY' : 'DRY-RUN'}${REPROBE ? ', REPROBE' : ''}) ──\n`)
+  const mode = STALE_BEFORE ? `, STALE-BEFORE ${STALE_BEFORE}` : REPROBE ? ', REPROBE' : ''
+  console.log(`\n── probe-bookshop-isbn (${APPLY ? 'APPLY' : 'DRY-RUN'}${mode}) ──\n`)
 
   const supabase = adminClient()
 
-  type BookRow = { id: number; slug: string; title: string; isbn13: string }
+  type BookRow = {
+    id: number
+    slug: string
+    title: string
+    isbn13: string
+    bookshop_isbn13: string | null
+  }
 
   // Paginate to bypass the 1000-row default cap.
   const books: BookRow[] = []
@@ -79,11 +104,16 @@ async function main() {
   while (true) {
     let q = supabase
       .from('books')
-      .select('id, slug, title, isbn13')
+      .select('id, slug, title, isbn13, bookshop_isbn13')
       .not('isbn13', 'is', null)
       .order('id')
       .range(offset, offset + 999)
-    if (!REPROBE) q = q.is('bookshop_status', null)
+    if (STALE_BEFORE) {
+      // Resumable re-probe: NULL (never checked) or stale (checked before cutoff).
+      q = q.or(`bookshop_checked_at.is.null,bookshop_checked_at.lt.${STALE_BEFORE}`)
+    } else if (!REPROBE) {
+      q = q.is('bookshop_status', null)
+    }
 
     const { data, error } = await q
     if (error) { console.error('DB error:', error.message); process.exit(1) }
@@ -103,9 +133,16 @@ async function main() {
 
   for (let i = 0; i < limit; i++) {
     const book = books[i]
-    process.stdout.write(`  [${i + 1}/${limit}] ${book.isbn13}  ${book.title.slice(0, 45).padEnd(45)} `)
+    // Probe the ISBN the affiliate link will actually use. getBookshopUrl()
+    // prefers bookshop_isbn13 (the Open Library cross-ref to a Bookshop-listed
+    // US edition) over the canonical isbn13 (often a foreign edition that 404s).
+    // Probing isbn13 here would mark those cross-ref books not_found and waste
+    // the enrichment, so mirror the link logic exactly.
+    const linkIsbn = book.bookshop_isbn13 ?? book.isbn13
+    const xref = book.bookshop_isbn13 ? ' (xref)' : ''
+    process.stdout.write(`  [${i + 1}/${limit}] ${linkIsbn}${xref}  ${book.title.slice(0, 45).padEnd(45)} `)
 
-    const result = await probe(book.isbn13)
+    const result = await probe(linkIsbn)
     process.stdout.write(`→ ${result}\n`)
 
     if (result === 'valid') valid++
