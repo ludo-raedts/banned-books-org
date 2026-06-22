@@ -28,6 +28,7 @@ import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
 import BanContextCallout from '@/components/ban-context-callout'
 import { contextsForBook } from '@/lib/ban-contexts'
+import { explainerForReasonSlugs } from '@/lib/reason-explainers'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
@@ -777,6 +778,37 @@ export default async function BookPage({
   // otherwise-sparse page.
   const bookContexts = contextsForBook(book)
 
+  // Category-level context for the book's dominant reason — cited, general, and
+  // reused across every book carrying that reason. Adds information the single
+  // ban row does not contain, for the ~3,200 sparse single-event pages. No query:
+  // reason slugs are already on the loaded bans. See lib/reason-explainers.ts.
+  // Gate: a book already showing a ban-context (event) callout gets the more
+  // specific event context — don't stack a generic reason box on top of it. The
+  // explainer instead serves the large middle of the catalogue that has no hub.
+  // (Audit 2026-06-22: 99.4% of truly-barren books already match an event hub,
+  // so the hub lever is exhausted; the reason lens is the non-overlapping one.)
+  const reasonExplainer = bookContexts.length > 0
+    ? null
+    : explainerForReasonSlugs(
+        book.bans.flatMap(b =>
+          b.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s),
+        ),
+      )
+
+  // (a) Promote the raw, source-derived per-ban description(s) to the prominent
+  // "Why it was banned" slot when there is no synthesized `description_ban`.
+  // These short factual notes (e.g. "banned by the Punjab Assembly committee as
+  // 'blasphemous'…") are already cited in the bans table below — but only in a
+  // small italic sub-row that's easy to miss. For an otherwise-sparse page this
+  // is the most specific, per-book content we hold. Deduped, no query. When we
+  // promote, the in-table sub-row is suppressed to avoid showing it twice.
+  const promotedBanNotes = book.description_ban
+    ? []
+    : [...new Set(
+        sortedBans.map(b => b.description?.trim()).filter((d): d is string => !!d),
+      )]
+  const hasPromotedBanNote = promotedBanNotes.length > 0
+
   // Distinct country count across all bans (includes bans with NULL year_started,
   // unlike timelineRows which filters those). Used for the headline label and
   // share-text so the displayed "country" count is always semantically correct.
@@ -1402,11 +1434,20 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Why it was banned */}
-      {book.description_ban && (
+      {/* Why it was banned — the synthesized description_ban when we have one,
+          else (a) the promoted raw per-ban note(s). */}
+      {(book.description_ban || hasPromotedBanNote) && (
         <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
           <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">Why it was banned</h2>
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
+          {book.description_ban ? (
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
+          ) : (
+            <div className="space-y-2">
+              {promotedBanNotes.map((note, i) => (
+                <p key={i} className="text-gray-700 leading-relaxed">{note}</p>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
@@ -1416,6 +1457,41 @@ export default async function BookPage({
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Censorship history</h2>
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
+        </section>
+      )}
+
+      {/* Reason context — hand-authored, cited, category-level background for the
+          book's dominant challenge reason. Reused across all books carrying the
+          reason; never asserts anything specific about this title. View-layer
+          only: not part of JSON-LD (it isn't a description of the work). */}
+      {reasonExplainer && (
+        <section className="mb-8 rounded-r-xl border-l-4 border-slate-300 bg-slate-50/70 pl-5 pr-4 py-4">
+          <h2 className="text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-1.5">
+            Context · {reasonExplainer.heading}
+          </h2>
+          <p className="text-sm leading-relaxed text-gray-800">{reasonExplainer.body}</p>
+          <p className="mt-2 text-xs text-gray-500">
+            Source:{' '}
+            <a
+              href={reasonExplainer.source.url}
+              rel="nofollow noopener"
+              target="_blank"
+              className="underline underline-offset-2 hover:text-gray-700"
+            >
+              {reasonExplainer.source.name}
+            </a>
+            {reasonExplainer.relatedContextSlug && (
+              <>
+                {' · '}
+                <Link
+                  href={`/contexts/${reasonExplainer.relatedContextSlug}`}
+                  className="text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
+                >
+                  More on {reasonExplainer.relatedContextLabel} →
+                </Link>
+              </>
+            )}
+          </p>
         </section>
       )}
 
@@ -1541,7 +1617,7 @@ export default async function BookPage({
                             </td>
                           </tr>
                         )}
-                        {c.description && (
+                        {!hasPromotedBanNote && c.description && (
                           <tr className="bg-amber-50/50">
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 italic leading-relaxed">
                               {c.description}
