@@ -122,3 +122,91 @@ export function EmbedSnippets({ iframe, badge }: { iframe: string; badge: string
     </div>
   )
 }
+
+// A monospace value with an inline copy button — used for the Slack command and
+// the raw feed URL on the per-platform subscribe cards.
+function CopyField({ value }: { value: string }) {
+  const { copied, copy } = useCopied()
+  return (
+    <div className="flex items-stretch gap-2">
+      <code className="flex-1 min-w-0 text-xs bg-neutral-50 border border-neutral-200 rounded px-2.5 py-1.5 text-neutral-700 overflow-x-auto whitespace-nowrap">
+        {value}
+      </code>
+      <button
+        onClick={() => copy(value, value)}
+        className="shrink-0 text-xs font-medium text-oxblood hover:underline px-1"
+        aria-label="Copy to clipboard"
+      >
+        {copied === value ? 'Copied' : 'Copy'}
+      </button>
+    </div>
+  )
+}
+
+function PlatformCard({ name, children }: { name: string; children: React.ReactNode }) {
+  return (
+    <div className="border border-neutral-200 rounded-lg p-4 flex flex-col gap-2.5">
+      <h3 className="text-sm font-semibold text-gray-900">{name}</h3>
+      {children}
+    </div>
+  )
+}
+
+const helpLink = 'text-xs font-medium text-oxblood hover:underline mt-auto'
+
+// Per-platform self-serve subscribe cards. The feed itself does all the work;
+// each card is just the one paste-this step that platform needs. No accounts,
+// no webhooks stored by us — the platforms poll the feed.
+export function FeedSubscribe({ feedUrl }: { feedUrl: string }) {
+  const slackCmd = `/feed subscribe ${feedUrl}`
+  const feedly = `https://feedly.com/i/subscription/feed/${encodeURIComponent(feedUrl)}`
+
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <PlatformCard name="Slack">
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            In any channel, paste this — it adds Slack&rsquo;s RSS app and posts the book each day.
+          </p>
+          <CopyField value={slackCmd} />
+          <a href="https://slack.com/help/articles/218688467-Add-RSS-feeds-to-Slack" target="_blank" rel="noopener noreferrer" className={helpLink}>
+            How it works →
+          </a>
+        </PlatformCard>
+
+        <PlatformCard name="Discord">
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            Add the free MonitoRSS bot, then paste this feed URL and pick a channel.
+          </p>
+          <CopyField value={feedUrl} />
+          <a href="https://monitorss.xyz/" target="_blank" rel="noopener noreferrer" className={helpLink}>
+            Get MonitoRSS →
+          </a>
+        </PlatformCard>
+
+        <PlatformCard name="Teams">
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            In Power Automate, use &ldquo;When a feed item is published&rdquo; → Post in a channel, with this URL.
+          </p>
+          <CopyField value={feedUrl} />
+          <a href="https://make.powerautomate.com/" target="_blank" rel="noopener noreferrer" className={helpLink}>
+            Open Power Automate →
+          </a>
+        </PlatformCard>
+      </div>
+
+      <div className="flex items-center gap-5 flex-wrap text-sm">
+        <a href={feedUrl} className="inline-flex items-center gap-1.5 font-medium text-gray-600 hover:text-oxblood transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 11a9 9 0 0 1 9 9h-2.5A6.5 6.5 0 0 0 4 13.5V11zm0-5a14 14 0 0 1 14 14h-2.5A11.5 11.5 0 0 0 4 8.5V6zm1.5 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" />
+          </svg>
+          RSS feed
+        </a>
+        <a href={feedly} target="_blank" rel="noopener noreferrer" className="font-medium text-gray-600 hover:text-oxblood transition-colors">
+          Add to Feedly
+        </a>
+        <span className="text-neutral-400">Works in any RSS reader.</span>
+      </div>
+    </div>
+  )
+}

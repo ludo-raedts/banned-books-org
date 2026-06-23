@@ -12,20 +12,40 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { SITE_URL } from '@/lib/canonical-host'
 import { getBookOfTheDay, reasonPhrases, joinHuman, whereClause } from '@/lib/book-of-the-day'
-import { ShareRow, EmbedSnippets } from '@/components/share-tools'
+import { ShareRow, EmbedSnippets, FeedSubscribe } from '@/components/share-tools'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
 
 export const revalidate = 3600
 
+const META_DESCRIPTION =
+  'A different banned or challenged book every day, with the record of where and why it was censored. Share it, subscribe in Slack, Discord or Teams, embed the live widget, or follow the RSS feed.'
+
 export const metadata: Metadata = {
-  title: 'Banned book of the day — share it',
-  description:
-    'A different banned or challenged book every day, with the record of where and why it was censored. Share it, follow it, or embed the live widget on your own site.',
-  alternates: { canonical: '/share' },
+  title: 'Banned book of the day — share, embed & subscribe',
+  description: META_DESCRIPTION,
+  keywords: [
+    'banned book of the day',
+    'banned books RSS feed',
+    'censored books widget',
+    'book ban Slack feed',
+    'embed banned books',
+  ],
+  alternates: {
+    canonical: '/share',
+    types: {
+      'application/rss+xml': [{ url: '/book-of-the-day/feed.xml', title: 'Banned book of the day' }],
+    },
+  },
   openGraph: {
     title: 'Banned book of the day',
-    description: 'A different banned book every day — share it or embed it on your site.',
+    description: META_DESCRIPTION,
+    url: '/share',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Banned book of the day',
+    description: 'A different banned book every day — share it, embed it, or subscribe in your tools.',
   },
 }
 
@@ -45,6 +65,7 @@ export default async function SharePage() {
 
   // Embed snippets. The iframe points at the chrome-free widget route; the badge
   // is the live PNG wrapped in a link back to this hub.
+  const feedUrl = `${SITE_URL}/book-of-the-day/feed.xml`
   const iframeSnippet = `<iframe src="${SITE_URL}/embed/book-of-the-day" width="520" height="240" style="border:0;max-width:100%" title="Banned book of the day" loading="lazy"></iframe>`
   const badgeSnippet = `[![Banned book of the day](${SITE_URL}/book-of-the-day/image)](${SITE_URL}/share)`
 
@@ -137,7 +158,7 @@ export default async function SharePage() {
       </section>
 
       {/* Embed */}
-      <section className="mb-4">
+      <section className="mb-12">
         <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">Put it on your site</h2>
         <p className="text-sm text-neutral-500 mb-5">
           A live widget that updates itself every day. No script, no tracking — just an iframe or an image.
@@ -160,6 +181,16 @@ export default async function SharePage() {
           </div>
           <EmbedSnippets iframe={iframeSnippet} badge={badgeSnippet} />
         </div>
+      </section>
+
+      {/* Subscribe / automate — one feed, every chat tool & reader */}
+      <section className="mb-4">
+        <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">Get it in your tools</h2>
+        <p className="text-sm text-neutral-500 mb-5 max-w-2xl">
+          One feed drops the daily book straight into Slack, Discord, Teams or any reader — no account,
+          no setup on our end. The platform polls the feed and posts each new day for you.
+        </p>
+        <FeedSubscribe feedUrl={feedUrl} />
       </section>
     </main>
   )
