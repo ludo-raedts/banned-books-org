@@ -128,6 +128,7 @@ die een merge-script daarna inleest.
 | Script | Doet |
 |---|---|
 | `_audit_paren_suffix_dupes.ts` | "Titel (suffix)"-dubbele boeken → `data/paren-suffix-dupes.json` (input voor `merge-paren-suffix-dupes.ts`) |
+| `_audit_same_author_title_dupes.ts` | Same-author boek-dupes met genormaliseerd-identieke titel (`&`↔`and`, interpunctie, hoofdletters, diacritics, unicode-bewust) → `data/same-author-title-dupes.json` (exact, merge-ready voor `merge-paren-suffix-dupes.ts`) + `.md` met een NEAR-tier (subtitle/serie, review-only). Sluit placeholder-auteurs (Anonymous/Various/…) uit. Ving de "Pride: …& Community" vs "…and Community"-klasse die paren-suffix miste |
 | `_audit_split_authors.ts` | Canonieke detector voor gesplitste auteurs → `data/hk-split-authors-review.md` |
 | `_audit_honorific_author_dupes.ts` | Honorific-twin auteurs (Ustaz/Haji-prefix) → input voor `merge-honorific-author-dupes.ts` |
 | `_audit_mojibake_authors.ts` | U+FFFD-corrupte auteursnamen (draai vóór nieuwe KDN-batch) |
