@@ -48,6 +48,12 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   return {
     title,
     description,
+    // These dated pages carry the book's title in their own title/H1, so an
+    // indexed version would cannibalise the real /books/[slug] page for that
+    // query. noindex,follow keeps them fully usable (RSS, sharing, OG cards)
+    // and lets link equity flow to the book record they link to, without
+    // competing in search. The archive + /share stay indexed (feature terms).
+    robots: { index: false, follow: true },
     alternates: { canonical: `/book-of-the-day/${date}` },
     openGraph: {
       title, description, type: 'article', url: `/book-of-the-day/${date}`,
