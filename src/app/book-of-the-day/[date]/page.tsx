@@ -44,12 +44,16 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   const description = book
     ? `${book.title} by ${book.author} was the banned book of the day for ${long} — the record of where and why it was censored.`
     : `The banned book of the day for ${long}.`
+  const ogImage = `${SITE_URL}/book-of-the-day/image?date=${date}`
   return {
     title,
     description,
     alternates: { canonical: `/book-of-the-day/${date}` },
-    openGraph: { title, description, type: 'article', url: `/book-of-the-day/${date}` },
-    twitter: { card: 'summary_large_image' },
+    openGraph: {
+      title, description, type: 'article', url: `/book-of-the-day/${date}`,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: 'Banned book of the day' }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
   }
 }
 
