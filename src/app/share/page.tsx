@@ -11,7 +11,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { SITE_URL } from '@/lib/canonical-host'
-import { getBookOfTheDay, reasonPhrases, joinHuman, whereClause } from '@/lib/book-of-the-day'
+import { getBookOfTheDay, reasonPhrases, joinHuman, whereClause, todayYmd } from '@/lib/book-of-the-day'
 import { ShareRow, EmbedSnippets, FeedSubscribe } from '@/components/share-tools'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
 
@@ -68,6 +68,7 @@ export default async function SharePage() {
   const feedUrl = `${SITE_URL}/book-of-the-day/feed.xml`
   const iframeSnippet = `<iframe src="${SITE_URL}/embed/book-of-the-day" width="520" height="240" style="border:0;max-width:100%" title="Banned book of the day" loading="lazy"></iframe>`
   const badgeSnippet = `[![Banned book of the day](${SITE_URL}/book-of-the-day/image)](${SITE_URL}/share)`
+  const svgBadgeSnippet = `<a href="${SITE_URL}/share"><picture><source media="(prefers-color-scheme: dark)" srcset="${SITE_URL}/book-of-the-day/badge.svg?theme=dark"><img alt="Banned book of the day" src="${SITE_URL}/book-of-the-day/badge.svg"></picture></a>`
 
   const coverOk = !!book?.coverUrl && isAllowedImageUrl(book.coverUrl)
 
@@ -138,6 +139,12 @@ export default async function SharePage() {
         <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">Share it</h2>
         <p className="text-sm text-neutral-500 mb-4">Post today&rsquo;s book to your network.</p>
         <ShareRow url={shareUrl} text={shareText} />
+        <Link
+          href={`/book-of-the-day/${todayYmd()}/card`}
+          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-oxblood transition-colors mt-4"
+        >
+          🖨 Print a shelf card for libraries &amp; classrooms →
+        </Link>
       </section>
 
       {/* Follow */}
@@ -179,7 +186,7 @@ export default async function SharePage() {
               loading="lazy"
             />
           </div>
-          <EmbedSnippets iframe={iframeSnippet} badge={badgeSnippet} />
+          <EmbedSnippets iframe={iframeSnippet} badge={badgeSnippet} svgBadge={svgBadgeSnippet} />
         </div>
       </section>
 

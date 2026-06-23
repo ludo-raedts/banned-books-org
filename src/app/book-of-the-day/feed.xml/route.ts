@@ -14,7 +14,7 @@
 
 import { unstable_cache } from 'next/cache'
 import { pickForDates, type DailyBook } from '@/lib/bluesky-post'
-import { reasonPhrases, joinHuman, whereClause } from '@/lib/book-of-the-day'
+import { reasonPhrases, joinHuman, whereClause, publishedBotdDates } from '@/lib/book-of-the-day'
 import { SITE_URL } from '@/lib/canonical-host'
 
 // How many past days to carry. RSS pollers (Slack's app, MonitoRSS, …) bookmark
@@ -29,16 +29,6 @@ function escapeXml(s: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;')
-}
-
-/** The last WINDOW_DAYS dates (UTC), newest first, as YYYY-MM-DD. */
-function recentDates(today: Date): string[] {
-  const out: string[] = []
-  for (let i = 0; i < WINDOW_DAYS; i++) {
-    const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - i))
-    out.push(d.toISOString().slice(0, 10))
-  }
-  return out
 }
 
 /** One sentence of grounded context — the editor ban note if we have one, else
@@ -65,14 +55,15 @@ function pickWindow(dates: string[]) {
 
 export async function GET() {
   const now = new Date()
-  const dates = recentDates(now)
+  // Never go before launch — a feed item must have a real dated permalink.
+  const dates = publishedBotdDates().slice(0, WINDOW_DAYS)
   const picks = await pickWindow(dates)
 
   const items = dates
     .map((ymd, i) => ({ ymd, book: picks[i] }))
     .filter((x): x is { ymd: string; book: DailyBook } => !!x.book)
     .map(({ ymd, book }) => {
-      const link = `${SITE_URL}/books/${book.slug}?utm_source=rss&utm_medium=feed&utm_campaign=book-of-the-day`
+      const link = `${SITE_URL}/book-of-the-day/${ymd}?utm_source=rss&utm_medium=feed&utm_campaign=book-of-the-day`
       const yearPart = book.year ? ` (${book.year})` : ''
       const title = `Banned book of the day: ${book.title}${yearPart} — ${book.author}`
       // Each day "publishes" at 08:00 UTC; clamp today's to now so readers never

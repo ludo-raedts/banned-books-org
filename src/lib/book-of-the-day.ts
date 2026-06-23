@@ -13,17 +13,69 @@
 // per UTC day, so the cache key rolling at 00:00 UTC lines up with the rotation.
 
 import { unstable_cache } from 'next/cache'
-import { pickDailyBook, type DailyBook } from './bluesky-post'
+import { pickDailyBook, pickForDates, dayNumber, type DailyBook } from './bluesky-post'
 
 export type { DailyBook }
 
+// The rotation is deterministic for ANY date (dayNumber → pick), but we only
+// publish dated archive pages from the day the daily actually launched, so we
+// never invent "the book of the day" for dates before the feature existed.
+export const BOTD_LAUNCH = '2026-06-16'
+
+/** Today's date in UTC, as YYYY-MM-DD. */
+export function todayYmd(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
 /** Today's banned book of the day (UTC), cached once per day. */
 export function getBookOfTheDay(): Promise<DailyBook | null> {
-  const ymd = new Date().toISOString().slice(0, 10)
   return unstable_cache(
-    () => pickDailyBook(ymd),
-    ['book-of-the-day', ymd],
+    () => pickDailyBook(todayYmd()),
+    ['book-of-the-day', todayYmd()],
     { revalidate: 3600, tags: ['book-of-the-day'] },
+  )()
+}
+
+/** The pick for a specific UTC date (deterministic), cached per date for a day. */
+export function getBookForDate(ymd: string): Promise<DailyBook | null> {
+  return unstable_cache(
+    async () => (await pickForDates([ymd]))[0] ?? null,
+    ['book-of-the-day-date', ymd],
+    { revalidate: 86400, tags: ['book-of-the-day'] },
+  )()
+}
+
+/** True when ymd is a valid YYYY-MM-DD within [launch, today] (UTC). */
+export function isPublishableBotdDate(ymd: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return false
+  // Round-trip guard: rejects impossible dates like 2026-02-31 (which parse to
+  // an Invalid Date or roll over to a different day).
+  const d = new Date(`${ymd}T00:00:00Z`)
+  if (Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== ymd) return false
+  return ymd >= BOTD_LAUNCH && ymd <= todayYmd()
+}
+
+/** Published archive dates, newest first: launch … today (inclusive). */
+export function publishedBotdDates(): string[] {
+  const out: string[] = []
+  const launch = dayNumber(BOTD_LAUNCH)
+  const today = dayNumber(todayYmd())
+  for (let d = today; d >= launch; d--) {
+    out.push(new Date(d * 86400_000).toISOString().slice(0, 10))
+  }
+  return out
+}
+
+/** The archive grid (newest first), hydrated in ONE eligible-id scan + cached. */
+export function getBotdArchive(limit = 60): Promise<Array<{ date: string; book: DailyBook | null }>> {
+  const dates = publishedBotdDates().slice(0, limit)
+  return unstable_cache(
+    async () => {
+      const books = await pickForDates(dates)
+      return dates.map((date, i) => ({ date, book: books[i] ?? null }))
+    },
+    ['book-of-the-day-archive', dates[0] ?? 'none', String(dates.length)],
+    { revalidate: 86400, tags: ['book-of-the-day'] },
   )()
 }
 
