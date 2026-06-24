@@ -188,7 +188,10 @@ export default async function PressPage() {
     foundingDate: '2026-04',
     foundingLocation: 'Groningen, Netherlands',
     description: 'Independent international database of book censorship.',
-    sameAs: ['https://www.banned-books.org'],
+    sameAs: [
+      'https://www.linkedin.com/company/banned-books-org',
+      'https://bsky.app/profile/banned-books.org',
+    ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Press',

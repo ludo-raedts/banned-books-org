@@ -451,6 +451,10 @@ export default async function HomePage() {
       url: 'https://www.banned-books.org/brand/compact-bb.png',
     },
     description: 'An international catalogue of books banned by governments and schools worldwide. Documents censorship history, dates, scope, and source citations.',
+    sameAs: [
+      'https://www.linkedin.com/company/banned-books-org',
+      'https://bsky.app/profile/banned-books.org',
+    ],
   }
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
