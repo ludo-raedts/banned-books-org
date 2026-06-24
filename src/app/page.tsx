@@ -31,6 +31,7 @@ import {
 import HeroSection from '@/components/home/HeroSection'
 import StartHereSection from '@/components/home/StartHereSection'
 import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
+import { getBookOfTheDay } from '@/lib/book-of-the-day'
 import HappeningNowSection from '@/components/home/HappeningNowSection'
 import TrendingSection from '@/components/home/TrendingSection'
 import MostBannedAuthorsSection from '@/components/home/MostBannedAuthorsSection'
@@ -58,17 +59,6 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: '/' },
   }
 }
-
-// Latin-script language gate for the Book-of-the-day pick — keeps the
-// English homepage hero on titles that render with a real English name
-// (not pinyin/transliteration). Non-Latin titles surface in the dedicated
-// Non-English section + the /non-english-banned-books destination.
-const LATIN_SCRIPT_LANGS = [
-  'en','es','fr','de','nl','it','pt','ca','gl','eu',
-  'sv','da','no','nb','nn','fi','is',
-  'pl','cs','sk','hu','ro','hr','sl','lv','lt','et','sq','bs',
-  'tr','id','ms','vi','tl','sw','af','cy','ga','mt','lb','la',
-] as const
 
 const REASON_SLUGS = ['lgbtq', 'sexual', 'political', 'religious', 'racial'] as const
 
@@ -371,20 +361,19 @@ export default async function HomePage() {
     ((countriesRes.data ?? []) as { code: string; name_en: string }[]).map(c => [c.code, c.name_en]),
   )
 
-  // Book of the day: pick from the top-100 globally-banned pool (already in
-  // bookById from the top-banned rail) so the daily rotation lands on a
-  // recognisable censored title — 1984, Lolita, Satanic Verses, etc. —
-  // rather than a random catalogue entry. Latin-script + description filter
-  // are the same constraints as before so the hero card always has English
-  // copy + a real synopsis to render.
-  const pickPool = topBannedRows
-    .map(r => bookById.get(Number(r.entity_id)))
-    .filter((b): b is TopListBookRow => !!b)
-    .filter(b => !!b.description_book)
-    .filter(b => !b.original_language || (LATIN_SCRIPT_LANGS as readonly string[]).includes(b.original_language))
-  const bookOfDaySeed = new Date().toISOString().slice(0, 10)
-  const bookOfDaySeedSum = bookOfDaySeed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const pickBookRow = pickPool.length > 0 ? pickPool[bookOfDaySeedSum % pickPool.length] : null
+  // Book of the day: the SAME canonical pick that powers the Bluesky bot, the
+  // /share hub, the /embed widget and the RSS feed (getBookOfTheDay() →
+  // pickDailyBook over the full ~8.6k-book catalogue, cached once per UTC day).
+  // The homepage used to draw from its own top-100 pool with a separate seed,
+  // so the hero advertised a DIFFERENT "book of the day" than everything we
+  // broadcast — a visitor arriving from a Bluesky post or the feed landed on
+  // another title. Unifying on one source keeps every "book of the day"
+  // surface in lock-step. The shared pool already gates on a valid cover,
+  // editorial ban copy (description_ban) and Latin-script titles, so the hero
+  // card always has copy to render; a missing book synopsis (description_book)
+  // is handled gracefully by BookOfDaySection.
+  const dailyPick = await timer.wrap('book-of-day-pick', () => getBookOfTheDay())
+  const pickId = dailyPick?.id ?? null
 
   // One follow-up fetch to pull the richer fields we need for the new card
   // shape (description_ban, genres, per-ban status + year + reasons). Cheap
@@ -393,13 +382,13 @@ export default async function HomePage() {
   // already surfaced on the book detail page; reused here so the homepage
   // doesn't need a parallel editorial field.
   let bookOfDay: BookOfDay | null = null
-  if (pickBookRow) {
+  if (pickId) {
     const { data: richRaw } = await timer.wrap('book-of-day-rich', () =>
       supabase.from('books').select(
         'id, title, slug, cover_url, first_published_year, description_book, description_ban, genres, ' +
         'book_authors(authors(display_name)), ' +
         'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))',
-      ).eq('id', pickBookRow.id).maybeSingle(),
+      ).eq('id', pickId).maybeSingle(),
     )
     if (richRaw) bookOfDay = buildBookOfDay(richRaw as unknown as RichBookOfDayRow, countryNameMap)
   }
