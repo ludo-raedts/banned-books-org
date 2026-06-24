@@ -87,6 +87,7 @@ interface Book {
   title: string
   isbn13: string | null
   cover_url: string | null
+  cover_status: string | null
   description: string | null
   description_book: string | null
   first_published_year: number | null
@@ -105,7 +106,7 @@ async function load() {
   const [books, authors, bookAuthors, bans, banSourceLinks] = await Promise.all([
     paginate<Book>(
       'books',
-      'id, slug, title, isbn13, cover_url, description, description_book, first_published_year',
+      'id, slug, title, isbn13, cover_url, cover_status, description, description_book, first_published_year',
       'id',
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
@@ -167,6 +168,16 @@ async function runChecks(): Promise<Finding[]> {
     id: 'image-host-cover', label: 'cover_url on non-allowlisted host (next/image 500s)',
     severity: 'invariant', count: badCover.length,
     samples: badCover.slice(0, SAMPLE_CAP).map((b) => `${b.slug}: ${b.cover_url}`),
+  })
+  // A cover_url scrubbed for a bad host (clearing image-host-cover above) must
+  // also reset cover_status to 'rejected_placeholder', or the book is stuck in
+  // an inconsistent "valid cover, no URL" state that no retry path picks up.
+  // Caught here regardless of which script nulls the URL.
+  const validNoCover = books.filter((b) => b.cover_status === 'valid' && !b.cover_url)
+  findings.push({
+    id: 'cover-status-valid-no-url', label: "cover_status='valid' but cover_url IS NULL (drift)",
+    severity: 'invariant', count: validNoCover.length,
+    samples: validNoCover.slice(0, SAMPLE_CAP).map((b) => `${b.id} ${b.slug}`),
   })
   const badPhoto = authors.filter((a) => a.photo_url && !isAllowedImageUrl(a.photo_url))
   findings.push({
