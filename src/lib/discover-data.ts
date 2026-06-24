@@ -1,6 +1,6 @@
 import { adminClient } from './supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
-import { genreLabel } from '@/components/genre-badge'
+import { genreLabel, isMappedGenre } from '@/components/genre-badge'
 import {
   ICONIC_BOOK_SLUGS,
   GENRE_ALIASES,
@@ -190,7 +190,7 @@ function collectDiscoverGenres(candidates: DiscoverCandidate[]): DiscoverGenre[]
   }
 
   return [...folded.entries()]
-    .filter(([slug]) => genreLabel(slug) !== slug)
+    .filter(([slug]) => isMappedGenre(slug))
     .sort((a, b) => b[1] - a[1])
     .slice(0, 12)
     .map(([slug]) => ({ slug, label: genreLabel(slug) }))

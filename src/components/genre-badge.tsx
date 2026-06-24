@@ -24,12 +24,27 @@ const GENRES: Record<string, { label: string; classes: string }> = {
   'political-non-fiction':    { label: 'Political non-fiction',    classes: 'bg-sky-100 text-sky-700' },
 }
 
+// Sentence-case fallback for genres not in the map above (e.g. "science",
+// "young-adult-fiction"), so every badge reads consistently — first word
+// capitalised, hyphens turned into spaces.
+function humanizeGenre(slug: string) {
+  const words = slug.replace(/-/g, ' ').trim()
+  return words.charAt(0).toUpperCase() + words.slice(1)
+}
+
 export function genreLabel(slug: string) {
-  return GENRES[slug]?.label ?? slug
+  return GENRES[slug]?.label ?? humanizeGenre(slug)
+}
+
+// True only for genres in the curated map above. Use this — not
+// `genreLabel(slug) !== slug` — to gate on "is this a known genre", since
+// genreLabel now always returns a humanized fallback for unmapped slugs.
+export function isMappedGenre(slug: string) {
+  return slug in GENRES
 }
 
 export default function GenreBadge({ slug }: { slug: string }) {
-  const g = GENRES[slug] ?? { label: slug, classes: 'bg-gray-100 text-gray-600' }
+  const g = GENRES[slug] ?? { label: humanizeGenre(slug), classes: 'bg-gray-100 text-gray-600' }
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${g.classes}`}>
       {g.label}
