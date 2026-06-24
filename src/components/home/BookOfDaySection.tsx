@@ -38,10 +38,15 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
   const displayedGenres = book.genres.slice(0, 3)
   return (
     <SectionShell tone="cream" eyebrow="Book of the day">
-      <Link
-        href={`/books/${book.slug}`}
-        className="hover-lift-book group block bg-white border border-cream-border rounded-sm p-5 md:p-7"
-      >
+      {/* Stretched-link card: the whole card opens the book entry, but the
+          footer "Share" link sits above the overlay (relative z-10) so it
+          navigates to /share — the daily-book share hub — instead. */}
+      <div className="hover-lift-book group relative bg-white border border-cream-border rounded-sm p-5 md:p-7">
+        <Link
+          href={`/books/${book.slug}`}
+          aria-label={`Read the full entry for ${book.title}`}
+          className="absolute inset-0 rounded-sm"
+        />
         <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-7 items-start">
           <div className="mx-auto md:mx-0">
             <div
@@ -129,6 +134,31 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
               className="mt-4 pt-3 border-t flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-neutral-600"
               style={{ borderColor: '#e8d4cd' }}
             >
+              {/* Subtle share affordance — sits above the stretched card link
+                  (relative z-10) so it routes to the daily-book share hub. */}
+              <Link
+                href="/share"
+                className="relative z-10 inline-flex items-center gap-1.5 font-medium text-neutral-500 hover:text-oxblood transition-colors"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+                Share this book
+              </Link>
+              <span className="text-neutral-400" aria-hidden="true">·</span>
               <span>
                 <span className="font-semibold text-oxblood">{book.countryCount}</span>{' '}
                 {book.countryCount === 1 ? 'country' : 'countries'}
@@ -147,7 +177,7 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </SectionShell>
   )
 }
