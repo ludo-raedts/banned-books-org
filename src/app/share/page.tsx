@@ -150,18 +150,33 @@ export default async function SharePage() {
       {/* Follow */}
       <section className="mb-12">
         <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">Follow it</h2>
-        <p className="text-sm text-neutral-500 mb-4">Get the banned book of the day in your feed.</p>
-        <a
-          href="https://bsky.app/profile/banned-books.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md bg-brand text-white hover:bg-brand-dark transition-colors"
-        >
-          <svg width="15" height="15" viewBox="0 0 600 530" fill="currentColor" aria-hidden="true">
-            <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.449-163.25-81.433C20.15 217.613 9.997 86.535 9.997 68.825c0-88.687 77.742-60.816 125.72-24.795z" />
-          </svg>
-          Follow on Bluesky
-        </a>
+        <p className="text-sm text-neutral-500 mb-4">
+          Get the banned book of the day in your feed — every day, automatically.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href="https://bsky.app/profile/banned-books.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md bg-brand text-white hover:bg-brand-dark transition-colors"
+          >
+            <svg width="15" height="15" viewBox="0 0 600 530" fill="currentColor" aria-hidden="true">
+              <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.449-163.25-81.433C20.15 217.613 9.997 86.535 9.997 68.825c0-88.687 77.742-60.816 125.72-24.795z" />
+            </svg>
+            Follow on Bluesky
+          </a>
+          <a
+            href="https://www.linkedin.com/company/banned-books-org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md bg-brand text-white hover:bg-brand-dark transition-colors"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
+            </svg>
+            Follow on LinkedIn
+          </a>
+        </div>
       </section>
 
       {/* Embed */}
