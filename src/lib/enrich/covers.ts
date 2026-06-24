@@ -2,15 +2,22 @@
 // (scripts/enrich-covers-v2.ts) or the in-process API route
 // (/api/admin/enrich/run). Strategies, tried in order per book:
 //
-//   1. Google Books title-only (no inauthor:) — highest hit rate
-//   2. Open Library title-only
-//   3. Open Library stripped-subtitle search
-//   4. Wikipedia page thumbnail
+//   1. Google Books ISBN-direct (exact edition)
+//   2. Open Library work-edition cover (stored work_id → its editions' covers,
+//      title-guarded)
+//   3. Google Books title-only (no inauthor:)
+//   4. Open Library title-only
+//   5. Open Library stripped-subtitle search
+//   6. Wikipedia page thumbnail
 //
-// Google Books URLs are pHash-checked against the official placeholder; matches
-// are rejected and the book gets cover_status='rejected_placeholder' so future
-// runs skip it. Books with cover_status in (rejected_placeholder, manual_override)
-// are skipped unless `force` is true.
+// Step 2 walks the work's editions rather than only its primary cover_i, which
+// is what the title-search steps (4–5) already pin — that closes the gap that
+// left books like DK Eyewitness "Insect" (work OL1924736W) falsely marked
+// rejected_placeholder despite a real cover on a sibling edition. Google Books
+// URLs are pHash-checked against the official placeholder; matches are rejected
+// and the book gets cover_status='rejected_placeholder' so future runs skip it.
+// Books with cover_status in (rejected_placeholder, manual_override) are skipped
+// unless `force` is true.
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
@@ -24,7 +31,8 @@ const WIKI_DELAY_MS = 200
 const BOOK_DELAY_MS = 200
 
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
-const NEW_SOURCES = ['gb_isbn', 'ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia']
+const OL_COVERS_BASE = 'https://covers.openlibrary.org'
+const NEW_SOURCES = ['gb_isbn', 'ol_edition', 'ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia']
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -93,6 +101,49 @@ export async function olSearch(title: string, author: string): Promise<{ coverUr
   // (if any) so we don't lose a weaker-but-valid match.
   if (retry.coverUrl) return retry
   return first.workId ? first : retry
+}
+
+// An OL cover URL resolves to a real image (not the blank default). Probe with
+// ?default=false so a missing cover is a clean 404; the redirect chain to the
+// archive.org image is followed and confirmed to be image/* content.
+async function olImageExists(probeUrl: string): Promise<boolean> {
+  try {
+    const r = await fetch(probeUrl, { method: 'HEAD' })
+    return r.ok && (r.headers.get('content-type') ?? '').startsWith('image/')
+  } catch { return false }
+}
+
+// A work_id's editions' covers — the exact-edition path the title-search
+// strategies miss when the work's primary cover_i is blank/absent but a sibling
+// edition carries a real cover (the DK Eyewitness "Insect" gap, work
+// OL1924736W). A stored work_id can occasionally be a contaminated/namesake
+// link (e.g. "The Thing" → "The Things They Carried"), so the work's canonical
+// title must match one of our title variants — the same titlesMatch guard the
+// title-search path uses, widened to the title ladder so a legit foreign-
+// language work title still matches via title_native. (The raw isbn13 is NOT
+// trusted as a standalone source here: OL's broad ISBN coverage surfaces
+// mis-stored ISBNs as confidently-wrong covers, and unlike gb_isbn there is no
+// vision check downstream. ISBN-only backfill stays with the vision-gated
+// recover-nulled-covers.ts.) Returns the first cover that HEAD-resolves to a
+// real image, or null.
+export async function olEditionCover(workId: string, ladderTitles: string[]): Promise<string | null> {
+  try {
+    const wr = await fetch(`https://openlibrary.org/works/${workId}.json`, { headers: OL_HEADERS })
+    await sleep(OL_DELAY_MS)
+    const work = wr.ok ? (await wr.json() as { title?: string }) : null
+    if (!work?.title || !ladderTitles.some(t => titlesMatch(t, work.title!))) return null
+    const er = await fetch(`https://openlibrary.org/works/${workId}/editions.json?limit=50`, { headers: OL_HEADERS })
+    await sleep(OL_DELAY_MS)
+    if (!er.ok) return null
+    const ed = await er.json() as { entries?: Array<{ covers?: number[] }> }
+    const ids: number[] = []
+    for (const e of ed.entries ?? []) for (const c of (e.covers ?? [])) if (c && c > 0) ids.push(c)
+    for (const id of [...new Set(ids)].slice(0, 8)) {
+      const url = `${OL_COVERS_BASE}/b/id/${id}-L.jpg`
+      if (await olImageExists(`${url}?default=false`)) return url
+    }
+    return null
+  } catch { return null }
 }
 
 async function wikipediaCover(title: string, author: string): Promise<string | null> {
@@ -289,6 +340,17 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
           if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
           gbExhausted = true
         }
+      }
+
+      // OL work-edition cover: when the book has a (title-matched) work_id, the
+      // title-search strategies below still miss the cover if the work's
+      // primary cover_i is blank but a sibling edition has a real image — the
+      // gap that left DK Eyewitness "Insect" (work OL1924736W) falsely rejected.
+      // Free of GB, so it runs even after the GB quota wall.
+      if (!coverUrl && book.openlibrary_work_id) {
+        newSources.push('ol_edition')
+        const edCover = await olEditionCover(book.openlibrary_work_id, ladder.map(v => v.title))
+        if (edCover) { coverUrl = edCover; source = 'OL-edition' }
       }
 
       // Walk the title ladder; for each variant try GB → OL → OL-stripped →
