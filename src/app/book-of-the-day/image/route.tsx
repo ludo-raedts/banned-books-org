@@ -11,20 +11,24 @@
 // file-based opengraph-image.tsx in a *dynamic* segment gets bundled into it
 // and drags next/og's require() in, crashing the page (Turbopack).
 //
+// ?format=square renders a 1:1 1080×1080 variant for Instagram (and any grid).
+//
 // The card visual is shared with /share's Open Graph image via renderBadge().
 
 import { ImageResponse } from 'next/og'
 import { getBookOfTheDay, getBookForDate, isPublishableBotdDate } from '@/lib/book-of-the-day'
-import { renderBadge, BADGE_SIZE } from '@/lib/book-of-the-day-badge'
+import { renderBadge, BADGE_SIZE, BADGE_SIZE_SQUARE } from '@/lib/book-of-the-day-badge'
 
 export async function GET(req: Request) {
-  const date = new URL(req.url).searchParams.get('date')
+  const params = new URL(req.url).searchParams
+  const date = params.get('date')
+  const square = params.get('format') === 'square'
   const book = date && isPublishableBotdDate(date)
     ? await getBookForDate(date)
     : await getBookOfTheDay()
 
-  return new ImageResponse(renderBadge(book), {
-    ...BADGE_SIZE,
+  return new ImageResponse(renderBadge(book, { square }), {
+    ...(square ? BADGE_SIZE_SQUARE : BADGE_SIZE),
     headers: {
       'cache-control': 'public, s-maxage=3600, stale-while-revalidate=86400',
     },
