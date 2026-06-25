@@ -455,6 +455,7 @@ export default async function HomePage() {
       'https://www.linkedin.com/company/banned-books-org',
       'https://bsky.app/profile/banned-books.org',
       'https://www.facebook.com/bannedbooks.org',
+      'https://www.instagram.com/bannedbooksarchive',
     ],
   }
 
