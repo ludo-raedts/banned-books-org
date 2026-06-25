@@ -362,30 +362,10 @@ export default function AdminDashboardClient({
           </div>
           <div className="flex flex-col gap-1.5 text-sm mt-1">
             <a
-              href="/admin/scripts"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Enrichment &amp; sources
-            </a>
-            <a
-              href="/admin/sitemap"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Sitemap &amp; IndexNow
-            </a>
-            <a
               href="/admin/zenodo"
               className="text-gray-700 hover:text-brand transition-colors"
             >
               → Zenodo re-deposit guide
-            </a>
-            <a
-              href="https://www.banned-books.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → View live site
             </a>
             <a
               href="https://supabase.com/dashboard"
@@ -410,6 +390,14 @@ export default function AdminDashboardClient({
               className="text-gray-700 hover:text-brand transition-colors"
             >
               → Cloudflare dashboard
+            </a>
+            <a
+              href="https://eu1.make.com/organization/8159588/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-brand transition-colors"
+            >
+              → Make dashboard (social auto-posting)
             </a>
             <a
               href="https://resend.com/overview"
