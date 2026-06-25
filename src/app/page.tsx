@@ -454,6 +454,7 @@ export default async function HomePage() {
     sameAs: [
       'https://www.linkedin.com/company/banned-books-org',
       'https://bsky.app/profile/banned-books.org',
+      'https://www.facebook.com/bannedbooks.org',
     ],
   }
 
