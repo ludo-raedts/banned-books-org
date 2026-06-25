@@ -12,12 +12,18 @@
 // and drags next/og's require() in, crashing the page (Turbopack).
 //
 // ?format=square renders a 1:1 1080×1080 variant for Instagram (and any grid).
+// That variant is returned as JPEG — Instagram's publishing API only accepts
+// JPEG (no PNG), and next/og emits PNG, so we transcode it with sharp. JPEG is
+// fine everywhere, so square is always JPEG; the landscape badge stays PNG
+// (OG/Twitter cards and hot-linked <img> badges accept it).
 //
 // The card visual is shared with /share's Open Graph image via renderBadge().
 
 import { ImageResponse } from 'next/og'
 import { getBookOfTheDay, getBookForDate, isPublishableBotdDate } from '@/lib/book-of-the-day'
 import { renderBadge, BADGE_SIZE, BADGE_SIZE_SQUARE } from '@/lib/book-of-the-day-badge'
+
+const CACHE = 'public, s-maxage=3600, stale-while-revalidate=86400'
 
 export async function GET(req: Request) {
   const params = new URL(req.url).searchParams
@@ -27,10 +33,24 @@ export async function GET(req: Request) {
     ? await getBookForDate(date)
     : await getBookOfTheDay()
 
-  return new ImageResponse(renderBadge(book, { square }), {
-    ...(square ? BADGE_SIZE_SQUARE : BADGE_SIZE),
-    headers: {
-      'cache-control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-    },
+  const png = Buffer.from(
+    await new ImageResponse(renderBadge(book, { square }), {
+      ...(square ? BADGE_SIZE_SQUARE : BADGE_SIZE),
+    }).arrayBuffer(),
+  )
+
+  if (square) {
+    const sharp = (await import('sharp')).default
+    const jpg = await sharp(png)
+      .flatten({ background: '#FBF6F3' }) // JPEG has no alpha; fill on the cream bg
+      .jpeg({ quality: 90, chromaSubsampling: '4:4:4' })
+      .toBuffer()
+    return new Response(new Uint8Array(jpg), {
+      headers: { 'content-type': 'image/jpeg', 'cache-control': CACHE },
+    })
+  }
+
+  return new Response(new Uint8Array(png), {
+    headers: { 'content-type': 'image/png', 'cache-control': CACHE },
   })
 }
