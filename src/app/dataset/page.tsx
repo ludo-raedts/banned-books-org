@@ -157,6 +157,17 @@ export default async function DatasetPage() {
     ? `Raedts, Ludo. Banned Books — Open Censorship Core. Zenodo. CC-BY-4.0. DOI: ${ZENODO_CONCEPT_DOI}.`
     : null
 
+  // Projects built on the open core. Append entries as they appear in the wild;
+  // the invitation below routes new submissions to the About contact form.
+  const inTheWild: { name: string; href: string; blurb: string }[] = [
+    {
+      name: 'Verboten — The Global Banned-Books Index',
+      href: 'https://ai-analytics.org/voidly/verboten/',
+      blurb:
+        'A searchable index and JSON API built on the open core, with per-country pages and a lookup aimed at journalists and AI agents.',
+    },
+  ]
+
   // The field split, stated once. Membership is the argument — no sell copy.
   const comparison: { label: string; open: boolean }[] = [
     { label: 'Structured facts — book, country, year, action type, status, scope', open: true },
@@ -335,9 +346,45 @@ export default async function DatasetPage() {
         </div>
       </SectionShell>
 
+      {/* ── In the wild ───────────────────────────────────────────── */}
+      <SectionShell tone="white" eyebrow="In the wild">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-3 pb-3 border-b border-oxblood/30">
+            Built with this data
+          </h2>
+          <p className="text-sm text-neutral-700 leading-relaxed mb-6">
+            Projects and tools built on the open core. Released under CC-BY-4.0, the
+            data is free to reuse with attribution — here&rsquo;s who&rsquo;s doing it.
+          </p>
+          <ul className="flex flex-col gap-5">
+            {inTheWild.map((p) => (
+              <li key={p.href} className="border-l-2 border-oxblood/30 pl-4">
+                <TrackedOutboundLink
+                  eventName="Dataset In The Wild Clicked"
+                  eventProperties={{ project: p.name }}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-serif text-lg font-semibold text-oxblood hover:underline"
+                >
+                  {p.name} →
+                </TrackedOutboundLink>
+                <p className="mt-1 text-sm text-neutral-700 leading-relaxed">{p.blurb}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-7 text-sm text-neutral-600 leading-relaxed">
+            Using the open core for your own project?{' '}
+            <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">
+              Tell us and we&rsquo;ll list it here →
+            </Link>
+          </p>
+        </div>
+      </SectionShell>
+
       {/* ── Versions & changelog ──────────────────────────────────── */}
       {ZENODO_CONCEPT_DOI && (
-        <SectionShell tone="white" eyebrow="Versions">
+        <SectionShell tone="cream" eyebrow="Versions">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-3 border-b border-oxblood/30">
               Dataset versions
