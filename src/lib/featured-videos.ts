@@ -206,6 +206,12 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     // site endorsing or condemning. No criminal conviction as of writing.
     note: 'Since 2024, several women have publicly accused Gaiman of sexual misconduct, including in a civil lawsuit; Gaiman denies the allegations. Included here without endorsement.',
   },
+  {
+    videoId: 'AMUSwYQ0RJk',
+    title: 'Barbara Dee: Writing Stories That Matter',
+    credit: 'Unban Coolies',
+    authorSlug: 'barbara-dee',
+  },
 ]
 
 /** The featured clip for a book page, if one is registered. */
