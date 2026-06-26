@@ -29,6 +29,12 @@ export type FeaturedVideo = {
   /** Optional start offset in seconds (e.g. 193 to begin at 3:13). */
   start?: number
   /**
+   * Optional neutral editorial note shown under the player — e.g. to record
+   * public allegations against an author without the site taking a position.
+   * Keep it factual and position-free.
+   */
+  note?: string
+  /**
    * Optional Tailwind max-width class to shrink the player from the default
    * full content width — for low-quality/archival clips that shouldn't
    * dominate the page (e.g. "max-w-md").
@@ -75,6 +81,127 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     authorSlug: 'james-patterson',
     // The book-ban discussion proper starts at 3:13.
     start: 193,
+  },
+
+  // ── Discovered via scripts/find-author-interviews.ts, hand-vetted 2026-06-26 ──
+  // Each is the right person in a watchable interview; false positives and
+  // namesakes from the candidate run were dropped.
+  {
+    videoId: 'RA8KkeyPFvk',
+    title: 'Lauren Myracle for the Banned Books Week Virtual Read-out',
+    credit: 'Banned Books Week',
+    authorSlug: 'lauren-myracle',
+  },
+  {
+    videoId: 'ir2FyaT3p2M',
+    title: 'Meg Cabot’s “Ready or Not” — Velshi Banned Book Club',
+    credit: 'MS NOW · #VelshiBannedBookClub',
+    authorSlug: 'meg-cabot',
+  },
+  {
+    videoId: 'zdERAQ6CIJM',
+    title: 'Colleen Hoover — extended interview with Jenna Bush Hager',
+    credit: 'TODAY',
+    authorSlug: 'colleen-hoover',
+  },
+  {
+    videoId: '7n4UCuSNVOA',
+    title: 'Cecily von Ziegesar — full Q&A at the Oxford Union',
+    credit: 'The Oxford Union',
+    authorSlug: 'cecily-von-ziegesar',
+  },
+  {
+    videoId: '2DEOdm72rvk',
+    title: 'Lincoln Peirce in conversation with Jeff Kinney',
+    credit: 'An Unlikely Story',
+    authorSlug: 'lincoln-peirce',
+  },
+  {
+    videoId: 'dCu5t6vj03Q',
+    title: 'Ellen Hopkins — author interview',
+    credit: 'Simon & Schuster',
+    authorSlug: 'ellen-hopkins',
+  },
+  {
+    videoId: 'hPSAAC-AEIk',
+    title: 'Sara Shepard discusses The Visibles',
+    credit: 'Simon & Schuster',
+    authorSlug: 'sara-shepard',
+  },
+  {
+    videoId: 'Y_YrfVnwkiI',
+    title: 'Nicholas Sparks on his novels’ success and impact (extended interview)',
+    credit: 'CBS Sunday Morning',
+    authorSlug: 'nicholas-sparks',
+  },
+  {
+    videoId: '8iugtSjz-0A',
+    title: 'David Levithan — interview at BookCon',
+    credit: 'Detroit PBS',
+    authorSlug: 'david-levithan',
+  },
+  {
+    videoId: 'N6M0jK4lZCs',
+    title: 'Rick Riordan on the openly gay protagonists in The Sun and the Star',
+    credit: 'AdLit',
+    authorSlug: 'rick-riordan',
+  },
+  {
+    videoId: 'XrC23s33UxI',
+    title: 'Sarah J. Maas in conversation with Eva Chen',
+    credit: 'Live Talks Los Angeles',
+    authorSlug: 'sarah-j-maas',
+  },
+  {
+    videoId: 'CyTHDNM7GDo',
+    title: 'Melissa de la Cruz — interview at BookCon',
+    credit: 'Detroit PBS',
+    authorSlug: 'melissa-de-la-cruz',
+  },
+  {
+    videoId: 'nd9P1DI8seA',
+    title: 'Holly Black talks The Stolen Heir',
+    credit: 'Good Morning America',
+    authorSlug: 'holly-black',
+  },
+  {
+    videoId: 'xYDwLpJqdgE',
+    title: 'John Grisham on writing his first mystery',
+    credit: 'The View',
+    authorSlug: 'john-grisham',
+  },
+  {
+    videoId: 'i7EdkXNlmic',
+    title: 'Alice Oseman — Heartstopper interview',
+    credit: 'Q+ Magazine',
+    authorSlug: 'alice-oseman',
+  },
+  {
+    videoId: 'HzAtOyw6ACw',
+    title: 'Jacqueline Woodson: What reading slowly taught me about writing',
+    credit: 'TED',
+    authorSlug: 'jacqueline-woodson',
+  },
+  {
+    videoId: 'PA6YxDtxlgo',
+    title: 'Chuck Palahniuk — interview at San Diego Comic-Con',
+    credit: 'LitReactor',
+    authorSlug: 'chuck-palahniuk',
+  },
+  {
+    videoId: 'k6asCYR2mow',
+    title: 'Cassandra Clare — full Q&A at the Oxford Union',
+    credit: 'The Oxford Union',
+    authorSlug: 'cassandra-clare',
+  },
+  {
+    videoId: '7zHCpEnCy8I',
+    title: 'Neil Gaiman on mythology, Norse gods and politics',
+    credit: 'Channel 4 News',
+    authorSlug: 'neil-gaiman',
+    // Editorial note, position-free: record the public allegations without the
+    // site endorsing or condemning. No criminal conviction as of writing.
+    note: 'Since 2024, several women have publicly accused Gaiman of sexual misconduct, including in a civil lawsuit; Gaiman denies the allegations. Included here without endorsement.',
   },
 ]
 

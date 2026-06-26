@@ -1510,6 +1510,9 @@ export default async function BookPage({
           <div className={featuredVideo.maxWidth}>
             <YouTubeEmbed videoId={featuredVideo.videoId} title={featuredVideo.title} start={featuredVideo.start} />
             <p className="mt-2 text-xs text-gray-500">{featuredVideo.credit}</p>
+            {featuredVideo.note && (
+              <p className="mt-1 text-xs italic text-gray-400">{featuredVideo.note}</p>
+            )}
           </div>
         </section>
       )}
