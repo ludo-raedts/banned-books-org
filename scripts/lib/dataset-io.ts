@@ -92,15 +92,49 @@ export async function fetchAll(
   const PAGE = pageSize
   const rows: Row[] = []
   for (let from = 0; ; from += PAGE) {
-    let q = supabase.from(table).select(columns)
-    for (const col of cols) q = q.order(col, { ascending: true })
-    const { data, error } = await q.range(from, from + PAGE - 1)
-    if (error) throw new Error(`fetch ${table}: ${error.message}`)
+    const data = await fetchPageWithRetry(supabase, table, columns, cols, from, PAGE)
     if (!data || data.length === 0) break
-    rows.push(...(data as Row[]))
+    rows.push(...data)
     if (data.length < PAGE) break
   }
   return rows
+}
+
+/** True for transient DB errors worth retrying — chiefly Postgres 57014
+ *  ("canceling statement due to statement timeout"), which the build hits when
+ *  it coincides with production read load (a crawler wave). Page reads are
+ *  idempotent, so a retry after a short wait for the load to pass is safe. */
+function isTransientError(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false
+  if (error.code === '57014') return true
+  const m = (error.message ?? '').toLowerCase()
+  return m.includes('statement timeout') || m.includes('timeout') || m.includes('fetch failed')
+}
+
+async function fetchPageWithRetry(
+  supabase: DatasetClient,
+  table: string,
+  columns: string,
+  cols: string[],
+  from: number,
+  PAGE: number,
+  maxAttempts = 5,
+): Promise<Row[] | null> {
+  for (let attempt = 1; ; attempt++) {
+    let q = supabase.from(table).select(columns)
+    for (const col of cols) q = q.order(col, { ascending: true })
+    const { data, error } = await q.range(from, from + PAGE - 1)
+    if (!error) return data as Row[]
+    if (attempt >= maxAttempts || !isTransientError(error)) {
+      throw new Error(`fetch ${table}: ${error.message}`)
+    }
+    // Exponential backoff (2s, 4s, 8s, 16s) to ride out the read-load spike.
+    const waitMs = 1000 * 2 ** attempt
+    console.log(
+      `    ⚠ ${table} page @${from} timed out (attempt ${attempt}/${maxAttempts}); retrying in ${waitMs / 1000}s`,
+    )
+    await new Promise((r) => setTimeout(r, waitMs))
+  }
 }
 
 // ─── CSV ─────────────────────────────────────────────────────────────────────

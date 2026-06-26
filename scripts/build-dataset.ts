@@ -69,7 +69,7 @@ async function main() {
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
     countries, reasons, scopes, sources,
   ] = await Promise.all([
-    fetchAll(supabase, 'books',            BOOK_COLUMNS.join(','),         'id', 500),
+    fetchAll(supabase, 'books',            BOOK_COLUMNS.join(','),         'id', 250),
     fetchAll(supabase, 'authors',          AUTHOR_COLUMNS.join(','),       'id'),
     fetchAll(supabase, 'book_authors',     'book_id, author_id, role',     'book_id,author_id'),
     fetchAll(supabase, 'bans',             BAN_COLUMNS.join(','),          'id'),
