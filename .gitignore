@@ -157,6 +157,10 @@ next-env.d.ts
 # press-release source/draft material (local-only)
 /data/press-release-data-*
 
+# outreach/backlink tracker — contains personal contact emails + campaign strategy.
+# REPO IS PUBLIC, so this must never be committed/pushed. Lives local-only.
+/data/outreach-tracker.md
+
 # parallel-enrichment per-run artifacts (logs, manifest, before/after snapshots);
 # the coverage REPORT (data/enrichment-coverage-report-*.md) is committed, the
 # rollback backups stay local
