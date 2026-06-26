@@ -97,6 +97,7 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     title: 'Meg Cabot’s “Ready or Not” — Velshi Banned Book Club',
     credit: 'MS NOW · #VelshiBannedBookClub',
     authorSlug: 'meg-cabot',
+    bookSlug: 'ready-or-not', // segment is specifically about this banned title
   },
   {
     videoId: 'zdERAQ6CIJM',
@@ -163,6 +164,7 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     title: 'Holly Black talks The Stolen Heir',
     credit: 'Good Morning America',
     authorSlug: 'holly-black',
+    bookSlug: 'the-stolen-heir', // interview is specifically about this banned title
   },
   {
     videoId: 'xYDwLpJqdgE',
@@ -175,6 +177,7 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     title: 'Alice Oseman — Heartstopper interview',
     credit: 'Q+ Magazine',
     authorSlug: 'alice-oseman',
+    bookSlug: 'heartstopper', // interview is specifically about Heartstopper
   },
   {
     videoId: 'HzAtOyw6ACw',
