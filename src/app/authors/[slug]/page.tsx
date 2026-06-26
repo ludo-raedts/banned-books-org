@@ -32,6 +32,8 @@ import {
 } from '@/components/data-quality'
 import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
+import { videoForAuthor } from '@/lib/featured-videos'
+import YouTubeEmbed from '@/components/youtube-embed'
 
 type Author = {
   id: number
@@ -581,6 +583,11 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     authorLead = `This page collects ${books.length} ${books.length === 1 ? 'book' : 'books'} in our catalogue without an attributed author. These are separate works by different (unknown or anonymous) writers, grouped here for catalogue navigation only.`
   }
 
+  // Hand-curated primary-source clip for this author, if any (e.g. the author
+  // discussing their banned work). Privacy-safe facade embed. See
+  // lib/featured-videos.ts.
+  const featuredVideo = videoForAuthor(slug)
+
   // Breadcrumb mirrors the visible <Breadcrumb> rendered above the hero.
   // "Authors" points at /most-banned-authors — the real author directory
   // (no /authors index route exists).
@@ -796,6 +803,17 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         <p className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4">
           {authorLead}
         </p>
+      )}
+
+      {/* In their own words — hand-curated primary-source clip (see
+          lib/featured-videos.ts). Privacy-safe facade embed: no YouTube
+          cookies/JS until the viewer clicks play. */}
+      {featuredVideo && (
+        <section className="mb-10">
+          <h2 className="text-lg font-semibold mb-3">In their own words</h2>
+          <YouTubeEmbed videoId={featuredVideo.videoId} title={featuredVideo.title} />
+          <p className="mt-2 text-xs text-gray-500">{featuredVideo.credit}</p>
+        </section>
       )}
 
       {/* Find books */}

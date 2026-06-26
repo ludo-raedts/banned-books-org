@@ -29,6 +29,8 @@ import ShareButtons from '@/components/share-buttons'
 import BanContextCallout from '@/components/ban-context-callout'
 import { contextsForBook } from '@/lib/ban-contexts'
 import { explainerForReasonSlugs } from '@/lib/reason-explainers'
+import { videoForBook } from '@/lib/featured-videos'
+import YouTubeEmbed from '@/components/youtube-embed'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
@@ -809,6 +811,10 @@ export default async function BookPage({
       )]
   const hasPromotedBanNote = promotedBanNotes.length > 0
 
+  // Hand-curated primary-source clip for this title, if any (e.g. the author
+  // discussing the ban). Privacy-safe facade embed. See lib/featured-videos.ts.
+  const featuredVideo = videoForBook(slug)
+
   // Distinct country count across all bans (includes bans with NULL year_started,
   // unlike timelineRows which filters those). Used for the headline label and
   // share-text so the displayed "country" count is always semantically correct.
@@ -1492,6 +1498,17 @@ export default async function BookPage({
               </>
             )}
           </p>
+        </section>
+      )}
+
+      {/* In the author's words — hand-curated primary-source clip (see
+          lib/featured-videos.ts). Privacy-safe facade embed: no YouTube
+          cookies/JS until the viewer clicks play. */}
+      {featuredVideo && (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">In the author’s words</h2>
+          <YouTubeEmbed videoId={featuredVideo.videoId} title={featuredVideo.title} />
+          <p className="mt-2 text-xs text-gray-500">{featuredVideo.credit}</p>
         </section>
       )}
 
