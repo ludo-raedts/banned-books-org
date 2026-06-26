@@ -37,6 +37,20 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     bookSlug: 'nineteen-minutes',
     authorSlug: 'jodi-picoult',
   },
+  {
+    videoId: 'ljvVUW2vrRU',
+    title: 'Margaret Atwood shares real-life parallels in The Handmaid’s Tale',
+    credit: 'PBS · Brief But Spectacular',
+    bookSlug: 'the-handmaids-tale',
+    authorSlug: 'margaret-atwood',
+  },
+  {
+    videoId: '69rd-7vEF3s',
+    title: 'John Green on the banning of Looking for Alaska',
+    credit: 'vlogbrothers (John Green)',
+    bookSlug: 'looking-for-alaska',
+    authorSlug: 'john-green',
+  },
 ]
 
 /** The featured clip for a book page, if one is registered. */
