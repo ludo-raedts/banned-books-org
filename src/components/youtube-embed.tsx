@@ -7,6 +7,8 @@ type Props = {
   videoId: string
   /** Accessible title for the player. */
   title: string
+  /** Optional start offset in seconds (e.g. 193 to begin at 3:13). */
+  start?: number
 }
 
 /**
@@ -17,7 +19,7 @@ type Props = {
  * normal embed. Keeps the page fast and Lighthouse-clean while staying a plain
  * 16:9 responsive box.
  */
-export default function YouTubeEmbed({ videoId, title }: Props) {
+export default function YouTubeEmbed({ videoId, title, start }: Props) {
   const [activated, setActivated] = useState(false)
 
   // hqdefault is always present (maxresdefault 404s for some uploads); it is
@@ -29,7 +31,7 @@ export default function YouTubeEmbed({ videoId, title }: Props) {
       {activated ? (
         <iframe
           className="absolute inset-0 h-full w-full"
-          src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`}
+          src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0${start ? `&start=${start}` : ''}`}
           title={title}
           allow="accelerator; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen

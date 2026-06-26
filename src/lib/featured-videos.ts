@@ -26,6 +26,14 @@ export type FeaturedVideo = {
   bookSlug?: string
   /** Author slug this clip belongs on, if any. */
   authorSlug?: string
+  /** Optional start offset in seconds (e.g. 193 to begin at 3:13). */
+  start?: number
+  /**
+   * Optional Tailwind max-width class to shrink the player from the default
+   * full content width — for low-quality/archival clips that shouldn't
+   * dominate the page (e.g. "max-w-md").
+   */
+  maxWidth?: string
 }
 
 export const FEATURED_VIDEOS: FeaturedVideo[] = [
@@ -50,6 +58,23 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     credit: 'vlogbrothers (John Green)',
     bookSlug: 'looking-for-alaska',
     authorSlug: 'john-green',
+  },
+  {
+    videoId: 'T-rrg2MRUGA',
+    title: 'Stephen King talks school censorship + Q&A (1996)',
+    credit: 'Manufacturing Intellect',
+    authorSlug: 'stephen-king',
+    // 1996 archival footage, 4:3 and rough audio — keep it modest so it
+    // doesn't dominate the page.
+    maxWidth: 'max-w-md',
+  },
+  {
+    videoId: 'p1FrOhkh55w',
+    title: 'James Patterson and Mychal Threets discuss book bans and library joy',
+    credit: 'USA TODAY · The Excerpt',
+    authorSlug: 'james-patterson',
+    // The book-ban discussion proper starts at 3:13.
+    start: 193,
   },
 ]
 
