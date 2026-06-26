@@ -811,7 +811,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       {featuredVideo && (
         <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3">In their own words</h2>
-          <div className={featuredVideo.maxWidth}>
+          <div className={featuredVideo.maxWidth ?? 'max-w-2xl'}>
             <YouTubeEmbed videoId={featuredVideo.videoId} title={featuredVideo.title} start={featuredVideo.start} />
             <p className="mt-2 text-xs text-gray-500">{featuredVideo.credit}</p>
             {featuredVideo.note && (

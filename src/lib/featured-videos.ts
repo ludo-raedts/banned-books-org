@@ -35,9 +35,9 @@ export type FeaturedVideo = {
    */
   note?: string
   /**
-   * Optional Tailwind max-width class to shrink the player from the default
-   * full content width — for low-quality/archival clips that shouldn't
-   * dominate the page (e.g. "max-w-md").
+   * Optional Tailwind max-width class overriding the default player width
+   * (max-w-2xl). Use a smaller class (e.g. "max-w-md") to de-emphasise a
+   * low-quality/archival clip, or a larger one for a marquee clip.
    */
   maxWidth?: string
 }
