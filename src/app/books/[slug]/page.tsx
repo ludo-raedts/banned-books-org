@@ -403,6 +403,42 @@ export async function generateMetadata({
   const multi = uniqueCountries.length >= 2
   const country = single ? uniqueCountries[0] : null
   const titleCandidates: string[] = []
+
+  // Ban-count hook (cf. bannedindex.org "Banned N Times"): the raw record count
+  // is a striking SERP/CTR lever, but only for heavily-banned titles — "Banned 2
+  // times" reads thin, so gate on a threshold. Where it applies it leads the
+  // ladder, and we fold in our own differentiator (the country spread) so a
+  // high-count international title gets BOTH the count and the "{M} countries"
+  // hook the US-only competitor can't show. Below threshold we fall through to
+  // the unchanged reason/country ladder.
+  const banCount = bans.length
+  const BAN_COUNT_TITLE_MIN = 5
+  if (banCount >= BAN_COUNT_TITLE_MIN) {
+    const times = `Banned ${banCount} times`
+    if (multi && topReasonPhrase) {
+      titleCandidates.push(`${baseTitle} – ${times} in ${uniqueCountries.length} countries for ${topReasonPhrase}`)
+      titleCandidates.push(`${data.title} – ${times} in ${uniqueCountries.length} countries for ${topReasonPhrase}`)
+    }
+    if (multi) {
+      titleCandidates.push(`${baseTitle} – ${times} in ${uniqueCountries.length} countries`)
+      titleCandidates.push(`${data.title} – ${times} in ${uniqueCountries.length} countries`)
+    }
+    if (single && country && topReasonPhrase) {
+      titleCandidates.push(`${baseTitle} – ${times} in ${country} for ${topReasonPhrase}`)
+      titleCandidates.push(`${data.title} – ${times} in ${country} for ${topReasonPhrase}`)
+    }
+    if (single && country) {
+      titleCandidates.push(`${baseTitle} – ${times} in ${country}`)
+      titleCandidates.push(`${data.title} – ${times} in ${country}`)
+    }
+    if (topReasonPhrase) {
+      titleCandidates.push(`${baseTitle} – ${times} for ${topReasonPhrase}`)
+      titleCandidates.push(`${data.title} – ${times} for ${topReasonPhrase}`)
+    }
+    titleCandidates.push(`${baseTitle} – ${times}`)
+    titleCandidates.push(`${data.title} – ${times}`)
+  }
+
   if (single && country && topReasonPhrase) {
     titleCandidates.push(`${baseTitle} – Banned in ${country} for ${topReasonPhrase}`)
     titleCandidates.push(`${data.title} – Banned in ${country} for ${topReasonPhrase}`)
