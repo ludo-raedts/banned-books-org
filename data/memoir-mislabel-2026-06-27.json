@@ -1,0 +1,205 @@
+[
+  {
+    "id": 209,
+    "title": "I Am Not Your Perfect Mexican Daughter",
+    "slug": "i-am-not-your-perfect-mexican-daughter",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "I Am Not Your Perfect Mexican Daughter is a young adult novel by Erika L."
+  },
+  {
+    "id": 687,
+    "title": "My Century",
+    "slug": "my-century-aleksander-wat",
+    "genres": [
+      "memoir",
+      "non-fiction"
+    ],
+    "snippet": "My Century (German: Mein Jahrhundert, 1999) is a novel written by German author Günter Grass."
+  },
+  {
+    "id": 1186,
+    "title": "The Girl Who Loved Tom Gordon",
+    "slug": "the-girl-who-loved-tom-gordon",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "The Girl Who Loved Tom Gordon is a psychological horror novel by Stephen King, published in 1999."
+  },
+  {
+    "id": 1319,
+    "title": "Rainbow Boys",
+    "slug": "rainbow-boys",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "Rainbow Boys is the first novel in a trilogy by Alex Sánchez that explores the challenges faced by gay and questioning youth."
+  },
+  {
+    "id": 1350,
+    "title": "Twenty Boy Summer",
+    "slug": "twenty-boy-summer",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "Beautifully written and emotionally honest, this is a debut novel that explores what it truly means to love someone and what it means to grieve, and ultimately, how to make the most of every single moment this world has to offer."
+  },
+  {
+    "id": 1910,
+    "title": "Self-Made Boys: A Great Gatsby Remix",
+    "slug": "self-made-boys-a-great-gatsby-remix",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "'Self-Made Boys: A Great Gatsby Remix' is a young adult novel that reimagines 'The Great Gatsby'."
+  },
+  {
+    "id": 3847,
+    "title": "Mexican Whiteboy",
+    "slug": "mexican-whiteboy",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "'Mexican WhiteBoy' is a novel by Matt de la Peña that follows the story of Danny, a biracial teenager living in San Diego."
+  },
+  {
+    "id": 4933,
+    "title": "Boyfriends with Girlfriends",
+    "slug": "boyfriends-with-girlfriends",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "Boyfriends with Girlfriends is a 2011 young adult novel by Alex Sánchez that explores the complexities of teenage sexuality and identity."
+  },
+  {
+    "id": 5947,
+    "title": "The Boy from the Basement",
+    "slug": "the-boy-from-the-basement",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "The Boy from the Basement is a young adult novel by Susan Shaw, published in 2004."
+  },
+  {
+    "id": 6426,
+    "title": "Let's Talk About It",
+    "slug": "lets-talk-about-it",
+    "genres": [
+      "graphic-novel",
+      "memoir",
+      "non-fiction"
+    ],
+    "snippet": "Let's Talk About It: The Teen's Guide to Sex, Relationships, and Being a Human is a 2021 graphic novel written and illustrated by Erika Moen and Matthew Nolan."
+  },
+  {
+    "id": 6646,
+    "title": "A Sentimental Journey Through France and Italy",
+    "slug": "a-sentimental-journey-through-france-and-italy",
+    "genres": [
+      "memoir",
+      "historical-fiction"
+    ],
+    "snippet": "A Sentimental Journey Through France and Italy is a fictional travelogue by Laurence Sterne, published in 1768."
+  },
+  {
+    "id": 8263,
+    "title": "The Girl Who Drank the Moon",
+    "slug": "the-girl-who-drank-the-moon",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "The Girl Who Drank the Moon is a fantasy novel featuring a girl named Luna."
+  },
+  {
+    "id": 9088,
+    "title": "Suzanne's Diary for Nicholas",
+    "slug": "suzannes-diary-for-nicholas",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "Suzanne's Diary for Nicholas is a 2001 novel by James Patterson that intertwines the stories of Katie Wilkinson, a New York City book editor, and Suzanne, a mother writing a diary for her son Nicholas."
+  },
+  {
+    "id": 9286,
+    "title": "Anansi Boys",
+    "slug": "anansi-boys",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "Anansi Boys is a fantasy novel by Neil Gaiman that follows the story of twin sons of \"Mr."
+  },
+  {
+    "id": 9695,
+    "title": "The Diary of a Teenage Girl: An Account in Words and Pictures",
+    "slug": "the-diary-of-a-teenage-girl-an-account-in-words-and-pictures",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "The Diary of a Teenage Girl: An Account in Words and Pictures is a graphic novel by Phoebe Gloeckner, first published in 2002."
+  },
+  {
+    "id": 10194,
+    "title": "The Bunker Diary",
+    "slug": "the-bunker-diary",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "The Bunker Diary is a 2013 young adult novel by Kevin Brooks that tells the story of Linus Weems, a teenager who is captured and imprisoned in a mysterious underground bunker along with five others from different backgrounds."
+  },
+  {
+    "id": 11329,
+    "title": "Portnoy's Complant",
+    "slug": "portnoys-complant",
+    "genres": [
+      "literary-fiction",
+      "memoir",
+      "satire"
+    ],
+    "snippet": "'Portnoy's Complaint' is a novel by Philip Roth featuring the main character, Alexander Portnoy, a Jewish man."
+  },
+  {
+    "id": 16615,
+    "title": "It's Me, Eddie",
+    "slug": "its-me-eddie",
+    "genres": [
+      "memoir",
+      "political-non-fiction"
+    ],
+    "snippet": "It's Me, Eddie (Russian: Это я — Эдичка, romanized: Eto ya — Edichka) is the first novel by Russian writer and politician Eduard Limonov."
+  },
+  {
+    "id": 18167,
+    "title": "The Night Diary",
+    "slug": "the-night-diary",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "The Night Diary is a young adult novel by Veera Hiranandani, set in 1947 during the partition of India."
+  },
+  {
+    "id": 18954,
+    "title": "The Boy in the Dress",
+    "slug": "the-boy-in-the-dress",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "'The Boy in the Dress' is a children's novel by David Walliams."
+  },
+  {
+    "id": 18971,
+    "title": "Putting Makeup on the Fat Boy",
+    "slug": "putting-makeup-on-the-fat-boy",
+    "genres": [
+      "young-adult",
+      "memoir"
+    ],
+    "snippet": "Putting Makeup on the Fat Boy is a 2011 young adult novel by Bil Wright that follows sixteen-year-old Carlos Duarte, a gay teenager aspiring to be a famous makeup artist."
+  }
+]

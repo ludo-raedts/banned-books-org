@@ -1,0 +1,994 @@
+[
+  {
+    "id": 269,
+    "title": "We Are the Ants",
+    "slug": "we-are-the-ants",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fiction novel by Shaun David Hutchinson, published January 19, 2016 by Simon Pulse with a 24-page companion story, \"What We Pretend to Be\", published on the publisher's website, Riveted, later that year."
+  },
+  {
+    "id": 274,
+    "title": "All the Things We Do in the Dark",
+    "slug": "all-the-things-we-do-in-the-dark",
+    "genres": [
+      "horror",
+      "thriller"
+    ],
+    "snippet": "young adult psychological thriller novel by Saundra Mitchell, published October 29, 2019 by HarperTeen."
+  },
+  {
+    "id": 305,
+    "title": "Pet",
+    "slug": "pet",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult debut with a book that asks difficult questions about what choices you can make when the society around you is in denial."
+  },
+  {
+    "id": 340,
+    "title": "The Nerdy and the Dirty",
+    "slug": "the-nerdy-and-the-dirty",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": ""
+  },
+  {
+    "id": 363,
+    "title": "Maximum Ride",
+    "slug": "maximum-ride",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fantasy novels by James Patterson, focusing on the adventures of Maximum \"Max\" Ride and her family, known as the Flock, who are winged human-avian hybrids created in a lab called The School."
+  },
+  {
+    "id": 511,
+    "title": "One of Us Is Lying",
+    "slug": "one-of-us-is-lying",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult mystery novel by Karen M."
+  },
+  {
+    "id": 554,
+    "title": "And They Lived...",
+    "slug": "and-they-lived",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "From the author of Can't Take That Away comes a sex-positive, fairytale-inspired YA novel"
+  },
+  {
+    "id": 1144,
+    "title": "Things We Couldn't Say",
+    "slug": "things-we-couldnt-say",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fiction"
+  },
+  {
+    "id": 1162,
+    "title": "Cold",
+    "slug": "cold",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "From award-winning author Mariko Tamaki comes Cold, a haunting YA novel"
+  },
+  {
+    "id": 1335,
+    "title": "The Detour",
+    "slug": "the-detour",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fiction"
+  },
+  {
+    "id": 1395,
+    "title": "Sink or Swim",
+    "slug": "sink-or-swim",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult."
+  },
+  {
+    "id": 1450,
+    "title": "Gravity",
+    "slug": "gravity",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "King meets Chris Crutcher in boxing journalist Sarah Deming's YA novel"
+  },
+  {
+    "id": 1454,
+    "title": "Lord of Shadows",
+    "slug": "lord-of-shadows",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult urban fantasy novel by Cassandra Clare, and the second book in The Dark Artifices series."
+  },
+  {
+    "id": 1470,
+    "title": "The Naturals",
+    "slug": "the-naturals",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult thriller book series by Jennifer Lynn Barnes about a classified FBI program that recruits teenagers with exceptional abilities to solve cold cases."
+  },
+  {
+    "id": 1514,
+    "title": "If He Had Been With Me",
+    "slug": "if-he-had-been-with-me",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 1750,
+    "title": "Beautiful Music for Ugly Children",
+    "slug": "beautiful-music-for-ugly-children",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult Literature."
+  },
+  {
+    "id": 1780,
+    "title": "Coping with Gender Dysphoria",
+    "slug": "coping-with-gender-dysphoria",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult readers resources and strategies for coping in different contexts: at home, at school, out in public, and in seeking medical care."
+  },
+  {
+    "id": 2025,
+    "title": "The Infinite Sea",
+    "slug": "the-infinite-sea",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fiction romance novel by Rick Yancey, published in 2014 as the second book in The 5th Wave trilogy."
+  },
+  {
+    "id": 2063,
+    "title": "As She Fades",
+    "slug": "as-she-fades",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 2151,
+    "title": "Across the Universe",
+    "slug": "across-the-universe",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fiction romance novels written by American author Beth Revis."
+  },
+  {
+    "id": 2159,
+    "title": "All Eyes On Her",
+    "slug": "all-eyes-on-her",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult thriller told from the perspective of everyone except the alleged killer—a seventeen-year-old girl."
+  },
+  {
+    "id": 2497,
+    "title": "Say What You Will",
+    "slug": "say-what-you-will",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult debut is a heartfelt and heartbreaking story about how we can all feel lost until we find someone who loves us because of our faults, not in spite of them."
+  },
+  {
+    "id": 2633,
+    "title": "You Say It First",
+    "slug": "you-say-it-first",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "An addictive, irresistible YA novel"
+  },
+  {
+    "id": 2711,
+    "title": "Shackled: A Tale of Wronged Kids, Rogue Judges, and a Town that Looked Away",
+    "slug": "shackled-a-tale-of-wronged-kids-rogue-judges-and-a-town-that-looked-away",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult Readers The New York Public Library Best Books for Teens 2024 Here is the explosive story of the Kids for Cash scandal in Pennsylvania, a judicial justice miscarriage that sent more than 2,500 children and teens to a for-profit detention center while two judges lined their pockets with cash, as told by Candy J."
+  },
+  {
+    "id": 2958,
+    "title": "Canto Contigo",
+    "slug": "canto-contigo",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YOUNG ADULT LITERATURE AWARD WINNER THE PUBLISHING TRIANGLE AWARDS – JACQUELINE WOODSON AWARD FOR LGBTQ+ CHILDREN'S/YOUNG ADULT LITERATURE WINNER When a Mariachi star transfers schools, he expects to be handed his new group's lead vocalist spot—what he gets instead is a tenacious current lead with a very familiar, very kissable face."
+  },
+  {
+    "id": 3044,
+    "title": "Fresh Ink: A We Need Diverse Books Anthology",
+    "slug": "fresh-ink-a-we-need-diverse-books-anthology",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult literature, highlighting a range of experiences and perspectives."
+  },
+  {
+    "id": 3116,
+    "title": "If You're a Kid Like Gavin: The True Story of a Young Trans Activist",
+    "slug": "if-youre-a-kid-like-gavin-the-true-story-of-a-young-trans-activist",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult transgender activist who stood up, spoke out and fought for civil rights after his school discriminated against him, and how he is currently raising awareness and education for everyone."
+  },
+  {
+    "id": 3270,
+    "title": "The Divine Order",
+    "slug": "the-divine-order",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult graphic novel, third in the DeadEndia trilogy, Barney, Norma, and friends team up with unlikely heroes to fight a battle for the fate of the universe, all while dealing with their greatest challenge of all: their love lives."
+  },
+  {
+    "id": 3293,
+    "title": "The Truth About White Lies",
+    "slug": "the-truth-about-white-lies",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "For fans of I'm Not Dying with You Tonight, this gripping YA novel"
+  },
+  {
+    "id": 3313,
+    "title": "Venom & Vow",
+    "slug": "venom-vow",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 3319,
+    "title": "We Are Mayhem",
+    "slug": "we-are-mayhem",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Filled with messy, complicated characters, We Are Mayhem is a debut YA novel"
+  },
+  {
+    "id": 4456,
+    "title": "Even When Your Voice Shakes",
+    "slug": "even-when-your-voice-shakes",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "A young woman speaks out against her wealthy abuser in this riveting YA novel"
+  },
+  {
+    "id": 4494,
+    "title": "Beyond the Black Door",
+    "slug": "beyond-the-black-door",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult dark fantasy about unlocking the mysteries around and within us—no matter the cost."
+  },
+  {
+    "id": 4531,
+    "title": "Firekeeper's Daughter",
+    "slug": "firekeepers-daughter",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult (YA) novel by Angeline Boulley, published March 16, 2021, by Henry Holt and Co."
+  },
+  {
+    "id": 4539,
+    "title": "Girls of Storm and Shadow",
+    "slug": "girls-of-storm-and-shadow",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": ""
+  },
+  {
+    "id": 4585,
+    "title": "Kissing Lessons",
+    "slug": "kissing-lessons",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 4657,
+    "title": "Rani Patel in Full Effect",
+    "slug": "rani-patel-in-full-effect",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult historical fiction novel by Sonia Patel, set in 1991 on the Hawaiian island of Moloka’i."
+  },
+  {
+    "id": 4915,
+    "title": "A Hundred Vicious Turns",
+    "slug": "a-hundred-vicious-turns",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 4918,
+    "title": "Act Cool",
+    "slug": "act-cool",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "*Named a Rainbow Book List Title and one of Bank Street Children's Best Books of the Year* A trans teen walks the fine line between doing whatever it takes for his acting dream and staying true to himself in this moving, thought-provoking YA novel"
+  },
+  {
+    "id": 4938,
+    "title": "Cheer Up: Love and Pompoms",
+    "slug": "cheer-up-love-and-pompoms",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult graphic novel written by Crystal Frasier, with art by Val Wise and lettering by Oscar Jupiter."
+  },
+  {
+    "id": 4947,
+    "title": "Dead End Girls",
+    "slug": "dead-end-girls",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": ""
+  },
+  {
+    "id": 4993,
+    "title": "Into the Real",
+    "slug": "into-the-real",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "In this gripping, genre-defying YA novel"
+  },
+  {
+    "id": 4999,
+    "title": "Last Chance Dance",
+    "slug": "last-chance-dance",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 5096,
+    "title": "Rough Patch",
+    "slug": "rough-patch",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "A YA novel"
+  },
+  {
+    "id": 5128,
+    "title": "Strictly No Heroics",
+    "slug": "strictly-no-heroics",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult debut filled with humor and heart."
+  },
+  {
+    "id": 5208,
+    "title": "The Vast Fields of Ordinary",
+    "slug": "the-vast-fields-of-ordinary",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult gay novel by Nick Burd, published in 2009."
+  },
+  {
+    "id": 5266,
+    "title": "You Brought Me the Ocean",
+    "slug": "you-brought-me-the-ocean",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult literature, Lambda Award-Winning author Alex Sanchez (Rainbow Boys) and New York Times bestselling illustrator Julie Maroh (Blue Is the Warmest Color), present a new coming-out romance and origin story for Aqualad."
+  },
+  {
+    "id": 5691,
+    "title": "Internet Famous",
+    "slug": "internet-famous",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "\"A YA novel"
+  },
+  {
+    "id": 5787,
+    "title": "Monstrous: A Transracial Adoption Story",
+    "slug": "monstrous-a-transracial-adoption-story",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult Literature Monstrous is poignant young adult graphic memoir about a Korean-American girl who uses fandom and art-making to overcome racist bullying."
+  },
+  {
+    "id": 5903,
+    "title": "Sex and Gender: A Reference Handbook",
+    "slug": "sex-and-gender-a-reference-handbook",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult in the United States today."
+  },
+  {
+    "id": 5930,
+    "title": "Te daría el sol",
+    "slug": "te-daria-el-sol",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult\"."
+  },
+  {
+    "id": 5931,
+    "title": "Teen Killers Club",
+    "slug": "teen-killers-club",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": "young adult murder mystery about teen criminals at a “summer camp for psychos”—full of “sick, twisted, fast-paced fun” (Kendare Blake, #1 New York Times bestselling author of Three Dark Crowns) Framed for the murder of her best friend, a young girl joins a super-secret society of teenage assassins to avoid a lifetime behind bars—and discovers her own true self in the process."
+  },
+  {
+    "id": 5954,
+    "title": "The Curse of the Mummy: Uncovering Tutankhamun's Tomb",
+    "slug": "the-curse-of-the-mummy-uncovering-tutankhamuns-tomb",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult readers."
+  },
+  {
+    "id": 6036,
+    "title": "The Year I Didn't Eat",
+    "slug": "the-year-i-didnt-eat",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Beautifully crafted and honestly written, this debut YA novel"
+  },
+  {
+    "id": 6060,
+    "title": "Twilight: The Graphic Novel",
+    "slug": "twilight-the-graphic-novel",
+    "genres": [
+      "graphic-novel"
+    ],
+    "snippet": "young adult vampire-romance novel, which follows seventeen-year-old Bella Swan as she moves to Forks, Washington, and falls in love with the enigmatic vampire Edward Cullen."
+  },
+  {
+    "id": 6142,
+    "title": "Zom-B: Gladiator",
+    "slug": "zom-b-gladiator",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult zombie apocalyptic-thriller novel series by written by Irish author Darren O'Shaughnessy under the pen name Darren Shan."
+  },
+  {
+    "id": 6206,
+    "title": "The Birds, the Bees, and You and Me",
+    "slug": "the-birds-the-bees-and-you-and-me",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 6428,
+    "title": "My Brother Sam Is Dead",
+    "slug": "my-brother-sam-is-dead",
+    "genres": [
+      "historical-fiction",
+      "coming-of-age"
+    ],
+    "snippet": "young-adult historical fiction novel by James Lincoln Collier and Christopher Collier, set in Redding, Connecticut during the American Revolution."
+  },
+  {
+    "id": 7860,
+    "title": "Blackout",
+    "slug": "blackout",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 7893,
+    "title": "House of Night: Legacy",
+    "slug": "house-of-night-legacy",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult vampire-themed fantasy series by P."
+  },
+  {
+    "id": 8070,
+    "title": "Dealing with Dragons",
+    "slug": "dealing-with-dragons",
+    "genres": [
+      "fantasy"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 8075,
+    "title": "Iron Widow",
+    "slug": "iron-widow",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fantasy novel by Xiran Jay Zhao, set in a futuristic reinterpretation of Medieval China called Huaxia."
+  },
+  {
+    "id": 8103,
+    "title": "Beautiful Darkness",
+    "slug": "beautiful-darkness",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": "young adult paranormal romance novel by Kami Garcia and Margaret Stohl, published on October 12, 2010."
+  },
+  {
+    "id": 8231,
+    "title": "Un final para Rachel",
+    "slug": "un-final-para-rachel",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult por YALSA Libro destacado por Capitol Choices Ganadora del Gran Premio del Jurado Sundance 2015 La crítica ha dicho."
+  },
+  {
+    "id": 8264,
+    "title": "Kingdom of Souls",
+    "slug": "kingdom-of-souls",
+    "genres": [
+      "fantasy"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 8302,
+    "title": "Achilles",
+    "slug": "achilles",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "This isn't your everyday YA novel"
+  },
+  {
+    "id": 8389,
+    "title": "The Never Tilting World",
+    "slug": "the-never-tilting-world",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 8444,
+    "title": "Brightly Burning",
+    "slug": "brightly-burning",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult sci-fi and thriller author."
+  },
+  {
+    "id": 8473,
+    "title": "Crescendo",
+    "slug": "crescendo",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult paranormal romance novel by Becca Fitzpatrick, published on October 19, 2010, and the second book in the Hush, Hush series."
+  },
+  {
+    "id": 8516,
+    "title": "You'd Be Home Now",
+    "slug": "youd-be-home-now",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "This contemporary YA novel"
+  },
+  {
+    "id": 8591,
+    "title": "If I Fix You",
+    "slug": "if-i-fix-you",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "A young girl struggles to face an uncomfortable truth about her mother in this romantic contemporary YA novel"
+  },
+  {
+    "id": 8598,
+    "title": "The Fashion Committee: A Novel of Art, Crime, and Applied Design",
+    "slug": "the-fashion-committee-a-novel-of-art-crime-and-applied-design",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Told in the alternating voices of Charlie s and John s journals, this hilarious and poignant YA novel"
+  },
+  {
+    "id": 8647,
+    "title": "In Another Time",
+    "slug": "in-another-time",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "” —Elizabeth Wein, New York Times bestselling author of Code Name Verity A romantic historical YA novel"
+  },
+  {
+    "id": 8767,
+    "title": "The Traitor's Game",
+    "slug": "the-traitors-game",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 8814,
+    "title": "The Dead and the Gone",
+    "slug": "the-dead-and-the-gone",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": "young adult science fiction dystopian novel by Susan Beth Pfeffer."
+  },
+  {
+    "id": 8826,
+    "title": "There Will Come a Darkness",
+    "slug": "there-will-come-a-darkness",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 8995,
+    "title": "Black Enough: Stories of Being Young and Black in America",
+    "slug": "black-enough-stories-of-being-young-and-black-in-america",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult anthology edited by Ibi Zoboi, featuring a collection of fictional stories by acclaimed Black authors."
+  },
+  {
+    "id": 9000,
+    "title": "The Sacrifice of Darkness",
+    "slug": "the-sacrifice-of-darkness",
+    "genres": [
+      "thriller"
+    ],
+    "snippet": ""
+  },
+  {
+    "id": 9185,
+    "title": "Geektastic: Stories from the Nerd Herd",
+    "slug": "geektastic-stories-from-the-nerd-herd",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult literature: M."
+  },
+  {
+    "id": 9337,
+    "title": "Truly Devious",
+    "slug": "truly-devious",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult mystery novel set at Ellingham Academy, a prestigious private school in Vermont."
+  },
+  {
+    "id": 9405,
+    "title": "Talking in the Dark: A Poetry Memoir",
+    "slug": "talking-in-the-dark-a-poetry-memoir",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "Young Adult category."
+  },
+  {
+    "id": 9477,
+    "title": "Esperanza Rising",
+    "slug": "esperanza-rising",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult historical fiction novel by Pam Muñoz Ryan, published in 2000."
+  },
+  {
+    "id": 9637,
+    "title": "Beasts of Prey",
+    "slug": "beasts-of-prey",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 9738,
+    "title": "The Fascinators",
+    "slug": "the-fascinators",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "A magic-infused YA novel"
+  },
+  {
+    "id": 9784,
+    "title": "Kings of B'more",
+    "slug": "kings-of-bmore",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Young Adult Literature With junior year starting in the fall, Harrison feels like he’s on the precipice of, well, everything."
+  },
+  {
+    "id": 9786,
+    "title": "The Grief Keeper",
+    "slug": "the-grief-keeper",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult science fiction novel by Alexandra Villasante, published in 2019."
+  },
+  {
+    "id": 9822,
+    "title": "House of Night",
+    "slug": "house-of-night",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult vampire-themed fantasy series by P."
+  },
+  {
+    "id": 10004,
+    "title": "The Year I Stopped Trying",
+    "slug": "the-year-i-stopped-trying",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "So she asks herself: Why am I trying so hard? What if I stop? With her signature wit and heaps of dark humor, Katie Heaney delivers a stunning YA novel"
+  },
+  {
+    "id": 10020,
+    "title": "Spin Me Right Round",
+    "slug": "spin-me-right-round",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "From lauded writer David Valdes, a sharp and funny YA novel"
+  },
+  {
+    "id": 10200,
+    "title": "Hush, Hush",
+    "slug": "hush-hush",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult paranormal romance novel by Becca Fitzpatrick, centering on sixteen-year-old Nora Grey, whose life becomes perilous after she begins a romance with Patch Cipriano, a fallen angel."
+  },
+  {
+    "id": 10218,
+    "title": "Roller Girl",
+    "slug": "roller-girl",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult graphic novel written and illustrated by Victoria Jamieson, published by Dial Books for Young Readers in 2015."
+  },
+  {
+    "id": 17671,
+    "title": "Code of Honor",
+    "slug": "code-of-honor",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult historical fiction novel by Alan Gratz, published in 2015."
+  },
+  {
+    "id": 17699,
+    "title": "D-Day: The World War II Invasion that Changed History",
+    "slug": "d-day-the-world-war-ii-invasion-that-changed-history",
+    "genres": [
+      "historical-fiction"
+    ],
+    "snippet": "young adult readers."
+  },
+  {
+    "id": 17784,
+    "title": "Eyes of the Forest",
+    "slug": "eyes-of-the-forest",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult thriller in this story that seamlessly blends suspense with an exploration of fan culture."
+  },
+  {
+    "id": 17792,
+    "title": "Far from Normal",
+    "slug": "far-from-normal",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA romance"
+  },
+  {
+    "id": 17814,
+    "title": "Once & Future",
+    "slug": "once-future",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "This bold YA novel"
+  },
+  {
+    "id": 17914,
+    "title": "Hope Nation: YA Authors Share Personal Moments of Inspiration",
+    "slug": "hope-nation-ya-authors-share-personal-moments-of-inspiration",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult authors."
+  },
+  {
+    "id": 17919,
+    "title": "A Better Bad Idea",
+    "slug": "a-better-bad-idea",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Laurie Devore's YA novel"
+  },
+  {
+    "id": 17921,
+    "title": "The Friend Scheme",
+    "slug": "the-friend-scheme",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "Part thriller, part romance, The Friend Scheme is another twisty #ownvoices YA novel"
+  },
+  {
+    "id": 17926,
+    "title": "Huda F Are You?",
+    "slug": "huda-f-are-you",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult graphic novel by Huda Fahmy that serves as a fictionalized memoir."
+  },
+  {
+    "id": 18115,
+    "title": "How Not to Ask a Boy to Prom",
+    "slug": "how-not-to-ask-a-boy-to-prom",
+    "genres": [
+      "memoir"
+    ],
+    "snippet": "young adult rom com from S."
+  },
+  {
+    "id": 18170,
+    "title": "Original Fake",
+    "slug": "original-fake",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult graphic novel by Kirstin Cronn-Mills, illustrated by E."
+  },
+  {
+    "id": 18301,
+    "title": "The Marvelous",
+    "slug": "the-marvelous",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "From the author of Let’s Talk About Love and If It Makes You Happy, this exuberant YA Novel"
+  },
+  {
+    "id": 18308,
+    "title": "Life in Outer Space",
+    "slug": "life-in-outer-space",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult romantic comedy by Melissa Keil that follows sixteen-year-old Sam Kinnison, a movie-obsessed geek who is content with his life until he meets the beautiful and friendly Camilla Carter."
+  },
+  {
+    "id": 18339,
+    "title": "Jumping Off Swings",
+    "slug": "jumping-off-swings",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "This poignant YA novel"
+  },
+  {
+    "id": 18371,
+    "title": "Taking Responsibility: A Teen's Guide to Contraception and Pregnancy",
+    "slug": "taking-responsibility-a-teens-guide-to-contraception-and-pregnancy",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult, you have important decisions to make."
+  },
+  {
+    "id": 18623,
+    "title": "It Goes Like This",
+    "slug": "it-goes-like-this",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult debut, It Goes Like This, four queer teens realize that sometimes you have to risk hitting repeat on heartbreak."
+  },
+  {
+    "id": 18926,
+    "title": "This Golden Flame",
+    "slug": "this-golden-flame",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  },
+  {
+    "id": 18938,
+    "title": "Ghost Wood Song",
+    "slug": "ghost-wood-song",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "young adult debut a haunting and hopeful story about facing everything that haunts us in the dark."
+  },
+  {
+    "id": 18979,
+    "title": "Witchlight",
+    "slug": "witchlight",
+    "genres": [
+      "literary-fiction"
+    ],
+    "snippet": "YA fantasy"
+  }
+]
