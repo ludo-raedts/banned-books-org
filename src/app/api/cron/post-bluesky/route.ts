@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { pickDailyBook, buildPost } from '@/lib/bluesky-post'
+import { pickDailyBook, buildPost, planBirthdayPicks } from '@/lib/bluesky-post'
 import { createSession, uploadImageBlob, createPost, latestPostCreatedAt, type ExternalEmbed } from '@/lib/bluesky'
 
 // Daily "banned book of the day" post to Bluesky (@banned-books.org).
@@ -30,6 +30,10 @@ export async function GET(req: NextRequest) {
 
   const date = req.nextUrl.searchParams.get('date') ?? new Date().toISOString().slice(0, 10)
   const live = isLive(req)
+
+  // Keep featured-author birthdays pinned ahead of the rotation (best-effort —
+  // a failure here must never block the daily post).
+  await planBirthdayPicks().catch(() => {})
 
   const book = await pickDailyBook(date)
   if (!book) return NextResponse.json({ error: 'No eligible book found' }, { status: 500 })

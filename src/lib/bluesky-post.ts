@@ -52,6 +52,8 @@ export type DailyBook = {
   countries: string[]
   countryCount: number
   banCount: number
+  /** Set when this pick is a featured author's birthday — drives the 🎂 note. */
+  birthday?: { name: string; bornYear: number | null } | null
 }
 
 /**
@@ -182,6 +184,118 @@ export async function computePickIds(datesYmd: string[]): Promise<Map<string, nu
   return out
 }
 
+// ── Birthday pushes ───────────────────────────────────────────────────────
+// On a curated (birthday_featured) author's birthday we override that day's pick
+// with one of their banned books, for topical relevance. The override lives in
+// bluesky_daily_picks with source='birthday' (priority: manual > birthday >
+// auto). See scripts/enrich-author-birthdays.ts for how the featured set is
+// chosen and scripts/apply-birthday-picks.ts / the daily cron for pinning.
+
+type FeaturedAuthor = { id: number; name: string; bornYear: number | null }
+
+const mmdd = (month: number, day: number): string => `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
+/** Featured authors keyed by "MM-DD" birthday. Empty on error / missing column. */
+export async function loadFeaturedBirthdays(): Promise<Map<string, FeaturedAuthor[]>> {
+  const out = new Map<string, FeaturedAuthor[]>()
+  try {
+    const { data, error } = await adminClient()
+      .from('authors')
+      .select('id, display_name, birth_year, birth_month, birth_day')
+      .eq('birthday_featured', true)
+    if (error || !data) return out
+    for (const r of data as Array<{ id: number; display_name: string; birth_year: number | null; birth_month: number | null; birth_day: number | null }>) {
+      if (r.birth_month == null || r.birth_day == null) continue
+      const key = mmdd(r.birth_month, r.birth_day)
+      out.set(key, [...(out.get(key) ?? []), { id: Number(r.id), name: r.display_name, bornYear: r.birth_year }])
+    }
+  } catch {
+    /* empty map → no birthday overrides */
+  }
+  return out
+}
+
+/** Case-insensitive: is `name` one of the (comma-joined) authors of `bookAuthor`? */
+function authorInList(name: string, bookAuthor: string): boolean {
+  const a = name.toLowerCase()
+  const b = bookAuthor.toLowerCase()
+  return b.includes(a) || a.includes(b)
+}
+
+/** The author's most-banned postable book id (same gate as the rotation), or null. */
+export async function bestPostableBookForAuthor(authorId: number): Promise<number | null> {
+  const { data, error } = await adminClient()
+    .from('books')
+    .select('id, bans(country_code), book_authors!inner(author_id)')
+    .eq('book_authors.author_id', authorId)
+    .eq('is_gated', false)
+    .eq('is_blanket_works', false)
+    .not('cover_url', 'is', null)
+    .not('description_ban', 'is', null)
+    .or(`original_language.is.null,original_language.in.(${LATIN_SCRIPT_LANGS.join(',')})`)
+  if (error || !data) return null
+  let best: { id: number; bans: number } | null = null
+  for (const r of data as Array<{ id: number; bans: Array<{ country_code: string | null }> | null }>) {
+    const bans = r.bans ?? []
+    const hasNonUs = bans.some(b => b.country_code && b.country_code !== 'US')
+    if (!(bans.length >= MIN_BANS || hasNonUs)) continue
+    if (!best || bans.length > best.bans) best = { id: Number(r.id), bans: bans.length }
+  }
+  return best?.id ?? null
+}
+
+/** Attach birthday context to a hydrated pick when its date is a featured
+ *  author's birthday AND that author actually wrote the picked book (guards
+ *  against a manual override having swapped in a different author's book). */
+function attachBirthday(book: DailyBook | null, ymd: string, featured: Map<string, FeaturedAuthor[]>): DailyBook | null {
+  if (!book) return book
+  const authors = featured.get(ymd.slice(5))
+  if (!authors) return book
+  const match = authors.find(a => authorInList(a.name, book.author))
+  if (match) book.birthday = { name: match.name, bornYear: match.bornYear }
+  return book
+}
+
+/**
+ * Pin featured-author birthdays across a rolling window (default ~13 months) so
+ * the override is "live" immediately and stays ahead of the lazy auto-freeze.
+ * Overwrites auto picks on birthday dates, never touches a manual override, and
+ * clears stale birthday rows (e.g. an author that was un-featured) so they fall
+ * back to the deterministic rotation. Idempotent — safe to run daily (cron).
+ */
+export async function planBirthdayPicks(windowDays = 400): Promise<{ pinned: number; cleared: number }> {
+  const featured = await loadFeaturedBirthdays()
+  const start = dayNumber(todayUtcYmd())
+  const dates = Array.from({ length: windowDays }, (_, i) => new Date((start + i) * 86_400_000).toISOString().slice(0, 10))
+
+  const { data: existing } = await adminClient().from('bluesky_daily_picks').select('pick_date, source').in('pick_date', dates)
+  const srcByDate = new Map((existing ?? []).map(r => [(r as { pick_date: string }).pick_date, (r as { source: string }).source]))
+
+  const bookCache = new Map<number, number | null>()
+  const toPin: Array<{ pick_date: string; book_id: number; source: string }> = []
+  const toClear: string[] = []
+  for (const ymd of dates) {
+    const authors = featured.get(ymd.slice(5))
+    const src = srcByDate.get(ymd)
+    if (authors && authors.length) {
+      if (src === 'manual') continue // editor override always wins
+      let bookId: number | null = null
+      for (const a of authors) {
+        if (!bookCache.has(a.id)) bookCache.set(a.id, await bestPostableBookForAuthor(a.id))
+        const bid = bookCache.get(a.id) ?? null
+        if (bid != null) { bookId = bid; break }
+      }
+      if (bookId != null) toPin.push({ pick_date: ymd, book_id: bookId, source: 'birthday' })
+    } else if (src === 'birthday') {
+      toClear.push(ymd) // no longer a featured birthday → revert to auto
+    }
+  }
+
+  if (toPin.length) await adminClient().from('bluesky_daily_picks').upsert(toPin, { onConflict: 'pick_date' })
+  if (toClear.length) await adminClient().from('bluesky_daily_picks').delete().in('pick_date', toClear)
+  return { pinned: toPin.length, cleared: toClear.length }
+}
+
 // Notability gate: a book enters the pool if it has multiple recorded bans
 // (MIN_BANS) OR at least one non-US ban. This drops the long tail of single-
 // event US school removals (often niche/educational one-offs) while keeping
@@ -286,14 +400,16 @@ export async function pickDailyBook(dateYmd?: string): Promise<DailyBook | null>
  * Used by the admin "upcoming" view. Returns one entry per input date, in order.
  */
 export async function pickForDates(datesYmd: string[]): Promise<(DailyBook | null)[]> {
-  const [ids, excluded, stored] = await Promise.all([
+  const [ids, excluded, stored, featured] = await Promise.all([
     eligibleBookIds(),
     loadExcludedIds(),
     loadStoredPicks(datesYmd),
+    loadFeaturedBirthdays(),
   ])
   if (ids.length === 0) return datesYmd.map(() => null)
   const chosen = await resolvePickIds(datesYmd, ids, excluded, stored)
-  return Promise.all(chosen.map(id => hydrate(id)))
+  const books = await Promise.all(chosen.map(id => hydrate(id)))
+  return books.map((b, i) => attachBirthday(b, datesYmd[i], featured))
 }
 
 /** Excluded books with display fields, newest exclusion first — for the admin view. */
@@ -339,7 +455,11 @@ export function buildPost(book: DailyBook): BuiltPost {
   const url = `${SITE}/books/${book.slug}?utm_source=bluesky&utm_medium=social&utm_campaign=book-of-the-day`
   const display = `banned-books.org/books/${book.slug}`
   const yearPart = book.year ? ` (${book.year})` : ''
-  const head = '📚 Banned book of the day'
+  const head = book.birthday ? '🎂 Banned book of the day' : '📚 Banned book of the day'
+  // On a featured author's birthday, name the occasion right under the title.
+  const bdayLine = book.birthday
+    ? `\n\n🎂 ${book.birthday.name} was born on this day${book.birthday.bornYear ? ` in ${book.birthday.bornYear}` : ''}.`
+    : ''
 
   const reasonLabels = book.reasons.map(s => REASON_LABELS[s] ?? s).filter(s => s !== 'unspecified reasons')
 
@@ -371,7 +491,7 @@ export function buildPost(book: DailyBook): BuiltPost {
     if (countryClause) return `\n\nBanned${countryClause}${withBanClause ? banClause : ''}.`
     return ''
   }
-  const compose = (titleLine: string, why: string): string => `${head}\n\n${titleLine}${why}\n\n${display}${FEED_TAG}`
+  const compose = (titleLine: string, why: string): string => `${head}\n\n${titleLine}${bdayLine}${why}\n\n${display}${FEED_TAG}`
 
   const fullTitleLine = `${book.title} — ${book.author}${yearPart}`
 

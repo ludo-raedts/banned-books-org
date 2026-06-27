@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CalendarDays, X, RotateCcw } from 'lucide-react'
 
-export type UpcomingItem = { ymd: string; label: string; book: { id: number; title: string; author: string; why: string } | null }
+export type UpcomingItem = { ymd: string; label: string; book: { id: number; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null } | null }
 export type ExcludedItem = { id: number; title: string; author: string }
 
 export default function UpcomingManager({ upcoming, excluded }: { upcoming: UpcomingItem[]; excluded: ExcludedItem[] }) {
@@ -47,7 +47,11 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
               {book ? (
                 <>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-gray-800">{book.title} <span className="font-normal text-gray-500">— {book.author}</span></p>
+                    <p className="text-sm font-medium text-gray-800">
+                      {book.birthday && <span title={`${book.birthday.name} was born on this day${book.birthday.bornYear ? ` in ${book.birthday.bornYear}` : ''}`}>🎂 </span>}
+                      {book.title} <span className="font-normal text-gray-500">— {book.author}</span>
+                    </p>
+                    {book.birthday && <p className="text-[11px] text-amber-700">🎂 {book.birthday.name}&apos;s birthday{book.birthday.bornYear ? ` (b. ${book.birthday.bornYear})` : ''}</p>}
                     <p className="text-xs text-gray-500">{book.why}</p>
                   </div>
                   <button

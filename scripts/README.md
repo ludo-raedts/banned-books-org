@@ -389,6 +389,15 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 | `probe-bookshop-isbn.ts` | Test Bookshop.org affiliate deep-link per isbn13 |
 | `_parse_apm_pdf.py` | Parse APM-PDF (Python) |
 
+### Bluesky "banned book of the day" (gepinde rotatie + verjaardagen)
+De dagkeuze is **bevroren** in tabel `bluesky_daily_picks` (datum→boek, `source` = auto\|birthday\|manual) zodat data-edits de rotatie niet meer verschuiven — logica in `src/lib/bluesky-post.ts`.
+
+| Script | Doet |
+|---|---|
+| `backfill-bluesky-picks.ts` | Pin de huidige deterministische rotatie N dagen vooruit (default 90); idempotent, raakt al-gepinde datums niet |
+| `enrich-author-birthdays.ts` | Vul `authors.birth_month/day` uit Wikidata P569 (namesake-gated op `birth_year`); `--feature` markeert de mix van 30 (`birthday_featured`) |
+| `apply-birthday-picks.ts` | Pin verjaardagen van featured auteurs (`source='birthday'`, overschrijft auto, respecteert manual); cron draait `planBirthdayPicks()` ook dagelijks |
+
 ---
 
 ## Flag-conventie
