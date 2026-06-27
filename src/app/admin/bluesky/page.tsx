@@ -2,7 +2,7 @@ import AdminBackLink from '@/components/admin-back-link'
 import { pickForDates, buildPost, listExcludedBooks, type DailyBook } from '@/lib/bluesky-post'
 import { getRecentPosts } from '@/lib/bluesky'
 import UpcomingManager from './upcoming-manager'
-import { Send, Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircle } from 'lucide-react'
+import { Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircle, Megaphone, Rss, Share2, Code2, Image as ImageIcon } from 'lucide-react'
 
 // Live view — always fresh: upcoming generated posts + the account's real feed.
 export const dynamic = 'force-dynamic'
@@ -12,6 +12,21 @@ const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-wh
 const HANDLE = process.env.BLUESKY_HANDLE ?? 'banned-books.org'
 const PROFILE_URL = `https://bsky.app/profile/${HANDLE}`
 const UPCOMING_DAYS = 7
+
+const SITE = 'https://www.banned-books.org'
+// The one daily pick fans out to every channel below. Bluesky is posted natively
+// by our cron; Instagram/Facebook/LinkedIn are auto-posted by Make.com, which
+// polls our RSS feed; the rest are pull surfaces anyone can embed or poll.
+const SOCIAL = {
+  instagram: 'https://www.instagram.com/bannedbooksarchive',
+  facebook: 'https://www.facebook.com/bannedbooks.org',
+  linkedin: 'https://www.linkedin.com/company/banned-books-org',
+}
+const MAKE_DASHBOARD = 'https://eu1.make.com/organization/8159588/dashboard'
+const FEED_URL = `${SITE}/book-of-the-day/feed.xml`
+const EMBED_URL = `${SITE}/embed/book-of-the-day`
+const SHARE_URL = `${SITE}/share`
+const BADGE_URL = `${SITE}/book-of-the-day/badge.svg`
 
 function fmt(iso: string | null): string {
   if (!iso) return '—'
@@ -59,44 +74,72 @@ export default async function BlueskyAdminPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
-            <a href="/admin" className="hover:text-gray-600">Admin</a> / Bluesky
+            <a href="/admin" className="hover:text-gray-600">Admin</a> / Book of the day
           </p>
-          <h1 className="text-2xl font-bold">Bluesky — banned book of the day</h1>
+          <h1 className="text-2xl font-bold">Banned book of the day</h1>
+          <p className="text-sm text-gray-500 mt-1">One daily pick, broadcast across every channel below.</p>
         </div>
         <AdminBackLink href="/admin" label="Admin dashboard" />
       </div>
 
       <div className="flex flex-col gap-6">
-        {/* ── Status ─────────────────────────────────────────────── */}
+        {/* ── Distribution channels ──────────────────────────────── */}
         <div className={cardCls}>
           <div className="flex items-center gap-2">
-            <Send className="w-5 h-5 text-gray-400 shrink-0" />
-            <h2 className="font-semibold text-gray-900">Status</h2>
+            <Megaphone className="w-5 h-5 text-gray-400 shrink-0" />
+            <h2 className="font-semibold text-gray-900">Distribution</h2>
+            <span className="text-xs text-gray-400">one daily pick · many channels</span>
           </div>
-          <dl className="grid grid-cols-[140px_1fr] gap-y-2 text-sm">
-            <dt className="text-gray-500">Account</dt>
-            <dd>
-              <a href={PROFILE_URL} target="_blank" rel="noopener noreferrer" className="font-mono text-brand hover:underline inline-flex items-center gap-1">
-                @{HANDLE} <ExternalLink className="w-3 h-3" />
-              </a>
-            </dd>
-            <dt className="text-gray-500">Posting</dt>
-            <dd>
+          <p className="text-sm text-gray-600">
+            Every channel broadcasts the <strong>same</strong> banned book of the day (the frozen pick, with birthday overrides).
+            Skipping or curating a day here changes all of them at once.
+          </p>
+
+          {/* Auto-posted */}
+          <div className="flex flex-col gap-3">
+            <p className="text-[11px] uppercase tracking-widest text-gray-400">Auto-posted</p>
+
+            {/* Bluesky — native cron */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <span className="font-medium text-gray-900 w-24 shrink-0">Bluesky</span>
               {enabled ? (
-                <span className="inline-flex items-center gap-1.5 text-emerald-700 font-medium"><CheckCircle className="w-4 h-4" /> Live (auto-posts daily)</span>
+                <span className="inline-flex items-center gap-1.5 text-emerald-700 font-medium"><CheckCircle className="w-4 h-4" /> Live</span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-amber-700 font-medium"><XCircle className="w-4 h-4" /> Dry-run (set BLUESKY_POST_ENABLED=true to go live)</span>
+                <span className="inline-flex items-center gap-1.5 text-amber-700 font-medium"><XCircle className="w-4 h-4" /> Dry-run</span>
               )}
-            </dd>
-            <dt className="text-gray-500">Schedule</dt>
-            <dd className="inline-flex items-center gap-1.5 text-gray-700"><Clock className="w-4 h-4 text-gray-400" /> Daily at 14:00 UTC ({amsterdamPostTime()} Amsterdam)</dd>
-          </dl>
+              <span className="inline-flex items-center gap-1 text-gray-500"><Clock className="w-3.5 h-3.5" /> 14:00 UTC ({amsterdamPostTime()} AMS)</span>
+              <a href={PROFILE_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1">@{HANDLE} <ExternalLink className="w-3 h-3" /></a>
+              <span className="text-[11px] text-gray-400 basis-full">Native daily cron post.{enabled ? '' : ' Set BLUESKY_POST_ENABLED=true to go live.'}</span>
+            </div>
+
+            {/* Make.com → socials, via the RSS feed */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <span className="font-medium text-gray-900 w-24 shrink-0">Make.com</span>
+              <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1">Instagram <ExternalLink className="w-3 h-3" /></a>
+              <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1">Facebook <ExternalLink className="w-3 h-3" /></a>
+              <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1">LinkedIn <ExternalLink className="w-3 h-3" /></a>
+              <a href={MAKE_DASHBOARD} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-brand inline-flex items-center gap-1">Make dashboard <ExternalLink className="w-3 h-3" /></a>
+              <span className="text-[11px] text-gray-400 basis-full">Make polls the RSS feed and posts to these three. Scheduling &amp; on/off live in Make, not here.</span>
+            </div>
+          </div>
+
+          {/* Pull surfaces */}
+          <div className="flex flex-col gap-2 border-t border-gray-100 pt-3">
+            <p className="text-[11px] uppercase tracking-widest text-gray-400">Feeds &amp; widgets (always live)</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+              <a href={FEED_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1"><Rss className="w-3.5 h-3.5" /> RSS feed</a>
+              <a href={EMBED_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1"><Code2 className="w-3.5 h-3.5" /> Embed widget</a>
+              <a href={SHARE_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1"><Share2 className="w-3.5 h-3.5" /> Share hub</a>
+              <a href={BADGE_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline inline-flex items-center gap-1"><ImageIcon className="w-3.5 h-3.5" /> Badge image</a>
+            </div>
+            <p className="text-[11px] text-gray-400">The RSS feed is the source of truth other platforms poll (Make, Slack, Discord, …).</p>
+          </div>
         </div>
 
         {/* ── Today's generated post ─────────────────────────────── */}
         <div className={cardCls}>
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Today&apos;s post</h2>
+            <h2 className="font-semibold text-gray-900">Today&apos;s post <span className="font-normal text-gray-400 text-sm">— Bluesky</span></h2>
             {todayPost && <span className="text-xs text-gray-400">{Array.from(todayPost.text).length} / 300 characters</span>}
           </div>
           {pickError ? (
@@ -115,7 +158,12 @@ export default async function BlueskyAdminPage() {
                   <p className="text-[11px] text-gray-400 mt-1">www.banned-books.org</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400">{enabled ? 'This is what posts (or posted) today.' : 'Preview only — posting is off.'}</p>
+              <p className="text-xs text-gray-400">
+                {enabled ? 'This is the Bluesky post for today.' : 'Preview only — Bluesky posting is off.'}{' '}
+                Instagram/Facebook/LinkedIn render from the{' '}
+                <a href={FEED_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">RSS feed</a>{' · '}
+                <a href={EMBED_URL} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">embed preview</a>.
+              </p>
             </div>
           ) : (
             <p className="text-sm text-gray-500">No eligible book found for today.</p>
@@ -128,7 +176,7 @@ export default async function BlueskyAdminPage() {
         {/* ── Recent posts (live from the account) ───────────────── */}
         <div className={cardCls}>
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Recent posts</h2>
+            <h2 className="font-semibold text-gray-900">Recent posts <span className="font-normal text-gray-400 text-sm">— Bluesky</span></h2>
             <a href={PROFILE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-brand hover:underline inline-flex items-center gap-1">View on Bluesky <ExternalLink className="w-3 h-3" /></a>
           </div>
           {recent.length === 0 ? (

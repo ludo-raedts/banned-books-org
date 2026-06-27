@@ -16,7 +16,7 @@ const NAV = [
   { href: '/admin/authors', label: 'Authors' },
   { href: '/admin/import-review', label: 'Import review' },
   { href: '/admin/news', label: 'News' },
-  { href: '/admin/bluesky', label: 'Bluesky' },
+  { href: '/admin/bluesky', label: 'Book of the day' },
   { href: '/admin/reading-club', label: 'Reading Club' },
   { href: '/admin/banned-books-week', label: 'BBW' },
   { href: '/admin/content-blocks', label: 'Content blocks' },
