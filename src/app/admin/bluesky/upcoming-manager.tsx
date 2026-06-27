@@ -65,7 +65,7 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
             </li>
           ))}
         </ul>
-        <p className="text-[11px] text-gray-400">Deterministic per date — skipping a book only rerolls that day; the rest of the queue stays put.</p>
+        <p className="text-[11px] text-gray-400">Each date is pinned (frozen) once chosen, so editing book data no longer reshuffles the queue. Skipping a book only re-rolls its own day; the rest stay put.</p>
       </div>
 
       {/* ── Excluded books ─────────────────────────────────────── */}

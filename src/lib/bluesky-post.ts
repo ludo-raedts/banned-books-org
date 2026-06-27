@@ -98,6 +98,90 @@ export async function loadExcludedIds(): Promise<Set<number>> {
   }
 }
 
+/** Today's UTC date as YYYY-MM-DD. */
+function todayUtcYmd(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
+/**
+ * Frozen picks for the given dates (date → book_id). The plan lives in
+ * `bluesky_daily_picks`; once a date is frozen its pick never changes, even if
+ * the eligible pool later shifts. Empty map on error / missing table, so the
+ * picker falls back to the deterministic compute and nothing breaks before the
+ * migration is applied.
+ */
+async function loadStoredPicks(datesYmd: string[]): Promise<Map<string, number>> {
+  if (datesYmd.length === 0) return new Map()
+  try {
+    const { data, error } = await adminClient()
+      .from('bluesky_daily_picks')
+      .select('pick_date, book_id')
+      .in('pick_date', datesYmd)
+    if (error || !data) return new Map()
+    return new Map(data.map(r => [(r as { pick_date: string }).pick_date, Number((r as { book_id: number }).book_id)]))
+  } catch {
+    return new Map()
+  }
+}
+
+/**
+ * Freeze picks (insert one row per date). `ignoreDuplicates` makes it a no-op
+ * for dates already frozen, so concurrent renders can't clobber an existing
+ * pick — the first writer wins. Best-effort: a failure (e.g. table not yet
+ * migrated) is swallowed so it never breaks a render or a post.
+ */
+export async function freezePicks(rows: Array<{ pick_date: string; book_id: number; source?: string }>): Promise<void> {
+  if (rows.length === 0) return
+  try {
+    await adminClient()
+      .from('bluesky_daily_picks')
+      .upsert(
+        rows.map(r => ({ pick_date: r.pick_date, book_id: r.book_id, source: r.source ?? 'auto' })),
+        { onConflict: 'pick_date', ignoreDuplicates: true },
+      )
+  } catch {
+    /* non-fatal: freezing is best-effort */
+  }
+}
+
+/**
+ * Resolve the book id for each date: a frozen pick wins; otherwise compute the
+ * deterministic pick and (for today/future dates) freeze it so it stays put.
+ * Past dates that were never frozen are left unfrozen — we don't manufacture a
+ * retroactive history. Returns ids aligned to the input dates plus the freshly
+ * frozen rows (already written).
+ */
+async function resolvePickIds(
+  datesYmd: string[],
+  ids: number[],
+  excluded: Set<number>,
+  stored: Map<string, number>,
+): Promise<number[]> {
+  const today = todayUtcYmd()
+  const toFreeze: Array<{ pick_date: string; book_id: number }> = []
+  const chosen = datesYmd.map(ymd => {
+    const frozen = stored.get(ymd)
+    if (frozen != null) return frozen
+    const id = pickIdForDate(ids, excluded, dayNumber(ymd))
+    if (ymd >= today) toFreeze.push({ pick_date: ymd, book_id: id })
+    return id
+  })
+  await freezePicks(toFreeze)
+  return chosen
+}
+
+/**
+ * Deterministic pick ids per date WITHOUT touching the frozen plan — used by the
+ * backfill to compute the current rotation before pinning it. Returns date → id.
+ */
+export async function computePickIds(datesYmd: string[]): Promise<Map<string, number>> {
+  const [ids, excluded] = await Promise.all([eligibleBookIds(), loadExcludedIds()])
+  const out = new Map<string, number>()
+  if (ids.length === 0) return out
+  for (const ymd of datesYmd) out.set(ymd, pickIdForDate(ids, excluded, dayNumber(ymd)))
+  return out
+}
+
 // Notability gate: a book enters the pool if it has multiple recorded bans
 // (MIN_BANS) OR at least one non-US ban. This drops the long tail of single-
 // event US school removals (often niche/educational one-offs) while keeping
@@ -202,9 +286,14 @@ export async function pickDailyBook(dateYmd?: string): Promise<DailyBook | null>
  * Used by the admin "upcoming" view. Returns one entry per input date, in order.
  */
 export async function pickForDates(datesYmd: string[]): Promise<(DailyBook | null)[]> {
-  const [ids, excluded] = await Promise.all([eligibleBookIds(), loadExcludedIds()])
+  const [ids, excluded, stored] = await Promise.all([
+    eligibleBookIds(),
+    loadExcludedIds(),
+    loadStoredPicks(datesYmd),
+  ])
   if (ids.length === 0) return datesYmd.map(() => null)
-  return Promise.all(datesYmd.map(ymd => hydrate(pickIdForDate(ids, excluded, dayNumber(ymd)))))
+  const chosen = await resolvePickIds(datesYmd, ids, excluded, stored)
+  return Promise.all(chosen.map(id => hydrate(id)))
 }
 
 /** Excluded books with display fields, newest exclusion first — for the admin view. */

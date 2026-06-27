@@ -15,6 +15,17 @@ export async function POST(req: NextRequest) {
     .from('bluesky_excluded_books')
     .upsert({ book_id }, { onConflict: 'book_id', ignoreDuplicates: true })
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Unfreeze any pinned days that point at the skipped book (today onward), so
+  // they re-roll to another title on the next render instead of staying stuck on
+  // the excluded book. Best-effort — a failure here shouldn't fail the skip.
+  const today = new Date().toISOString().slice(0, 10)
+  await adminClient()
+    .from('bluesky_daily_picks')
+    .delete()
+    .eq('book_id', book_id)
+    .gte('pick_date', today)
+
   return NextResponse.json({ ok: true })
 }
 
