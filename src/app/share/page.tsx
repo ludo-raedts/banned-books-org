@@ -253,25 +253,27 @@ export default async function SharePage() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-1">SVG badge</h3>
             <p className="text-sm text-neutral-500 mb-3">A small, crisp badge that auto-switches between light and dark. Perfect for a README or sidebar.</p>
-            <div className="flex flex-wrap items-start gap-3 mb-1">
-              <a href="/share" target="_blank" rel="noopener noreferrer" title="Links to the banned book of the day">
+            {/* Both variants framed identically (only the backdrop differs) so
+                they read as equal-size swatches. */}
+            <div className="flex flex-col items-start gap-3 mb-1">
+              <a href="/share" target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full rounded-xl border border-cream-border bg-white p-3" title="Links to the banned book of the day">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/book-of-the-day/badge.svg"
                   alt="Banned book of the day — SVG badge, light"
                   width={360}
                   height={84}
-                  className="max-w-full rounded-xl"
+                  className="max-w-full h-auto"
                 />
               </a>
-              <a href="/share" target="_blank" rel="noopener noreferrer" className="inline-flex rounded-xl bg-[#1a1414] p-3" title="Links to the banned book of the day">
+              <a href="/share" target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full rounded-xl bg-[#1a1414] p-3" title="Links to the banned book of the day">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/book-of-the-day/badge.svg?theme=dark"
                   alt="Banned book of the day — SVG badge, dark"
                   width={360}
                   height={84}
-                  className="max-w-full"
+                  className="max-w-full h-auto"
                 />
               </a>
             </div>
