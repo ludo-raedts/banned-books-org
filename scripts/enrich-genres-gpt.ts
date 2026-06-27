@@ -6,6 +6,14 @@
  * description_book as signal. Returns UNKNOWN-equivalent when nothing fits or
  * the model has no idea — book stays in the candidate pool.
  *
+ * GROUNDING GUARD (the UNKNOWN route): for rows with NO description_book, a single
+ * model confidently guesses genre from the title (root cause of the 2026-05 NZ
+ * Indecent-Publications import being mis-tagged YA/children/sci-fi). Such rows are
+ * only accepted when GPT and Gemini INDEPENDENTLY agree (intersection of their
+ * slugs); title-guesses diverge between models → empty → skip. Grounded rows (a
+ * real description is in the prompt) keep the cheap single GPT call. Needs
+ * GOOGLE_AI_API_KEY; without it, ungrounded rows are skipped rather than guessed.
+ *
  * Idempotent: only targets books where `genres = '{}'`. Manual edits via the
  * admin (or seed-genres.ts) survive re-runs because their `genres` is non-empty.
  *
@@ -22,6 +30,7 @@
  */
 
 import OpenAI from 'openai'
+import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
 
 export type EnrichGenresOptions = {
@@ -111,6 +120,7 @@ Rules:
 - Pick 1–3 slugs. Prefer the smallest set that captures the work.
 - Combine when honest: a YA dystopian novel = ["young-adult", "dystopian"]. To Kill a Mockingbird = ["coming-of-age", "historical-fiction"].
 - Children's picture books: just ["children"]. Don't add young-adult.
+- GROUNDING (critical): Only classify if a Description is provided below, OR you reliably know THIS EXACT book — this specific title by this specific author — from training data. If neither holds, return an empty array with confidence "low". NEVER infer genre from the title or author name alone: a title that merely sounds like a diary, a children's book, a memoir, a sci-fi story, etc. is NOT evidence of genre. When there is no description and you don't genuinely recognise the specific book, an empty array IS the correct, expected answer — do not guess.
 - If genuinely unsure or the book isn't in your training data, return an empty array.
 - Never invent slugs. Only the 21 above are allowed.`
 
@@ -181,6 +191,29 @@ async function classify(client: OpenAI, book: BookRow, model: string): Promise<G
   }
 }
 
+/**
+ * Second, independent classifier (Gemini) used ONLY to verify ungrounded guesses.
+ * Returns the cleaned slug set, or null on error. A single model confidently
+ * guesses genre from the title when no description grounds it (the root cause of
+ * the NZ-import mis-tagging); two independent models disagree on a title-guess,
+ * so the intersection collapses to empty = UNKNOWN.
+ */
+async function classifyGemini(genai: GoogleGenAI, book: BookRow): Promise<GenreSlug[] | null> {
+  try {
+    const res = await genai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: buildPrompt(book),
+      config: { systemInstruction: POLICY, temperature: 0, thinkingConfig: { thinkingBudget: 0 }, responseMimeType: 'application/json' },
+    })
+    const txt = (res.text ?? '').trim()
+    const json = txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1)
+    const parsed = JSON.parse(json) as { genres?: string[] }
+    return Array.from(new Set((parsed.genres ?? []).filter((g): g is GenreSlug => GENRE_SET.has(g)))).slice(0, 3)
+  } catch {
+    return null
+  }
+}
+
 const SELECT_COLS = `
   id, title, slug, first_published_year, genres, description_book,
   book_authors(authors(display_name))
@@ -237,6 +270,10 @@ export async function enrichGenres(opts: EnrichGenresOptions) {
 
   const supabase = adminClient()
   const openai   = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  // Second model verifies ungrounded guesses (the UNKNOWN route). Without it we
+  // cannot trust a title-only classification, so ungrounded rows are declined.
+  const genai    = process.env.GOOGLE_AI_API_KEY ? new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY }) : null
+  if (!genai) console.warn('  ⚠ GOOGLE_AI_API_KEY not set — ungrounded books (no description_book) will be skipped, not classified.')
 
   const all   = await fetchCandidates(supabase, opts)
   const batch = Number.isFinite(opts.limit) ? all.slice(0, opts.limit) : all
@@ -252,7 +289,25 @@ export async function enrichGenres(opts: EnrichGenresOptions) {
     const author = book.book_authors[0]?.authors?.display_name ?? ''
     console.log(`[${book.slug}]  ${book.title}${author ? ` / ${author}` : ''}`)
 
-    const result = await classify(openai, book, opts.model)
+    let result = await classify(openai, book, opts.model)
+
+    // GROUNDING GUARD (the UNKNOWN route): for rows with no description_book, a
+    // single model's self-reported confidence is unreliable — it returns "high"
+    // on pure title-guesses (e.g. "Master Masochist" → literary-fiction). Require
+    // GPT ∩ Gemini agreement; a title-guess diverges between models → empty →
+    // UNKNOWN. Grounded rows (a real description is in the prompt) keep the cheap
+    // single call.
+    if (result && result.genres.length > 0 && !book.description_book) {
+      if (!genai) {
+        result = { genres: [], confidence: 'low' }
+      } else {
+        const gem = await classifyGemini(genai, book)
+        const agreed = gem ? result.genres.filter(g => (gem as string[]).includes(g)) : []
+        result = agreed.length > 0
+          ? { genres: agreed.slice(0, 3), confidence: result.confidence }
+          : { genres: [], confidence: 'low' }
+      }
+    }
 
     if (!result) {
       console.log(`  → error`)

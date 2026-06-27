@@ -104,6 +104,8 @@ Rules:
 - Use only facts you are confident about from the historical record
 - When you have no specific named case, describe accurately what the documented data shows: country, year, scope, and (only if documented) the stated reason
 - Never invent institution names, case names, official names, or reactions you are not certain about
+- Describe ONLY the documented censorship event. Do NOT describe, summarise, or infer the book's content, plot, themes, characters, or what made it objectionable. Unless a "Book synopsis" line is given above, you do NOT know the book's contents and must not characterise them — writing e.g. "explores adolescent themes" or "deals with sexuality" from the title alone is a fabrication.
+- If, after the priority list, you have nothing concrete to add beyond the country, year, and scope already listed above, reply with exactly the single word INSUFFICIENT and nothing else.
 - Do not start with "This book", "The book", or "It"
 - Do not use vague constructions like "has been banned in multiple countries"
 - Do not add hedges like "reportedly" or "allegedly" unless genuinely uncertain about a documented fact
@@ -119,6 +121,9 @@ async function generate(client: OpenAI, book: BookRow): Promise<string | null> {
       messages: [{ role: 'user', content: buildPrompt(book) }],
     })
     const text = res.choices[0]?.message?.content?.trim() ?? ''
+    // UNKNOWN route: the model declines when the documented data is too thin to
+    // write concrete ban history without inventing book-content detail.
+    if (/^insufficient\b/i.test(text)) return null
     return text.length >= 60 ? text : null
   } catch (e) {
     console.error(`  GPT error: ${(e as Error).message}`)
@@ -167,9 +172,23 @@ async function main() {
     ? all
     : all.filter(b => !SKIP_STATUSES.has(b.description_ban_status ?? ''))
   const skippedByStatus = all.length - audited.length
-  const eligible = audited.filter(b => b.bans.length > 0)
+  const withBans = audited.filter(b => b.bans.length > 0)
+
+  // GROUNDING GUARD (the UNKNOWN route): only write ban history when there is a
+  // concrete fact to build on — a named institution, a named challenger/actor, a
+  // per-ban note, or a book synopsis. A bare country+year+scope (+ generic reason)
+  // is already shown by the structured ban data; asking GPT to expand it produces
+  // confabulated book-content claims (the 2026-05 NZ Indecent-Publications batch
+  // got "explores adolescent themes" invented from the title). Those rows stay
+  // description_ban=NULL and fall back to the reason-explainer + cited source.
+  const hasGrounding = (b: BookRow) =>
+    !!(b.description_book && b.description_book.trim()) ||
+    b.bans.some(x => x.institution || x.actor || (x.description && x.description.trim()))
+  const eligible = withBans.filter(hasGrounding)
+  const skippedUngrounded = withBans.length - eligible.length
   const batch    = eligible.slice(0, LIMIT)
   if (skippedByStatus > 0) console.log(`  Skipped (description_ban_status=human_curated/auto_rejected_low_quality): ${skippedByStatus}`)
+  if (skippedUngrounded > 0) console.log(`  Skipped (no concrete grounding — left NULL for reason-explainer fallback): ${skippedUngrounded}`)
 
   console.log(`\n── enrich-ban-descriptions-gpt (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)
   if (OVERWRITE) console.log('  --overwrite: replacing existing description_ban too')
