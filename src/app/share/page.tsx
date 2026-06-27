@@ -209,49 +209,52 @@ export default async function SharePage() {
           Here&rsquo;s exactly what each one looks like.
         </p>
 
+        <p className="text-xs text-neutral-400 mb-6 -mt-3">
+          Each badge below is a link — embedded, it opens the{' '}
+          <Link href="/share" className="text-oxblood hover:underline">banned book of the day</Link>{' '}
+          (always the current day). The previews here are clickable too.
+        </p>
+
         <div className="space-y-10">
           {/* 1 — Live widget (iframe) */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-1">Live widget</h3>
             <p className="text-sm text-neutral-500 mb-3">An interactive panel with the cover, the censorship context and a link through to the record.</p>
-            <div className="grid gap-6 sm:grid-cols-2 items-start">
-              <iframe
-                src="/embed/book-of-the-day"
-                width={520}
-                height={240}
-                style={{ border: 0, maxWidth: '100%' }}
-                title="Banned book of the day preview"
-                loading="lazy"
-              />
-              <CopySnippet label="Embed (iframe)" code={iframeSnippet} />
-            </div>
+            <iframe
+              src="/embed/book-of-the-day"
+              width={520}
+              height={240}
+              style={{ border: 0, maxWidth: '100%' }}
+              title="Banned book of the day preview"
+              loading="lazy"
+              className="mb-3"
+            />
+            <CopySnippet label="Embed (iframe)" code={iframeSnippet} />
           </div>
 
           {/* 2 — Image badge (PNG card) */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-1">Image badge</h3>
             <p className="text-sm text-neutral-500 mb-3">A 1200×630 card — ideal as a blog-post or newsletter image, or a README hero. Updates daily.</p>
-            <div className="grid gap-6 sm:grid-cols-2 items-start">
-              <a href="/book-of-the-day/image" target="_blank" rel="noopener noreferrer" className="block">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/book-of-the-day/image"
-                  alt="Banned book of the day — image badge"
-                  width={1200}
-                  height={630}
-                  className="w-full rounded-lg border border-cream-border shadow-sm"
-                />
-              </a>
-              <CopySnippet label="Image badge (Markdown)" code={badgeSnippet} />
-            </div>
+            <a href="/share" target="_blank" rel="noopener noreferrer" className="block max-w-md mb-3" title="Links to the banned book of the day">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/book-of-the-day/image"
+                alt="Banned book of the day — image badge"
+                width={1200}
+                height={630}
+                className="w-full rounded-lg border border-cream-border shadow-sm"
+              />
+            </a>
+            <CopySnippet label="Image badge (Markdown)" code={badgeSnippet} />
           </div>
 
           {/* 3 — SVG badge (auto light/dark) */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-1">SVG badge</h3>
             <p className="text-sm text-neutral-500 mb-3">A small, crisp badge that auto-switches between light and dark. Perfect for a README or sidebar.</p>
-            <div className="grid gap-6 sm:grid-cols-2 items-start">
-              <div className="space-y-3">
+            <div className="flex flex-wrap items-start gap-3 mb-1">
+              <a href="/share" target="_blank" rel="noopener noreferrer" title="Links to the banned book of the day">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/book-of-the-day/badge.svg"
@@ -260,20 +263,20 @@ export default async function SharePage() {
                   height={84}
                   className="max-w-full rounded-xl"
                 />
-                <div className="inline-flex rounded-xl bg-[#1a1414] p-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/book-of-the-day/badge.svg?theme=dark"
-                    alt="Banned book of the day — SVG badge, dark"
-                    width={360}
-                    height={84}
-                    className="max-w-full"
-                  />
-                </div>
-                <p className="text-xs text-neutral-400">Light &amp; dark shown — the snippet picks the right one automatically.</p>
-              </div>
-              <CopySnippet label="SVG badge — auto dark/light (HTML)" code={svgBadgeSnippet} />
+              </a>
+              <a href="/share" target="_blank" rel="noopener noreferrer" className="inline-flex rounded-xl bg-[#1a1414] p-3" title="Links to the banned book of the day">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/book-of-the-day/badge.svg?theme=dark"
+                  alt="Banned book of the day — SVG badge, dark"
+                  width={360}
+                  height={84}
+                  className="max-w-full"
+                />
+              </a>
             </div>
+            <p className="text-xs text-neutral-400 mb-3">Light &amp; dark shown — the snippet picks the right one automatically.</p>
+            <CopySnippet label="SVG badge — auto dark/light (HTML)" code={svgBadgeSnippet} />
           </div>
         </div>
       </section>
