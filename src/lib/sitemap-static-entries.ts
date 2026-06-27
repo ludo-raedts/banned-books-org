@@ -108,10 +108,12 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     // are ban-driven so weekly is enough.
     { loc: `${base}/trending-banned-books`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/rising-banned-books`, changefreq: 'daily', priority: 0.8 },
-    // Banned book of the day — the daily hub (share/embed/subscribe) and its
-    // archive. Both change daily; previously discoverable only via internal links.
+    // The daily share/embed/subscribe hub. Changes daily; was previously
+    // discoverable only via internal links. The /book-of-the-day archive (and
+    // its dated pages) are deliberately kept OUT of the sitemap — the dated
+    // pages are noindex,follow to avoid cannibalising the real /books/[slug]
+    // pages, so indexing the archive index that points at them adds no value.
     { loc: `${base}/share`, changefreq: 'daily', priority: 0.7 },
-    { loc: `${base}/book-of-the-day`, changefreq: 'daily', priority: 0.7 },
     { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9, lastmod: authorsLastMod },
     { loc: `${base}/award-winning-banned-books`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
