@@ -3,8 +3,8 @@
 // Client-side share + embed tooling for the /share hub. Two exports:
 //  - ShareRow: one-tap share to Bluesky / X / LinkedIn / email, plus copy-link
 //    and (mobile) the native share sheet.
-//  - EmbedSnippets: copy-paste <iframe> and image-badge snippets so anyone can
-//    drop the live "book of the day" onto their own site / README / newsletter.
+//  - CopySnippet: a single labelled, copy-to-clipboard code block — one per
+//    embed option (iframe / image badge / SVG badge) on the /share hub.
 
 import { useEffect, useState } from 'react'
 
@@ -142,15 +142,11 @@ function SnippetBox({ label, code, copied, onCopy }: { label: string; code: stri
   )
 }
 
-export function EmbedSnippets({ iframe, badge, svgBadge }: { iframe: string; badge: string; svgBadge: string }) {
+// A single labelled snippet with its own copy button. Placed next to each
+// embed option's live preview on /share so people see what they're pasting.
+export function CopySnippet({ label, code }: { label: string; code: string }) {
   const { copied, copy } = useCopied()
-  return (
-    <div className="space-y-4">
-      <SnippetBox label="Embed (iframe)" code={iframe} copied={copied === 'iframe'} onCopy={() => copy('iframe', iframe)} />
-      <SnippetBox label="Image badge (Markdown)" code={badge} copied={copied === 'badge'} onCopy={() => copy('badge', badge)} />
-      <SnippetBox label="SVG badge — auto dark/light (HTML)" code={svgBadge} copied={copied === 'svg'} onCopy={() => copy('svg', svgBadge)} />
-    </div>
-  )
+  return <SnippetBox label={label} code={code} copied={copied === label} onCopy={() => copy(label, code)} />
 }
 
 // A monospace value with an inline copy button — used for the Slack command and

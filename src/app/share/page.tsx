@@ -12,7 +12,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { SITE_URL } from '@/lib/canonical-host'
 import { getBookOfTheDay, reasonPhrases, joinHuman, whereClause, todayYmd } from '@/lib/book-of-the-day'
-import { ShareRow, EmbedSnippets, FeedSubscribe } from '@/components/share-tools'
+import { ShareRow, CopySnippet, FeedSubscribe } from '@/components/share-tools'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
 
 export const revalidate = 3600
@@ -204,26 +204,77 @@ export default async function SharePage() {
       {/* Embed */}
       <section className="mb-12">
         <h2 className="font-serif text-xl font-semibold tracking-tight text-gray-900 mb-1">Put it on your site</h2>
-        <p className="text-sm text-neutral-500 mb-5">
-          A live widget that updates itself every day. No script, no tracking — just an iframe or an image.
+        <p className="text-sm text-neutral-500 mb-6">
+          Three ways to show today&rsquo;s banned book — each updates itself every day, no script and no tracking.
+          Here&rsquo;s exactly what each one looks like.
         </p>
 
-        <div className="grid gap-8 sm:grid-cols-2 items-start">
-          {/* Live preview of the actual embed */}
+        <div className="space-y-10">
+          {/* 1 — Live widget (iframe) */}
           <div>
-            <span className="text-xs font-medium uppercase tracking-wide text-neutral-500 block mb-2">
-              Live preview
-            </span>
-            <iframe
-              src="/embed/book-of-the-day"
-              width={520}
-              height={240}
-              style={{ border: 0, maxWidth: '100%' }}
-              title="Banned book of the day preview"
-              loading="lazy"
-            />
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Live widget</h3>
+            <p className="text-sm text-neutral-500 mb-3">An interactive panel with the cover, the censorship context and a link through to the record.</p>
+            <div className="grid gap-6 sm:grid-cols-2 items-start">
+              <iframe
+                src="/embed/book-of-the-day"
+                width={520}
+                height={240}
+                style={{ border: 0, maxWidth: '100%' }}
+                title="Banned book of the day preview"
+                loading="lazy"
+              />
+              <CopySnippet label="Embed (iframe)" code={iframeSnippet} />
+            </div>
           </div>
-          <EmbedSnippets iframe={iframeSnippet} badge={badgeSnippet} svgBadge={svgBadgeSnippet} />
+
+          {/* 2 — Image badge (PNG card) */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Image badge</h3>
+            <p className="text-sm text-neutral-500 mb-3">A 1200×630 card — ideal as a blog-post or newsletter image, or a README hero. Updates daily.</p>
+            <div className="grid gap-6 sm:grid-cols-2 items-start">
+              <a href="/book-of-the-day/image" target="_blank" rel="noopener noreferrer" className="block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/book-of-the-day/image"
+                  alt="Banned book of the day — image badge"
+                  width={1200}
+                  height={630}
+                  className="w-full rounded-lg border border-cream-border shadow-sm"
+                />
+              </a>
+              <CopySnippet label="Image badge (Markdown)" code={badgeSnippet} />
+            </div>
+          </div>
+
+          {/* 3 — SVG badge (auto light/dark) */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">SVG badge</h3>
+            <p className="text-sm text-neutral-500 mb-3">A small, crisp badge that auto-switches between light and dark. Perfect for a README or sidebar.</p>
+            <div className="grid gap-6 sm:grid-cols-2 items-start">
+              <div className="space-y-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/book-of-the-day/badge.svg"
+                  alt="Banned book of the day — SVG badge, light"
+                  width={360}
+                  height={84}
+                  className="max-w-full rounded-xl"
+                />
+                <div className="inline-flex rounded-xl bg-[#1a1414] p-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/book-of-the-day/badge.svg?theme=dark"
+                    alt="Banned book of the day — SVG badge, dark"
+                    width={360}
+                    height={84}
+                    className="max-w-full"
+                  />
+                </div>
+                <p className="text-xs text-neutral-400">Light &amp; dark shown — the snippet picks the right one automatically.</p>
+              </div>
+              <CopySnippet label="SVG badge — auto dark/light (HTML)" code={svgBadgeSnippet} />
+            </div>
+          </div>
         </div>
       </section>
 
