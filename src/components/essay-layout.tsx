@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import EssayRelatedBooks from './essay-related-books'
 import MoreEssays from './more-essays'
 import CitationBlock from './citation-block'
+import ShareButtons from './share-buttons'
 import SectionShell from './section/SectionShell'
 import Eyebrow from './section/Eyebrow'
 import type { Essay } from '@/lib/essays-data'
@@ -61,6 +62,14 @@ export default function EssayLayout({ essay, hero, children }: Props) {
           <p className="mt-6 text-xs text-neutral-500">
             Published {publishedDate}
           </p>
+
+          <div className="mt-4">
+            <ShareButtons
+              url={`https://www.banned-books.org${essay.href}`}
+              title={essay.title}
+              text={essay.title}
+            />
+          </div>
         </div>
       </section>
 

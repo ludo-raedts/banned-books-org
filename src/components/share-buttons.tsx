@@ -5,14 +5,18 @@ import { useEffect, useState } from 'react'
 interface ShareButtonsProps {
   url: string
   title: string
-  /** Total number of ban events for this book (typically per-district granular). */
-  banCount: number
+  /** Total number of ban events for this book (typically per-district granular).
+   *  Omit on non-book pages (e.g. essays) and pass `text` instead. */
+  banCount?: number
   /** Distinct countries those bans span. May be 1 even when banCount is large
    *  (e.g. 116 US school-district bans across 1 country). */
-  countryCount: number
+  countryCount?: number
+  /** Pre-composed share text. When given, it overrides the book-count sentence —
+   *  used by pages that aren't books, like essays. */
+  text?: string
 }
 
-export default function ShareButtons({ url, title, banCount, countryCount }: ShareButtonsProps) {
+export default function ShareButtons({ url, title, banCount, countryCount, text: textOverride }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
   // Native share is only offered when the platform supports it (mostly mobile).
   // Detected after mount to avoid a hydration mismatch with the server render.
@@ -25,9 +29,11 @@ export default function ShareButtons({ url, title, banCount, countryCount }: Sha
   // When banCount > countryCount we surface both numbers; otherwise the
   // simpler "is banned in N countries" is accurate (1 event = 1 country).
   const countryNoun = countryCount === 1 ? 'country' : 'countries'
-  const text = banCount > countryCount
-    ? `"${title}" has been banned ${banCount} times across ${countryCount} ${countryNoun}`
-    : `"${title}" is banned in ${countryCount} ${countryNoun}`
+  const text = textOverride ?? (
+    (banCount ?? 0) > (countryCount ?? 0)
+      ? `"${title}" has been banned ${banCount} times across ${countryCount} ${countryNoun}`
+      : `"${title}" is banned in ${countryCount} ${countryNoun}`
+  )
   const bskyHref = `https://bsky.app/intent/compose?text=${encodeURIComponent(`${text}\n${url}`)}`
 
   async function handleCopy() {
