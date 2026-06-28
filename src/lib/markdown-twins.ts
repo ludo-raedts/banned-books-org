@@ -24,6 +24,7 @@ export const MARKDOWN_TWINS: Record<string, string> = {
   '/essays/in-whose-name': '/essays/in-whose-name.md',
   '/essays/the-grey-zone': '/essays/the-grey-zone.md',
   '/essays/what-we-document': '/essays/what-we-document.md',
+  '/essays/who-hates-beetles': '/essays/who-hates-beetles.md',
 }
 
 // True when the client's Accept header expresses a preference for markdown that

@@ -61,5 +61,6 @@ export const config = {
     '/essays/in-whose-name',
     '/essays/the-grey-zone',
     '/essays/what-we-document',
+    '/essays/who-hates-beetles',
   ],
 }

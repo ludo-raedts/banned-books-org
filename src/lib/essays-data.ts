@@ -15,6 +15,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'who-hates-beetles',
+    href: '/essays/who-hates-beetles',
+    title: 'Who hates beetles?',
+    dek: 'Banning a novel polices a feeling. Banning a book of facts polices reality itself. What a children’s book about insects — pulled from Florida school libraries — reveals about a censorship movement that no longer needs anyone to object.',
+    publishedAt: '2026-06-28',
+    readingTimeMin: 7,
+    relatedBookSlugs: ['insect', 'gender-queer', 'the-bluest-eye', 'to-kill-a-mockingbird', 'maus', 'and-tango-makes-three'],
+  },
+  {
     slug: 'the-line-we-pretend-not-to-draw',
     href: '/essays/the-line-we-pretend-not-to-draw',
     title: 'The line we pretend not to draw',
