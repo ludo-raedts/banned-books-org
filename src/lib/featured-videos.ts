@@ -212,6 +212,12 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     credit: 'Unban Coolies',
     authorSlug: 'barbara-dee',
   },
+  {
+    videoId: 'QfP--AGK-tc',
+    title: 'Why Dave Eggers refuses to list his new book on Amazon',
+    credit: 'Amanpour and Company',
+    authorSlug: 'dave-eggers',
+  },
 ]
 
 /** The featured clip for a book page, if one is registered. */
