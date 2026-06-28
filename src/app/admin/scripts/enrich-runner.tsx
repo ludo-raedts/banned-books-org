@@ -28,7 +28,7 @@ const STEPS: StepDef[] = [
   { key: 'isbn',                label: 'ISBN-13 lookup',              paid: false, description: 'Open Library + Google Books. Free, fast.', inProcess: true },
   { key: 'covers',              label: 'Cover images',                paid: false, description: 'Google Books, Open Library, Wikipedia + placeholder rejection.', inProcess: true },
   { key: 'descriptions',        label: 'Book descriptions (v2)',      paid: true,  hasFreeFallback: true, description: 'Wikipedia + OL + Google Books with title-fuzz + author-surname cross-check. Grounded LLM synthesis from ≥2 cited sources — never free-form. Free mode = literal extracts only.', inProcess: true },
-  { key: 'ban_descriptions',    label: 'Ban descriptions',            paid: true,  description: 'GPT — why this book was banned in this country.', inProcess: false },
+  { key: 'ban_descriptions',    label: 'Ban descriptions',            paid: true,  description: 'GPT — why this book was banned. Only writes books with concrete grounding (named institution, challenger, or a book synopsis); books whose only ban note is a templated bulk import are skipped and left to the reason-explainer + cited source. Will not rewrite batch-imported bans.', inProcess: false },
   { key: 'censorship_context',  label: 'Censorship context',          paid: true,  description: 'GPT — political/historical background.', inProcess: false },
   { key: 'reasons',             label: 'Ban reason classification',   paid: true,  description: 'GPT — re-classifies bans currently tagged "other".', inProcess: false },
   { key: 'author_bios',         label: 'Author bios (Wikipedia)',     paid: false, description: 'Wikipedia article + infobox.', inProcess: false },
