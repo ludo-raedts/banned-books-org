@@ -152,6 +152,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/contexts/malaysia-banned-publications`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/contexts/argentina-dictatorship-censorship`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/contexts/index-librorum-prohibitorum`, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${base}/contexts/portugal-estado-novo`, changefreq: 'monthly', priority: 0.7 },
     // Data-quality HTML page (the .md twin is listed below for AI crawlers).
     { loc: `${base}/data-quality`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/scope/school`, changefreq: 'weekly', priority: 0.8 },

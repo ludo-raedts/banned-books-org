@@ -649,6 +649,86 @@ export const CONTEXT_CONTENT: Record<string, ContextContent> = {
     datePublished: '2026-05-30',
     dateModified: '2026-06-18',
   },
+
+  'portugal-estado-novo': {
+    dek:
+      'For four decades Portugal’s authoritarian Estado Novo subjected the printed word to prior censorship. From 1933 until the Carnation Revolution of 25 April 1974, the regime of António de Oliveira Salazar — and, after 1968, Marcelo Caetano — decided what could be published, cutting and banning books it judged a threat to the regime, the Church, the colonies or public morals. The Portuguese-edition titles in this archive are drawn from the inventory of works it suppressed.',
+    body: (
+      <>
+        <h2>What it was</h2>
+        <p>
+          The <strong>Estado Novo</strong> (“New State”) was the authoritarian, corporatist regime
+          that governed Portugal from <strong>1933 to 1974</strong>, founded on the 1933
+          Constitution and led for most of its life by{' '}
+          <strong>António de Oliveira Salazar</strong>, and after 1968 by{' '}
+          <strong>Marcelo Caetano</strong>. It fell in the{' '}
+          <strong>Carnation Revolution of 25 April 1974</strong>. Throughout, the state controlled
+          publishing through <em>censura prévia</em> — prior censorship — administered by the
+          censorship services and backed, ultimately, by the political police (PIDE/DGS).
+        </p>
+
+        <h2>How books were censored</h2>
+        <p>
+          Brandão dates the censorship of books to{' '}
+          <strong>Decreto n.º 22 469 of 11 April 1933</strong>, which placed books under prior
+          censorship alongside the press. The censors’ blue pencil — the <em>lápis azul</em> — cut
+          and suppressed works throughout the regime’s life. Targets included communist and
+          socialist texts, the <strong>neo-realist</strong> writers (Alves Redol, Soeiro Pereira
+          Gomes), best-selling novelists such as <strong>Jorge Amado</strong> and{' '}
+          <strong>Aquilino Ribeiro</strong>, anti-colonial writing as Portugal fought its colonial
+          wars from 1961, and books judged immoral. Some titles carried a special prohibition that
+          differed between the Metrópole and the overseas colonies.
+        </p>
+
+        <h2>The source</h2>
+        <p>
+          The entries here follow <strong>José Brandão’s</strong> compilation{' '}
+          <em>Livros Proibidos nos Anos da Ditadura de 1933 a 1974</em> — at some{' '}
+          <strong>900 Portuguese-edition titles</strong>, the largest single catalogue of books
+          banned under the regime. It traces back to the official inventory assembled after the
+          revolution by the <strong>Comissão do Livro Negro sobre o Regime Fascista</strong> (the
+          Black Book Commission on the Fascist Regime), drawing on the censorship services’ own
+          records.
+        </p>
+
+        <h2>How to read these entries</h2>
+        <p>
+          A book’s presence here means the Estado Novo tried to suppress it: these titles are
+          recorded as <strong>targets of censorship</strong> — the mark is against the regime that
+          banned them, not against the works or their authors. The year shown is Brandão’s recorded{' '}
+          <em>data da edição ou da proibição</em> — the edition or prohibition year — which we are
+          verifying title by title against the Portuguese national bibliography (PORBASE/BNP) before
+          asserting it as a publication date.
+        </p>
+      </>
+    ),
+    listHeading: 'Books in this archive banned under the Estado Novo',
+    listIntro:
+      'Portuguese-edition titles documented here that appear in José Brandão’s catalogue of books prohibited in Portugal between 1933 and 1974.',
+    sources: (
+      <ul className="list-disc pl-5 space-y-1">
+        <li>
+          José Brandão, <em>Livros Proibidos nos Anos da Ditadura de 1933 a 1974</em> — compilation
+          of some 900 Portuguese-edition titles.
+        </li>
+        <li>
+          Comissão do Livro Negro sobre o Regime Fascista,{' '}
+          <em>Livros Proibidos no Regime Fascista</em> (Presidência do Conselho de Ministros, 1981)
+          — the official inventory the compilation derives from.
+        </li>
+        <li>
+          Maria Luísa Alvim, <em>Livros Portugueses Proibidos no Regime Fascista: Bibliografia</em>{' '}
+          (Braga, 1992), and the BNP catalogue (PORBASE) — academic and bibliographic cross-reference.
+        </li>
+      </ul>
+    ),
+    backLink: { href: '/countries/pt', label: 'Books banned in Portugal' },
+    jsonLdAbout: {
+      '@type': 'Event',
+      name: 'Censorship under the Estado Novo (Portugal, 1933–1974)',
+    },
+    datePublished: '2026-06-28',
+  },
 }
 
 // Re-exported here so the route can render the hero without re-deriving the type.

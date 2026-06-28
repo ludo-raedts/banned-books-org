@@ -162,6 +162,21 @@ export const BAN_CONTEXTS: BanContext[] = [
     },
     match: { sourceUrlIncludes: ['index_librorum_prohibitorum'] },
   },
+  {
+    slug: 'portugal-estado-novo',
+    title: 'Portugal’s Estado Novo censorship (1933–1974)',
+    badge: 'Portugal · 1933–1974',
+    short:
+      'This title was banned in Portugal under the Estado Novo, the authoritarian regime of António de Oliveira Salazar and Marcelo Caetano. From 1933 the state placed books under prior censorship; this title appears in the inventory of works it suppressed.',
+    hasHub: true,
+    country: 'PT',
+    countryCard: {
+      title: 'Censorship under the Estado Novo (1933–1974) →',
+      blurb:
+        'Books suppressed by Portugal’s authoritarian Estado Novo, which subjected publishing to prior censorship from 1933 until the Carnation Revolution of 1974.',
+    },
+    match: { sourceUrlIncludes: ['bibliblogue.wordpress.com', '200412livrosproibidos33_74'] },
+  },
 ]
 
 export function getBanContext(slug: string): BanContext | undefined {
