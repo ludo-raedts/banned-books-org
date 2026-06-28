@@ -255,6 +255,47 @@ Scale: ~1,300 books banned or restricted in total; **two-thirds classified befor
 ### Final recommendation
 **Promising but needs manual verification.** Best bulk seed of the three after Berlin (clean text, ~900 rows), with documented provenance — but secondary, blog-hosted, and with an ambiguous year requiring per-title PORBASE verification.
 
+### Stap-0 build result (2026-06-28)
+
+Built read-only via `scripts/build-portugal-estado-novo-stage0.ts` (no DB writes).
+Brandão PDF cached at `data/source-research/portugal-brandao-livros-proibidos.pdf`;
+`pdftotext -layout` yields a clean fixed-width 4-column table that parses with
+**zero wrapped rows** — a data row = exactly 4 whitespace-delimited fields whose
+last field is a 4-digit year, which drops all intro prose.
+
+| Metric | Value |
+|---|---|
+| parsed rows | **900** (exactly the compilation's claimed 900) |
+| special-prohibition "(*)" | 94 (flagged, not dropped) |
+| collective/anthology authors (Vários/Colectivo) | 61 (no Wikidata author gate → skipped in enrichment) |
+
+Normalization handled: the "(*)" flag stripped to a boolean; the catalogue
+article un-inverted ("Adolescente, O" → "O Adolescente", "Porta Fechada, À" →
+"À Porta Fechada" = Sartre's *Huis Clos*); author "Surname, First" → "First
+Surname" with co-author "/" splitting and initial-preserving period handling
+("D. H. Lawrence" kept intact). The ambiguous `DATA` is captured as
+`source_data_year` ONLY; `publication_year` stays `null`/`year_unverified`.
+
+Seed → `data/portugal-estado-novo-<date>.json`; summary →
+`data/source-research/portugal-estado-novo-stage0-summary-<date>.md`.
+
+**Full Wikidata enrichment sweep DONE (2026-06-28):** 38 raw matches → **33 kept
+after QA**. A manual eyeball of all 38 caught **5 namesake/loose-author-gate
+false positives** that were nulled in the cache (`status: rejected-qa-namesake`,
+rows 221/390/484/569/624) so they revert to net-new (no false dedup signal):
+A Democracia/Burdeau→Tocqueville's *Democracy in America*; Os Herdeiros/Robbins→
+Simak's *A Heritage of Stars*; Lolita/Nabokov→wrong "Lolito" entity; Náufragos/
+Correia→Clarke's *A Fall of Moondust*; Os Pecadores/Turner→Edwards' *Sinners…*.
+(One kept match, Paraísos Artificiais, fell back to the French title *Les Paradis
+artificiels* — correct work, harmless.) Net 33/900 ≈ 3.7% English-title fill, the
+expected low yield. **Lesson for the importer:** `authorMatches` in the stage0
+script is too loose (substring + last-name≥4) — the importer's match-before-create
+must NOT trust these English titles blindly; treat them as a hint, still verify.
+
+**Remaining:** mandatory per-title PORBASE/BNP year verification, decide the 61
+collective rows (placeholder author), then write the thin importer. Still
+**do not import.**
+
 ---
 
 ## Import-route decision (2026-06-17)

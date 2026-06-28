@@ -1,0 +1,4502 @@
+{
+  "1": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "2": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "3": {
+    "english": "The ABC of Castro Alves",
+    "qid": "Q15727076",
+    "status": "matched"
+  },
+  "4": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "5": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "6": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "7": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "8": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "9": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "10": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "11": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "12": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "13": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "14": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "15": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "16": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "17": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "18": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "19": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "20": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "21": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "22": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "23": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "24": {
+    "english": "Lady Chatterley's Lover",
+    "qid": "Q750670",
+    "status": "matched"
+  },
+  "25": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "26": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "27": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "28": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "29": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "30": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "31": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "32": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "33": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "34": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "35": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "36": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "37": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "38": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "39": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "40": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "41": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "42": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "43": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "44": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "45": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "46": {
+    "english": "THE ASSAULT ON \"SANTA MARIA\"",
+    "qid": "Q126072901",
+    "status": "matched"
+  },
+  "47": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "48": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "49": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "50": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "51": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "52": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "53": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "54": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "55": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "56": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "57": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "58": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "59": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "60": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "61": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "62": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "63": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "64": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "65": {
+    "english": null,
+    "qid": "Q2891949",
+    "status": "english-equals-portuguese"
+  },
+  "66": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "67": {
+    "english": null,
+    "qid": "Q339761",
+    "status": "english-equals-portuguese"
+  },
+  "68": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "69": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "70": {
+    "english": null,
+    "qid": "Q115859496",
+    "status": "english-equals-portuguese"
+  },
+  "71": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "72": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "73": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "74": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "75": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "76": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "77": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "78": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "79": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "80": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "81": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "82": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "83": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "84": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "85": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "86": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "87": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "88": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "89": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "90": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "91": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "92": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "93": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "94": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "95": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "96": {
+    "english": "Captains of the Sands",
+    "qid": "Q154766",
+    "status": "matched"
+  },
+  "97": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "98": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "99": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "100": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "101": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "102": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "103": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "104": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "105": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "106": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "107": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "108": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "109": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "110": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "111": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "112": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "113": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "114": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "115": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "116": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "117": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "118": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "119": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "120": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "121": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "122": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "123": {
+    "english": null,
+    "qid": "Q1612826",
+    "status": "english-equals-portuguese"
+  },
+  "124": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "125": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "126": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "127": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "128": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "129": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "130": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "131": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "132": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "133": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "134": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "135": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "136": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "137": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "138": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "139": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "140": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "141": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "142": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "143": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "144": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "145": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "146": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "147": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "148": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "149": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "150": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "151": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "152": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "153": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "154": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "155": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "156": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "157": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "158": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "159": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "160": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "161": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "162": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "163": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "164": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "165": {
+    "english": "The Wretched of the Earth",
+    "qid": "Q2741364",
+    "status": "matched"
+  },
+  "166": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "167": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "168": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "169": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "170": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "171": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "172": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "173": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "174": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "175": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "176": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "177": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "178": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "179": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "180": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "181": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "182": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "183": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "184": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "185": {
+    "english": "A Contribution to the Critique of Political Economy",
+    "qid": "Q230317",
+    "status": "matched"
+  },
+  "186": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "187": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "188": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "189": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "190": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "191": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "192": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "193": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "194": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "195": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "196": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "197": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "198": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "199": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "200": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "201": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "202": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "203": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "204": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "205": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "206": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "207": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "208": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "209": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "210": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "211": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "212": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "213": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "214": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "215": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "216": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "217": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "218": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "219": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "220": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "221": {
+    "english": null,
+    "qid": null,
+    "status": "rejected-qa-namesake"
+  },
+  "222": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "223": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "224": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "225": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "226": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "227": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "228": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "229": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "230": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "231": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "232": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "233": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "234": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "235": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "236": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "237": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "238": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "239": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "240": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "241": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "242": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "243": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "244": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "245": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "246": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "247": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "248": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "249": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "250": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "251": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "252": {
+    "english": "Socialism: Utopian and Scientific",
+    "qid": "Q509858",
+    "status": "matched"
+  },
+  "253": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "254": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "255": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "256": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "257": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "258": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "259": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "260": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "261": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "262": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "263": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "264": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "265": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "266": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "267": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "268": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "269": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "270": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "271": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "272": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "273": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "274": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "275": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "276": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "277": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "278": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "279": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "280": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "281": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "282": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "283": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "284": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "285": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "286": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "287": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "288": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "289": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "290": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "291": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "292": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "293": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "294": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "295": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "296": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "297": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "298": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "299": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "300": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "301": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "302": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "303": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "304": {
+    "english": "\"Left-Wing\" Communism: An Infantile Disorder",
+    "qid": "Q2975666",
+    "status": "matched"
+  },
+  "305": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "306": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "307": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "308": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "309": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "310": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "311": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "312": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "313": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "314": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "315": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "316": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "317": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "318": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "319": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "320": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "321": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "322": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "323": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "324": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "325": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "326": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "327": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "328": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "329": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "330": {
+    "english": "Memoirs of a Woman of Pleasure",
+    "qid": "Q1395765",
+    "status": "matched"
+  },
+  "331": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "332": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "333": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "334": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "335": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "336": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "337": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "338": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "339": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "340": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "341": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "342": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "343": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "344": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "345": {
+    "english": "Philosophy in the Bedroom",
+    "qid": "Q20972873",
+    "status": "matched"
+  },
+  "346": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "347": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "348": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "349": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "350": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "351": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "352": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "353": {
+    "english": null,
+    "qid": "Q1435803",
+    "status": "english-equals-portuguese"
+  },
+  "354": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "355": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "356": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "357": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "358": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "359": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "360": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "361": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "362": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "363": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "364": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "365": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "366": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "367": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "368": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "369": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "370": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "371": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "372": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "373": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "374": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "375": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "376": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "377": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "378": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "379": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "380": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "381": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "382": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "383": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "384": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "385": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "386": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "387": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "388": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "389": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "390": {
+    "english": null,
+    "qid": null,
+    "status": "rejected-qa-namesake"
+  },
+  "391": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "392": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "393": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "394": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "395": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "396": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "397": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "398": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "399": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "400": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "401": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "402": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "403": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "404": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "405": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "406": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "407": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "408": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "409": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "410": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "411": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "412": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "413": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "414": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "415": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "416": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "417": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "418": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "419": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "420": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "421": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "422": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "423": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "424": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "425": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "426": {
+    "english": "The German Ideology",
+    "qid": "Q470600",
+    "status": "matched"
+  },
+  "427": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "428": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "429": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "430": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "431": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "432": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "433": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "434": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "435": {
+    "english": "The Immoralist",
+    "qid": "Q174626",
+    "status": "matched"
+  },
+  "436": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "437": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "438": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "439": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "440": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "441": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "442": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "443": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "444": {
+    "english": "The Government Inspector",
+    "qid": "Q471066",
+    "status": "matched"
+  },
+  "445": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "446": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "447": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "448": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "449": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "450": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "451": {
+    "english": "The Brothers Karamazov",
+    "qid": "Q183157",
+    "status": "matched"
+  },
+  "452": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "453": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "454": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "455": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "456": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "457": {
+    "english": null,
+    "qid": "Q2290668",
+    "status": "english-equals-portuguese"
+  },
+  "458": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "459": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "460": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "461": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "462": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "463": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "464": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "465": {
+    "english": "Kama Sutra",
+    "qid": "Q47228",
+    "status": "matched"
+  },
+  "466": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "467": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "468": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "469": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "470": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "471": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "472": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "473": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "474": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "475": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "476": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "477": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "478": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "479": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "480": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "481": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "482": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "483": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "484": {
+    "english": null,
+    "qid": null,
+    "status": "rejected-qa-namesake"
+  },
+  "485": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "486": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "487": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "488": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "489": {
+    "english": null,
+    "qid": "Q10321103",
+    "status": "english-equals-portuguese"
+  },
+  "490": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "491": {
+    "english": null,
+    "qid": "Q193417",
+    "status": "english-equals-portuguese"
+  },
+  "492": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "493": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "494": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "495": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "496": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "497": {
+    "english": "The Communist Manifesto",
+    "qid": "Q40591",
+    "status": "matched"
+  },
+  "498": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "499": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "500": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "501": {
+    "english": "Economic and Philosophic Manuscripts of 1844",
+    "qid": "Q295347",
+    "status": "matched"
+  },
+  "502": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "503": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "504": {
+    "english": "Sea of Death",
+    "qid": "Q154774",
+    "status": "matched"
+  },
+  "505": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "506": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "507": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "508": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "509": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "510": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "511": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "512": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "513": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "514": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "515": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "516": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "517": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "518": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "519": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "520": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "521": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "522": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "523": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "524": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "525": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "526": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "527": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "528": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "529": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "530": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "531": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "532": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "533": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "534": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "535": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "536": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "537": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "538": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "539": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "540": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "541": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "542": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "543": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "544": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "545": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "546": {
+    "english": "The Flies",
+    "qid": "Q1212496",
+    "status": "matched"
+  },
+  "547": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "548": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "549": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "550": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "551": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "552": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "553": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "554": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "555": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "556": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "557": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "558": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "559": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "560": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "561": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "562": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "563": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "564": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "565": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "566": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "567": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "568": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "569": {
+    "english": null,
+    "qid": null,
+    "status": "rejected-qa-namesake"
+  },
+  "570": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "571": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "572": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "573": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "574": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "575": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "576": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "577": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "578": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "579": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "580": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "581": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "582": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "583": {
+    "english": "New Portuguese Letters",
+    "qid": "Q10337921",
+    "status": "matched"
+  },
+  "584": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "585": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "586": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "587": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "588": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "589": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "590": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "591": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "592": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "593": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "594": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "595": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "596": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "597": {
+    "english": "Oppression and Liberty",
+    "qid": "Q118089243",
+    "status": "matched"
+  },
+  "598": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "599": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "600": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "601": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "602": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "603": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "604": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "605": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "606": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "607": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "608": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "609": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "610": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "611": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "612": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "613": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "614": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "615": {
+    "english": "Les Paradis artificiels",
+    "qid": "Q2249082",
+    "status": "matched"
+  },
+  "616": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "617": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "618": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "619": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "620": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "621": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "622": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "623": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "624": {
+    "english": null,
+    "qid": null,
+    "status": "rejected-qa-namesake"
+  },
+  "625": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "626": {
+    "english": "Pedagogy of the Oppressed",
+    "qid": "Q1757488",
+    "status": "matched"
+  },
+  "627": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "628": {
+    "english": "Black Skin, White Masks",
+    "qid": "Q3089394",
+    "status": "matched"
+  },
+  "629": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "630": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "631": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "632": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "633": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "634": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "635": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "636": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "637": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "638": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "639": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "640": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "641": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "642": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "643": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "644": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "645": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "646": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "647": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "648": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "649": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "650": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "651": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "652": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "653": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "654": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "655": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "656": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "657": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "658": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "659": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "660": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "661": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "662": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "663": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "664": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "665": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "666": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "667": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "668": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "669": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "670": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "671": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "672": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "673": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "674": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "675": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "676": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "677": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "678": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "679": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "680": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "681": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "682": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "683": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "684": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "685": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "686": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "687": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "688": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "689": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "690": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "691": {
+    "english": "What Is Property?",
+    "qid": "Q2713465",
+    "status": "matched"
+  },
+  "692": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "693": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "694": {
+    "english": "What Is to Be Done?",
+    "qid": "Q946877",
+    "status": "matched"
+  },
+  "695": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "696": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "697": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "698": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "699": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "700": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "701": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "702": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "703": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "704": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "705": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "706": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "707": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "708": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "709": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "710": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "711": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "712": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "713": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "714": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "715": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "716": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "717": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "718": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "719": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "720": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "721": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "722": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "723": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "724": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "725": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "726": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "727": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "728": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "729": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "730": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "731": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "732": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "733": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "734": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "735": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "736": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "737": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "738": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "739": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "740": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "741": {
+    "english": "The Permanent Revolution",
+    "qid": "Q7756737",
+    "status": "matched"
+  },
+  "742": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "743": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "744": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "745": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "746": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "747": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "748": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "749": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "750": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "751": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "752": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "753": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "754": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "755": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "756": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "757": {
+    "english": "The Golden Harvest",
+    "qid": "Q154675",
+    "status": "matched"
+  },
+  "758": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "759": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "760": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "761": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "762": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "763": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "764": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "765": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "766": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "767": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "768": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "769": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "770": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "771": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "772": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "773": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "774": {
+    "english": null,
+    "qid": "Q3480964",
+    "status": "english-equals-portuguese"
+  },
+  "775": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "776": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "777": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "778": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "779": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "780": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "781": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "782": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "783": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "784": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "785": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "786": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "787": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "788": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "789": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "790": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "791": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "792": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "793": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "794": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "795": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "796": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "797": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "798": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "799": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "800": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "801": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "802": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "803": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "804": {
+    "english": null,
+    "qid": "Q1452613",
+    "status": "english-equals-portuguese"
+  },
+  "805": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "806": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "807": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "808": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "809": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "810": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "811": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "812": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "813": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "814": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "815": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "816": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "817": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "818": {
+    "english": "Tereza Batista: Home from the Wars",
+    "qid": "Q154767",
+    "status": "matched"
+  },
+  "819": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "820": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "821": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "822": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "823": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "824": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "825": {
+    "english": "The Violent Land",
+    "qid": "Q154769",
+    "status": "matched"
+  },
+  "826": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "827": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "828": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "829": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "830": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "831": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "832": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "833": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "834": {
+    "english": "Wage Labour and Capital",
+    "qid": "Q225684",
+    "status": "matched"
+  },
+  "835": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "836": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "837": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "838": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "839": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "840": {
+    "english": "Tropic of Cancer",
+    "qid": "Q1501700",
+    "status": "matched"
+  },
+  "841": {
+    "english": "Tropic of Capricorn",
+    "qid": "Q663887",
+    "status": "matched"
+  },
+  "842": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "843": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "844": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "845": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "846": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "847": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "848": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "849": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "850": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "851": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "852": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "853": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "854": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "855": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "856": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "857": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "858": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "859": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "860": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "861": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "862": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "863": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "864": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "865": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "866": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "867": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "868": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "869": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "870": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "871": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "872": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "873": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "874": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "875": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "876": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "877": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "878": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "879": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "880": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "881": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "882": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "883": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "884": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "885": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "886": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "887": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "888": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "889": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "890": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "891": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "892": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "893": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "894": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "895": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "896": {
+    "english": null,
+    "qid": null,
+    "status": "no-author-gate"
+  },
+  "897": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "898": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  },
+  "899": {
+    "english": null,
+    "qid": null,
+    "status": "no-confirmed-work-match"
+  },
+  "900": {
+    "english": null,
+    "qid": null,
+    "status": "no-search-hit"
+  }
+}

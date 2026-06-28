@@ -166,3 +166,9 @@ next-env.d.ts
 # rollback backups stay local
 /data/enrich-run/
 /data/enrichment-rollback-*-backup.csv
+
+# Portugal Estado Novo: third-party source copies (Brandão PDF + verbatim text
+# extraction) — unclear license, kept local only; the derived normalized seed
+# (data/portugal-estado-novo-*.json) carries the bibliographic facts.
+/data/source-research/portugal-brandao-livros-proibidos.pdf
+/data/source-research/portugal-brandao-raw.txt
