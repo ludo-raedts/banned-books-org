@@ -175,15 +175,26 @@ async function main() {
   const withBans = audited.filter(b => b.bans.length > 0)
 
   // GROUNDING GUARD (the UNKNOWN route): only write ban history when there is a
-  // concrete fact to build on — a named institution, a named challenger/actor, a
-  // per-ban note, or a book synopsis. A bare country+year+scope (+ generic reason)
-  // is already shown by the structured ban data; asking GPT to expand it produces
+  // concrete fact to build on — a named institution, a named challenger/actor,
+  // or a book synopsis. A bare country+year+scope (+ generic reason) is already
+  // shown by the structured ban data; asking GPT to expand it produces
   // confabulated book-content claims (the 2026-05 NZ Indecent-Publications batch
   // got "explores adolescent themes" invented from the title). Those rows stay
   // description_ban=NULL and fall back to the reason-explainer + cited source.
+  //
+  // NB: a bare per-ban `description` is deliberately NOT grounding. Bulk imports
+  // now write a *templated* bans.description (e.g. the Portugal Estado Novo /
+  // Brandão batch: "…banned under the Estado Novo… The year (X) is Brandão's
+  // recorded 'data da edição ou da proibição'…"). Counting that as grounding made
+  // GPT eligible to launder the templated note + the batch-default reason
+  // ('political') + the ambiguous year into a confident, confabulated paragraph
+  // ("banned in 1965 due to its political content, as recorded in the historical
+  // documentation"). The structured ban data + reason-explainer already surface
+  // the real, cited note; only a concrete institution/actor/synopsis licenses an
+  // LLM expansion.
   const hasGrounding = (b: BookRow) =>
     !!(b.description_book && b.description_book.trim()) ||
-    b.bans.some(x => x.institution || x.actor || (x.description && x.description.trim()))
+    b.bans.some(x => x.institution || x.actor)
   const eligible = withBans.filter(hasGrounding)
   const skippedUngrounded = withBans.length - eligible.length
   const batch    = eligible.slice(0, LIMIT)
