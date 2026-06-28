@@ -30,6 +30,11 @@ const arg = (k: string) => process.argv.find(a => a.startsWith(`--${k}=`))?.spli
 const LIMIT = arg('limit') ? parseInt(arg('limit')!, 10) : undefined
 const SLUG = arg('slug')
 const LANG = arg('lang') ?? 'en'
+// Batch scope by creation date (e.g. --created-after=2026-06-28). When set, the
+// original_language='en' filter is dropped so NULL-language batch imports (e.g.
+// the Portugal Estado Novo books) are included. The UNKNOWN/agree gate keeps it
+// safe on obscure foreign titles: unknown books just get skipped, never invented.
+const CREATED_AFTER = arg('created-after')
 const CONCURRENCY = arg('concurrency') ? parseInt(arg('concurrency')!, 10) : 4
 const ACCEPT_CONF = parseFloat(arg('accept-conf') ?? '0.7')
 
@@ -127,7 +132,9 @@ async function loadCandidates(): Promise<any[]> {
   if (SLUG) { const { data } = await sb.from('books').select(sel).eq('slug', SLUG); return data ?? [] }
   const rows: any[] = []; let from = 0; const P = 1000
   for (;;) {
-    const { data, error } = await sb.from('books').select(sel).eq('original_language', LANG).is('description_source_type', null).order('id').range(from, from + P - 1)
+    let q = sb.from('books').select(sel).is('description_source_type', null).order('id').range(from, from + P - 1)
+    q = CREATED_AFTER ? q.gte('created_at', CREATED_AFTER) : q.eq('original_language', LANG)
+    const { data, error } = await q
     if (error) throw error
     if (!data?.length) break
     rows.push(...data)
@@ -138,7 +145,7 @@ async function loadCandidates(): Promise<any[]> {
 }
 
 async function main() {
-  console.log(`── enrich-descriptions-consensus (${APPLY ? 'APPLY' : 'DRY-RUN'}) — scope lang=${LANG} ──`)
+  console.log(`── enrich-descriptions-consensus (${APPLY ? 'APPLY' : 'DRY-RUN'}) — scope ${CREATED_AFTER ? `created-after=${CREATED_AFTER}` : `lang=${LANG}`} ──`)
   const candidates = await loadCandidates()
   console.log(`candidates (ungrounded): ${candidates.length}\n`)
 
