@@ -648,11 +648,11 @@ npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model
 
           <Script
             name="enrich-ban-descriptions-gpt.ts"
-            what="Genereert per-boek de 'waarom is dit boek verboden'-narrative — concreet incident: jaar, instelling, school district, rechter, uitkomst. 2–3 zinnen (min. 60 char). Met --slug of --overwrite herschrijft het ook bestaande description_ban. Let op: ondanks de naam is dit één tekst per boek (books.description_ban), NIET één per ban-event — voor per-event narratives zie bans.description gevuld door apply-wiki-enrichment.ts."
+            what="Genereert per-boek de 'waarom is dit boek verboden'-narrative — ALLEEN voor boeken met concrete grounding (genoemde instelling, challenger/actor, of een book-synopsis). Boeken waarvan de enige ban-context een getemplate bulk-import is (bv. de Portugal Estado Novo / Brandão batch) worden overgeslagen — die blijven NULL en vallen terug op de reason-explainer + geciteerde bron. Zonder grounding verzint GPT anders een 'incident' uit de batch-default reason + dubbelzinnig jaar (incident 2026-06-28). 2–3 zinnen (min. 60 char). Met --slug of --overwrite herschrijft het bestaande description_ban (grounding-guard blijft ook dan gelden). Let op: ondanks de naam is dit één tekst per boek (books.description_ban), NIET één per ban-event — voor per-event narratives zie bans.description gevuld door apply-wiki-enrichment.ts."
             tags={['gpt', 'destructive']}
             meta={{
-              coverage: <><strong>default:</strong> only-empty <code className="font-mono">books.description_ban</code>. <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows.</>,
-              cadence: 'na elke import',
+              coverage: <><strong>default:</strong> only-empty <code className="font-mono">books.description_ban</code>, <strong>én alleen boeken met grounding</strong> (institution/actor/synopsis — geldt in alle modi, ook --slug/--overwrite). <strong>Met --slug:</strong> single-target. <strong>Met --overwrite:</strong> all-rows.</>,
+              cadence: 'NIET blind na elke import — batch-imports zonder per-titel grounding worden automatisch overgeslagen; draai gericht op boeken met synopsis/instelling/challenger',
               writes: <><code className="font-mono">books.description_ban</code> — één per boek (overschrijft met --slug/--overwrite; geen backup)</>,
               output: <>Verschijnt op de boek-detailpagina als rode card <strong>&quot;Why it was banned&quot;</strong> — zie <a href="/books/the-kite-runner" className="text-brand hover:underline">/books/&lt;slug&gt;</a></>,
               idempotent: 'default ja; --overwrite is destructief',
@@ -673,7 +673,7 @@ npx tsx --env-file=.env.local scripts/enrich-ban-descriptions-gpt.ts --apply --o
               { flag: '--overwrite', desc: 'Alle bans, overschrijft' },
               { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 500)' },
             ]}
-            note="Sanity-check met --slug voor je --overwrite draait."
+            note="Draai dit NIET op een verse bulk-import: zonder per-titel grounding (instelling/challenger/synopsis) wordt elk boek overgeslagen — de getemplate bans.description + de batch-default reason zijn géén grounding (incident 2026-06-28, Portugal-batch). Sanity-check altijd met --slug voor je --overwrite draait."
           />
 
           <Script
