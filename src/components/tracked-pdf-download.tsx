@@ -33,6 +33,9 @@ export default function TrackedPdfDownload({
 }: Props) {
   return (
     <a
+      // The PDF is a download asset, not a page to crawl/index (the route also
+      // sends X-Robots-Tag: noindex). nofollow keeps crawlers off the endpoint.
+      rel="nofollow"
       {...rest}
       download
       onClick={() => {

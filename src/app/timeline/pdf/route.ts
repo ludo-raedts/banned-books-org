@@ -13,6 +13,9 @@ export async function GET() {
       'Content-Type': 'application/pdf',
       'Content-Disposition': 'attachment; filename="banned-books-timeline.pdf"',
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      // Downloadable companion of the canonical /timeline page — keep it out of
+      // the search index so it doesn't compete with that page as a duplicate.
+      'X-Robots-Tag': 'noindex',
     },
   })
 }

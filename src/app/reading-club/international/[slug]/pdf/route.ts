@@ -34,6 +34,9 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
       // Allow shared caches to keep the PDF for an hour; behind a CDN this
       // turns repeat-downloads into a static asset hit.
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      // Downloadable companion of the canonical HTML guide page — keep it out
+      // of the search index so it doesn't compete with that page as a duplicate.
+      'X-Robots-Tag': 'noindex',
     },
   })
 }
