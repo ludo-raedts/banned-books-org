@@ -2,6 +2,34 @@
 
 Generated 2026-06-29 (read-only). 93 books whose title marks them as an adaptation (graphic novel / "for kids" / young-readers / illustrated) but that carry ≤1 author. Many are missing the adapter or illustrator. NOT auto-fixable — each needs the missing maker looked up.
 
+## Status — resolved 2026-06-29
+
+A Google-Books discovery pass (title-guarded: candidate title must contain every token of ours) surfaced concrete missing co-authors; each was manually verified before applying. **13 books fixed, 15 co-authors added** (7 got auto bios from Wikipedia):
+
+| id | book | added | note |
+|---|---|---|---|
+| 372 | Let's Talk About It | Matthew Nolan | |
+| 428 | Slaughterhouse-Five: The Graphic Novel | Ryan North | adapter |
+| 1471 | The O'Reilly Factor for Kids | Charles Flowers | |
+| 2036 | Brave New World: A Graphic Novel | Fred Fordham | adapter/illustrator |
+| 2697 | Barracoon: Adapted for Young Readers | Ibram X. Kendi, Jazzmen Lee-Johnson | web-verified: adapter + illustrator |
+| 3195 | My Own Way | Jay Hulme | |
+| 3217 | Pink, Blue, and You! | Mykaell Blais | |
+| 3518 | Chicken Soup for the Preteen Soul | Mark Victor Hansen | |
+| 4325 | Richard Matheson: Master of Terror | Chris Ryall, Steve Niles, Ian Edginton | |
+| 5466 | Blue Bloods: The Graphic Novel | Robert Venditti | adapter |
+| 7816 | Anne Frank graphic biography | Ernie Colón | illustrator |
+| 8659 | The Illustrated Guide to the Supernatural | Vida Adamoli | |
+| 18517 | The Gettysburg Address: A Graphic Adaptation | Aaron McConnell | illustrator |
+
+**Skipped (verified NOT a missing author):** #3966 The Human Body Book — GB "author" was the publisher *DK*; #8892 Illustrated Who's Who in Mythology — Geoffrey Parrinder is *consultant editor*, not an author.
+
+The remaining ~78 candidates had no GB-verified extra author — most are legitimate single-author originals (e.g. Drama, Tomboy: A Graphic Memoir, remixes like Self-Made Boys) where one author is correct. Left untouched.
+
+---
+
+## Full candidate list (original)
+
 | id | title | current author | year |
 |---|---|---|---|
 | 17441 | 1001 Comics You Must Read Before You Die: The Ultimate Guide to Comic Books, Graphic Novels, and Manga | Paul Gravett | 2014 |
