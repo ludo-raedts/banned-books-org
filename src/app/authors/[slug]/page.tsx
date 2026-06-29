@@ -34,6 +34,7 @@ import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import { videoForAuthor } from '@/lib/featured-videos'
 import YouTubeEmbed from '@/components/youtube-embed'
+import AuthorLinks from '@/components/author-links'
 
 type Author = {
   id: number
@@ -54,6 +55,9 @@ type Author = {
   data_quality_status: DataQualityStatus
   data_quality_evaluated_at: string | null
   awards: unknown
+  wikidata_id: string | null
+  website_url: string | null
+  social_links: Record<string, string> | null
 }
 
 type Ban = {
@@ -199,7 +203,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards')
+    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links')
     .eq('slug', slug)
     .single()
 
@@ -490,6 +494,18 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
       value: a.data_quality_status,
       url: 'https://www.banned-books.org/data-quality',
     }
+    // sameAs — fuse this page with the author's canonical entity elsewhere
+    // (Wikidata, VIAF authority file, official site, social profiles). This is
+    // the primary payoff of the author-links enrichment: it lets Google/AI
+    // crawlers resolve this Person to a known entity rather than treating the
+    // page as an unanchored name. Sourced from Wikidata (CC-0), namesake-gated
+    // — see scripts/enrich-author-links.ts.
+    const sameAs = [
+      a.wikidata_id ? `https://www.wikidata.org/wiki/${a.wikidata_id}` : null,
+      a.website_url,
+      ...(a.social_links ? Object.values(a.social_links) : []),
+    ].filter((u): u is string => !!u)
+    if (sameAs.length > 0) personJsonLd.sameAs = sameAs.length === 1 ? sameAs[0] : sameAs
   }
 
   // ── Direct-answer lead + FAQPage JSON-LD ──────────────────────────────────
@@ -788,6 +804,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               </Link>.
             </p>
           ) : null}
+          {/* Official website + social profiles (Wikidata-sourced). Hidden for
+              placeholder buckets; the component self-hides when there's nothing
+              to show. VIAF/Wikidata live in the Person JSON-LD sameAs, not here. */}
+          {!isPlaceholder && (
+            <AuthorLinks websiteUrl={a.website_url} socialLinks={a.social_links} />
+          )}
         </div>
       </div>
 
