@@ -29,6 +29,10 @@ const APPLY = process.argv.includes('--apply')
 const arg = (k: string) => process.argv.find(a => a.startsWith(`--${k}=`))?.split('=')[1]
 const LIMIT = arg('limit') ? parseInt(arg('limit')!, 10) : undefined
 const SLUG = arg('slug')
+// --ids=1,2,3 — run consensus on an explicit set (e.g. a remediation batch).
+// Still honours the description_source_type IS NULL guard so it never clobbers
+// a grounded row; language filter is dropped (the caller chose these rows).
+const IDS = arg('ids') ? arg('ids')!.split(',').map(s => parseInt(s.trim(), 10)).filter(Number.isFinite) : null
 const LANG = arg('lang') ?? 'en'
 // Batch scope by creation date (e.g. --created-after=2026-06-28). When set, the
 // original_language='en' filter is dropped so NULL-language batch imports (e.g.
@@ -130,6 +134,14 @@ async function pool<T, R>(items: T[], n: number, fn: (t: T, i: number) => Promis
 async function loadCandidates(): Promise<any[]> {
   const sel = 'id, slug, title, first_published_year, original_language, description_book, censorship_context, book_authors(authors(display_name)), bans(countries(name_en))'
   if (SLUG) { const { data } = await sb.from('books').select(sel).eq('slug', SLUG); return data ?? [] }
+  if (IDS) {
+    const out: any[] = []
+    for (let i = 0; i < IDS.length; i += 300) {
+      const { data } = await sb.from('books').select(sel).is('description_source_type', null).in('id', IDS.slice(i, i + 300))
+      out.push(...(data ?? []))
+    }
+    return LIMIT ? out.slice(0, LIMIT) : out
+  }
   const rows: any[] = []; let from = 0; const P = 1000
   for (;;) {
     let q = sb.from('books').select(sel).is('description_source_type', null).order('id').range(from, from + P - 1)
