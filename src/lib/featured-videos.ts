@@ -218,6 +218,12 @@ export const FEATURED_VIDEOS: FeaturedVideo[] = [
     credit: 'Amanpour and Company',
     authorSlug: 'dave-eggers',
   },
+  {
+    videoId: 'S7SOMbWChYo',
+    title: 'Ibram X. Kendi on recent book-banning efforts',
+    credit: 'MS NOW · Zerlina.',
+    authorSlug: 'ibram-x-kendi',
+  },
 ]
 
 /** The featured clip for a book page, if one is registered. */
