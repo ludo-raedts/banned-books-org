@@ -2,6 +2,19 @@
 
 Generated 2026-06-29 (read-only). 411 books where first_published_year == earliest ban year AND no ISBN AND no OpenLibrary match — the importer likely defaulted the publication year to the ban year. NOT blanket-safe to null: recent books are often banned in their publication year, so some of these years are correct. Use the batch view to spot systematic placeholders (whole imports where year was defaulted).
 
+## Status — resolved 2026-06-29 via `scripts/enrich-orphan-years.ts`
+
+Ran a guarded OpenLibrary match (author agreement + bidirectional title match + the invariant "first published ≤ earliest ban year") over all 411:
+
+- **18 resolved** — 14 had their year **confirmed** by OL (placeholder was correct) + got their `openlibrary_work_id` backfilled (now enrichable); **4 corrected** to OL's verified first-publish year — but **2 of those 4 were OL junk** caught on manual review and reverted:
+  - ✓ #3220 Pride: The Celebration and the Struggle 2025→**2016**
+  - ✓ #16415 Lettres Philosophiques (Voltaire) 1734→**1733**
+  - ✗ #19117 …Moskauer Prozess 1938→1975 — impossible (banned 1938), **reverted**
+  - ✗ #19510 I Knew Hitler 1938→1770 — OL junk year, **reverted**
+- **393 had no guarded OL match** — spot-checks confirm these titles simply **aren't in OpenLibrary** (obscure / foreign / banned works — which is exactly why they never got an ISBN). No external source exists to verify them, so their years stay as best-effort and this list remains the watchlist.
+
+**Lesson:** year-corrections are now review-gated in the script (`--write-year-corrections`); OL `first_publish_year` can be junk that's earlier than the ban (1770) and passes every automated invariant.
+
 ## Batches (by created_at day) — high inC/total ratio = systematic placeholder
 
 | created day | in-C | total created that day | ratio |
