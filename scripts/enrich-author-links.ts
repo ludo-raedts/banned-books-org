@@ -89,19 +89,33 @@ async function loadRankedAuthors(): Promise<AuthorStat[]> {
   return [...byAuthor.values()].sort((a, b) => b.books - a.books || b.bans - a.bans)
 }
 
-/** Per-author gate fields, fetched in batches keyed by id. */
-async function loadAuthorMeta(ids: number[]): Promise<Map<number, { birthYear: number | null; placeholder: boolean; checked: boolean }>> {
-  const out = new Map<number, { birthYear: number | null; placeholder: boolean; checked: boolean }>()
+type AuthorMeta = {
+  birthYear: number | null
+  placeholder: boolean
+  checked: boolean
+  website: string | null
+  social: Record<string, string> | null
+}
+
+/** Per-author gate + existing-link fields, fetched in batches keyed by id. */
+async function loadAuthorMeta(ids: number[]): Promise<Map<number, AuthorMeta>> {
+  const out = new Map<number, AuthorMeta>()
   const CHUNK = 500
   for (let i = 0; i < ids.length; i += CHUNK) {
     const slice = ids.slice(i, i + CHUNK)
     const { data, error } = await sb
       .from('authors')
-      .select('id, birth_year, is_placeholder, links_checked_at')
+      .select('id, birth_year, is_placeholder, links_checked_at, website_url, social_links')
       .in('id', slice)
     if (error) throw new Error(error.message)
-    for (const r of (data ?? []) as Array<{ id: number; birth_year: number | null; is_placeholder: boolean | null; links_checked_at: string | null }>) {
-      out.set(r.id, { birthYear: r.birth_year, placeholder: !!r.is_placeholder, checked: r.links_checked_at != null })
+    for (const r of (data ?? []) as Array<{ id: number; birth_year: number | null; is_placeholder: boolean | null; links_checked_at: string | null; website_url: string | null; social_links: Record<string, string> | null }>) {
+      out.set(r.id, {
+        birthYear: r.birth_year,
+        placeholder: !!r.is_placeholder,
+        checked: r.links_checked_at != null,
+        website: r.website_url,
+        social: r.social_links,
+      })
     }
   }
   return out
@@ -213,10 +227,16 @@ async function main() {
     if (r.ok) {
       hits.push({ a, links: r.links })
       if (APPLY) {
+        // Merge-safe: never clobber a manually-curated website with a null,
+        // and union social_links so hand-added handles (e.g. an Instagram
+        // Wikidata doesn't carry) survive a later run. Wikidata wins per key
+        // when it has a value; existing manual entries are preserved otherwise.
+        const m = meta.get(a.id)!
+        const mergedSocial = { ...(m.social ?? {}), ...r.links.social }
         const { error } = await sb.from('authors').update({
           wikidata_id: r.links.qid,
-          website_url: r.links.website,
-          social_links: Object.keys(r.links.social).length > 0 ? r.links.social : null,
+          website_url: r.links.website ?? m.website,
+          social_links: Object.keys(mergedSocial).length > 0 ? mergedSocial : null,
           links_checked_at: stamp,
         }).eq('id', a.id)
         if (error) console.error(`  ✗ update ${a.slug}: ${error.message}`)
