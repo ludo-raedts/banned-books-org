@@ -30,7 +30,7 @@
  * pending per-title PORBASE/BNP verification.
  *
  * Collective/anthology rows (author "Vários"/"Colectivo") are attached to the
- * existing placeholder author "Various".
+ * canonical placeholder author "Various Authors" (id 455, slug 'various-authors').
  *
  * Usage:
  *   pnpm tsx --env-file=.env.local scripts/import-portugal-estado-novo.ts                                   # dry-run (default seed = today)
@@ -68,7 +68,7 @@ type SeedRow = {
   source_url: string
 }
 
-const COLLECTIVE_AUTHOR = 'Various' // existing placeholder author (id 7243)
+const COLLECTIVE_AUTHOR = 'Various Authors' // canonical placeholder author (id 455, slug 'various-authors')
 const SOURCE_TYPE = 'compilation'
 const BAN_STATUS = 'historical' as const
 const INCLUSION_RATIONALE =
