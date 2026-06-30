@@ -35,6 +35,7 @@ import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import { videoForAuthor } from '@/lib/featured-videos'
 import YouTubeEmbed from '@/components/youtube-embed'
 import AuthorLinks from '@/components/author-links'
+import { isOrganizationAuthor } from '@/lib/organization-authors'
 
 type Author = {
   id: number
@@ -439,6 +440,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   // mode for these records.
   const isPlaceholder = a.is_placeholder === true
 
+  // Corporate / organizational credits (studios, publishers, editorial bodies)
+  // are real catalogue authors but not people — emit Organization JSON-LD, not
+  // Person, and an organizational-credit explanation instead of the person
+  // no-bio note. Curated registry (see lib/organization-authors.ts). The ban
+  // counts, lead, and FAQ stay — they read correctly for an organization too.
+  const isOrg = !isPlaceholder && isOrganizationAuthor(a.slug)
+
   // Author-level literary awards (Nobel Prize in Literature). Rendered as a
   // gold badge in the header and emitted as schema.org `award` on the Person.
   const authorAwards = parseAwards(a.awards)
@@ -451,10 +459,13 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const canonicalUrlLd = `https://www.banned-books.org/authors/${a.slug}`
   const personAlternateNames = [a.name_native, a.name_english, a.name_transliterated]
     .filter((n): n is string => !!n && n.trim() !== '' && n.trim().toLowerCase() !== a.display_name.trim().toLowerCase())
+  // Entity fragment id: organizations anchor at #organization, people at
+  // #person. webPageJsonLd.about points at whichever exists below.
+  const entityFragment = isOrg ? 'organization' : 'person'
   const personJsonLd: Record<string, unknown> | null = isPlaceholder ? null : {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${canonicalUrlLd}#person`,
+    '@type': isOrg ? 'Organization' : 'Person',
+    '@id': `${canonicalUrlLd}#${entityFragment}`,
     name: a.display_name,
     url: canonicalUrlLd,
     mainEntityOfPage: canonicalUrlLd,
@@ -465,21 +476,27 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   if (personJsonLd) {
     if (a.photo_url)      personJsonLd.image = a.photo_url
     if (a.bio)            personJsonLd.description = a.bio
-    if (a.birth_year)     personJsonLd.birthDate = String(a.birth_year)
-    if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
-    if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
-    if (a.original_language) personJsonLd.knowsLanguage = a.original_language
     if (authorAwards.length > 0) {
       const aw = authorAwards.map(awardSchemaText)
       personJsonLd.award = aw.length === 1 ? aw[0] : aw
     }
-    if (realBooks.length > 0) {
-      personJsonLd.workExample = realBooks.slice(0, 50).map(b => ({
-        '@type': 'Book',
-        name: b.title,
-        url: `https://www.banned-books.org/books/${b.slug}`,
-        ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
-      }))
+    // Person-only properties. `workExample`, `birthDate`/`deathDate`,
+    // `birthPlace`, and `knowsLanguage` aren't valid on schema.org Organization,
+    // so they're suppressed for corporate-author records (those fields are NULL
+    // for orgs anyway, but emitting them would still be invalid markup).
+    if (!isOrg) {
+      if (a.birth_year)     personJsonLd.birthDate = String(a.birth_year)
+      if (a.death_year)     personJsonLd.deathDate = String(a.death_year)
+      if (a.birth_country)  personJsonLd.birthPlace = a.birth_country
+      if (a.original_language) personJsonLd.knowsLanguage = a.original_language
+      if (realBooks.length > 0) {
+        personJsonLd.workExample = realBooks.slice(0, 50).map(b => ({
+          '@type': 'Book',
+          name: b.title,
+          url: `https://www.banned-books.org/books/${b.slug}`,
+          ...(b.first_published_year ? { datePublished: String(b.first_published_year) } : {}),
+        }))
+      }
     }
     // dateModified — trigger-bumped freshness signal, parallel to the
     // Book.dateModified emitted on book detail pages.
@@ -630,7 +647,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     author: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
     publisher: { '@type': 'Organization', name: 'Banned Books', url: 'https://www.banned-books.org' },
   }
-  if (!isPlaceholder) webPageJsonLd.about = { '@id': `${canonicalUrlLd}#person` }
+  if (!isPlaceholder) webPageJsonLd.about = { '@id': `${canonicalUrlLd}#${entityFragment}` }
   if (a.created_at) webPageJsonLd.datePublished = a.created_at
   if (a.updated_at) webPageJsonLd.dateModified = a.updated_at
 
@@ -683,7 +700,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         )}
         <div className="flex flex-col justify-center gap-2 min-w-0">
           <p className="text-[11px] uppercase tracking-[0.12em] font-semibold text-oxblood">
-            Author
+            {isOrg ? 'Organization' : 'Author'}
           </p>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
             {a.display_name}
@@ -781,6 +798,17 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             // Authors, No Further Information). Rendered in place of the DB
             // `bio` field, which is mostly corrupt for these rows.
             <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">{placeholderText}</p>
+          ) : isOrg ? (
+            // Organizational credit (studio, publisher, imprint). These rows
+            // are real catalogue authors but not people, so the person no-bio
+            // note below would mislead. Editorial collectives ("Editors of…")
+            // are handled by placeholderText above and never reach here.
+            <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">
+              This is an organizational credit, not an individual author. These works are
+              attributed to {a.display_name} as a corporate author rather than to a single
+              person, so a personal biography doesn&rsquo;t apply. The works themselves are
+              catalogued below alongside their bans.
+            </p>
           ) : a.bio ? (
             <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
           ) : !isPlaceholder ? (
