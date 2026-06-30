@@ -193,6 +193,7 @@ export default async function PressPage() {
       'https://bsky.app/profile/banned-books.org',
       'https://www.facebook.com/bannedbooks.org',
       'https://www.instagram.com/bannedbooksarchive',
+      'https://mastodon.social/@bannedbooks',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
