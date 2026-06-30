@@ -23,15 +23,22 @@ import { ImageResponse } from 'next/og'
 import { getBookOfTheDay, getBookForDate, isPublishableBotdDate } from '@/lib/book-of-the-day'
 import { renderBadge, BADGE_SIZE, BADGE_SIZE_SQUARE } from '@/lib/book-of-the-day-badge'
 
-const CACHE = 'public, s-maxage=3600, stale-while-revalidate=86400'
+// A specific date's render is deterministic and never changes → cache long.
+// The date-less "today" badge is live, so cache it briefly: a previous-day
+// render must expire (not be served stale for up to a day), or hot-linked
+// badges and date-less image_url consumers (e.g. an Instagram post) show
+// yesterday's book. Always link dated URLs where you can; they're unique per
+// day and thus immune to any cross-day cache.
+const CACHE_DATED = 'public, s-maxage=86400, stale-while-revalidate=604800'
+const CACHE_LIVE = 'public, s-maxage=600, stale-while-revalidate=600'
 
 export async function GET(req: Request) {
   const params = new URL(req.url).searchParams
   const date = params.get('date')
   const square = params.get('format') === 'square'
-  const book = date && isPublishableBotdDate(date)
-    ? await getBookForDate(date)
-    : await getBookOfTheDay()
+  const dated = !!date && isPublishableBotdDate(date)
+  const book = dated ? await getBookForDate(date) : await getBookOfTheDay()
+  const cache = dated ? CACHE_DATED : CACHE_LIVE
 
   const png = Buffer.from(
     await new ImageResponse(renderBadge(book, { square }), {
@@ -46,11 +53,11 @@ export async function GET(req: Request) {
       .jpeg({ quality: 90, chromaSubsampling: '4:4:4' })
       .toBuffer()
     return new Response(new Uint8Array(jpg), {
-      headers: { 'content-type': 'image/jpeg', 'cache-control': CACHE },
+      headers: { 'content-type': 'image/jpeg', 'cache-control': cache },
     })
   }
 
   return new Response(new Uint8Array(png), {
-    headers: { 'content-type': 'image/png', 'cache-control': CACHE },
+    headers: { 'content-type': 'image/png', 'cache-control': cache },
   })
 }

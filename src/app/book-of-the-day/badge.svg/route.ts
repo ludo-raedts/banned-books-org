@@ -59,7 +59,9 @@ export async function GET(req: Request) {
   return new Response(svg, {
     headers: {
       'Content-Type': 'image/svg+xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      // Live daily badge — short cache so a previous day's render expires
+      // rather than being served stale for up to a day.
+      'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=600',
     },
   })
 }
