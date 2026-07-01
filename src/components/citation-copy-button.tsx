@@ -24,13 +24,20 @@ export default function CitationCopyButton({ text, label }: Props) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`Copy ${label} citation to clipboard`}
-      className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors"
-    >
-      {copied ? 'Copied!' : 'Copy'}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`Copy ${label} citation to clipboard`}
+        className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors"
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
+      {/* The static aria-label masks the "Copied!" text swap from screen
+          readers, so announce success through a polite live region instead. */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? `${label} citation copied to clipboard` : ''}
+      </span>
+    </>
   )
 }
