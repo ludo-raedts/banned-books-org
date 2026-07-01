@@ -1,4 +1,9 @@
-export const dynamic = 'force-dynamic'
+// ISR: cache the feed for an hour and revalidate in the background, matching
+// /essays/feed.xml and /book-of-the-day/feed.xml. News refreshes via a daily
+// cron, so hourly staleness is fine — and it stops RSS pollers (Feedly, Slack,
+// Bluesky relays) from hitting the news_items query on every fetch. The
+// Cache-Control header below still governs CDN/browser caching downstream.
+export const revalidate = 3600
 
 import { adminClient } from '@/lib/supabase'
 import { publishedEssays } from '@/lib/essays-data'

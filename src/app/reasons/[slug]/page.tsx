@@ -56,13 +56,18 @@ function countryFlag(code: string): string {
   ).join('')
 }
 
-// Return [] (not the 11 slugs): empty array still flips the route to static +
-// ISR — the catalogue is now client-side (ReasonCatalogueBrowser), so the page
-// no longer reads searchParams and can be cached. Renders on first request
-// rather than running 11 reason sweeps concurrently at build time (the same
-// build-timeout hazard that hit the country pages under DB load).
+// Prebuild all 11 reason hubs at build time. These are high-authority landing
+// pages (linked from every book sidebar, the reasons index, and essay intros),
+// so a warm cache on the first crawler hit matters — an empty array left them
+// to render on-demand (cold ISR miss + a DB sweep) on the first request.
+// The old build-timeout concern is stale: the page was since slimmed to a
+// light ban_reason_links sweep (no full-catalogue hydration), and /books/[slug]
+// already prebuilds the full ~15.8k catalogue under the same build, so 11 more
+// pages are well within the concurrency budget (staticGenerationRetryCount +
+// staticGenerationMaxConcurrency in next.config.ts). Slugs come from the local
+// REASON_INTROS registry so this stays DB-free.
 export async function generateStaticParams() {
-  return [] as { slug: string }[]
+  return Object.keys(REASON_INTROS).map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
