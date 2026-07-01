@@ -115,6 +115,7 @@ Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='govern
 | `add-bulk-books.ts` | inline lijst | Bulk nieuwe boeken + OpenLibrary cover-fetch, direct via `adminClient()` | n.v.t. |
 | `import-russia-bans.ts` | `data/russia-articles-batch1.json` + `data/russia-minjust-batch1.json` | RU: hand-curated onafhankelijke-pers cases + Минюст Federal List of Extremist Materials; alles `country='RU'`/`scope='government'`; dedup op (book_slug, year_started); minjust-rijen auto-`needs_review` | `--apply` (`--only=articles\|minjust`) |
 | `import-berlin-verbannte.ts` | `data/berlin-verbannte-1938-*.json` (Berlin.de CC-BY, Nazi 1938-lijst) | DE `government`/`banned`/`historical`-bans, `warning_level=none` (censuur-slachtoffers, als Liste Otto). **Match-before-create via `matchExistingBook` (cross-language tier), niet de queue.** Houdt intra-batch slug-collisies (zelfde titel, andere auteur) + ambigue generieke bestaande-matches vast als needs_review. Idempotent/resumebaar | `--apply` (`--limit=N`) |
+| `import-portugal-estado-novo.ts` | `data/portugal-estado-novo-<date>.json` (José Brandão "Livros Proibidos", ~900 titels; seed gebouwd door `build-portugal-estado-novo-stage0.ts`) | PT Estado-Novo `government`-bans. **AUTHOR-VERIFIED match-before-create** (PT-slug → EN-slug via `title_english_meaningful` → `authorsAgree()`) — het strengste dedup-voorbeeld. `first_published_year` blijft NULL tot PORBASE-verificatie (`verify-portugal-years-porbase.ts`, §6). Uitgevoerd 2026-06-28 | `--apply` |
 
 **Vuistregel:** JSON met standaard government-bans → `import-africa` als template ·
 school/library challenges → `import-nipissing` · bans bij bestaande boeken → `add-ala-2025`.
@@ -220,7 +221,7 @@ CourtListener doet **niet** mee: dat is een render-time live feed
 | `enrich-all.ts` | **Master-pipeline.** Fase 1 = parallelle gratis-harvest (ol/gb/native-titles concurrent — verving de oude sequentiële `enrich-isbn` + covers-continuous first-pass), Fase 2 = sequentieel covers-v2 + gutenberg + archive + descriptions-v2 + GPT. Wrapt alles in een before/after coverage-snapshot + confidence-rollback. Flags: `--apply`, `--free-only`, `--no-gutenberg`, `--no-archive`, `--gpt-limit=N`, `--native-limit=N`, `--threshold=` |
 | `enrich-coverage-snapshot.ts` | Read-only coverage-meting (isbn13 / cover / description / native-title-non-EN) via `count(head:true)` (1000-row-cap-veilig). `--snapshot=<path>` schrijft JSON. Exporteert `captureCoverage()` (gebruikt door enrich-all) |
 | `enrich-coverage-report.ts` | Rendert het before/after-rapport (`data/enrichment-coverage-report-<date>.md`) uit twee snapshots + de run-manifest + `confidence.json` |
-| `enrich.ts` | Oudere/seed-achtige enrichment (referentiedata + bestaande data); het `enrich.js`-compilaat is verwijderd |
+| ~~`enrich.ts`~~ | **Gearchiveerd** (`scripts/archive/enrich.ts`, 2026-07-01) — de oude seed-achtige enrichment-harness, volledig vervangen door `enrich-all.ts` + de `enrich-*` component-scripts |
 | **Descriptions** | |
 | `enrich-descriptions-v2.ts` | 2e-generatie CLI — **voorkeur voor nieuwe runs**. v1 (`enrich-descriptions.ts`) is verwijderd 2026-06-11; `/api/admin/enrich/run` draait in-process op v2 |
 | `enrich-descriptions-continuous.ts` | Continu missende `description_book` vullen; tracking in `description_search_attempts` |
@@ -315,6 +316,7 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 | `remediate-author-bios.ts` | Apply-zijde van `_audit_author_bio_contamination`: LLM-classificatie (gpt-4o-mini) nullt wrong_entity/wrong_person-bios; CSV-backup per run; deelt skip-cache met `enrich-author-bios.ts` zodat de enricher gerepareerde rijen niet opnieuw vervuilt | gericht |
 | `normalize-russia-titles.ts` | RU FSEM Cyrillic-titels: zet `title_native_script='cyrillic'` + BGN/PCGN-transliteratie + `original_language`; raakt canonieke titel/slug niet aan; idempotent | generiek |
 | `verify-pen-school-bans.ts` | Grondt PEN-school-bans tegen de upstream Index-bestanden (src#2131/#2068) en zet `bans.confidence='verified'` bij district-match via `titlesMatch()`; title+state-only matches → review, nooit auto | gericht |
+| `verify-portugal-years-porbase.ts` | **Read-only** review-tool: verifieert PT Estado-Novo `first_published_year` (na import NULL gelaten) tegen PORBASE (Biblioteca Nacional de Portugal); `fpy` blijft NULL — schrijft een reviewlijst, muteert niets. PT year-verify is nog open | scope/read-only |
 | `_scope_fr_otto_bans.ts` / `_scope_fr_wikipedia_bans.ts` | Scope/verken FR ban-bronnen (read-only; Sprint-A Taak 5 FR is nog open) | scope |
 | `mark-cover-override.ts` | Markeert cover als handmatige override (clear cover_url) | tool |
 
@@ -337,6 +339,8 @@ Genummerde stages voor het opschonen/hergronden van bestaande descriptions.
 | 2.6 | `strip-filler-sentences.ts` | Strip filler-zinnen/clausules (behoudt named cases) |
 | wrapper | `clean-descriptions.ts` | Één commando dat de remediation-stappen aaneenrijgt |
 | 2 (no-ISBN) | `_reground_noisbn.ts` | Fase-2 reground van de no-ISBN REGROUND-rijen uit de ungrounded-audit die wél via title+author naar een OL/Wikipedia-bron resolven |
+| recovery | `restore-cleaned-descriptions.ts` | Geguarde restore van descriptions die `cleanup-shared-enrichment.ts` nullde: **title/author-match-guard** vóór herstel, zodat een fout upstream-record per ISBN (bv. "To Live" #104 herteld met een pinyin-blurb over een ander boek) niet terugsluipt. Draai i.p.v. een blinde v2-refill |
+| markup | `clean-wiki-markup-descriptions.ts` | Kapt gelekte MediaWiki-opmaak (`== Sectie ==`) af tot de lead-paragraaf (nullt bij <60 tekens). Preventie zit in `stripWikiMarkup()` in `src/lib/enrich/descriptions.ts`; regressie-signaal = de scoring-guard in `score-data-quality.ts`. 280 boeken opgeschoond 2026-07-01 |
 
 > Volgorde: `score-descriptions` → `clean-descriptions` (of los 2 → 2.5 → 2.6).
 
@@ -395,6 +399,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 | `fetch-news.ts` | RSS ophalen, embed + dedup, samenvatten (gpt-4.1-mini), opslaan |
 | `suggest-editorial-classification-gpt.ts` | GPT editorial-classification suggester |
 | `probe-bookshop-isbn.ts` | Test Bookshop.org affiliate deep-link per isbn13 |
+| `find-author-interviews.ts` | **Read-only discovery:** zoekt YouTube naar duidelijke auteur-interviews/clips voor de meest-verboden auteurs → ranked kandidatenworklist voor handmatige selectie in `src/lib/featured-videos.ts`; schrijft niets naar DB/registry |
 | `_parse_apm_pdf.py` | Parse APM-PDF (Python) |
 
 ### Bluesky "banned book of the day" (gepinde rotatie + verjaardagen)

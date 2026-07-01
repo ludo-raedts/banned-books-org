@@ -95,6 +95,6 @@ async function main() {
     console.log()
   }
 
-  console.log(WRITE ? 'Applied.' : 'Dry-run — re-run with --write.')
+  console.log(WRITE ? 'Applied.' : 'Dry-run — re-run with --apply.')
 }
 main().catch(e => { console.error(e); process.exit(1) })

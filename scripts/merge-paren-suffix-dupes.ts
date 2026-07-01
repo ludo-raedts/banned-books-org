@@ -294,7 +294,7 @@ async function main() {
   }
 
   console.log(`\nDone. ${WRITE ? 'Applied' : 'Would apply'}: ${ok}.  Skipped: ${skipped}.  Failed: ${failed}.`)
-  if (!WRITE) console.log(`\nRe-run with --write to apply.`)
+  if (!WRITE) console.log(`\nRe-run with --apply to persist.`)
 }
 
 main().catch(e => { console.error(e); process.exit(1) })

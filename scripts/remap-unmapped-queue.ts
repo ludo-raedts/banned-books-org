@@ -216,7 +216,7 @@ async function main() {
   console.log(`Empty notes (skipped):     ${emptyNotes}   (no notes AND no source fallback configured)`)
   console.log(`No signal (skipped):       ${noSignal}   (notes have text but no pattern matched)`)
   if (WRITE) console.log(`Update errors:             ${errors}`)
-  if (!WRITE) console.log(`\n[DRY-RUN] Re-run with --write to apply.`)
+  if (!WRITE) console.log(`\n[DRY-RUN] Re-run with --apply to persist.`)
 }
 
 main().catch(e => { console.error(e); process.exit(1) })

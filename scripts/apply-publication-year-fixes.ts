@@ -35,6 +35,6 @@ async function main() {
     ok++
   }
   console.log(`\n${WRITE ? 'Applied' : 'Would apply'}: ${ok}  Skipped: ${skip}  Failed: ${fail}`)
-  if (!WRITE) console.log('Re-run with --write to apply.')
+  if (!WRITE) console.log('Re-run with --apply to persist.')
 }
 main().catch(e => { console.error(e); process.exit(1) })

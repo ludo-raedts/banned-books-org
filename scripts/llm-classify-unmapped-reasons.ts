@@ -239,7 +239,7 @@ async function main() {
     console.log(`  ${String(n).padStart(4)}  ${k}`)
   }
   if (failures) console.log(`  failures: ${failures}`)
-  if (!WRITE) console.log(`\n[DRY-RUN] re-run with --write to persist mappings.`)
+  if (!WRITE) console.log(`\n[DRY-RUN] re-run with --apply to persist mappings.`)
 }
 
 main().catch(e => { console.error(e); process.exit(1) })
