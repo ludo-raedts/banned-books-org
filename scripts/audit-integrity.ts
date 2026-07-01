@@ -91,6 +91,7 @@ interface Book {
   description: string | null
   description_book: string | null
   first_published_year: number | null
+  original_language: string | null
 }
 interface Author {
   id: number
@@ -106,7 +107,7 @@ async function load() {
   const [books, authors, bookAuthors, bans, banSourceLinks] = await Promise.all([
     paginate<Book>(
       'books',
-      'id, slug, title, isbn13, cover_url, cover_status, description, description_book, first_published_year',
+      'id, slug, title, isbn13, cover_url, cover_status, description, description_book, first_published_year, original_language',
       'id',
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
@@ -146,6 +147,20 @@ const groupConsistent = (titles: string[]): boolean =>
   titles.every((t) => titlesMatch(titles[0], t))
 
 const hasMojibake = (s: string | null): boolean => !!s && s.includes('�')
+
+// Cross-language edition-dupe signal (mirrors scripts/_audit_spanish_edition_dupes.ts).
+// A foreign import can mint a fresh row keyed on the Spanish EDITION title of a
+// work already catalogued in English under the same author. The precision gate is
+// original_language='en': a true edition row carries the underlying English work's
+// language, whereas a genuine Spanish WORK carries 'es'. Noisy by design (drift,
+// not invariant) — genuine Spanish/French works by bilingual authors show up as
+// false positives, so growth past baseline is a WARN to review, never a hard fail.
+const SPANISH_START = /^(el|la|los|las|un|una|unos|unas|del)\s+/i
+const SPANISH_CHAR = /[ñ¡¿]/i
+const SPANISH_MID = /\s(y|en el|en la|de los|de las)\s/i
+const isSpanishTitle = (t: string): boolean =>
+  SPANISH_CHAR.test(t) || SPANISH_START.test(t) || SPANISH_MID.test(t)
+const isLatinTitle = (s: string): boolean => !/[^ -ɏ]/.test(s || '')
 
 async function runChecks(): Promise<Finding[]> {
   const { books, authors, bookAuthors, banBookIds, bans, banSourceLinks } = await load()
@@ -357,6 +372,37 @@ async function runChecks(): Promise<Finding[]> {
     id: 'country-coverage', label: 'distinct countries with at least one ban',
     severity: 'drift', count: countryCounts.size, badDirection: 'down',
     samples: topCountries.slice(0, SAMPLE_CAP).map(([c, n]) => `${c}: ${n} bans`),
+  })
+
+  // 15. cross-language edition dupes (standing gate for the class that used to be
+  //     found only by running _audit_spanish_edition_dupes.ts by hand after a
+  //     foreign import). Per author with ≥2 books: a Spanish-titled row stamped
+  //     original_language='en' alongside an English-titled row is a merge
+  //     candidate. Growth past baseline = a new import re-introduced the class →
+  //     resolve via the curated scripts/merge-spanish-edition-dupes.ts.
+  const booksByAuthor = new Map<number, Book[]>()
+  const bookById = new Map(books.map((b) => [b.id, b]))
+  for (const ba of bookAuthors) {
+    const bk = bookById.get(ba.book_id)
+    if (!bk) continue
+    const arr = booksByAuthor.get(ba.author_id) ?? []
+    arr.push(bk)
+    booksByAuthor.set(ba.author_id, arr)
+  }
+  const editionDupes: string[] = []
+  for (const [authorId, bks] of booksByAuthor) {
+    if (bks.length < 2) continue
+    const spanish = bks.filter((b) => isSpanishTitle(b.title) && b.original_language === 'en')
+    const english = bks.filter((b) => !isSpanishTitle(b.title) && isLatinTitle(b.title))
+    if (spanish.length && english.length) {
+      for (const s of spanish) editionDupes.push(`author ${authorId}: #${s.id} ${s.slug}`)
+    }
+  }
+  findings.push({
+    id: 'cross-language-edition-dupes',
+    label: 'Spanish-edition row (original_language=en) beside an English row, same author',
+    severity: 'drift', count: editionDupes.length,
+    samples: editionDupes.slice(0, SAMPLE_CAP),
   })
 
   return findings

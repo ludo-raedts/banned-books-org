@@ -147,6 +147,13 @@ die een merge-script daarna inleest.
 > import met mogelijk vreemdtalige titels:** draai `_audit_cross_script_dupes.ts`
 > (auteurs) én `_audit_spanish_edition_dupes.ts` (boeken), en fold de bevestigde
 > hits via de bijbehorende merge-scripts. Dit is het staande vangnet, niet optioneel.
+>
+> **Automatisch vangnet (sinds 2026-07-01):** de boek-editie-variant draait nu ook
+> als drift-metric `cross-language-edition-dupes` in `audit-integrity.ts` (baseline
+> 12 = ruisvloer van genuine `es/fr`-werken bij tweetalige auteurs). Draait
+> standalone én aan het eind van `enrich-all`, dus een import die de klasse
+> herintroduceert WARN't vanzelf — ook als het bespoke script vergat te matchen.
+> De handmatige `_audit_*`-run blijft de fijnmazige lijst voor het curated mergen.
 
 ---
 

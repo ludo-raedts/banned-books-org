@@ -8,6 +8,7 @@
     "orphan-books": 1,
     "ban-before-publication": 748,
     "no-cover": 5890,
-    "no-description": 1677
+    "no-description": 1677,
+    "cross-language-edition-dupes": 12
   }
 }
