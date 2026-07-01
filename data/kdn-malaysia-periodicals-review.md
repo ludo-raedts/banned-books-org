@@ -4,6 +4,8 @@ Gegenereerd: 2026-06-03. Kandidaat-periodieken (magazines/journals/pictorials) d
 
 **Bijgewerkt 2026-06-03:** 17 aangevinkte high-records verwijderd uit de DB (+ hun bans/book_authors). Onderstaande lijst toont alleen wat nog over is.
 
+**Bijgewerkt 2026-07-01:** de resterende 16 high-records verwijderd (15 magazines + de krant "Causeway (newspaper)" #11585, die niet uit de KDN-batch kwam maar dezelfde books-only-scope schendt) — 16 boeken + 16 bans, cascade. **Uitzondering: "Poetry Magazine" (#11008) BEHOUDEN** — herbeoordeeld als dichtbundel (echt boek), niet als tijdschrift. Backup: `data/kdn-periodicals-deleted-2026-07-01.json`; script: `scripts/delete-kdn-periodicals.ts`. Nog open: de 10 `medium`-kandidaten (aparte reviewstap); de 9 `low` blijven (echte boeken).
+
 Confidence dat het GEEN boek is (= periodiek, kandidaat voor verwijdering):
 - **high** (16): magazine/majalah-woord of issue-marker, geen named author, geen ISBN — meest in MY verboden (KDN-cluster)
 - **medium** (10): serie-woord maar minder eenduidig — nalopen

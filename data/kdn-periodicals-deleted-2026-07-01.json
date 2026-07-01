@@ -1,0 +1,231 @@
+{
+  "deletedAt": "2026-07-01",
+  "books": [
+    {
+      "id": 7520,
+      "slug": "marc-dorcel-magazine",
+      "title": "Marc Dorcel Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11463,
+      "slug": "blue-cover-mystery-magazine",
+      "title": "Blue Cover Mystery Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11584,
+      "slug": "artist-magazine",
+      "title": "Artist Magazine",
+      "isbn13": "9781346360362",
+      "first_published_year": null
+    },
+    {
+      "id": 11585,
+      "slug": "causeway-newspaper",
+      "title": "Causeway (newspaper)",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11629,
+      "slug": "pictorial-magazine-on-the-death-of-chairman-mao-tse-tung",
+      "title": "Pictorial Magazine On The Death of Chairman Mao Tse-tung",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11764,
+      "slug": "the-fantasies-magazine",
+      "title": "The Fantasies Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11766,
+      "slug": "green-cover-mystery-magazine",
+      "title": "Green Cover Mystery Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11767,
+      "slug": "the-discovery-magazine",
+      "title": "The Discovery Magazine",
+      "isbn13": "9781345752465",
+      "first_published_year": null
+    },
+    {
+      "id": 11806,
+      "slug": "untuk-mereka-yang-berkorban-di-sri-langka-bagi-tamil-eelam-majalah-tanda-penghargaan",
+      "title": "Untuk Mereka Yang Berkorban Di Sri Langka Bagi Tamil Eelam: Majalah Tanda Penghargaan",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11834,
+      "slug": "more-magazine",
+      "title": "More Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 11836,
+      "slug": "james-bond-magazine",
+      "title": "James Bond Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 12107,
+      "slug": "yang-ganjil-sekali-dalam-siri-majalah-manusia-ganjil",
+      "title": "Yang Ganjil Sekali Dalam Siri Majalah Manusia Ganjil",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 12108,
+      "slug": "cerita-ganjil-yang-menarik-dalam-siri-majalah-manusia-ganjil",
+      "title": "Cerita Ganjil Yang Menarik Dalam Siri Majalah Manusia Ganjil",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 12133,
+      "slug": "joan-chan-dalam-majalah-penthouse",
+      "title": "Joan Chan Dalam Majalah Penthouse",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 13084,
+      "slug": "sensasi-majalah-lelaki-millennium",
+      "title": "SENSASI - majalah lelaki millennium",
+      "isbn13": null,
+      "first_published_year": null
+    },
+    {
+      "id": 13099,
+      "slug": "hard-magazine",
+      "title": "Hard Magazine",
+      "isbn13": null,
+      "first_published_year": null
+    }
+  ],
+  "bans": [
+    {
+      "id": 6088,
+      "book_id": 7520,
+      "country_code": "FR",
+      "year_started": 2010,
+      "action_type": "restricted"
+    },
+    {
+      "id": 26425,
+      "book_id": 11463,
+      "country_code": "MY",
+      "year_started": 1973,
+      "action_type": "banned"
+    },
+    {
+      "id": 24170,
+      "book_id": 11584,
+      "country_code": "MY",
+      "year_started": 1975,
+      "action_type": "banned"
+    },
+    {
+      "id": 24171,
+      "book_id": 11585,
+      "country_code": "MY",
+      "year_started": 1975,
+      "action_type": "banned"
+    },
+    {
+      "id": 24215,
+      "book_id": 11629,
+      "country_code": "MY",
+      "year_started": 1976,
+      "action_type": "banned"
+    },
+    {
+      "id": 26530,
+      "book_id": 11764,
+      "country_code": "MY",
+      "year_started": 1984,
+      "action_type": "banned"
+    },
+    {
+      "id": 26532,
+      "book_id": 11766,
+      "country_code": "MY",
+      "year_started": 1984,
+      "action_type": "banned"
+    },
+    {
+      "id": 26533,
+      "book_id": 11767,
+      "country_code": "MY",
+      "year_started": 1984,
+      "action_type": "banned"
+    },
+    {
+      "id": 26572,
+      "book_id": 11806,
+      "country_code": "MY",
+      "year_started": 1985,
+      "action_type": "banned"
+    },
+    {
+      "id": 26601,
+      "book_id": 11834,
+      "country_code": "MY",
+      "year_started": 1986,
+      "action_type": "banned"
+    },
+    {
+      "id": 26603,
+      "book_id": 11836,
+      "country_code": "MY",
+      "year_started": 1986,
+      "action_type": "banned"
+    },
+    {
+      "id": 24502,
+      "book_id": 12107,
+      "country_code": "MY",
+      "year_started": 1992,
+      "action_type": "banned"
+    },
+    {
+      "id": 24503,
+      "book_id": 12108,
+      "country_code": "MY",
+      "year_started": 1992,
+      "action_type": "banned"
+    },
+    {
+      "id": 24528,
+      "book_id": 12133,
+      "country_code": "MY",
+      "year_started": 1992,
+      "action_type": "banned"
+    },
+    {
+      "id": 25436,
+      "book_id": 13084,
+      "country_code": "MY",
+      "year_started": 2010,
+      "action_type": "banned"
+    },
+    {
+      "id": 25451,
+      "book_id": 13099,
+      "country_code": "MY",
+      "year_started": 2010,
+      "action_type": "banned"
+    }
+  ]
+}
