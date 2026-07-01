@@ -96,11 +96,20 @@ function classifyBook(book: any): BookVerdict {
 
   const descBook = (book.description_book ?? '').trim()
   const descBan = (book.description_ban ?? '').trim()
+  // Raw MediaWiki markup ("== Section ==") means the Wikipedia article body
+  // leaked past the lead — a visibly broken blurb that must never read as a
+  // high-confidence, editorially-complete record. The live pipeline now strips
+  // this (src/lib/enrich/descriptions.ts) and clean-wiki-markup-descriptions.ts
+  // backfilled it, so in practice this guards against regressions.
+  const hasWikiMarkup = /={2,}\s?[^=\n]{1,80}?\s?={2,}/.test(descBook)
   // ai_consensus = a cross-model AI summary, neither editorially reviewed nor
   // tied to a cited source. It must NOT count toward the editorial-complete
   // signal that (with a canonical id) gates a book into `confident`.
   const editorialComplete =
-    descBook.length > 100 && descBan.length > 100 && book.description_source_type !== 'ai_consensus'
+    descBook.length > 100 &&
+    descBan.length > 100 &&
+    book.description_source_type !== 'ai_consensus' &&
+    !hasWikiMarkup
   if (editorialComplete) {
     score++
     reasons.push('editorial-complete')

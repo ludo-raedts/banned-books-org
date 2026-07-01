@@ -57,6 +57,25 @@ function stripMarkdown(text: string): string {
     .trim()
 }
 
+// Wikipedia/wiki-sourced extracts arrive with the full article body after the
+// lead paragraph, delimited by "== Section ==" / "=== Sub ===" headers. Only
+// the lead is a usable book blurb; everything from the first header on is
+// off-topic dump (plot outlines, publication history, reception). Truncate at
+// the first section marker and scrub any residual "==" runs. Exported so the
+// one-off cleanup (scripts/clean-wiki-markup-descriptions.ts) applies the exact
+// same transform as the live pipeline below.
+export function stripWikiMarkup(text: string): string {
+  let t = text
+  const headerIdx = t.search(/==+/)
+  if (headerIdx !== -1) t = t.slice(0, headerIdx)
+  return t
+    .replace(/==+/g, ' ')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim()
+}
+
 function stripLeadingEndorsements(text: string): string {
   const lines = text.split('\n')
   let i = 0
@@ -72,7 +91,7 @@ function stripLeadingEndorsements(text: string): string {
 }
 
 function clean(raw: string): string {
-  return stripMarkdown(stripLeadingEndorsements(raw))
+  return stripMarkdown(stripWikiMarkup(stripLeadingEndorsements(raw)))
 }
 
 function isEnglish(text: string): boolean {
