@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import PageviewTracker from '@/components/pageview-tracker'
+import DescriptionSourceAttribution from '@/components/description-source-attribution'
 import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge from '@/components/reason-badge'
 import GenreBadge from '@/components/genre-badge'
@@ -42,6 +43,8 @@ type Author = {
   display_name: string
   slug: string
   bio: string | null
+  bio_source_type: string | null
+  bio_source_url: string | null
   birth_year: number | null
   death_year: number | null
   birth_country: string | null
@@ -204,7 +207,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   const { data: author } = await supabase
     .from('authors')
-    .select('id, display_name, slug, bio, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links')
+    .select('id, display_name, slug, bio, bio_source_type, bio_source_url, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links')
     .eq('slug', slug)
     .single()
 
@@ -810,7 +813,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               catalogued below alongside their bans.
             </p>
           ) : a.bio ? (
-            <p className="text-sm text-gray-700 leading-relaxed mt-1 max-w-2xl">{a.bio}</p>
+            <div className="mt-1 max-w-2xl">
+              <p className="text-sm text-gray-700 leading-relaxed">{a.bio}</p>
+              {/* Bio provenance — same component as description_book on the
+                  book page. Legacy bios (bio_source_type NULL) show nothing. */}
+              {a.bio_source_type && (
+                <DescriptionSourceAttribution url={a.bio_source_url} type={a.bio_source_type} />
+              )}
+            </div>
           ) : !isPlaceholder ? (
             // No-bio placeholder. Surfaces an explicit "we couldn't find a
             // bio" note + a route to the contact form, rather than silently

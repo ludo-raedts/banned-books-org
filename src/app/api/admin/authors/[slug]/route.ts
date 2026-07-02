@@ -6,7 +6,21 @@ import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
 
 const ALLOWED_FIELDS = new Set([
   'display_name', 'bio', 'birth_year', 'death_year', 'birth_country', 'photo_url',
+  'bio_source_url',
 ])
+
+// bio_source_type is server-derived, never client-supplied: the URL's host
+// names the source (same vocabulary as books.description_source_type).
+function bioSourceTypeFor(url: string | null): 'wikipedia' | 'openlibrary' | 'manual' {
+  if (url) {
+    try {
+      const host = new URL(url).hostname
+      if (host === 'openlibrary.org' || host.endsWith('.openlibrary.org')) return 'openlibrary'
+      if (host === 'wikipedia.org' || host.endsWith('.wikipedia.org')) return 'wikipedia'
+    } catch { /* fall through to manual */ }
+  }
+  return 'manual'
+}
 
 export async function PATCH(
   request: NextRequest,
@@ -47,6 +61,19 @@ export async function PATCH(
     }
   }
 
+  // bio_source_url must be a plain http(s) URL; empty string clears it.
+  if ('bio_source_url' in updates) {
+    const u = updates.bio_source_url
+    if (u === '' || u === null) {
+      updates.bio_source_url = null
+    } else if (typeof u !== 'string' || !/^https?:\/\//.test(u)) {
+      return NextResponse.json(
+        { error: 'bio_source_url must be an http(s) URL or empty' },
+        { status: 400 },
+      )
+    }
+  }
+
   // birth_year / death_year are integer columns — reject non-numeric input.
   for (const field of ['birth_year', 'death_year'] as const) {
     if (field in updates) {
@@ -76,12 +103,12 @@ export async function PATCH(
   const supabase = adminClient()
   const { data: current } = await supabase
     .from('authors')
-    .select('bio, birth_year, death_year, photo_url')
+    .select('bio, bio_source_url, birth_year, death_year, photo_url')
     .eq('slug', slug)
     .maybeSingle()
 
   if (current) {
-    const changed = (field: 'bio' | 'birth_year' | 'death_year' | 'photo_url') =>
+    const changed = (field: 'bio' | 'bio_source_url' | 'birth_year' | 'death_year' | 'photo_url') =>
       field in updates && (updates[field] ?? null) !== (current[field] ?? null)
 
     // Bio and years are written together by enrich-author-ol behind one gate,
@@ -93,6 +120,26 @@ export async function PATCH(
     }
     if (changed('photo_url')) {
       updates.photo_v2_checked_at = new Date().toISOString()
+    }
+
+    // Bio provenance (mirrors books.description_source_*): a real bio or
+    // source-URL edit re-derives bio_source_type from the effective URL —
+    // a pasted Wikipedia bio + its URL renders "Source: Wikipedia", a bio
+    // without a URL renders "Source: editorial team". Clearing the bio
+    // clears both provenance fields.
+    if (changed('bio') || changed('bio_source_url')) {
+      const effectiveBio =
+        'bio' in updates ? ((updates.bio ?? null) as string | null) : (current.bio ?? null)
+      if (effectiveBio) {
+        const effectiveUrl =
+          'bio_source_url' in updates
+            ? ((updates.bio_source_url ?? null) as string | null)
+            : (current.bio_source_url ?? null)
+        updates.bio_source_type = bioSourceTypeFor(effectiveUrl)
+      } else {
+        updates.bio_source_type = null
+        updates.bio_source_url = null
+      }
     }
   }
 

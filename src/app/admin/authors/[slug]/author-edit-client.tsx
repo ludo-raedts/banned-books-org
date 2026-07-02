@@ -21,6 +21,7 @@ const textareaCls = `${inputCls} resize-y`
 export default function AuthorEditClient({ author }: { author: AuthorEditData }) {
   const [displayName, setDisplayName] = useState(author.display_name)
   const [bio, setBio] = useState(author.bio ?? '')
+  const [bioSourceUrl, setBioSourceUrl] = useState(author.bio_source_url ?? '')
   const [birthYear, setBirthYear] = useState(author.birth_year?.toString() ?? '')
   const [deathYear, setDeathYear] = useState(author.death_year?.toString() ?? '')
   const [birthCountry, setBirthCountry] = useState(author.birth_country ?? '')
@@ -28,7 +29,7 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
   const [saving, setSaving] = useState(false)
   const ui = useAdminUi()
 
-  const snapshot = JSON.stringify({ displayName, bio, birthYear, deathYear, birthCountry, photoUrl })
+  const snapshot = JSON.stringify({ displayName, bio, bioSourceUrl, birthYear, deathYear, birthCountry, photoUrl })
   const [baseline, setBaseline] = useState(snapshot)
   const dirty = snapshot !== baseline
   useUnsavedChanges(dirty)
@@ -39,6 +40,7 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
       const body: Record<string, unknown> = {
         display_name: displayName,
         bio: bio || null,
+        bio_source_url: bioSourceUrl.trim() || null,
         birth_year: birthYear ? parseInt(birthYear) : null,
         death_year: deathYear ? parseInt(deathYear) : null,
         birth_country: birthCountry || null,
@@ -72,6 +74,19 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
 
         <Field label="Bio" hint="Short biography shown on the author page">
           <textarea rows={8} value={bio} onChange={e => setBio(e.target.value)} className={textareaCls} />
+        </Field>
+
+        <Field
+          label="Bio source URL"
+          hint="Where the bio text comes from — a Wikipedia/OpenLibrary URL shows “Source: Wikipedia” under the bio; blank shows “Source: editorial team”"
+        >
+          <input
+            type="url"
+            value={bioSourceUrl}
+            onChange={e => setBioSourceUrl(e.target.value)}
+            className={inputCls}
+            placeholder="https://en.wikipedia.org/wiki/…"
+          />
         </Field>
 
         <div className="grid grid-cols-2 gap-4">

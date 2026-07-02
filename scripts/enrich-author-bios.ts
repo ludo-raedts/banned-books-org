@@ -659,7 +659,13 @@ async function main() {
 
       // 7. Write to DB
       if (APPLY) {
-        const updates: Record<string, unknown> = { bio }
+        // Provenance for the on-page "Source: Wikipedia" attribution (the
+        // ?curid= form canonically redirects to the article).
+        const updates: Record<string, unknown> = {
+          bio,
+          bio_source_type: 'wikipedia',
+          bio_source_url: `https://en.wikipedia.org/?curid=${pageId}`,
+        }
         if (birthYear !== null) updates.birth_year = birthYear
         if (deathYear !== null) updates.death_year = deathYear
         if (birthCountry !== null) updates.birth_country = birthCountry

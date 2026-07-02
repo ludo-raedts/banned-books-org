@@ -2,11 +2,13 @@ import React from 'react'
 
 /**
  * Small subtle attribution rendered under description_book on the book
- * page. Tells the reader where the text came from (Wikipedia, OpenLibrary,
- * Google Books, or AI-synthesised from cited sources) and links out.
+ * page — and, since the authors.bio_source_* columns, under the author bio
+ * as well. Tells the reader where the text came from (Wikipedia,
+ * OpenLibrary, Google Books, or AI-synthesised from cited sources) and
+ * links out.
  *
- * Only rendered for descriptions produced by enrich-descriptions-v2;
- * legacy rows (description_source_url = NULL) show nothing.
+ * Only rendered for texts with recorded provenance; legacy rows
+ * (source type NULL) show nothing.
  *
  * Design notes:
  *   - Single line, text-xs, gray — does not compete with the description.
@@ -28,21 +30,27 @@ export default function DescriptionSourceAttribution({
   url,
   type,
 }: {
-  url: string
+  // null → unlinked label (a manual bio without a source URL still names its
+  // provenance, it just has nowhere to link).
+  url: string | null
   type: string
 }) {
   const label = TYPE_LABEL[type] ?? 'external source'
   return (
     <p className="mt-2 text-xs text-gray-500">
       Source:{' '}
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline hover:text-brand"
-      >
-        {label}
-      </a>
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-brand"
+        >
+          {label}
+        </a>
+      ) : (
+        label
+      )}
     </p>
   )
 }

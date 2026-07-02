@@ -10,6 +10,7 @@ export type AuthorEditData = {
   slug: string
   display_name: string
   bio: string | null
+  bio_source_url: string | null
   birth_year: number | null
   death_year: number | null
   birth_country: string | null
@@ -24,7 +25,7 @@ export default async function AdminAuthorEditPage({ params }: { params: Promise<
   const { data, error } = await supabase
     .from('authors')
     .select(`
-      id, slug, display_name, bio, birth_year, death_year, birth_country, photo_url,
+      id, slug, display_name, bio, bio_source_url, birth_year, death_year, birth_country, photo_url,
       book_authors(books(bans(id)))
     `)
     .eq('slug', slug)
@@ -37,6 +38,7 @@ export default async function AdminAuthorEditPage({ params }: { params: Promise<
     slug: string
     display_name: string
     bio: string | null
+    bio_source_url: string | null
     birth_year: number | null
     death_year: number | null
     birth_country: string | null
@@ -55,6 +57,7 @@ export default async function AdminAuthorEditPage({ params }: { params: Promise<
     slug: raw.slug,
     display_name: raw.display_name,
     bio: raw.bio,
+    bio_source_url: raw.bio_source_url,
     birth_year: raw.birth_year,
     death_year: raw.death_year,
     birth_country: raw.birth_country,
