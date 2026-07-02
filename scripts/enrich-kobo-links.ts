@@ -146,51 +146,10 @@ function extractKoboUrl(linkurl: string): string | null {
 
 // ── Matching guard ────────────────────────────────────────────────────────
 
-function tokenList(s: string): string[] {
-  const toks = s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean)
-  // Leading articles differ freely between editions ("1984" vs "Nineteen…"
-  // aside, "The Bluest Eye" vs "Bluest Eye") — strip for comparison.
-  while (toks.length > 1 && ['the', 'a', 'an'].includes(toks[0])) toks.shift()
-  return toks
-}
-
-// Kobo's catalogue is full of study guides, summaries, and essays ABOUT
-// famous books ("Summary and Analysis of Brave New World"), and those all
-// contain the title tokens — a plain overlap guard matches them (same
-// failure mode as the study-guide cover audit). Two stricter rules:
-//   1. productname must START with the book's main-title token sequence
-//      (modulo leading articles), so "Wasted Talent in The Bluest Eye"
-//      and "Summary and Analysis of …" fail.
-//   2. study-guide vocabulary anywhere in the productname rejects it —
-//      unless the word is part of our own title ("The Lesbiana's Guide
-//      to Catholic School").
-const STUDY_GUIDE_RE = /summary|analysis|study guide|sparknotes|cliffsnotes|maxnotes|litcharts|shmoop|bookrags|gradesaver|workbook|lesson plan|classroom|questions|teaching|quiz|trivia|essay|critique|critical|companion|sidekick|conversation starters|book review|abridged|adapted|retold|songbook|musical|soundtrack|movie version/i
-
-// Knockoff summaries and reprint mills title themselves "<Title> by
-// <Author>"; official publisher editions never put the author inside the
-// productname. Reject when " by " introduces the author's name.
-function looksLikeByAuthorKnockoff(productName: string, authorLastName: string): boolean {
-  if (!authorLastName) return false
-  return new RegExp(`\\bby\\s+[a-z.\\s]*${authorLastName}\\b`, 'i').test(productName)
-}
-
-function titleGuard(bookTitle: string, productName: string): boolean {
-  const title = tokenList(bookTitle.split(':')[0])
-  const product = tokenList(productName)
-  if (title.length === 0 || product.length < title.length) return false
-  for (let i = 0; i < title.length; i++) {
-    if (product[i] !== title[i]) return false
-  }
-  const m = productName.match(STUDY_GUIDE_RE)
-  if (m && !bookTitle.toLowerCase().includes(m[0].toLowerCase())) return false
-  return true
-}
-
-function lastName(display: string): string {
-  const parts = display.trim().split(/\s+/)
-  return parts[parts.length - 1] ?? ''
-}
+// Matching guards shared with enrich-kobo-links-site.ts — see
+// scripts/lib/kobo-match.ts for the rationale (study-guide flood,
+// "<Title> by <Author>" knockoffs, subtitle cap).
+import { tokenList, pickBestMatch, lastName } from './lib/kobo-match'
 
 // ── Main ──────────────────────────────────────────────────────────────────
 
@@ -246,26 +205,15 @@ async function main() {
     process.stdout.write(`  [${i + 1}/${todo.length}] ${b.title.slice(0, 45).padEnd(45)} `)
 
     const items = await searchKobo(keyword)
-    // Among guard-passing items, the real edition is the one with the
-    // FEWEST tokens beyond the title itself — "The Satanic Verses" beats
-    // "The Satanic Verses: The Rhetoric of…" (academic works and knockoff
-    // guides start with the title too, but always trail a subtitle). Cap
-    // the trailing-subtitle length at 3 tokens: beyond that it's near
-    // always a work ABOUT the book, and a miss just keeps the (safe)
-    // search-link fallback.
-    const titleLen = tokenList(b.title.split(':')[0]).length
-    const authorLast = lastName(author)
-    const match = items
-      .filter(it =>
-        titleGuard(b.title, it.productname) &&
-        !looksLikeByAuthorKnockoff(it.productname, authorLast) &&
-        tokenList(it.productname).length - titleLen <= 3,
-      )
-      .sort((x, y) => tokenList(x.productname).length - tokenList(y.productname).length)[0]
+    const match = pickBestMatch(
+      items.map(it => ({ name: it.productname, linkurl: it.linkurl })),
+      b.title,
+      lastName(author),
+    )
     const koboUrl = match ? extractKoboUrl(match.linkurl) : null
 
     if (koboUrl) {
-      process.stdout.write(`→ "${match!.productname.slice(0, 50)}" ${koboUrl.slice(28, 80)}\n`)
+      process.stdout.write(`→ "${match!.name.slice(0, 50)}" ${koboUrl.slice(28, 80)}\n`)
       found++
     } else {
       process.stdout.write(`→ no match (${items.length} results)\n`)
