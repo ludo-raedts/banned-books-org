@@ -53,6 +53,16 @@ export function getKoboStorefrontUrl(subId?: string): string {
   return wrapAffiliate(KOBO_BASE, subId)
 }
 
+// Product-page deep link for books whose kobo_url was resolved by
+// scripts/enrich-kobo-links.ts (Rakuten Product Search API). The DB stores
+// the plain Kobo URL; the affiliate wrapping stays render-side so tracking
+// params never live in the data. Falls back to null on empty input so
+// callers can chain `?? getKoboUrl(searchQuery, subId)`.
+export function getKoboProductUrl(koboUrl: string | null | undefined, subId?: string): string | null {
+  if (!koboUrl) return null
+  return wrapAffiliate(koboUrl, subId)
+}
+
 // rel value for outbound Kobo affiliate links — matches BOOKSHOP_REL: the
 // "sponsored" hint Google asks for on affiliate links, plus "nofollow" so
 // crawlers don't follow the link into Rakuten's redirect (bot clicks were

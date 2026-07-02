@@ -34,7 +34,7 @@ import YouTubeEmbed from '@/components/youtube-embed'
 import BanTimeline, { type TimelineRow } from '@/components/ban-timeline'
 import { countryFlag } from '@/lib/country-flag'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
-import { getKoboUrl, KOBO_REL } from '@/lib/kobo'
+import { getKoboUrl, getKoboProductUrl, KOBO_REL } from '@/lib/kobo'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import CitationBlock from '@/components/citation-block'
 import DescriptionSourceAttribution from '@/components/description-source-attribution'
@@ -198,7 +198,7 @@ const BOOK_DETAIL_SELECT = `
   id, title, slug, cover_url, description, description_book, description_ban,
   description_source_url, description_source_type,
   censorship_context, first_published_year, genres, gutenberg_id, isbn13,
-  bookshop_status, bookshop_isbn13, archive_org_id, archive_org_status,
+  bookshop_status, bookshop_isbn13, kobo_url, archive_org_id, archive_org_status,
   warning_level, inclusion_rationale, extended_context,
   is_gated, gating_country, is_blanket_works,
   original_language,
@@ -584,6 +584,7 @@ type BookDetail = {
   isbn13: string | null
   bookshop_status: 'valid' | 'not_found' | null
   bookshop_isbn13: string | null
+  kobo_url: string | null
   archive_org_id: string | null
   archive_org_status: 'valid' | 'not_found' | null
   warning_level: WarningLevel | null
@@ -1109,7 +1110,11 @@ export default async function BookPage({
   const primaryAuthor = book.book_authors[0]?.authors
 
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
-  const koboHref = getKoboUrl(primaryAuthor ? `${book.title} ${primaryAuthor.display_name}` : book.title, `book-${book.slug}`)
+  // Product deep link when the Rakuten enrichment resolved one; search
+  // fallback otherwise (title + author tokens on Kobo's own search).
+  const koboHref =
+    getKoboProductUrl(book.kobo_url, `book-${book.slug}`) ??
+    getKoboUrl(primaryAuthor ? `${book.title} ${primaryAuthor.display_name}` : book.title, `book-${book.slug}`)
 
   // ── Schema.org JSON-LD ─────────────────────────────────────────────────────
   // Book + BreadcrumbList, emitted as <script type="application/ld+json">.
