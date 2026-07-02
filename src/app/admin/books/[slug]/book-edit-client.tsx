@@ -58,6 +58,29 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
   const imgKey = useRef(0)
   const ui = useAdminUi()
 
+  // On-request alternative-cover picker. Candidates come from
+  // /api/admin/books/<slug>/cover-candidates (OL isbn/editions/search + Google
+  // Books); clicking one just fills the cover field — the normal Save applies
+  // it, and the PATCH route stamps cover_status='manual_override'.
+  type CoverCandidate = { url: string; source: string }
+  const [candidates, setCandidates] = useState<CoverCandidate[]>([])
+  const [candState, setCandState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [brokenCands, setBrokenCands] = useState<Set<string>>(new Set())
+
+  async function findCovers() {
+    setCandState('loading')
+    setBrokenCands(new Set())
+    try {
+      const res = await fetch(`/api/admin/books/${book.slug}/cover-candidates`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const j = (await res.json()) as { candidates: CoverCandidate[] }
+      setCandidates(j.candidates ?? [])
+      setCandState('done')
+    } catch {
+      setCandState('error')
+    }
+  }
+
   const snapshot = JSON.stringify({
     title, titleNative, titleNativeScript, titleTransliterated, titleEnglish,
     year, genres, coverUrl, descriptionBook, descriptionBan, censorshipContext,
@@ -234,6 +257,65 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
                 />
               ) : null}
             </div>
+          </div>
+
+          {/* ── Alternative-cover picker ──────────────────────────────── */}
+          <div className="mt-2 flex flex-col gap-2">
+            <div>
+              <button
+                type="button"
+                onClick={findCovers}
+                disabled={candState === 'loading'}
+                className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {candState === 'loading' ? 'Searching covers…' : 'Find alternative covers'}
+              </button>
+            </div>
+            {candState === 'error' && (
+              <p className="text-xs text-red-600">Cover search failed — try again.</p>
+            )}
+            {candState === 'done' && candidates.filter(c => !brokenCands.has(c.url)).length === 0 && (
+              <p className="text-xs text-gray-500">No alternative covers found on OpenLibrary / Google Books.</p>
+            )}
+            {candidates.filter(c => !brokenCands.has(c.url)).length > 0 && (
+              <div className="flex flex-wrap gap-3">
+                {candidates.filter(c => !brokenCands.has(c.url)).map(c => {
+                  const selected = coverUrl === c.url
+                  return (
+                    <button
+                      key={c.url}
+                      type="button"
+                      onClick={() => handleCoverUrlChange(c.url)}
+                      title={`${c.source}\n${c.url}`}
+                      className={`flex flex-col items-center gap-1 rounded-lg p-1.5 border transition-colors ${
+                        selected
+                          ? 'border-green-500 ring-2 ring-green-200 bg-green-50'
+                          : 'border-gray-200 hover:border-gray-400 bg-white'
+                      }`}
+                    >
+                      <span className="block w-[72px] h-[106px] rounded overflow-hidden bg-gray-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={c.url}
+                          alt={`Cover candidate (${c.source})`}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={() => setBrokenCands(prev => new Set(prev).add(c.url))}
+                        />
+                      </span>
+                      <span className="text-[10px] text-gray-500 max-w-[80px] truncate">
+                        {selected ? '✓ selected' : c.source}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+            {candidates.some(c => coverUrl === c.url) && dirty && (
+              <p className="text-xs text-gray-500">
+                Click <span className="font-medium">Save</span> to apply — the pick is pinned as a manual override so enrichment won&apos;t replace it.
+              </p>
+            )}
           </div>
         </Field>
 
