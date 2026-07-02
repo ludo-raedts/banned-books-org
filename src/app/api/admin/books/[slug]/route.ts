@@ -77,7 +77,52 @@ export async function PATCH(
     }
   }
 
-  const { error } = await adminClient()
+  // ── Manual-provenance stamping ─────────────────────────────────────────────
+  // The edit client sends its full form on every save, so we diff against the
+  // current row and only stamp on a REAL change — otherwise fixing a year would
+  // silently mark an untouched OL/Wikipedia description as 'manual'.
+  //
+  // Why stamp at all: enrichment pins live in columns the pipelines gate on.
+  // Without them a hand-written description keeps description_source_type NULL,
+  // which is exactly what `enrich-descriptions-v2 --reground-ungrounded`
+  // selects (descriptions-v2.ts, regroundUngrounded branch) — a later reground
+  // run would overwrite the admin's text. Same story for covers: ol/gb-harvest
+  // skip cover_status='manual_override' but nothing else.
+  const supabase = adminClient()
+  const { data: current } = await supabase
+    .from('books')
+    .select('description_book, cover_url')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  if (current && 'description_book' in updates) {
+    const next = (updates.description_book ?? null) as string | null
+    if (next !== (current.description_book ?? null)) {
+      if (next) {
+        // A human wrote/edited this text: record provenance so regrounds skip
+        // it, and force ai_drafted off regardless of the checkbox state.
+        updates.description_source_type = 'manual'
+        updates.ai_drafted = false
+      } else {
+        // Cleared: no text → no source. Leaves the row eligible for a sourced
+        // refill by the fill-missing pipeline, which is the desired retry path.
+        updates.description_source_type = null
+      }
+    }
+  }
+
+  if (current && 'cover_url' in updates) {
+    const next = (updates.cover_url ?? null) as string | null
+    if (next !== (current.cover_url ?? null)) {
+      // 'manual_override' is the established admin pin (enrich-ol-harvest /
+      // enrich-gb-harvest skip it; cover audits exclude it). A cleared cover
+      // must not stay 'valid' (audit-integrity invariant cover-status-valid-
+      // no-url) — 'rejected_placeholder' routes it to the retry path.
+      updates.cover_status = next ? 'manual_override' : 'rejected_placeholder'
+    }
+  }
+
+  const { error } = await supabase
     .from('books')
     .update(updates)
     .eq('slug', slug)
