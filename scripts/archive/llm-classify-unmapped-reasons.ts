@@ -27,8 +27,8 @@
 //   npx tsx --env-file=.env.local scripts/llm-classify-unmapped-reasons.ts --limit=5  # sample first
 import { GoogleGenAI } from '@google/genai'
 import { z } from 'zod'
-import { adminClient } from '../src/lib/supabase'
-import { isApply, flagValue } from './lib/cli'
+import { adminClient } from '../../src/lib/supabase'
+import { isApply, flagValue } from '../lib/cli'
 
 const WRITE = isApply()
 const limitRaw = flagValue('limit')

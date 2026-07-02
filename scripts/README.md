@@ -47,6 +47,44 @@ eenmalig, bv. `_apply_csam_block.ts`).
 
 ## 1. Import
 
+### Nieuwe bron gevonden? — plak deze standaardprompt
+Kopieer dit als startprompt in een Claude-sessie zodra je een nieuwe bron hebt.
+Hij dwingt hergebruik af: geen nieuwe machinerie voor dingen die al bestaan.
+
+```text
+Ik heb een nieuwe bron met verboden/gecensureerde boeken: <URL of bestand + korte omschrijving>.
+
+Volg exact de standaard werkwijze in scripts/README.md §1 (Stap 0–5). Bouw GEEN nieuwe
+machinerie die al bestaat; hergebruik:
+
+- Stap 0 — normaliseer de bron naar data/<bron>-<datum>.json (één rij per boek ×
+  jurisdictie × ban-event). Template: scripts/build-portugal-estado-novo-stage0.ts.
+- Stap 1 — kies het import-template uit de tabel in §1 (add-ala-2025 / import-africa /
+  import-nipissing / import-pen; nieuwste voorbeelden: import-berlin-verbannte.ts en
+  import-portugal-estado-novo.ts). Een nieuw script is hooguit een dunne lezer die naar de
+  gedeelde commit-lib voert: commitParsedRow / commitNewBanForBook
+  (src/lib/imports/review-commit.ts) — nooit een eigen INSERT-implementatie.
+- Stap 2 (VERPLICHT) — match-before-create via matchExistingBook
+  (src/lib/imports/verifier.ts); lever title_english_meaningful aan bij anderstalige
+  titels. Ambigue matches: vasthouden als needs_review in het eigen seed/log-bestand
+  (Berlin-patroon) en per stuk resolven — nooit blind creëren.
+- Herbruikbaar, NIET zelf herschrijven: slugify (src/lib/imports/slugify.ts),
+  taal/script-detectie (src/lib/imports/language-inference.ts), auteursnaam-
+  canonicalisatie (src/lib/imports/canonicalise-author-name.ts), newPgClient
+  (src/lib/wikipedia/importer.ts), isApply/flagValue (scripts/lib/cli.ts).
+- Scope-gate — alleen boeken; periodieken/films/audio/pamfletten importeren we niet
+  (criteria: src/lib/imports/extraction-prompt.ts). Twijfelgeval = uitzoeken, niet
+  importeren.
+- Stap 3 — read-only telling vóór → dry-run → --apply → telling ná; rapporteer exacte
+  rij-aantallen.
+- Stap 4 — draai daarna _audit_cross_script_dupes.ts, _audit_spanish_edition_dupes.ts en
+  audit-integrity.ts; fold bevestigde dupes via de merge-scripts (§3).
+- Verrijking — enrich-all.ts --apply (§4) voor covers/descriptions/native titles; PT-regel:
+  first_published_year alleen zetten als de bron 'm echt geeft, anders NULL + verify-tool.
+- Stap 5 — commit + push met de exacte counts; documenteer het nieuwe script in
+  scripts/README.md §1.
+```
+
 ### Standaard werkwijze voor een nieuwe bron — LEES DIT EERST
 Eén vaste route, zodat niet elke bron zijn eigen script + werkwijze krijgt.
 
@@ -67,8 +105,7 @@ cross-language match-signaal (zie stap 2).
 | school/library **challenges** (per-entry scope/action/reasons/regio/instituut) | `import-nipissing-challenges.ts` |
 | groot, consistent CSV-catalogus (per-district) | `import-pen.ts` |
 
-De LLM-queue (`run-import-job.ts` / `import_jobs`) is **legacy/idle** — route nieuw
-werk daar NIET doorheen ([[project_import_queue_decommission]]). De herbruikbare kern
+De LLM-queue is **verwijderd** (2026-07-02; zie §8). De herbruikbare kern
 is de gedeelde commit-lib **`commitParsedRow` / `commitNewBanForBook`**
 (`src/lib/imports/review-commit.ts`); een nieuw script is een dunne lezer die je
 databestand naar die functies voert — niet een eigen INSERT-implementatie.
@@ -92,14 +129,15 @@ stap 2 glipt — m.n. CSV-bronnen die geen Engelse titel meeleveren.
 
 **Stap 5 — Commit + push** met de exacte counts in de message.
 
-### Gedeelde commit-lib & LLM-queue — `src/lib/imports/`
+### Gedeelde commit-lib — `src/lib/imports/`
 - **`commitParsedRow` / `commitNewBanForBook`** (`review-commit.ts`) — de herbruikbare,
-  transactionele INSERT-plek die directe scripts horen aan te roepen (stap 1). Auto-approve
-  én handmatige review leveren dezelfde DB-vorm. **Doet zelf GEEN match-before-create** —
-  dat hoort in de caller (stap 2).
-- **LLM-queue** (`run-import-job.ts`): `pending → fetched → archived → extracted → verified
-  → gated → committed`, met `gate.ts` (auto-approve-beslissing) en `verifier.ts` (match-stap,
-  incl. de cross-language tier). **Idle/legacy** — alleen relevant als de queue ooit heropent.
+  transactionele INSERT-plek die directe scripts horen aan te roepen (stap 1).
+  **Doet zelf GEEN match-before-create** — dat hoort in de caller (stap 2).
+- **`matchExistingBook`** (`verifier.ts`) — dé matcher (exacte slug → Engelse-titel-slug →
+  fuzzy), incl. de cross-language tier. Elke importer hoort hierdoorheen.
+- **`gate.ts` + `extraction-prompt.ts`** — de books-only scope-doctrine (wat is géén boek).
+- **`llm-extraction.ts`** — gedeelde Gemini/GPT-clients (hergebruikt door
+  `enrich-descriptions-consensus.ts`). De LLM-queue er omheen is verwijderd (§8).
 
 ### One-off import-scripts
 Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='government'`
@@ -346,16 +384,20 @@ Genummerde stages voor het opschonen/hergronden van bestaande descriptions.
 
 ---
 
-## 8. Review-queue
-Verwerking van `import_review_queue` (legacy/idle — zie memory "Import queue is legacy/idle").
+## 8. Review-queue — GEDECOMMISSIONED (2026-07-02)
+De twee-LLM ingest → review → approve pijplijn (gebouwd voor de Wikipedia-batch van
+2026-05) is verwijderd: `run-import-job`/`fetcher`/`archiver`/`committer`/`review-approve`
+en de admin-UI + API (`/admin/import-review`) bestaan niet meer — git-historie is het
+archief. De tabel `import_review_queue` blijft staan als audit trail van de verwerkte
+batch (1.172 approved / 63 rejected, niets pending sinds 2026-05-14).
 
-| Script | Doet |
-|---|---|
-| `remap-unmapped-queue.ts` | Re-run reason-mapping over rows met `unmapped_reason` (3 passes) |
-| `llm-classify-unmapped-reasons.ts` | LLM 2e-pass voor rows die de regex-mapper niet aankon |
+Queue-helpers → `scripts/archive/`: `remap-unmapped-queue.ts` (verwijderd — importeerde
+review-approve), `llm-classify-unmapped-reasons.ts`, `enrich-pending-non-latin.ts`, plus de
+eerdere one-offs (salvage-stale-queue-bans, finish-deferred-review-queue [verwijderd]).
 
-Afgeronde queue-one-offs (salvage-stale-queue-bans 2026-05-14, finish-deferred-review-queue
-2026-06-06) → `scripts/archive/`.
+Wat BLEEF (gebruikt door de standaard route, zie §1): `review-commit.ts`, `verifier.ts`,
+`gate.ts`/`extraction-prompt.ts`, `llm-extraction.ts`, en `src/lib/wikipedia/*` (parser +
+`newPgClient`, door 10+ scripts geïmporteerd).
 
 ---
 

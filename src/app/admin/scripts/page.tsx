@@ -1465,18 +1465,14 @@ npx tsx --env-file=.env.local scripts/check-no-desc.ts`}</Code>
             </p>
 
             <div className="rounded-md border border-gray-200 bg-gray-50/60 px-3 py-3 text-xs text-gray-600 leading-relaxed">
-              <p className="font-semibold mb-1 text-gray-700">Legacy: de twee-LLM review-queue (idle)</p>
-              <p className="mb-2">
-                De oude <code className="font-mono text-[11px]">run-import-job</code> → 2× LLM → gate →{' '}
-                <a href="/admin/import-review" className="underline hover:no-underline">/admin/import-review</a>{' '}
-                pijplijn diende om <em>onbewaakte</em> bulk-ingest (vooral Wikipedia-lijsten) te gaten vóór publicatie.
-                Sinds alle nieuwe bronnen handmatig-gecureerd binnenkomen, gebeurt die review al vóór de commit en staat
-                de queue stil. Laat 'm collapsed; staat gepland om gedecommissioned te worden.
-              </p>
-              <p className="opacity-80">
-                Queue-only helper (alleen relevant zolang de queue bestaat):{' '}
-                <code className="font-mono text-[11px]">remap-unmapped-queue.ts</code> re-runt reason-mapping over pending
-                rijen na een vocab-change.
+              <p className="font-semibold mb-1 text-gray-700">Gedecommissioned (2026-07-02): de twee-LLM review-queue</p>
+              <p>
+                De oude <code className="font-mono text-[11px]">run-import-job</code> → 2× LLM → gate →
+                review-UI pijplijn (gebouwd voor de Wikipedia-batch van mei 2026) is verwijderd: code, admin-UI en
+                API-routes zijn weg; de verwerkte rijen blijven in de tabel{' '}
+                <code className="font-mono text-[11px]">import_review_queue</code> staan als audit trail
+                (1.172 approved / 63 rejected). Nieuwe bronnen volgen de standaard route hierboven — zie ook de
+                &ldquo;nieuwe bron&rdquo;-prompt in <code className="font-mono text-[11px]">scripts/README.md</code> §1.
               </p>
             </div>
 

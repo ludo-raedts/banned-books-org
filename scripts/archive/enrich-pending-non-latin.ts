@@ -29,8 +29,8 @@
  *     → re-run even on rows that already have llm_prefill
  */
 import OpenAI from 'openai'
-import { adminClient } from '../src/lib/supabase'
-import { detectScript } from '../src/lib/imports/language-inference'
+import { adminClient } from '../../src/lib/supabase'
+import { detectScript } from '../../src/lib/imports/language-inference'
 
 type ParsedRow = {
   title?: string | null

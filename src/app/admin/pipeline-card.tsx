@@ -1,11 +1,6 @@
 import { ArrowRight, Download, ClipboardList, Sparkles, Plus } from 'lucide-react'
 
 interface Props {
-  pendingReview: number
-  // approvedLast7Days is still passed by the dashboard but no longer surfaced:
-  // approvals via the review queue are idle (books now arrive via direct-import
-  // scripts), so the metric would read 0 indefinitely.
-  approvedLast7Days?: number
   needsEnrichment: number
   cardCls: string
 }
@@ -33,7 +28,6 @@ function Arrow() {
 }
 
 export default function PipelineCard({
-  pendingReview,
   needsEnrichment,
   cardCls,
 }: Props) {
@@ -107,11 +101,9 @@ export default function PipelineCard({
       </div>
 
       <p className="text-xs text-gray-400 mt-1">
-        The old two-LLM ingest → review → approve queue is idle — books now arrive via curated direct-import scripts, so
-        review happens before commit, not after.{' '}
-        <a href="/admin/import-review" className="text-gray-500 hover:underline">
-          Manual review queue{pendingReview > 0 ? ` (${pendingReview.toLocaleString('en')} pending)` : ''} →
-        </a>
+        The old two-LLM ingest → review → approve queue was decommissioned (2026-07-02): books arrive via curated
+        direct-import scripts, so review happens before commit, not after. The processed queue rows remain in the
+        `import_review_queue` table as the audit trail of the 2026-05 Wikipedia batch.
       </p>
     </div>
   )

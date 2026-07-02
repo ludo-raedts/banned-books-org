@@ -25,8 +25,6 @@ interface Props {
   newsCount: number
   banCount: number
   countryCount: number
-  reviewQueuePending: number
-  approvedLast7Days: number
   needsEnrichment: number
   dbSizeBytes: number | null
   dbLimitBytes: number
@@ -181,8 +179,7 @@ function formatBytes(n: number): string {
 }
 
 export default function AdminDashboardClient({
-  bookCount, newsCount, banCount, countryCount, reviewQueuePending,
-  approvedLast7Days, needsEnrichment,
+  bookCount, newsCount, banCount, countryCount, needsEnrichment,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
   inboxRows, inboxFetchedAt,
@@ -245,8 +242,6 @@ export default function AdminDashboardClient({
 
         {/* Row 0 — Import pipeline overview (full width) */}
         <PipelineCard
-          pendingReview={reviewQueuePending}
-          approvedLast7Days={approvedLast7Days}
           needsEnrichment={needsEnrichment}
           cardCls={cardCls}
         />

@@ -14,7 +14,6 @@ const NAV = [
   { href: '/admin', label: 'Overview' },
   { href: '/admin/books', label: 'Books' },
   { href: '/admin/authors', label: 'Authors' },
-  { href: '/admin/import-review', label: 'Import review' },
   { href: '/admin/news', label: 'News' },
   { href: '/admin/bluesky', label: 'Book of the day' },
   { href: '/admin/reading-club', label: 'Reading Club' },
