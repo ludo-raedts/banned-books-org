@@ -151,6 +151,7 @@ export default function RootLayout({
                   <li><Link href="/discover" className="hover:text-gray-800 transition-colors">Pick a banned book</Link></li>
                   <li><Link href="/share" className="hover:text-gray-800 transition-colors">Daily book · share &amp; embed</Link></li>
                   <li><Link href="/reading-list" className="hover:text-gray-800 transition-colors">Further reading</Link></li>
+                  <li><Link href="/get-banned-books" className="hover:text-gray-800 transition-colors">Get banned books</Link></li>
                 </ul>
               </div>
               <div>

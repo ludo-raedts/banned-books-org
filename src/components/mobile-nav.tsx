@@ -33,6 +33,7 @@ const SECTIONS: NavSection[] = [
       { href: '/news', label: 'News' },
       { href: '/reading-club', label: 'Reading club' },
       { href: '/discover', label: 'Pick me a banned book', indented: true },
+      { href: '/get-banned-books', label: 'Get banned books' },
     ],
   },
 ]

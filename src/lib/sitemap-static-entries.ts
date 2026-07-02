@@ -128,6 +128,8 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/news`, changefreq: 'daily', priority: 0.8 },
     { loc: `${base}/essays`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/reading-list`, changefreq: 'monthly', priority: 0.7 },
+    // Buy/borrow hub — curated Bookshop.org lists + Kobo + public domain.
+    { loc: `${base}/get-banned-books`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/about`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/press`, changefreq: 'monthly', priority: 0.6 },
     { loc: `${base}/sources`, changefreq: 'monthly', priority: 0.4 },

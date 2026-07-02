@@ -46,6 +46,13 @@ export function getKoboUrl(query: string, subId?: string): string {
   return wrapAffiliate(search, subId)
 }
 
+// Storefront-level link (no specific book) — drops the visitor on Kobo's
+// home with the affiliate cookie set, mirroring the Bookshop storefront
+// fallback pattern.
+export function getKoboStorefrontUrl(subId?: string): string {
+  return wrapAffiliate(KOBO_BASE, subId)
+}
+
 // rel value for outbound Kobo affiliate links — matches BOOKSHOP_REL: the
 // "sponsored" hint Google asks for on affiliate links, plus "nofollow" so
 // crawlers don't follow the link into Rakuten's redirect (bot clicks were

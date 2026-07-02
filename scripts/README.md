@@ -441,6 +441,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 | `fetch-news.ts` | RSS ophalen, embed + dedup, samenvatten (gpt-4.1-mini), opslaan |
 | `suggest-editorial-classification-gpt.ts` | GPT editorial-classification suggester |
 | `probe-bookshop-isbn.ts` | Test Bookshop.org affiliate deep-link per isbn13 |
+| `export-bookshop-lists.ts` | Genereert per curated Bookshop.org-lijst een `isbns.csv` + `metadata.md` in `data/bookshop-lists/` (gitignored) voor handmatige upload in het affiliate-dashboard; draai na elke ISBN-enrichmentbatch + probe-sweep |
 | `find-author-interviews.ts` | **Read-only discovery:** zoekt YouTube naar duidelijke auteur-interviews/clips voor de meest-verboden auteurs → ranked kandidatenworklist voor handmatige selectie in `src/lib/featured-videos.ts`; schrijft niets naar DB/registry |
 | `_parse_apm_pdf.py` | Parse APM-PDF (Python) |
 
