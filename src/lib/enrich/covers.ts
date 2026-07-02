@@ -9,6 +9,8 @@
 //   4. Open Library title-only
 //   5. Open Library stripped-subtitle search
 //   6. Wikipedia page thumbnail
+//   7. Language-matched Wikipedia ({original_language}.wikipedia.org) page
+//      thumbnail, guarded on title-match + author-surname-in-summary
 //
 // Step 2 walks the work's editions rather than only its primary cover_i, which
 // is what the title-search steps (4–5) already pin — that closes the gap that
@@ -32,7 +34,7 @@ const BOOK_DELAY_MS = 200
 
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
 const OL_COVERS_BASE = 'https://covers.openlibrary.org'
-const NEW_SOURCES = ['gb_isbn', 'ol_edition', 'ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia']
+const NEW_SOURCES = ['gb_isbn', 'ol_edition', 'ol_title_only', 'ol_stripped', 'gb_title_only', 'wikipedia', 'wikipedia_lang']
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -174,6 +176,68 @@ async function wikipediaCover(title: string, author: string): Promise<string | n
   } catch { return null }
 }
 
+// Language-matched Wikipedia cover: for a book whose original_language is not
+// English, the {lang}.wikipedia article often carries a cover the en.wiki
+// step never sees (e.g. pt.wiki has "O Judeu" while en.wiki has no article).
+// A bare title lookup on a language wiki is dangerous though — sampling the
+// PT backlog surfaced "Homens" resolving to a generic article about men and
+// "Miragem" to the optical phenomenon — so two guards are mandatory:
+//   1. the hit's title must actually match ours (parenthetical disambiguators
+//      like "(livro)" stripped first),
+//   2. the page summary must mention the author's surname — a generic
+//      concept/film/place article won't, a book article nearly always does,
+//   3. the page must not be a screen/stage adaptation: film articles pass
+//      guard 2 because they credit the novelist ("Doutor Jivago" → the 1965
+//      film poster), so film/series words in the description or the first
+//      sentence reject the page, and poster-ish image filenames reject the
+//      image. A rejected page just continues to the next search hit, which is
+//      often the actual book article.
+// Books without an author skip this step entirely.
+
+// Film/series markers across the wiki languages this corpus actually spans
+// (pt/es/fr/de/ru + english loanwords). Checked against description + first
+// sentence only — a book article legitimately mentions its adaptation later
+// in the extract.
+const ADAPTATION_RE = /film|filme|pel[ií]cula|фильм|экраниз|s[ée]rie|serie|сериал|telenovela|miniss[ée]rie|tv series|verfilmung/i
+const POSTERISH_IMAGE_RE = /cartaz|poster|affiche|locandina|screenshot|trailer|logo/i
+export async function wikipediaLangCover(title: string, author: string, lang: string): Promise<string | null> {
+  if (!/^[a-z]{2,3}$/.test(lang) || lang === 'en' || !author) return null
+  const surname = author.trim().split(/\s+/).filter(t => t.length >= 3).pop()
+  if (!surname) return null
+  try {
+    const q = encodeURIComponent(`${title} ${author}`.trim())
+    const searchRes = await fetch(
+      `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${q}&format=json&srlimit=3&srprop=`
+    )
+    await sleep(WIKI_DELAY_MS)
+    if (!searchRes.ok) return null
+    const searchJson = await searchRes.json() as {
+      query?: { search?: Array<{ title: string }> }
+    }
+    for (const hit of searchJson.query?.search ?? []) {
+      const hitTitle = hit.title.replace(/\s*\([^)]*\)\s*$/, '')
+      if (!titlesMatch(title, hitTitle)) continue
+      const pageSlug = encodeURIComponent(hit.title.replace(/ /g, '_'))
+      const summaryRes = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${pageSlug}`)
+      await sleep(WIKI_DELAY_MS)
+      if (!summaryRes.ok) continue
+      const summary = await summaryRes.json() as {
+        extract?: string
+        description?: string
+        originalimage?: { source?: string }
+        thumbnail?: { source?: string }
+      }
+      const prose = `${summary.description ?? ''} ${summary.extract ?? ''}`.toLowerCase()
+      if (!prose.includes(surname.toLowerCase())) continue
+      const firstSentence = (summary.extract ?? '').split(/(?<=\.)\s/, 1)[0] ?? ''
+      if (ADAPTATION_RE.test(`${summary.description ?? ''} ${firstSentence}`)) continue
+      const img = summary.originalimage?.source ?? summary.thumbnail?.source
+      if (img && !POSTERISH_IMAGE_RE.test(img)) return img
+    }
+    return null
+  } catch { return null }
+}
+
 type BookRow = {
   id: number
   slug: string
@@ -269,7 +333,13 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
       : row.cover_search_attempts
     const prevSources = ca?.sources_tried ?? []
     const hasNewSources = NEW_SOURCES.some(s => prevSources.includes(s))
-    if (!opts.reset && hasNewSources) { alreadyDoneCount++; continue }
+    // A book that went through v2 before the wikipedia_lang step existed gets
+    // one more pass if that step applies to it (non-English original) and
+    // hasn't been recorded yet.
+    const langWikiPending =
+      !!row.original_language && row.original_language !== 'en' &&
+      !prevSources.some(s => s.startsWith('wikipedia_lang'))
+    if (!opts.reset && hasNewSources && !langWikiPending) { alreadyDoneCount++; continue }
     toSearch.push({
       id: row.id,
       slug: row.slug,
@@ -405,6 +475,16 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         newSources.push(`wikipedia${tag}`)
         const wikiUrl = await wikipediaCover(variant.title, author)
         if (wikiUrl) { coverUrl = wikiUrl; source = `Wikipedia${tag}`; break }
+
+        // Language-matched Wikipedia (guarded). The marker is pushed even
+        // when the author gate inside wikipediaLangCover makes it a no-op, so
+        // sources_tried records the attempt and the book doesn't stay
+        // eligible forever.
+        if (book.original_language && book.original_language !== 'en') {
+          newSources.push(`wikipedia_lang${tag}`)
+          const langUrl = await wikipediaLangCover(variant.title, author, book.original_language)
+          if (langUrl) { coverUrl = langUrl; source = `Wikipedia-${book.original_language}${tag}`; break }
+        }
       }
     } catch (err) {
       if (err instanceof GbQuotaError) {

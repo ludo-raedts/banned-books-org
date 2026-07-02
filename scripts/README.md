@@ -269,7 +269,8 @@ CourtListener doet **niet** mee: dat is een render-time live feed
 | `enrich-descriptions-consensus.ts` | Recovery via **cross-model consensus** (GPT-4o-mini + Gemini-2.5-flash + judge) voor boeken die de v2-ladder niet kon gronden maar de modellen wél kennen; schrijft `description_source_type='ai_consensus'` (eigen tier, geen geciteerde bron). UNKNOWN/onenigheid → rij blijft onaangeroerd. Valideer eerst met `validate-consensus-descriptions.ts` |
 | **Covers** | |
 | `enrich-covers-continuous.ts` | Continu missende covers; tracking in `cover_search_attempts` |
-| `enrich-covers-v2.ts` | Re-try van eerder gefaalde cover-searches |
+| `enrich-covers-v2.ts` | Re-try van eerder gefaalde cover-searches (ladder incl. taal-gematchte Wikipedia-stap `wikipedia_lang` met auteur- en adaptatie-guards; heropent boeken met non-EN `original_language` die die stap nog niet probeerden) |
+| `enrich-covers-websearch.ts` | **Websearch-covers** voor boeken die de GB/OL/wiki-ladder mist (generalisatie van de HK/KDN Gemini-pilot, git 329b635): Gemini-grounded site-zoektocht → og:image-extractie (zuinige Firecrawl-fallback bij botwalls) → fnac-search-fallback (PT) → mirror naar `book-covers`-bucket → vision-verificatie per kandidaat. Flags: `--country=XX`/`--slugs=`/`--book-id=`, `--lang=` (batch-taal bij NULL `original_language`), `--limit=`, `--apply` (schrijft alléén `looks_right`). Rapport + montage-HTML in `data/`, JSONL-checkpoint = resumebaar. **Altijd eerst dry-run + montage-review** |
 | `enrich-russia-recognizable.ts` | → `scripts/archive/` (afgeronde FSEM-subset pass) |
 | **Auteurs** | |
 | `enrich-author-bios.ts` | Bios via Wikipedia (incl. `--photos-only`) |

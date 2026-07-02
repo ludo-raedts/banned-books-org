@@ -14,6 +14,9 @@
 //   3. Fetch the HTML and try, in order: og:image, twitter:image, JSON-LD
 //      "image" field, link rel=image_src. Reject obvious site logos (paths
 //      that look like /logo.jpg, /default.png, etc).
+//   4. If the plain fetch is bot-blocked and the caller opted in
+//      (firecrawlFallback), retry once through Firecrawl browser rendering
+//      and run the same meta-tag ladder on its HTML.
 //
 // Returns the resolved page URL too, so callers can use it as the Referer for
 // the eventual image download.
@@ -25,7 +28,14 @@ export type CoverExtraction =
   | { ok: true;  imageUrl: string; resolvedPageUrl: string; via: string }
   | { ok: false; reason: string }
 
-export async function extractCoverFromPage(pageUrl: string): Promise<CoverExtraction> {
+export type ExtractOpts = {
+  // When the plain fetch is bot-blocked (Cloudflare 403/challenge — the norm
+  // on wook.pt, bertrand.pt, fnac.pt, goodreads), retry the page once through
+  // Firecrawl's browser rendering. Costs Firecrawl credits, so opt-in.
+  firecrawlFallback?: boolean
+}
+
+export async function extractCoverFromPage(pageUrl: string, opts: ExtractOpts = {}): Promise<CoverExtraction> {
   // 1. Vertex AI redirect → resolve.
   const resolved = await resolveRedirect(pageUrl)
   if (!resolved) return { ok: false, reason: `couldn't resolve URL ${pageUrl}` }
@@ -35,8 +45,9 @@ export async function extractCoverFromPage(pageUrl: string): Promise<CoverExtrac
   if (direct) return { ok: true, imageUrl: direct, resolvedPageUrl: resolved, via: 'pattern' }
 
   // 3. Fetch HTML and look for cover meta tags.
-  let html: string
+  let html: string | null = null
   let finalUrl = resolved
+  let blockReason = ''
   try {
     const res = await fetch(resolved, {
       headers: {
@@ -47,43 +58,72 @@ export async function extractCoverFromPage(pageUrl: string): Promise<CoverExtrac
       redirect: 'follow',
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     })
-    if (!res.ok) return { ok: false, reason: `page HTTP ${res.status}` }
-    // Some sites (Readmoo, books.com.tw) silently redirect 404s to a generic
-    // landing page that returns 200. Treat redirects to a root-path URL as a
-    // soft-404 — the book is gone, the cover won't be on this page.
-    if (res.url && res.url !== resolved) {
-      const ru = new URL(res.url)
-      if (ru.pathname === '/' || ru.pathname === '') {
-        return { ok: false, reason: `soft-404: redirected to root ${res.url}` }
-      }
-      finalUrl = res.url
+    if (!res.ok) {
+      blockReason = `page HTTP ${res.status}`
+    } else if (res.url && res.url !== resolved && (new URL(res.url).pathname === '/' || new URL(res.url).pathname === '')) {
+      // Some sites (Readmoo, books.com.tw) silently redirect 404s to a generic
+      // landing page that returns 200. Treat redirects to a root-path URL as a
+      // soft-404 — the book is gone, the cover won't be on this page. This is
+      // a real miss, not a block: Firecrawl won't see anything different.
+      return { ok: false, reason: `soft-404: redirected to root ${res.url}` }
+    } else {
+      if (res.url && res.url !== resolved) finalUrl = res.url
+      html = await res.text()
     }
-    html = await res.text()
   } catch (e) {
-    return { ok: false, reason: `page fetch failed: ${e instanceof Error ? e.message : 'unknown'}` }
+    blockReason = `page fetch failed: ${e instanceof Error ? e.message : 'unknown'}`
   }
 
+  if (html) {
+    const found = extractFromHtml(html, finalUrl, '')
+    if (found) return found
+  }
+
+  // 4. Bot-blocked (or fetched fine but the challenge page had no metadata —
+  // Cloudflare "202 challenge" pages return 200-ish shells): one Firecrawl
+  // retry when the caller opted in.
+  if (opts.firecrawlFallback && (blockReason || !html)) {
+    const { firecrawlFetchPage } = await import('./firecrawl-fetch')
+    const fc = await firecrawlFetchPage(resolved)
+    if (!fc.ok) {
+      return { ok: false, reason: `${blockReason || 'no html'}; firecrawl: ${fc.reason}` }
+    }
+    if (fc.ogImage && !isObviouslyNotACover(fc.ogImage, fc.finalUrl)) {
+      return { ok: true, imageUrl: fc.ogImage, resolvedPageUrl: fc.finalUrl, via: 'firecrawl:og:image' }
+    }
+    const found = extractFromHtml(fc.html, fc.finalUrl, 'firecrawl:')
+    if (found) return found
+    return { ok: false, reason: `no usable cover meta on ${new URL(fc.finalUrl).hostname} (via firecrawl)` }
+  }
+
+  if (blockReason) return { ok: false, reason: blockReason }
+  return { ok: false, reason: `no usable cover meta on ${new URL(finalUrl).hostname}` }
+}
+
+// The meta-tag ladder shared by the plain-fetch and Firecrawl paths:
+// og:image → twitter:image → JSON-LD image → link rel=image_src.
+function extractFromHtml(html: string, finalUrl: string, viaPrefix: string): CoverExtraction | null {
   const og = extractOgImage(html)
   if (og && !isObviouslyNotACover(og, finalUrl)) {
-    return { ok: true, imageUrl: og, resolvedPageUrl: finalUrl, via: 'og:image' }
+    return { ok: true, imageUrl: og, resolvedPageUrl: finalUrl, via: `${viaPrefix}og:image` }
   }
 
   const tw = extractMeta(html, 'twitter:image')
   if (tw && !isObviouslyNotACover(tw, finalUrl)) {
-    return { ok: true, imageUrl: tw, resolvedPageUrl: finalUrl, via: 'twitter:image' }
+    return { ok: true, imageUrl: tw, resolvedPageUrl: finalUrl, via: `${viaPrefix}twitter:image` }
   }
 
   const jsonLd = extractJsonLdImage(html)
   if (jsonLd && !isObviouslyNotACover(jsonLd, finalUrl)) {
-    return { ok: true, imageUrl: jsonLd, resolvedPageUrl: finalUrl, via: 'json-ld' }
+    return { ok: true, imageUrl: jsonLd, resolvedPageUrl: finalUrl, via: `${viaPrefix}json-ld` }
   }
 
   const linkRel = extractLinkImageSrc(html)
   if (linkRel && !isObviouslyNotACover(linkRel, finalUrl)) {
-    return { ok: true, imageUrl: linkRel, resolvedPageUrl: finalUrl, via: 'link-rel' }
+    return { ok: true, imageUrl: linkRel, resolvedPageUrl: finalUrl, via: `${viaPrefix}link-rel` }
   }
 
-  return { ok: false, reason: `no usable cover meta on ${new URL(finalUrl).hostname}` }
+  return null
 }
 
 // Vertex AI grounding redirect → underlying URL. The redirect returns HTML
