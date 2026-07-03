@@ -41,23 +41,34 @@ export function titleGuard(bookTitle: string, productName: string): boolean {
   return true
 }
 
+// Tokens that may trail the title in a REAL edition's product name
+// ("The Handmaid's Tale: A Novel", "Slaughterhouse-Five Deluxe Edition").
+// Anything else after the title means a *different work* that shares the
+// opening words ("What Does the Bible Really Teach about Homosexuality")
+// or a work about the book — reject; a miss keeps the safe search link.
+const EXTRA_OK = new Set([
+  'a', 'an', 'the', 'novel', 'memoir', 'edition', 'deluxe', 'anniversary',
+  'special', 'collector', 'collectors', 'complete', 'unabridged',
+])
+
 // Among guard-passing candidates the real edition is the one with the
 // FEWEST tokens beyond the title — "The Satanic Verses" beats "The
-// Satanic Verses: The Rhetoric of…". The subtitle allowance scales with
-// title length: a one-word title like "Lucky" must match exactly (it
-// otherwise pulls in "The Lucky Egg"), two words allow one extra, longer
-// titles allow a 3-token subtitle.
+// Satanic Verses: The Rhetoric of…". The allowance scales with title
+// length (a one-word title like "Lucky" must match exactly — it
+// otherwise pulls in "The Lucky Egg") AND every extra token must come
+// from the edition vocabulary above.
 export function pickBestMatch<T extends { name: string }>(
   candidates: T[], bookTitle: string, authorLastName: string,
 ): T | undefined {
   const titleLen = tokenList(bookTitle.split(':')[0]).length
   const extraCap = titleLen === 1 ? 0 : titleLen === 2 ? 1 : 3
   return candidates
-    .filter(c =>
-      titleGuard(bookTitle, c.name) &&
-      !looksLikeByAuthorKnockoff(c.name, authorLastName) &&
-      tokenList(c.name).length - titleLen <= extraCap,
-    )
+    .filter(c => {
+      if (!titleGuard(bookTitle, c.name)) return false
+      if (looksLikeByAuthorKnockoff(c.name, authorLastName)) return false
+      const extra = tokenList(c.name).slice(titleLen)
+      return extra.length <= extraCap && extra.every(t => EXTRA_OK.has(t))
+    })
     .sort((x, y) => tokenList(x.name).length - tokenList(y.name).length)[0]
 }
 
