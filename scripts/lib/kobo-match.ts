@@ -20,7 +20,10 @@ export const STUDY_GUIDE_RE = /summary|analysis|study guide|sparknotes|cliffsnot
 // productname.
 export function looksLikeByAuthorKnockoff(productName: string, authorLastName: string): boolean {
   if (!authorLastName) return false
-  return new RegExp(`\\bby\\s+[a-z.\\s]*${authorLastName}\\b`, 'i').test(productName)
+  // Corporate "authors" produce last-name tokens with regex metacharacters
+  // ("Society)" from "… Society (of Pennsylvania)") — escape before use.
+  const escaped = authorLastName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`\\bby\\s+[a-z.\\s]*${escaped}\\b`, 'i').test(productName)
 }
 
 // productname must START with the book's main-title token sequence
