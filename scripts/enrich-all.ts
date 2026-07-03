@@ -116,6 +116,21 @@ const harvestSteps: Array<{ name: string; logName: string; script: string; args:
     script: 'enrich-native-titles.ts', args: APPLY ? ['--apply', `--limit=${NATIVE_LIMIT}`] : [] },
 ]
 
+// Kobo product links write their own column pair (kobo_url/kobo_checked_at,
+// sticky NULL-targeting) — disjoint from the other harvesters, so it joins
+// Phase 1. Included only when the Rakuten credentials are configured; a
+// missing token would otherwise hard-exit the child. NOTE: only the API
+// tier — enrich-kobo-links-site.ts (Firecrawl, paid credits) stays manual,
+// like CourtListener.
+if (process.env.RAKUTEN_CLIENT_ID && process.env.RAKUTEN_CLIENT_SECRET && process.env.RAKUTEN_SID) {
+  harvestSteps.push({
+    name: 'Kobo ebook links (Rakuten Product Search)', logName: 'kobo-links',
+    script: 'enrich-kobo-links.ts', args: APPLY ? ['--apply'] : [],
+  })
+} else {
+  console.log('  ⚠ Kobo links skipped: RAKUTEN_CLIENT_ID/SECRET/SID not all set in env')
+}
+
 const steps: Step[] = [
   {
     name: 'Cover images (v2 retries + placeholder rejection)',
@@ -136,6 +151,16 @@ const steps: Step[] = [
     args: APPLY ? ['--apply'] : [],
     gpt: false,
     archive: true,
+  },
+  {
+    // Runs AFTER Phase 1 so freshly-harvested isbn13s get probed. Default
+    // mode only touches bookshop_status NULL rows (incremental, ~1 req/s);
+    // full re-probes stay manual via --stale-before. The deep-vs-storefront
+    // link choice on every book page depends on this status.
+    name: 'Bookshop deep-link probe (new ISBNs only)',
+    script: 'probe-bookshop-isbn.ts',
+    args: APPLY ? ['--apply'] : [],
+    gpt: false,
   },
   {
     // ⚠️ 2026-05-28: v2 replaces the previous two-step combo (v1 +
@@ -348,6 +373,16 @@ async function main() {
     `--before=${runDir}/coverage-before.json`, `--after=${runDir}/coverage-after.json`,
     `--run-dir=${runDir}`, `--out=${resolve(ROOT, `data/enrichment-coverage-report-${new Date().toISOString().slice(0, 10)}.md`)}`,
   ], { stdio: 'inherit' })
+
+  // The storefront lists live on bookshop.org and don't update themselves —
+  // after a run that changed ISBNs or bookshop_status, regenerate + upload.
+  if (APPLY) {
+    console.log(
+      '\n  ↻ ISBNs of bookshop_status gewijzigd? Ververs de storefront-lijsten:\n' +
+      '    npx tsx --env-file=.env.local scripts/export-bookshop-lists.ts\n' +
+      '    → upload de CSV\'s via https://bookshop.org/affiliates/lists\n',
+    )
+  }
 
   // Catalog freshness — last thing you see, so new scripts don't rot out of
   // scripts/README.md. Read-only; never affects exit status on its own.
