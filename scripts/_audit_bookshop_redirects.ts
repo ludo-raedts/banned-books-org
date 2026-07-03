@@ -163,8 +163,14 @@ type BookRow = {
   title: string
   isbn13: string | null
   bookshop_isbn13: string | null
+  bookshop_checked_at: string | null
   book_authors: { authors: { display_name: string } | null }[] | null
 }
+
+// Rows (re)written after this moment were page-verified or deliberately
+// demoted by the 2026-07-02 availability/edition fix round in the affiliate
+// session — a mismatch on those is lower-priority (possibly already known).
+const VERIFIED_CUTOFF = '2026-07-02T12:00:00Z'
 
 type Bucket = 'match' | 'match_no_auth' | 'head_only' | 'mismatch'
   | 'gone' | 'no_slug' | 'unverifiable' | 'error'
@@ -204,7 +210,7 @@ async function fetchBooks(): Promise<BookRow[]> {
   while (true) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, slug, title, isbn13, bookshop_isbn13, book_authors(authors(display_name))')
+      .select('id, slug, title, isbn13, bookshop_isbn13, bookshop_checked_at, book_authors(authors(display_name))')
       .eq('bookshop_status', 'valid')
       .order('id')
       .range(offset, offset + 999)
@@ -260,7 +266,15 @@ function proposal(e: Entry): string {
     : "bookshop_status='not_found' (canonieke isbn13 wijst naar ander werk — isbn13 zelf checken)"
 }
 
-function writeReport(entries: Entry[], totalValid: number) {
+function writeReport(entries: Entry[], totalValid: number, checkedAtById: Map<number, string | null>) {
+  const recentlyVerified = (e: Entry) => {
+    const at = checkedAtById.get(e.id)
+    return Boolean(at && at >= VERIFIED_CUTOFF)
+  }
+  const verifiedCell = (e: Entry) => recentlyVerified(e) ? '✓' : '—'
+  // Unverified rows first: those are the ones nobody has looked at yet.
+  const byPriority = (a: Entry, z: Entry) => Number(recentlyVerified(a)) - Number(recentlyVerified(z))
+
   const by = (b: Bucket) => entries.filter(e => e.bucket === b)
   const mismatch = by('mismatch')
   // Review-priority split: no author token in the slug = likely a completely
@@ -301,20 +315,22 @@ function writeReport(entries: Entry[], totalValid: number) {
   lines.push('')
   lines.push(`Fix-pad na review: \`npx tsx --env-file=.env.local scripts/remediate-bookshop-editions.ts --audit=data/bookshop-redirect-audit-${today}.json --book-ids=<bevestigde ids> --apply\` — herleidt een correcte Engelse papieren editie via het OL-werk, of demoteert naar de storefront-fallback (xref NULL + \`bookshop_status='not_found'\`). Niets applyen zonder deze review.`)
   lines.push('')
+  lines.push(`De kolom "geverifieerd ≥02-07" markeert rijen waarvan bookshop_checked_at ná ${VERIFIED_CUTOFF} ligt: die zijn in de affiliate-sessie al page-verified of bewust gedemoveerd — lagere prioriteit. Ongeverifieerde rijen staan bovenaan.`)
+  lines.push('')
   lines.push(`### Auteur NIET in slug (${mismatchHard.length}) — waarschijnlijk ander werk, hoogste prioriteit`)
   lines.push('')
-  lines.push('| id | book | auteur | link-ISBN | redirect-slug | voorstel |')
-  lines.push('|---|---|---|---|---|---|')
-  for (const e of mismatchHard) {
-    lines.push(`| ${e.id} | ${bookCell(e)} | ${e.authors.join('; ').slice(0, 40)} | ${isbnCell(e)} | ${slugCell(e)} | ${proposal(e)} |`)
+  lines.push('| id | book | auteur | link-ISBN | redirect-slug | geverifieerd ≥02-07 | voorstel |')
+  lines.push('|---|---|---|---|---|---|---|')
+  for (const e of [...mismatchHard].sort(byPriority)) {
+    lines.push(`| ${e.id} | ${bookCell(e)} | ${e.authors.join('; ').slice(0, 40)} | ${isbnCell(e)} | ${slugCell(e)} | ${verifiedCell(e)} | ${proposal(e)} |`)
   }
   lines.push('')
   lines.push(`### Auteur wél in slug (${mismatchSoft.length}) — vertaalde editie / ander werk zelfde auteur`)
   lines.push('')
-  lines.push('| id | book | auteur | link-ISBN | redirect-slug | voorstel |')
-  lines.push('|---|---|---|---|---|---|')
-  for (const e of mismatchSoft) {
-    lines.push(`| ${e.id} | ${bookCell(e)} | ${e.authors.join('; ').slice(0, 40)} | ${isbnCell(e)} | ${slugCell(e)} | ${proposal(e)} |`)
+  lines.push('| id | book | auteur | link-ISBN | redirect-slug | geverifieerd ≥02-07 | voorstel |')
+  lines.push('|---|---|---|---|---|---|---|')
+  for (const e of [...mismatchSoft].sort(byPriority)) {
+    lines.push(`| ${e.id} | ${bookCell(e)} | ${e.authors.join('; ').slice(0, 40)} | ${isbnCell(e)} | ${slugCell(e)} | ${verifiedCell(e)} | ${proposal(e)} |`)
   }
   lines.push('')
 
@@ -373,7 +389,11 @@ function writeReport(entries: Entry[], totalValid: number) {
     findings: mismatch.map(e => ({
       id: e.id, slug: e.slug, title: e.title,
       linkIsbn: e.linkIsbn, isXref: e.isXref,
-      flags: ['redirect_mismatch', e.authorHit ? 'author_in_slug' : 'author_missing'],
+      flags: [
+        'redirect_mismatch',
+        e.authorHit ? 'author_in_slug' : 'author_missing',
+        ...(recentlyVerified(e) ? ['verified_after_2026-07-02'] : []),
+      ],
       redirectSlug: e.productSlug,
     })),
   }, null, 2))
@@ -414,9 +434,10 @@ async function main() {
 
   // Report over everything checkpointed for books that are still 'valid'.
   const validIds = new Set(books.map(b => b.id))
+  const checkedAtById = new Map(books.map(b => [b.id, b.bookshop_checked_at]))
   const entries = [...done.values()].filter(e => validIds.has(e.id) && e.bucket !== 'error')
   const errCount = [...done.values()].filter(e => e.bucket === 'error').length
-  writeReport(entries, books.length)
+  writeReport(entries, books.length, checkedAtById)
 
   const counts = new Map<Bucket, number>()
   for (const e of entries) counts.set(e.bucket, (counts.get(e.bucket) ?? 0) + 1)
