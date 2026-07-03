@@ -172,3 +172,7 @@ next-env.d.ts
 # (data/portugal-estado-novo-*.json) carries the bibliographic facts.
 /data/source-research/portugal-brandao-livros-proibidos.pdf
 /data/source-research/portugal-brandao-raw.txt
+
+# Bookshop redirect-target audit — resume checkpoint (~5.4k probe results,
+# local-only cache; the derived review-MD/JSON in data/ are the deliverable)
+/data/bookshop-redirect-audit-checkpoint.jsonl
