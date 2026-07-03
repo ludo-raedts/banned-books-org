@@ -33,16 +33,16 @@ const SCOPE_TO_LIST: Readonly<Record<string, string>> = {
   church: 'banned-by-the-church',
 }
 
-// Country lists (ISO-2, uppercase). NOTE: fill in each slug only AFTER the
-// list exists on bookshop.org — Bookshop derives the slug from the title
-// and appends a suffix on collision (cf. 'banned-classics-banned-books'),
-// so a predicted slug can 404 inside the embed iframe. Specs live in
+// Country lists (ISO-2, uppercase), live since 2026-07-03. Slugs verified
+// against the created lists (Bookshop derives them from the title and
+// suffixes on collision — always confirm before adding here, a wrong slug
+// 404s inside the embed iframe). Specs live in
 // scripts/export-bookshop-lists.ts.
 const COUNTRY_TO_LIST: Readonly<Record<string, string>> = {
-  // MY: 'banned-in-malaysia',
-  // DE: 'books-banned-by-nazi-germany',
-  // HK: 'banned-in-hong-kong',
-  // CN: 'banned-in-china',
+  MY: 'banned-in-malaysia',
+  DE: 'books-banned-by-nazi-germany',
+  HK: 'banned-in-hong-kong',
+  CN: 'banned-in-china',
 }
 
 /** Standalone bookshop lists not tied to a single taxonomy slug. */
