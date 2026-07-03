@@ -22,6 +22,8 @@ import { coverAlt } from '@/lib/cover-alt'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 import { contextsForCountry } from '@/lib/ban-contexts'
+import { BookshopListEmbed } from '@/components/bookshop-list-embed'
+import { getBookshopListForCountry, bookshopListUrl } from '@/lib/bookshop-lists'
 
 // Return [] (not the full country list): an empty array still flips the route
 // to static + ISR — the key fix, so it's edge-cached (s-maxage) instead of
@@ -642,6 +644,25 @@ export default async function CountryPage({
           </div>
         </SectionShell>
       )}
+
+      {/* ── Curated reading list on Bookshop.org (mirrors scope pages) ── */}
+      {(() => {
+        const bookshopSlug = getBookshopListForCountry(upperCode)
+        if (!bookshopSlug) return null
+        return (
+          <SectionShell tone="cream" eyebrow="Read these · Buy from a local bookstore">
+            <SectionHeader
+              title="On the shelf at Bookshop.org"
+              subtitle={`Our curated list of banned books from ${country.name_en}, available in English. Every purchase supports independent bookstores.`}
+              accent="oxblood"
+              viewAllHref={bookshopListUrl(bookshopSlug)}
+              viewAllLabel="Open the full list"
+              viewAllExternal
+            />
+            <BookshopListEmbed slug={bookshopSlug} />
+          </SectionShell>
+        )
+      })()}
 
       {/* ── Citation ────────────────────────────────────────────────── */}
       <SectionShell tone="cream">

@@ -129,6 +129,41 @@ const LISTS: readonly ListSpec[] = [
     footer: 'Compiled by banned-books.org. Full record of violence-related bans at https://banned-books.org/reasons/violence.',
     reasonsAny: ['violence'],
   },
+
+  // ── Country lists (2026-07-03) ──────────────────────────────────────────
+  // Only countries whose banned set overlaps Bookshop's (US-market)
+  // catalogue enough for a real list — the big foreign-language registries
+  // (DE modern, FR, PT, AR) sit at 2-4% coverage and are left out.
+  {
+    slug: 'banned-in-malaysia',
+    title: 'Banned in Malaysia',
+    header: 'Books prohibited by Malaysia\'s Ministry of Home Affairs — one of the largest active censorship registers in the world, maintained under the Printing Presses and Publications Act. Possession of a banned title can carry criminal penalties. These are the prohibited books available in English.',
+    footer: 'Compiled by banned-books.org from Malaysia\'s federal gazette orders. The full register — over 3,000 titles — is documented at https://banned-books.org/countries/my.',
+    countriesAny: ['MY'],
+  },
+  {
+    slug: 'banned-by-nazi-germany',
+    title: 'Books Banned by Nazi Germany',
+    header: 'Books banned, burned, or purged from libraries under the Third Reich, 1933–1945 — including the Berlin 1938 index of forbidden literature. Erich Maria Remarque, Bertolt Brecht, Erich Kästner: the exile canon of a generation, in English translation.',
+    footer: 'Compiled by banned-books.org from the 1938 Berlin "Liste des schädlichen und unerwünschten Schrifttums" and related records. Full history at https://banned-books.org/contexts/berlin-1938-verbannte-buecher.',
+    countriesAny: ['DE'],
+    yearStartedMin: 1933,
+    yearStartedMax: 1945,
+  },
+  {
+    slug: 'banned-in-hong-kong',
+    title: 'Banned in Hong Kong',
+    header: 'Books pulled from Hong Kong\'s public libraries or barred from sale since the 2020 National Security Law — memoirs of the democracy movement, Tiananmen histories, political satire. A censorship wave unfolding in real time.',
+    footer: 'Compiled by banned-books.org from library purge records and press documentation. Ongoing tracking at https://banned-books.org/countries/hk.',
+    countriesAny: ['HK'],
+  },
+  {
+    slug: 'banned-in-china',
+    title: 'Banned in China',
+    header: 'Books banned in the People\'s Republic of China — from Tiananmen accounts and dissident memoirs to novels suppressed for their politics. Nearly all are available in English; many were written in Chinese and can only be published abroad.',
+    footer: 'Compiled by banned-books.org. The documented record is at https://banned-books.org/countries/cn.',
+    countriesAny: ['CN'],
+  },
 ] as const
 
 // ── Raw shapes from Supabase ──────────────────────────────────────────────
