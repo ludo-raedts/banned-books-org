@@ -219,6 +219,15 @@ async function main() {
     // consensus batch filled a description on the dupe (same-author-title-dupes
     // misses it: "cook book" ≠ "cookbook" after tokenising).
     await mergeBook(pg, 558, 16302)
+    // Case D (2026-07-04): Manuel Humbert's "Adolf Hitlers Mein Kampf —
+    // Dichtung und Wahrheit" (Paris 1936) was minted twice: #22275 by the
+    // Berlin-1938 import (DE ban, full title, year 1936) and #14825 by the
+    // Liste Otto import (FR:1940 ban, short title, lang wrongly 'fr' — the
+    // work is German). Same author row #10134 → book merge only; keeper is
+    // the full-title row. NB: the four OTHER "Mein Kampf" rows are distinct
+    // critiques ABOUT the book (Appuhn, Morvilliers, Lichtenberg) — never
+    // blanket-merge this cluster.
+    await mergeBook(pg, 22275, 14825)
     if (APPLY) { await pg.query('commit'); console.log(`\nApplied (single transaction).`) }
     else console.log(`\nDry-run — re-run with --apply.`)
   } catch (err) {
