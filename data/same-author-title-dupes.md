@@ -1,24 +1,20 @@
-# Same-author title dupes — 2026-06-23
+# Same-author title dupes — 2026-07-04
 
-Exact-normalised pairs: **7** (→ data/same-author-title-dupes.json, merge-ready)
-Near pairs (review-only): **215**
+Exact-normalised pairs: **0** (→ data/same-author-title-dupes.json, merge-ready)
+Spaceless pairs (NEW class, review-only): **2**
+Near pairs (review-only): **217**
 
 ## EXACT (merge candidates)
 
-- KEEP #239 "Red, White, and Royal Blue" [red-white-and-royal-blue] isbn=9786073808323 yr=2019 cover=valid desc=y bans=42
-  DROP #13494 "Red, White & Royal Blue" [red-white-royal-blue] isbn=9781250316776 yr=2019 cover=valid desc=y bans=1
-- KEEP #1047 "Islam" [islam-gordon] isbn=9780195218855 yr=2002 cover=valid desc=y bans=1
-  DROP #12195 "Islam" [islam] isbn=9781438169378 yr=– cover=valid desc=y bans=2
-- KEEP #1049 "A Fundamental Fear: Eurocentrism and the Emergence of Islamism" [a-fundamental-fear] isbn=9781856494120 yr=1997 cover=valid desc=y bans=1
-  DROP #12914 "A Fundamental Fear Eurocentrism and the Emergence of Islamism" [a-fundamental-fear-eurocentrism-and-the-emergence-of-islamism] isbn=– yr=– cover=– desc=y bans=1
-- KEEP #1050 "Islam Revealed: A Christian Arab's View of Islam" [islam-revealed] isbn=9780840730152 yr=1988 cover=valid desc=y bans=1
-  DROP #12915 "Islam Revealed a Christian Arab's View of Islam" [islam-revealed-a-christian-arabs-view-of-islam] isbn=9780785264644 yr=– cover=valid desc=y bans=1
-- KEEP #1052 "Mini Skirts, Mothers & Muslims" [mini-skirts-mothers-and-muslims] isbn=9780990401292 yr=2004 cover=rejected_placeholder desc=y bans=1
-  DROP #12916 "Mini-skirts Mothers & Muslims" [mini-skirts-mothers-muslims] isbn=– yr=– cover=– desc=n bans=1
-- KEEP #1064 "Gay is OK!: A Christian Perspective" [gay-is-ok] isbn=9789832344193 yr=2011 cover=rejected_placeholder desc=n bans=1
-  DROP #13304 "Gay Is Ok! a Christian Perspective" [gay-is-ok-a-christian-perspective] isbn=– yr=– cover=– desc=n bans=1
-- KEEP #1065 "Rebirth: Reformasi, Resistance and Hope in New Malaysia" [rebirth-reformasi] isbn=9789672165811 yr=2020 cover=rejected_placeholder desc=n bans=1
-  DROP #13302 "Rebirth: Reformasi, Resistance, and Hope in New Malaysia" [rebirth-reformasi-resistance-and-hope-in-new-malaysia] isbn=– yr=– cover=valid desc=n bans=1
+
+## SPACELESS (compound spacing variants — review before merge)
+
+- spaceless-normalised identical: "фалуньдафасутьусердногосовершенствованияiii" ⚠ differing numeral tokens — likely different volumes, NOT a dupe
+  - #14333 "Фалунь Дафа суть усердного совершенствования III" [falun-dafa-sut-userdnogo-sovershenstvovaniya-iii] isbn=– yr=– cover=valid desc=n bans=1
+  - #14334 "Фалунь Дафа суть усердного совершенствования I-II" [falun-dafa-sut-userdnogo-sovershenstvovaniya-i-ii] isbn=– yr=– cover=valid desc=n bans=1
+- spaceless-normalised identical: "alovelycherry"
+  - #11407 "A Lovely Cherry" [a-lovely-cherry] isbn=– yr=– cover=– desc=n bans=1
+  - #11421 "Alovely Cherry" [alovely-cherry] isbn=– yr=– cover=– desc=n bans=1
 
 ## NEAR (review only — subtitle/series differences)
 
@@ -36,7 +32,7 @@ Near pairs (review-only): **215**
   - #9049 "Brave New World Revisited" [brave-new-world-revisited] isbn=9787532774685 yr=1942 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #20 "Slaughterhouse-Five" [slaughterhouse-five] isbn=9780099268796 yr=1969 cover=valid desc=y bans=60
-  - #428 "Slaughterhouse-Five: The Graphic Novel" [slaughterhouse-five-the-graphic-novel] isbn=9781684156252 yr=2000 cover=rejected_placeholder desc=y bans=13
+  - #428 "Slaughterhouse-Five: The Graphic Novel" [slaughterhouse-five-the-graphic-novel] isbn=9781684156252 yr=2000 cover=valid desc=y bans=13
 - one title is a prefix of the other
   - #30 "Speak" [speak] isbn=9780613846141 yr=1999 cover=valid desc=y bans=68
   - #349 "Speak: The Graphic Novel" [speak-the-graphic-novel] isbn=9788869665196 yr=2018 cover=valid desc=y bans=21
@@ -62,7 +58,7 @@ Near pairs (review-only): **215**
   - #6258 "Azadi: Freedom. Fascism. Fiction." [azadi-arundhati-roy] isbn=9780143460169 yr=2020 cover=– desc=y bans=1
   - #6305 "Azadi" [azadi] isbn=9781642597066 yr=2020 cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #1280 "Different Seasons: Four Novellas" [different-seasons-four-novellas] isbn=9780751525670 yr=1982 cover=rejected_placeholder desc=y bans=7
+  - #1280 "Different Seasons: Four Novellas" [different-seasons-four-novellas] isbn=9780751525670 yr=1982 cover=valid desc=y bans=7
   - #14321 "Different Seasons" [different-seasons] isbn=9780340899076 yr=1982 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #122 "Maus" [maus] isbn=9780679406419 yr=1991 cover=valid desc=y bans=2
@@ -99,10 +95,10 @@ Near pairs (review-only): **215**
   - #1156 "Assassination Classroom, Vol. 4" [assassination-classroom-vol-4] isbn=9781518214028 yr=2025 cover=valid desc=y bans=10
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
-  - #1157 "Assassination Classroom, Vol. 5" [assassination-classroom-vol-5] isbn=9781518214042 yr=2025 cover=valid desc=y bans=9
+  - #1157 "Assassination Classroom, Vol. 5" [assassination-classroom-vol-5] isbn=9781518214042 yr=2025 cover=valid desc=n bans=9
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
-  - #1158 "Assassination Classroom, Vol. 6" [assassination-classroom-vol-6] isbn=9781974710140 yr=2025 cover=valid desc=y bans=9
+  - #1158 "Assassination Classroom, Vol. 6" [assassination-classroom-vol-6] isbn=9781974710140 yr=2025 cover=valid desc=n bans=9
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
   - #1159 "Assassination Classroom, Vol. 7" [assassination-classroom-vol-7] isbn=9781518214035 yr=2025 cover=valid desc=y bans=8
@@ -126,7 +122,7 @@ Near pairs (review-only): **215**
   - #2652 "Assassination Classroom, Vol. 14" [assassination-classroom-vol-14] isbn=– yr=2025 cover=– desc=y bans=3
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
-  - #2653 "Assassination Classroom, Vol. 15" [assassination-classroom-vol-15] isbn=9781518233814 yr=2025 cover=valid desc=y bans=3
+  - #2653 "Assassination Classroom, Vol. 15" [assassination-classroom-vol-15] isbn=9781518233814 yr=2025 cover=valid desc=n bans=3
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
   - #2654 "Assassination Classroom, Vol. 16" [assassination-classroom-vol-16] isbn=– yr=2025 cover=valid desc=y bans=3
@@ -141,7 +137,7 @@ Near pairs (review-only): **215**
   - #2657 "Assassination Classroom, Vol. 19" [assassination-classroom-vol-19] isbn=– yr=2025 cover=– desc=y bans=4
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
-  - #2658 "Assassination Classroom, Vol. 20" [assassination-classroom-vol-20] isbn=9781544402437 yr=2025 cover=valid desc=y bans=3
+  - #2658 "Assassination Classroom, Vol. 20" [assassination-classroom-vol-20] isbn=9781544402437 yr=2025 cover=valid desc=n bans=3
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9783551739445 yr=2016 cover=valid desc=y bans=9
   - #2659 "Assassination Classroom, Vol. 21" [assassination-classroom-vol-21] isbn=9781544402444 yr=2025 cover=– desc=y bans=4
@@ -150,7 +146,7 @@ Near pairs (review-only): **215**
   - #2789 "A Game of Thrones: The Graphic Novel, Vol. 2" [a-game-of-thrones-the-graphic-novel-vol-2] isbn=9780007493043 yr=2012 cover=valid desc=y bans=4
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=29
-  - #2790 "A Game of Thrones: The Graphic Novel, Vol. 3" [a-game-of-thrones-the-graphic-novel-vol-3] isbn=9780593159705 yr=2014 cover=valid desc=y bans=4
+  - #2790 "A Game of Thrones: The Graphic Novel, Vol. 3" [a-game-of-thrones-the-graphic-novel-vol-3] isbn=9780593159705 yr=2014 cover=valid desc=n bans=4
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=29
   - #2791 "A Game of Thrones: The Graphic Novel, Vol. 4" [a-game-of-thrones-the-graphic-novel-vol-4] isbn=9780345539717 yr=2025 cover=valid desc=y bans=4
@@ -174,10 +170,10 @@ Near pairs (review-only): **215**
   - #1215 "Heartstopper, Vol. 2" [heartstopper-vol-2] isbn=9788682186021 yr=2019 cover=– desc=y bans=9
 - one title is a prefix of the other
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
-  - #1216 "Heartstopper, Vol. 4" [heartstopper-vol-4] isbn=9781338617566 yr=2021 cover=rejected_placeholder desc=y bans=7
+  - #1216 "Heartstopper, Vol. 4" [heartstopper-vol-4] isbn=9781338617566 yr=2021 cover=valid desc=y bans=7
 - one title is a prefix of the other
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
-  - #1426 "Heartstopper, Vol. 1" [heartstopper-vol-1] isbn=9789877478433 yr=2018 cover=rejected_placeholder desc=y bans=11
+  - #1426 "Heartstopper, Vol. 1" [heartstopper-vol-1] isbn=9789877478433 yr=2018 cover=valid desc=y bans=11
 - one title is a prefix of the other
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
   - #1427 "Heartstopper, Vol. 3" [heartstopper-vol-3] isbn=9781444952780 yr=2020 cover=valid desc=y bans=7
@@ -201,7 +197,7 @@ Near pairs (review-only): **215**
   - #5466 "Blue Bloods: The Graphic Novel" [blue-bloods-the-graphic-novel] isbn=9781423134473 yr=2025 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #362 "American Gods" [american-gods] isbn=9780755379927 yr=2001 cover=valid desc=y bans=7
-  - #17508 "American Gods, Vol. 1: Shadows" [american-gods-vol-1-shadows] isbn=9781506734996 yr=2022 cover=valid desc=n bans=1
+  - #17508 "American Gods, Vol. 1: Shadows" [american-gods-vol-1-shadows] isbn=9781506734996 yr=2022 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #362 "American Gods" [american-gods] isbn=9780755379927 yr=2001 cover=valid desc=y bans=7
   - #17510 "American Gods, Vol. 2: My Ainsel" [american-gods-vol-2-my-ainsel] isbn=– yr=2022 cover=valid desc=n bans=1
@@ -237,7 +233,7 @@ Near pairs (review-only): **215**
   - #8499 "The Sandman, Vol. 9: The Kindly Ones" [the-sandman-vol-9-the-kindly-ones] isbn=9781401236397 yr=1996 cover=rejected_placeholder desc=y bans=1
 - one title is a prefix of the other
   - #363 "Maximum Ride" [maximum-ride] isbn=9780759514188 yr=2005 cover=valid desc=y bans=2
-  - #18094 "Maximum Ride Forever" [maximum-ride-forever] isbn=9781484474792 yr=2006 cover=– desc=n bans=1
+  - #18094 "Maximum Ride Forever" [maximum-ride-forever] isbn=9781484474792 yr=2006 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #8800 "Cross" [cross] isbn=9781455523528 yr=2011 cover=– desc=y bans=1
   - #9085 "Cross Country" [cross-country] isbn=9780446536301 yr=2008 cover=– desc=y bans=1
@@ -309,7 +305,7 @@ Near pairs (review-only): **215**
   - #1987 "Soul Eater, Vol. 16" [soul-eater-vol-16] isbn=9784757527904 yr=2024 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #514 "Soul Eater" [soul-eater] isbn=9780759530010 yr=2004 cover=valid desc=y bans=1
-  - #1988 "Soul Eater, Vol. 17" [soul-eater-vol-17] isbn=9783551792273 yr=2024 cover=valid desc=y bans=3
+  - #1988 "Soul Eater, Vol. 17" [soul-eater-vol-17] isbn=9783551792273 yr=2024 cover=valid desc=n bans=3
 - one title is a prefix of the other
   - #514 "Soul Eater" [soul-eater] isbn=9780759530010 yr=2004 cover=valid desc=y bans=1
   - #1989 "Soul Eater, Vol. 2" [soul-eater-vol-2] isbn=9780316237161 yr=2010 cover=valid desc=y bans=4
@@ -327,7 +323,7 @@ Near pairs (review-only): **215**
   - #1993 "Soul Eater, Vol. 6" [soul-eater-vol-6] isbn=9783551792167 yr=2024 cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #514 "Soul Eater" [soul-eater] isbn=9780759530010 yr=2004 cover=valid desc=y bans=1
-  - #1994 "Soul Eater, Vol. 7" [soul-eater-vol-7] isbn=9783551792174 yr=2024 cover=valid desc=y bans=3
+  - #1994 "Soul Eater, Vol. 7" [soul-eater-vol-7] isbn=9783551792174 yr=2024 cover=valid desc=n bans=3
 - one title is a prefix of the other
   - #514 "Soul Eater" [soul-eater] isbn=9780759530010 yr=2004 cover=valid desc=y bans=1
   - #1995 "Soul Eater, Vol. 8" [soul-eater-vol-8] isbn=9788467902891 yr=2024 cover=valid desc=y bans=3
@@ -407,7 +403,7 @@ Near pairs (review-only): **215**
   - #1692 "Miss Peregrine’s Home for Peculiar Children" [miss-peregrine-s-home-for-peculiar-children] isbn=9788551000687 yr=2011 cover=valid desc=y bans=3
   - #2004 "Miss Peregrine’s Home for Peculiar Children: The Graphic Novel" [miss-peregrine-s-home-for-peculiar-children-the-graphic-novel] isbn=9781594749520 yr=2013 cover=valid desc=y bans=2
 - one title is a prefix of the other
-  - #1868 "Magical Boy, Vol 1" [magical-boy-vol-1] isbn=9780545465939 yr=2025 cover=valid desc=y bans=3
+  - #1868 "Magical Boy, Vol 1" [magical-boy-vol-1] isbn=9780545465939 yr=2025 cover=valid desc=n bans=3
   - #7556 "Magical Boy" [magical-boy] isbn=9781338775532 yr=2022 cover=– desc=y bans=2
 - one title is a prefix of the other
   - #2032 "Art That Changed the World: Transformative Art Movements and the Paintings That Inspired Them" [art-that-changed-the-world-transformative-art-movements-and-the-paintings-that-inspired-them] isbn=9781465421203 yr=2025 cover=valid desc=n bans=2
@@ -419,7 +415,7 @@ Near pairs (review-only): **215**
   - #2544 "The Beginning of Everything: Everyone Gets a Tragedy" [the-beginning-of-everything-everyone-gets-a-tragedy] isbn=9781484433645 yr=2013 cover=valid desc=y bans=2
   - #7778 "The Beginning of Everything" [the-beginning-of-everything] isbn=9780062217158 yr=2013 cover=– desc=y bans=2
 - one title is a prefix of the other
-  - #2676 "My Hero Academia: Origin, Vol. 5" [my-hero-academia-origin-vol-5] isbn=9784088802640 yr=2025 cover=rejected_placeholder desc=y bans=1
+  - #2676 "My Hero Academia: Origin, Vol. 5" [my-hero-academia-origin-vol-5] isbn=9784088802640 yr=2025 cover=valid desc=y bans=1
   - #7596 "My Hero Academia" [my-hero-academia] isbn=9788822610485 yr=2014 cover=– desc=y bans=2
 - one title is a prefix of the other
   - #7596 "My Hero Academia" [my-hero-academia] isbn=9788822610485 yr=2014 cover=– desc=y bans=2
@@ -446,13 +442,13 @@ Near pairs (review-only): **215**
   - #5078 "Ranma 1/2, Vol. 20" [ranma-1-2-vol-20] isbn=9781417658206 yr=2024 cover=valid desc=y bans=1
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #5080 "Ranma 1/2, Vol. 21" [ranma-1-2-vol-21] isbn=9781417658336 yr=2024 cover=rejected_placeholder desc=y bans=1
+  - #5080 "Ranma 1/2, Vol. 21" [ranma-1-2-vol-21] isbn=9781417658336 yr=2024 cover=valid desc=y bans=1
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #3401 "Locke and Key Vol. 1: Welcomeome To Lovecraft" [locke-and-key-vol-1-welcomeome-to-lovecraft] isbn=9781631409462 yr=2008 cover=valid desc=y bans=2
   - #7593 "Locke & Key" [locke-key] isbn=9783866078505 yr=2008 cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #3402 "Locke and Key, Vol. 5: Clockworks" [locke-and-key-vol-5-clockworks] isbn=9781613772270 yr=2012 cover=rejected_placeholder desc=y bans=2
+  - #3402 "Locke and Key, Vol. 5: Clockworks" [locke-and-key-vol-5-clockworks] isbn=9781613772270 yr=2012 cover=valid desc=y bans=2
   - #7593 "Locke & Key" [locke-key] isbn=9783866078505 yr=2008 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #3403 "Locke and Key, Vol. 6: Alpha and Omega" [locke-and-key-vol-6-alpha-and-omega] isbn=9781631408465 yr=2013 cover=valid desc=y bans=2
@@ -500,7 +496,7 @@ Near pairs (review-only): **215**
   - #6452 "You Hear Me?" [you-hear-me] isbn=9780763611583 yr=2000 cover=– desc=y bans=1
   - #9282 "You Hear Me? Poems and Writing by Teenage Boys" [you-hear-me-poems-and-writing-by-teenage-boys] isbn=9780763611590 yr=2001 cover=– desc=y bans=1
 - one title is a prefix of the other
-  - #4551 "Help for the Haunted Heroine" [help-for-the-haunted-heroine] isbn=9780060779634 yr=2024 cover=rejected_placeholder desc=y bans=2
+  - #4551 "Help for the Haunted Heroine" [help-for-the-haunted-heroine] isbn=9780060779634 yr=2024 cover=valid desc=y bans=2
   - #5631 "Help for the Haunted" [help-for-the-haunted] isbn=9780751555882 yr=2013 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #4801 "The Ten Things We Did (and Probably Shouldn't Have)" [the-ten-things-we-did-and-probably-shouldnt-have] isbn=9798225066512 yr=2011 cover=valid desc=y bans=1
@@ -609,13 +605,13 @@ Near pairs (review-only): **215**
   - #10152 "Death Note: Black Edition" [death-note-black-edition] isbn=9783867196710 yr=2010 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #16510 "Friedrich Engels: A Biography" [friedrich-engels-a-biography] isbn=9783658342784 yr=– cover=valid desc=y bans=1
-  - #22457 "Friedrich Engels" [friedrich-engels] isbn=9788437501598 yr=1934 cover=valid desc=n bans=1
+  - #22457 "Friedrich Engels" [friedrich-engels] isbn=9788437501598 yr=1934 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #11346 "Seeds of the Rainbow - Part 1 and 2" [seeds-of-the-rainbow-part-1-and-2] isbn=– yr=– cover=– desc=n bans=1
-  - #16287 "Seeds of the Rainbow" [seeds-of-the-rainbow] isbn=9781596544116 yr=– cover=valid desc=n bans=1
+  - #16287 "Seeds of the Rainbow" [seeds-of-the-rainbow] isbn=9781596544116 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #11376 "Seeds of the Rainbow I and Ii" [seeds-of-the-rainbow-i-and-ii] isbn=9781626571525 yr=– cover=– desc=y bans=1
-  - #16287 "Seeds of the Rainbow" [seeds-of-the-rainbow] isbn=9781596544116 yr=– cover=valid desc=n bans=1
+  - #16287 "Seeds of the Rainbow" [seeds-of-the-rainbow] isbn=9781596544116 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #11638 "Sokong Dengan Hangat Perjuangan Kemerdekaan Rakyat Pattani" [sokong-dengan-hangat-perjuangan-kemerdekaan-rakyat-pattani-bertarikh-31hb-disember-1975] isbn=– yr=– cover=– desc=n bans=1
   - #11644 "Sokong Dengan Hangat Perjuangan Kemerdekaan Rakyat Pattani - Dated 31/12/75" [sokong-dengan-hangat-perjuangan-kemerdekaan-rakyat-pattani-dated-31-12-75] isbn=– yr=– cover=– desc=n bans=1
@@ -667,3 +663,9 @@ Near pairs (review-only): **215**
 - one title is a prefix of the other
   - #19692 "Chiropraktik oder Das menschliche Rückgrat als Träger u. Ursache von Gesundheit u. Krankheit" [chiropraktik-oder-das-menschliche-ruckgrat-als-trager-u-ursache-von-gesundheit-u-krankheit] isbn=– yr=1934 cover=– desc=n bans=1
   - #22118 "Chiropraktik" [chiropraktik] isbn=– yr=1935 cover=– desc=n bans=1
+- one title is a prefix of the other
+  - #22861 "O Filho da Mãe volta a atacar" [o-filho-da-mae-volta-a-atacar] isbn=– yr=– cover=– desc=n bans=1
+  - #22862 "O Filho da Mãe" [o-filho-da-mae] isbn=– yr=– cover=– desc=n bans=1
+- one title is a prefix of the other
+  - #22932 "Ho Chi Minh" [ho-chi-minh] isbn=– yr=– cover=valid desc=y bans=1
+  - #22933 "Ho Chi Minh/Habib Burguiba" [ho-chi-minh-habib-burguiba] isbn=– yr=– cover=– desc=n bans=1
