@@ -7,12 +7,18 @@
 // Route (as suggested): group every author's books, normalise each title,
 // and flag books that collapse to the same (or near-same) normalised string.
 //
-//   exact  — titles identical after normalisation (&↔and, punctuation, case,
-//            diacritics, whitespace). High confidence; emitted to the JSON
-//            worklist for merge-paren-suffix-dupes.ts.
-//   near   — one normalised title is a prefix of the other, OR token-set
-//            Jaccard ≥ 0.92. Review-only (subtitle/edition differences, but
-//            also series volumes — NOT auto-merged).
+//   exact     — titles identical after normalisation (&↔and, punctuation,
+//               case, diacritics, whitespace). High confidence; emitted to
+//               the JSON worklist for merge-paren-suffix-dupes.ts.
+//   spaceless — titles identical only after ALSO stripping all whitespace
+//               from the normalised string. Catches spacing variants of
+//               compounds ("The Anarchist Cook Book" vs "The Anarchist
+//               Cookbook", #16302/#558) that token comparison misses because
+//               "cook book" is 2 tokens and "cookbook" is 1. Review-only —
+//               NOT in the JSON worklist.
+//   near      — one normalised title is a prefix of the other, OR token-set
+//               Jaccard ≥ 0.92. Review-only (subtitle/edition differences,
+//               but also series volumes — NOT auto-merged).
 //
 // KEEP is the row with the richer metadata (isbn13, description_book,
 // work id, valid cover, year); DROP is migrated into it. The audit only
@@ -76,6 +82,12 @@ function tokens(n: string): Set<string> {
   return new Set(n.split(' ').filter(Boolean))
 }
 
+// Whitespace-free variant of an already-normalised title, so spacing
+// variants of compound words collapse ("cook book" ↔ "cookbook").
+function spaceless(n: string): string {
+  return n.replace(/ /g, '')
+}
+
 function jaccard(a: Set<string>, b: Set<string>): number {
   let inter = 0
   for (const x of a) if (b.has(x)) inter++
@@ -121,7 +133,7 @@ async function main() {
   }
 
   type Hit = {
-    a: Book; b: Book; tier: 'exact' | 'near'; detail: string
+    a: Book; b: Book; tier: 'exact' | 'spaceless' | 'near'; detail: string
   }
   const hits: Hit[] = []
   const seenPair = new Set<string>()
@@ -145,6 +157,22 @@ async function main() {
           hits.push({ a: x, b: y, tier: 'exact', detail: `normalised identical: "${nx}"` })
           continue
         }
+        // spaceless: identical once ALL whitespace is stripped — compound
+        // spacing variants ("cook book" vs "cookbook"). Hazard: volume
+        // numerals also collapse ("I-II" → "iii" ↔ "III"), so flag pairs
+        // whose differing tokens are digits/roman numerals.
+        if (spaceless(nx) === spaceless(ny)) {
+          seenPair.add(pairKey)
+          const tx = tokens(nx), ty = tokens(ny)
+          const numeralDiff = [...new Set([...tx, ...ty])]
+            .some(t => tx.has(t) !== ty.has(t) && /^(\d+|[ivxlcdm]+)$/.test(t))
+          hits.push({
+            a: x, b: y, tier: 'spaceless',
+            detail: `spaceless-normalised identical: "${spaceless(nx)}"` +
+              (numeralDiff ? ' ⚠ differing numeral tokens — likely different volumes, NOT a dupe' : ''),
+          })
+          continue
+        }
         // near: prefix or high token overlap
         const isPrefix = nx.startsWith(ny + ' ') || ny.startsWith(nx + ' ')
         const jac = jaccard(tokens(nx), tokens(ny))
@@ -160,6 +188,7 @@ async function main() {
   }
 
   const exact = hits.filter(h => h.tier === 'exact')
+  const spacelessHits = hits.filter(h => h.tier === 'spaceless')
   const near = hits.filter(h => h.tier === 'near')
 
   // Build merge worklist for the EXACT tier (keep = higher score; tiebreak
@@ -190,6 +219,7 @@ async function main() {
   lines.push(`# Same-author title dupes — ${new Date().toISOString().slice(0, 10)}`)
   lines.push('')
   lines.push(`Exact-normalised pairs: **${exact.length}** (→ data/same-author-title-dupes.json, merge-ready)`)
+  lines.push(`Spaceless pairs (NEW class, review-only): **${spacelessHits.length}**`)
   lines.push(`Near pairs (review-only): **${near.length}**`)
   lines.push('')
   const fmt = (b: Book) =>
@@ -203,6 +233,14 @@ async function main() {
     lines.push(`  DROP ${fmt(d)}`)
   }
   lines.push('')
+  lines.push('## SPACELESS (compound spacing variants — review before merge)')
+  lines.push('')
+  for (const h of spacelessHits) {
+    lines.push(`- ${h.detail}`)
+    lines.push(`  - ${fmt(h.a)}`)
+    lines.push(`  - ${fmt(h.b)}`)
+  }
+  lines.push('')
   lines.push('## NEAR (review only — subtitle/series differences)')
   lines.push('')
   for (const h of near) {
@@ -212,7 +250,7 @@ async function main() {
   }
   writeFileSync('data/same-author-title-dupes.md', lines.join('\n'))
 
-  console.log(`\nEXACT: ${exact.length}   NEAR: ${near.length}`)
+  console.log(`\nEXACT: ${exact.length}   SPACELESS: ${spacelessHits.length}   NEAR: ${near.length}`)
   console.log('Wrote data/same-author-title-dupes.json (exact, merge-ready)')
   console.log('Wrote data/same-author-title-dupes.md (full review)')
 }
