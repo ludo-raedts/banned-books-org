@@ -212,6 +212,13 @@ async function main() {
     await mergeAuthor(pg, 4433, 9639)
     // Case B: Li Hongzhi — author only; books #14333/#14334 kept as distinct works.
     await mergeAuthor(pg, 190, 9637)
+    // Case C (2026-07-04): The Anarchist Cookbook — the FR-arrêtés import minted
+    // #16302 "The Anarchist Cook Book" (lang=fr, FR:1971 ban) beside canonical
+    // #558 (en, ISBN+cover+desc, AU/NZ/GB/CA bans). Same author row already, so
+    // book merge only: FR ban migrates, slug becomes an alias. Found because the
+    // consensus batch filled a description on the dupe (same-author-title-dupes
+    // misses it: "cook book" ≠ "cookbook" after tokenising).
+    await mergeBook(pg, 558, 16302)
     if (APPLY) { await pg.query('commit'); console.log(`\nApplied (single transaction).`) }
     else console.log(`\nDry-run — re-run with --apply.`)
   } catch (err) {
