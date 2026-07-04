@@ -140,9 +140,14 @@ async function pickKnown(): Promise<any[]> {
   return shuffle(data ?? []).slice(0, PER_BUCKET)
 }
 async function pickTarget(): Promise<any[]> {
+  // 2026-07-04: the historical band (ungrounded ai_drafted text, no source)
+  // was emptied by the June reground work. Today's recovery band is the
+  // ISBN-bearing rows where NO external source produced a blurb at all
+  // (see data/desc-websearch-isbn-full.md — 686 no_source of 1.095).
   const { data } = await sb.from('books')
     .select('id, slug, title, first_published_year, original_language, censorship_context, book_authors(authors(display_name)), bans(countries(name_en))')
-    .eq('ai_drafted', true).is('description_source_type', null).not('isbn13', 'is', null).not('description_book', 'is', null).limit(PER_BUCKET * 4)
+    .is('description_book', null).not('isbn13', 'is', null).eq('is_blanket_works', false)
+    .limit(PER_BUCKET * 4)
   return shuffle(data ?? []).slice(0, PER_BUCKET)
 }
 
@@ -173,13 +178,23 @@ async function pickScoped(): Promise<any[]> {
 async function pickAnonymous(): Promise<any[]> {
   // wiped books from the Phase-1 backup (obscure/anonymous, confabulation traps)
   const p = resolve(__dirname, '../data/wiped-ungrounded-descriptions-backup.csv')
-  if (!existsSync(p)) return []
-  const slugs = readFileSync(p, 'utf8').split('\n').slice(1).map(l => l.split(',')[1]).filter(Boolean)
-  const pick = shuffle(slugs).slice(0, PER_BUCKET)
+  if (existsSync(p)) {
+    const slugs = readFileSync(p, 'utf8').split('\n').slice(1).map(l => l.split(',')[1]).filter(Boolean)
+    const pick = shuffle(slugs).slice(0, PER_BUCKET)
+    const { data } = await sb.from('books')
+      .select('id, slug, title, first_published_year, original_language, censorship_context, book_authors(authors(display_name)), bans(countries(name_en))')
+      .in('slug', pick)
+    return data ?? []
+  }
+  // Fallback (the CSV was a data/-cleanup casualty, 2026-07-04): Estado Novo
+  // pamphlets without ISBN or description — obscure enough that any confident
+  // model answer is near-certain confabulation. Same trap function, live data.
   const { data } = await sb.from('books')
     .select('id, slug, title, first_published_year, original_language, censorship_context, book_authors(authors(display_name)), bans(countries(name_en))')
-    .in('slug', pick)
-  return data ?? []
+    .is('description_book', null).is('isbn13', null).eq('is_blanket_works', false)
+    .eq('original_language', 'pt')
+    .limit(PER_BUCKET * 4)
+  return shuffle(data ?? []).slice(0, PER_BUCKET)
 }
 function shuffle<T>(a: T[]): T[] { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a }
 
