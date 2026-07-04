@@ -145,6 +145,13 @@ async function loadCandidates(): Promise<any[]> {
   const rows: any[] = []; let from = 0; const P = 1000
   for (;;) {
     let q = sb.from('books').select(sel).is('description_source_type', null).order('id').range(from, from + P - 1)
+    // Fill-only by default (2026-07-04): the June replace-ungrounded mission is
+    // done; batch runs must not overwrite existing (legacy source-less) text
+    // and must skip blanket-works pseudo-books ("Toutes ses œuvres…").
+    // --overwrite-ungrounded restores the old replace behaviour.
+    if (!process.argv.includes('--overwrite-ungrounded')) {
+      q = q.is('description_book', null).eq('is_blanket_works', false)
+    }
     q = CREATED_AFTER ? q.gte('created_at', CREATED_AFTER) : q.eq('original_language', LANG)
     const { data, error } = await q
     if (error) throw error
