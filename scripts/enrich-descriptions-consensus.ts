@@ -53,7 +53,11 @@ const GEN_SYSTEM =
   `If you are not confident you know this specific book, reply with exactly the single word UNKNOWN and nothing else. ` +
   `When you do know it, write 60-120 words of concrete specifics: what kind of work it is, the actual subject or plot, ` +
   `named characters or key arguments, setting — facts a reader could verify. ` +
-  `Avoid generic filler like "explores themes of identity" or "a poignant coming-of-age".`
+  `Avoid generic filler like "explores themes of identity" or "a poignant coming-of-age". ` +
+  // Spot-check 2026-07-04: authors/subjects were reliably right but ~15% of
+  // stated publication years were off (shared training bias survives the
+  // cross-model gate). Years add little to a blurb — leave them out unless sure.
+  `Do NOT state a publication year unless you are completely certain of it; when in doubt, omit the year entirely.`
 
 const JUDGE_SYSTEM =
   `You compare two descriptions, written independently, of the same book, to detect AI confabulation. ` +
@@ -82,12 +86,28 @@ function bookContext(b: any): string {
   ].filter(Boolean).join('\n')
 }
 
+// Transient API failures (Gemini 503 UNAVAILABLE under parallel batch load,
+// occasional 429/5xx) must not kill a 600-book run: retry with backoff, and
+// processBook catches what survives so one book fails, not the batch.
+async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
+  let attempt = 0
+  for (;;) {
+    try { return await fn() } catch (e) {
+      attempt++
+      const msg = e instanceof Error ? e.message : String(e)
+      const transient = /\b(429|500|502|503|504|UNAVAILABLE|INTERNAL|RESOURCE_EXHAUSTED|overloaded|timeout)\b/i.test(msg)
+      if (attempt >= 4 || !transient) throw e
+      await new Promise(r => setTimeout(r, 2000 * attempt))
+    }
+  }
+}
+
 async function genOpenAI(ctx: string): Promise<string> {
-  const r = await oai.chat.completions.create({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: GEN_SYSTEM }, { role: 'user', content: ctx }], temperature: 0.3 })
+  const r = await withRetry(() => oai.chat.completions.create({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: GEN_SYSTEM }, { role: 'user', content: ctx }], temperature: 0.3 }))
   return (r.choices[0]?.message?.content ?? '').trim()
 }
 async function genGemini(ctx: string): Promise<string> {
-  const r = await genai.models.generateContent({ model: 'gemini-2.5-flash', contents: ctx, config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } } })
+  const r = await withRetry(() => genai.models.generateContent({ model: 'gemini-2.5-flash', contents: ctx, config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } } }))
   return (r.text ?? '').trim()
 }
 const isUnknown = (s: string) => /^unknown\b/i.test(s.trim()) || s.trim().length < 25
@@ -113,6 +133,16 @@ type Row = { id: number; slug: string; title: string; description_book: string |
 type Outcome = { id: number; slug: string; decision: string; conf?: number; text?: string }
 
 async function processBook(b: any): Promise<Outcome> {
+  try {
+    return await processBookInner(b)
+  } catch (e) {
+    // Exhausted retries or non-transient: this book is skipped (stays in
+    // scope, a re-run picks it up), the rest of the batch continues.
+    return { id: b.id, slug: b.slug, decision: `ERROR(${(e as Error).message?.slice(0, 60) ?? 'unknown'})` }
+  }
+}
+
+async function processBookInner(b: any): Promise<Outcome> {
   const ctx = bookContext(b)
   const [a, g] = await Promise.all([genOpenAI(ctx), genGemini(ctx)])
   if (isUnknown(a) || isUnknown(g)) return { id: b.id, slug: b.slug, decision: 'UNKNOWN' }
