@@ -229,9 +229,12 @@ jaarindexen; marlon-bundo-broward: sjabloon voor één-paar ban-merge) staan in 
 | `merge-honorific-author-dupes.ts` | Hardcoded paren | Maleisisch import-artefact. Migreert `book_authors` + author-FK-tabellen | `--write` |
 | `merge-cross-language-dupes.ts` | Hardcoded paren (auteur + evt. boek) | **Cross-script dupes** uit vreemdtalige ban-imports. Foreign DROP levert ALLEEN ban + URL-alias + taal-neutrale velden (datums/land/IDs); nooit name/title/`original_language`/description (= vertaling, niet het origineel). Boek mee-mergen alléén als het dezelfde *work* is. Input: `_audit_cross_script_dupes.ts` | `--apply` |
 
-Afgeronde één-paar auteur-merge (`merge-vs-naipaul-authors.ts`: V. S. Naipaul-dubbel,
-introduceerde óók `author_slug_aliases` + de alias-fallback op de author-pagina, sjabloon
-voor "merge + dropped-slug-redirect") staat in `scripts/archive/`.
+Afgeronde één-paar auteur-merges staan in `scripts/archive/`: `merge-vs-naipaul-authors.ts`
+(V. S. Naipaul-dubbel, introduceerde óók `author_slug_aliases` + de alias-fallback op de
+author-pagina, sjabloon voor "merge + dropped-slug-redirect") en
+`merge-various-placeholder-authors.ts` (aggregaat-placeholder "Various" #7243 → "Various
+Authors" #455; sjabloon voor placeholder-merges die bewust géén persoons-identiteitsvelden
+meekopiëren).
 
 **Vuistregel:** generieke boek-dupes → vul `data/paren-suffix-dupes.json` + draai
 `merge-paren-suffix-dupes.ts` · eenmalig bijzonder geval → kopieer het dichtstbijzijnde
@@ -288,6 +291,7 @@ CourtListener doet **niet** mee: dat is een render-time live feed
 | `enrich-native-titles.ts` | **`title_native` + `title_native_script` voor anderstalige boeken die onder hun Engelse/vertaalde titel staan** (bv. "Doctor Zhivago" → "Доктор Живаго"). Bron Wikidata (CC-0): `wbsearchentities` (titel + zonder leidend lidwoord) → hard-gate op P31=written-work **én** P50-auteur-match (incl. aliassen/pseudoniemen); P364 wordt NIET als gate gebruikt (vaak leeg). Native titel uit `P1476@origlang` of label. Raakt `title`/`slug` nooit; niet-Latijnse transliteratie blijft NULL (review-gated, vlag in reviewbestand). Idempotent (`.is title_native null`-guard). Ranking op `distinct_countries`. Schrijft `data/native-title-enrichment-<date>.{json,md}`. `--limit` / `--offset` / `--lang=xx` / `--book-ids=` / `--apply` | apply |
 | **Identifiers / overig** | |
 | `enrich-isbn.ts` | Missende `isbn13` via OpenLibrary + Google Books |
+| `enrich-orphan-years.ts` | Verifieert "placeholder-year" wezen (Class C: `first_published_year` == vroegste ban-jaar, geen isbn13/work_id — importer heeft het jaar vermoedelijk op het ban-jaar gedefault) tegen OL's work-level `first_publish_year`. Dubbele guard (auteur-overlap **én** bidirectionele titel-match) vóór accept; bij match backfill van work_id + isbn13 (UNIQUE-safe) en confirmed/corrected jaar. Geen match = onaangeroerd op de watchlist (`data/placeholder-year-review-2026-06-29.md`). Her-draaibaar na imports die jaren op ban-jaar defaulten. `--limit` / `--apply` | apply |
 | `enrich-gb-harvest.ts` | **Gebundelde Google-Books harvester**, **wezen-only** (geen isbn13 én geen work_id): één GB-call per boek vult isbn13 + cover_url + original_language via title-search (de enige route voor sleutelloze boeken). GB is ~1.000 queries/dag. Logt year/categories/pages/publisher naar `data/gb-harvest-proposals.jsonl` (niet geschreven). Resumebaar; draait via launchd |
 | `enrich-ol-harvest.ts` | **Exact-key OL harvester** (gratis tegenhanger van gb-harvest, géén dagcap): voor *keybare* boeken (work_id óf isbn13) haalt het cover, `first_published_year` (uit work `first_publish_date` — de enige bron hiervoor) en sibling-ISBN direct uit het OL-record, zónder fuzzy title-search. Title-agreement guard weert vervuilde keys. Disjunct van gb-harvest → mag gelijktijdig draaien. Resumebaar via `data/ol-harvest-cursor.json` |
 | `enrich-archive-org.ts` | archive.org identifiers via Advanced Search API |
@@ -369,7 +373,11 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 Afgeronde one-off fixes (cleanup-iran-titles, source-orphan-{canonical,cluster}-bans,
 `_apply_google_cover_fixes`, `_apply_csam_block` ⚠️ destructief-eenmalig, `_apply_fr_nazi_warning_tiers`,
 `_apply_ban_vs_context_cleanup`, `_apply_keep_narrative_groundedness`, `_fix_*`-batchcorrecties,
-`_improve_north_korea`, `_update_fr_country_description`, `_strip_dark_mode`) → `scripts/archive/`.
+`_improve_north_korea`, `_update_fr_country_description`, `_strip_dark_mode`,
+`fix-impossible-years-2026-07-01` + follow-up `fix-grete-fischer-identity` — namesake-
+contaminatie #14662/#16348, sjabloon voor geguarde exact-state puntcorrecties,
+`delete-kdn-periodicals` — slot van de KDN-periodical-purge 2026-07-01, 16 out-of-scope
+rijen + backup-JSON in `data/`) → `scripts/archive/`.
 
 ---
 
