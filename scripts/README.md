@@ -77,8 +77,9 @@ machinerie die al bestaat; hergebruik:
   importeren.
 - Stap 3 — read-only telling vóór → dry-run → --apply → telling ná; rapporteer exacte
   rij-aantallen.
-- Stap 4 — draai daarna _audit_cross_script_dupes.ts, _audit_spanish_edition_dupes.ts en
-  audit-integrity.ts; fold bevestigde dupes via de merge-scripts (§3).
+- Stap 4 — draai daarna _audit_cross_script_dupes.ts, _audit_spanish_edition_dupes.ts,
+  _audit_cross_language_dupes.ts en audit-integrity.ts; fold bevestigde dupes via de
+  merge-scripts (§3).
 - Verrijking — enrich-all.ts --apply (§4) voor covers/descriptions/native titles; PT-regel:
   first_published_year alleen zetten als de bron 'm echt geeft, anders NULL + verify-tool.
 - Stap 5 — commit + push met de exacte counts; documenteer het nieuwe script in
@@ -123,9 +124,10 @@ aan de bron.
 Rapporteer exacte rij-aantallen (CLAUDE.md-regel).
 
 **Stap 4 — Verplichte dubbelen-sweep ná de import.** Draai
-`_audit_cross_script_dupes.ts` (auteurs) + `_audit_spanish_edition_dupes.ts` (boeken)
-en fold bevestigde hits via de merge-scripts (§2/§3). Staand vangnet voor wat door
-stap 2 glipt — m.n. CSV-bronnen die geen Engelse titel meeleveren.
+`_audit_cross_script_dupes.ts` (auteurs) + `_audit_spanish_edition_dupes.ts` +
+`_audit_cross_language_dupes.ts` (boeken) en fold bevestigde hits via de
+merge-scripts (§2/§3). Staand vangnet voor wat door stap 2 glipt — m.n.
+CSV-bronnen die geen Engelse titel meeleveren.
 
 **Stap 5 — Commit + push** met de exacte counts in de message.
 
@@ -173,6 +175,7 @@ die een merge-script daarna inleest.
 | `_audit_mojibake_authors.ts` | U+FFFD-corrupte auteursnamen (draai vóór nieuwe KDN-batch) |
 | `_audit_cross_script_dupes.ts` | Cross-script auteur-twins: niet-Latijnse auteur die een bestaande Latijnse auteur dubbelt (name_english-match of identieke bio) → fold via `merge-cross-language-dupes.ts`. Draai ná elke vreemdtalige ban-import (FSEM/KDN/Iran). Under-count: name_english is schaars |
 | `_audit_spanish_edition_dupes.ts` | **Latin-script** cross-language boek-dupes die `_audit_cross_script_dupes` mist: een vertaalde editie (Spaans/Frans-getiteld) van een werk dat al onder de Engelse titel staat. Gate = Spaanse titel + `original_language='en'` (de importer stempelt de taal van het Engelse *werk*) + zelfde-auteur Engelse rij → input voor de curated lijst in `merge-spanish-edition-dupes.ts`. Heuristiek over-telt (genuine `es/fr/it`-werken); handmatig filteren |
+| `_audit_cross_language_dupes.ts` | **Staande, taal-agnostische** same-work-different-language boek-dupe-detector (auteur-sibling-methode) — vangt wat token-detectors structureel missen ("cook book"≠"cookbook", "Mon Combat"≠"Mein Kampf") en wat `_audit_spanish_edition_dupes` (alleen Spaans) niet dekt. Paart elk foreign/NULL-taal boek met same-author EN/NULL-boeken; signalen: genormaliseerde + **spatieloze** titel-gelijkheid, near-identical spelling (edit ≤2, volume/sequel-guards), `title_english_meaningful`-match (ook tem↔tem), `first_published_year`±2 → drie buckets in `data/cross-language-dupes-review-<datum>.md`: STRONG (merge-kandidaat), WEAK (review), WARNING (zelfde onderwerp, ánder werk — titel citeert andermans complete werktitel, de Mein-Kampf-kritieken-klasse: nooit mergen). Bevestigde paren gaan per case in `merge-cross-language-dupes.ts` |
 | `check-dupes.ts` | Ad-hoc: print info voor een **hardcoded** sluglijst om te beoordelen óf het dupes zijn. Schrijft niets |
 
 > Detectoren **vinden**, merge-scripts **voeren uit**. Draai altijd eerst de audit.
@@ -184,8 +187,9 @@ die een merge-script daarna inleest.
 > vangt dit nu af via een cross-language tier op `title_english_meaningful`, maar
 > CSV-one-offs (`import-pen.ts`) hebben dat signaal niet. **Verplicht na élke
 > import met mogelijk vreemdtalige titels:** draai `_audit_cross_script_dupes.ts`
-> (auteurs) én `_audit_spanish_edition_dupes.ts` (boeken), en fold de bevestigde
-> hits via de bijbehorende merge-scripts. Dit is het staande vangnet, niet optioneel.
+> (auteurs) én `_audit_spanish_edition_dupes.ts` + `_audit_cross_language_dupes.ts`
+> (boeken), en fold de bevestigde hits via de bijbehorende merge-scripts. Dit is
+> het staande vangnet, niet optioneel.
 >
 > **Automatisch vangnet (sinds 2026-07-01):** de boek-editie-variant draait nu ook
 > als drift-metric `cross-language-edition-dupes` in `audit-integrity.ts` (baseline
