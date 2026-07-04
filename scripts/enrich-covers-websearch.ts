@@ -63,8 +63,11 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 // (era, likely publishers). Extend as new batches come up.
 const CONTEXT_HINTS: Record<string, string> = {
   PT: 'Banned in Portugal under the Estado Novo dictatorship (censorship lists 1933-1974). Portuguese-language title, often published in Lisbon/Porto; modern reeditions exist for many. Check Portuguese bookshop sites (wook.pt, bertrand.pt).',
-  HK: 'Banned in Hong Kong (post-2020 National Security Law). Likely published in HK or Taiwan.',
-  MY: 'On the Malaysia KDN Senarai Larangan banned-publications list.',
+  HK: 'Banned in Hong Kong (post-2020 National Security Law). Likely published in HK or Taiwan; mainland sites like douban will have delisted these — prefer Taiwanese sites.',
+  MY: 'On the Malaysia KDN Senarai Larangan banned-publications list. Mixed Malay/Chinese/English/Tamil titles; Malay titles are often religious or political paperbacks from Malaysian or Indonesian publishers.',
+  CN: 'Banned in mainland China. Politically sensitive titles are usually delisted from douban — Taiwanese and Hong Kong publishers/shops (books.com.tw) are the better source.',
+  DE: 'Banned in Germany — many are Nazi-era (1933-1945) banned books by exile authors whose original editions only surface on antiquarian sites (zvab.com, booklooker.de); reprints of the famous ones exist.',
+  SG: 'Banned in Singapore (IMDA or its predecessors). English, Chinese or Malay language.',
 }
 
 type Candidate = {

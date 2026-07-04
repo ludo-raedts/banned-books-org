@@ -55,8 +55,12 @@ const SITE_PREFERENCES: Record<string, string> = {
   pt: 'fnac.pt → estantevirtual.com.br → goodreads.com → pt.wikipedia.org → almedina.net → livraria sites → publisher sites → wook.pt → bertrand.pt → other',
   es: 'casadellibro.com → todostuslibros.com → iberlibro.com → goodreads.com → es.wikipedia.org → publisher sites → other',
   ru: 'labirint.ru → livelib.ru → fantlab.ru → goodreads.com → ru.wikipedia.org → publisher sites → other',
-  de: 'buecher.de → thalia.de → lovelybooks.de → goodreads.com → de.wikipedia.org → publisher sites → other',
+  // Antiquarian sites (zvab/booklooker) rank high for de: the Nazi-era banned
+  // batches (Berlin 1938, Liste Otto) are full of never-reprinted editions
+  // that only exist as used-book listings with seller photos.
+  de: 'buecher.de → thalia.de → zvab.com → booklooker.de → lovelybooks.de → goodreads.com → de.wikipedia.org → publisher sites → other',
   fr: 'babelio.com → fnac.com → decitre.fr → goodreads.com → fr.wikipedia.org → publisher sites → other',
+  ms: 'mphonline.com → goodreads.com → bookurve.com → ms.wikipedia.org → publisher sites → other',
 }
 const DEFAULT_SITE_PREFERENCE =
   'goodreads.com → bookshop/retailer sites in the book\'s own language → the language-matched Wikipedia → national-library catalogues → publisher sites → other'
