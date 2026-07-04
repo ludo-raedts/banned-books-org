@@ -320,6 +320,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `audit-enrichment-confidence.ts` | **Post-batch confidence + auto-rollback** voor een `enrich-all.ts`-run (laatste fase) (read-only; `--apply` reverteert, CSV-backup vooraf). Native-titels: scoort elke geschreven proposal uit de review-JSON op namesake/leidend-lidwoord-risico (−0.5 geen auteur-gate, −0.2 leidend lidwoord) en reverteert <`--threshold` (default 0.5) — reverteert alléén rijen waarvan `title_native` nog gelijk is aan de proposal (nooit een latere handmatige edit). ISBN/cover: structurele her-verificatie van de this-run writes (`--since=<ISO>`) op host-allowlist + dup-collision. ISBN/cover-semantiek zit al hard-gated vóór de write, dus de echte rollback-waarde zit bij native-titels |
 | `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
 | `check-no-desc.ts` | Snelle description-coverage check |
+| `_audit_ban_outcome_granularity.ts` | Meet hoe groot de "niet écht verwijderd — reshelved / access-gated" categorie is die Banned Index als aparte statussen voert maar wij afvlakken naar 3 `action_type`s: verdeling over rows én distinct books, US/non-US-split, keyword-scan op `bans.description` (relocation / access-gate / full removal). Lokaal-only (gitignored) |
 | **Jaren** | |
 | `audit-publication-years.ts` | `first_published_year` vs OpenLibrary → review-artifact |
 | `audit-impossible-years.ts` | Onmogelijke/verdachte publicatiejaren |
@@ -329,6 +330,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | **Auteurs** | |
 | `audit-non-person-authors.ts` | Author-rijen die geen persoon zijn (uitgevers/comités/…) |
 | `_audit_author_bio_contamination.ts` | Classificeert author-bios op contaminatie door `enrich-author-bios.ts` (verkeerd Wikipedia-artikel geaccepteerd: boek/film/band/andere persoon) → `data/author-bio-contamination-audit.md`; apply-zijde: `remediate-author-bios.ts` |
+| `_analyze-top-authors.ts` | Rankt auteurs op aantal POSTABLE banned books (zelfde eligibility-gate als de Bluesky-picker) — scoping voor de birthday-push feature: wie moet gedekt zijn en wie heeft al een `birth_year`. Lokaal-only (gitignored) |
 | **Covers** | |
 | `audit-covers-for-placeholders.ts` | Google Books "image not available" placeholders |
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
@@ -344,6 +346,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `filter-nfd-subset.ts` | Filtert slug-audit naar de NFD-bug subset |
 | **Descriptions / context** | |
 | `_audit_ungrounded_descriptions.ts` | Ongegronde ai-drafted descriptions (read-only sizing) |
+| `_audit_wiki_markup_descriptions.ts` | Telt books waarvan `description`/`description_book` nog rauwe MediaWiki-sectiemarkup draagt (`== Heading ==`) die uit het Wikipedia-enrichment-pad lekte. Her-draaibaar na wiki-enrichment-runs. Lokaal-only (gitignored) |
 | `validate-consensus-descriptions.ts` | Read-only recall/false-positive-meting van de cross-model consensus-pijplijn (3 buckets: known/anonymous/target) — draai dit om een scope te vetten vóór `enrich-descriptions-consensus.ts --apply` |
 
 Afgeronde audits/metingen (ban-vs-context-overlap + keep-narrative 2e-pass + steekproef-helpers,
