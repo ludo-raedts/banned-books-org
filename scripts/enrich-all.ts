@@ -52,6 +52,11 @@
  *     → cap each GPT step at 50 books (useful for incremental runs)
  *   --native-limit=N   cap the Phase-1 native-titles sweep (default 99999 = full)
  *   --threshold=0.5    confidence threshold for the rollback auditor
+ *   --heartbeat=N      seconds between status heartbeats (default 60; Phase 2
+ *                      beats at 5× this rate since those steps stream their own
+ *                      output). Makes `tail -f` on a nohup log readable — every
+ *                      beat shows the last log line of each running harvester.
+ *                      One-shot status from another terminal: scripts/enrich-status.sh
  */
 
 import { spawn, spawnSync } from 'child_process'
@@ -105,6 +110,11 @@ const NATIVE_LIMIT = (() => {
 const CONFIDENCE_THRESHOLD = (() => {
   const a = process.argv.find(x => x.startsWith('--threshold='))
   return a ? a.split('=')[1] : '0.5'
+})()
+const HEARTBEAT_MS = (() => {
+  const a = process.argv.find(x => x.startsWith('--heartbeat='))
+  const s = a ? parseInt(a.split('=')[1], 10) : 60
+  return Math.max(10, Number.isFinite(s) ? s : 60) * 1000
 })()
 
 const harvestSteps: Array<{ name: string; logName: string; script: string; args: string[] }> = [
@@ -210,42 +220,86 @@ const steps: Step[] = [
 
 // ── Runner ────────────────────────────────────────────────────────────────────
 
+function hhmmss() {
+  return new Date().toTimeString().slice(0, 8)
+}
+
+function elapsedMin(t0: number) {
+  return `${Math.round((Date.now() - t0) / 60000)}m`
+}
+
+// Last meaningful line of a (possibly large) log — reads only the tail chunk,
+// skips blanks and banner/separator lines.
+function lastLogLine(file: string): string {
+  try {
+    const { size } = fs.statSync(file)
+    const len = Math.min(size, 4096)
+    if (len === 0) return '(log leeg)'
+    const buf = Buffer.alloc(len)
+    const fd = fs.openSync(file, 'r')
+    fs.readSync(fd, buf, 0, len, size - len)
+    fs.closeSync(fd)
+    const lines = buf.toString('utf-8').split('\n')
+      .map(l => l.trim())
+      .filter(l => l && !/^[═─╌\s]+$/.test(l))
+    return lines.pop() ?? '(log leeg)'
+  } catch {
+    return '(log nog leeg)'
+  }
+}
+
 function banner(text: string) {
   const line = '─'.repeat(60)
   console.log(`\n${line}`)
-  console.log(`  ${text}`)
+  console.log(`  [${hhmmss()}] ${text}`)
   console.log(line)
 }
 
-function run(step: Step, index: number, total: number): boolean {
+function run(step: Step): Promise<boolean> {
   if (step.gpt && FREE_ONLY) {
     console.log(`  ⟶  skipped (--free-only)\n`)
-    return true
+    return Promise.resolve(true)
   }
   if (step.gutenberg && NO_GUTENBERG) {
     console.log(`  ⟶  skipped (--no-gutenberg)\n`)
-    return true
+    return Promise.resolve(true)
   }
   if (step.archive && NO_ARCHIVE) {
     console.log(`  ⟶  skipped (--no-archive)\n`)
-    return true
+    return Promise.resolve(true)
   }
   if (step.alwaysWrites && !APPLY) {
     console.log(`  ⟶  skipped in dry-run (this script always writes)\n`)
-    return true
+    return Promise.resolve(true)
   }
 
+  // async spawn (not spawnSync) so the heartbeat timer keeps firing while the
+  // step runs; the step's own output still streams straight through (inherit).
+  // Phase-2 beats are sparser (5×) — they only prove liveness with a timestamp.
   const scriptPath = resolve(ROOT, 'scripts', step.script)
-  const result = spawnSync(TSX, [`--env-file=${ENV}`, scriptPath, ...step.args], {
-    stdio: 'inherit',
-    encoding: 'utf-8',
+  return new Promise(resolveStep => {
+    const child = spawn(TSX, [`--env-file=${ENV}`, scriptPath, ...step.args], {
+      stdio: 'inherit',
+    })
+    const t0 = Date.now()
+    const hb = setInterval(() => {
+      console.log(`  ♥ ${hhmmss()} — "${step.name}" draait ${elapsedMin(t0)}`)
+    }, HEARTBEAT_MS * 5)
+    child.on('close', code => {
+      clearInterval(hb)
+      if (code !== 0) {
+        console.error(`\n  ✗ Step failed (exit ${code ?? 'unknown'})`)
+        resolveStep(false)
+      } else {
+        resolveStep(true)
+      }
+    })
+    child.on('error', err => {
+      clearInterval(hb)
+      console.error(`\n  ✗ Step failed to start: ${err.message}`)
+      resolveStep(false)
+    })
   })
-
-  if (result.status !== 0) {
-    console.error(`\n  ✗ Step failed (exit ${result.status ?? 'unknown'})`)
-    return false
-  }
-  return true
 }
 
 // Run the harvest sources concurrently, each detached to its own log file
@@ -261,16 +315,30 @@ function runParallelPhase(runDir: string): Promise<Array<{ name: string; pid: nu
     console.log(`  ⟶  ${s.name}  (pid ${child.pid}, log ${log})`)
     return { s, child, log }
   })
+
+  // Heartbeat: the harvesters log to their own files, so without this the main
+  // log is silent for the whole phase. Every beat shows the freshest line of
+  // each still-running source.
+  const t0 = Date.now()
+  const running = new Map(procs.map(({ s, log }) => [s.logName, log]))
+  const hb = setInterval(() => {
+    console.log(`  ♥ ${hhmmss()} (+${elapsedMin(t0)}) — nog bezig: ${[...running.keys()].join(', ')}`)
+    for (const [name, log] of running) {
+      console.log(`      ${name.padEnd(14)} ${lastLogLine(log).slice(0, 110)}`)
+    }
+  }, HEARTBEAT_MS)
+
   return Promise.all(
     procs.map(({ s, child, log }) =>
       new Promise<{ name: string; pid: number; log: string; code: number | null }>(res => {
         child.on('close', code => {
-          console.log(`     ${s.logName}: ${code === 0 ? 'done' : `stopped (exit ${code}) — continuing`}`)
+          running.delete(s.logName)
+          console.log(`     [${hhmmss()}] ${s.logName}: ${code === 0 ? 'done' : `stopped (exit ${code}) — continuing`}`)
           res({ name: s.name, pid: child.pid ?? -1, log, code })
         })
       }),
     ),
-  )
+  ).finally(() => clearInterval(hb))
 }
 
 async function main() {
@@ -284,8 +352,10 @@ async function main() {
   const mode = skipTags.length ? `${modeBase} — ${skipTags.join(', ')}` : modeBase
 
   console.log(`\n${'═'.repeat(60)}`)
-  console.log(`  enrich-all  [${mode}]`)
+  console.log(`  enrich-all  [${mode}]  gestart ${hhmmss()}`)
   console.log(`${'═'.repeat(60)}`)
+  console.log(`  ♥ heartbeat elke ${HEARTBEAT_MS / 1000}s — volg live met: tail -f data/enrich-all.log`)
+  console.log(`    of vanuit een andere terminal: scripts/enrich-status.sh -f`)
 
   if (!APPLY) {
     console.log(`
@@ -333,7 +403,7 @@ async function main() {
 
     banner(`${num} ${step.name}${tag}${skipMsg}`)
 
-    const ok = run(step, i, steps.length)
+    const ok = await run(step)
     if (!ok) failed++
   }
 
