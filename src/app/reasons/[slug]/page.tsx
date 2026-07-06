@@ -360,9 +360,32 @@ export default async function ReasonPage({
               ))}
             </div>
 
-            {reasonLead && (
+            {reasonLead && bookCount > 0 && (
               <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
-                {reasonLead}
+                {/* Same content as `reasonLead` string (kept for JSON-LD)
+                    but with inline Links on top-country names — matches the
+                    /countries/[code] and /books/[slug] internal-linking
+                    pattern (2026-07-06). */}
+                {bookCount} {bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for {phrase} worldwide
+                {earliestBanYear && <> since {earliestBanYear}</>}
+                .
+                {topCountries.length >= 2 && (
+                  <>
+                    {' '}{sentencePhrase} bans are most frequently documented in{' '}
+                    {topCountries.slice(0, 3).map((c, i, arr) => (
+                      <span key={c.code}>
+                        <Link
+                          href={`/countries/${c.code.toLowerCase()}`}
+                          className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                        >
+                          {c.name_en}
+                        </Link>
+                        {i < arr.length - 1 && (i === arr.length - 2 ? ', and ' : ', ')}
+                      </span>
+                    ))}
+                    .
+                  </>
+                )}
               </p>
             )}
 

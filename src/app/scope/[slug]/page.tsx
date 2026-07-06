@@ -24,7 +24,9 @@ import {
   buildScopeLead,
   buildScopeFaq,
   scopeFaqTitle,
+  scopeNounPlural,
 } from '@/lib/scope-meta'
+import { reasonPhrase } from '@/lib/reason-phrases'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForScope, bookshopListUrl } from '@/lib/bookshop-lists'
 
@@ -525,9 +527,45 @@ export default async function ScopePage({
               ))}
             </div>
 
-            {lead && (
+            {lead && distinctBooks > 0 && (
               <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
-                {lead}
+                {/* Mirror of buildScopeLead's string output (kept for
+                    JSON-LD) but with inline Links on top-reason phrases —
+                    same internal-linking pattern as country/reason/book
+                    pages (2026-07-06). Countries/states not linked here
+                    because we don't have codes in scope at this render
+                    site; skip rather than fabricate. */}
+                {distinctBooks.toLocaleString('en')} {distinctBooks === 1 ? 'book' : 'books'}{' '}
+                have been banned, restricted, or challenged in {scopeNounPlural(scope.slug, scope.label_en)}
+                {topStates.length >= 2 && (
+                  <>, concentrated in {topStates.slice(0, 3).map((s) => s.state).join(', ')}</>
+                )}
+                {topStates.length < 2 && topCountryNames.length === 1 && (
+                  <>, almost entirely in {topCountryNames[0]}</>
+                )}
+                {topReasons.length >= 1 && (
+                  <>
+                    , with most events citing{' '}
+                    {topReasons.slice(0, 3).map((r, i, arr) => (
+                      <span key={r.slug}>
+                        <Link
+                          href={`/reasons/${r.slug}`}
+                          className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                        >
+                          {reasonPhrase(r.slug)}
+                        </Link>
+                        {i < arr.length - 1 && (i === arr.length - 2 ? ', and ' : ', ')}
+                      </span>
+                    ))}
+                  </>
+                )}
+                .
+                {scope.slug !== 'school' && earliestYear && latestYear && latestYear !== earliestYear && (
+                  <> Documented events span {earliestYear}–{latestYear}.</>
+                )}
+                {scope.slug !== 'school' && earliestYear && (!latestYear || latestYear === earliestYear) && (
+                  <> Earliest documented event: {earliestYear}.</>
+                )}
               </p>
             )}
 

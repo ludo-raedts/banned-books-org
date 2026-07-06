@@ -484,9 +484,43 @@ export default async function CountryPage({
               ))}
             </div>
 
-            {countryLead && (
+            {countryLead && totalBanCount > 0 && (
               <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
-                {countryLead}
+                {/* Same content as `countryLead` (kept for JSON-LD) but with
+                    inline Links on reason names — internal-linking pattern
+                    matching the /books/[slug] hero subtitle (2026-07-06). */}
+                {totalBanCount} {totalBanCount === 1 ? 'book has' : 'books have'}{' '}
+                been banned or challenged in {country.name_en}
+                {earliestBanYear && <> since {earliestBanYear}</>}
+                {topReasons[0] && (
+                  <>
+                    , most often for{' '}
+                    <Link
+                      href={`/reasons/${topReasons[0].slug}`}
+                      className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                    >
+                      {reasonPhrase(topReasons[0].slug)}
+                    </Link>
+                  </>
+                )}
+                .
+                {topReasons.length >= 2 && (
+                  <>
+                    {' '}Documented bans also cite{' '}
+                    {topReasons.slice(1, 3).map((r, i, arr) => (
+                      <span key={r.slug}>
+                        <Link
+                          href={`/reasons/${r.slug}`}
+                          className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                        >
+                          {reasonPhrase(r.slug)}
+                        </Link>
+                        {i < arr.length - 1 && ' and '}
+                      </span>
+                    ))}
+                    .
+                  </>
+                )}
               </p>
             )}
 

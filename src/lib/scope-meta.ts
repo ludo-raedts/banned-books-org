@@ -92,7 +92,7 @@ export function buildScopeLead(input: ScopeLeadInput): string | null {
 // "in U.S. schools" reads more naturally than "in school settings"; reserve
 // the generic "settings" phrasing for the long-tail scopes where there
 // isn't a clean preposition.
-function scopeNounPlural(slug: string, label: string): string {
+export function scopeNounPlural(slug: string, label: string): string {
   switch (slug) {
     case 'school': return 'U.S. schools'
     case 'public_library': return 'public libraries'

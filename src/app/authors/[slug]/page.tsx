@@ -258,8 +258,25 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const blanketWorks = books.filter(b => b.is_blanket_works)
 
   const totalBans = books.reduce((sum, b) => sum + b.bans.length, 0)
-  const countryCount = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))].length
+  const countryCodes = [...new Set(books.flatMap(b => b.bans.map(bn => bn.country_code)))]
+  const countryCount = countryCodes.length
   const activeBanCount = books.reduce((sum, b) => sum + b.bans.filter(bn => bn.status === 'active').length, 0)
+  // When the author is only banned in one country, expose the code+name so
+  // the H1-zone subtitle can render it as an inline Link to /countries/[code]
+  // (the pattern proven on /books/[slug] to add above-the-fold dwell-time
+  // pathways for bouncing visitors).
+  const singleCountry: { code: string; name: string } | null = countryCount === 1
+    ? (() => {
+        for (const b of books) {
+          for (const bn of b.bans) {
+            if (bn.country_code === countryCodes[0]) {
+              return { code: countryCodes[0], name: bn.countries?.name_en ?? countryCodes[0] }
+            }
+          }
+        }
+        return null
+      })()
+    : null
 
   // Representative book for the no-bio placeholder: the work this author is
   // most banned for. Used only when `a.bio` is NULL — see the bio render
@@ -717,11 +734,31 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               buckets) where the phrase would mislead. */}
           {realBooks.length > 0 && countryCount > 0 ? (
             <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
-              {realBooks.length} banned {realBooks.length === 1 ? 'book' : 'books'} in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
+              {realBooks.length} banned {realBooks.length === 1 ? 'book' : 'books'} in{' '}
+              {singleCountry ? (
+                <Link
+                  href={`/countries/${singleCountry.code.toLowerCase()}`}
+                  className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                >
+                  {singleCountry.name}
+                </Link>
+              ) : (
+                <>{countryCount} countries</>
+              )}
             </p>
           ) : blanketWorks.length > 0 && countryCount > 0 ? (
             <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
-              Complete works banned in {countryCount} {countryCount === 1 ? 'country' : 'countries'}
+              Complete works banned in{' '}
+              {singleCountry ? (
+                <Link
+                  href={`/countries/${singleCountry.code.toLowerCase()}`}
+                  className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                >
+                  {singleCountry.name}
+                </Link>
+              ) : (
+                <>{countryCount} countries</>
+              )}
             </p>
           ) : null}
           {/* Secondary name: native-script form (for authors whose original
