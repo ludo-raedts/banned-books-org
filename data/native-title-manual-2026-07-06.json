@@ -1,0 +1,97 @@
+{
+  "generated": "2026-07-06T15:16:06.816Z",
+  "apply": true,
+  "entries": [
+    {
+      "id": 147,
+      "slug": "tombstone-yang-jisheng",
+      "native": "墓碑",
+      "source": "zh.wikipedia \"墓碑 (书籍)\" (杨继绳著, 香港天地图书 2008); en.wikipedia \"Yang Jisheng (journalist)\" lead: Tombstone (墓碑)"
+    },
+    {
+      "id": 738,
+      "slug": "the-corpse-walker",
+      "native": "中国底层访谈录",
+      "source": "zh.wikipedia \"中国底层访谈录\" (廖亦武/老威, 2001); The Corpse Walker (Pantheon 2008) is the English selection of this work",
+      "note": "Taiwan edition of the English selection is titled 吆屍人：来自中国底层的真实故事; the banned original (2001, PRC) is 中国底层访谈录"
+    },
+    {
+      "id": 739,
+      "slug": "forbidden-memory-woeser",
+      "native": "杀劫",
+      "source": "zh.wikipedia \"唯色\": 《杀劫》/《杀劫-镜头下的西藏文革》 incl. author explanation of the title (藏语\"革命\"谐音)"
+    },
+    {
+      "id": 912,
+      "slug": "for-a-song-and-a-hundred-songs",
+      "native": "我的證詞",
+      "source": "zh.wikipedia \"廖亦武\" infobox representative works: 《我的證詞》 (Taiwan 允晨文化 2011); German/English editions = Für ein Lied und hundert Lieder / For a Song and a Hundred Songs"
+    },
+    {
+      "id": 933,
+      "slug": "1000-years-of-joys-and-sorrows",
+      "native": "千年悲欢",
+      "source": "zh.wikipedia \"艾未未\" works list: 《千年悲欢》 (memoir, 2021)"
+    },
+    {
+      "id": 939,
+      "slug": "red-dust-ma-jian",
+      "native": "非法流浪",
+      "source": "zh.wikipedia \"马建 (作家)\": 2002年因小说《非法流浪》获托马斯·库克旅行文学奖 — Red Dust won the 2002 Thomas Cook Travel Book Award"
+    },
+    {
+      "id": 942,
+      "slug": "god-is-red-liao-yiwu",
+      "native": "上帝是紅色的",
+      "source": "zh.wikipedia \"廖亦武\" infobox representative works: 《上帝是紅色的》"
+    },
+    {
+      "id": 6250,
+      "slug": "candy-mian-mian",
+      "native": "糖",
+      "source": "zh.wikipedia \"棉棉\": 代表作为2000年出版的长篇小说《糖》"
+    },
+    {
+      "id": 6251,
+      "slug": "lingren-wangshi",
+      "native": "伶人往事",
+      "source": "en.wikipedia \"Lingren Wangshi\" (Chinese: 伶人往事) + zh interwiki 伶人往事 (章诒和)"
+    },
+    {
+      "id": 6252,
+      "slug": "bloody-myth-tan-hecheng",
+      "native": "血的神话",
+      "source": "zh.wikipedia \"血的神话\" (谭合成著, 2010): 《血的神话：公元1967年湖南道县文革大屠杀纪实》; English = The Killing Wind"
+    },
+    {
+      "id": 6253,
+      "slug": "moving-away-from-the-imperial-regime",
+      "native": "走出帝制",
+      "source": "zh.wikipedia \"秦晖\" works list: 《走出帝制——从晚清到民国的历史回望》; en.wikipedia \"Moving Away from the Imperial Regime\" (Qin Hui)"
+    },
+    {
+      "id": 976,
+      "slug": "viral-murong-xuecun",
+      "native": "禁城：武漢傳來的聲音",
+      "source": "zh.wikipedia \"慕容雪村\": 最新作品非虛構小說《禁城：武漢傳來的聲音》 — his only COVID/Wuhan nonfiction work (English: Deadly Quiet City / announced as Viral: China's COVID Coverups)",
+      "note": "MEDIUM confidence on title equivalence: DB row title \"Viral: China's COVID Coverups\" was the pre-publication English title; published as Deadly Quiet City (Hardie Grant 2022)"
+    }
+  ],
+  "skipped": [
+    {
+      "id": 741,
+      "slug": "prisoners-of-the-state",
+      "reason": "No such Xu Zhiyong book found on en/zh Wikipedia — row looks like a data error (possible conflation with prisoner-of-the-state / Zhao Ziyang). Needs editor review, not enrichment."
+    },
+    {
+      "id": 932,
+      "slug": "no-enemies-no-hatred",
+      "reason": "English-language anthology (Belknap/Harvard 2012, ed. Link/Martin-Liao/Liu Xia); no single zh original volume exists. title_native correctly stays NULL."
+    },
+    {
+      "id": 940,
+      "slug": "the-noodle-maker",
+      "reason": "Suspected 拉麵者 but zero zh.wikipedia grounding (not in 马建 works list, no article). Left for a later pass with publisher sources."
+    }
+  ]
+}
