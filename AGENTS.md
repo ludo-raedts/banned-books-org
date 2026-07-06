@@ -1,3 +1,7 @@
+## Project Stack
+
+This is a TypeScript/Next.js project deployed on Vercel with Supabase (Postgres via PostgREST) and Cloudflare in front. Be mindful of s-maxage/ISR caching, service_role query timeouts (~8s), and Supabase egress when making changes.
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
@@ -30,19 +34,19 @@ Files under `data/` can be multiple MB (e.g. `data/film/film-data.json`, `data/p
 
 ## Data & Database
 
-Always verify data changes with a read-only DB query before AND after applying them, and report exact row counts affected (e.g., "merged 14, kept 14, cleaned 3,399").
+Always verify data changes with a read-only DB query before AND after applying them, and report exact row counts affected (e.g., "merged 14, kept 14, cleaned 3,399"). After data changes, confirm the integrity audit passes (`scripts/audit-integrity.ts` exit 0) before committing.
 
 ## Git Workflow
 
-After any data enrichment/merge/cleanup, always commit AND push the result with a descriptive message summarizing counts and scope.
+After completing a task, commit AND push to origin unless told otherwise, with a descriptive message summarizing what and why (for data work: counts and scope).
 
 ## Enrichment Pipeline
 
 For cover/title enrichment, guard against namesake/leading-article mismatches and roll back batches that produce incorrect matches; verify a sample before bulk applying.
 
-## Long-Running Jobs
+## Long-Running Jobs & Batch Scripts
 
-Prefer interruption-resistant, checkpointed terminal commands for long batch jobs; avoid relying on background tasks/monitors that abort on session interruption.
+Prefer bounded, interruption-resistant, checkpointed terminal commands for long batch jobs; avoid relying on background tasks/monitors that abort on session interruption. Cap large operations (e.g., top-N instead of all ~16k pages) to avoid deploy/finalization crashes and known platform limits.
 
 ## Data Quality
 
