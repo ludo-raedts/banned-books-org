@@ -1395,7 +1395,10 @@ export default async function BookPage({
                 <span key={i}>
                   {i > 0 && ', '}
                   {authorSlug ? (
-                    <Link href={`/authors/${authorSlug}`} className="hover:underline">
+                    <Link
+                      href={`/authors/${authorSlug}`}
+                      className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                    >
                       {display_name}
                     </Link>
                   ) : (
