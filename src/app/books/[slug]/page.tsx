@@ -1168,6 +1168,16 @@ export default async function BookPage({
       }
     })
   }
+  // Speakable schema — hints to voice-search + AI Overview which parts of
+  // the page to read aloud when citing the entry. Points at the H1-zone
+  // topical subtitle ("Banned in X for Y") and the complement red-quote
+  // beneath the hero ("First documented in Y. N bans active."). Both
+  // carry the direct-answer content curated for the "why was X banned"
+  // query family. Google-supported per Article/WebPage; ignored otherwise.
+  bookJsonLd.speakable = {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['[data-speakable="topic"]', '[data-speakable="complement"]'],
+  }
   if (book.original_language) bookJsonLd.inLanguage = book.original_language
   if (book.first_published_year) bookJsonLd.datePublished = String(book.first_published_year)
   if (book.description_book) bookJsonLd.description = book.description_book
@@ -1339,7 +1349,10 @@ export default async function BookPage({
               </>
             ) : null
             return (
-              <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
+              <p
+                data-speakable="topic"
+                className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug"
+              >
                 Banned in {country}{reason}
               </p>
             )
@@ -1479,7 +1492,10 @@ export default async function BookPage({
           nothing to add beyond what `topic` already states, to avoid the
           duplication that suppresses CTR. */}
       {banSummary && banSummary.complement && (
-        <p className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4">
+        <p
+          data-speakable="complement"
+          className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4"
+        >
           {banSummary.complement}
         </p>
       )}
