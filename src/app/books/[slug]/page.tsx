@@ -65,22 +65,35 @@ type Ban_ = {
   ban_reason_links: { reasons: { id: number; slug: string } | null }[]
 }
 type FaqItem = { q: string; a: string }
+// `topic.scope` = single-country or multi-country roll-up; `topic.reason` =
+// the top-ranked ban reason (nullable when no reason is coded). The consumer
+// renders this as JSX with inline Links to /countries/[code] and
+// /reasons/[slug] — the single highest-leverage dwell-time booster on the
+// hero (bounce-rate 79-93% pre-change means every above-the-fold path out
+// of a dead-end fact page counts).
+type Topic = {
+  scope: { kind: 'country'; name: string; code: string } | { kind: 'multi'; count: number }
+  reason: { label: string; slug: string } | null
+}
 function buildBanSummary(
   bookTitle: string,
   authorStr: string,
   sortedBans: Ban_[],
-): { topic: string; complement: string; faqItems: FaqItem[] } | null {
+): { topic: Topic; complement: string; faqItems: FaqItem[] } | null {
   if (sortedBans.length === 0) return null
 
   const baseTitle = authorStr ? `${bookTitle} by ${authorStr}` : bookTitle
 
-  const countryNames = new Map<string, string>()
+  // Ordered {code, name} entries — dedup keeps FIRST occurrence (which
+  // matches sortedBans order, so the "earliest ban" country is index 0).
+  const countryList: Array<{ code: string; name: string }> = []
+  const seenCodes = new Set<string>()
   for (const b of sortedBans) {
-    if (b.countries?.name_en && !countryNames.has(b.country_code)) {
-      countryNames.set(b.country_code, b.countries.name_en)
+    if (b.countries?.name_en && !seenCodes.has(b.country_code)) {
+      seenCodes.add(b.country_code)
+      countryList.push({ code: b.country_code, name: b.countries.name_en })
     }
   }
-  const countries = [...countryNames.values()]
 
   const reasonCount = new Map<string, number>()
   for (const b of sortedBans) {
@@ -102,34 +115,34 @@ function buildBanSummary(
   const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map(b => b.year_started!)) : null
   const activeBanCount = sortedBans.filter(b => b.status === 'active').length
 
-  // `topic` = the short headline phrase rendered as a subtitle in the H1
-  // zone. Carries the country+reason match for the "why was X banned" query.
+  // `topic` = structured data for the H1-zone subtitle. Rendered by the page
+  // as JSX with inline Links (country → /countries/[code], reason →
+  // /reasons/[slug]) so bouncing visitors have an immediate, in-line
+  // pathway out of a dead-end fact page.
   // `complement` = the longer red-quote sentence below the hero, carrying
   // facts the subtitle deliberately omits (year, multi-country roll-up,
   // mixed active/historical status). The two MUST NOT repeat each other's
   // headline — see [[reference-gsc-scripts]] and the gsc-ops doc for why
   // duplication suppresses CTR.
-  let topic: string
-  if (countries.length === 1 && topReasonPhrase) {
-    topic = `Banned in ${countries[0]} for ${topReasonPhrase}`
-  } else if (countries.length === 1) {
-    topic = `Banned in ${countries[0]}`
-  } else if (topReasonPhrase) {
-    topic = `Banned in ${countries.length} countries for ${topReasonPhrase}`
-  } else {
-    topic = `Banned in ${countries.length} countries`
+  const topic: Topic = {
+    scope: countryList.length === 1
+      ? { kind: 'country', name: countryList[0].name, code: countryList[0].code }
+      : { kind: 'multi', count: countryList.length },
+    reason: topReasonSlug && topReasonPhrase
+      ? { label: topReasonPhrase, slug: topReasonSlug }
+      : null,
   }
 
   const complementParts: string[] = []
   if (earliestYear) {
     complementParts.push(
-      countries.length === 1
+      countryList.length === 1
         ? `First documented in ${earliestYear}.`
         : `Earliest documented ban: ${earliestYear}.`,
     )
   }
-  if (countries.length >= 3) {
-    complementParts.push(`Documented bans include ${countries.slice(0, 3).join(', ')}, among others.`)
+  if (countryList.length >= 3) {
+    complementParts.push(`Documented bans include ${countryList.slice(0, 3).map(c => c.name).join(', ')}, among others.`)
   }
   if (activeBanCount > 0 && sortedBans.length > activeBanCount) {
     complementParts.push(
@@ -163,7 +176,7 @@ function buildBanSummary(
   if (earliestYear && items.length < 5) {
     const firstCountry = sortedBans.find(b => b.year_started === earliestYear)?.countries?.name_en
     if (firstCountry) {
-      const more = countries.length - 1
+      const more = countryList.length - 1
       items.push({
         q: `When was ${bookTitle} first banned?`,
         a: `${bookTitle} was first banned in ${firstCountry} in ${earliestYear}.${
@@ -1298,11 +1311,39 @@ export default async function BookPage({
             {book.title}
             <QualityCheck status={book.data_quality_status} />
           </h1>
-          {banSummary && (
-            <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
-              {banSummary.topic}
-            </p>
-          )}
+          {banSummary && (() => {
+            const t = banSummary.topic
+            // Inline pathway CTAs — country + reason as Links so the
+            // subtitle doubles as a "keep exploring" invitation without any
+            // extra vertical space. Links inherit the oxblood/90 colour
+            // from the wrapping p; hover:underline is the affordance cue.
+            const country = t.scope.kind === 'country' ? (
+              <Link
+                href={`/countries/${t.scope.code.toLowerCase()}`}
+                className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+              >
+                {t.scope.name}
+              </Link>
+            ) : (
+              <>{t.scope.count} countries</>
+            )
+            const reason = t.reason ? (
+              <>
+                {' '}for{' '}
+                <Link
+                  href={`/reasons/${t.reason.slug}`}
+                  className="underline underline-offset-4 decoration-2 decoration-oxblood/40 hover:decoration-oxblood"
+                >
+                  {t.reason.label}
+                </Link>
+              </>
+            ) : null
+            return (
+              <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
+                Banned in {country}{reason}
+              </p>
+            )
+          })()}
           {/* Secondary title: English meaning (for transliterated/non-English titles)
               OR native-script form (for English canonical titles whose original is non-Latin).
               Suppressed when the alt-title equals the canonical title to avoid
