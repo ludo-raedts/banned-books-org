@@ -32,6 +32,15 @@
  *   - books that fail the author gate — routed to the review file as
  *     "unconfirmed", never written.
  *
+ * Sticky miss-stamp (native_title_checked_at, cf. isbn_checked_at in
+ * enrich-ol-harvest): with --apply every processed book gets stamped — hits
+ * alongside the title_native write, sticky misses (no-search-hit /
+ * no-confirmed-work-match) in a batch at the end. The candidate query skips
+ * rows stamped within the last --recheck-days (default 90), so exhausted
+ * misses stop hitting Wikidata every enrich-all run and get one fresh retry
+ * per window. Transient search-errors are NOT stamped and retry next run;
+ * --book-ids bypasses the window (explicit request).
+ *
  * Every run writes a human-checkable review file:
  *   data/native-title-enrichment-<date>.{json,md}
  *
@@ -50,6 +59,7 @@ import { isApply, flagValue, intFlag } from './lib/cli'
 const APPLY = isApply()
 const LIMIT = intFlag('limit', 40)
 const OFFSET = intFlag('offset', 0)
+const RECHECK_DAYS = intFlag('recheck-days', 90)
 const LANG_FILTER = flagValue('lang')?.toLowerCase() ?? null
 const BOOK_IDS = (flagValue('book-ids') ?? '')
   .split(',')
@@ -303,6 +313,7 @@ async function loadCandidates(): Promise<Candidate[]> {
   }> = []
 
   if (BOOK_IDS.length) {
+    // Explicit list: bypass the recheck window — the user asked for these.
     const { data, error } = await sb
       .from('books')
       .select('id, title, original_language, book_authors(authors(display_name))')
@@ -310,6 +321,21 @@ async function loadCandidates(): Promise<Candidate[]> {
     if (error) throw error
     rows.push(...((data ?? []) as typeof rows))
   } else {
+    // Sticky miss-stamp: skip rows whose last check is inside the window.
+    const cutoff = new Date(Date.now() - RECHECK_DAYS * 86_400_000).toISOString()
+    let poolTotal = 0
+    {
+      let cq = sb
+        .from('books')
+        .select('id', { count: 'exact', head: true })
+        .not('original_language', 'is', null)
+        .neq('original_language', 'en')
+        .is('title_native', null)
+      if (LANG_FILTER) cq = cq.eq('original_language', LANG_FILTER)
+      const { count, error } = await cq
+      if (error) throw error
+      poolTotal = count ?? 0
+    }
     for (let from = 0; ; from += 1000) {
       let q = sb
         .from('books')
@@ -317,6 +343,7 @@ async function loadCandidates(): Promise<Candidate[]> {
         .not('original_language', 'is', null)
         .neq('original_language', 'en')
         .is('title_native', null)
+        .or(`native_title_checked_at.is.null,native_title_checked_at.lt.${cutoff}`)
         .order('id')
         .range(from, from + 999)
       if (LANG_FILTER) q = q.eq('original_language', LANG_FILTER)
@@ -326,6 +353,7 @@ async function loadCandidates(): Promise<Candidate[]> {
       rows.push(...(data as typeof rows))
       if (data.length < 1000) break
     }
+    console.log(`  pool: ${poolTotal} unfilled — ${poolTotal - rows.length} skipped (checked < ${RECHECK_DAYS}d ago), ${rows.length} eligible`)
   }
 
   const candidates: Candidate[] = rows.map(r => ({
@@ -426,17 +454,34 @@ async function main() {
     return
   }
 
+  const now = new Date().toISOString()
   let written = 0
   for (const p of proposals) {
     const { error } = await sb
       .from('books')
-      .update({ title_native: p.nativeTitle, title_native_script: p.script })
+      .update({ title_native: p.nativeTitle, title_native_script: p.script, native_title_checked_at: now })
       .eq('id', p.id)
       .is('title_native', null) // never clobber a manually-set native title
     if (error) { console.error(`  ✗ #${p.id}: ${error.message}`); continue }
     written++
   }
   console.log(`\n  APPLIED: wrote title_native+script to ${written} book(s).`)
+
+  // Sticky miss-stamp: a definitive miss stops re-hitting Wikidata until the
+  // recheck window lapses. Transient search-errors stay unstamped (retry).
+  const STICKY = new Set(['no-search-hit', 'no-confirmed-work-match'])
+  const missIds = unconfirmed.filter(u => STICKY.has(u.reason)).map(u => u.id)
+  let stamped = 0
+  for (let i = 0; i < missIds.length; i += 200) {
+    const slice = missIds.slice(i, i + 200)
+    const { error } = await sb
+      .from('books')
+      .update({ native_title_checked_at: now })
+      .in('id', slice)
+    if (error) { console.error(`  ✗ miss-stamp batch @${i}: ${error.message}`); continue }
+    stamped += slice.length
+  }
+  console.log(`  miss-stamped native_title_checked_at on ${stamped} book(s) (${unconfirmed.length - missIds.length} transient errors left unstamped).`)
   console.log(`  Non-Latin transliterations remain NULL by design — see the review file.\n`)
 }
 
