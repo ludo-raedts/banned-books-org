@@ -48,6 +48,15 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    // Loosen the default snippet caps so AI Overviews / Featured Snippets
+    // can display the full topical subtitle + complement paragraph on
+    // book pages (max-snippet defaults to ~160 chars, cutting our
+    // direct-answer prose mid-sentence). max-image-preview: 'large'
+    // lets book covers show at full size in image-rich SERP surfaces.
+    // Both are respected by Google, Bing, and most other engines.
+    'max-snippet': -1,
+    'max-image-preview': 'large',
+    'max-video-preview': -1,
   },
   alternates: {
     canonical: '/',
