@@ -6,8 +6,8 @@ export const dynamic = 'force-dynamic'
 
 // Same caching policy as /api/books — popular autocomplete queries
 // (single-letter prefixes, common author/country names) collapse to one
-// origin hit per query string per region per 10 min.
-const SUGGEST_CACHE_HEADER = 'public, s-maxage=600, stale-while-revalidate=86400'
+// origin hit per query string per region per 4h.
+const SUGGEST_CACHE_HEADER = 'public, s-maxage=14400, stale-while-revalidate=86400'
 
 const BOOK_LIMIT = 5
 const AUTHOR_LIMIT = 3

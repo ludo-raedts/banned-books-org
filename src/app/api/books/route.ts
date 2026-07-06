@@ -3,12 +3,13 @@ import { searchBooks, parseBookSort } from '@/lib/book-search'
 
 export const dynamic = 'force-dynamic'
 
-// CDN-cache identical search-query responses on the edge for 10 minutes,
-// serve stale for up to a day while refreshing. Popular searches (empty q,
-// common authors, country filters) collapse to one origin hit per query
-// string per region per 10 min instead of one per visitor keystroke.
+// CDN-cache identical search-query responses on the edge for 4 hours,
+// serve stale for up to a day while refreshing. The catalogue changes at
+// most daily, so popular searches (empty q, common authors, country
+// filters) collapse to one origin hit per query string per region per 4h
+// instead of one per visitor keystroke.
 // Errors are deliberately not cached.
-const SEARCH_CACHE_HEADER = 'public, s-maxage=600, stale-while-revalidate=86400'
+const SEARCH_CACHE_HEADER = 'public, s-maxage=14400, stale-while-revalidate=86400'
 
 export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams
