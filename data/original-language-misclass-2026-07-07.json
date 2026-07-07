@@ -1,0 +1,344 @@
+{
+ "generated_at": "2026-07-07",
+ "strong": [
+  {
+   "id": 3581,
+   "slug": "at-the-end-of-the-night",
+   "title": "At the End of the Night",
+   "title_native": null,
+   "original_language": "ar",
+   "countries": [
+    "IL"
+   ]
+  },
+  {
+   "id": 758,
+   "slug": "the-little-red-schoolbook",
+   "title": "The Little Red Schoolbook",
+   "title_native": null,
+   "original_language": "da",
+   "countries": [
+    "GB"
+   ]
+  },
+  {
+   "id": 14306,
+   "slug": "jenny-lives-with-eric-and-martin",
+   "title": "Jenny Lives with Eric and Martin",
+   "title_native": null,
+   "original_language": "da",
+   "countries": [
+    "GB"
+   ]
+  },
+  {
+   "id": 692,
+   "slug": "the-land-of-green-plums",
+   "title": "The Land of Green Plums",
+   "title_native": "Herztier",
+   "original_language": "de",
+   "countries": [
+    "RO"
+   ]
+  },
+  {
+   "id": 1010,
+   "slug": "the-interpretation-of-dreams",
+   "title": "The Interpretation of Dreams",
+   "title_native": "Die Traumdeutung",
+   "original_language": "de",
+   "countries": [
+    "NZ"
+   ]
+  },
+  {
+   "id": 3580,
+   "slug": "studies-in-the-history-of-palestine-during-the-middle-ages",
+   "title": "Studies in the History of Palestine During the Middle Ages",
+   "title_native": null,
+   "original_language": "de",
+   "countries": [
+    "IL"
+   ]
+  },
+  {
+   "id": 6430,
+   "slug": "the-new-joy-of-gay-sex",
+   "title": "The New Joy of Gay Sex",
+   "title_native": null,
+   "original_language": "de",
+   "countries": [
+    "US"
+   ]
+  },
+  {
+   "id": 6471,
+   "slug": "his-dark-materials-series",
+   "title": "His Dark Materials (series)",
+   "title_native": null,
+   "original_language": "de",
+   "countries": [
+    "US"
+   ]
+  },
+  {
+   "id": 13712,
+   "slug": "the-love-of-two-women",
+   "title": "The love of two women",
+   "title_native": null,
+   "original_language": "de",
+   "countries": [
+    "AR"
+   ]
+  },
+  {
+   "id": 16701,
+   "slug": "the-forty-days-of-musa-dagh",
+   "title": "The Forty Days of Musa Dagh",
+   "title_native": "Die vierzig Tage des Musa Dagh",
+   "original_language": "de",
+   "countries": [
+    "TR"
+   ]
+  },
+  {
+   "id": 96,
+   "slug": "the-house-of-the-spirits",
+   "title": "The House of the Spirits",
+   "title_native": "La casa de los espíritus",
+   "original_language": "es",
+   "countries": [
+    "US"
+   ]
+  },
+  {
+   "id": 1088,
+   "slug": "respect-chavez-perez",
+   "title": "Respect: Everything a Guy Needs to Know About Sex",
+   "title_native": null,
+   "original_language": "es",
+   "countries": [
+    "KR"
+   ]
+  },
+  {
+   "id": 6436,
+   "slug": "the-rules-of-attraction",
+   "title": "The Rules of Attraction",
+   "title_native": null,
+   "original_language": "es",
+   "countries": [
+    "US"
+   ]
+  },
+  {
+   "id": 6451,
+   "slug": "women-on-top",
+   "title": "Women on Top",
+   "title_native": null,
+   "original_language": "es",
+   "countries": [
+    "US",
+    "MY"
+   ]
+  },
+  {
+   "id": 7298,
+   "slug": "my-bed-is-not-for-sleeping",
+   "title": "My Bed is not for Sleeping",
+   "title_native": null,
+   "original_language": "es",
+   "countries": [
+    "NZ"
+   ]
+  },
+  {
+   "id": 657,
+   "slug": "the-spirit-of-the-laws",
+   "title": "The Spirit of the Laws",
+   "title_native": "The Spirit of the Laws",
+   "original_language": "fr",
+   "countries": [
+    "VA",
+    "ES"
+   ]
+  },
+  {
+   "id": 785,
+   "slug": "the-swallows-of-kabul",
+   "title": "The Swallows of Kabul",
+   "title_native": "The Swallows of Kabul",
+   "original_language": "fr",
+   "countries": [
+    "AF"
+   ]
+  },
+  {
+   "id": 896,
+   "slug": "midnight-in-the-century",
+   "title": "Midnight in the Century",
+   "title_native": "Midnight in the Century",
+   "original_language": "fr",
+   "countries": [
+    "SU"
+   ]
+  },
+  {
+   "id": 1650,
+   "slug": "the-wretched-of-the-earth",
+   "title": "The Wretched of the Earth",
+   "title_native": "The Wretched of the Earth",
+   "original_language": "fr",
+   "countries": [
+    "ZA",
+    "PT"
+   ]
+  },
+  {
+   "id": 1656,
+   "slug": "the-little-prince",
+   "title": "The Little Prince",
+   "title_native": "The Little Prince",
+   "original_language": "fr",
+   "countries": [
+    "AR"
+   ]
+  },
+  {
+   "id": 6226,
+   "slug": "the-120-days-of-sodom",
+   "title": "The 120 Days of Sodom",
+   "title_native": "The 120 Days of Sodom",
+   "original_language": "fr",
+   "countries": [
+    "AU",
+    "BY"
+   ]
+  },
+  {
+   "id": 6238,
+   "slug": "the-hunchback-of-notre-dame",
+   "title": "The Hunchback of Notre-Dame",
+   "title_native": "The Hunchback of Notre-Dame",
+   "original_language": "fr",
+   "countries": [
+    "VA",
+    "KW"
+   ]
+  },
+  {
+   "id": 7279,
+   "slug": "a-history-of-eroticism",
+   "title": "A History of Eroticism",
+   "title_native": null,
+   "original_language": "fr",
+   "countries": [
+    "NZ"
+   ]
+  },
+  {
+   "id": 7354,
+   "slug": "the-poverty-of-philosophy",
+   "title": "The Poverty of Philosophy",
+   "title_native": "Misère de la philosophie",
+   "original_language": "fr",
+   "countries": [
+    "NZ"
+   ]
+  },
+  {
+   "id": 17008,
+   "slug": "sapiens-a-brief-history-of-humankind",
+   "title": "Sapiens: A Brief History of Humankind",
+   "title_native": "mamagueverria",
+   "original_language": "he",
+   "countries": [
+    "AF"
+   ]
+  },
+  {
+   "id": 12495,
+   "slug": "big-4-vol-ii-no-5",
+   "title": "Big 4, Vol. II No.5",
+   "title_native": null,
+   "original_language": "ja",
+   "countries": [
+    "MY"
+   ]
+  },
+  {
+   "id": 27,
+   "slug": "the-diary-of-a-young-girl",
+   "title": "The Diary of a Young Girl",
+   "title_native": "Het Achterhuis",
+   "original_language": "nl",
+   "countries": [
+    "US",
+    "LB",
+    "MY"
+   ]
+  },
+  {
+   "id": 13536,
+   "slug": "buttons-and-lace-her-debt-his-desire",
+   "title": "Buttons and Lace: Her Debt. His Desire",
+   "title_native": null,
+   "original_language": "ro",
+   "countries": [
+    "BY"
+   ]
+  },
+  {
+   "id": 17005,
+   "slug": "twilight-of-the-eastern-gods",
+   "title": "Twilight of the Eastern Gods",
+   "title_native": null,
+   "original_language": "sq",
+   "countries": [
+    "AF"
+   ]
+  },
+  {
+   "id": 6663,
+   "slug": "gabriele-dannunzio-all-love-stories",
+   "title": "Gabriele D'Annunzio — All love stories",
+   "title_native": null,
+   "original_language": "tr",
+   "countries": [
+    "VA"
+   ]
+  }
+ ],
+ "native": [
+  {
+   "id": 926,
+   "slug": "the-incoherence-of-the-incoherence",
+   "title": "The Incoherence of the Incoherence",
+   "title_native": "تهافت التهافت",
+   "original_language": "ar",
+   "countries": [
+    "ES"
+   ]
+  },
+  {
+   "id": 3596,
+   "slug": "and-quiet-flows-the-don",
+   "title": "And Quiet Flows the Don",
+   "title_native": "Тихий Дон",
+   "original_language": "ru",
+   "countries": [
+    "IL"
+   ]
+  },
+  {
+   "id": 7347,
+   "slug": "my-gun-is-quick",
+   "title": "My Gun Is Quick",
+   "title_native": "Мой револьвер быстр",
+   "original_language": "ru",
+   "countries": [
+    "NZ"
+   ]
+  }
+ ]
+}
