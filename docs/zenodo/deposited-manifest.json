@@ -1,27 +1,27 @@
 {
-  "markedAt": "2026-06-22",
-  "note": "2026-06-22 (version DOI 10.5281/zenodo.20795629)",
+  "markedAt": "2026-07-07",
+  "note": "2026-07-07 (version DOI 10.5281/zenodo.21235503)",
   "conceptDoi": "10.5281/zenodo.20511553",
   "tables": {
     "books.csv": {
-      "rowCount": 19403,
-      "sha256": "9c3ec2af2a33596e8f1f22b2528b358c3fc20637acef1b4fc711c6b2c9e9fabb"
+      "rowCount": 20252,
+      "sha256": "79d99db1bb7632f3de3024e86e5d9e433e1e2ad562d5b26e88311b8fc1197b9a"
     },
     "authors.csv": {
-      "rowCount": 12217,
-      "sha256": "7cbb40e95e6af96aa4c6635179aff9a0547bc3d3a3ceaf754e734f57e2491693"
+      "rowCount": 12750,
+      "sha256": "77e8aa1dada38843a2deba2953ca0d516bbf8646fd9b19f48b742c8e6b032f01"
     },
     "bans.csv": {
-      "rowCount": 34987,
-      "sha256": "4290dddf689b1a4e4318dc8fe18905bde31e913460c1aa53bc5300c396a23a64"
+      "rowCount": 35860,
+      "sha256": "24018487931c7d0c6bd1e8da53467e9a9f816f12363811545e91678a53d2b847"
     },
     "ban_reasons.csv": {
-      "rowCount": 62850,
-      "sha256": "d1bcb7993f62dbf697e9f362534da26445f2a180f086626282a8c71594dd8a0b"
+      "rowCount": 63722,
+      "sha256": "53f444178a6f529f25c80dcc593ff18e6e5eb5b9cac7934da9d25ba93048fd0f"
     },
     "ban_sources.csv": {
-      "rowCount": 35230,
-      "sha256": "e70b2a4c07d2fdad4c0616b0dd90e465082bf87fd4ed1cd3e42510e04ae92ce5"
+      "rowCount": 36174,
+      "sha256": "2e653bf15fbd8b28bf1251f295f9a4e691049bbb4e8d40ae3849ca76b5bcba24"
     },
     "countries.csv": {
       "rowCount": 119,
@@ -184,7 +184,7 @@
     "ZW"
   ],
   "distinct": {
-    "booksWithBan": 19399,
+    "booksWithBan": 20248,
     "countriesWithBan": 119
   }
 }
