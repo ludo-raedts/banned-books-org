@@ -28,6 +28,7 @@ import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
 import BanContextCallout from '@/components/ban-context-callout'
 import { contextsForBook } from '@/lib/ban-contexts'
+import { equivalentTitles } from '@/lib/native-title'
 import { explainerForReasonSlugs } from '@/lib/reason-explainers'
 import { videoForBook } from '@/lib/featured-videos'
 import YouTubeEmbed from '@/components/youtube-embed'
@@ -378,7 +379,7 @@ export async function generateMetadata({
   // English titles and would only add SERP noise.
   const nativeParen =
     data.original_language && data.original_language !== 'en' &&
-    data.title_native && data.title_native.trim().toLowerCase() !== data.title.trim().toLowerCase()
+    data.title_native && !equivalentTitles(data.title_native, data.title)
       ? ` (${data.title_native.trim()})`
       : ''
   const withNative = (c: string) =>
