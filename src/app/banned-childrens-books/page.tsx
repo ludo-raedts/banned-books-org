@@ -77,6 +77,12 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
 
   const filter = ALL_TAGS.map(t => `genres.cs.{${t}}`).join(',')
 
+  // Small page size: the SELECT embeds every ban row per book, and modern
+  // children's/YA titles are among the most-banned in the catalogue (hundreds
+  // of school-district bans each). A 1000-book page pulled enough ban rows in
+  // one statement to trip Postgres 57014 (statement timeout) at prerender once
+  // the catalogue grew past ~20k books. 200 keeps each statement well under.
+  const PAGE = 200
   let all: ChildBook[] = []
   let offset = 0
   while (true) {
@@ -84,14 +90,14 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
       .from('books')
       .select(SELECT)
       .or(filter)
-      // Stable order across pages or .range() skips/dupes past the 1000-row page.
+      // Stable order across pages or .range() skips/dupes past the page size.
       .order('id')
-      .range(offset, offset + 999)
+      .range(offset, offset + PAGE - 1)
     if (error) throw error
     if (!data || data.length === 0) break
     all = all.concat(data as unknown as ChildBook[])
-    if (data.length < 1000) break
-    offset += 1000
+    if (data.length < PAGE) break
+    offset += PAGE
   }
 
   // Only books with documented bans land on the directory. The

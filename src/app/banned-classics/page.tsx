@@ -93,10 +93,14 @@ async function fetchClassics(): Promise<ClassicBook[]> {
   }
   const keep = ids.filter(id => (counts.get(id) ?? 0) >= MIN_BANS)
 
-  // 3. Hydrate full detail for the bounded set only.
+  // 3. Hydrate full detail for the bounded set only. Small batch: the SELECT
+  //    embeds every ban row (+ countries join) per book, and heavily-banned
+  //    classics carry many bans — a 300-book batch pulled enough rows in one
+  //    statement to trip Postgres 57014 (statement timeout) at prerender once
+  //    the catalogue grew past ~20k books. 50 keeps each statement well under.
   const out: ClassicBook[] = []
-  for (let i = 0; i < keep.length; i += 300) {
-    const { data, error } = await supabase.from('books').select(SELECT).in('id', keep.slice(i, i + 300))
+  for (let i = 0; i < keep.length; i += 50) {
+    const { data, error } = await supabase.from('books').select(SELECT).in('id', keep.slice(i, i + 50))
     if (error) throw error
     out.push(...(data as unknown as ClassicBook[]))
   }
