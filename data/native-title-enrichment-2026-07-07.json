@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-07-07",
+  "applied": true,
+  "proposals": [],
+  "unconfirmed": [
+    {
+      "id": 13628,
+      "title": "Acidheads",
+      "author": "Nicholas Blincoe",
+      "lang": "fr",
+      "reason": "no-search-hit",
+      "triedQids": []
+    },
+    {
+      "id": 14065,
+      "title": "C´est le printemps",
+      "author": "Jacques Montedron",
+      "lang": "fr",
+      "reason": "no-confirmed-work-match",
+      "triedQids": [
+        "Q2930316",
+        "Q122127342"
+      ]
+    }
+  ]
+}
