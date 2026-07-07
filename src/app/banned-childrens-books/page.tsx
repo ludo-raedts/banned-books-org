@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
 import SectionShell from '@/components/section/SectionShell'
@@ -71,7 +72,7 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
 
   const countryNames = new Map<string, string>()
   {
-    const { data } = await supabase.from('countries').select('code, name_en')
+    const { data } = await withDbRetry(() => supabase.from('countries').select('code, name_en'), 'childrens countries')
     for (const c of (data ?? []) as Array<{ code: string; name_en: string }>) countryNames.set(c.code, c.name_en)
   }
 
@@ -86,13 +87,13 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
   let all: ChildBook[] = []
   let offset = 0
   while (true) {
-    const { data, error } = await supabase
+    const { data, error } = await withDbRetry(() => supabase
       .from('books')
       .select(SELECT)
       .or(filter)
       // Stable order across pages or .range() skips/dupes past the page size.
       .order('id')
-      .range(offset, offset + PAGE - 1)
+      .range(offset, offset + PAGE - 1), 'childrens books')
     if (error) throw error
     if (!data || data.length === 0) break
     all = all.concat(data as unknown as ChildBook[])

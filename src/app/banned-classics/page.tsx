@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
 import SectionShell from '@/components/section/SectionShell'
@@ -65,16 +66,16 @@ async function fetchClassics(): Promise<ClassicBook[]> {
   // 1. Pre-1970 book ids (light; no embed).
   const ids: number[] = []
   for (let offset = 0; ; offset += 1000) {
-    const { data, error } = await supabase
+    const { data, error } = await withDbRetry(() => supabase
       .from('books')
       .select('id')
       .lt('first_published_year', 1970)
       .not('first_published_year', 'is', null)
       .order('id')
-      .range(offset, offset + 999)
+      .range(offset, offset + 999), 'classics ids')
     if (error) throw error
     if (!data || data.length === 0) break
-    ids.push(...data.map(r => r.id as number))
+    ids.push(...(data as Array<{ id: number }>).map(r => r.id))
     if (data.length < 1000) break
   }
 
@@ -82,10 +83,10 @@ async function fetchClassics(): Promise<ClassicBook[]> {
   //    identify the multiply-banned subset WITHOUT embedding every ban row.
   const counts = new Map<number, number>()
   for (let i = 0; i < ids.length; i += 300) {
-    const { data, error } = await supabase
+    const { data, error } = await withDbRetry(() => supabase
       .from('v_book_ban_counts')
       .select('entity_id, total_bans')
-      .in('entity_id', ids.slice(i, i + 300))
+      .in('entity_id', ids.slice(i, i + 300)), 'classics ban-counts')
     if (error) throw error
     for (const r of (data ?? []) as Array<{ entity_id: number; total_bans: number }>) {
       counts.set(r.entity_id, r.total_bans)
@@ -100,7 +101,7 @@ async function fetchClassics(): Promise<ClassicBook[]> {
   //    the catalogue grew past ~20k books. 50 keeps each statement well under.
   const out: ClassicBook[] = []
   for (let i = 0; i < keep.length; i += 50) {
-    const { data, error } = await supabase.from('books').select(SELECT).in('id', keep.slice(i, i + 50))
+    const { data, error } = await withDbRetry(() => supabase.from('books').select(SELECT).in('id', keep.slice(i, i + 50)), 'classics hydrate')
     if (error) throw error
     out.push(...(data as unknown as ClassicBook[]))
   }
