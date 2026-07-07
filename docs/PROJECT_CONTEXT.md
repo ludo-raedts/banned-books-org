@@ -884,7 +884,7 @@ Tracked in `docs/sprint-a/step-0-findings.md`:
 ### Current open threads (2026-06-16)
 
 - **May core-update visibility collapse** — site-brede ~95% impressies-collapse door de mei-2026 core-update (2-maanden-oude thin/AI-content site, honeymoon-reset). Pages geïndexeerd, geen manual action. Lever = content-kwaliteit + autoriteit (OL/GB, AI-desc-QA, bio-remediation), gerealiseerd bij de volgende core-update. Nooit concluderen uit weekend/frontier-dagen.
-- **Scraper-swarm DB-load** — verdedigd via top-2000 prebuild + 24h-ISR + Cloudflare-challenge + gehalveerde per-render queries; geen verdere lever op de pooler.
+- **Scraper-swarm DB-load** — verdedigd via top-2000 prebuild + 24h-ISR + Cloudflare-challenge + gehalveerde per-render queries; geen verdere lever op de pooler. **Update 2026-07-07:** CN/HK residential-botnet (64% van "Vercel-verkeer", loste managed challenge én Turnstile op) geblokkeerd via geo-block met verified-bot-exemptie; volledige WAF-regelset, escalatieladder, meet-queries en analytics-bron-doctrine gedocumenteerd in **[docs/cloudflare-waf.md](cloudflare-waf.md)**.
 - **Russia FSEM full crawl** — ~5500-entry minjust-crawl nog open (510/~5500 geïmporteerd); ~326 rijen editor-review-flag.
 - **Bluesky go-live** — wacht op flippen `BLUESKY_POST_ENABLED` (account + app-password aangemaakt; `/.well-known/atproto-did` indien custom-handle-verificatie nodig).
 - **Editorial/data residu** — diverse kleinere dup-residuen (KDN title-collision, Iran-1979 placeholder ~33 rijen, split-authors 45 clusters in `data/hk-split-authors-review.md`, HK `=`-separator parser-bug ~15 rijen). Niet-blokkerend; opgepakt via `scripts/audit-integrity.ts` drift + de stappenplan.
