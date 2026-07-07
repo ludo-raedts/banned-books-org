@@ -11,6 +11,11 @@ export type TopListBook = {
   cover_url: string | null
   author: string
   context?: string
+  // Native-script title line ("活着" under "To Live"). Callers pass the raw DB
+  // value; the cards run it through displayNativeTitle() so identical/'en'
+  // values never render. lang is the book's original_language BCP-47 code.
+  title_native?: string | null
+  title_native_lang?: string | null
 }
 
 export type TopListAuthor = {

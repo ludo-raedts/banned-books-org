@@ -2,10 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
+import { displayNativeTitle } from '@/lib/native-title'
 import type { TopListBook } from '@/components/top-list-card'
 
 export default function BookCardCompact({ book, sizes }: { book: TopListBook; sizes?: string }) {
   const alt = coverAlt(book.title, book.author)
+  const nativeTitle = displayNativeTitle(book.title, book.title_native, book.title_native_lang)
   return (
     <Link
       href={`/books/${book.slug}`}
@@ -33,6 +35,11 @@ export default function BookCardCompact({ book, sizes }: { book: TopListBook; si
         <h3 className="book-title font-serif text-sm font-semibold leading-snug text-gray-900 line-clamp-2">
           {book.title}
         </h3>
+        {nativeTitle && (
+          <p className="text-xs text-gray-700 mt-0.5 line-clamp-1" lang={book.title_native_lang ?? undefined}>
+            {nativeTitle}
+          </p>
+        )}
         {book.author && (
           <p className="text-xs text-gray-600 mt-0.5 line-clamp-1">
             {book.author}
