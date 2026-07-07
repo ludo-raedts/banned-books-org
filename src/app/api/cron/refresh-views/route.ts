@@ -15,8 +15,14 @@ export async function GET(req: NextRequest) {
   // on import and are refreshed by /api/cron/refresh-counts (daily) +
   // refresh_all_materialized_views() on demand after an import.
   const { error } = await adminClient().rpc('refresh_rising_materialized_views')
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  // Incremental upsert of the last 2 UTC days into the pageviews_daily rollup
+  // (admin Traffic chart). Index-scan over ~1 day of rows, a few ms.
+  const { error: dailyError } = await adminClient().rpc('refresh_pageviews_daily')
+  if (error || dailyError) {
+    return NextResponse.json(
+      { error: [error?.message, dailyError?.message].filter(Boolean).join('; ') },
+      { status: 500 },
+    )
   }
   return NextResponse.json({ ok: true })
 }

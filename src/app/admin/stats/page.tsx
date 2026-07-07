@@ -1,11 +1,44 @@
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import CloudflareCards from '../cloudflare-cards'
-import TrafficCard, { type CountryViewRow, type ReferrerViewRow } from '../traffic-card'
+import TrafficCard, { type CountryViewRow, type ReferrerViewRow, type DailyTrafficRow } from '../traffic-card'
 import TrendingCard, { type TrendingBookRow, type TrendingAuthorRow, type AllTimeBookRow, type AllTimeAuthorRow } from '../trending-card'
 
 export const dynamic = 'force-dynamic'
 
 const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
+
+// 30-day daily series for the Traffic chart, read from the pageviews_daily
+// rollup (upserted hourly by /api/cron/refresh-views) — never from the raw
+// pageviews table. Cached for 5 minutes on top of that, so the owner
+// re-checking the page repeatedly costs zero queries. Days without a rollup
+// row (zero tracked traffic) are filled with zeros so the x-axis stays linear.
+const getDailyTraffic = unstable_cache(
+  async (): Promise<DailyTrafficRow[]> => {
+    const DAYS = 30
+    const today = new Date().toISOString().slice(0, 10)
+    const since = new Date(Date.now() - (DAYS - 1) * 86_400_000).toISOString().slice(0, 10)
+    const { data } = await adminClient()
+      .from('pageviews_daily')
+      .select('day, visitors, pageviews')
+      .gte('day', since)
+      .order('day', { ascending: true })
+    const byDay = new Map((data ?? []).map(r => [r.day as string, r]))
+    const series: DailyTrafficRow[] = []
+    for (let d = new Date(`${since}T00:00:00Z`); d.toISOString().slice(0, 10) <= today; d.setUTCDate(d.getUTCDate() + 1)) {
+      const day = d.toISOString().slice(0, 10)
+      const row = byDay.get(day)
+      series.push({
+        day,
+        visitors: Number(row?.visitors ?? 0),
+        pageviews: Number(row?.pageviews ?? 0),
+      })
+    }
+    return series
+  },
+  ['admin-traffic-daily'],
+  { revalidate: 300 },
+)
 
 export default async function AdminStatsPage() {
   const supabase = adminClient()
@@ -23,6 +56,13 @@ export default async function AdminStatsPage() {
   let countriesLastWeek: CountryViewRow[] = []
   let referrersThisWeek: ReferrerViewRow[] = []
   let referrersLastWeek: ReferrerViewRow[] = []
+  let dailySeries: DailyTrafficRow[] = []
+
+  try {
+    dailySeries = await getDailyTraffic()
+  } catch {
+    // pageviews_daily rollup not yet created — chart hides itself
+  }
 
   try {
     const [
@@ -177,6 +217,7 @@ export default async function AdminStatsPage() {
           visitorsLastWeek={visitorsLastWeek}
           pageviewsThisWeek={pageviewsThisWeek}
           pageviewsLastWeek={pageviewsLastWeek}
+          dailySeries={dailySeries}
           cardCls={cardCls}
         />
 

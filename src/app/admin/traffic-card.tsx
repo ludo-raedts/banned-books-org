@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 export type CountryViewRow = { country: string | null; views: number }
 export type ReferrerViewRow = { referrer_host: string | null; views: number }
+export type DailyTrafficRow = { day: string; visitors: number; pageviews: number }
 
 const REFERRER_LABELS: Record<string, string> = {
   'google.com': 'Google',
@@ -43,11 +44,85 @@ function MiniBar({ value, max, color }: { value: number; max: number; color: 're
   )
 }
 
+function formatDay(day: string) {
+  return new Date(`${day}T00:00:00Z`).toLocaleDateString('en', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+}
+
+// 30-day area chart of daily visitors + pageviews, fed by the pageviews_daily
+// rollup. Plain SVG in the existing admin style — no chart lib. "Visitors" is
+// per-day unique (daily-salted hash), so the series is only comparable
+// day-by-day, never summed across days.
+function TrafficChart({ series }: { series: DailyTrafficRow[] }) {
+  const [hover, setHover] = useState<number | null>(null)
+
+  const W = 600
+  const H = 150
+  const PAD_T = 6
+  const n = series.length
+  const max = Math.max(1, ...series.map(d => d.pageviews))
+  const x = (i: number) => (n > 1 ? (i / (n - 1)) * W : W / 2)
+  const y = (v: number) => PAD_T + (1 - v / max) * (H - PAD_T)
+
+  const line = (key: 'visitors' | 'pageviews') =>
+    series.map((d, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(d[key]).toFixed(1)}`).join(' ')
+  const area = (key: 'visitors' | 'pageviews') => `${line(key)} L${W},${H} L0,${H} Z`
+
+  const shown = hover !== null ? series[hover] : series[n - 1]
+  const isToday = shown === series[n - 1]
+
+  function onMove(e: React.MouseEvent<SVGSVGElement>) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const frac = (e.clientX - rect.left) / rect.width
+    setHover(Math.min(n - 1, Math.max(0, Math.round(frac * (n - 1)))))
+  }
+
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-4 flex-wrap mb-2">
+        <div className="flex items-center gap-4">
+          <p className="text-sm font-medium text-gray-700">Last 30 days</p>
+          <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+            <span className="w-2 h-2 rounded-full bg-red-500" /> visitors
+          </span>
+          <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+            <span className="w-2 h-2 rounded-full bg-blue-300" /> pageviews
+          </span>
+        </div>
+        <p className="text-xs text-gray-500 tabular-nums">
+          {formatDay(shown.day)}{isToday && hover === null ? ' (today so far)' : ''} —{' '}
+          <span className="font-medium text-gray-700">{shown.visitors.toLocaleString('en')}</span> visitors ·{' '}
+          {shown.pageviews.toLocaleString('en')} pageviews
+        </p>
+      </div>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        className="w-full h-36 block"
+        onMouseMove={onMove}
+        onMouseLeave={() => setHover(null)}
+      >
+        <path d={area('pageviews')} fill="#dbeafe" />
+        <path d={line('pageviews')} fill="none" stroke="#93c5fd" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+        <path d={area('visitors')} fill="#fecaca" fillOpacity={0.75} />
+        <path d={line('visitors')} fill="none" stroke="#dc2626" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+        {hover !== null && (
+          <line x1={x(hover)} x2={x(hover)} y1={0} y2={H} stroke="#9ca3af" strokeWidth={1} vectorEffect="non-scaling-stroke" strokeDasharray="3 3" />
+        )}
+      </svg>
+      <div className="flex justify-between mt-1">
+        <span className="text-[10px] text-gray-400">{formatDay(series[0].day)}</span>
+        <span className="text-[10px] text-gray-400">{formatDay(series[n - 1].day)}</span>
+      </div>
+    </div>
+  )
+}
+
 export default function TrafficCard({
   countriesThisWeek, countriesLastWeek,
   referrersThisWeek, referrersLastWeek,
   visitorsThisWeek, visitorsLastWeek,
   pageviewsThisWeek, pageviewsLastWeek,
+  dailySeries,
   cardCls,
 }: {
   countriesThisWeek: CountryViewRow[]
@@ -58,6 +133,7 @@ export default function TrafficCard({
   visitorsLastWeek: number
   pageviewsThisWeek: number
   pageviewsLastWeek: number
+  dailySeries: DailyTrafficRow[]
   cardCls: string
 }) {
   const [week, setWeek] = useState<'this' | 'last'>('this')
@@ -131,6 +207,8 @@ export default function TrafficCard({
           </span>
         )}
       </div>
+
+      {dailySeries.length > 1 && <TrafficChart series={dailySeries} />}
 
       {isEmpty ? (
         <p className="text-sm text-gray-400 italic text-center py-8">
