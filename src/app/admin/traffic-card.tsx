@@ -162,12 +162,38 @@ export default function TrafficCard({
 
   return (
     <div className={`${cardCls} col-span-full`}>
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h2 className="font-semibold text-gray-900">Traffic</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Unique visitors per day by country and referrer.
-          </p>
+      <div>
+        <h2 className="font-semibold text-gray-900">Traffic</h2>
+        <p className="text-sm text-gray-500 mt-0.5">
+          Unique visitors per day by country and referrer.
+        </p>
+      </div>
+
+      {dailySeries.length > 1 && <TrafficChart series={dailySeries} />}
+
+      {/* Weekly section — the toggle sits next to the numbers it controls,
+          so it can't be read as controlling the 30-day chart above. */}
+      <div className="flex items-center justify-between gap-4 flex-wrap border-t border-gray-100 pt-4 mt-2">
+        <div className="flex items-baseline gap-3 flex-wrap">
+          <span className="text-3xl font-bold text-gray-900 tabular-nums leading-none">
+            {totalViews.toLocaleString('en')}
+          </span>
+          <span className="text-sm text-gray-500">visitors</span>
+          <span className="text-xs text-gray-400 tabular-nums">
+            · {totalPageviews.toLocaleString('en')} pageviews
+          </span>
+          {totalPct !== null && (
+            <span className={`text-xs font-medium tabular-nums ${
+              totalPct > 0 ? 'text-emerald-600' :
+              totalPct < 0 ? 'text-red-500' :
+              'text-gray-400'
+            }`}>
+              {totalPct > 0 ? `↑ ${totalPct}%` : totalPct < 0 ? `↓ ${Math.abs(totalPct)}%` : '→ 0%'}
+              <span className="text-gray-400 font-normal ml-1">
+                vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString('en')})
+              </span>
+            </span>
+          )}
         </div>
         <div className="flex gap-1 shrink-0">
           {(['this', 'last'] as const).map(w => (
@@ -185,30 +211,6 @@ export default function TrafficCard({
           ))}
         </div>
       </div>
-
-      <div className="flex items-baseline gap-3 flex-wrap border-y border-gray-100 py-4 -mx-2 px-2">
-        <span className="text-3xl font-bold text-gray-900 tabular-nums leading-none">
-          {totalViews.toLocaleString('en')}
-        </span>
-        <span className="text-sm text-gray-500">visitors</span>
-        <span className="text-xs text-gray-400 tabular-nums">
-          · {totalPageviews.toLocaleString('en')} pageviews
-        </span>
-        {totalPct !== null && (
-          <span className={`text-xs font-medium tabular-nums ${
-            totalPct > 0 ? 'text-emerald-600' :
-            totalPct < 0 ? 'text-red-500' :
-            'text-gray-400'
-          }`}>
-            {totalPct > 0 ? `↑ ${totalPct}%` : totalPct < 0 ? `↓ ${Math.abs(totalPct)}%` : '→ 0%'}
-            <span className="text-gray-400 font-normal ml-1">
-              vs {week === 'this' ? 'last week' : 'this week'} ({compareViews.toLocaleString('en')})
-            </span>
-          </span>
-        )}
-      </div>
-
-      {dailySeries.length > 1 && <TrafficChart series={dailySeries} />}
 
       {isEmpty ? (
         <p className="text-sm text-gray-400 italic text-center py-8">
