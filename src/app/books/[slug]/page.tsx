@@ -371,6 +371,19 @@ export async function generateMetadata({
   const author = authorList.join(', ')
   const baseTitle = `${data.title}${author ? ` by ${author}` : ''}`
 
+  // Native-title token for original-script findability ("To Live (活着) by Yu
+  // Hua – …"): searchers on Baidu/Yandex/etc. query the native title, which
+  // shares zero tokens with the English one. Gated to genuinely foreign-language
+  // books — 'en' originals carry title_native values that are mere alternate
+  // English titles and would only add SERP noise.
+  const nativeParen =
+    data.original_language && data.original_language !== 'en' &&
+    data.title_native && data.title_native.trim().toLowerCase() !== data.title.trim().toLowerCase()
+      ? ` (${data.title_native.trim()})`
+      : ''
+  const withNative = (c: string) =>
+    nativeParen && c.startsWith(data.title) ? `${data.title}${nativeParen}${c.slice(data.title.length)}` : c
+
   const countryByCode = new Map<string, string>()
   for (const b of bans) {
     if (!countryByCode.has(b.country_code)) {
@@ -479,21 +492,31 @@ export async function generateMetadata({
   titleCandidates.push(baseTitle)
   titleCandidates.push(data.title)
 
-  let title = titleCandidates.find(c => c.length <= 70) ?? data.title
+  // Candidate priority stays ladder-first: at each rung the native-augmented
+  // variant is preferred, but a rung is never skipped just to fit the native
+  // token — richness (reason/country hooks) outranks the native title.
+  let title = titleCandidates
+    .flatMap(c => (withNative(c) !== c ? [withNative(c), c] : [c]))
+    .find(c => c.length <= 70) ?? data.title
   if (title.length > 70) title = title.slice(0, 67) + '…'
 
-  let description: string
-  if (bans.length === 0) {
-    description = `${baseTitle} on Banned Books — censorship history, country-by-country entries, and source citations on this page.`
-  } else if (uniqueCountries.length === 1 && topReasonPhrase) {
-    description = `${baseTitle} was banned in ${uniqueCountries[0]} for ${topReasonPhrase}. See the year, the scope, and the full source citations on this page.`
-  } else if (uniqueCountries.length === 1) {
-    description = `${baseTitle} was banned in ${uniqueCountries[0]}. See the year, the scope, and the full source citations behind every entry on this page.`
-  } else if (topReasonPhrase) {
-    description = `${baseTitle} has been banned in ${uniqueCountries.length} countries, often for ${topReasonPhrase}. See where, when, why — and the full source citations on this page.`
-  } else {
-    description = `${baseTitle} has been banned or challenged in ${uniqueCountries.length} countries. See where, when, why — and the full source citations behind every entry.`
+  const buildDescription = (bt: string): string => {
+    if (bans.length === 0) {
+      return `${bt} on Banned Books — censorship history, country-by-country entries, and source citations on this page.`
+    } else if (uniqueCountries.length === 1 && topReasonPhrase) {
+      return `${bt} was banned in ${uniqueCountries[0]} for ${topReasonPhrase}. See the year, the scope, and the full source citations on this page.`
+    } else if (uniqueCountries.length === 1) {
+      return `${bt} was banned in ${uniqueCountries[0]}. See the year, the scope, and the full source citations behind every entry on this page.`
+    } else if (topReasonPhrase) {
+      return `${bt} has been banned in ${uniqueCountries.length} countries, often for ${topReasonPhrase}. See where, when, why — and the full source citations on this page.`
+    }
+    return `${bt} has been banned or challenged in ${uniqueCountries.length} countries. See where, when, why — and the full source citations behind every entry.`
   }
+  // Unlike the <title>, the description always keeps the native token when one
+  // exists: it is a real search token (the only metadata slot left for books
+  // whose augmented <title> overflows the 70-char cap, e.g. cyrillic titles),
+  // while the sentence tail it may push past the cap is boilerplate.
+  let description = buildDescription(withNative(baseTitle))
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
   const canonicalUrl = `https://www.banned-books.org/books/${slug}`

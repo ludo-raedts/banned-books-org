@@ -19,6 +19,7 @@ import FaqSection from '@/components/home/FaqSection'
 import UsCourtCasesSection from '@/components/country/UsCourtCasesSection'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { coverAlt } from '@/lib/cover-alt'
+import { displayNativeTitle } from '@/lib/native-title'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 import { contextsForCountry } from '@/lib/ban-contexts'
@@ -105,6 +106,8 @@ type Book = {
   title: string
   slug: string
   cover_url: string | null
+  title_native: string | null
+  original_language: string | null
   first_published_year: number | null
   book_authors: { authors: { display_name: string } | null }[]
   // Only year_started is read (the decade/year timeline). The grid cards render
@@ -148,7 +151,7 @@ export default async function CountryPage({
   const booksGridQuery = supabase
     .from('books')
     .select(`
-      id, title, slug, cover_url, first_published_year,
+      id, title, slug, cover_url, title_native, original_language, first_published_year,
       book_authors(authors(display_name)),
       bans!inner(year_started)
     `)
@@ -224,16 +227,18 @@ export default async function CountryPage({
 
   type TopBookRow = {
     id: number; title: string; slug: string; cover_url: string | null
+    title_native: string | null; original_language: string | null
     book_authors: { authors: { display_name: string } | null }[]
   }
   let topBookCards: Array<{
     id: number; title: string; slug: string; cover_url: string | null
     author: string; context: string
+    title_native: string | null; title_native_lang: string | null
   }> = []
   if (showTopBooks) {
     const { data: topRows } = await supabase
       .from('books')
-      .select('id, title, slug, cover_url, book_authors(authors(display_name))')
+      .select('id, title, slug, cover_url, title_native, original_language, book_authors(authors(display_name))')
       .in('id', topBookByCount.map(([id]) => id))
     const rowMap = new Map(((topRows ?? []) as unknown as TopBookRow[]).map(r => [r.id, r]))
     topBookCards = topBookByCount
@@ -247,6 +252,8 @@ export default async function CountryPage({
           cover_url: r.cover_url,
           author: r.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
           context: `${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'}`,
+          title_native: r.title_native,
+          title_native_lang: r.original_language,
         }
       })
       .filter((b): b is NonNullable<typeof b> => b !== null)
@@ -673,6 +680,15 @@ export default async function CountryPage({
                 <h3 className="mt-2 font-serif text-xs font-medium leading-snug text-gray-900 group-hover:text-oxblood line-clamp-2 transition-colors">
                   {book.title}
                 </h3>
+                {(() => {
+                  const native = displayNativeTitle(book.title, book.title_native, book.original_language)
+                  if (!native) return null
+                  return (
+                    <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-1" lang={book.original_language ?? undefined}>
+                      {native}
+                    </p>
+                  )
+                })()}
               </Link>
             ))}
           </div>
