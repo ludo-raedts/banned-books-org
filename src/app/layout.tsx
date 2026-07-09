@@ -153,6 +153,7 @@ export default function RootLayout({
                 <ul className="space-y-1.5">
                   <li><Link href="/film" className="hover:text-gray-800 transition-colors">Film</Link></li>
                   <li><Link href="/essays" className="hover:text-gray-800 transition-colors">Essays</Link></li>
+                  <li><Link href="/podcasts" className="hover:text-gray-800 transition-colors">Podcasts</Link></li>
                   <li><Link href="/history" className="hover:text-gray-800 transition-colors">History</Link></li>
                   <li><Link href="/timeline" className="hover:text-gray-800 transition-colors">Timeline</Link></li>
                   <li><Link href="/news" className="hover:text-gray-800 transition-colors">News</Link></li>

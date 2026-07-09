@@ -9,7 +9,7 @@ import Eyebrow from '@/components/section/Eyebrow'
 export const metadata = {
   title: 'Banned books podcasts — a curated listening guide',
   description:
-    'A hand-picked, annotated guide to the best podcasts about banned books and censorship — from Brooklyn Public Library\'s Peabody-nominated Borrowed and Banned to author-hosted shows, an internationally-focused museum podcast, and, for balance, the case made by those who push for restrictions.',
+    'A hand-picked, link-verified guide to the best banned-books and censorship podcasts — reported journalism, author-hosted shows, and the case for restriction.',
   alternates: { canonical: '/podcasts' },
 }
 
