@@ -102,7 +102,6 @@ type BookCard = {
   title: string
   slug: string
   cover_url: string | null
-  description: string | null
   first_published_year: number | null
   genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
@@ -266,7 +265,7 @@ export default async function ScopePage({
     const { data: topBookRows } = await supabase
       .from('books')
       .select(`
-        id, title, slug, cover_url, description, first_published_year, genres,
+        id, title, slug, cover_url, first_published_year, genres,
         book_authors(authors(display_name))
       `)
       .in('id', topScopeCounts.map(r => r.book_id))
