@@ -88,7 +88,6 @@ interface Book {
   isbn13: string | null
   cover_url: string | null
   cover_status: string | null
-  description: string | null
   description_book: string | null
   first_published_year: number | null
   original_language: string | null
@@ -107,7 +106,7 @@ async function load() {
   const [books, authors, bookAuthors, bans, banSourceLinks] = await Promise.all([
     paginate<Book>(
       'books',
-      'id, slug, title, isbn13, cover_url, cover_status, description, description_book, first_published_year, original_language',
+      'id, slug, title, isbn13, cover_url, cover_status, description_book, first_published_year, original_language',
       'id',
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
@@ -204,7 +203,7 @@ async function runChecks(): Promise<Finding[]> {
   // 3. mojibake (U+FFFD) in user-facing text — KDN import artefact
   const mojibake: string[] = []
   for (const b of books) {
-    if (hasMojibake(b.title) || hasMojibake(b.description) || hasMojibake(b.description_book))
+    if (hasMojibake(b.title) || hasMojibake(b.description_book))
       mojibake.push(`book ${b.slug}: "${b.title}"`)
   }
   for (const a of authors) {
@@ -352,7 +351,7 @@ async function runChecks(): Promise<Finding[]> {
     severity: 'drift', count: noCover.length,
     samples: noCover.slice(0, SAMPLE_CAP).map((b) => b.slug),
   })
-  const noDesc = books.filter((b) => !b.description && !b.description_book)
+  const noDesc = books.filter((b) => !b.description_book)
   findings.push({
     id: 'no-description', label: 'book without any description',
     severity: 'drift', count: noDesc.length,
