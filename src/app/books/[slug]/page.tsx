@@ -209,7 +209,7 @@ const isBlockedSlug = cache(async (slug: string): Promise<boolean> => {
 // column set is a superset of what either consumer needs; metadata reads its
 // subset off the same row. Extracted from BookPage so both go through it.
 const BOOK_DETAIL_SELECT = `
-  id, title, slug, cover_url, description, description_book, description_ban,
+  id, title, slug, cover_url, description_book, description_ban,
   description_source_url, description_source_type,
   censorship_context, first_published_year, genres, gutenberg_id, isbn13,
   bookshop_status, bookshop_isbn13, kobo_url, archive_org_id, archive_org_status,
@@ -606,7 +606,6 @@ type BookDetail = {
   title: string
   slug: string
   cover_url: string | null
-  description: string | null
   description_book: string | null
   description_ban: string | null
   description_source_url: string | null
@@ -1530,12 +1529,12 @@ export default async function BookPage({
       <BanContextCallout contexts={bookContexts} />
 
       {/* About the book */}
-      {!(book.description_book ?? book.description) ? (
+      {!book.description_book ? (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
           {/* We only publish descriptions backed by a citable source. This book
               has none yet — better an honest note than an unverifiable AI synopsis.
-              View-layer only: description_book stays NULL so JSON-LD omits it. */}
+              description_book stays NULL so JSON-LD omits it. */}
           <p className="text-sm text-gray-400 italic leading-relaxed">
             We only publish book descriptions backed by a citable source, and we
             haven&rsquo;t found one for this title yet.
@@ -1545,11 +1544,9 @@ export default async function BookPage({
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
           <p className="text-gray-700 leading-relaxed">
-            {book.description_book ?? book.description}
+            {book.description_book}
           </p>
-          {/* Source attribution — only when v2 enrichment recorded a source.
-              Legacy `description`-fallback rows have description_source_url = NULL
-              and render no attribution. */}
+          {/* Source attribution — only when v2 enrichment recorded a source. */}
           {book.description_book && book.description_source_url && book.description_source_type && (
             <DescriptionSourceAttribution
               url={book.description_source_url}

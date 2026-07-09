@@ -40,7 +40,7 @@ const REASON_INTROS: Record<string, string> = {
 
 type Book = {
   id: number; title: string; slug: string; cover_url: string | null
-  description: string | null; first_published_year: number | null; genres: string[]
+  first_published_year: number | null; genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
   bans: { id: number; status: string; country_code: string; year_started: number | null; countries: { name_en: string } | null; ban_reason_links: { reasons: { slug: string } | null }[] }[]
 }
@@ -213,7 +213,7 @@ export default async function ReasonPage({
     const { data } = await supabase
       .from('books')
       .select(`
-        id, title, slug, cover_url, description, first_published_year, genres,
+        id, title, slug, cover_url, first_published_year, genres,
         book_authors(authors(display_name)),
         bans(id, status, country_code, year_started, countries(name_en), ban_reason_links(reasons(slug)))
       `)

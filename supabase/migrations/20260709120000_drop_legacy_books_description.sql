@@ -1,0 +1,22 @@
+-- Drop the legacy `books.description` column.
+--
+-- Superseded by `description_book` (canonical, source-stamped, what the book
+-- page renders and what feeds JSON-LD). The old view-layer fallback
+-- `description_book ?? description` has been removed from the codebase
+-- (books/authors/reasons pages + enrich-reasons / clean-wiki-markup /
+-- check-no-desc / update-ban-descriptions scripts) in the same change set.
+--
+-- Data handling before this drop:
+--   * 1.152 rows had a legacy value; 1.117 were redundant (also in description_book).
+--   * 33 fallback-only rows (description_book NULL) were AI-confabulated filler or
+--     junk (all with description_source_type NULL) — intentionally not preserved.
+--   * 2 genuine blurbs were rescued into description_book with source_type='manual'
+--     first: #520 "Perfect" (Sara Shepard) and #631 "The Bible".
+--   * Full legacy contents backed up to
+--     data/legacy-books-description-backup-2026-07-09.json.
+--
+-- DROP COLUMN is metadata-only in Postgres (no table rewrite, no temp-spill /
+-- Disk-IO cost). Apply AFTER the code that stops selecting `description` is live
+-- in production, so no in-flight PostgREST select references a missing column.
+
+ALTER TABLE books DROP COLUMN IF EXISTS description;

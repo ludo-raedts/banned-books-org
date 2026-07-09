@@ -81,10 +81,10 @@ async function main() {
 
   // ── And Tango Makes Three — add book description ──────────────────
   {
-    const { data: book } = await supabase.from('books').select('id, description').eq('slug', 'and-tango-makes-three').single()
-    if (book && !book.description) {
+    const { data: book } = await supabase.from('books').select('id, description_book').eq('slug', 'and-tango-makes-three').single()
+    if (book && !book.description_book) {
       await supabase.from('books').update({
-        description: 'A children\'s picture book based on the true story of Roy and Silo, two male chinstrap penguins at New York\'s Central Park Zoo who paired and raised a chick named Tango together. Since publication it has consistently topped the American Library Association\'s list of most-challenged books, making it one of the most banned children\'s books of the 21st century.'
+        description_book: 'A children\'s picture book based on the true story of Roy and Silo, two male chinstrap penguins at New York\'s Central Park Zoo who paired and raised a chick named Tango together. Since publication it has consistently topped the American Library Association\'s list of most-challenged books, making it one of the most banned children\'s books of the 21st century.'
       }).eq('id', book.id)
       console.log('Added description for And Tango Makes Three')
     }
@@ -92,10 +92,10 @@ async function main() {
 
   // ── The Satanic Verses — add book description ─────────────────────
   {
-    const { data: book } = await supabase.from('books').select('id, description').eq('slug', 'the-satanic-verses').single()
-    if (book && !book.description) {
+    const { data: book } = await supabase.from('books').select('id, description_book').eq('slug', 'the-satanic-verses').single()
+    if (book && !book.description_book) {
       await supabase.from('books').update({
-        description: 'Salman Rushdie\'s novel weaving together the stories of two Indian actors who survive a hijacked plane explosion, exploring identity, migration, and faith through magical realist reimaginings of Islamic history. Published in 1988, it provoked one of the most severe literary crises of the modern era: Iran\'s Supreme Leader Ayatollah Khomeini issued a fatwa calling for Rushdie\'s death, forcing him into a decade of hiding under police protection.'
+        description_book: 'Salman Rushdie\'s novel weaving together the stories of two Indian actors who survive a hijacked plane explosion, exploring identity, migration, and faith through magical realist reimaginings of Islamic history. Published in 1988, it provoked one of the most severe literary crises of the modern era: Iran\'s Supreme Leader Ayatollah Khomeini issued a fatwa calling for Rushdie\'s death, forcing him into a decade of hiding under police protection.'
       }).eq('id', book.id)
       console.log('Added description for The Satanic Verses')
     }
@@ -103,10 +103,10 @@ async function main() {
 
   // ── 1984 — add book description ────────────────────────────────────
   {
-    const { data: book } = await supabase.from('books').select('id, description').eq('slug', '1984').single()
-    if (book && !book.description) {
+    const { data: book } = await supabase.from('books').select('id, description_book').eq('slug', '1984').single()
+    if (book && !book.description_book) {
       await supabase.from('books').update({
-        description: 'George Orwell\'s dystopian masterpiece set in a totalitarian future where "Big Brother" watches every citizen, independent thought is a crime (thoughtcrime), and history is continuously rewritten. Written in 1948 as a warning about Stalinist totalitarianism, it has been banned or restricted in the Soviet Union and numerous authoritarian states, and in the USA challenged in schools for its dark themes and sexual content. It gave the language the words "doublethink," "newspeak," and "Room 101."'
+        description_book: 'George Orwell\'s dystopian masterpiece set in a totalitarian future where "Big Brother" watches every citizen, independent thought is a crime (thoughtcrime), and history is continuously rewritten. Written in 1948 as a warning about Stalinist totalitarianism, it has been banned or restricted in the Soviet Union and numerous authoritarian states, and in the USA challenged in schools for its dark themes and sexual content. It gave the language the words "doublethink," "newspeak," and "Room 101."'
       }).eq('id', book.id)
       console.log('Added description for 1984')
     }
@@ -114,10 +114,10 @@ async function main() {
 
   // ── The Diary of a Young Girl — add book description ──────────────
   {
-    const { data: book } = await supabase.from('books').select('id, description').eq('slug', 'the-diary-of-a-young-girl').single()
-    if (book && !book.description) {
+    const { data: book } = await supabase.from('books').select('id, description_book').eq('slug', 'the-diary-of-a-young-girl').single()
+    if (book && !book.description_book) {
       await supabase.from('books').update({
-        description: 'Anne Frank\'s diary, kept during the two years she and her family hid from the Nazis in a concealed apartment in Amsterdam. Discovered and first published in 1947 by her father Otto, the sole family survivor, it has become one of the most widely read accounts of the Holocaust. Challenged in some US schools for its depiction of puberty and sexuality, and banned in Lebanon and some other countries with restrictions on material sympathetic to Israel.'
+        description_book: 'Anne Frank\'s diary, kept during the two years she and her family hid from the Nazis in a concealed apartment in Amsterdam. Discovered and first published in 1947 by her father Otto, the sole family survivor, it has become one of the most widely read accounts of the Holocaust. Challenged in some US schools for its depiction of puberty and sexuality, and banned in Lebanon and some other countries with restrictions on material sympathetic to Israel.'
       }).eq('id', book.id)
       console.log('Added description for Diary of a Young Girl')
     }
@@ -125,10 +125,10 @@ async function main() {
 
   // ── Lolita — add book description ─────────────────────────────────
   {
-    const { data: book } = await supabase.from('books').select('id, description').eq('slug', 'lolita').single()
-    if (book && !book.description) {
+    const { data: book } = await supabase.from('books').select('id, description_book').eq('slug', 'lolita').single()
+    if (book && !book.description_book) {
       await supabase.from('books').update({
-        description: 'Vladimir Nabokov\'s controversial novel narrated by Humbert Humbert, a middle-aged professor obsessed with his 12-year-old stepdaughter Dolores. Rejected by every American publisher as unpublishable, it was first published in Paris by Olympia Press in 1955. Despite the repellent narrator, the novel is widely regarded as a masterwork of literary unreliable narration. Banned in France, the UK, Argentina, and New Zealand upon publication; challenged in US schools for decades.'
+        description_book: 'Vladimir Nabokov\'s controversial novel narrated by Humbert Humbert, a middle-aged professor obsessed with his 12-year-old stepdaughter Dolores. Rejected by every American publisher as unpublishable, it was first published in Paris by Olympia Press in 1955. Despite the repellent narrator, the novel is widely regarded as a masterwork of literary unreliable narration. Banned in France, the UK, Argentina, and New Zealand upon publication; challenged in US schools for decades.'
       }).eq('id', book.id)
       console.log('Added description for Lolita')
     }

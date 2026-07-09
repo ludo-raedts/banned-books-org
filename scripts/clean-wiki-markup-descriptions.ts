@@ -25,14 +25,13 @@ const db = adminClient()
 const APPLY = isApply()
 const MIN_LEN = intFlag('min', 60)
 const WIKI_HEADER = /={2,}\s?[^=\n]{1,80}?\s?={2,}/
-const FIELDS = ['description', 'description_book'] as const
+const FIELDS = ['description_book'] as const
 
 type Book = {
   id: number
   slug: string
   title: string
   data_quality_status: string | null
-  description: string | null
   description_book: string | null
 }
 
@@ -43,7 +42,7 @@ async function paginate(): Promise<Book[]> {
   for (;;) {
     const { data, error } = await db
       .from('books')
-      .select('id, slug, title, data_quality_status, description, description_book')
+      .select('id, slug, title, data_quality_status, description_book')
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw error

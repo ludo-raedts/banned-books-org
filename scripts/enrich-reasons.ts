@@ -37,7 +37,7 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 type ClassifyContext = {
   title: string
   author: string
-  bookDescription: string   // books.description_book ?? books.description
+  bookDescription: string   // books.description_book
   bookBanContext: string    // books.description_ban ?? books.censorship_context
   banDescription: string    // bans.description (per-event, strongest signal)
   actionType: string        // banned | challenged | removed | restricted | blocked
@@ -125,7 +125,7 @@ async function main() {
     description: string | null
     books: {
       id: number; slug: string; title: string
-      description_book: string | null; description: string | null
+      description_book: string | null
       description_ban: string | null; censorship_context: string | null
       book_authors: Array<{ authors: { display_name: string } | null }>
     } | null
@@ -134,7 +134,7 @@ async function main() {
 
   const SELECT = `
     id, country_code, region, institution, action_type, year_started, description,
-    books(id, slug, title, description_book, description, description_ban, censorship_context, book_authors(authors(display_name))),
+    books(id, slug, title, description_book, description_ban, censorship_context, book_authors(authors(display_name))),
     ban_reason_links(reasons(id, slug))
   `
 
@@ -183,7 +183,7 @@ async function main() {
       const slugs = await classifyReasons(openai, {
         title: book.title,
         author,
-        bookDescription: book.description_book ?? book.description ?? '',
+        bookDescription: book.description_book ?? '',
         bookBanContext: book.description_ban ?? book.censorship_context ?? '',
         banDescription: ban.description ?? '',
         actionType: ban.action_type ?? '',

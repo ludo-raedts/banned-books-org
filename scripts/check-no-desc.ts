@@ -1,7 +1,7 @@
 import { adminClient } from '../src/lib/supabase'
 async function main() {
   const s = adminClient()
-  const { data: books } = await s.from('books').select('slug, title, description').is('description', null).order('title')
+  const { data: books } = await s.from('books').select('slug, title, description_book').is('description_book', null).order('title')
   // Look for well-known titles
   const wellKnown = [
     'alice', 'clockwork', 'wrinkle', 'passage', 'catch', 'mockingbird',
