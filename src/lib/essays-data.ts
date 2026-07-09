@@ -95,6 +95,15 @@ export const ESSAYS: Essay[] = [
     readingTimeMin: 12,
     relatedBookSlugs: ['slaughterhouse-five', 'gender-queer', 'all-boys-arent-blue', 'beloved', 'the-bluest-eye', 'looking-for-alaska'],
   },
+  {
+    slug: 'one-in-ten',
+    href: '/essays/one-in-ten',
+    title: 'One in ten: the disabled kids disappearing from the shelf',
+    dek: 'One in ten books pulled from US schools last year featured a character who is disabled or neurodivergent. Most were not banned for it — the disabled child was collateral in a ban aimed elsewhere. A few had nothing anyone could name. During Disability Pride Month, what goes missing either way.',
+    publishedAt: '2026-07-09',
+    readingTimeMin: 5,
+    relatedBookSlugs: ['a-boy-called-bat', 'out-of-my-mind', 'wonder', 'handle-with-care', 'everything-everything', 'to-kill-a-mockingbird', 'push', 'laughing-at-my-nightmare', 'one-for-all', 'the-invisible-life-of-ivan-isaenko'],
+  },
 ]
 
 export function publishedEssays(): Essay[] {
