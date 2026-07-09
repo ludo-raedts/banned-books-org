@@ -36,6 +36,7 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
     primary: { label: 'Methodology', href: '/methodology' },
     subs: [
       { label: 'essays', href: '/essays' },
+      { label: 'podcasts', href: '/podcasts' },
       { label: 'history', href: '/history' },
       { label: 'timeline', href: '/timeline' },
       { label: 'challenged books', href: '/challenged-books' },
