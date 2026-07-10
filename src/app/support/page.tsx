@@ -98,7 +98,11 @@ export default async function SupportPage() {
           <Link href="/dataset" className="text-oxblood hover:underline">
             free open dataset
           </Link>{' '}
-          in your own work.
+          in your own work. Or skip me entirely and support the{' '}
+          <Link href="/organizations" className="text-oxblood hover:underline">
+            organisations that actually fight book bans
+          </Link>
+          .
         </p>
       </SectionShell>
     </main>

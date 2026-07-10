@@ -1,0 +1,152 @@
+// Curated directory of organisations that defend the freedom to read —
+// rendered on /organizations. This is an editorial "who does the work, and
+// how to support them" list, deliberately distinct from /sources (which
+// documents where our *ban data* comes from). Some organisations appear on
+// both pages because they both publish censorship data AND campaign against
+// it; here we surface the advocacy/donate/join angle, not the data feed.
+//
+// Links are plain dofollow anchors on purpose: these are trusted, on-topic
+// non-profits, and linking to them is a genuine relevance signal — the
+// opposite of the affiliate links we nofollow. Homepage URLs only (they rot
+// far less often than deep links), each verified to resolve.
+
+export type Ally = {
+  name: string
+  url: string
+  // One sentence: what they do and, where relevant, how a reader can help.
+  blurb: string
+}
+
+export type AllyGroup = {
+  heading: string
+  blurb: string
+  allies: readonly Ally[]
+}
+
+export const ALLY_GROUPS: readonly AllyGroup[] = [
+  {
+    heading: 'United States',
+    blurb:
+      'Where most documented book challenges happen today, a dense network of library, writer, and legal groups fights removals school board by school board.',
+    allies: [
+      {
+        name: 'American Library Association — Office for Intellectual Freedom',
+        url: 'https://www.ala.org/bbooks',
+        blurb:
+          'The ALA tracks challenges nationwide, runs Banned Books Week, and supports the librarians on the receiving end of removal campaigns.',
+      },
+      {
+        name: 'Unite Against Book Bans',
+        url: 'https://uniteagainstbookbans.org',
+        blurb:
+          'The ALA’s public campaign, with practical toolkits for anyone who wants to defend a book at their own local library or school board.',
+      },
+      {
+        name: 'PEN America',
+        url: 'https://pen.org',
+        blurb:
+          'A writers’ organisation whose Index of School Book Bans is the most comprehensive count of US classroom removals; also campaigns for imprisoned writers worldwide.',
+      },
+      {
+        name: 'National Coalition Against Censorship',
+        url: 'https://ncac.org',
+        blurb:
+          'A coalition of more than fifty national groups that intervenes directly in local censorship disputes, from libraries to classrooms to art galleries.',
+      },
+      {
+        name: 'Freedom to Read Foundation',
+        url: 'https://www.ftrf.org',
+        blurb:
+          'The ALA’s legal-defence arm, funding First Amendment litigation and supporting librarians and readers sued or fired over book access.',
+      },
+      {
+        name: 'EveryLibrary',
+        url: 'https://www.everylibrary.org',
+        blurb:
+          'A political action committee for libraries — it fights book-ban legislation and helps communities win the funding votes that keep libraries open.',
+      },
+      {
+        name: 'Comic Book Legal Defense Fund',
+        url: 'https://cbldf.org',
+        blurb:
+          'Defends the freedom to read comics and graphic novels — among the most frequently challenged formats in US schools.',
+      },
+      {
+        name: 'Authors Guild',
+        url: 'https://authorsguild.org',
+        blurb:
+          'The largest US professional organisation for writers, advocating against book bans and for authors’ rights.',
+      },
+      {
+        name: 'FIRE — Foundation for Individual Rights and Expression',
+        url: 'https://www.thefire.org',
+        blurb:
+          'Litigates and campaigns for free expression in schools, universities, and public institutions across the political spectrum.',
+      },
+    ],
+  },
+  {
+    heading: 'International',
+    blurb:
+      'Beyond any single country, these groups document censorship, defend jailed and exiled writers, and press governments on the right to read and write freely.',
+    allies: [
+      {
+        name: 'Index on Censorship',
+        url: 'https://www.indexoncensorship.org',
+        blurb:
+          'A UK-based organisation that has reported on censorship worldwide since 1972 through its magazine, campaigns, and support for persecuted writers.',
+      },
+      {
+        name: 'PEN International',
+        url: 'https://www.pen-international.org',
+        blurb:
+          'A global association of writers whose Writers in Prison Committee campaigns for authors detained, exiled, or killed for their work.',
+      },
+      {
+        name: 'English PEN',
+        url: 'https://www.englishpen.org',
+        blurb:
+          'The founding PEN centre, defending freedom of expression and championing translated and at-risk literature.',
+      },
+      {
+        name: 'Article 19',
+        url: 'https://www.article19.org',
+        blurb:
+          'Named after the free-expression article of the Universal Declaration of Human Rights, it works globally for the right to speak, publish, and read.',
+      },
+      {
+        name: 'Amnesty International',
+        url: 'https://www.amnesty.org',
+        blurb:
+          'The global human-rights movement, campaigning for prisoners of conscience — including writers jailed for what they published.',
+      },
+      {
+        name: 'Human Rights Watch',
+        url: 'https://www.hrw.org',
+        blurb:
+          'Investigates and reports on censorship and other rights abuses, holding governments to account with rigorous documentation.',
+      },
+      {
+        name: 'Reporters Without Borders',
+        url: 'https://rsf.org',
+        blurb:
+          'Defends press freedom worldwide and tracks the imprisonment and killing of journalists and writers.',
+      },
+    ],
+  },
+  {
+    heading: 'Canada',
+    blurb:
+      'A long-running national effort keeps the freedom to read on the public agenda north of the border.',
+    allies: [
+      {
+        name: 'Freedom to Read (Book and Periodical Council)',
+        url: 'https://www.freedomtoread.ca',
+        blurb:
+          'Runs Canada’s annual Freedom to Read Week and publishes the country’s record of challenged books and periodicals.',
+      },
+    ],
+  },
+] as const
+
+export const ALLY_COUNT = ALLY_GROUPS.reduce((n, g) => n + g.allies.length, 0)

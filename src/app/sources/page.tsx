@@ -1264,6 +1264,10 @@ export default async function SourcesPage() {
           <p className="mt-3 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
             The list below shows every source family currently in use, the count of ban records attributed to it, and where the data comes from. The catalogue currently aggregates <strong>{totalBans.toLocaleString('en-US')}</strong> source citations across <strong>{counts.size}</strong> distinct source URLs.
           </p>
+          <p className="mt-3 max-w-[720px] text-sm md:text-base leading-relaxed text-gray-700">
+            Many of these are the free-expression organisations that fight censorship as well as document it. See the full directory of{' '}
+            <Link href="/organizations" className="text-brand hover:underline">organisations defending the freedom to read</Link>.
+          </p>
 
           <Link
             href="/dataset"
