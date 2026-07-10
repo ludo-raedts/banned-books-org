@@ -25,6 +25,43 @@ export type AllyGroup = {
 
 export const ALLY_GROUPS: readonly AllyGroup[] = [
   {
+    heading: 'International',
+    blurb:
+      'Beyond any single country, these groups document censorship, defend jailed and exiled writers, and press governments on the right to read and write freely.',
+    allies: [
+      {
+        name: 'PEN International',
+        url: 'https://www.pen-international.org',
+        blurb:
+          'A global association of writers whose Writers in Prison Committee campaigns for authors detained, exiled, or killed for their work.',
+      },
+      {
+        name: 'Article 19',
+        url: 'https://www.article19.org',
+        blurb:
+          'Named after the free-expression article of the Universal Declaration of Human Rights, it works globally for the right to speak, publish, and read.',
+      },
+      {
+        name: 'Amnesty International',
+        url: 'https://www.amnesty.org',
+        blurb:
+          'The global human-rights movement, campaigning for prisoners of conscience — including writers jailed for what they published.',
+      },
+      {
+        name: 'Human Rights Watch',
+        url: 'https://www.hrw.org',
+        blurb:
+          'Investigates and reports on censorship and other rights abuses, holding governments to account with rigorous documentation.',
+      },
+      {
+        name: 'Reporters Without Borders',
+        url: 'https://rsf.org',
+        blurb:
+          'Defends press freedom worldwide and tracks the imprisonment and killing of journalists and writers.',
+      },
+    ],
+  },
+  {
     heading: 'United States',
     blurb:
       'Where most documented book challenges happen today, a dense network of library, writer, and legal groups fights removals school board by school board.',
@@ -86,64 +123,46 @@ export const ALLY_GROUPS: readonly AllyGroup[] = [
     ],
   },
   {
-    heading: 'International',
+    heading: 'United Kingdom',
     blurb:
-      'Beyond any single country, these groups document censorship, defend jailed and exiled writers, and press governments on the right to read and write freely.',
+      'Britain’s PEN centre and its oldest censorship watchdog campaign for the freedom to read at home and for writers under threat abroad.',
     allies: [
-      {
-        name: 'Index on Censorship',
-        url: 'https://www.indexoncensorship.org',
-        blurb:
-          'A UK-based organisation that has reported on censorship worldwide since 1972 through its magazine, campaigns, and support for persecuted writers.',
-      },
-      {
-        name: 'PEN International',
-        url: 'https://www.pen-international.org',
-        blurb:
-          'A global association of writers whose Writers in Prison Committee campaigns for authors detained, exiled, or killed for their work.',
-      },
       {
         name: 'English PEN',
         url: 'https://www.englishpen.org',
         blurb:
-          'The founding PEN centre, defending freedom of expression and championing translated and at-risk literature.',
+          'The founding centre of the PEN network, defending freedom of expression in the UK and championing translated and at-risk literature.',
       },
       {
-        name: 'Article 19',
-        url: 'https://www.article19.org',
+        name: 'Index on Censorship',
+        url: 'https://www.indexoncensorship.org',
         blurb:
-          'Named after the free-expression article of the Universal Declaration of Human Rights, it works globally for the right to speak, publish, and read.',
-      },
-      {
-        name: 'Amnesty International',
-        url: 'https://www.amnesty.org',
-        blurb:
-          'The global human-rights movement, campaigning for prisoners of conscience — including writers jailed for what they published.',
-      },
-      {
-        name: 'Human Rights Watch',
-        url: 'https://www.hrw.org',
-        blurb:
-          'Investigates and reports on censorship and other rights abuses, holding governments to account with rigorous documentation.',
-      },
-      {
-        name: 'Reporters Without Borders',
-        url: 'https://rsf.org',
-        blurb:
-          'Defends press freedom worldwide and tracks the imprisonment and killing of journalists and writers.',
+          'A UK charity that has reported on censorship worldwide since 1972 through its magazine, campaigns, and support for persecuted writers.',
       },
     ],
   },
   {
     heading: 'Canada',
     blurb:
-      'A long-running national effort keeps the freedom to read on the public agenda north of the border.',
+      'Library associations and free-expression centres keep the freedom to read on the public agenda north of the border.',
     allies: [
       {
         name: 'Freedom to Read (Book and Periodical Council)',
         url: 'https://www.freedomtoread.ca',
         blurb:
           'Runs Canada’s annual Freedom to Read Week and publishes the country’s record of challenged books and periodicals.',
+      },
+      {
+        name: 'Canadian Federation of Library Associations',
+        url: 'https://cfla-fcab.ca',
+        blurb:
+          'The national voice of Canada’s libraries, whose Intellectual Freedom Committee defends open access to information against challenges.',
+      },
+      {
+        name: 'Centre for Free Expression',
+        url: 'https://cfe.torontomu.ca',
+        blurb:
+          'A research and advocacy hub at Toronto Metropolitan University that supports librarians and educators facing censorship pressure.',
       },
     ],
   },
