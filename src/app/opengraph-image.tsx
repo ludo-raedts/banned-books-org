@@ -9,7 +9,7 @@ export default function Image() {
     (
       <div
         style={{
-          background: '#080808',
+          background: '#FBF9F6',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -18,6 +18,9 @@ export default function Image() {
           justifyContent: 'center',
           padding: '120px 64px',
           fontFamily: 'Georgia, serif',
+          // Inset border so the light card keeps a defined edge on
+          // light-themed social timelines instead of bleeding into them.
+          border: '3px solid #5C1010',
         }}
       >
         <div
@@ -43,7 +46,7 @@ export default function Image() {
         <div
           style={{
             fontSize: 26,
-            color: '#F5E8E8',
+            color: '#4A2020',
             letterSpacing: 8,
             fontWeight: 400,
           }}
