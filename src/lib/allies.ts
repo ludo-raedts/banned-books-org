@@ -142,6 +142,31 @@ export const ALLY_GROUPS: readonly AllyGroup[] = [
     ],
   },
   {
+    heading: 'Continental Europe',
+    blurb:
+      'National PEN centres in Germany, France, and Belarus — three of the countries most heavily represented in this catalogue, spanning Nazi- and Soviet-era bans and Belarus’s present-day repression.',
+    allies: [
+      {
+        name: 'PEN Zentrum Deutschland',
+        url: 'https://www.pen-deutschland.de',
+        blurb:
+          'The German PEN centre, defending persecuted writers and running a long-standing Writers-in-Exile programme.',
+      },
+      {
+        name: 'PEN Club français',
+        url: 'https://penclub.fr',
+        blurb:
+          'The French PEN centre, campaigning for freedom of expression and for writers imprisoned around the world.',
+      },
+      {
+        name: 'PEN Belarus',
+        url: 'https://penbelarus.org',
+        blurb:
+          'The Belarusian PEN centre, liquidated by the regime and now working in exile, which documents cultural repression and catalogues books banned in Belarus.',
+      },
+    ],
+  },
+  {
     heading: 'Canada',
     blurb:
       'Library associations and free-expression centres keep the freedom to read on the public agenda north of the border.',
