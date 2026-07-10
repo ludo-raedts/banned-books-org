@@ -167,6 +167,37 @@ export const ALLY_GROUPS: readonly AllyGroup[] = [
     ],
   },
   {
+    heading: 'Asia-Pacific',
+    blurb:
+      'From Malaysia’s publication bans to post-National-Security-Law Hong Kong and mainland China, these groups — several working in exile — defend writers and the freedom to read across the region.',
+    allies: [
+      {
+        name: 'Centre for Independent Journalism (Malaysia)',
+        url: 'https://cijmalaysia.net',
+        blurb:
+          'A Malaysian non-profit promoting freedom of expression and media independence in a country with a long record of banning books and publications.',
+      },
+      {
+        name: 'Hong Kong Watch',
+        url: 'https://www.hongkongwatch.org',
+        blurb:
+          'Monitors and campaigns on the erosion of freedoms in Hong Kong, including the removal of books from public libraries since the National Security Law.',
+      },
+      {
+        name: 'Independent Chinese PEN Center',
+        url: 'https://www.chinesepen.org',
+        blurb:
+          'A PEN International centre for Chinese writers, many of them in exile, defending free expression and imprisoned authors — once led by the late Nobel laureate Liu Xiaobo.',
+      },
+      {
+        name: 'New Zealand Society of Authors (PEN NZ)',
+        url: 'https://authors.org.nz',
+        blurb:
+          'New Zealand’s PEN centre, representing authors and defending the freedom to write and read across Aotearoa.',
+      },
+    ],
+  },
+  {
     heading: 'Canada',
     blurb:
       'Library associations and free-expression centres keep the freedom to read on the public agenda north of the border.',
