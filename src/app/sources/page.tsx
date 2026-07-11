@@ -303,6 +303,20 @@ const CATEGORIES: readonly Category[] = [
         match: ['cdhe.colorado.gov'],
       },
       {
+        name: 'Utah State Board of Education — Sensitive Materials Removed Statewide',
+        url: 'https://usbe-my.sharepoint.com/:x:/g/personal/davina_sauthoff_schools_utah_gov/IQC62f_kkhOUTKg8QYRsa5glAf1N_fdVRalq8tPXL4FkQWY',
+        description:
+          'Utah\'s official statewide book-removal register. Under H.B. 29 (2024), once a title is removed for "objective sensitive material" by at least three school districts (or two districts and five charter schools) it must be removed from EVERY Utah public school. The spreadsheet lists each banned title with its author, the triggering districts, and the date the removal threshold was met — the cite-of-record for our Utah statewide bans.',
+        match: ['usbe-my.sharepoint.com'],
+      },
+      {
+        name: 'Utah H.B. 29 (2024) — Sensitive Materials in Schools',
+        url: 'https://le.utah.gov/~2024/bills/static/HB0029.html',
+        description:
+          'The Utah statute (codified at Utah Code §53G-10-103) that creates the statewide-removal mechanism above. Cited as the legal basis alongside the USBE register for each Utah statewide ban.',
+        match: ['le.utah.gov/~2024/bills/static/hb0029'],
+      },
+      {
         name: 'Singapore Ministry of Digital Development and Information (MDDI)',
         url: 'https://www.mddi.gov.sg',
         description:
