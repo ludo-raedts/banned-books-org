@@ -1146,6 +1146,15 @@ export default async function BookPage({
   const primaryAuthor = book.book_authors[0]?.authors
 
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
+  // Quiet buy-link in the hero (under the ISBN), for readers who don't scroll
+  // to the "Find this book" panel far below. Only shown when we have a real
+  // per-book deep link (never the storefront) and affiliates aren't editorially
+  // suppressed — mirrors the panel's own gate. Tracked as source 'book-hero'
+  // so its conversion can be compared against the bottom panel.
+  const showBookshopHeroLink =
+    getBookshopLinkType(bookshopHref) === 'deep' &&
+    book.warning_level !== 'context' &&
+    book.warning_level !== 'extended'
   // Product deep link when the Rakuten enrichment resolved one; search
   // fallback otherwise (title + author tokens on Kobo's own search).
   const koboHref =
@@ -1467,6 +1476,19 @@ export default async function BookPage({
             ))}
           {book.isbn13 && (
             <p className="text-xs text-gray-400">ISBN {book.isbn13}</p>
+          )}
+          {showBookshopHeroLink && (
+            <TrackedOutboundLink
+              eventName="Bookshop Click"
+              eventProperties={{ source: 'book-hero', bookSlug: slug, isbn13: book.isbn13 ?? null, linkType: 'deep' }}
+              href={bookshopHref}
+              target="_blank"
+              rel={BOOKSHOP_REL}
+              className="inline-flex items-center gap-1 self-start text-xs font-medium text-oxblood hover:underline"
+            >
+              Buy on Bookshop.org
+              <span aria-hidden="true">→</span>
+            </TrackedOutboundLink>
           )}
           {book.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
@@ -1892,9 +1914,9 @@ export default async function BookPage({
                   href={bookshopHref}
                   target="_blank"
                   rel={BOOKSHOP_REL}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-sm font-semibold text-white transition-colors shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-oxblood hover:bg-oxblood/90 text-sm font-semibold text-white transition-colors shadow-sm"
                 >
-                  Find on Bookshop.org
+                  Buy on Bookshop.org
                 </TrackedOutboundLink>
                 <TrackedOutboundLink
                   eventName="Kobo Click"
@@ -1904,7 +1926,7 @@ export default async function BookPage({
                   rel={KOBO_REL}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-amber-300 hover:border-amber-500 text-sm font-medium text-gray-700 transition-colors"
                 >
-                  Find on Kobo
+                  Buy the ebook on Kobo
                 </TrackedOutboundLink>
               </div>
               <p className="text-xs text-amber-800/70 text-center leading-relaxed">
