@@ -54,7 +54,6 @@ type BookRow = {
   slug: string
   first_published_year: number | null
   cover_url: string | null
-  description: string | null
   description_book: string | null
   description_ban: string | null
   description_source_type: string | null
@@ -67,8 +66,8 @@ type BookRow = {
 function bookGaps(b: BookRow): string[] {
   const gaps: string[] = []
   if (!b.cover_url) gaps.push('cover_url MISSING')
-  const desc = b.description_book ?? b.description
-  if (!desc) gaps.push('description MISSING (description + description_book both null)')
+  const desc = b.description_book
+  if (!desc) gaps.push('description MISSING (description_book null)')
   else if (desc.length < THIN_DESC_CHARS) gaps.push(`description THIN (${desc.length} chars)`)
   if (!b.description_ban) gaps.push('description_ban MISSING')
   else if (b.description_ban.length < THIN_DESC_CHARS) gaps.push(`description_ban THIN (${b.description_ban.length} chars)`)
@@ -118,7 +117,7 @@ async function main() {
     const { data, error } = await sb
       .from('books')
       .select(
-        'id, title, slug, first_published_year, cover_url, description, description_book, description_ban, ' +
+        'id, title, slug, first_published_year, cover_url, description_book, description_ban, ' +
           'description_source_type, genres, bookshop_isbn13, isbn13, ' +
           'book_authors(authors(id, slug, display_name, bio, bio_source_type, photo_url, wikidata_id, ' +
           'website_url, social_links, birth_year, birth_month, birth_day, links_checked_at, is_placeholder))',
