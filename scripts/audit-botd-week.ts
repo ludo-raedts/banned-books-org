@@ -23,7 +23,7 @@ import { adminClient } from '../src/lib/supabase'
 import { pickForDates, dayNumber } from '../src/lib/bluesky-post'
 import { intFlag } from './lib/cli'
 
-const DAYS = intFlag('--days', 8)
+const DAYS = intFlag('days', 8)
 
 // The importer's placeholder bio ("… Their work has been subject to censorship
 // or banning challenges.") and anything about this short is not a real bio.
