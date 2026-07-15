@@ -234,70 +234,87 @@ export default async function ManifestoLibraryPage() {
               {theme.blurb}
             </p>
 
-            <ul className="divide-y divide-neutral-200 bg-white border border-neutral-200 rounded-sm">
-              {group.map((entry) => {
-                const d = entry.slug ? details.get(entry.slug) : undefined
-                if (entry.slug && d) {
-                  return (
-                    <li key={entry.title}>
-                      <Link
-                        href={`/books/${entry.slug}`}
-                        className="group flex items-center gap-4 px-4 py-3 hover:bg-cream/50 transition-colors"
-                      >
-                        <div className="shrink-0 w-10 h-14 rounded overflow-hidden bg-neutral-100">
-                          {d.cover_url ? (
-                            <Image
-                              src={d.cover_url}
-                              alt={coverAlt(d.title, d.author, d.first_published_year)}
-                              width={40}
-                              height={56}
-                              className="w-full h-full object-cover"
-                              sizes="40px"
-                            />
-                          ) : (
-                            <BookCoverPlaceholder title={d.title} slug={entry.slug} className="h-full" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-serif text-base font-medium text-gray-900 leading-snug group-hover:text-oxblood transition-colors truncate">
-                            {entry.title}
-                          </p>
-                          <p className="text-xs text-neutral-600 truncate">{entry.author}</p>
-                        </div>
-                        {d.bans > 0 && (
-                          <div className="shrink-0 text-right">
-                            <span className="font-serif text-lg font-semibold tabular-nums text-oxblood">
-                              {d.bans}
-                            </span>
-                            <p className="text-[10px] uppercase tracking-wider text-neutral-500">
-                              {d.bans === 1 ? 'ban' : 'bans'}
-                            </p>
+            {(() => {
+              // What we hold, most-banned first — then the rest, collapsed.
+              const covered = group
+                .map((e) => ({ e, d: e.slug ? details.get(e.slug) : undefined }))
+                .filter((x): x is { e: typeof x.e; d: Detail } => !!x.d)
+                .sort((a, b) => b.d.bans - a.d.bans)
+              const gaps = group.filter((e) => !(e.slug && details.get(e.slug)))
+
+              return (
+                <>
+                  <ul className="divide-y divide-neutral-200 bg-white border border-neutral-200 rounded-sm">
+                    {covered.map(({ e: entry, d }) => (
+                      <li key={entry.title}>
+                        <Link
+                          href={`/books/${entry.slug}`}
+                          className="group flex items-center gap-4 px-4 py-3 hover:bg-cream/50 transition-colors"
+                        >
+                          <div className="shrink-0 w-10 h-14 rounded overflow-hidden bg-neutral-100">
+                            {d.cover_url ? (
+                              <Image
+                                src={d.cover_url}
+                                alt={coverAlt(d.title, d.author, d.first_published_year)}
+                                width={40}
+                                height={56}
+                                className="w-full h-full object-cover"
+                                sizes="40px"
+                              />
+                            ) : (
+                              <BookCoverPlaceholder title={d.title} slug={entry.slug!} className="h-full" />
+                            )}
                           </div>
-                        )}
-                      </Link>
-                    </li>
-                  )
-                }
-                // On the Manifesto list but not (yet) a documented ban in our database.
-                return (
-                  <li
-                    key={entry.title}
-                    className="flex items-center gap-4 px-4 py-3 opacity-70"
-                  >
-                    <div className="shrink-0 w-10 h-14 rounded bg-neutral-100 border border-dashed border-neutral-300" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-serif text-base font-medium text-neutral-700 leading-snug truncate">
-                        {entry.title}
-                      </p>
-                      <p className="text-xs text-neutral-500 truncate">{entry.author}</p>
-                    </div>
-                    <span className="shrink-0 text-[10px] uppercase tracking-wider text-neutral-400 text-right leading-tight max-w-[120px]">
-                      On the list · not yet documented here
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-serif text-base font-medium text-gray-900 leading-snug group-hover:text-oxblood transition-colors truncate">
+                              {entry.title}
+                            </p>
+                            <p className="text-xs text-neutral-600 truncate">{entry.author}</p>
+                          </div>
+                          {d.bans > 0 && (
+                            <div className="shrink-0 text-right">
+                              <span className="font-serif text-lg font-semibold tabular-nums text-oxblood">
+                                {d.bans}
+                              </span>
+                              <p className="text-[10px] uppercase tracking-wider text-neutral-500">
+                                {d.bans === 1 ? 'ban' : 'bans'}
+                              </p>
+                            </div>
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {gaps.length > 0 && (
+                    <details className="group mt-3 border border-neutral-200 rounded-sm bg-white">
+                      <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none select-none text-sm text-neutral-600 hover:text-oxblood transition-colors [&::-webkit-details-marker]:hidden">
+                        <span>
+                          <span className="font-medium text-neutral-700">Also on the Manifesto list</span>
+                          <span className="text-neutral-400">
+                            {' '}· {gaps.length} not yet documented in our catalogue
+                          </span>
+                        </span>
+                        <span
+                          aria-hidden
+                          className="shrink-0 text-neutral-400 text-xs transition-transform group-open:rotate-180"
+                        >
+                          ▾
+                        </span>
+                      </summary>
+                      <ul className="divide-y divide-neutral-100 border-t border-neutral-200">
+                        {gaps.map((entry) => (
+                          <li key={entry.title} className="flex items-baseline gap-2 px-4 py-2.5">
+                            <span className="font-serif text-sm text-neutral-700 truncate">{entry.title}</span>
+                            <span className="text-xs text-neutral-400 truncate">— {entry.author}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </>
+              )
+            })()}
           </SectionShell>
         )
       })}
