@@ -64,7 +64,7 @@ export default async function BlueskyAdminPage() {
   const todayPost = today ? buildPost(today) : null
   const upcoming = dates.slice(1).map((ymd, i) => {
     const b = books[i + 1] ?? null
-    return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, title: b.title, author: b.author, why: whyLine(b), birthday: b.birthday ?? null } : null }
+    return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, slug: b.slug, coverUrl: b.coverUrl, title: b.title, author: b.author, why: whyLine(b), birthday: b.birthday ?? null } : null }
   })
 
   const [recent, excluded] = await Promise.all([getRecentPosts(HANDLE, 20), listExcludedBooks()])

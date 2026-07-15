@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CalendarDays, X, RotateCcw } from 'lucide-react'
 
-export type UpcomingItem = { ymd: string; label: string; book: { id: number; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null } | null }
+export type UpcomingItem = { ymd: string; label: string; book: { id: number; slug: string; coverUrl: string | null; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null } | null }
 export type ExcludedItem = { id: number; title: string; author: string }
 
 export default function UpcomingManager({ upcoming, excluded }: { upcoming: UpcomingItem[]; excluded: ExcludedItem[] }) {
@@ -46,10 +46,22 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
               <span className="text-xs text-gray-400 w-20 shrink-0 pt-0.5 tabular-nums">{label}</span>
               {book ? (
                 <>
+                  <a
+                    href={`/admin/books/${book.slug}`}
+                    title="Open in book admin — edit cover, description, etc."
+                    className="shrink-0 block w-10 h-14 rounded overflow-hidden bg-gray-100 border border-gray-200 hover:border-brand"
+                  >
+                    {book.coverUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={book.coverUrl} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="flex items-center justify-center w-full h-full text-[9px] text-gray-400 text-center leading-tight px-0.5">no cover</span>
+                    )}
+                  </a>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-800">
                       {book.birthday && <span title={`${book.birthday.name} was born on this day${book.birthday.bornYear ? ` in ${book.birthday.bornYear}` : ''}`}>🎂 </span>}
-                      {book.title} <span className="font-normal text-gray-500">— {book.author}</span>
+                      <a href={`/admin/books/${book.slug}`} className="hover:text-brand hover:underline">{book.title}</a> <span className="font-normal text-gray-500">— {book.author}</span>
                     </p>
                     {book.birthday && <p className="text-[11px] text-amber-700">🎂 {book.birthday.name}&apos;s birthday{book.birthday.bornYear ? ` (b. ${book.birthday.bornYear})` : ''}</p>}
                     <p className="text-xs text-gray-500">{book.why}</p>
