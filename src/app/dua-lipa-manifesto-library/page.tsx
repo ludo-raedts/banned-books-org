@@ -9,6 +9,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import { SITE_URL } from '@/lib/canonical-host'
 import {
   MANIFESTO_LIBRARY,
   MANIFESTO_THEMES,
@@ -16,6 +17,33 @@ import {
 } from '@/lib/manifesto-library'
 
 const LINKED = MANIFESTO_LIBRARY.filter((e) => e.slug).length
+
+// CollectionPage + ItemList structured data: names every one of the 100 books
+// (with an author and, where we hold it, a canonical URL) so search engines and
+// AI crawlers can read the full curated list, not just the prose.
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: "Dua Lipa's Manifesto Library",
+  description:
+    "The 100 banned, censored and contested books Dua Lipa curated for the Manifesto Library at Livraria Lello, Porto.",
+  url: `${SITE_URL}/dua-lipa-manifesto-library`,
+  isPartOf: { '@type': 'WebSite', name: 'Banned Books', url: SITE_URL },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: MANIFESTO_LIBRARY.length,
+    itemListElement: MANIFESTO_LIBRARY.map((e, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Book',
+        name: e.title,
+        author: { '@type': 'Person', name: e.author },
+        ...(e.slug ? { url: `${SITE_URL}/books/${e.slug}` } : {}),
+      },
+    })),
+  },
+}
 
 export const metadata: Metadata = {
   title: "Dua Lipa's Manifesto Library — 100 Banned & Censored Books",
@@ -100,6 +128,11 @@ export default async function ManifestoLibraryPage() {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
+
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-5xl mx-auto">
@@ -110,56 +143,47 @@ export default async function ManifestoLibraryPage() {
             ← All books
           </Link>
 
-          <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-10 items-start">
-            <div>
-              <Eyebrow>Curated collection · Service95 × Livraria Lello</Eyebrow>
+          <div className="max-w-[720px]">
+            <Eyebrow>Curated collection · Service95 × Livraria Lello</Eyebrow>
 
-              <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900 max-w-[820px]">
-                Dua Lipa&apos;s Manifesto Library.
-              </h1>
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+              Dua Lipa&apos;s Manifesto Library.
+            </h1>
 
-              <p className="mt-6 max-w-[680px] text-sm md:text-base leading-relaxed text-gray-700">
-                In June 2026 the singer opened the Manifesto Library — a permanent home for
-                100 banned, censored and contested books — inside Livraria Lello in Porto,
-                an extension of the Service95 Book Club she founded in 2021. The shelves are
-                organised around four themes: <strong>Power</strong>, <strong>Control</strong>,{' '}
-                <strong>Voice</strong> and <strong>Memory</strong>. Below is the complete list,
-                with the censorship record behind each title we hold — {LINKED} of the 100 are
-                already in our catalogue.
-              </p>
+            <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
+              In June 2026 the singer opened the Manifesto Library — a permanent home for
+              100 banned, censored and contested books — inside Livraria Lello in Porto,
+              an extension of the Service95 Book Club she founded in 2021. The shelves are
+              organised around four themes: <strong>Power</strong>, <strong>Control</strong>,{' '}
+              <strong>Voice</strong> and <strong>Memory</strong>. Below is the complete list,
+              with the censorship record behind each title we hold — {LINKED} of the 100 are
+              already in our catalogue.
+            </p>
 
-              <blockquote className="mt-6 max-w-[680px] border-l-2 border-oxblood/40 pl-4 font-serif text-lg md:text-xl italic leading-snug text-gray-800">
-                “A sanctuary for books that have disappeared, for authors whose courage exposes
-                the structures of power and control, and for readers who refuse to be told which
-                books they are allowed to read.”
-                <cite className="mt-2 block not-italic text-xs uppercase tracking-wider text-neutral-500">
-                  — Dua Lipa, on the Manifesto Library
-                </cite>
-              </blockquote>
-            </div>
-
-            <figure className="hidden md:block w-[220px] shrink-0">
-              <Image
-                src="/dua-lipa-manifesto.jpg"
-                alt="Dua Lipa, who curated the Manifesto Library of banned books"
-                width={220}
-                height={297}
-                className="rounded-sm object-cover w-full h-auto shadow-sm"
-                priority
-              />
-              <figcaption className="mt-2 text-[10px] leading-tight text-neutral-400">
-                Harald Krichel,{' '}
-                <a
-                  href="https://creativecommons.org/licenses/by-sa/4.0"
-                  className="underline hover:text-oxblood"
-                  rel="nofollow noopener"
-                >
-                  CC BY-SA 4.0
-                </a>
-                , via Wikimedia Commons
-              </figcaption>
-            </figure>
+            <blockquote className="mt-6 border-l-2 border-oxblood/40 pl-4 font-serif text-lg md:text-xl italic leading-snug text-gray-800">
+              “A sanctuary for books that have disappeared, for authors whose courage exposes
+              the structures of power and control, and for readers who refuse to be told which
+              books they are allowed to read.”
+              <cite className="mt-2 block not-italic text-xs uppercase tracking-wider text-neutral-500">
+                — Dua Lipa, on the Manifesto Library
+              </cite>
+            </blockquote>
           </div>
+
+          <figure className="mt-8 max-w-2xl">
+            <Image
+              src="/dua-lipa-manifesto.jpg"
+              alt="Dua Lipa performing at Eurosonic Noorderslag, Groningen, January 2016"
+              width={1600}
+              height={1200}
+              className="rounded-sm w-full h-auto shadow-sm"
+              sizes="(max-width: 768px) 100vw, 672px"
+              priority
+            />
+            <figcaption className="mt-2 text-[11px] leading-tight text-neutral-400">
+              Dua Lipa performing at Eurosonic Noorderslag, Vera, Groningen — January 2016.
+            </figcaption>
+          </figure>
 
           <nav aria-label="Jump to theme" className="mt-8 flex flex-wrap gap-2">
             {MANIFESTO_THEMES.map((t) => {
