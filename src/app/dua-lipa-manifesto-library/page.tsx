@@ -201,17 +201,24 @@ export default async function ManifestoLibraryPage() {
             })}
           </nav>
 
-          <p className="mt-5 text-xs text-neutral-500">
-            Read Dua Lipa&apos;s own announcement at{' '}
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm">
             <a
               href="https://www.service95.com/manifesto-library-launch"
+              target="_blank"
+              rel="noopener"
               className="text-oxblood hover:underline"
-              rel="nofollow noopener"
             >
-              Service95
+              The Manifesto Library on Service95 <span aria-hidden>↗</span>
             </a>
-            .
-          </p>
+            <a
+              href="https://www.livrarialello.pt"
+              target="_blank"
+              rel="noopener"
+              className="text-oxblood hover:underline"
+            >
+              Visit Livraria Lello, Porto <span aria-hidden>↗</span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -269,7 +276,12 @@ export default async function ManifestoLibraryPage() {
                             <p className="font-serif text-base font-medium text-gray-900 leading-snug group-hover:text-oxblood transition-colors truncate">
                               {entry.title}
                             </p>
-                            <p className="text-xs text-neutral-600 truncate">{entry.author}</p>
+                            <p className="text-xs text-neutral-600 truncate">
+                              {entry.author}
+                              {d.first_published_year && (
+                                <span className="text-neutral-400"> · {d.first_published_year}</span>
+                              )}
+                            </p>
                           </div>
                           {d.bans > 0 && (
                             <div className="shrink-0 text-right">
