@@ -1,0 +1,23 @@
+{
+  "_note": "Books from Dua Lipa's Manifesto Library (Livraria Lello, Porto / Service95) that were missing from our catalog AND have a citable, documented book ban. Only The Vegetarian cleared the reliability bar (Korea Herald / Korea Times / SCMP, Gyeonggi Province 2024). The Crucible, There There, Pachinko et al. are on the Manifesto list but had no citable book-ban record (not in PEN America's school-ban index) and stay list-only on the hub. Imported via scripts/import-nipissing-challenges.ts --input=.",
+  "entries": [
+    {
+      "title": "The Vegetarian",
+      "author": "Han Kang",
+      "country_code": "KR",
+      "scope": "school",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Gyeonggi Province",
+      "institution": "Gyeonggi Province school libraries",
+      "year_started": 2024,
+      "year_ended": null,
+      "reason_slugs": ["sexual"],
+      "description": "In 2024, schools across Gyeonggi Province, South Korea discarded thousands of books flagged for sexual content — including Han Kang's The Vegetarian — after conservative parents' groups petitioned the provincial education office. A national parents' association separately demanded that the Nobel laureate's novel be reclassified as 'harmful media' unsuitable for minors.",
+      "source_name": "The Korea Herald",
+      "source_type": "news",
+      "source_url": "https://www.koreaherald.com/article/3829056",
+      "confidence": "reported"
+    }
+  ]
+}

@@ -134,6 +134,7 @@ export default function RootLayout({
                   <li><Link href="/banned-childrens-books" className="hover:text-gray-800 transition-colors">Children&rsquo;s books</Link></li>
                   <li><Link href="/non-english-banned-books" className="hover:text-gray-800 transition-colors">Non-English books</Link></li>
                   <li><Link href="/award-winning-banned-books" className="hover:text-gray-800 transition-colors">Award winners</Link></li>
+                  <li><Link href="/dua-lipa-manifesto-library" className="hover:text-gray-800 transition-colors">Dua Lipa&rsquo;s Manifesto Library</Link></li>
                   <li><Link href="/banned-books-week" className="hover:text-gray-800 transition-colors">Banned Books Week</Link></li>
                   <li><Link href="/banned-books" className="hover:text-gray-800 transition-colors">By year</Link></li>
                 </ul>

@@ -1,0 +1,602 @@
+[
+  {
+    "theme": "Power",
+    "title": "A Case of Exploding Mangoes",
+    "author": "Mohammed Hanif",
+    "slug": "a-case-of-exploding-mangoes"
+  },
+  {
+    "theme": "Power",
+    "title": "A Dictator Calls",
+    "author": "Ismail Kadare",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "A History of Reading",
+    "author": "Alberto Manguel",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Felon",
+    "author": "Reginald Dwayne Betts",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Free",
+    "author": "Lea Ypi",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Glory",
+    "author": "NoViolet Bulawayo",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "In Cold Blood",
+    "author": "Truman Capote",
+    "slug": "in-cold-blood"
+  },
+  {
+    "theme": "Power",
+    "title": "Jerusalem",
+    "author": "Gonçalo M. Tavares",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Kleptopia",
+    "author": "Tom Burgis",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Lula Dean's Little Library of Banned Books",
+    "author": "Kirsten Miller",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Men Who Hate Women",
+    "author": "Laura Bates",
+    "slug": "men-who-hate-women"
+  },
+  {
+    "theme": "Power",
+    "title": "Nineteen Eighty-Four",
+    "author": "George Orwell",
+    "slug": "1984"
+  },
+  {
+    "theme": "Power",
+    "title": "One Day, Everyone Will Have Always Been Against This",
+    "author": "Omar El Akkad",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "Putin's Russia",
+    "author": "Anna Politkovskaya",
+    "slug": "putins-russia"
+  },
+  {
+    "theme": "Power",
+    "title": "The Crucible",
+    "author": "Arthur Miller",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "The Feast of the Goat",
+    "author": "Mario Vargas Llosa",
+    "slug": null
+  },
+  {
+    "theme": "Power",
+    "title": "The Grapes of Wrath",
+    "author": "John Steinbeck",
+    "slug": "the-grapes-of-wrath"
+  },
+  {
+    "theme": "Power",
+    "title": "The Second Sex",
+    "author": "Simone de Beauvoir",
+    "slug": "the-second-sex"
+  },
+  {
+    "theme": "Power",
+    "title": "Unfree Speech",
+    "author": "Joshua Wong",
+    "slug": "unfree-speech"
+  },
+  {
+    "theme": "Control",
+    "title": "A Clockwork Orange",
+    "author": "Anthony Burgess",
+    "slug": "a-clockwork-orange"
+  },
+  {
+    "theme": "Control",
+    "title": "Ai Weiwei on Censorship",
+    "author": "Ai Weiwei",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "Animal Farm",
+    "author": "George Orwell",
+    "slug": "animal-farm"
+  },
+  {
+    "theme": "Control",
+    "title": "Blindness",
+    "author": "José Saramago",
+    "slug": "blindness"
+  },
+  {
+    "theme": "Control",
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "slug": "brave-new-world"
+  },
+  {
+    "theme": "Control",
+    "title": "Careless People",
+    "author": "Sarah Wynn-Williams",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "Fahrenheit 451",
+    "author": "Ray Bradbury",
+    "slug": "fahrenheit-451"
+  },
+  {
+    "theme": "Control",
+    "title": "Naked Lunch",
+    "author": "William S. Burroughs",
+    "slug": "naked-lunch"
+  },
+  {
+    "theme": "Control",
+    "title": "One Flew Over the Cuckoo's Nest",
+    "author": "Ken Kesey",
+    "slug": "one-flew-over-the-cuckoos-nest"
+  },
+  {
+    "theme": "Control",
+    "title": "The Accusation",
+    "author": "Bandi",
+    "slug": "the-accusation"
+  },
+  {
+    "theme": "Control",
+    "title": "The Burnout Society",
+    "author": "Byung-Chul Han",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "The Handmaid's Tale",
+    "author": "Margaret Atwood",
+    "slug": "the-handmaids-tale"
+  },
+  {
+    "theme": "Control",
+    "title": "The Hunger Games",
+    "author": "Suzanne Collins",
+    "slug": "the-hunger-games"
+  },
+  {
+    "theme": "Control",
+    "title": "The Melancholy of Resistance",
+    "author": "László Krasznahorkai",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "The Memory Police",
+    "author": "Yoko Ogawa",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "The Noise of Time",
+    "author": "Julian Barnes",
+    "slug": null
+  },
+  {
+    "theme": "Control",
+    "title": "The Trial",
+    "author": "Franz Kafka",
+    "slug": "the-trial"
+  },
+  {
+    "theme": "Voice",
+    "title": "A Thousand Splendid Suns",
+    "author": "Khaled Hosseini",
+    "slug": "a-thousand-splendid-suns"
+  },
+  {
+    "theme": "Voice",
+    "title": "Another Country",
+    "author": "James Baldwin",
+    "slug": "another-country"
+  },
+  {
+    "theme": "Voice",
+    "title": "Are You There God? It's Me, Margaret",
+    "author": "Judy Blume",
+    "slug": "are-you-there-god-its-me-margaret"
+  },
+  {
+    "theme": "Voice",
+    "title": "Born A Crime",
+    "author": "Trevor Noah",
+    "slug": "born-a-crime"
+  },
+  {
+    "theme": "Voice",
+    "title": "Decolonising the Mind",
+    "author": "Ngugi wa Thiongo",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Erasure",
+    "author": "Percival Everett",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Gender Queer",
+    "author": "Maia Kobabe",
+    "slug": "gender-queer"
+  },
+  {
+    "theme": "Voice",
+    "title": "Girl, Woman, Other",
+    "author": "Bernardine Evaristo",
+    "slug": "girl-woman-other"
+  },
+  {
+    "theme": "Voice",
+    "title": "Hard Like Water",
+    "author": "Yan Lianke",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Heartstopper",
+    "author": "Alice Oseman",
+    "slug": "heartstopper"
+  },
+  {
+    "theme": "Voice",
+    "title": "I Know Why The Caged Bird Sings",
+    "author": "Maya Angelou",
+    "slug": "i-know-why-the-caged-bird-sings"
+  },
+  {
+    "theme": "Voice",
+    "title": "Invisible Man",
+    "author": "Ralph Ellison",
+    "slug": "invisible-man-ellison"
+  },
+  {
+    "theme": "Voice",
+    "title": "Milk and Honey",
+    "author": "Rupi Kaur",
+    "slug": "milk-and-honey"
+  },
+  {
+    "theme": "Voice",
+    "title": "My Friends",
+    "author": "Hisham Matar",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "My Pen Is The Wing Of A Bird",
+    "author": "Afghan Women",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Nineteen Minutes",
+    "author": "Jodi Picoult",
+    "slug": "nineteen-minutes"
+  },
+  {
+    "theme": "Voice",
+    "title": "Olhos d'Água",
+    "author": "Conceição Evaristo",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "On Earth We're Briefly Gorgeous",
+    "author": "Ocean Vuong",
+    "slug": "on-earth-were-briefly-gorgeous"
+  },
+  {
+    "theme": "Voice",
+    "title": "Stamped",
+    "author": "Jason Reynolds",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Swimming in the Dark",
+    "author": "Tomasz Jędrowski",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "That Hair",
+    "author": "Djaimilia Pereira de Almeida",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "The Absolutely True Diary of a Part-Time Indian",
+    "author": "Sherman Alexie",
+    "slug": "the-absolutely-true-diary-of-a-part-time-indian"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Adventures of Huckleberry Finn",
+    "author": "Mark Twain",
+    "slug": "the-adventures-of-huckleberry-finn"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Catcher in the Rye",
+    "author": "J. D. Salinger",
+    "slug": "the-catcher-in-the-rye"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Color Purple",
+    "author": "Alice Walker",
+    "slug": "the-color-purple"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Dark Side of Skin",
+    "author": "Jeferson Tenório",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "The God of Small Things",
+    "author": "Arundhati Roy",
+    "slug": "the-god-of-small-things"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Hate U Give",
+    "author": "Angie Thomas",
+    "slug": "the-hate-u-give"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Metamorphosis",
+    "author": "Franz Kafka",
+    "slug": "the-metamorphosis"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Satanic Verses",
+    "author": "Salman Rushdie",
+    "slug": "the-satanic-verses"
+  },
+  {
+    "theme": "Voice",
+    "title": "The Three Marias",
+    "author": "Maria Isabel Barreno",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "The Vegetarian",
+    "author": "Han Kang",
+    "slug": "the-vegetarian"
+  },
+  {
+    "theme": "Voice",
+    "title": "Their Eyes Were Watching God",
+    "author": "Zora Neale Hurston",
+    "slug": "their-eyes-were-watching-god"
+  },
+  {
+    "theme": "Voice",
+    "title": "There There",
+    "author": "Tommy Orange",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "Things Fall Apart",
+    "author": "Chinua Achebe",
+    "slug": "things-fall-apart"
+  },
+  {
+    "theme": "Voice",
+    "title": "This Book Is Gay",
+    "author": "Juno Dawson",
+    "slug": "this-book-is-gay"
+  },
+  {
+    "theme": "Voice",
+    "title": "To Kill A Mockingbird",
+    "author": "Harper Lee",
+    "slug": "to-kill-a-mockingbird"
+  },
+  {
+    "theme": "Voice",
+    "title": "We Are Displaced",
+    "author": "Malala Yousafzai",
+    "slug": null
+  },
+  {
+    "theme": "Voice",
+    "title": "We Are Not Numbers",
+    "author": "Ahmed Alnaouq",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "Beloved",
+    "author": "Toni Morrison",
+    "slug": "beloved"
+  },
+  {
+    "theme": "Memory",
+    "title": "Half of a Yellow Sun",
+    "author": "Chimamanda Ngozi Adichie",
+    "slug": "half-of-a-yellow-sun"
+  },
+  {
+    "theme": "Memory",
+    "title": "Istanbul: Memories and the City",
+    "author": "Orhan Pamuk",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "Looking at Women Looking at War",
+    "author": "Victoria Amelina",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "Maus",
+    "author": "Art Spiegelman",
+    "slug": "maus"
+  },
+  {
+    "theme": "Memory",
+    "title": "Oblivion: A Memoir",
+    "author": "Héctor Abad Faciolince",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "One Hundred Years of Solitude",
+    "author": "Gabriel García Márquez",
+    "slug": "one-hundred-years-of-solitude"
+  },
+  {
+    "theme": "Memory",
+    "title": "Pachinko",
+    "author": "Min Jin Lee",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "Patriot",
+    "author": "Alexei Navalny",
+    "slug": "patriot-navalny"
+  },
+  {
+    "theme": "Memory",
+    "title": "Persepolis",
+    "author": "Marjane Satrapi",
+    "slug": "persepolis"
+  },
+  {
+    "theme": "Memory",
+    "title": "Soldiers of Salamis",
+    "author": "Javier Cercas",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Bastard of Istanbul",
+    "author": "Elif Shafak",
+    "slug": "the-bastard-of-istanbul"
+  },
+  {
+    "theme": "Memory",
+    "title": "The Book Thief",
+    "author": "Markus Zusak",
+    "slug": "the-book-thief"
+  },
+  {
+    "theme": "Memory",
+    "title": "The Books of Jacob",
+    "author": "Olga Tokarczuk",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Diary of a Young Girl",
+    "author": "Anne Frank",
+    "slug": "the-diary-of-a-young-girl"
+  },
+  {
+    "theme": "Memory",
+    "title": "The House of the Spirits",
+    "author": "Isabel Allende",
+    "slug": "the-house-of-the-spirits"
+  },
+  {
+    "theme": "Memory",
+    "title": "The Kite Runner",
+    "author": "Khaled Hosseini",
+    "slug": "the-kite-runner"
+  },
+  {
+    "theme": "Memory",
+    "title": "The Last Kabbalist of Lisbon",
+    "author": "Richard Zimler",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Machine to Make Spaniards",
+    "author": "Valter Hugo Mãe",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Most Secret Memory of Men",
+    "author": "Mohamed Mbougar Sarr",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Murmuring Coast",
+    "author": "Lídia Jorge",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Return",
+    "author": "Dulce Maria Cardoso",
+    "slug": null
+  },
+  {
+    "theme": "Memory",
+    "title": "The Sympathizer",
+    "author": "Viet Thanh Nguyen",
+    "slug": "the-sympathizer"
+  },
+  {
+    "theme": "Memory",
+    "title": "The Unbearable Lightness of Being",
+    "author": "Milan Kundera",
+    "slug": "the-unbearable-lightness-of-being"
+  },
+  {
+    "theme": "Memory",
+    "title": "Wild Swans",
+    "author": "Jung Chang",
+    "slug": "wild-swans"
+  }
+]
