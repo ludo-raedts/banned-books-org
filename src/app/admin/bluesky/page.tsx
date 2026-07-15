@@ -1,6 +1,9 @@
 import AdminBackLink from '@/components/admin-back-link'
 import { pickForDates, buildPost, listExcludedBooks, type DailyBook } from '@/lib/bluesky-post'
 import { getRecentPosts } from '@/lib/bluesky'
+import { adminClient } from '@/lib/supabase'
+import { bookGaps, authorGaps, BOOK_HEALTH_SELECT, type BookHealthRow } from '@/lib/botd-health'
+import type { BookHealth } from './upcoming-manager'
 import UpcomingManager from './upcoming-manager'
 import { Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircle, Megaphone, Rss, Share2, Code2, Image as ImageIcon } from 'lucide-react'
 
@@ -11,7 +14,7 @@ const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-wh
 
 const HANDLE = process.env.BLUESKY_HANDLE ?? 'banned-books.org'
 const PROFILE_URL = `https://bsky.app/profile/${HANDLE}`
-const UPCOMING_DAYS = 7
+const UPCOMING_DAYS = 14
 
 const SITE = 'https://www.banned-books.org'
 // The one daily pick fans out to every channel below. Bluesky is posted natively
@@ -62,9 +65,25 @@ export default async function BlueskyAdminPage() {
   }
   const today = books[0]
   const todayPost = today ? buildPost(today) : null
+
+  // Live data-health for the upcoming picks, computed from the SAME gap checks
+  // the weekly pre-flight (audit-botd-week.ts) uses. No "checked" flag is stored;
+  // a "ready" badge simply means there is nothing left for the pre-flight to fix.
+  const upcomingIds = [...new Set(dates.slice(1).map((_, i) => books[i + 1]?.id).filter((id): id is number => id != null))]
+  const health = new Map<number, BookHealth>()
+  if (upcomingIds.length) {
+    const { data } = await adminClient().from('books').select(BOOK_HEALTH_SELECT).in('id', upcomingIds)
+    for (const row of (data ?? []) as unknown as BookHealthRow[]) {
+      const authors = (row.book_authors ?? []).map(ba => ba.authors).filter((a): a is NonNullable<typeof a> => !!a)
+      const bGaps = bookGaps(row)
+      const aGaps = authors.map(a => ({ name: a.display_name, slug: a.slug, gaps: authorGaps(a) }))
+      health.set(row.id, { total: bGaps.length + aGaps.reduce((n, x) => n + x.gaps.length, 0), book: bGaps, authors: aGaps })
+    }
+  }
+
   const upcoming = dates.slice(1).map((ymd, i) => {
     const b = books[i + 1] ?? null
-    return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, slug: b.slug, coverUrl: b.coverUrl, title: b.title, author: b.author, why: whyLine(b), birthday: b.birthday ?? null } : null }
+    return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, slug: b.slug, coverUrl: b.coverUrl, title: b.title, author: b.author, why: whyLine(b), birthday: b.birthday ?? null, health: health.get(b.id) ?? null } : null }
   })
 
   const [recent, excluded] = await Promise.all([getRecentPosts(HANDLE, 20), listExcludedBooks()])

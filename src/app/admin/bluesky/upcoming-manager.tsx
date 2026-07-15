@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { CalendarDays, X, RotateCcw } from 'lucide-react'
+import { CalendarDays, X, RotateCcw, CheckCircle2, AlertTriangle } from 'lucide-react'
 
-export type UpcomingItem = { ymd: string; label: string; book: { id: number; slug: string; coverUrl: string | null; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null } | null }
+export type BookHealth = { total: number; book: string[]; authors: { name: string; slug: string; gaps: string[] }[] }
+export type UpcomingItem = { ymd: string; label: string; book: { id: number; slug: string; coverUrl: string | null; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null; health?: BookHealth | null } | null }
 export type ExcludedItem = { id: number; title: string; author: string }
 
 export default function UpcomingManager({ upcoming, excluded }: { upcoming: UpcomingItem[]; excluded: ExcludedItem[] }) {
@@ -65,6 +66,7 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
                     </p>
                     {book.birthday && <p className="text-[11px] text-amber-700">🎂 {book.birthday.name}&apos;s birthday{book.birthday.bornYear ? ` (b. ${book.birthday.bornYear})` : ''}</p>}
                     <p className="text-xs text-gray-500">{book.why}</p>
+                    <Health slug={book.slug} health={book.health ?? null} />
                   </div>
                   <button
                     onClick={() => mutate('POST', book.id)}
@@ -83,6 +85,11 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
         </ul>
         <p className="text-[11px] text-gray-400">Each date is pinned (frozen) once chosen, so editing book data no longer reshuffles the queue. Skipping a book only re-rolls its own day; the rest stay put.</p>
       </div>
+
+      {/* ── Data-health note ───────────────────────────────────── */}
+      <p className="text-[11px] text-gray-400 -mt-2">
+        Data health is computed live from the same checks the weekly pre-flight runs — a <span className="text-emerald-700 font-medium">Data ready</span> row has no gaps left for the pre-flight to fix.
+      </p>
 
       {/* ── Excluded books ─────────────────────────────────────── */}
       {excluded.length > 0 && (
@@ -112,5 +119,42 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
         </div>
       )}
     </>
+  )
+}
+
+/** Live data-health badge for one upcoming pick. Green when the book + its
+ *  author(s) have zero gaps (i.e. nothing left for the weekly pre-flight);
+ *  otherwise amber, listing the specific gaps so they can be fixed in place. */
+function Health({ slug, health }: { slug: string; health: BookHealth | null }) {
+  if (!health) return null
+
+  if (health.total === 0) {
+    return (
+      <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-emerald-700 font-medium">
+        <CheckCircle2 className="w-3.5 h-3.5" /> Data ready
+      </p>
+    )
+  }
+
+  return (
+    <div className="mt-1 flex flex-col gap-0.5">
+      <p className="inline-flex items-center gap-1 text-[11px] text-amber-700 font-medium">
+        <AlertTriangle className="w-3.5 h-3.5" /> {health.total} data {health.total === 1 ? 'gap' : 'gaps'}
+      </p>
+      <ul className="text-[11px] text-gray-500 leading-snug list-none pl-0">
+        {health.book.length > 0 && (
+          <li>
+            <a href={`/admin/books/${slug}`} className="hover:text-brand hover:underline">Book</a>: {health.book.join(' · ')}
+          </li>
+        )}
+        {health.authors
+          .filter(a => a.gaps.length > 0)
+          .map(a => (
+            <li key={a.slug}>
+              <a href={`/admin/authors/${a.slug}`} className="hover:text-brand hover:underline">{a.name}</a>: {a.gaps.join(' · ')}
+            </li>
+          ))}
+      </ul>
+    </div>
   )
 }
