@@ -15,6 +15,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'the-librarians',
+    href: '/essays/the-librarians',
+    title: 'Nobody arrested a librarian',
+    dek: 'A viral clip about Kim A. Snyder’s documentary The Librarians says librarians are being arrested for defending books. That specific claim is wrong — and what is actually happening to them is harder to wave away. On the film, the cartoon mouse with no clothes, and why precision is the censor’s enemy.',
+    publishedAt: '2026-07-16',
+    readingTimeMin: 7,
+    relatedBookSlugs: ['maus', 'gender-queer', 'all-boys-arent-blue', 'the-bluest-eye', 'looking-for-alaska', 'the-diary-of-a-young-girl'],
+  },
+  {
     slug: 'who-hates-beetles',
     href: '/essays/who-hates-beetles',
     title: 'Who hates beetles?',
