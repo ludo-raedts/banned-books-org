@@ -193,21 +193,26 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/about.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/history.md`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/why-not-amazon.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/in-whose-name.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/what-we-document.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/forbidden-knowledge-iceberg.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/the-grey-zone.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/first-amendment-paradox.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/essays/the-line-we-pretend-not-to-draw.md`, changefreq: 'monthly', priority: 0.5 },
   ]
 
   // Essay routes are derived from the registry so /essays index, sitemap, and
-  // the "More essays" footer can never drift apart.
-  const ESSAY_ENTRIES: SitemapEntry[] = publishedEssays().map(e => ({
-    loc: `${base}${e.href}`,
-    changefreq: 'monthly',
-    priority: e.slug === 'history' ? 0.8 : 0.5,
-  }))
+  // the "More essays" footer can never drift apart. Each essay under /essays/*
+  // ships a `.md` twin (clean markdown for LLM/crawler surfaces) via its
+  // <slug>.md/route.ts — emit that alongside the HTML page so the two never
+  // drift. The flat-href essays (/history, /why-not-amazon) list their .md
+  // twins in STATIC_ENTRIES above.
+  const ESSAY_ENTRIES: SitemapEntry[] = publishedEssays().flatMap(e => {
+    const html: SitemapEntry = {
+      loc: `${base}${e.href}`,
+      changefreq: 'monthly',
+      priority: e.slug === 'history' ? 0.8 : 0.5,
+    }
+    if (!e.href.startsWith('/essays/')) return [html]
+    return [
+      html,
+      { loc: `${base}${e.href}.md`, changefreq: 'monthly', priority: 0.5 },
+    ]
+  })
 
   const READING_CLUB_DETAIL_ENTRIES = await getReadingClubDetailEntries()
 
