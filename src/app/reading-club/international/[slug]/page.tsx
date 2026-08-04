@@ -6,7 +6,7 @@ import ReadingClubDetailView, { buildReadingClubJsonLd } from '@/components/read
 // ISR: same revalidate window as the track listing (1h). Editor changes to
 // blurbs / discussion questions show up within that window without us
 // re-rendering on every request.
-export const revalidate = 3600
+export const revalidate = 86400
 
 type Params = Promise<{ slug: string }>
 

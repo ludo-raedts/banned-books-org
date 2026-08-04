@@ -7,6 +7,7 @@
 export const revalidate = 3600
 
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks, parseBookSort, DEFAULT_BOOK_SORT } from '@/lib/book-search'
@@ -26,6 +27,29 @@ function pickFirst(v: string | string[] | undefined): string | undefined {
   if (!v) return undefined
   return Array.isArray(v) ? v[0] : v
 }
+
+// The facet scaffolding (total count, per-country ban tallies, country names)
+// is identical for every query, yet `/search` renders dynamically (it reads
+// `searchParams`), so without caching these three queries hit Supabase on
+// every request — including the crawl swarm. They only change on import, so
+// cache for an hour; only `searchBooks` below stays query-specific/uncached.
+const loadSearchFacets = unstable_cache(
+  async () => {
+    const supabase = adminClient()
+    const [{ count: totalBooks }, { data: banCounts }, { data: countriesRaw }] = await Promise.all([
+      supabase.from('books').select('*', { count: 'exact', head: true }),
+      supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
+      supabase.from('countries').select('code, name_en'),
+    ])
+    return {
+      totalBooks: totalBooks ?? 0,
+      banCounts: (banCounts ?? []) as { country_code: string; distinct_books: number }[],
+      countriesRaw: (countriesRaw ?? []) as { code: string; name_en: string }[],
+    }
+  },
+  ['search-facets-v1'],
+  { revalidate: 3600, tags: ['search-facets'] },
+)
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
@@ -50,22 +74,16 @@ export default async function SearchPage({
   const activeOnly = pickFirst(sp.active) === '1'
   const sort       = parseBookSort(pickFirst(sp.sort))
 
-  const supabase = adminClient()
-
   const [
-    { count: totalBooks },
-    { data: banCounts },
-    { data: countriesRaw },
+    { totalBooks, banCounts, countriesRaw },
     initialResult,
   ] = await Promise.all([
-    supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
-    supabase.from('countries').select('code, name_en'),
+    loadSearchFacets(),
     searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
   ])
 
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
-  const countries: CountryOption[] = (countriesRaw ?? [])
+  const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books as number]))
+  const countries: CountryOption[] = countriesRaw
     .filter(c => countMap.has(c.code))
     .sort((a, b) => a.name_en.localeCompare(b.name_en))
     .map(c => ({ code: c.code, name: c.name_en, count: countMap.get(c.code) ?? 0 }))

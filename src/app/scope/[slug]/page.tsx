@@ -1,7 +1,7 @@
 // ISR: same migration rationale as country/reason detail. No per-request
 // mutations on this page; bans/books lists change on enrichment cycles
 // or new imports — both lower-frequency than 3600s.
-export const revalidate = 3600
+export const revalidate = 86400
 
 import type { Metadata } from 'next'
 import Image from 'next/image'

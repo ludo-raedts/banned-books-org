@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getCurrentlyChallengedEntry } from '@/lib/reading-club-detail'
 import ReadingClubDetailView, { buildReadingClubJsonLd } from '@/components/reading-club-detail-view'
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 type Params = Promise<{ year: string; position: string }>
 

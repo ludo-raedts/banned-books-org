@@ -1,6 +1,6 @@
 // ISR: re-render every hour. Same migration rationale as country detail:
 // no per-request mutations, content changes on enrichment cycles.
-export const revalidate = 3600
+export const revalidate = 86400
 
 import type { Metadata } from 'next'
 import Link from 'next/link'

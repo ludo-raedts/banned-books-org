@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { adminClient } from './supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import { genreLabel, isMappedGenre } from '@/components/genre-badge'
@@ -31,7 +32,14 @@ export type DiscoverData = {
   candidates: DiscoverCandidate[]
 }
 
-export async function loadDiscoverData(): Promise<DiscoverData> {
+// `/discover` reads `searchParams`, so Next renders it dynamically — this
+// ~8-query fan-out (reasons + countries + mv_reason_top_books + a joined
+// books select + five reading-club-table scans) would otherwise run on EVERY
+// request, including every crawler hit, hammering the Nano PostgREST instance.
+// The candidate pool only changes hourly (mv_reason_top_books is refreshed by
+// the refresh-views cron), so cache the whole payload for an hour. First hit
+// after expiry pays the fan-out; the rest read from the Next data cache.
+async function loadDiscoverDataUncached(): Promise<DiscoverData> {
   const supabase = adminClient()
 
   const [{ data: reasonRows }, { data: countryRows }, { data: mvRows }] = await Promise.all([
@@ -119,6 +127,12 @@ export async function loadDiscoverData(): Promise<DiscoverData> {
 
   return { reasons, countries, genres, candidates }
 }
+
+export const loadDiscoverData = unstable_cache(
+  loadDiscoverDataUncached,
+  ['discover-data-v1'],
+  { revalidate: 3600, tags: ['discover-data'] },
+)
 
 // Books with a published reading-club PDF: union of book_ids across the
 // five reading_club_* tables where discussion_questions is non-empty AND
