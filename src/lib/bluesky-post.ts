@@ -304,15 +304,28 @@ export async function planBirthdayPicks(windowDays = 400): Promise<{ pinned: num
 // on ban count alone; ~58% US with this hybrid).
 const MIN_BANS = 2
 
-/** Fetch the eligible book ids (postable + grounded ban context), id-ordered. */
+/** Fetch the eligible book ids (postable + grounded ban context), id-ordered.
+ *
+ * Split into three light queries instead of one per-book `bans` embed paginated
+ * across ~20 pages. The embed was ~2s/page and, run concurrently by 3 build
+ * workers for the homepage / /share / /embed / badge, saturated Supabase and
+ * tripped the statement timeout (57014) at prerender. Now: (1) paginate
+ * candidate ids with column filters only — no embed; (2) batch total_bans from
+ * v_book_ban_counts; (3) batch the has-a-non-US-ban set. keep = total_bans >=
+ * MIN_BANS OR has-non-US — byte-identical to the old row-by-row predicate.
+ * The old `book_authors!inner` filter is dropped: every book has >=1 author
+ * (audit-integrity invariant), so it only ever multiplied rows (hence the
+ * dedup this version no longer needs). */
 async function eligibleBookIds(): Promise<number[]> {
   const supabase = adminClient()
-  const ids: number[] = []
+
+  // 1. Candidate ids — column filters only, id-ordered, no embed.
+  const candidates: number[] = []
   const PAGE = 1000
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, book_authors!inner(author_id), bans(country_code)')
+      .select('id')
       .eq('is_gated', false)
       .eq('is_blanket_works', false)
       .not('cover_url', 'is', null)
@@ -321,16 +334,33 @@ async function eligibleBookIds(): Promise<number[]> {
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw new Error(`eligibleBookIds: ${error.message}`)
-    const rows = (data ?? []) as Array<{ id: number; bans: Array<{ country_code: string | null }> | null }>
-    for (const r of rows) {
-      const bans = r.bans ?? []
-      const hasNonUs = bans.some(b => b.country_code && b.country_code !== 'US')
-      if (bans.length >= MIN_BANS || hasNonUs) ids.push(Number(r.id))
-    }
+    const rows = (data ?? []) as Array<{ id: number }>
+    candidates.push(...rows.map(r => Number(r.id)))
     if (rows.length < PAGE) break
   }
-  // Dedup: the !inner join multiplies rows for multi-author books.
-  return [...new Set(ids)].sort((a, b) => a - b)
+
+  // 2 & 3. Ban signals, batched over the candidate ids (v_book_ban_counts for
+  //        the total, a country_code<>'US' scan for the non-US flag).
+  const banCount = new Map<number, number>()
+  const hasNonUs = new Set<number>()
+  const BATCH = 1000
+  for (let i = 0; i < candidates.length; i += BATCH) {
+    const slice = candidates.slice(i, i + BATCH)
+    const [counts, nonUs] = await Promise.all([
+      supabase.from('v_book_ban_counts').select('entity_id, total_bans').in('entity_id', slice),
+      supabase.from('bans').select('book_id').in('book_id', slice).neq('country_code', 'US'),
+    ])
+    if (counts.error) throw new Error(`eligibleBookIds counts: ${counts.error.message}`)
+    if (nonUs.error) throw new Error(`eligibleBookIds non-us: ${nonUs.error.message}`)
+    for (const r of (counts.data ?? []) as Array<{ entity_id: number; total_bans: number }>) {
+      banCount.set(Number(r.entity_id), r.total_bans)
+    }
+    for (const r of (nonUs.data ?? []) as Array<{ book_id: number }>) hasNonUs.add(Number(r.book_id))
+  }
+
+  // keep = >= MIN_BANS bans OR at least one non-US ban. Candidates are already
+  // unique and id-ordered, so the result is too.
+  return candidates.filter(id => (banCount.get(id) ?? 0) >= MIN_BANS || hasNonUs.has(id))
 }
 
 type RichRow = {
