@@ -729,6 +729,91 @@ export const CONTEXT_CONTENT: Record<string, ContextContent> = {
     },
     datePublished: '2026-06-28',
   },
+
+  'irish-censorship-board': {
+    dek:
+      'For most of the twentieth century the Irish state ran one of the most sweeping book-censorship regimes in the democratic world. Between 1930 and 2016 the Censorship of Publications Board prohibited more than 12,000 books and periodicals as “indecent or obscene” — catching almost every major Irish writer of the era, from Beckett and Kate O’Brien to McGahern and Edna O’Brien. Because book-ban orders lapsed automatically after twelve years, the great majority of those prohibitions have quietly expired.',
+    body: (
+      <>
+        <h2>What it was</h2>
+        <p>
+          The <strong>Censorship of Publications Act 1929</strong> created a five-member{' '}
+          <strong>Censorship of Publications Board</strong>, empowered to prohibit the sale and
+          distribution of any book it judged <em>“indecent or obscene”</em>. It grew out of the{' '}
+          <strong>Committee on Evil Literature</strong> (1926) and the close alignment of the new
+          Irish state with the moral teaching of the Catholic Church. A separate ground was later
+          added for works that <em>“advocated the unnatural prevention of conception”</em> or the
+          procurement of abortion.
+        </p>
+        <p>
+          The Board banned works on the strength of complaints and its own reading, publishing each
+          prohibition in the state gazette, <em>Iris Oifigiúil</em>, and entering it in the{' '}
+          <strong>Register of Prohibited Publications</strong>. Between 1930 and 2016 it prohibited
+          more than <strong>12,000</strong> titles.
+        </p>
+
+        <h2>Who was banned</h2>
+        <p>
+          The regime fell hardest on Irish writers themselves. Samuel Beckett, Kate O’Brien, Seán
+          Ó Faoláin, Liam O’Flaherty, Frank O’Connor, Seán O’Casey, Brendan Behan, Benedict Kiely,
+          Brian Moore, Maura Laverty, John McGahern and Edna O’Brien all had work banned — often
+          book after book. International authors were swept up too: Aldous Huxley’s{' '}
+          <em>Brave New World</em>, Ernest Hemingway’s <em>A Farewell to Arms</em>, John Steinbeck’s{' '}
+          <em>East of Eden</em> and J. D. Salinger’s <em>The Catcher in the Rye</em> were all
+          prohibited. The 1942 banning of Eric Cross’s <em>The Tailor and Ansty</em> provoked a
+          famous four-day debate in the Seanad.
+        </p>
+
+        <h2>The twelve-year lapse</h2>
+        <p>
+          The <strong>Censorship of Publications Act 1967</strong> introduced a decisive reform:
+          prohibition orders on <em>books</em> would lapse automatically <strong>twelve years</strong>{' '}
+          after they were made. At a stroke, thousands of banned literary works — including most of
+          the Irish canon listed here — ceased to be prohibited, without any need for appeal. The
+          Board continued to sit, but its book bans dwindled; the last book was prohibited in{' '}
+          <strong>2016</strong>. Today the register holds only a few hundred periodicals and a small
+          number of pre-1990s titles concerning abortion, which pre-date the twelve-year rule.
+        </p>
+
+        <h2>How to read these entries</h2>
+        <p>
+          A book’s appearance here means the Irish state once prohibited its sale — not that it is
+          banned today. These are recorded as <strong>historical bans</strong>: the ban year is the
+          year the prohibition order was made, and for almost every literary title that order has
+          since lapsed. The books are catalogued as targets of a censorship regime, not as anything
+          objectionable in themselves.
+        </p>
+      </>
+    ),
+    listHeading: 'Books in this archive banned by the Censorship of Publications Board',
+    listIntro:
+      'Titles documented here that were prohibited in Ireland under the Censorship of Publications Acts, with the year each ban was made.',
+    sources: (
+      <ul className="list-disc pl-5 space-y-1">
+        <li>
+          Donal Ó Drisceoil, catalogue of books banned by the Censorship of Publications Board,
+          published in <em>The Oxford History of the Irish Book, Volume V</em> — reproduced by the{' '}
+          University of Notre Dame’s Irish Studies research guide (Hesburgh Library).
+        </li>
+        <li>
+          Wikipedia, <em>Book censorship in the Republic of Ireland</em> and{' '}
+          <em>Censorship of Publications Act 1929</em> — statutory background and internationally
+          famous titles.
+        </li>
+        <li>
+          Houses of the Oireachtas debates and the Department of Justice{' '}
+          <em>Register of Prohibited Publications</em> — for the current register and the
+          twelve-year lapse rule.
+        </li>
+      </ul>
+    ),
+    backLink: { href: '/countries/ie', label: 'Books banned in Ireland' },
+    jsonLdAbout: {
+      '@type': 'Organization',
+      name: 'Censorship of Publications Board (Ireland)',
+    },
+    datePublished: '2026-08-04',
+  },
 }
 
 // Re-exported here so the route can render the hero without re-deriving the type.

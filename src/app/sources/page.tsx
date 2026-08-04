@@ -212,6 +212,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['Undesirable_Publications_Act'],
       },
       {
+        name: 'Wikipedia — Book censorship in the Republic of Ireland',
+        url: 'https://en.wikipedia.org/wiki/Book_censorship_in_the_Republic_of_Ireland',
+        description:
+          'Wikipedia\'s overview of the Irish Censorship of Publications Board (1930–2016), which banned more than 12,000 publications. Cited for the internationally-famous titles (The Well of Loneliness, Point Counter Point) alongside the Notre Dame / Ó Drisceoil catalogue for the literary bans.',
+        match: ['Book_censorship_in_the_Republic_of_Ireland'],
+      },
+      {
         name: 'Wikipedia — book and author articles (per-title citations)',
         url: 'https://en.wikipedia.org/',
         description:
@@ -483,6 +490,13 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Holy See\'s catalogue of prohibited books, discontinued in 1966. Imported via the per-author Wikipedia article (above) but cited at the Index level for collective entries.',
         match: ['/Index_Librorum_Prohibitorum'],
+      },
+      {
+        name: 'University of Notre Dame — Irish Studies, Hesburgh Library',
+        url: 'https://sites.nd.edu/irish-hesburgh/censorship/',
+        description:
+          'Notre Dame\'s Irish Studies research guide reproduces Donal Ó Drisceoil\'s dated catalogue of books banned by the Irish Censorship of Publications Board (published as an appendix to the Oxford History of the Irish Book, vol. 5). The cite-of-record for our historical Irish literary bans — Beckett, the O\'Briens, O\'Faoláin, O\'Flaherty, Kiely, Mannin and dozens more, each with its year of prohibition.',
+        match: ['sites.nd.edu/irish-hesburgh'],
       },
       {
         name: 'University of Kansas — Spencer Research Library banned-books exhibition (1955, via Wayback)',

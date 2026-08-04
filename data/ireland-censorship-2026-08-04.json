@@ -1,0 +1,1148 @@
+{
+  "generated": "2026-08-04",
+  "count": 60,
+  "rows": [
+    {
+      "source_row_id": 1,
+      "title": "More Pricks Than Kicks",
+      "title_english_meaningful": null,
+      "authors": [
+        "Samuel Beckett"
+      ],
+      "publication_year": null,
+      "year": 1934,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 2,
+      "title": "The Pilgrimage",
+      "title_english_meaningful": null,
+      "authors": [
+        "John Broderick"
+      ],
+      "publication_year": null,
+      "year": 1961,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 3,
+      "title": "Rose Forbes",
+      "title_english_meaningful": null,
+      "authors": [
+        "George Buchanan"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 4,
+      "title": "A Fearful Joy",
+      "title_english_meaningful": null,
+      "authors": [
+        "Joyce Cary"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 5,
+      "title": "Castle Corner",
+      "title_english_meaningful": null,
+      "authors": [
+        "Joyce Cary"
+      ],
+      "publication_year": null,
+      "year": 1938,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 6,
+      "title": "Charley Is My Darling",
+      "title_english_meaningful": null,
+      "authors": [
+        "Joyce Cary"
+      ],
+      "publication_year": null,
+      "year": 1940,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 7,
+      "title": "Herself Surprised",
+      "title_english_meaningful": null,
+      "authors": [
+        "Joyce Cary"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 8,
+      "title": "The Bright Temptation",
+      "title_english_meaningful": null,
+      "authors": [
+        "Austin Clarke"
+      ],
+      "publication_year": null,
+      "year": 1932,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 9,
+      "title": "The Singing Men at Cashel",
+      "title_english_meaningful": null,
+      "authors": [
+        "Austin Clarke"
+      ],
+      "publication_year": null,
+      "year": 1936,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 10,
+      "title": "Hunger of the Heart",
+      "title_english_meaningful": null,
+      "authors": [
+        "Rearden Conner"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 11,
+      "title": "A Singular Man",
+      "title_english_meaningful": null,
+      "authors": [
+        "J. P. Donleavy"
+      ],
+      "publication_year": null,
+      "year": 1964,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 12,
+      "title": "The Cabfather",
+      "title_english_meaningful": null,
+      "authors": [
+        "Lee Dunne"
+      ],
+      "publication_year": null,
+      "year": 1976,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 13,
+      "title": "My Life and Loves",
+      "title_english_meaningful": null,
+      "authors": [
+        "Frank Harris"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 14,
+      "title": "Selected Stories",
+      "title_english_meaningful": null,
+      "authors": [
+        "Norah Hoult"
+      ],
+      "publication_year": null,
+      "year": 1946,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 15,
+      "title": "Coming from the Fair",
+      "title_english_meaningful": null,
+      "authors": [
+        "Norah Hoult"
+      ],
+      "publication_year": null,
+      "year": 1937,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 16,
+      "title": "Augusta Steps Out",
+      "title_english_meaningful": null,
+      "authors": [
+        "Norah Hoult"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 17,
+      "title": "Four Women Grow Up",
+      "title_english_meaningful": null,
+      "authors": [
+        "Norah Hoult"
+      ],
+      "publication_year": null,
+      "year": 1940,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 18,
+      "title": "Honey Seems Bitter",
+      "title_english_meaningful": null,
+      "authors": [
+        "Benedict Kiely"
+      ],
+      "publication_year": null,
+      "year": 1952,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 19,
+      "title": "There Was an Ancient House",
+      "title_english_meaningful": null,
+      "authors": [
+        "Benedict Kiely"
+      ],
+      "publication_year": null,
+      "year": 1955,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 20,
+      "title": "In a Harbour Green",
+      "title_english_meaningful": null,
+      "authors": [
+        "Benedict Kiely"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 21,
+      "title": "Alone We Embark",
+      "title_english_meaningful": null,
+      "authors": [
+        "Maura Laverty"
+      ],
+      "publication_year": null,
+      "year": 1943,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 22,
+      "title": "Liberty Lad",
+      "title_english_meaningful": null,
+      "authors": [
+        "Maurice Leitch"
+      ],
+      "publication_year": null,
+      "year": 1965,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 23,
+      "title": "Poor Lazarus",
+      "title_english_meaningful": null,
+      "authors": [
+        "Maurice Leitch"
+      ],
+      "publication_year": null,
+      "year": 1969,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 24,
+      "title": "I Am Alone",
+      "title_english_meaningful": null,
+      "authors": [
+        "Walter Macken"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 25,
+      "title": "Julie",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1940,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference",
+      "slug_override": "julie-ethel-mannin"
+    },
+    {
+      "source_row_id": 26,
+      "title": "Ragged Banners",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1931,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 27,
+      "title": "Red Rose",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1941,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 28,
+      "title": "Rolling in the Dew",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1940,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 29,
+      "title": "The Blossoming Bough",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1943,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 30,
+      "title": "Cactus",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 31,
+      "title": "Captain Moonlight",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1943,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 32,
+      "title": "Commonsense and Morality",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 33,
+      "title": "Commonsense and the Child",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 34,
+      "title": "Confessions and Impressions",
+      "title_english_meaningful": null,
+      "authors": [
+        "Ethel Mannin"
+      ],
+      "publication_year": null,
+      "year": 1930,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 35,
+      "title": "The Feast of Lupercal",
+      "title_english_meaningful": null,
+      "authors": [
+        "Brian Moore"
+      ],
+      "publication_year": null,
+      "year": 1957,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 36,
+      "title": "The Luck of Ginger Coffey",
+      "title_english_meaningful": null,
+      "authors": [
+        "Brian Moore"
+      ],
+      "publication_year": null,
+      "year": 1960,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 37,
+      "title": "An Answer from Limbo",
+      "title_english_meaningful": null,
+      "authors": [
+        "Brian Moore"
+      ],
+      "publication_year": null,
+      "year": 1962,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 38,
+      "title": "A Story-Teller's Holiday",
+      "title_english_meaningful": null,
+      "authors": [
+        "George Moore"
+      ],
+      "publication_year": null,
+      "year": 1933,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 39,
+      "title": "Girl with the Green Eyes",
+      "title_english_meaningful": null,
+      "authors": [
+        "Edna O'Brien"
+      ],
+      "publication_year": null,
+      "year": 1964,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 40,
+      "title": "August Is a Wicked Month",
+      "title_english_meaningful": null,
+      "authors": [
+        "Edna O'Brien"
+      ],
+      "publication_year": null,
+      "year": 1965,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 41,
+      "title": "Mary Lavelle",
+      "title_english_meaningful": null,
+      "authors": [
+        "Kate O'Brien"
+      ],
+      "publication_year": null,
+      "year": 1936,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 42,
+      "title": "Pictures in the Hallway",
+      "title_english_meaningful": null,
+      "authors": [
+        "Sean O'Casey"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 43,
+      "title": "Windfalls",
+      "title_english_meaningful": null,
+      "authors": [
+        "Sean O'Casey"
+      ],
+      "publication_year": null,
+      "year": 1934,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 44,
+      "title": "The Common Chord",
+      "title_english_meaningful": null,
+      "authors": [
+        "Frank O'Connor"
+      ],
+      "publication_year": null,
+      "year": 1947,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 45,
+      "title": "Travellers' Samples",
+      "title_english_meaningful": null,
+      "authors": [
+        "Frank O'Connor"
+      ],
+      "publication_year": null,
+      "year": 1951,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 46,
+      "title": "Kings, Lords and Commons",
+      "title_english_meaningful": null,
+      "authors": [
+        "Frank O'Connor"
+      ],
+      "publication_year": null,
+      "year": 1961,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 47,
+      "title": "Bird Alone",
+      "title_english_meaningful": null,
+      "authors": [
+        "Sean O'Faolain"
+      ],
+      "publication_year": null,
+      "year": 1936,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 48,
+      "title": "Midsummer Night Madness",
+      "title_english_meaningful": null,
+      "authors": [
+        "Sean O'Faolain"
+      ],
+      "publication_year": null,
+      "year": 1932,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 49,
+      "title": "Hollywood Cemetery",
+      "title_english_meaningful": null,
+      "authors": [
+        "Liam O'Flaherty"
+      ],
+      "publication_year": null,
+      "year": 1937,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 50,
+      "title": "The Puritan",
+      "title_english_meaningful": null,
+      "authors": [
+        "Liam O'Flaherty"
+      ],
+      "publication_year": null,
+      "year": 1932,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 51,
+      "title": "Shame the Devil",
+      "title_english_meaningful": null,
+      "authors": [
+        "Liam O'Flaherty"
+      ],
+      "publication_year": null,
+      "year": 1934,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 52,
+      "title": "A Hillside Man",
+      "title_english_meaningful": null,
+      "authors": [
+        "Con O'Leary"
+      ],
+      "publication_year": null,
+      "year": 1933,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 53,
+      "title": "Going Native",
+      "title_english_meaningful": null,
+      "authors": [
+        "Oliver St. John Gogarty"
+      ],
+      "publication_year": null,
+      "year": 1942,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 54,
+      "title": "The Adventures of the Black Girl in Her Search for God",
+      "title_english_meaningful": null,
+      "authors": [
+        "George Bernard Shaw"
+      ],
+      "publication_year": null,
+      "year": 1933,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 55,
+      "title": "Julie",
+      "title_english_meaningful": null,
+      "authors": [
+        "Francis Stuart"
+      ],
+      "publication_year": null,
+      "year": 1939,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference",
+      "slug_override": "julie-francis-stuart"
+    },
+    {
+      "source_row_id": 56,
+      "title": "The Flowering Cross",
+      "title_english_meaningful": null,
+      "authors": [
+        "Francis Stuart"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 57,
+      "title": "The Gadfly",
+      "title_english_meaningful": null,
+      "authors": [
+        "E. L. Voynich"
+      ],
+      "publication_year": null,
+      "year": 1943,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 58,
+      "title": "On a Dark Night",
+      "title_english_meaningful": null,
+      "authors": [
+        "Anthony West"
+      ],
+      "publication_year": null,
+      "year": 1950,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "University of Notre Dame — Irish Studies, Hesburgh Library (Ó Drisceoil banned-books catalogue)",
+      "source_url": "https://sites.nd.edu/irish-hesburgh/censorship/",
+      "source_type": "reference"
+    },
+    {
+      "source_row_id": 59,
+      "title": "The Well of Loneliness",
+      "title_english_meaningful": null,
+      "authors": [
+        "Radclyffe Hall"
+      ],
+      "publication_year": null,
+      "year": 1930,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "Wikipedia — Book censorship in the Republic of Ireland",
+      "source_url": "https://en.wikipedia.org/wiki/Book_censorship_in_the_Republic_of_Ireland",
+      "source_type": "wikipedia"
+    },
+    {
+      "source_row_id": 60,
+      "title": "Point Counter Point",
+      "title_english_meaningful": null,
+      "authors": [
+        "Aldous Huxley"
+      ],
+      "publication_year": null,
+      "year": 1930,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "historical",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Prohibited by the Irish Censorship of Publications Board as \"indecent or obscene\" under the Censorship of Publications Acts (1929–1967); order lapsed after the statutory 12-year period.",
+      "source_name": "Wikipedia — Book censorship in the Republic of Ireland",
+      "source_url": "https://en.wikipedia.org/wiki/Book_censorship_in_the_Republic_of_Ireland",
+      "source_type": "wikipedia"
+    }
+  ]
+}

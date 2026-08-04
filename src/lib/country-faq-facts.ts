@@ -95,4 +95,17 @@ export const COUNTRY_FAQ_FACTS: Record<string, CountryFaqFacts> = {
     notableContext:
       'The Salman Rushdie fatwa (1989) remains a uniquely durable feature of Iranian censorship policy — formally rescinded by the government in 1998 but never lifted by clerical authorities.',
   },
+
+  IE: {
+    banAuthority:
+      'the Censorship of Publications Board, a statutory body under the Department of Justice',
+    readingLegal: 'legal',
+    readingNote:
+      'There is no criminal liability for reading books in Ireland. The Censorship of Publications Act 1967 made book-ban orders lapse automatically after twelve years, so nearly every historical prohibition — including the great Irish literary canon banned mid-century — has long since expired.',
+    purchaseLegal: 'legal',
+    purchaseNote:
+      'Formerly banned titles are freely in print and sold everywhere. Only a small number of pre-1990s titles concerning abortion remain on the Register of Prohibited Publications, alongside a few hundred periodicals; general literature is unrestricted.',
+    notableContext:
+      'The Board banned more than 12,000 books and magazines between 1930 and 2016 — Beckett, Kate and Edna O’Brien, McGahern, O’Faoláin and O’Flaherty among them. The last book was prohibited in 2016.',
+  },
 }

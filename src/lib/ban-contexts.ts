@@ -177,6 +177,27 @@ export const BAN_CONTEXTS: BanContext[] = [
     },
     match: { sourceUrlIncludes: ['bibliblogue.wordpress.com', '200412livrosproibidos33_74'] },
   },
+  {
+    slug: 'irish-censorship-board',
+    title: 'The Irish Censorship of Publications Board',
+    badge: 'Ireland · 1930–2016',
+    short:
+      'This title was banned by Ireland’s Censorship of Publications Board, the statutory body that prohibited more than 12,000 books and periodicals as “indecent or obscene” between 1930 and 2016. Book-ban orders lapsed automatically after twelve years under the 1967 Act, so this prohibition has long since expired.',
+    hasHub: true,
+    country: 'IE',
+    countryCard: {
+      title: 'The Irish Censorship of Publications Board →',
+      blurb:
+        'The statutory board that banned more than 12,000 books and magazines in Ireland between 1930 and 2016 — sweeping up nearly every major Irish writer before the bans quietly lapsed.',
+    },
+    match: {
+      sourceUrlIncludes: [
+        'sites.nd.edu/irish-hesburgh',
+        'censorship_of_publications_act_1929',
+        'book_censorship_in_the_republic_of_ireland',
+      ],
+    },
+  },
 ]
 
 export function getBanContext(slug: string): BanContext | undefined {
