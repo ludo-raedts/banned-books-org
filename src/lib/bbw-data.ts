@@ -224,7 +224,10 @@ export async function getBBWLiveStats(): Promise<{
 
   const [{ count: totalBans }, { data: countryRows }, { count: recentBans }] = await Promise.all([
     supabase.from('bans').select('*', { count: 'exact', head: true }),
-    supabase.from('bans').select('country_code').range(0, 9999),
+    // Canonical distinct-country count: one row per country in mv_ban_counts.
+    // A plain `bans.select('country_code')` is capped at 1000 rows by
+    // PostgREST, which silently undercounts (~16 instead of 119).
+    supabase.from('mv_ban_counts').select('country_code').gt('distinct_books', 0),
     supabase.from('bans').select('*', { count: 'exact', head: true }).gte('year_started', FIVE_YEARS),
   ])
   const countryCount = new Set((countryRows ?? []).map(r => r.country_code)).size
