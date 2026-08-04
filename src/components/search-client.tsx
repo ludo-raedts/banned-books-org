@@ -159,9 +159,11 @@ export default function SearchClient({
 
   const flatSuggestions: Suggestion[] = [...authorSuggestions, ...countrySuggestions, ...bookSuggestions]
 
-  // Autocomplete fetch — 200ms debounce
+  // Autocomplete fetch — 400ms debounce, min 3 chars. Longer pause + higher
+  // floor means we fire per settled word, not per keystroke: fewer /api/suggest
+  // round-trips to the (force-dynamic) endpoint from both readers and scrapers.
   useEffect(() => {
-    if (q.length < 2) {
+    if (q.length < 3) {
       setAuthorSuggestions([]); setCountrySuggestions([]); setBookSuggestions([])
       setShowSuggestions(false)
       return
@@ -203,7 +205,7 @@ export default function SearchClient({
         setShowSuggestions(mappedAuthors.length + mappedCountries.length + mappedBooks.length > 0)
         setSelectedIndex(-1)
       } catch { /* ignore */ }
-    }, 200)
+    }, 400)
     return () => clearTimeout(id)
   }, [q])
 
@@ -252,9 +254,11 @@ export default function SearchClient({
     }
   }
 
-  // Debounce query for grid filtering — 300ms
+  // Debounce query for grid filtering — 500ms. Drives both the /api/books
+  // re-fetch and the /search RSC re-render below, so a longer pause here cuts
+  // the heaviest per-keystroke DB work while typing.
   useEffect(() => {
-    const id = setTimeout(() => setDebouncedQ(q), 300)
+    const id = setTimeout(() => setDebouncedQ(q), 500)
     return () => clearTimeout(id)
   }, [q])
 
