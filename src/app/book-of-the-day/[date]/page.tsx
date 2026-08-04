@@ -20,7 +20,11 @@ export const revalidate = 86400
 export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return publishedBotdDates().map((date) => ({ date }))
+  // [] defers every date to on-demand ISR (dynamicParams stays true) instead of
+  // prerendering all ~50 dates at build — each calls the daily-pick, which
+  // tripped the Supabase statement timeout when prerendered concurrently under
+  // build load. Renders on first request, then edge-cached.
+  return [] as { date: string }[]
 }
 
 function formatLong(ymd: string): string {

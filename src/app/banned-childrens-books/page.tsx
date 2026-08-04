@@ -1,6 +1,12 @@
-export const revalidate = 86400
+// force-dynamic keeps this heavy page OUT of the build-time prerender: its
+// multi-country ban aggregation tripped the Supabase statement timeout (57014)
+// when a build ran under DB load, failing the deploy. Rendered on-demand; the
+// expensive fetch is wrapped in unstable_cache so crawlers hit the DB at most
+// once per day, not per request.
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
@@ -129,8 +135,15 @@ async function fetchChildrensBooks(): Promise<{ picture: ChildBook[]; middle: Ch
   return { picture, middle, ya }
 }
 
+// Cache the heavy fetch so a force-dynamic (per-request) render still hits the
+// DB at most once per day — crawler-safe. Revalidated daily like the old ISR.
+const getChildrensCached = unstable_cache(fetchChildrensBooks, ['banned-childrens-books'], {
+  revalidate: 86400,
+  tags: ['banned-childrens-books'],
+})
+
 export default async function BannedChildrensBooksPage() {
-  const { picture, middle, ya } = await fetchChildrensBooks()
+  const { picture, middle, ya } = await getChildrensCached()
   const total = picture.length + middle.length + ya.length
 
   // JSON-LD: ItemList of both buckets, capped per Google's reasonable

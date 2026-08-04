@@ -49,9 +49,10 @@ export async function captureCoverage(): Promise<CoverageSnapshot> {
 
   const haveIsbn = await count((q) => q.not('isbn13', 'is', null))
   const haveCover = await count((q) => q.not('cover_url', 'is', null))
-  const haveDesc = await count((q) =>
-    q.or('description.not.is.null,description_book.not.is.null'),
-  )
+  // `description` (legacy) was dropped 2026-07-09; description_book is the
+  // canonical blurb column. Querying the dropped column errored out the whole
+  // enrich-all run at its first step.
+  const haveDesc = await count((q) => q.not('description_book', 'is', null))
   const haveNative = await count((q) =>
     q.neq('original_language', 'en').not('title_native', 'is', null),
   )

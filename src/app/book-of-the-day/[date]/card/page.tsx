@@ -20,7 +20,12 @@ export const revalidate = 86400
 export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return publishedBotdDates().map((date) => ({ date }))
+  // [] defers every date to on-demand ISR (dynamicParams stays true): each card
+  // renders on first request and is then edge-cached, instead of prerendering
+  // all ~50 dates at build. Each render calls the daily-pick (eligibleBookIds);
+  // prerendering them concurrently tripped the Supabase statement timeout under
+  // build load. publishedBotdDates() is still used by the archive page.
+  return [] as { date: string }[]
 }
 
 function formatLong(ymd: string): string {

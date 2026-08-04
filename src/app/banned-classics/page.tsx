@@ -1,6 +1,13 @@
-export const revalidate = 86400
+// force-dynamic keeps this heavy page OUT of the build-time prerender: its
+// pre-1970 scan + ban-count aggregation tripped the Supabase statement timeout
+// (57014) whenever a build ran while the DB was under load (e.g. an enrichment
+// run), failing the whole deploy. Rendering on-demand instead makes the build
+// immune; the expensive fetch is wrapped in unstable_cache below so crawlers
+// hit the DB at most once per day, not per request.
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Image from 'next/image'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
@@ -111,8 +118,15 @@ async function fetchClassics(): Promise<ClassicBook[]> {
     .sort((a, b) => b.bans.length - a.bans.length)
 }
 
+// Cache the heavy fetch so a force-dynamic (per-request) render still hits the
+// DB at most once per day — crawler-safe. Revalidated daily like the old ISR.
+const getClassicsCached = unstable_cache(fetchClassics, ['banned-classics'], {
+  revalidate: 86400,
+  tags: ['banned-classics'],
+})
+
 export default async function BannedClassicsPage() {
-  const books = await fetchClassics()
+  const books = await getClassicsCached()
 
   const grouped: Record<string, ClassicBook[]> = { pre1900: [], '1900to1945': [], '1945to1970': [] }
   for (const book of books) {
