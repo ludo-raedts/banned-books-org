@@ -89,7 +89,7 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
           />
         </Field>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Birth year" hint="4-digit year">
             <input type="number" value={birthYear} onChange={e => setBirthYear(e.target.value)} min={1000} max={2099} className={`${inputCls} w-full`} />
           </Field>

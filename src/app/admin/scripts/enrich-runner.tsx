@@ -269,7 +269,7 @@ export default function EnrichRunner() {
           disabled={busy !== null || inProcessReady.length === 0 || !onlyOneInProcessStep}
           title={
             inProcessReady.length === 0
-              ? 'Select one browser-ready step (only ISBN today).'
+              ? 'Select one browser-ready step (marked "browser").'
               : !onlyOneInProcessStep
               ? 'In-browser run supports one step at a time. Use GitHub for multi-step.'
               : ''

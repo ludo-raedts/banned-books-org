@@ -4,7 +4,7 @@ import { cardCls, formatBytes } from './kit'
 import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { ZENODO_DOI_URL } from '@/lib/zenodo'
+import { ZENODO_DOI_URL, ZENODO_RECORD_MANAGE_URL } from '@/lib/zenodo'
 import { useAdminUi } from './admin-ui'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
@@ -437,7 +437,7 @@ export default function AdminDashboardClient({
               → Zenodo dataset (concept DOI)
             </a>
             <a
-              href="https://zenodo.org/records/20511554"
+              href={ZENODO_RECORD_MANAGE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-brand transition-colors"

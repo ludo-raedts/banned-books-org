@@ -396,7 +396,7 @@ function CurrentlyChallengedTab({
                 className="mt-2 w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white resize-y"
               />
               <details className="mt-2">
-                <summary className="text-xs text-gray-500 cursor-pointer">ALA metadata (challenge count, bookshop URL, source URL)</summary>
+                <summary className="text-xs text-gray-500 cursor-pointer">ALA metadata (challenge count, source URL)</summary>
                 <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <input
                     type="number"
@@ -580,7 +580,7 @@ function BookTrackTab({
               <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↓</button>
             </div>
             <span className="text-xs font-mono text-gray-500 pt-1">#{p.position}</span>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <div className="font-medium text-sm">{p.title}</div>
               <div className="text-xs text-gray-500">{p.authors.join(', ')}{p.banCount ? ` · ${p.banCount} bans` : ''}{p.countries.length > 0 ? ` · ${new Set(p.countries).size} countries` : ''}</div>
               <textarea

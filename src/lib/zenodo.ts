@@ -22,6 +22,10 @@ export const ZENODO_DOI_URL: string | null = ZENODO_CONCEPT_DOI
   ? `https://doi.org/${ZENODO_CONCEPT_DOI}`
   : null
 
+/** Zenodo record page (manage / deposit new version) — the latest version's
+ *  record. Single source for the admin dashboard + /admin/zenodo runbook. */
+export const ZENODO_RECORD_MANAGE_URL = 'https://zenodo.org/records/20511554'
+
 /**
  * Published release history of the open dataset — the single source for the
  * changelog rendered on /dataset. Newest first. Each release is its own Zenodo

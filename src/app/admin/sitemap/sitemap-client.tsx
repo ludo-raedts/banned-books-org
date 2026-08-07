@@ -139,7 +139,7 @@ export default function SitemapClient({
         </a>
         <span className="text-gray-400"> — sitemap index</span>
       </div>
-      <dl className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1.5 text-sm mt-1 items-baseline">
+      <dl className="grid grid-cols-[auto_1fr] sm:grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1.5 text-sm mt-1 items-baseline">
         {([
           ['/sitemap-static.xml', sitemapCounts.static, 'homepage, nav, year roll-ups, scope'],
           ['/sitemap-books.xml', sitemapCounts.books, 'books with a slug'],

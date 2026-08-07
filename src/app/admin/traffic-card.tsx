@@ -224,7 +224,7 @@ export default function TrafficCard({
                   <span className="text-base w-5 shrink-0 text-center leading-none">
                     {row.country ? flagEmoji(row.country) : '🌐'}
                   </span>
-                  <span className="text-xs text-gray-700 w-28 shrink-0 truncate">
+                  <span className="text-xs text-gray-700 flex-1 min-w-[80px] max-w-[112px] truncate">
                     {row.country ?? 'Direct / unknown'}
                   </span>
                   <MiniBar
@@ -262,7 +262,7 @@ export default function TrafficCard({
                       alt=""
                       onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                     />
-                    <span className="text-xs text-gray-700 w-[140px] truncate shrink-0">
+                    <span className="text-xs text-gray-700 flex-1 min-w-[90px] max-w-[140px] truncate">
                       {label}
                     </span>
                     <MiniBar value={row.views} max={maxReferrerViews} color="blue" />

@@ -8,7 +8,6 @@ import {
   Sparkles,
   ShieldCheck,
   RefreshCw,
-  ImageIcon,
   FileText,
   Crosshair,
   Hammer,
@@ -62,7 +61,7 @@ function Meta({ meta }: { meta: ScriptMeta }) {
     ['cost', meta.cost],
   ]
   return (
-    <dl className="grid grid-cols-[6.5rem_1fr] gap-x-3 gap-y-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md px-3 py-2.5">
+    <dl className="grid grid-cols-1 sm:grid-cols-[6.5rem_1fr] gap-x-3 gap-y-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md px-3 py-2.5">
       {rows.map(([label, value]) => (
         <div key={label} className="contents">
           <dt className="font-mono text-gray-500 uppercase tracking-wider text-[10px] self-start pt-0.5">

@@ -1,13 +1,13 @@
 import { cardCls, Code } from '../kit'
 import AdminBackLink from '@/components/admin-back-link'
-import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
+import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL, ZENODO_RECORD_MANAGE_URL } from '@/lib/zenodo'
 import { Archive, AlertTriangle, CheckCircle, XCircle, Clock, HardDriveDownload } from 'lucide-react'
 
 const CONCEPT_DOI = ZENODO_CONCEPT_DOI ?? '10.5281/zenodo.20511553'
 const RECORD_URL = ZENODO_DOI_URL ?? 'https://doi.org/10.5281/zenodo.20511553'
 // The version-DOI record page (for "New version" / editing). The version DOI
 // increments per release; the management record id stays the v1 record.
-const RECORD_MANAGE_URL = 'https://zenodo.org/records/20511554'
+const RECORD_MANAGE_URL = ZENODO_RECORD_MANAGE_URL
 
 
 export default function ZenodoAdminPage() {

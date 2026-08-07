@@ -111,7 +111,7 @@ export default function ContentBlockEditClient({ block }: { block: ContentBlockR
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1.5">Preview (sanitized HTML — same as public)</label>
-          <div className="w-full min-h-[27rem] border border-gray-200 rounded-lg px-4 py-3 bg-white prose prose-sm prose-gray max-w-none">
+          <div className="w-full min-h-[27rem] overflow-x-auto border border-gray-200 rounded-lg px-4 py-3 bg-white prose prose-sm prose-gray max-w-none">
             {previewHtml ? (
               <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
             ) : (

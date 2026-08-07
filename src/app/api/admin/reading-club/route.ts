@@ -12,7 +12,6 @@ import { isPageReadyToPublish } from '@/lib/content-blocks'
 //
 // Actions:
 //   suggest_international — runs the engine, returns top10 + alternates
-//   save_currently_challenged_entry — upsert one row in the manual table
 //   save_track_books      — replace draft rows (international/classics/theme)
 //   publish_track         — flip every row in a track to published (gated by
 //                           the track's required content blocks)
@@ -95,8 +94,8 @@ export async function POST(req: NextRequest) {
   if (action === 'save_currently_challenged_bulk') {
     // Bulk replace: same delete-then-insert pattern as the other tracks, so
     // the in-memory picks list in the admin UI is the single source of truth.
-    // Differs from save_currently_challenged_entry (single-row upsert), which
-    // is preserved below for backward compat.
+    // (The old single-row save/delete_currently_challenged_entry actions were
+    // removed 2026-08-07 — no UI caller since the bulk variant landed.)
     const year = Number(body.year)
     const entries = body.entries as Array<{
       position: number
@@ -136,50 +135,6 @@ export async function POST(req: NextRequest) {
         .insert(rows)
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     }
-    return NextResponse.json({ ok: true })
-  }
-
-  if (action === 'save_currently_challenged_entry') {
-    const year = Number(body.year)
-    const e = body.entry as {
-      position: number
-      title: string
-      author: string
-      challenge_count?: number | null
-      book_id?: number | null
-      discussion_questions?: string[] | null
-      source_url?: string | null
-    } | undefined
-    if (!Number.isInteger(year) || !e) return NextResponse.json({ error: 'Bad input' }, { status: 400 })
-    const { error } = await supabase
-      .from('reading_club_currently_challenged')
-      .upsert({
-        year,
-        position: e.position,
-        title: e.title,
-        author: e.author,
-        challenge_count: e.challenge_count ?? null,
-        book_id: e.book_id ?? null,
-        discussion_questions: e.discussion_questions ?? null,
-        source_url: e.source_url ?? null,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'year,position' })
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
-  }
-
-  if (action === 'delete_currently_challenged_entry') {
-    const year = Number(body.year)
-    const position = Number(body.position)
-    if (!Number.isInteger(year) || !Number.isInteger(position)) {
-      return NextResponse.json({ error: 'Bad input' }, { status: 400 })
-    }
-    const { error } = await supabase
-      .from('reading_club_currently_challenged')
-      .delete()
-      .eq('year', year)
-      .eq('position', position)
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
   }
 
