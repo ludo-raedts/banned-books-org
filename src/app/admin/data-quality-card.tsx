@@ -99,7 +99,7 @@ function downloadCsv(rows: DetailData['rows'], metricKey: string, detailType: De
   URL.revokeObjectURL(url)
 }
 
-function BanDetailTable({ rows, metric }: { rows: BanDetailRow[]; metric: string }) {
+function BanDetailTable({ rows }: { rows: BanDetailRow[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
@@ -200,11 +200,13 @@ export default function DataQualityCard() {
   const [detailLoading, setDetailLoading] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
-  const fetchCounts = useCallback(async () => {
+  // Counts are cached server-side for 1h (they only move when imports run);
+  // `refresh` busts that cache for a live recount.
+  const fetchCounts = useCallback(async (refresh = false) => {
     setLoading(true)
     setErr(null)
     try {
-      const res = await fetch('/api/admin/data-quality', { credentials: 'include' })
+      const res = await fetch(`/api/admin/data-quality${refresh ? '?refresh=1' : ''}`, { credentials: 'include' })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setData(await res.json())
     } catch (e) {
@@ -256,7 +258,7 @@ export default function DataQualityCard() {
           <h2 className="font-semibold text-gray-900">Data Quality</h2>
         </div>
         <p className="text-sm text-red-500">{err ?? 'Unknown error'}</p>
-        <button onClick={fetchCounts} className="text-sm text-brand hover:underline w-fit">Retry</button>
+        <button onClick={() => fetchCounts()} className="text-sm text-brand hover:underline w-fit">Retry</button>
       </div>
     )
   }
@@ -333,7 +335,7 @@ export default function DataQualityCard() {
               {!detailLoading && detail && (detail.rows as unknown[]).length > 0 && (
                 <>
                   {detail.type === 'ban' && (
-                    <BanDetailTable rows={detail.rows as BanDetailRow[]} metric={m.key} />
+                    <BanDetailTable rows={detail.rows as BanDetailRow[]} />
                   )}
                   {detail.type === 'book' && (
                     <BookDetailTable rows={detail.rows as BookDetailRow[]} />
@@ -359,7 +361,7 @@ export default function DataQualityCard() {
           <h2 className="font-semibold text-gray-900">Data Quality</h2>
         </div>
         <button
-          onClick={() => { setActiveMetric(null); setDetail(null); fetchCounts() }}
+          onClick={() => { setActiveMetric(null); setDetail(null); fetchCounts(true) }}
           className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
         >
           <RefreshCw className="w-3.5 h-3.5" />
