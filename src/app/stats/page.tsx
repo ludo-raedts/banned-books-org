@@ -1,34 +1,249 @@
-// ISR: stats page reads materialized views (mv_ban_counts, v_top_*) plus
-// raw counts. MV's are refreshed hourly by the refresh-views cron, so a
-// 1h revalidate aligns with how often the displayed numbers can change.
-// searchParams (country/reason/active filters) make Next bail to dynamic
-// rendering per request — that's the expected behaviour for filtered
-// views; the no-param /stats page benefits from the cache window.
-export const revalidate = 3600
+// force-dynamic + unstable_cache: this page awaits searchParams (the timeline
+// filters), which is a request-time API — using it opts the WHOLE route into
+// dynamic rendering, so a plain `revalidate` export never cached anything
+// here: every visit re-scanned the full bans (~36k rows) and book_authors
+// (~21k rows) tables in ~57 sequential PostgREST round trips (20s+ renders).
+// Instead all heavy scanning + aggregation lives in fetchStatsData() below,
+// wrapped in unstable_cache with a 1h TTL (matching the hourly refresh-views
+// cron, i.e. how often the displayed numbers can change). Filtered requests
+// still render per-request, but they filter the compact cached aggregates
+// instead of hitting the DB.
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import TrendingWidget from '@/components/trending-widget'
 import StatsFilters from '@/components/stats-filters'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
 
-export async function generateMetadata(): Promise<Metadata> {
+// Bans grouped by (country, decade, active, reason-set) — compact enough to
+// live in the data cache (a few thousand groups vs ~36k raw rows) while still
+// supporting every combination of the timeline filters.
+type TimelineGroup = {
+  country: string
+  decade: number | null // null = no usable year (missing or < 1000)
+  active: boolean
+  reasons: number[] // indices into StatsData.reasonSlugs
+  count: number
+}
+
+type StatsData = {
+  totalBooks: number
+  totalBanEvents: number
+  countryCount: number
+  top5Countries: { code: string; name: string; count: number }[]
+  topAuthors: { name: string; slug: string | null; count: number }[]
+  topReasons: { slug: string; count: number }[]
+  activelyBannedBooks: number
+  liftedOnlyBooks: number
+  timelineGroups: TimelineGroup[]
+  reasonSlugs: string[] // sorted; doubles as the reason filter options
+  filterCountryOptions: { code: string; name: string }[]
+}
+
+const PAGE = 1000
+// Pages are fetched in parallel batches instead of one-by-one: the cold
+// (once-per-hour) render costs a few seconds instead of 20+.
+const SCAN_CONCURRENCY = 8
+
+async function fetchAllPages<T>(
+  total: number,
+  page: (from: number, to: number) => PromiseLike<{ data: unknown; error: { code?: string; message?: string } | null }>,
+  label: string,
+): Promise<T[]> {
+  const ranges: Array<[number, number]> = []
+  for (let off = 0; off < total; off += PAGE) ranges.push([off, off + PAGE - 1])
+  const chunks: T[][] = new Array(ranges.length).fill(undefined)
+  for (let i = 0; i < ranges.length; i += SCAN_CONCURRENCY) {
+    const batch = ranges.slice(i, i + SCAN_CONCURRENCY)
+    const results = await Promise.all(
+      batch.map(([from, to]) => withDbRetry(() => page(from, to), `${label} ${from}-${to}`)),
+    )
+    results.forEach((res, j) => {
+      // Throw rather than swallow: on a transient DB error this page would
+      // otherwise publish wrong/zero stats. Throwing keeps the last good
+      // cache entry being served instead.
+      if (res.error) throw res.error
+      chunks[i + j] = (res.data ?? []) as T[]
+    })
+  }
+  return chunks.flat()
+}
+
+async function fetchStatsData(): Promise<StatsData> {
   const supabase = adminClient()
-  const [{ count: bookCount }, { count: banCount }, { data: countryRows }] = await Promise.all([
+
+  const [booksRes, bansRes, baRes, countriesRes] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
-    supabase.from('bans').select('country_code').range(0, 9999),
+    supabase.from('book_authors').select('*', { count: 'exact', head: true }),
+    supabase.from('countries').select('code, name_en'),
   ])
-  const countryCount = new Set((countryRows ?? []).map((r) => r.country_code)).size
-  const books = (bookCount ?? 0).toLocaleString('en')
-  const bans = (banCount ?? 0).toLocaleString('en')
+  for (const res of [booksRes, bansRes, baRes, countriesRes]) {
+    if (res.error) throw res.error
+  }
+  const totalBooks = booksRes.count ?? 0
+  const totalBanEvents = bansRes.count ?? 0
+  const totalBookAuthors = baRes.count ?? 0
+  const countryMap = new Map((countriesRes.data ?? []).map((c) => [c.code, c.name_en]))
+
+  type BanRow = { book_id: number; country_code: string; year_started: number | null; status: string; ban_reason_links: Array<{ reasons: { slug: string } | null }> }
+  type BARow = { book_id: number; authors: { display_name: string; slug: string | null; is_placeholder: boolean | null } | null }
+
+  const [bansRaw, bookAuthorsRaw] = await Promise.all([
+    fetchAllPages<BanRow>(
+      totalBanEvents,
+      (from, to) =>
+        supabase
+          .from('bans')
+          .select('book_id, country_code, year_started, status, ban_reason_links(reasons(slug))')
+          // Stable total order is required or .range() pagination skips/dupes
+          // rows once the table exceeds the page size — which would inflate
+          // the decade histogram below. Order by the PK.
+          .order('id')
+          .range(from, to),
+      'stats bans scan',
+    ),
+    fetchAllPages<BARow>(
+      totalBookAuthors,
+      (from, to) =>
+        supabase
+          .from('book_authors')
+          .select('book_id, authors(display_name, slug, is_placeholder)')
+          // Composite PK (book_id, author_id) — order by both for a
+          // deterministic total order across pages.
+          .order('book_id')
+          .order('author_id')
+          .range(from, to),
+      'stats book_authors scan',
+    ),
+  ])
+
+  // All ranking sections count DISTINCT books, not raw ban records — otherwise
+  // PEN America's per-district granularity inflates US-leaning numbers (one
+  // book × 200 districts = 200 ban records but 1 banned book).
+
+  // ── Top countries ──────────────────────────────────────────────────
+  const countryBooks = new Map<string, Set<number>>()
+  for (const ban of bansRaw) {
+    let s = countryBooks.get(ban.country_code)
+    if (!s) { s = new Set(); countryBooks.set(ban.country_code, s) }
+    s.add(ban.book_id)
+  }
+  const top5Countries = [...countryBooks.entries()]
+    .map(([code, books]) => ({ code, name: countryMap.get(code) ?? code, count: books.size }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+
+  // ── Top authors ────────────────────────────────────────────────────
+  const authorSlugMap = new Map<string, string | null>()
+  const bookAuthorMap = new Map<number, string[]>()
+  for (const ba of bookAuthorsRaw) {
+    if (!ba.authors?.display_name) continue
+    if (ba.authors.is_placeholder === true) continue
+    const list = bookAuthorMap.get(ba.book_id) ?? []
+    list.push(ba.authors.display_name)
+    bookAuthorMap.set(ba.book_id, list)
+    if (!authorSlugMap.has(ba.authors.display_name)) {
+      authorSlugMap.set(ba.authors.display_name, ba.authors.slug ?? null)
+    }
+  }
+  const authorBooks = new Map<string, Set<number>>()
+  const bannedBookIds = new Set(bansRaw.map((b) => b.book_id))
+  for (const bookId of bannedBookIds) {
+    for (const author of bookAuthorMap.get(bookId) ?? []) {
+      let s = authorBooks.get(author)
+      if (!s) { s = new Set(); authorBooks.set(author, s) }
+      s.add(bookId)
+    }
+  }
+  const topAuthors = [...authorBooks.entries()]
+    .map(([name, books]) => ({ name, count: books.size, slug: authorSlugMap.get(name) ?? null }))
+    .filter((a) => a.count >= 2)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 15)
+
+  // ── Top reasons ────────────────────────────────────────────────────
+  const reasonBooks = new Map<string, Set<number>>()
+  for (const ban of bansRaw) {
+    for (const link of ban.ban_reason_links) {
+      const slug = link.reasons?.slug
+      if (!slug) continue
+      let s = reasonBooks.get(slug)
+      if (!s) { s = new Set(); reasonBooks.set(slug, s) }
+      s.add(ban.book_id)
+    }
+  }
+  const topReasons = [...reasonBooks.entries()]
+    .map(([slug, books]) => ({ slug, count: books.size }))
+    .sort((a, b) => b.count - a.count)
+
+  // ── Currently banned vs all-lifted ─────────────────────────────────
+  // Count distinct books, not ban records. A book is "currently banned" if
+  // it has at least one ban with status='active' anywhere; it's "lifted" if
+  // every recorded ban for it has been overturned.
+  const activeBookIds = new Set<number>()
+  for (const ban of bansRaw) {
+    if (ban.status === 'active') activeBookIds.add(ban.book_id)
+  }
+  const activelyBannedBooks = activeBookIds.size
+  const liftedOnlyBooks = bannedBookIds.size - activelyBannedBooks
+
+  // ── Timeline groups (support all filter combinations compactly) ────
+  const reasonSlugs = [...reasonBooks.keys()].sort()
+  const reasonIdx = new Map(reasonSlugs.map((s, i) => [s, i]))
+  const groupMap = new Map<string, TimelineGroup>()
+  for (const ban of bansRaw) {
+    const decade = ban.year_started && ban.year_started >= 1000
+      ? Math.floor(ban.year_started / 10) * 10
+      : null
+    const active = ban.status === 'active'
+    const reasons = [...new Set(
+      ban.ban_reason_links.map((l) => l.reasons?.slug).filter((s): s is string => !!s),
+    )].map((s) => reasonIdx.get(s)!).sort((a, b) => a - b)
+    const key = `${ban.country_code}|${decade ?? 'x'}|${active ? 1 : 0}|${reasons.join(',')}`
+    const g = groupMap.get(key)
+    if (g) g.count++
+    else groupMap.set(key, { country: ban.country_code, decade, active, reasons, count: 1 })
+  }
+
+  const filterCountryOptions = [...countryBooks.keys()]
+    .map((code) => ({ code, name: countryMap.get(code) ?? code }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  return {
+    totalBooks,
+    totalBanEvents,
+    countryCount: countryBooks.size,
+    top5Countries,
+    topAuthors,
+    topReasons,
+    activelyBannedBooks,
+    liftedOnlyBooks,
+    timelineGroups: [...groupMap.values()],
+    reasonSlugs,
+    filterCountryOptions,
+  }
+}
+
+const getStatsCached = unstable_cache(fetchStatsData, ['stats-page'], {
+  revalidate: 3600,
+  tags: ['stats-page'],
+})
+
+export async function generateMetadata(): Promise<Metadata> {
+  const stats = await getStatsCached()
+  const books = stats.totalBooks.toLocaleString('en')
+  const bans = stats.totalBanEvents.toLocaleString('en')
   return {
     title: 'Global book censorship statistics',
-    description: `${books} banned books and ${bans} documented bans across ${countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
+    description: `${books} banned books and ${bans} documented bans across ${stats.countryCount} countries — explore historical trends by decade, the top reasons, and the most-censored authors.`,
     alternates: { canonical: '/stats' },
   }
 }
@@ -59,156 +274,36 @@ export default async function StatsPage({
   const filterReason = filters.reason ?? ''
   const filterActive = filters.active === '1'
 
-  const supabase = adminClient()
-
-  const [{ count: totalBooks }, { count: totalBanEvents }, { data: countriesRaw }] = await Promise.all([
-    supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('bans').select('*', { count: 'exact', head: true }),
-    supabase.from('countries').select('code, name_en'),
-  ])
-
-  // rows: all bans | reason: used for every section
-  type BanRow = { id: number; book_id: number; country_code: string; year_started: number | null; status: string; ban_reason_links: Array<{ reasons: { slug: string } | null }> }
-  let bansRaw: BanRow[] = []
-  {
-    let offset = 0
-    while (true) {
-      const { data, error } = await supabase
-        .from('bans')
-        .select('id, book_id, country_code, year_started, status, ban_reason_links(reasons(slug))')
-        // Stable total order is required or .range() pagination skips/dupes
-        // rows once the table exceeds the 1000-row page size — which inflates
-        // the decade histogram below. Order by the PK.
-        .order('id')
-        .range(offset, offset + 999)
-      // Throw rather than swallow: on a transient DB error this page would
-      // otherwise publish wrong/zero stats. Throwing lets ISR keep serving the
-      // last good render (stale-while-revalidate) instead.
-      if (error) throw error
-      if (!data || data.length === 0) break
-      bansRaw = bansRaw.concat(data as unknown as BanRow[])
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  }
-
-  // rows: all book_authors | reason: top-authors leaderboard
-  type BARow = { book_id: number; authors: { display_name: string; slug: string | null; is_placeholder: boolean | null } | null }
-  let bookAuthorsRaw: BARow[] = []
-  {
-    let offset = 0
-    while (true) {
-      const { data, error } = await supabase
-        .from('book_authors')
-        .select('book_id, authors(display_name, slug, is_placeholder)')
-        // Composite PK (book_id, author_id) — order by both for a deterministic
-        // total order across pages, else the authors leaderboard mis-counts.
-        .order('book_id')
-        .order('author_id')
-        .range(offset, offset + 999)
-      if (error) throw error
-      if (!data || data.length === 0) break
-      bookAuthorsRaw = bookAuthorsRaw.concat(data as unknown as BARow[])
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  }
-
-  const countryMap = new Map((countriesRaw ?? []).map(c => [c.code, c.name_en]))
-
-  // All ranking sections count DISTINCT books, not raw ban records — otherwise
-  // PEN America's per-district granularity inflates US-leaning numbers (one
-  // book × 200 districts = 200 ban records but 1 banned book).
-
-  // ── Top countries (unfiltered) ─────────────────────────────────────
-  const countryBooks = new Map<string, Set<number>>()
-  for (const ban of bansRaw) {
-    let s = countryBooks.get(ban.country_code)
-    if (!s) { s = new Set(); countryBooks.set(ban.country_code, s) }
-    s.add(ban.book_id)
-  }
-  const top5Countries = [...countryBooks.entries()]
-    .map(([code, books]) => ({ code, name: countryMap.get(code) ?? code, count: books.size }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5)
+  const stats = await getStatsCached()
+  const {
+    totalBooks, totalBanEvents, top5Countries, topAuthors, topReasons,
+    activelyBannedBooks, liftedOnlyBooks,
+  } = stats
   const maxCountry = top5Countries[0]?.count ?? 1
-
-  // ── Top authors (unfiltered) ───────────────────────────────────────
-  const authorSlugMap = new Map<string, string | null>()
-  const bookAuthorMap = new Map<number, string[]>()
-  for (const ba of bookAuthorsRaw) {
-    if (!ba.authors?.display_name) continue
-    if (ba.authors.is_placeholder === true) continue
-    const list = bookAuthorMap.get(ba.book_id) ?? []
-    list.push(ba.authors.display_name)
-    bookAuthorMap.set(ba.book_id, list)
-    if (!authorSlugMap.has(ba.authors.display_name)) {
-      authorSlugMap.set(ba.authors.display_name, ba.authors.slug ?? null)
-    }
-  }
-  const authorBooks = new Map<string, Set<number>>()
-  const bannedBookIds = new Set(bansRaw.map(b => b.book_id))
-  for (const bookId of bannedBookIds) {
-    for (const author of bookAuthorMap.get(bookId) ?? []) {
-      let s = authorBooks.get(author)
-      if (!s) { s = new Set(); authorBooks.set(author, s) }
-      s.add(bookId)
-    }
-  }
-  const topAuthors = [...authorBooks.entries()]
-    .map(([name, books]) => ({ name, count: books.size, slug: authorSlugMap.get(name) ?? null }))
-    .filter(a => a.count >= 2)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 15)
   const maxAuthor = topAuthors[0]?.count ?? 1
-
-  // ── Top reasons (unfiltered) ───────────────────────────────────────
-  const reasonBooks = new Map<string, Set<number>>()
-  for (const ban of bansRaw) {
-    for (const link of ban.ban_reason_links) {
-      const slug = link.reasons?.slug
-      if (!slug) continue
-      let s = reasonBooks.get(slug)
-      if (!s) { s = new Set(); reasonBooks.set(slug, s) }
-      s.add(ban.book_id)
-    }
-  }
-  const topReasons = [...reasonBooks.entries()]
-    .map(([slug, books]) => ({ slug, count: books.size }))
-    .sort((a, b) => b.count - a.count)
   const maxReason = topReasons[0]?.count ?? 1
 
-  // ── Currently banned vs all-lifted (unfiltered) ───────────────────
-  // Count distinct books, not ban records. A book is "currently banned" if
-  // it has at least one ban with status='active' anywhere; it's "lifted" if
-  // every recorded ban for it has been overturned.
-  const activeBookIds = new Set<number>()
-  for (const ban of bansRaw) {
-    if (ban.status === 'active') activeBookIds.add(ban.book_id)
-  }
-  const activelyBannedBooks = activeBookIds.size
-  const liftedOnlyBooks = bannedBookIds.size - activelyBannedBooks
-
   // ── Timeline: apply filters, then bucket by decade ─────────────────
-  let timelineBans = bansRaw
-  if (filterCountry) timelineBans = timelineBans.filter(b => b.country_code === filterCountry)
-  if (filterReason)  timelineBans = timelineBans.filter(b => b.ban_reason_links.some(l => l.reasons?.slug === filterReason))
-  if (filterActive)  timelineBans = timelineBans.filter(b => b.status === 'active')
+  const reasonFilterIdx = filterReason ? stats.reasonSlugs.indexOf(filterReason) : -1
+  let timelineGroups = stats.timelineGroups
+  if (filterCountry) timelineGroups = timelineGroups.filter((g) => g.country === filterCountry)
+  if (filterReason)  timelineGroups = timelineGroups.filter((g) => reasonFilterIdx !== -1 && g.reasons.includes(reasonFilterIdx))
+  if (filterActive)  timelineGroups = timelineGroups.filter((g) => g.active)
 
   const isFiltered = !!(filterCountry || filterReason || filterActive)
 
   const decadeCounts = new Map<number, number>()
-  for (const ban of timelineBans) {
-    if (!ban.year_started || ban.year_started < 1000) continue
-    const decade = Math.floor(ban.year_started / 10) * 10
-    decadeCounts.set(decade, (decadeCounts.get(decade) ?? 0) + 1)
+  let matchingBans = 0
+  let timelineWithoutYear = 0
+  for (const g of timelineGroups) {
+    matchingBans += g.count
+    if (g.decade === null) { timelineWithoutYear += g.count; continue }
+    decadeCounts.set(g.decade, (decadeCounts.get(g.decade) ?? 0) + g.count)
   }
   const decades = [...decadeCounts.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([decade, count]) => ({ decade, count }))
-  const maxDecade = Math.max(...decades.map(d => d.count), 1)
-  const timelineWithYear = timelineBans.filter(b => b.year_started && b.year_started >= 1000).length
-  const timelineWithoutYear = timelineBans.length - timelineWithYear
+  const maxDecade = Math.max(...decades.map((d) => d.count), 1)
 
   // Log scale so small historical eras stay visible next to the 2020s peak.
   // log10(count + 1) keeps count=1 at 0 and avoids -Infinity for count=0.
@@ -234,16 +329,7 @@ export default async function StatsPage({
     { max: 10000,  label: '< 10,000', bar: 'bg-red-700', swatch: 'bg-red-700' },
     { max: Infinity, label: '≥ 10,000', bar: 'bg-red-900', swatch: 'bg-red-900' },
   ] as const
-  const bucketFor = (count: number) => TIMELINE_BUCKETS.find(b => count < b.max) ?? TIMELINE_BUCKETS[TIMELINE_BUCKETS.length - 1]
-
-  // ── Filter options (for the timeline filter UI) ────────────────────
-  const filterCountryOptions = [...new Set(bansRaw.map(b => b.country_code))]
-    .map(code => ({ code, name: countryMap.get(code) ?? code }))
-    .sort((a, b) => a.name.localeCompare(b.name))
-
-  const allReasonSlugs = [...new Set(
-    bansRaw.flatMap(b => b.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s))
-  )].sort()
+  const bucketFor = (count: number) => TIMELINE_BUCKETS.find((b) => count < b.max) ?? TIMELINE_BUCKETS[TIMELINE_BUCKETS.length - 1]
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -255,9 +341,9 @@ export default async function StatsPage({
         <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
           Books have been banned, burned, and suppressed by governments, churches, and school boards for
           as long as they have been written. This catalogue documents{' '}
-          <span className="font-semibold text-gray-900">{(totalBooks ?? 0).toLocaleString('en')} books</span> across{' '}
-          <span className="font-semibold text-gray-900">{countryBooks.size} countries</span>, with{' '}
-          <span className="font-semibold text-gray-900">{(totalBanEvents ?? 0).toLocaleString('en')} documented ban events</span> — from
+          <span className="font-semibold text-gray-900">{totalBooks.toLocaleString('en')} books</span> across{' '}
+          <span className="font-semibold text-gray-900">{stats.countryCount} countries</span>, with{' '}
+          <span className="font-semibold text-gray-900">{totalBanEvents.toLocaleString('en')} documented ban events</span> — from
           Ancient Rome&apos;s book burnings to today&apos;s school board removals in the American South.
         </p>
         <p className="text-gray-600 max-w-2xl leading-relaxed text-xs mt-3">
@@ -272,9 +358,9 @@ export default async function StatsPage({
       {/* ── 2. Stat cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {[
-          { label: 'Books catalogued',        value: (totalBooks ?? 0).toLocaleString('en') },
-          { label: 'Ban events documented',   value: (totalBanEvents ?? 0).toLocaleString('en') },
-          { label: 'Countries & territories', value: countryBooks.size.toString() },
+          { label: 'Books catalogued',        value: totalBooks.toLocaleString('en') },
+          { label: 'Ban events documented',   value: totalBanEvents.toLocaleString('en') },
+          { label: 'Countries & territories', value: stats.countryCount.toString() },
           { label: 'Currently banned',        value: activelyBannedBooks.toLocaleString('en'), sub: `${liftedOnlyBooks.toLocaleString('en')} fully lifted` },
         ].map(stat => (
           <div key={stat.label} className="border border-gray-200 rounded-xl p-4">
@@ -398,14 +484,14 @@ export default async function StatsPage({
         {/* Timeline filter */}
         <Suspense>
           <StatsFilters
-            countries={filterCountryOptions}
-            reasons={allReasonSlugs}
+            countries={stats.filterCountryOptions}
+            reasons={stats.reasonSlugs}
             current={{ country: filterCountry, reason: filterReason, active: filterActive }}
           />
         </Suspense>
         {isFiltered && (
           <p className="text-xs text-brand mb-4">
-            Showing {timelineBans.length.toLocaleString('en')} ban{timelineBans.length !== 1 ? 's' : ''} matching your filters.
+            Showing {matchingBans.toLocaleString('en')} ban{matchingBans !== 1 ? 's' : ''} matching your filters.
           </p>
         )}
 
