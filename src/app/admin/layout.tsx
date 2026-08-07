@@ -22,5 +22,14 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <AdminShell>{children}</AdminShell>
+  return (
+    <>
+      {/* The admin brings its own chrome (AdminShell). Hide the public site
+          header + footer that the root layout renders around every page —
+          double sticky headers cost ~96px of vertical space on mobile and
+          made it look like you were still on the public site. */}
+      <style>{`body > header, body > footer { display: none }`}</style>
+      <AdminShell>{children}</AdminShell>
+    </>
+  )
 }
