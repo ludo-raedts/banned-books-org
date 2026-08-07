@@ -174,6 +174,7 @@ die een merge-script daarna inleest.
 | `_audit_split_authors.ts` | Canonieke detector voor gesplitste auteurs → `data/hk-split-authors-review.md` |
 | `_audit_honorific_author_dupes.ts` | Honorific-twin auteurs (Ustaz/Haji-prefix) → input voor `merge-honorific-author-dupes.ts` |
 | `_audit_mojibake_authors.ts` | U+FFFD-corrupte auteursnamen (draai vóór nieuwe KDN-batch) |
+| `_audit_truncated_titles.ts` | **Staande** detector voor afgekapte/generieke import-titels → `data/truncated-titles-audit.md`. Vijf buckets: TRUNCATED (dangling lidwoord/voorzetsel-staart of hangende interpunctie — "On the" #13397, de Berlin-1938 "… Frankfurt a"-klasse), ELLIPSIS ("…"-staart, review), INVERTED ("Week, The", de-inversie-kandidaten), PERIODICAL (Publisher/Printer-clausule met magazine/newspaper/issue-dated markers of issue-shaped titel — out-of-scope, delete-precedent `archive/delete-kdn-periodicals.ts`), GENERIC (één-woord-titel zonder ISBN/OL/desc-corroboratie, review-only). Corroboratie-gate onderdrukt de "Carry On"-klasse; CJK-romanisatie en Duitse scheidbare werkwoorden zijn uitgezonderd. Draai na elke import uit fixed-width/gazette-bronnen. Herstel via geguarde one-off (sjabloon `archive/_fix_truncated_generic_titles.ts`): titelwijziging = altijd `book_slug_aliases`-rij voor de oude slug |
 | `_audit_cross_script_dupes.ts` | Cross-script auteur-twins: niet-Latijnse auteur die een bestaande Latijnse auteur dubbelt (name_english-match of identieke bio) → fold via `merge-cross-language-dupes.ts`. Draai ná elke vreemdtalige ban-import (FSEM/KDN/Iran). Under-count: name_english is schaars |
 | `_audit_spanish_edition_dupes.ts` | **Latin-script** cross-language boek-dupes die `_audit_cross_script_dupes` mist: een vertaalde editie (Spaans/Frans-getiteld) van een werk dat al onder de Engelse titel staat. Gate = Spaanse titel + `original_language='en'` (de importer stempelt de taal van het Engelse *werk*) + zelfde-auteur Engelse rij → input voor de curated lijst in `merge-spanish-edition-dupes.ts`. Heuristiek over-telt (genuine `es/fr/it`-werken); handmatig filteren |
 | `_audit_cross_language_dupes.ts` | **Staande, taal-agnostische** same-work-different-language boek-dupe-detector (auteur-sibling-methode) — vangt wat token-detectors structureel missen ("cook book"≠"cookbook", "Mon Combat"≠"Mein Kampf") en wat `_audit_spanish_edition_dupes` (alleen Spaans) niet dekt. Paart elk foreign/NULL-taal boek met same-author EN/NULL-boeken; signalen: genormaliseerde + **spatieloze** titel-gelijkheid, near-identical spelling (edit ≤2, volume/sequel-guards), `title_english_meaningful`-match (ook tem↔tem), `first_published_year`±2 → drie buckets in `data/cross-language-dupes-review-<datum>.md`: STRONG (merge-kandidaat), WEAK (review), WARNING (zelfde onderwerp, ánder werk — titel citeert andermans complete werktitel, de Mein-Kampf-kritieken-klasse: nooit mergen). Bevestigde paren gaan per case in `merge-cross-language-dupes.ts` |
@@ -383,7 +384,12 @@ Afgeronde one-off fixes (cleanup-iran-titles, source-orphan-{canonical,cluster}-
 `fix-impossible-years-2026-07-01` + follow-up `fix-grete-fischer-identity` — namesake-
 contaminatie #14662/#16348, sjabloon voor geguarde exact-state puntcorrecties,
 `delete-kdn-periodicals` — slot van de KDN-periodical-purge 2026-07-01, 16 out-of-scope
-rijen + backup-JSON in `data/`) → `scripts/archive/`.
+rijen + backup-JSON in `data/`,
+`_fix_truncated_generic_titles` — geverifieerde hits van `_audit_truncated_titles.ts`
+2026-08-07: 2 retitles + slug-alias ("On the" #13397 → PEN-Belarus-brontitel,
+"The Event" #18491 → "Black Hammer, Vol. 2: The Event"), 4 namesake/wiki-schoonmaken
+(#17734 Will, #6166 Health, #2563/#3917 ban-jaar-als-pubjaar), 4 KDN-periodieken
+verwijderd (Times/Time/Novel/Stories) + backup-JSON in `data/`) → `scripts/archive/`.
 
 ---
 
