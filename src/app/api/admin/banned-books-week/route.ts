@@ -5,6 +5,10 @@ import { buildSuggesterCorpus } from '@/lib/bbw-data'
 import { suggestBBWFeatured } from '@/lib/bbw-suggester'
 import { isPageReadyToPublish } from '@/lib/content-blocks'
 
+// action:'suggest' builds the full suggester corpus (whole catalogue with
+// bans + reasons joins) — give it headroom beyond the default timeout.
+export const maxDuration = 60
+
 // POST /api/admin/banned-books-week
 // Actions:
 //   suggest         — run the engine for { year } and return top10 + alternates

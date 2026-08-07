@@ -59,7 +59,9 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const limit = Number.isFinite(body.limit) ? Number(body.limit) : Infinity
+    // Sequential LLM calls run ~5s each; an unbounded batch is guaranteed to
+    // hit the 300s function timeout mid-run. Cap the default at what fits.
+    const limit = Math.min(Number.isFinite(body.limit) ? Number(body.limit) : 40, 40)
     const rows = (await findReadingClubRowsMissingQuestions({ force })).slice(0, limit)
 
     let success = 0

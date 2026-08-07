@@ -28,14 +28,25 @@ export async function middleware(request: NextRequest) {
     return res
   }
 
-  if (!pathname.startsWith('/admin')) return NextResponse.next()
+  // /admin pages redirect to the login form; /api/admin gets a plain 401 so
+  // unauthenticated scanners are rejected at the edge instead of invoking a
+  // function. Every route still calls requireAdmin() as defense-in-depth.
+  const isAdminPage = pathname.startsWith('/admin')
+  const isAdminApi = pathname.startsWith('/api/admin')
+  if (!isAdminPage && !isAdminApi) return NextResponse.next()
   if (pathname === '/admin/login') return NextResponse.next()
-  if (pathname.startsWith('/api/admin/login')) return NextResponse.next()
+  // login is the gate itself; logout only clears the caller's own cookie.
+  if (pathname.startsWith('/api/admin/login') || pathname.startsWith('/api/admin/logout')) {
+    return NextResponse.next()
+  }
 
   const session = request.cookies.get(SESSION_COOKIE)?.value
   const valid = await verifySessionToken(session, process.env.ADMIN_SECRET)
 
   if (!valid) {
+    if (isAdminApi) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
     url.searchParams.set('from', pathname)
@@ -50,6 +61,7 @@ export const config = {
   // Next.js requires this to be a static literal, so it cannot be derived.
   matcher: [
     '/admin/:path*',
+    '/api/admin/:path*',
     '/',
     '/about',
     '/data-quality',

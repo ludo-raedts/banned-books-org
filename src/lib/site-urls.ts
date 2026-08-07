@@ -29,16 +29,19 @@ async function fetchAllSlugs(table: 'books' | 'authors'): Promise<string[]> {
 export async function getAllCanonicalUrls(): Promise<string[]> {
   const supabase = adminClient()
 
-  const [bookSlugs, authorSlugs, countriesRes, bansRes, reasonsRes, staticEntries] = await Promise.all([
+  const [bookSlugs, authorSlugs, countriesRes, banCountriesRes, reasonsRes, staticEntries] = await Promise.all([
     fetchAllSlugs('books'),
     fetchAllSlugs('authors'),
     supabase.from('countries').select('code'),
-    supabase.from('bans').select('country_code'),
+    // One row per country with bans (same source as sitemap-countries.xml).
+    // Never read raw `bans` for this: an unpaginated select caps at 1000 rows
+    // and silently drops countries.
+    supabase.from('mv_ban_counts').select('country_code'),
     supabase.from('reasons').select('slug'),
     getSitemapStaticEntries(),
   ])
 
-  const countriesWithBans = new Set((bansRes.data ?? []).map((b) => b.country_code))
+  const countriesWithBans = new Set((banCountriesRes.data ?? []).map((b) => b.country_code))
   const countryUrls = (countriesRes.data ?? [])
     .filter((c) => countriesWithBans.has(c.code))
     .map((c) => `${SITEMAP_BASE_URL}/countries/${c.code.toLowerCase()}`)

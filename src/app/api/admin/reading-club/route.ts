@@ -29,6 +29,10 @@ const TRACK_TO_PAGE_KEY: Record<string, string> = {
   'young-readers':        'reading-club-young-readers',
 }
 
+// action:'suggest_international' builds the full suggester corpus (whole
+// catalogue with bans + reasons joins) — needs headroom beyond the default.
+export const maxDuration = 60
+
 export async function POST(req: NextRequest) {
   const auth = await requireAdmin()
   if (!auth.ok) return auth.response

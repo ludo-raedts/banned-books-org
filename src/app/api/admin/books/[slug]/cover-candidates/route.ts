@@ -8,6 +8,10 @@ import {
   hasGbKey,
 } from '@/lib/enrich/google-books'
 
+// Worst case walks 4 external ladders incl. two sequential Google Books
+// calls with a 30s default timeout each — needs more than the default budget.
+export const maxDuration = 60
+
 // GET /api/admin/books/<slug>/cover-candidates
 //
 // On-request alternative covers for the book editor: the admin clicks "Find

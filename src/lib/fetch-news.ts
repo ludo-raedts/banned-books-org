@@ -193,9 +193,19 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
 
   const config = await getNewsConfig()
 
-  // URL dedup: same as before, hard skip if URL already exists in any state.
-  const { data: existing } = await supabase.from('news_items').select('source_url')
-  const existingUrls = new Set((existing ?? []).map(r => r.source_url))
+  // URL dedup: hard skip if URL already exists in any state. Paginated —
+  // a plain select caps at 1000 rows, which would silently break dedup once
+  // the table outgrows that.
+  const existingUrls = new Set<string>()
+  for (let from = 0; ; from += 1000) {
+    const { data: existing } = await supabase
+      .from('news_items')
+      .select('source_url')
+      .order('id', { ascending: true })
+      .range(from, from + 999)
+    for (const r of existing ?? []) existingUrls.add(r.source_url)
+    if (!existing || existing.length < 1000) break
+  }
 
   // Embedding dedup: load embeddings of items from the lookback window. Items
   // without an embedding (legacy rows from before migration 018) are skipped

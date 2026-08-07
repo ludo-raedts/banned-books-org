@@ -393,27 +393,16 @@ export async function getThemeBooks(themeSlug: string, opts?: { admin?: boolean 
   const reasonSlugs = THEME_REASON_MAP[themeSlug as ThemeSlug] ?? []
   if (reasonSlugs.length === 0) return []
 
-  // Two-step query: first find ban_ids whose reasons match, then books for those bans.
+  // Ranked in SQL (admin_theme_top_books): the old JS pipeline read
+  // ban_reason_links without a limit — silently capped at 1000 rows by
+  // PostgREST, so broad themes ranked over an arbitrary subset — and then
+  // hydrated 200 books to keep 12. Now we fetch exactly the top ids.
   const reasonsClient = adminClient()
-  const { data: reasonIds } = await reasonsClient
-    .from('reasons')
-    .select('id, slug')
-    .in('slug', reasonSlugs as string[])
-  const reasonIdSet = new Set((reasonIds ?? []).map(r => r.id))
-  if (reasonIdSet.size === 0) return []
-
-  const { data: links } = await reasonsClient
-    .from('ban_reason_links')
-    .select('ban_id, reason_id')
-    .in('reason_id', Array.from(reasonIdSet))
-  const banIds = Array.from(new Set((links ?? []).map(l => l.ban_id))).slice(0, 1000)
-  if (banIds.length === 0) return []
-
-  const { data: bans } = await reasonsClient
-    .from('bans')
-    .select('book_id')
-    .in('id', banIds)
-  const bookIds = Array.from(new Set((bans ?? []).map(b => b.book_id))).slice(0, 200)
+  const { data: ranked } = await reasonsClient.rpc('admin_theme_top_books', {
+    reason_slugs: reasonSlugs as string[],
+    max_rows: 12,
+  })
+  const bookIds = ((ranked ?? []) as Array<{ book_id: number }>).map(r => Number(r.book_id))
   if (bookIds.length === 0) return []
 
   const { data: books } = await reasonsClient
