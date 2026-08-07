@@ -124,6 +124,7 @@ export default async function AdminPage() {
       datasetStats={datasetStats}
       inboxRows={inboxRows}
       inboxFetchedAt={inboxFetchedAt}
+      isLocalDev={process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production'}
     />
   )
 }

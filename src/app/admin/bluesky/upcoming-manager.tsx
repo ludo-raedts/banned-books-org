@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CalendarDays, X, RotateCcw, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { useAdminUi } from '../admin-ui'
+import { adminFetch } from '../admin-fetch'
 
 export type BookHealth = { total: number; book: string[]; authors: { name: string; slug: string; gaps: string[] }[] }
 export type UpcomingItem = { ymd: string; label: string; book: { id: number; slug: string; coverUrl: string | null; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null; health?: BookHealth | null } | null }
@@ -10,23 +12,16 @@ export type ExcludedItem = { id: number; title: string; author: string }
 
 export default function UpcomingManager({ upcoming, excluded }: { upcoming: UpcomingItem[]; excluded: ExcludedItem[] }) {
   const router = useRouter()
+  const ui = useAdminUi()
   const [busy, setBusy] = useState<number | null>(null)
 
   async function mutate(method: 'POST' | 'DELETE', book_id: number) {
     setBusy(book_id)
     try {
-      const res = await fetch('/api/admin/bluesky-exclude', {
-        method,
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ book_id }),
-      })
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}))
-        alert(`Failed: ${j.error ?? res.status}`)
-        return
-      }
+      await adminFetch('/api/admin/bluesky-exclude', { method, json: { book_id } })
       router.refresh()
+    } catch (err) {
+      ui.toast(err instanceof Error ? err.message : 'Request failed', 'error')
     } finally {
       setBusy(null)
     }

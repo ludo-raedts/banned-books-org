@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAdminUi } from '../admin-ui'
+import { adminFetch } from '../admin-fetch'
+import { inputCls, ToggleSwitch } from '../kit'
 import { normalizeNewsDisplay, languageInfo, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
 import type { NewsConfig } from '@/config/news'
 
@@ -54,9 +56,8 @@ function formatDate(iso: string | null) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-const editInputCls = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400'
-
 function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: number) => void; onPatch: (patch: Partial<NewsItem>) => void }) {
+  const ui = useAdminUi()
   const [editing, setEditing] = useState(false)
   const [headline, setHeadline] = useState(item.headline ?? '')
   const [summary, setSummary] = useState(item.summary ?? '')
@@ -64,16 +65,17 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
 
   async function call(action: string, extras?: { headline?: string; summary?: string }) {
     setLoading(action)
-    await fetch('/api/admin/news', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: item.id, action, ...extras }),
-    })
-    setLoading(null)
-    // publish + reject move the draft out of the queue; update_text keeps the
-    // row visible and merges the edit into parent state.
-    if (action === 'update_text' && extras) onPatch(extras)
-    else onDone(item.id)
+    try {
+      await adminFetch('/api/admin/news', { method: 'PATCH', json: { id: item.id, action, ...extras } })
+      // publish + reject move the draft out of the queue; update_text keeps the
+      // row visible and merges the edit into parent state.
+      if (action === 'update_text' && extras) onPatch(extras)
+      else onDone(item.id)
+    } catch (err) {
+      ui.toast(err instanceof Error ? err.message : 'Request failed', 'error')
+    } finally {
+      setLoading(null)
+    }
   }
 
   const { title, sourceName } = normalizeNewsDisplay(item.title, item.source_name)
@@ -115,7 +117,7 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
               value={headline}
               onChange={e => setHeadline(e.target.value)}
               placeholder="Short attention-grabbing kop"
-              className={editInputCls}
+              className={inputCls}
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -124,7 +126,7 @@ function NewsRow({ item, onDone, onPatch }: { item: NewsItem; onDone: (id: numbe
               value={summary}
               onChange={e => setSummary(e.target.value)}
               rows={4}
-              className={`${editInputCls} resize-none`}
+              className={`${inputCls} resize-none`}
             />
           </label>
         </div>
@@ -191,6 +193,7 @@ export default function NewsAdminClient({
   const [rejectingAll, setRejectingAll] = useState(false)
   const [langFilter, setLangFilter] = useState<string>('all')
   const router = useRouter()
+  const ui = useAdminUi()
 
   // Languages present in the current draft queue. Drives the filter dropdown
   // — no point listing 'ru' if there are no Russian items pending.
@@ -245,15 +248,22 @@ export default function NewsAdminClient({
   }
 
   async function rejectAll() {
-    setRejectingAll(true)
-    const res = await fetch('/api/admin/news', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'reject_all' }),
-      credentials: 'include',
+    const ok = await ui.confirm({
+      title: `Reject all ${items.length} draft${items.length !== 1 ? 's' : ''}?`,
+      body: 'Every pending draft is marked rejected. Their URLs stay in the dedup list, so they will not come back on the next fetch.',
+      confirmLabel: 'Reject all',
+      danger: true,
     })
-    setRejectingAll(false)
-    if (res.ok) setItems([])
+    if (!ok) return
+    setRejectingAll(true)
+    try {
+      await adminFetch('/api/admin/news', { method: 'PATCH', json: { action: 'reject_all' } })
+      setItems([])
+    } catch (err) {
+      ui.toast(err instanceof Error ? err.message : 'Request failed', 'error')
+    } finally {
+      setRejectingAll(false)
+    }
   }
 
   return (
@@ -333,14 +343,15 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
 
   async function call(action: string, extras?: { headline?: string; summary?: string }) {
     setLoading(action)
-    await fetch('/api/admin/news', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: item.id, action, ...extras }),
-    })
-    setLoading(null)
-    if (action === 'unpublish') onDone(item.id)
-    else if (action === 'update_text' && extras) onPatch(extras)
+    try {
+      await adminFetch('/api/admin/news', { method: 'PATCH', json: { id: item.id, action, ...extras } })
+      if (action === 'unpublish') onDone(item.id)
+      else if (action === 'update_text' && extras) onPatch(extras)
+    } catch (err) {
+      ui.toast(err instanceof Error ? err.message : 'Request failed', 'error')
+    } finally {
+      setLoading(null)
+    }
   }
 
   async function unpublish() {
@@ -400,7 +411,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
               value={headline}
               onChange={e => setHeadline(e.target.value)}
               placeholder="Short attention-grabbing kop"
-              className={editInputCls}
+              className={inputCls}
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -409,7 +420,7 @@ function PublishedRow({ item, onDone, onPatch }: { item: PublishedItem; onDone: 
               value={summary}
               onChange={e => setSummary(e.target.value)}
               rows={4}
-              className={`${editInputCls} resize-none`}
+              className={`${inputCls} resize-none`}
             />
           </label>
         </div>
@@ -568,30 +579,3 @@ function NewsConfigCard({ initial, onSave }: { initial: NewsConfig; onSave: () =
   )
 }
 
-function ToggleSwitch({
-  checked, onChange, disabled, labelOn, labelOff,
-}: {
-  checked: boolean
-  onChange: (next: boolean) => void
-  disabled?: boolean
-  labelOn: string
-  labelOff: string
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className="inline-flex items-center gap-2 group disabled:opacity-50"
-    >
-      <span className={`text-xs font-medium ${checked ? 'text-green-700' : 'text-gray-500'}`}>
-        {checked ? labelOn : labelOff}
-      </span>
-      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300'}`}>
-        <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : ''}`} />
-      </span>
-    </button>
-  )
-}

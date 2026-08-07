@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ToggleSwitch } from '../kit'
+import { useUnsavedChanges } from '../use-unsaved-changes'
 import Link from 'next/link'
 import AdminBackLink from '@/components/admin-back-link'
 import type { FeaturedBookRow } from '@/lib/bbw-data'
@@ -64,7 +66,7 @@ type DraftRow = {
   meta?: {
     title?: string
     authors?: string[]
-    countries?: string[]
+    countryCount?: number
     reasons?: string[]
     banCount?: number
     finalScore?: number
@@ -83,7 +85,7 @@ function fromFeaturedRow(r: FeaturedBookRow): DraftRow {
     meta: {
       title: r.book.title,
       authors: r.book.authors,
-      countries: Array.from({ length: r.book.countryCount }, () => ''),
+      countryCount: r.book.countryCount,
       reasons: r.book.reasons,
       banCount: r.book.banCount,
     },
@@ -98,6 +100,12 @@ export default function BannedBooksWeekAdminClient(props: Props) {
   const [busy, setBusy] = useState<string | null>(null)
   const [msg, setMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Warn before leaving with unsaved pick edits (order, blurbs, pins).
+  const picksSnapshot = JSON.stringify(picks)
+  const picksBaseline = useRef(picksSnapshot)
+  const picksDirty = picksSnapshot !== picksBaseline.current
+  useUnsavedChanges(picksDirty)
 
   const blocksReady = props.requiredBlocks.every(b => b.status === 'published')
     && props.requiredBlocks.length === props.requiredBlockCount
@@ -133,7 +141,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       meta: {
         title: c.title,
         authors: c.authors,
-        countries: c.countries,
+        countryCount: c.countryCount,
         reasons: c.reasons,
         banCount: c.banCount,
         finalScore: c.finalScore,
@@ -154,6 +162,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       pinned: p.pinned,
     })) })
     if (data) {
+      picksBaseline.current = JSON.stringify(picks)
       setMsg('Draft saved.')
       router.refresh()
     }
@@ -176,6 +185,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       pinned: p.pinned,
     })) })
     if (!saved) return
+    picksBaseline.current = JSON.stringify(picks)
     const data = await call('publish')
     if (data) {
       setMsg('Published.')
@@ -209,7 +219,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       meta: {
         title: alt.title,
         authors: alt.authors,
-        countries: alt.countries,
+        countryCount: alt.countryCount,
         reasons: alt.reasons,
         banCount: alt.banCount,
         finalScore: alt.finalScore,
@@ -320,6 +330,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         <Link href={`/banned-books-week?preview=draft`} target="_blank" className="text-sm text-brand hover:underline">
           Preview draft →
         </Link>
+        {picksDirty && !busy && <span className="text-xs text-amber-600 self-center">Unsaved changes</span>}
         {msg && <span className="text-xs text-green-700">{msg}</span>}
         {error && <span className="text-xs text-red-600">{error}</span>}
       </div>
@@ -339,12 +350,12 @@ export default function BannedBooksWeekAdminClient(props: Props) {
                     <button onClick={() => move(i, +1)} disabled={i === picks.length - 1} className="text-xs px-1.5 py-0.5 rounded border border-gray-200 disabled:opacity-30">↓</button>
                   </div>
                   <div className="w-7 text-xs text-gray-500 font-mono pt-1">#{p.position}</div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">{p.meta?.title ?? `Book ${p.book_id}`}</div>
                     <div className="text-xs text-gray-500 mt-0.5">
                       {p.meta?.authors?.join(', ')}
-                      {p.meta?.banCount ? ` · ${p.meta.banCount} bans` : ''}
-                      {p.meta?.countries && p.meta.countries.length > 0 ? ` · ${new Set(p.meta.countries).size} countries` : ''}
+                      {p.meta?.banCount ? ` · ${p.meta.banCount} ${p.meta.banCount === 1 ? 'ban' : 'bans'}` : ''}
+                      {p.meta?.countryCount ? ` · ${p.meta.countryCount} ${p.meta.countryCount === 1 ? 'country' : 'countries'}` : ''}
                       {p.meta?.inPreviousYears ? ' · prev. year' : ''}
                     </div>
                     {p.meta?.components && (
@@ -407,7 +418,7 @@ export default function BannedBooksWeekAdminClient(props: Props) {
                   <div className="text-sm font-medium">{a.title}</div>
                   <div className="text-xs text-gray-500 mt-0.5">
                     {a.authors.length > 0 && `${a.authors.join(', ')} · `}
-                    {a.banCount} bans · {new Set(a.countries).size} countries · score {a.finalScore.toFixed(3)}
+                    {a.banCount} bans · {a.countryCount} {a.countryCount === 1 ? 'country' : 'countries'} · score {a.finalScore.toFixed(3)}
                     {a.inPreviousYears ? ' · prev. year' : ''}
                   </div>
                 </div>
@@ -600,30 +611,3 @@ function BBWConfigCard({ initial, onSave }: { initial: ConfigCardInput; onSave: 
 }
 
 // Tiny toggle switch — used for the "enabled" kill switch above.
-function ToggleSwitch({
-  checked, onChange, disabled, labelOn, labelOff,
-}: {
-  checked: boolean
-  onChange: (next: boolean) => void
-  disabled?: boolean
-  labelOn: string
-  labelOff: string
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={`inline-flex items-center gap-2 group disabled:opacity-50`}
-    >
-      <span className={`text-xs font-medium ${checked ? 'text-green-700' : 'text-gray-500'}`}>
-        {checked ? labelOn : labelOff}
-      </span>
-      <span className={`relative inline-block w-9 h-5 rounded-full transition-colors ${checked ? 'bg-green-600' : 'bg-gray-300'}`}>
-        <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : ''}`} />
-      </span>
-    </button>
-  )
-}

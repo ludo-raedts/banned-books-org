@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAdminUi } from '../admin-ui'
+import { useUnsavedChanges } from '../use-unsaved-changes'
 import type { ReadingClubCard } from '@/lib/reading-club-data'
 
 type BlockStatusSummary = { ready: boolean; total: number; published: number }
@@ -34,12 +35,58 @@ interface Props {
 
 type TabKey = 'currently-challenged' | 'international' | 'classics' | 'young-readers' | 'themes'
 
+// Tracks whether `value` diverged from its baseline (set on mount, reset via
+// the returned markClean after a successful save) and reports changes upward.
+// Tab components unmount on tab switch, so without this an editor could lose
+// unsaved picks by simply clicking another tab.
+function useDirtyFlag<T>(value: T, onDirtyChange: (dirty: boolean) => void): () => void {
+  const snapshot = JSON.stringify(value)
+  const baselineRef = useRef(snapshot)
+  const snapshotRef = useRef(snapshot)
+  snapshotRef.current = snapshot
+  const cbRef = useRef(onDirtyChange)
+  cbRef.current = onDirtyChange
+  const dirty = snapshot !== baselineRef.current
+  useEffect(() => {
+    cbRef.current(dirty)
+  }, [dirty])
+  // On unmount the (possibly discarded) edits are gone — clear the flag.
+  useEffect(() => () => cbRef.current(false), [])
+  return useCallback(() => {
+    baselineRef.current = snapshotRef.current
+    cbRef.current(false)
+  }, [])
+}
+
 export default function ReadingClubAdminClient(props: Props) {
   const router = useRouter()
+  const ui = useAdminUi()
   const [tab, setTab] = useState<TabKey>('currently-challenged')
   const [busy, setBusy] = useState<string | null>(null)
   const [msg, setMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [dirtyKeys, setDirtyKeys] = useState<Record<string, boolean>>({})
+
+  const anyDirty = Object.values(dirtyKeys).some(Boolean)
+  useUnsavedChanges(anyDirty)
+
+  const setDirty = useCallback((key: string, dirty: boolean) => {
+    setDirtyKeys(prev => (prev[key] === dirty ? prev : { ...prev, [key]: dirty }))
+  }, [])
+
+  async function switchTab(next: TabKey) {
+    if (next === tab) return
+    if (dirtyKeys[tab]) {
+      const ok = await ui.confirm({
+        title: 'Discard unsaved changes?',
+        body: 'This tab has edits that are not saved as a draft yet. Switching tabs discards them.',
+        confirmLabel: 'Discard',
+        danger: true,
+      })
+      if (!ok) return
+    }
+    setTab(next)
+  }
 
   async function call(payload: Record<string, unknown>): Promise<unknown> {
     setBusy(String(payload.action) + (payload.track ? ':' + payload.track : ''))
@@ -84,7 +131,7 @@ export default function ReadingClubAdminClient(props: Props) {
           return (
             <button
               key={key}
-              onClick={() => setTab(key)}
+              onClick={() => switchTab(key)}
               className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
                 active
                   ? 'border-brand text-gray-900'
@@ -115,6 +162,7 @@ export default function ReadingClubAdminClient(props: Props) {
           ready={props.blockStatus.currentlyChallenged.ready}
           call={call}
           onChange={() => router.refresh()}
+          onDirtyChange={d => setDirty('currently-challenged', d)}
         />
       )}
 
@@ -128,6 +176,7 @@ export default function ReadingClubAdminClient(props: Props) {
           showSuggester
           call={call}
           onChange={() => router.refresh()}
+          onDirtyChange={d => setDirty('international', d)}
         />
       )}
 
@@ -139,6 +188,7 @@ export default function ReadingClubAdminClient(props: Props) {
           ready={props.blockStatus.classics.ready}
           call={call}
           onChange={() => router.refresh()}
+          onDirtyChange={d => setDirty('classics', d)}
         />
       )}
 
@@ -148,6 +198,7 @@ export default function ReadingClubAdminClient(props: Props) {
           ready={props.blockStatus.youngReaders.ready}
           call={call}
           onChange={() => router.refresh()}
+          onDirtyChange={d => setDirty('young-readers', d)}
         />
       )}
 
@@ -157,6 +208,7 @@ export default function ReadingClubAdminClient(props: Props) {
           themesIntroReady={props.blockStatus.themesIntro.ready}
           call={call}
           onChange={() => router.refresh()}
+          onDirtyChange={setDirty}
         />
       )}
     </div>
@@ -179,17 +231,19 @@ export default function ReadingClubAdminClient(props: Props) {
 const ALA_DEFAULT_SOURCE_URL = 'https://www.ala.org/bbooks/frequentlychallengedbooks/top10'
 
 function CurrentlyChallengedTab({
-  year, rows, ready, call, onChange,
+  year, rows, ready, call, onChange, onDirtyChange,
 }: {
   year: number
   rows: ReadingClubCard[]
   ready: boolean
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const [picks, setPicks] = useState<ReadingClubCard[]>(rows)
   const [manualTitle, setManualTitle] = useState('')
   const [manualAuthor, setManualAuthor] = useState('')
+  const markClean = useDirtyFlag(picks, onDirtyChange)
 
   function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {
     if (picks.some(p => p.bookId === book.id)) return
@@ -248,8 +302,8 @@ function CurrentlyChallengedTab({
     setPicks(next)
   }
 
-  async function saveDraft() {
-    await call({
+  async function saveDraft(): Promise<boolean> {
+    const data = await call({
       action: 'save_currently_challenged_bulk',
       year,
       entries: picks.map(p => ({
@@ -263,13 +317,15 @@ function CurrentlyChallengedTab({
         featured: p.featured,
       })),
     })
+    if (!data) return false
+    markClean()
     onChange()
+    return true
   }
 
   async function publish() {
-    await saveDraft()
-    await call({ action: 'publish_track', track: 'currently-challenged', year })
-    onChange()
+    if (!(await saveDraft())) return
+    if (await call({ action: 'publish_track', track: 'currently-challenged', year })) onChange()
   }
 
   // Used by the typeahead to filter out books the editor already added.
@@ -418,7 +474,7 @@ type ScoredAlt = {
 }
 
 function BookTrackTab({
-  title, track, rows, ready, showPinned, showSuggester, call, onChange,
+  title, track, rows, ready, showPinned, showSuggester, call, onChange, onDirtyChange,
 }: {
   title: string
   track: 'international' | 'classics'
@@ -428,9 +484,11 @@ function BookTrackTab({
   showSuggester?: boolean
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const [picks, setPicks] = useState<ReadingClubCard[]>(rows)
   const [alternates, setAlternates] = useState<ScoredAlt[]>([])
+  const markClean = useDirtyFlag(picks, onDirtyChange)
   const isInternational = track === 'international'
 
   async function suggest() {
@@ -445,8 +503,8 @@ function BookTrackTab({
     setAlternates(data.alternates)
   }
 
-  async function saveDraft() {
-    await call({
+  async function saveDraft(): Promise<boolean> {
+    const data = await call({
       action: 'save_track_books',
       track,
       picks: picks.map(p => ({
@@ -457,13 +515,15 @@ function BookTrackTab({
         featured: p.featured,
       })),
     })
+    if (!data) return false
+    markClean()
     onChange()
+    return true
   }
 
   async function publish() {
-    await saveDraft()
-    await call({ action: 'publish_track', track })
-    onChange()
+    if (!(await saveDraft())) return
+    if (await call({ action: 'publish_track', track })) onChange()
   }
 
   function move(idx: number, dir: -1 | 1) {
@@ -628,16 +688,18 @@ type YoungReadersPick = ReadingClubCard & {
 }
 
 function YoungReadersTab({
-  rows, ready, call, onChange,
+  rows, ready, call, onChange, onDirtyChange,
 }: {
   rows: ReadingClubCard[]
   ready: boolean
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const [picks, setPicks] = useState<YoungReadersPick[]>(rows as YoungReadersPick[])
   const [genBusy, setGenBusy] = useState<string | null>(null)
   const ui = useAdminUi()
+  const markClean = useDirtyFlag(picks, onDirtyChange)
 
   function update(i: number, patch: Partial<YoungReadersPick>) {
     const next = [...picks]
@@ -645,8 +707,8 @@ function YoungReadersTab({
     setPicks(next)
   }
 
-  async function saveDraft() {
-    await call({
+  async function saveDraft(): Promise<boolean> {
+    const data = await call({
       action: 'save_track_books',
       track: 'young-readers',
       picks: picks.map(p => ({
@@ -660,13 +722,15 @@ function YoungReadersTab({
         featured: p.featured,
       })),
     })
+    if (!data) return false
+    markClean()
     onChange()
+    return true
   }
 
   async function publish() {
-    await saveDraft()
-    await call({ action: 'publish_track', track: 'young-readers' })
-    onChange()
+    if (!(await saveDraft())) return
+    if (await call({ action: 'publish_track', track: 'young-readers' })) onChange()
   }
 
   function move(idx: number, dir: -1 | 1) {
@@ -907,12 +971,13 @@ function YoungReadersTab({
 // ── Themes tab ──────────────────────────────────────────────────────────────
 
 function ThemesTab({
-  themes, themesIntroReady, call, onChange,
+  themes, themesIntroReady, call, onChange, onDirtyChange,
 }: {
   themes: ThemeSummary[]
   themesIntroReady: boolean
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
+  onDirtyChange: (key: string, dirty: boolean) => void
 }) {
   return (
     <div>
@@ -923,7 +988,13 @@ function ThemesTab({
       </p>
       <div className="flex flex-col gap-4">
         {themes.map(t => (
-          <ThemePanel key={t.slug} theme={t} call={call} onChange={onChange} />
+          <ThemePanel
+            key={t.slug}
+            theme={t}
+            call={call}
+            onChange={onChange}
+            onDirtyChange={d => onDirtyChange(`theme:${t.slug}`, d)}
+          />
         ))}
       </div>
     </div>
@@ -931,17 +1002,19 @@ function ThemesTab({
 }
 
 function ThemePanel({
-  theme, call, onChange,
+  theme, call, onChange, onDirtyChange,
 }: {
   theme: ThemeSummary
   call: (p: Record<string, unknown>) => Promise<unknown>
   onChange: () => void
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const blockReady = theme.blocks.every(b => b.status === 'published') && theme.blocks.length > 0
   const [picks, setPicks] = useState<ReadingClubCard[]>(theme.books)
+  const markClean = useDirtyFlag(picks, onDirtyChange)
 
   async function publish() {
-    await call({
+    const saved = await call({
       action: 'save_track_books',
       track: `theme:${theme.slug}`,
       picks: picks.map(p => ({
@@ -952,8 +1025,11 @@ function ThemePanel({
         featured: p.featured,
       })),
     })
-    await call({ action: 'publish_track', track: `theme:${theme.slug}` })
-    onChange()
+    if (!saved) return
+    if (await call({ action: 'publish_track', track: `theme:${theme.slug}` })) {
+      markClean()
+      onChange()
+    }
   }
 
   return (
@@ -966,7 +1042,7 @@ function ThemePanel({
         <ol className="flex flex-col gap-2 mb-3">
           {picks.length === 0 ? (
             <li className="text-xs text-gray-500">No books for this theme yet.</li>
-          ) : picks.slice(0, 12).map((p, i) => (
+          ) : picks.map((p, i) => (
             <li key={p.bookId ?? i} className="border border-gray-100 rounded p-2">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-xs font-mono text-gray-500">#{p.position}</span>

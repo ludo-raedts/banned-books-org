@@ -14,6 +14,7 @@ const PAGE_LABELS: Record<string, string> = {
   'reading-club-currently-challenged': 'Reading Club — Currently Challenged',
   'reading-club-international': 'Reading Club — International',
   'reading-club-classics': 'Reading Club — Classics',
+  'reading-club-young-readers': 'Reading Club — Young Readers',
   'reading-club-themes': 'Reading Club — By Theme',
   'theme-lgbtq': 'Theme — LGBTQ+',
   'theme-political-dissent': 'Theme — Political dissent',

@@ -21,6 +21,8 @@ export type InboxRow = {
 
 
 interface Props {
+  // build-dataset spawns a local child process — the API route 400s on Vercel.
+  isLocalDev: boolean
   bookCount: number
   newsCount: number
   banCount: number
@@ -182,7 +184,7 @@ export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount, needsEnrichment,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
-  inboxRows, inboxFetchedAt,
+  inboxRows, inboxFetchedAt, isLocalDev,
 }: Props) {
   const [refreshState, setRefreshState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [refreshMsg, setRefreshMsg] = useState('')
@@ -562,16 +564,24 @@ export default function AdminDashboardClient({
               ⚠ Data has changed since last build — buyers will get the previous snapshot until you rebuild.
             </p>
           )}
-          <button
-            onClick={handleBuildDataset}
-            disabled={buildDatasetState === 'loading'}
-            className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
-          >
-            {buildDatasetState === 'loading' ? 'Building…' : 'Rebuild now'}
-          </button>
-          {buildDatasetMsg && (
-            <p className={`text-xs ${buildDatasetState === 'error' ? 'text-red-500' : 'text-green-600'}`}>
-              {buildDatasetMsg}
+          {isLocalDev ? (
+            <>
+              <button
+                onClick={handleBuildDataset}
+                disabled={buildDatasetState === 'loading'}
+                className="mt-auto self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-brand text-white hover:bg-brand/90 disabled:opacity-50 transition-colors"
+              >
+                {buildDatasetState === 'loading' ? 'Building…' : 'Rebuild now'}
+              </button>
+              {buildDatasetMsg && (
+                <p className={`text-xs ${buildDatasetState === 'error' ? 'text-red-500' : 'text-green-600'}`}>
+                  {buildDatasetMsg}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="mt-auto text-xs text-gray-400">
+              Rebuild runs locally only: <code>pnpm build:dataset</code> (spawns a child process, blocked on Vercel).
             </p>
           )}
         </div>
