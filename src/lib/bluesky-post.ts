@@ -374,8 +374,14 @@ type RichRow = {
   bans: Array<{ country_code: string | null; ban_reason_links: Array<{ reasons: { slug: string } | null }> | null }> | null
 }
 
-/** Hydrate one chosen book with the fields the post needs. */
-async function hydrate(id: number): Promise<DailyBook | null> {
+/** Hydrate chosen books with the fields the post needs — one batched query
+ *  for all ids plus one countries lookup, instead of a query per pick (the
+ *  admin "upcoming" view hydrates 14 dates at once). */
+async function hydrateMany(ids: number[]): Promise<Map<number, DailyBook>> {
+  const out = new Map<number, DailyBook>()
+  const unique = [...new Set(ids)]
+  if (unique.length === 0) return out
+
   const supabase = adminClient()
   const { data } = await supabase
     .from('books')
@@ -384,38 +390,41 @@ async function hydrate(id: number): Promise<DailyBook | null> {
         'book_authors(authors(display_name)), ' +
         'bans(country_code, ban_reason_links(reasons(slug)))',
     )
-    .eq('id', id)
-    .maybeSingle()
-  if (!data) return null
-  const row = data as unknown as RichRow
-  const author = row.book_authors?.map(ba => ba.authors?.display_name).filter(Boolean).join(', ') || 'Unknown'
-  const bans = row.bans ?? []
-  const codes = [...new Set(bans.map(b => b.country_code).filter((c): c is string => !!c))]
-  const reasons = new Set<string>()
-  for (const b of bans) for (const l of b.ban_reason_links ?? []) if (l.reasons?.slug) reasons.add(l.reasons.slug)
+    .in('id', unique)
+  const rows = (data ?? []) as unknown as RichRow[]
 
-  // Resolve country codes → English names (one cheap lookup for the few codes
-  // on this book). Falls back to the raw code if a name is missing.
-  let countries: string[] = codes
-  if (codes.length > 0) {
-    const { data: cRows } = await supabase.from('countries').select('code, name_en').in('code', codes)
-    const nameByCode = new Map((cRows ?? []).map(c => [(c as { code: string }).code, (c as { name_en: string }).name_en]))
-    countries = codes.map(c => nameByCode.get(c) ?? c)
+  // Resolve country codes → English names in one lookup across all books.
+  // Falls back to the raw code if a name is missing.
+  const allCodes = new Set<string>()
+  for (const row of rows) for (const b of row.bans ?? []) if (b.country_code) allCodes.add(b.country_code)
+  const nameByCode = new Map<string, string>()
+  if (allCodes.size > 0) {
+    const { data: cRows } = await supabase.from('countries').select('code, name_en').in('code', [...allCodes])
+    for (const c of (cRows ?? []) as Array<{ code: string; name_en: string }>) nameByCode.set(c.code, c.name_en)
   }
 
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    author,
-    year: row.first_published_year,
-    coverUrl: row.cover_url,
-    descriptionBan: row.description_ban,
-    reasons: [...reasons],
-    countries,
-    countryCount: codes.length,
-    banCount: bans.length,
+  for (const row of rows) {
+    const author = row.book_authors?.map(ba => ba.authors?.display_name).filter(Boolean).join(', ') || 'Unknown'
+    const bans = row.bans ?? []
+    const codes = [...new Set(bans.map(b => b.country_code).filter((c): c is string => !!c))]
+    const reasons = new Set<string>()
+    for (const b of bans) for (const l of b.ban_reason_links ?? []) if (l.reasons?.slug) reasons.add(l.reasons.slug)
+
+    out.set(Number(row.id), {
+      id: row.id,
+      title: row.title,
+      slug: row.slug,
+      author,
+      year: row.first_published_year,
+      coverUrl: row.cover_url,
+      descriptionBan: row.description_ban,
+      reasons: [...reasons],
+      countries: codes.map(c => nameByCode.get(c) ?? c),
+      countryCount: codes.length,
+      banCount: bans.length,
+    })
   }
+  return out
 }
 
 /** Pick the book of the day for the given date (defaults to today, UTC). */
@@ -430,16 +439,27 @@ export async function pickDailyBook(dateYmd?: string): Promise<DailyBook | null>
  * Used by the admin "upcoming" view. Returns one entry per input date, in order.
  */
 export async function pickForDates(datesYmd: string[]): Promise<(DailyBook | null)[]> {
-  const [ids, excluded, stored, featured] = await Promise.all([
-    eligibleBookIds(),
+  const [excluded, stored, featured] = await Promise.all([
     loadExcludedIds(),
     loadStoredPicks(datesYmd),
     loadFeaturedBirthdays(),
   ])
-  if (ids.length === 0) return datesYmd.map(() => null)
+
+  // The eligible pool is only needed to roll a pick for dates that aren't
+  // frozen yet. On the normal path (all dates frozen — e.g. every admin page
+  // view after the daily cron ran) this skips the ~20-query books scan.
+  const needsPool = datesYmd.some(ymd => !stored.has(ymd))
+  const ids = needsPool ? await eligibleBookIds() : []
+  if (needsPool && ids.length === 0) return datesYmd.map(() => null)
+
   const chosen = await resolvePickIds(datesYmd, ids, excluded, stored)
-  const books = await Promise.all(chosen.map(id => hydrate(id)))
-  return books.map((b, i) => attachBirthday(b, datesYmd[i], featured))
+  const byId = await hydrateMany(chosen)
+  // Clone per date: attachBirthday mutates, and the same book can serve
+  // multiple dates.
+  return chosen.map((id, i) => {
+    const b = byId.get(id)
+    return attachBirthday(b ? { ...b } : null, datesYmd[i], featured)
+  })
 }
 
 /** Excluded books with display fields, newest exclusion first — for the admin view. */

@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import AdminBackLink from '@/components/admin-back-link'
 import { pickForDates, buildPost, listExcludedBooks, type DailyBook } from '@/lib/bluesky-post'
 import { getRecentPosts } from '@/lib/bluesky'
@@ -86,7 +87,14 @@ export default async function BlueskyAdminPage() {
     return { ymd, label: dayLabel(ymd), book: b ? { id: b.id, slug: b.slug, coverUrl: b.coverUrl, title: b.title, author: b.author, why: whyLine(b), birthday: b.birthday ?? null, health: health.get(b.id) ?? null } : null }
   })
 
-  const [recent, excluded] = await Promise.all([getRecentPosts(HANDLE, 20), listExcludedBooks()])
+  // The account's own feed changes once a day (the 14:00 UTC post) — cache the
+  // external Bluesky API call instead of hitting it on every page view.
+  const getRecentPostsCached = unstable_cache(
+    () => getRecentPosts(HANDLE, 20),
+    ['bluesky-recent-posts', HANDLE],
+    { revalidate: 300 },
+  )
+  const [recent, excluded] = await Promise.all([getRecentPostsCached(), listExcludedBooks()])
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
