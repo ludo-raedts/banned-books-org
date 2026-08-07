@@ -4,10 +4,9 @@
 // here: every visit re-scanned the full bans (~36k rows) and book_authors
 // (~21k rows) tables in ~57 sequential PostgREST round trips (20s+ renders).
 // Instead all heavy scanning + aggregation lives in fetchStatsData() below,
-// wrapped in unstable_cache with a 1h TTL (matching the hourly refresh-views
-// cron, i.e. how often the displayed numbers can change). Filtered requests
-// still render per-request, but they filter the compact cached aggregates
-// instead of hitting the DB.
+// wrapped in unstable_cache with a 24h TTL — decade-level stats don't need
+// more freshness than that. Filtered requests still render per-request, but
+// they filter the compact cached aggregates instead of hitting the DB.
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
@@ -233,7 +232,7 @@ async function fetchStatsData(): Promise<StatsData> {
 }
 
 const getStatsCached = unstable_cache(fetchStatsData, ['stats-page'], {
-  revalidate: 3600,
+  revalidate: 86400,
   tags: ['stats-page'],
 })
 
