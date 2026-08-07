@@ -1,5 +1,6 @@
 'use client'
 
+import { StatusPill } from '../../kit'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminBackLink from '@/components/admin-back-link'
@@ -12,18 +13,6 @@ import type { ContentBlockRow, ContentBlockStatus } from '@/lib/content-blocks'
 // We don't run the markdown pipeline in the browser — the client only shows a
 // preview after each save (which is fast: a single fetch round-trip).
 
-function StatusPill({ status }: { status: ContentBlockStatus }) {
-  const styles: Record<ContentBlockStatus, string> = {
-    placeholder: 'bg-gray-200 text-gray-700',
-    draft:       'bg-amber-100 text-amber-800',
-    published:   'bg-green-100 text-green-800',
-  }
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wide ${styles[status]}`}>
-      {status}
-    </span>
-  )
-}
 
 export default function ContentBlockEditClient({ block }: { block: ContentBlockRow }) {
   const router = useRouter()

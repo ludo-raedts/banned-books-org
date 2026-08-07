@@ -1,21 +1,9 @@
+import { cardCls, flagEmoji, formatBytes } from './kit'
 import { Cloud, Network, BarChart3 } from 'lucide-react'
 import { getCloudflareSnapshot, type ThreatBreakdown } from '@/lib/cloudflare-analytics'
 
-const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
-function flagEmoji(code: string | null) {
-  if (!code || code.length !== 2) return '🌐'
-  return code.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('')
-}
 
-function formatBytes(n: number): string {
-  if (n < 1024) return `${n} B`
-  const units = ['KB', 'MB', 'GB', 'TB']
-  let v = n / 1024
-  let i = 0
-  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++ }
-  return `${v < 10 ? v.toFixed(1) : Math.round(v)} ${units[i]}`
-}
 
 function compactNumber(n: number): string {
   if (n < 1000) return n.toLocaleString('en')

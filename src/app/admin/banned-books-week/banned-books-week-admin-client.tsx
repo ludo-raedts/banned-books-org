@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ToggleSwitch } from '../kit'
+import { arrayMove, ToggleSwitch } from '../kit'
 import { useUnsavedChanges } from '../use-unsaved-changes'
 import Link from 'next/link'
 import AdminBackLink from '@/components/admin-back-link'
@@ -194,18 +194,11 @@ export default function BannedBooksWeekAdminClient(props: Props) {
   }
 
   function move(idx: number, dir: -1 | 1) {
-    const target = idx + dir
-    if (target < 0 || target >= picks.length) return
-    const next = [...picks]
-    ;[next[idx], next[target]] = [next[target], next[idx]]
-    next.forEach((p, i) => { p.position = i + 1 })
-    setPicks(next)
+    setPicks(arrayMove(picks, idx, dir).map((p, i) => ({ ...p, position: i + 1 })))
   }
 
   function remove(idx: number) {
-    const next = picks.filter((_, i) => i !== idx)
-    next.forEach((p, i) => { p.position = i + 1 })
-    setPicks(next)
+    setPicks(picks.filter((_, i) => i !== idx).map((p, i) => ({ ...p, position: i + 1 })))
   }
 
   function promoteAlternate(altBookId: number) {

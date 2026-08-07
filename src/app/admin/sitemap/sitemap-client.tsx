@@ -1,10 +1,10 @@
 'use client'
 
+import { cardCls } from '../kit'
 import { useState } from 'react'
 import { Map as MapIcon } from 'lucide-react'
 import { useAdminUi } from '../admin-ui'
 
-const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 type LastSubmission = {
   submittedAt: string

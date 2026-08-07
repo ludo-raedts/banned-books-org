@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 // ── Styling constants ───────────────────────────────────────────────────────
 
-export const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white'
+export const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 export const inputCls =
   'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-50'
@@ -51,13 +51,14 @@ export function PageHeader({
 
 // ── Small display components ────────────────────────────────────────────────
 
-export function StatusPill({ status }: { status: 'published' | 'draft' | string }) {
-  const cls =
-    status === 'published'
-      ? 'bg-emerald-100 text-emerald-700'
-      : 'bg-amber-100 text-amber-700'
+export function StatusPill({ status }: { status: 'placeholder' | 'draft' | 'published' }) {
+  const styles = {
+    placeholder: 'bg-gray-200 text-gray-700',
+    draft:       'bg-amber-100 text-amber-800',
+    published:   'bg-green-100 text-green-800',
+  } as const
   return (
-    <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-medium uppercase tracking-wide ${cls}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wide ${styles[status]}`}>
       {status}
     </span>
   )
@@ -65,9 +66,9 @@ export function StatusPill({ status }: { status: 'published' | 'draft' | string 
 
 export function Code({ children }: { children: React.ReactNode }) {
   return (
-    <pre className="bg-gray-900 text-gray-100 rounded-lg p-3 text-xs whitespace-pre overflow-x-auto">
+    <code className="block bg-gray-950 text-green-400 text-xs rounded-lg px-4 py-3 font-mono whitespace-pre overflow-x-auto">
       {children}
-    </pre>
+    </code>
   )
 }
 
@@ -110,25 +111,17 @@ export function arrayMove<T>(arr: T[], i: number, dir: -1 | 1): T[] {
   return next
 }
 
-export function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes < 0) return '—'
-  if (bytes < 1024) return `${bytes} B`
+export function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`
   const units = ['KB', 'MB', 'GB', 'TB']
-  let v = bytes
-  let u = -1
-  do {
-    v /= 1024
-    u++
-  } while (v >= 1024 && u < units.length - 1)
-  return `${v.toFixed(v >= 100 ? 0 : 1)} ${units[u]}`
+  let v = n / 1024
+  let i = 0
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++ }
+  return `${v < 10 ? v.toFixed(1) : Math.round(v)} ${units[i]}`
 }
 
-/** "US" → 🇺🇸 . Returns the raw code when it isn't a 2-letter country code. */
+/** "US" → 🇺🇸 ; anything that isn't a 2-letter code → 🌐 . */
 export function flagEmoji(code: string | null | undefined): string {
-  if (!code || code.length !== 2) return code ?? ''
-  const base = 0x1f1e6
-  const a = code.toUpperCase().charCodeAt(0) - 65
-  const b = code.toUpperCase().charCodeAt(1) - 65
-  if (a < 0 || a > 25 || b < 0 || b > 25) return code
-  return String.fromCodePoint(base + a, base + b)
+  if (!code || code.length !== 2) return '🌐'
+  return code.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('')
 }

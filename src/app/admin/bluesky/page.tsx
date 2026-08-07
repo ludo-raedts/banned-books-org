@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+import { cardCls } from '../kit'
 import AdminBackLink from '@/components/admin-back-link'
 import { pickForDates, buildPost, listExcludedBooks, type DailyBook } from '@/lib/bluesky-post'
 import { getRecentPosts } from '@/lib/bluesky'
@@ -10,8 +11,6 @@ import { Clock, CheckCircle, XCircle, ExternalLink, Heart, Repeat2, MessageCircl
 
 // Live view — always fresh: upcoming generated posts + the account's real feed.
 export const dynamic = 'force-dynamic'
-
-const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white'
 
 const HANDLE = process.env.BLUESKY_HANDLE ?? 'banned-books.org'
 const PROFILE_URL = `https://bsky.app/profile/${HANDLE}`

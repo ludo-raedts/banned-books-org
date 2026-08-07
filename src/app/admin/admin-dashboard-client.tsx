@@ -1,5 +1,6 @@
 'use client'
 
+import { cardCls, formatBytes } from './kit'
 import { useState } from 'react'
 import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -171,14 +172,6 @@ function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: 
   )
 }
 
-function formatBytes(n: number): string {
-  if (n < 1024) return `${n} B`
-  const units = ['KB', 'MB', 'GB', 'TB']
-  let v = n / 1024
-  let i = 0
-  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++ }
-  return `${v < 10 ? v.toFixed(1) : Math.round(v)} ${units[i]}`
-}
 
 export default function AdminDashboardClient({
   bookCount, newsCount, banCount, countryCount, needsEnrichment,
@@ -232,7 +225,6 @@ export default function AdminDashboardClient({
     }
   }
 
-  const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">

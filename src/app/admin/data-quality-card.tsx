@@ -1,5 +1,6 @@
 'use client'
 
+import { cardCls } from './kit'
 import { useState, useEffect, useCallback } from 'react'
 import { ShieldCheck, RefreshCw } from 'lucide-react'
 
@@ -235,8 +236,6 @@ export default function DataQualityCard() {
       setDetailLoading(false)
     }
   }
-
-  const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
   if (loading) {
     return (

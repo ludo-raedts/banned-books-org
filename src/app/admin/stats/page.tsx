@@ -1,3 +1,4 @@
+import { cardCls } from '../kit'
 import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
@@ -7,8 +8,6 @@ import TrafficCard, { type CountryViewRow, type ReferrerViewRow, type DailyTraff
 import TrendingCard, { type TrendingBookRow, type TrendingAuthorRow, type AllTimeBookRow, type AllTimeAuthorRow } from '../trending-card'
 
 export const dynamic = 'force-dynamic'
-
-const cardCls = 'border border-gray-200 rounded-xl p-6 flex flex-col gap-3 bg-white'
 
 // 30-day daily series for the Traffic chart, read from the pageviews_daily
 // rollup (upserted hourly by /api/cron/refresh-views) — never from the raw

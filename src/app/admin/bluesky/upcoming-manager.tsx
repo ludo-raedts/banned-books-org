@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { CalendarDays, X, RotateCcw, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { useAdminUi } from '../admin-ui'
 import { adminFetch } from '../admin-fetch'
+import { cardCls } from '../kit'
 
 export type BookHealth = { total: number; book: string[]; authors: { name: string; slug: string; gaps: string[] }[] }
 export type UpcomingItem = { ymd: string; label: string; book: { id: number; slug: string; coverUrl: string | null; title: string; author: string; why: string; birthday?: { name: string; bornYear: number | null } | null; health?: BookHealth | null } | null }
@@ -30,7 +31,7 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
   return (
     <>
       {/* ── Upcoming queue ─────────────────────────────────────── */}
-      <div className="border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white">
+      <div className={cardCls}>
         <div className="flex items-center gap-2">
           <CalendarDays className="w-5 h-5 text-gray-400 shrink-0" />
           <h2 className="font-semibold text-gray-900">Upcoming</h2>
@@ -88,7 +89,7 @@ export default function UpcomingManager({ upcoming, excluded }: { upcoming: Upco
 
       {/* ── Excluded books ─────────────────────────────────────── */}
       {excluded.length > 0 && (
-        <div className="border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white">
+        <div className={cardCls}>
           <div className="flex items-center gap-2">
             <X className="w-5 h-5 text-gray-400 shrink-0" />
             <h2 className="font-semibold text-gray-900">Excluded from rotation</h2>

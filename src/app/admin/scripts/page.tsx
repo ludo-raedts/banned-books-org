@@ -1,3 +1,4 @@
+import { cardCls, Code } from '../kit'
 import AdminBackLink from '@/components/admin-back-link'
 import {
   Terminal,
@@ -17,16 +18,6 @@ import {
 } from 'lucide-react'
 import EnrichRunner from './enrich-runner'
 
-const cardCls =
-  'border border-gray-200 rounded-xl p-6 flex flex-col gap-4 bg-white'
-
-function Code({ children }: { children: string }) {
-  return (
-    <code className="block bg-gray-950 text-green-400 text-xs rounded-lg px-4 py-3 font-mono whitespace-pre overflow-x-auto">
-      {children}
-    </code>
-  )
-}
 
 type TagType = 'free' | 'gpt' | 'claude' | 'destructive' | 'safe'
 

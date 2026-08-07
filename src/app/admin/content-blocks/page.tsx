@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import AdminBackLink from '@/components/admin-back-link'
 import { REQUIRED_BLOCKS_BY_PAGE, type ContentBlockRow } from '@/lib/content-blocks'
+import { StatusPill } from '../kit'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,18 +24,6 @@ const PAGE_LABELS: Record<string, string> = {
   'theme-sexuality': 'Theme — Sexuality',
 }
 
-function StatusPill({ status }: { status: ContentBlockRow['status'] }) {
-  const styles: Record<ContentBlockRow['status'], string> = {
-    placeholder: 'bg-gray-200 text-gray-700',
-    draft:       'bg-amber-100 text-amber-800',
-    published:   'bg-green-100 text-green-800',
-  }
-  return (
-    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${styles[status]}`}>
-      {status}
-    </span>
-  )
-}
 
 export default async function AdminContentBlocksPage() {
   const { data } = await adminClient()

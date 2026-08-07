@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAdminUi } from '../admin-ui'
 import { useUnsavedChanges } from '../use-unsaved-changes'
+import { arrayMove } from '../kit'
 import type { ReadingClubCard } from '@/lib/reading-club-data'
 
 type BlockStatusSummary = { ready: boolean; total: number; published: number }
@@ -294,12 +295,7 @@ function CurrentlyChallengedTab({
   }
 
   function move(idx: number, dir: -1 | 1) {
-    const target = idx + dir
-    if (target < 0 || target >= picks.length) return
-    const next = [...picks]
-    ;[next[idx], next[target]] = [next[target], next[idx]]
-    next.forEach((p, i) => { p.position = i + 1 })
-    setPicks(next)
+    setPicks(arrayMove(picks, idx, dir).map((p, i) => ({ ...p, position: i + 1 })))
   }
 
   async function saveDraft(): Promise<boolean> {
@@ -527,12 +523,7 @@ function BookTrackTab({
   }
 
   function move(idx: number, dir: -1 | 1) {
-    const target = idx + dir
-    if (target < 0 || target >= picks.length) return
-    const next = [...picks]
-    ;[next[idx], next[target]] = [next[target], next[idx]]
-    next.forEach((p, i) => { p.position = i + 1 })
-    setPicks(next)
+    setPicks(arrayMove(picks, idx, dir).map((p, i) => ({ ...p, position: i + 1 })))
   }
 
   function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {
@@ -734,12 +725,7 @@ function YoungReadersTab({
   }
 
   function move(idx: number, dir: -1 | 1) {
-    const target = idx + dir
-    if (target < 0 || target >= picks.length) return
-    const next = [...picks]
-    ;[next[idx], next[target]] = [next[target], next[idx]]
-    next.forEach((p, i) => { p.position = i + 1 })
-    setPicks(next)
+    setPicks(arrayMove(picks, idx, dir).map((p, i) => ({ ...p, position: i + 1 })))
   }
 
   function addBook(book: { id: number; title: string; authors: string[]; banCount: number; countryCount: number; slug: string }) {

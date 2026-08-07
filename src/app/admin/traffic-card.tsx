@@ -1,5 +1,6 @@
 'use client'
 
+import { flagEmoji } from './kit'
 import { useState } from 'react'
 
 export type CountryViewRow = { country: string | null; views: number }
@@ -20,9 +21,6 @@ const REFERRER_LABELS: Record<string, string> = {
   'substack.com': 'Substack',
 }
 
-function flagEmoji(code: string) {
-  return code.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('')
-}
 
 function ViewDelta({ thisWeek, lastWeek }: { thisWeek: number; lastWeek: number | null }) {
   const base = 'text-[10px] font-medium shrink-0 w-8 text-left leading-none'
