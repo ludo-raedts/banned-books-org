@@ -1,10 +1,10 @@
-// ISR hint: search page receives searchParams (q/country/reason/etc.)
-// which makes Next render dynamically per request — that's correct
-// because each query needs fresh results. The revalidate value here
-// applies only to the no-param /search landing page (the form-default
-// view); Google's SearchAction crawler hits /search?q=foo which always
-// bypasses the cache.
-export const revalidate = 3600
+// Search reads searchParams (q/country/reason/etc.), which forces dynamic
+// rendering per request — correct, since each query needs fresh results.
+// Note there is NO "no-param landing page benefits from revalidate" carve-out:
+// any searchParams access makes the whole route dynamic and a `revalidate`
+// export a dead letter (see /stats for the bug that assumption caused). The
+// shared facet scaffolding is unstable_cache'd below instead.
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'

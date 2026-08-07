@@ -5,11 +5,12 @@ import { REGIONS, type SpinScope } from '@/lib/discover-engine'
 import FaqAccordion, { type FaqItem } from '@/components/faq-accordion'
 import DiscoverWizard from './discover-wizard'
 
-// The candidate pool comes from mv_reason_top_books, which the platform
-// refreshes hourly via the existing cron. Matching that cadence with ISR
-// means crawlers and warm users hit cached HTML instead of triggering a
-// fresh DB round-trip on every request.
-export const revalidate = 3600
+// This page reads searchParams (shareable filter deeplinks), which forces
+// dynamic rendering — a `revalidate` export would be a dead letter here, NOT
+// an ISR cache (see /stats for the bug that pattern caused). That's fine:
+// the candidate pool comes from loadDiscoverData(), which is unstable_cache'd
+// against mv_reason_top_books, so per-request DB work is a cache read.
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   // Root layout adds the "%s | Banned Books" suffix — keep this clean to

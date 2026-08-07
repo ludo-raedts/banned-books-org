@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
 import { adminClient } from '@/lib/supabase'
 import { normalizeNewsDisplay, TranslatedBadge, OriginalTitleLine } from '@/lib/news-display'
@@ -8,13 +9,13 @@ import SectionShell from '@/components/section/SectionShell'
 import SectionHeader from '@/components/section/SectionHeader'
 import Eyebrow from '@/components/section/Eyebrow'
 
-// ISR: news content auto-publishes daily via cron (fetch-news cron at
-// 06:00 UTC = 08:00 Amsterdam in summer, 07:00 in winter). 30-min
-// revalidate keeps the list reasonably fresh between cron cycles without
-// re-rendering the page on every visit. ?page=N pagination forces
-// dynamic per page-param, but the default landing view (/news without
-// params) benefits from the cache window.
-export const revalidate = 1800
+// ?page=N pagination means this page reads searchParams — a request-time API
+// that forces the whole route dynamic, so a `revalidate` export is a dead
+// letter here (it silently never cached anything; /stats had the same bug).
+// The per-request queries are light (one 30-row news page + a count); the
+// heavy part — the linkify reference corpus of every book title — is cached
+// in loadLinkifyRefs below.
+export const dynamic = 'force-dynamic'
 
 // Items per page. Tuned so a typical page is ~3–6 daily groups under the
 // daily auto-publish flow, which keeps the HTML payload small without making
@@ -46,6 +47,38 @@ type NewsItem = {
 type BookRef = { slug: string; title: string }
 type CountryRef = { code: string; name_en: string }
 
+// Reference corpus for linkifying book titles + country names in summaries.
+// Paginated so the FULL catalogue is covered — the previous single
+// .range(0, 9999) fetch silently dropped everything past 10k rows, so half
+// the ~20k books were never linked. Cached 24h: titles/slugs change rarely,
+// and this saves a multi-MB Supabase read per pageview. Sequential pages are
+// fine here — the cold fill runs at most once a day.
+const loadLinkifyRefs = unstable_cache(
+  async (): Promise<{ books: BookRef[]; countries: CountryRef[] }> => {
+    const supabase = adminClient()
+    const books: BookRef[] = []
+    for (let offset = 0; ; offset += 1000) {
+      const { data, error } = await supabase
+        .from('books')
+        .select('slug, title')
+        // Stable total order or .range() pagination skips/dupes rows.
+        .order('id')
+        .range(offset, offset + 999)
+      if (error) throw error
+      books.push(...((data ?? []) as BookRef[]))
+      if (!data || data.length < 1000) break
+    }
+    const { data: countries, error } = await supabase
+      .from('countries')
+      .select('code, name_en')
+      .range(0, 299)
+    if (error) throw error
+    return { books, countries: (countries ?? []) as CountryRef[] }
+  },
+  ['news-linkify-refs'],
+  { revalidate: 86400, tags: ['news-linkify-refs'] },
+)
+
 // "Friday, 8 May 2026" — anchored in UTC so the header is stable regardless
 // of the visitor's timezone (matches how published_at is stored).
 function formatDay(isoDate: string): string {
@@ -59,32 +92,59 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function linkify(text: string, books: BookRef[], countries: CountryRef[]): React.ReactNode[] {
+type Matcher = { regex: RegExp; make: (match: string, k: number) => React.ReactNode }
+
+// Compile the match regexes ONCE per render instead of once per book×item:
+// with ~20k books and 30 items per page the old inline construction meant
+// ~600k RegExp compiles per pageview.
+//
+// Generic-title guard: the catalogue holds real books titled "America",
+// "Court", "Will", "Freedom", "Novel", … which as case-insensitive matchers
+// linked ordinary words in summaries (even "America" inside "PEN America").
+// So book titles match case-SENSITIVELY; single-word titles only link when
+// the summary quotes them ("Maus" banned in …); multi-word titles need ≥2
+// capitalized tokens, so sentence-case fragments like "On the" never match.
+const QUOTE_CLASS = `["'“”‘’«»]`
+function buildMatchers(books: BookRef[], countries: CountryRef[]): Matcher[] {
+  const matchers: Matcher[] = []
+  for (const book of books) {
+    const title = book.title.trim()
+    if (title.length < 4) continue
+    const words = title.split(/\s+/)
+    let pattern: string
+    if (words.length === 1) {
+      pattern = `(?<=${QUOTE_CLASS})${escapeRegex(title)}(?=${QUOTE_CLASS})`
+    } else {
+      const capTokens = words.filter(w => /^[^a-z]/.test(w)).length
+      if (capTokens < 2) continue
+      pattern = `\\b${escapeRegex(title)}\\b`
+    }
+    matchers.push({
+      regex: new RegExp(pattern, 'g'),
+      make: (match, k) => <Link key={k} href={`/books/${book.slug}`} className="text-gray-900 underline underline-offset-2 hover:no-underline">{match}</Link>,
+    })
+  }
+  for (const country of countries) {
+    if (country.name_en.length < 4) continue
+    matchers.push({
+      regex: new RegExp(`\\b${escapeRegex(country.name_en)}\\b`, 'gi'),
+      make: (match, k) => <Link key={k} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 underline underline-offset-2 hover:no-underline">{match}</Link>,
+    })
+  }
+  return matchers
+}
+
+function linkify(text: string, matchers: Matcher[]): React.ReactNode[] {
   type Span = { start: number; end: number; node: React.ReactNode }
   const spans: Span[] = []
   let key = 0
 
-  const collect = (regex: RegExp, makeNode: (match: string, k: number) => React.ReactNode) => {
+  for (const { regex, make } of matchers) {
     regex.lastIndex = 0
     let m: RegExpExecArray | null
     while ((m = regex.exec(text)) !== null) {
-      spans.push({ start: m.index, end: m.index + m[0].length, node: makeNode(m[0], key++) })
+      spans.push({ start: m.index, end: m.index + m[0].length, node: make(m[0], key++) })
     }
-  }
-
-  for (const book of books) {
-    collect(
-      new RegExp(`\\b${escapeRegex(book.title)}\\b`, 'gi'),
-      (match, k) => <Link key={k} href={`/books/${book.slug}`} className="text-gray-900 underline underline-offset-2 hover:no-underline">{match}</Link>
-    )
-  }
-
-  for (const country of countries) {
-    if (country.name_en.length < 4) continue
-    collect(
-      new RegExp(`\\b${escapeRegex(country.name_en)}\\b`, 'gi'),
-      (match, k) => <Link key={k} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 underline underline-offset-2 hover:no-underline">{match}</Link>
-    )
   }
 
   spans.sort((a, b) => a.start - b.start || b.end - a.end)
@@ -118,7 +178,7 @@ export default async function NewsPage({
 
   const supabase = adminClient()
 
-  const [{ data: rawItems, count: totalCount }, { data: books }, { data: countries }] = await Promise.all([
+  const [{ data: rawItems, count: totalCount }, { books, countries }] = await Promise.all([
     // rows: 30 per page | reason: paginated daily news feed; count drives the pager
     supabase
       .from('news_items')
@@ -126,15 +186,12 @@ export default async function NewsPage({
       .eq('status', 'published')
       .order('published_at', { ascending: false, nullsFirst: false })
       .range(offset, offset + ITEMS_PER_PAGE - 1),
-    // rows: ≤10000 | fields: [slug, title] | reason: linkify book titles in news summaries
-    supabase.from('books').select('slug, title').range(0, 9999),
-    // rows: ≤300 | fields: [code, name_en] | reason: linkify country names in news summaries
-    supabase.from('countries').select('code, name_en').range(0, 299),
+    // full book + country corpus for linkify — cached 24h, see loadLinkifyRefs
+    loadLinkifyRefs(),
   ])
 
   const items = (rawItems ?? []) as NewsItem[]
-  const bookRefs = (books ?? []) as BookRef[]
-  const countryRefs = (countries ?? []) as CountryRef[]
+  const matchers = buildMatchers(books, countries)
   const totalPages = Math.max(1, Math.ceil((totalCount ?? 0) / ITEMS_PER_PAGE))
 
   // Essays strip only renders on page 1 — paginated pages are meant for
@@ -197,7 +254,7 @@ export default async function NewsPage({
                   className="mb-1.5"
                 />
                 <p className="text-sm text-gray-700 leading-relaxed">
-                  {linkify(item.summary, bookRefs, countryRefs)}
+                  {linkify(item.summary, matchers)}
                 </p>
                 <p className="mt-2 text-xs text-gray-400 flex items-center gap-2 flex-wrap">
                   <a
