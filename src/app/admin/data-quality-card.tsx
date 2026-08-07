@@ -200,6 +200,10 @@ export default function DataQualityCard() {
   const [detail, setDetail] = useState<DetailData | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  // Collapsed by default: the dashboard shows the health score + the three
+  // worst metrics; the full list (and its clickable detail tables) is a click
+  // away. Counts still load on mount — they're one cached HTTP call now.
+  const [expanded, setExpanded] = useState(false)
 
   // Counts are cached server-side for 1h (they only move when imports run);
   // `refresh` busts that cache for a live recount.
@@ -368,26 +372,47 @@ export default function DataQualityCard() {
         </button>
       </div>
 
-      {/* Health score */}
-      <div className="flex items-center gap-2">
+      {/* Health score + summary chips */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <span className="text-sm text-gray-500">Data health:</span>
         <span className={`text-sm font-bold tabular-nums ${health.cls}`}>{healthScore}%</span>
         <span className={`text-sm font-medium ${health.cls}`}>— {health.text}</span>
+        {!expanded && sortedScoring.slice(0, 3).map(m => {
+          const p = pct(m.count, m.total)
+          return (
+            <button
+              key={m.key}
+              onClick={() => { setExpanded(true); handleMetricClick(m.key) }}
+              className={`text-xs px-2 py-1 rounded-full font-medium ${priorityFor(p).badge} hover:opacity-80`}
+              title="Show details"
+            >
+              {m.label}: {m.count.toLocaleString('en')} ({p}%)
+            </button>
+          )
+        })}
+        <button
+          onClick={() => { setExpanded(v => !v); if (expanded) { setActiveMetric(null); setDetail(null) } }}
+          className="text-xs text-gray-400 hover:text-gray-700 transition-colors ml-auto"
+        >
+          {expanded ? 'Collapse ▴' : 'All metrics ▾'}
+        </button>
       </div>
 
       {/* Metric rows */}
-      <div className="flex flex-col gap-1 mt-1">
-        {sortedScoring.map(m => renderMetricRow(m, false))}
+      {expanded && (
+        <div className="flex flex-col gap-1 mt-1">
+          {sortedScoring.map(m => renderMetricRow(m, false))}
 
-        {informationalMetrics.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-200">
-            <p className="text-xs text-gray-400 mb-2 px-1">
-              Informational — not counted in data health score
-            </p>
-            {informationalMetrics.map(m => renderMetricRow(m, true))}
-          </div>
-        )}
-      </div>
+          {informationalMetrics.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <p className="text-xs text-gray-400 mb-2 px-1">
+                Informational — not counted in data health score
+              </p>
+              {informationalMetrics.map(m => renderMetricRow(m, true))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

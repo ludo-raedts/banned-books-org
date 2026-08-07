@@ -9,6 +9,7 @@ export default async function AdminPage() {
 
   const [
     { count: bookCount },
+    { count: authorCount },
     { count: newsCount },
     { count: banCount },
     needsEnrichmentRes,
@@ -16,6 +17,7 @@ export default async function AdminPage() {
     { data: refreshLog },
   ] = await Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
+    supabase.from('authors').select('*', { count: 'exact', head: true }),
     supabase.from('news_items').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     // Books missing at least one enrichable field — approximates "pending enrichment"
@@ -111,6 +113,7 @@ export default async function AdminPage() {
   return (
     <AdminDashboardClient
       bookCount={bookCount ?? 0}
+      authorCount={authorCount ?? 0}
       newsCount={newsCount ?? 0}
       banCount={banCount ?? 0}
       countryCount={countryCount}

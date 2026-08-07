@@ -2,7 +2,7 @@
 
 import { cardCls, formatBytes } from './kit'
 import { useState } from 'react'
-import { BookOpen, Newspaper, BarChart2, Zap, Users, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
+import { BarChart2, Zap, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ZENODO_DOI_URL, ZENODO_RECORD_MANAGE_URL } from '@/lib/zenodo'
 import { useAdminUi } from './admin-ui'
@@ -25,6 +25,7 @@ interface Props {
   // build-dataset spawns a local child process — the API route 400s on Vercel.
   isLocalDev: boolean
   bookCount: number
+  authorCount: number
   newsCount: number
   banCount: number
   countryCount: number
@@ -61,6 +62,32 @@ function formatRelativeTime(iso: string | null): string {
   if (hr < 24) return `${hr}h ago`
   const d = Math.round(hr / 24)
   return `${d}d ago`
+}
+
+// Compact at-a-glance tile. Clickable when href is set — the tiles replace
+// the old full-size Books/Writers/News link cards.
+function StatTile({
+  label, value, sub, href, badge,
+}: {
+  label: string
+  value: string
+  sub?: string
+  href?: string
+  badge?: boolean
+}) {
+  const inner = (
+    <>
+      <p className={`text-xl font-bold tabular-nums leading-tight ${badge ? 'text-red-600' : 'text-gray-900'}`}>{value}</p>
+      <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-0.5">{label}</p>
+      {sub && <p className="text-[11px] text-gray-400 tabular-nums">{sub}</p>}
+    </>
+  )
+  const tileCls = 'border border-gray-200 rounded-xl px-4 py-3 bg-white min-w-0'
+  return href ? (
+    <a href={href} className={`${tileCls} block hover:border-gray-400 transition-colors`}>{inner}</a>
+  ) : (
+    <div className={tileCls}>{inner}</div>
+  )
 }
 
 function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: string | null; cardCls: string }) {
@@ -174,7 +201,7 @@ function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: 
 
 
 export default function AdminDashboardClient({
-  bookCount, newsCount, banCount, countryCount, needsEnrichment,
+  bookCount, authorCount, newsCount, banCount, countryCount, needsEnrichment,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
   inboxRows, inboxFetchedAt, isLocalDev,
@@ -232,6 +259,26 @@ export default function AdminDashboardClient({
         <h1 className="text-2xl font-bold">Overview</h1>
       </div>
 
+      {/* At-a-glance tiles — the cheap counts that used to be scattered over
+          full-size cards. Books/Authors/Drafts link straight to their section. */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        <StatTile label="Books" value={bookCount.toLocaleString('en')} href="/admin/books" />
+        <StatTile label="Authors" value={authorCount.toLocaleString('en')} href="/admin/authors" />
+        <StatTile label="Bans" value={banCount.toLocaleString('en')} />
+        <StatTile label="Countries" value={String(countryCount)} />
+        <StatTile
+          label={`News draft${newsCount === 1 ? '' : 's'}`}
+          value={String(newsCount)}
+          href="/admin/news"
+          badge={newsCount > 0}
+        />
+        <StatTile
+          label="DB size"
+          value={dbSizeBytes !== null ? formatBytes(dbSizeBytes) : '—'}
+          sub={dbSizeBytes !== null ? `${((dbSizeBytes / dbLimitBytes) * 100).toFixed(1)}% of ${formatBytes(dbLimitBytes)}` : undefined}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Row 0 — Import pipeline overview (full width) */}
@@ -240,56 +287,6 @@ export default function AdminDashboardClient({
           cardCls={cardCls}
         />
 
-        {/* Row 1 — Books */}
-        <a href="/admin/books" className={`${cardCls} hover:border-gray-400 transition-colors group`}>
-          <div className="flex items-center justify-between">
-            <BookOpen className="w-5 h-5 text-gray-400" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900">Books</h2>
-            <p className="text-sm text-gray-500 mt-0.5">
-              Edit book descriptions, covers, genres, and censorship context.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400">{bookCount.toLocaleString('en')} books in database</p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage books →</span>
-        </a>
-
-        {/* Row 1 — Writers */}
-        <a href="/admin/authors" className={`${cardCls} hover:border-gray-400 transition-colors group`}>
-          <div className="flex items-center justify-between">
-            <Users className="w-5 h-5 text-gray-400" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900">Writers</h2>
-            <p className="text-sm text-gray-500 mt-0.5">
-              Edit author bios, photos, birth year, and country.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400">Add bios from Wikipedia or manually</p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Manage writers →</span>
-        </a>
-
-        {/* Row 1 — News */}
-        <a href="/admin/news" className={`${cardCls} hover:border-gray-400 transition-colors group relative`}>
-          {newsCount > 0 && (
-            <span className="absolute top-4 right-4 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center tabular-nums">
-              {newsCount}
-            </span>
-          )}
-          <div className="flex items-center justify-between">
-            <Newspaper className="w-5 h-5 text-gray-400" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900">News</h2>
-            <p className="text-sm text-gray-500 mt-0.5">
-              Review and publish weekly news digests from RSS feeds.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400">{newsCount} draft{newsCount !== 1 ? 's' : ''} awaiting review</p>
-          <span className="text-sm text-brand font-medium group-hover:underline mt-auto">Review drafts →</span>
-        </a>
-
         {/* Row 1 — Inbox */}
         <InboxCard rows={inboxRows} fetchedAt={inboxFetchedAt} cardCls={cardCls} />
 
@@ -297,21 +294,13 @@ export default function AdminDashboardClient({
             those sections are reachable via the top nav bar, and duplicating
             the entry points clutters the overview. */}
 
-        {/* Row 2 — Database */}
+        {/* Row 2 — Storage (catalogue counts live in the tiles above) */}
         <div className={cardCls}>
           <BarChart2 className="w-5 h-5 text-gray-400" />
           <div>
-            <h2 className="font-semibold text-gray-900">Database</h2>
-            <p className="text-sm text-gray-500 mt-0.5">Catalogue size and storage usage.</p>
+            <h2 className="font-semibold text-gray-900">Storage</h2>
+            <p className="text-sm text-gray-500 mt-0.5">Supabase database usage.</p>
           </div>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm mt-1">
-            <dt className="text-gray-500">Books</dt>
-            <dd className="tabular-nums font-medium">{bookCount.toLocaleString('en')}</dd>
-            <dt className="text-gray-500">Bans</dt>
-            <dd className="tabular-nums font-medium">{banCount.toLocaleString('en')}</dd>
-            <dt className="text-gray-500">Countries</dt>
-            <dd className="tabular-nums font-medium">{countryCount}</dd>
-          </dl>
 
           {dbSizeBytes !== null && (() => {
             const pct = Math.min(100, (dbSizeBytes / dbLimitBytes) * 100)
@@ -343,116 +332,32 @@ export default function AdminDashboardClient({
           })()}
         </div>
 
-        {/* Row 2 — Quick actions (next to Database) */}
+        {/* Row 2 — Quick actions: the three daily dashboards up front, the
+            long tail behind a disclosure (13 flat links was a bookmarks bar). */}
         <div className={cardCls}>
           <Zap className="w-5 h-5 text-gray-400" />
           <div>
             <h2 className="font-semibold text-gray-900">Quick actions</h2>
           </div>
           <div className="flex flex-col gap-1.5 text-sm mt-1">
-            <a
-              href="/admin/zenodo"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Zenodo re-deposit guide
-            </a>
-            <a
-              href="https://supabase.com/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Supabase dashboard
-            </a>
-            <a
-              href="https://vercel.com/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Vercel dashboard
-            </a>
-            <a
-              href="https://dash.cloudflare.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Cloudflare dashboard
-            </a>
-            <a
-              href="https://eu1.make.com/organization/8159588/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Make dashboard (social auto-posting)
-            </a>
-            <a
-              href="https://resend.com/overview"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Resend dashboard
-            </a>
-            <a
-              href="https://formspree.io/forms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Formspree dashboard
-            </a>
-            <a
-              href="https://dashboard.stripe.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Stripe dashboard
-            </a>
-            <a
-              href="https://bookshop.org/affiliates/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Bookshop.org affiliate dashboard
-            </a>
-            <a
-              href="https://publisher.rakutenadvertising.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Kobo affiliate dashboard (Rakuten)
-            </a>
-            <a
-              href={ZENODO_DOI_URL ?? 'https://doi.org/10.5281/zenodo.20511553'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Zenodo dataset (concept DOI)
-            </a>
-            <a
-              href={ZENODO_RECORD_MANAGE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → Zenodo record (manage / new version)
-            </a>
-            <a
-              href="https://orcid.org/0009-0006-8358-7119"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-brand transition-colors"
-            >
-              → ORCID — Ludo Raedts
-            </a>
+            <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Supabase dashboard</a>
+            <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Vercel dashboard</a>
+            <a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Cloudflare dashboard</a>
           </div>
+          <details className="mt-1">
+            <summary className="text-sm text-gray-500 cursor-pointer select-none hover:text-gray-700">All dashboards &amp; links</summary>
+            <div className="flex flex-col gap-1.5 text-sm mt-2">
+              <a href="https://eu1.make.com/organization/8159588/dashboard" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Make dashboard (social auto-posting)</a>
+              <a href="https://resend.com/overview" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Resend dashboard</a>
+              <a href="https://formspree.io/forms" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Formspree dashboard</a>
+              <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Stripe dashboard</a>
+              <a href="https://bookshop.org/affiliates/dashboard" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Bookshop.org affiliate dashboard</a>
+              <a href="https://publisher.rakutenadvertising.com/" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Kobo affiliate dashboard (Rakuten)</a>
+              <a href={ZENODO_DOI_URL ?? 'https://doi.org/10.5281/zenodo.20511553'} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Zenodo dataset (concept DOI)</a>
+              <a href={ZENODO_RECORD_MANAGE_URL} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ Zenodo record (manage / new version)</a>
+              <a href="https://orcid.org/0009-0006-8358-7119" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-brand transition-colors">→ ORCID — Ludo Raedts</a>
+            </div>
+          </details>
         </div>
 
         {/* Row 3 — Data quality (full width) */}
