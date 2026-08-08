@@ -28,6 +28,8 @@
  *   npx tsx --env-file=.env.local scripts/verify-years-llm.ts --dry-run --limit=40
  *   npx tsx --env-file=.env.local scripts/verify-years-llm.ts --apply
  *   (default without --apply is dry-run; --limit=N caps the batch)
+ *   --ids-file=data/foo.json  → scope to a JSON array of book-ids (bv. de
+ *   PEN stamped-years watchlist) i.p.v. de hele catalogus.
  */
 
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
@@ -38,6 +40,7 @@ const CKPT = 'data/year-llm-verification.jsonl'
 
 const APPLY = process.argv.includes('--apply')
 const LIMIT = (() => { const a = process.argv.find(x => x.startsWith('--limit=')); return a ? parseInt(a.split('=')[1], 10) : Infinity })()
+const IDS_FILE = process.argv.find(x => x.startsWith('--ids-file='))?.split('=')[1]
 const CONCURRENCY = 6
 const MINI = 'gpt-4o-mini'
 const SENIOR = 'gpt-4o'
@@ -212,6 +215,11 @@ async function main() {
   for (const id of processedIds) skip.add(id)
   console.log(`Skip set: ${skip.size}  (OL-confirmed/fixed + ${processedIds.size} already-checkpointed)`)
   let targets = await fetchTargets(skip)
+  if (IDS_FILE) {
+    const only = new Set<number>(JSON.parse(readFileSync(IDS_FILE, 'utf8')) as number[])
+    targets = targets.filter(t => only.has(t.id))
+    console.log(`--ids-file ${IDS_FILE}: scoped to ${only.size} ids → ${targets.length} targets after skip-set`)
+  }
   console.log(`Remaining targets: ${targets.length}  (with year: ${targets.filter(t => t.db_year != null).length}, NULL backfill: ${targets.filter(t => t.db_year == null).length})`)
   if (LIMIT !== Infinity) { targets = targets.slice(0, LIMIT); console.log(`--limit ${LIMIT} → processing ${targets.length}`) }
   console.log(`Mode: ${APPLY ? 'APPLY (writes high-confidence changes)' : 'DRY-RUN (no writes)'}\n`)

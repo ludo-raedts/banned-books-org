@@ -1021,3 +1021,19 @@ Rijtelling: fpy∈{2024,2025} van 499+798=1.297 → 215+263=**478**
 (461 niet-gefixte + 17 gefixte 2025→2024). Restant-watchlist: 41 review-tier + 404
 onverifieerbaar + 3 gedropte, waarvan 111 intern onmogelijk (ban vóór pub-jaar) —
 follow-up via de bestaande keten `verify-years-llm.ts` → `resolve-proposed-years.ts`.
+
+## Follow-up keten uitgevoerd 2026-08-08
+
+Watchlist (448 ids, `data/pen-stamped-years-watchlist-ids.json`) door de bestaande keten:
+
+1. `verify-years-llm.ts --ids-file=… --apply` (nieuwe scope-flag): **12 gecorrigeerd**
+   (o.a. Sword of Destiny→1992, 1Q84→2009), 436 door naar stap 2 als 'proposed'.
+2. `resolve-proposed-years.ts --apply` (verdict-enum gefixt: `openlibrary_correct`
+   werd door gpt-4o geïmproviseerd maar door de code genegeerd): **15 gecorrigeerd**
+   (o.a. Complete Persepolis→2007, Hidden→2012, Dragon Ball Vol. 1→1985), 421 leave.
+
+Eindstand fpy∈{2024,2025}: 478 → **451** (205×2024 + 246×2025). Totaal keten:
+836 + 12 + 15 = **863 hersteld** van de oorspronkelijke 1.297. Het restant is de
+onverifieerbare long tail (per-volume manga zonder OL `first_publish_date`,
+obscure serie-nonfictie) + de 13 bevestigd-echte recente titels.
+`audit-integrity.ts` exit 0; ban-before-publication 397→384, baseline her-ankerd.

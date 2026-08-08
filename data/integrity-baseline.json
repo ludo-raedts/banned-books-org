@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-08T06:01:15.473Z",
+  "generatedAt": "2026-08-08T06:21:35.687Z",
   "metrics": {
     "non-person-authors": 15,
     "shared-cover-contamination": 0,
     "shared-desc-contamination": 16,
     "slug-drift": 858,
     "orphan-books": 1,
-    "ban-before-publication": 397,
+    "ban-before-publication": 384,
     "no-cover": 10455,
     "no-description": 10682,
     "country-coverage": 119,

@@ -50,7 +50,7 @@ const HEAVY_SYS = `You are a bibliographic adjudicator. Determine the year a lit
 You are given a database year, a junior model's guess, and an OpenLibrary year. None is authoritative — OpenLibrary in particular is sometimes corrupted by a single mis-dated edition. Decide from your OWN specific knowledge of this exact work+author, using the candidates only as hints. If you do not genuinely know this work, or cannot tell which same-titled work it is, return null and verdict "unsure" — do NOT rubber-stamp any candidate.
 
 Reply with ONLY JSON:
-{"first_published_year": <integer or null>, "confidence":"high"|"medium"|"low", "verdict":"db_correct"|"model_correct"|"other_year"|"unsure", "reasoning":"<one sentence naming the edition you know it by, or why unsure>"}
+{"first_published_year": <integer or null>, "confidence":"high"|"medium"|"low", "verdict":"db_correct"|"model_correct"|"openlibrary_correct"|"other_year"|"unsure", "reasoning":"<one sentence naming the edition you know it by, or why unsure>"}
 BCE years negative.`
 
 function plausible(y: number | null): y is number { return typeof y === 'number' && Number.isInteger(y) && y >= YEAR_MIN && y <= YEAR_MAX }
@@ -121,7 +121,10 @@ async function processBook(sb: ReturnType<typeof adminClient>, b: Hydrated): Pro
   const h = await heavy(b, ol.year)
   if (!h) return { ...base, ol_year: ol.year, ol_work: ol.work, final_year: null, action: 'error', note: 'heavy failed' }
   const hy = h.first_published_year
-  const wants = (h.verdict === 'model_correct' || h.verdict === 'other_year') && plausible(hy) && hy !== b.db_year
+  // 'openlibrary_correct': gpt-4o improviseerde dit verdict al (het enum
+  // miste een OL-optie terwijl OL wél als kandidaat wordt aangeboden);
+  // nu gesanctioneerd — de corroboration-gate (hy === ol.year) blijft gelden.
+  const wants = (h.verdict === 'model_correct' || h.verdict === 'other_year' || h.verdict === 'openlibrary_correct') && plausible(hy) && hy !== b.db_year
   // Corroboration gate: the heavy year must be backed by at least one other
   // signal (OL or the junior), so we never write a number only the heavy
   // asserted — its self-rated "high confidence" is not enough alone on the
