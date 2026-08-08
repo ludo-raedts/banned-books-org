@@ -601,7 +601,10 @@ async function main() {
           title: ev.title,
           slug,
           original_language: 'en',
-          first_published_year: ol.publishYear ?? ev.year ?? null,
+          // NOOIT het ban-jaar (ev.year) als pub-jaar stempelen: dat vervuilde
+          // 1.297 rijen met fpy 2024/2025 (zie _audit_pen_stamped_years.ts).
+          // Geen OL-jaar → NULL; de year-verify-keten vult later.
+          first_published_year: ol.publishYear ?? null,
           ai_drafted: false,
           genres: guessGenres(ev.title, ev.author),
           cover_url: ol.coverUrl,

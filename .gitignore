@@ -131,6 +131,12 @@ next-env.d.ts
 /data/resolve-proposed-years.json
 /data/resolve-proposed-years.jsonl
 
+# PEN stamped-years audit — resume checkpoint + large regenerable JSON
+# (the .md review + the high-conf fixes JSON ARE committed)
+/data/pen-stamped-years-checkpoint.jsonl
+/data/pen-stamped-years-audit.json
+/data/publication-year-fixes-backup-*.csv
+
 # cover vision-audit / recovery machine outputs (.md report IS committed)
 /data/cover-vision-audit.json
 /data/cover-vision-audit.jsonl

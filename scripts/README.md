@@ -353,7 +353,10 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `validate-consensus-descriptions.ts` | Read-only recall/false-positive-meting van de cross-model consensus-pijplijn (3 buckets: known/anonymous/target) — draai dit om een scope te vetten vóór `enrich-descriptions-consensus.ts --apply` |
 
 Afgeronde audits/metingen (ban-vs-context-overlap + keep-narrative 2e-pass + steekproef-helpers,
-ISBN-winrate-meting, CSAM-red-flags-telling, Nazi-warning-kandidaten) → `scripts/archive/`.
+ISBN-winrate-meting, CSAM-red-flags-telling, Nazi-warning-kandidaten,
+`_audit_pen_stamped_years.ts` — PEN "ban-jaar als pub-jaar"-stempels vs OL, 836 fixes
+toegepast 2026-08-08 via `apply-publication-year-fixes.ts --file=`, review in
+`data/pen-stamped-years-audit.md`; de importer-fallback zelf is gefixt in `import-pen.ts`) → `scripts/archive/`.
 
 ---
 

@@ -1,20 +1,26 @@
 #!/usr/bin/env tsx
 /**
  * Apply the high-confidence publication-year corrections produced by
- * scripts/audit-publication-years.ts (re-sliced into the high-conf JSON).
+ * scripts/audit-publication-years.ts of scripts/_audit_pen_stamped_years.ts
+ * (re-sliced into the high-conf JSON).
  * Sets books.first_published_year = OL first_publish_year for the flagged
- * "early-import stamped a recent index year" rows.
+ * "importer stamped a recent index/ban year" rows.
+ *
+ * Guards: exact-state (row must still hold the audited year), plausibility
+ * range on ol_year. Before the first write a CSV backup of the current DB
+ * state of every targeted row is written to data/ (rollback material).
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts            # dry-run
  *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --apply    # (--write werkt nog als alias)
+ *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --file=data/other-fixes.json --apply
  */
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { adminClient } from '../src/lib/supabase'
-import { isApply } from './lib/cli'
+import { flagValue, isApply } from './lib/cli'
 
 const WRITE = isApply()
-const FILE = 'data/publication-year-fixes-highconf.json'
+const FILE = flagValue('file') ?? 'data/publication-year-fixes-highconf.json'
 
 type Fix = { id: number; slug: string; title: string; first_published_year: number; ol_year: number }
 
@@ -22,6 +28,21 @@ async function main() {
   const fixes: Fix[] = JSON.parse(readFileSync(FILE, 'utf8'))
   console.log(`Loaded ${fixes.length} fixes from ${FILE}. Mode: ${WRITE ? 'WRITE' : 'DRY-RUN'}\n`)
   const sb = adminClient()
+
+  if (WRITE && fixes.length > 0) {
+    // CSV backup of the CURRENT DB state of every targeted row (rollback material).
+    const rows: string[] = ['id,slug,first_published_year']
+    for (let i = 0; i < fixes.length; i += 200) {
+      const ids = fixes.slice(i, i + 200).map((f) => f.id)
+      const { data, error } = await sb.from('books').select('id, slug, first_published_year').in('id', ids)
+      if (error) throw new Error(`backup query failed: ${error.message}`)
+      for (const r of data ?? []) rows.push(`${r.id},"${r.slug}",${r.first_published_year ?? ''}`)
+    }
+    const backupPath = `data/publication-year-fixes-backup-${new Date().toISOString().slice(0, 10)}.csv`
+    writeFileSync(backupPath, rows.join('\n') + '\n')
+    console.log(`Backup of ${rows.length - 1} current rows → ${backupPath}\n`)
+  }
+
   let ok = 0, skip = 0, fail = 0
   for (const f of fixes) {
     if (typeof f.ol_year !== 'number' || f.ol_year < 1400 || f.ol_year > 2026) { skip++; console.log(`  skip #${f.id}: implausible ol_year ${f.ol_year}`); continue }
