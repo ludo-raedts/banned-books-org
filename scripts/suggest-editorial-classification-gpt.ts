@@ -52,9 +52,9 @@ const limitArg = process.argv.find(a => a.startsWith('--limit='))
 const slugArg  = process.argv.find(a => a.startsWith('--slug='))
 const delayArg = process.argv.find(a => a.startsWith('--delay='))
 const modelArg = process.argv.find(a => a.startsWith('--model='))
-const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 100 : 3)
+const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 100 : 3)
 const SLUG     = slugArg?.split('=')[1] ?? null
-const DELAY    = delayArg ? parseInt(delayArg.split('=')[1]) : 400
+const DELAY    = delayArg ? parseInt(delayArg.split('=')[1], 10) : 400
 const MODEL    = modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? 'gpt-4o-mini'
 
 // ─── Condensed framework, distilled from the two essays ──────────────────────

@@ -22,7 +22,7 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
-import { titlesMatch, titleTokens } from '../src/lib/enrich/title-match'
+import { titleTokens } from '../src/lib/enrich/title-match'
 import { writeFileSync } from 'node:fs'
 
 const APPLY = process.argv.includes('--apply')

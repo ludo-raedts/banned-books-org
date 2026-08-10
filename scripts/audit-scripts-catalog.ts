@@ -12,9 +12,9 @@
  *
  * Exports findUndocumentedScripts() for the enrich-all integration.
  */
-import { readdirSync, readFileSync } from 'fs'
-import { resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { readdirSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const HERE = fileURLToPath(new URL('.', import.meta.url))
 const README = resolve(HERE, 'README.md')

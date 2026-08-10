@@ -277,7 +277,7 @@ export async function planBirthdayPicks(windowDays = 400): Promise<{ pinned: num
   for (const ymd of dates) {
     const authors = featured.get(ymd.slice(5))
     const src = srcByDate.get(ymd)
-    if (authors && authors.length) {
+    if (authors?.length) {
       if (src === 'manual') continue // editor override always wins
       let bookId: number | null = null
       for (const a of authors) {

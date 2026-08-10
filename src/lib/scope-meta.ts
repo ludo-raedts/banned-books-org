@@ -175,7 +175,7 @@ export function buildScopeFaq(input: ScopeFaqInput): FaqItem[] {
   if (input.scopeSlug === 'school' && input.topStateNames.length >= 3) {
     items.push({
       q: 'Which U.S. states ban the most books in schools?',
-      a: `The states with the most documented school book bans are ${input.topStateNames.slice(0, 5).join(', ')}. These five account for the majority of all records in PEN America\'s Index.`,
+      a: `The states with the most documented school book bans are ${input.topStateNames.slice(0, 5).join(', ')}. These five account for the majority of all records in PEN America's Index.`,
     })
   }
 
@@ -208,7 +208,7 @@ export function buildScopeFaq(input: ScopeFaqInput): FaqItem[] {
   if (input.topBookTitles.length >= 3) {
     items.push({
       q: `What are the most-banned books in ${noun}?`,
-      a: `The titles most frequently affected include ${input.topBookTitles.slice(0, 5).join(', ')}. Each book\'s page lists every documented event with date, district, and source citation.`,
+      a: `The titles most frequently affected include ${input.topBookTitles.slice(0, 5).join(', ')}. Each book's page lists every documented event with date, district, and source citation.`,
     })
   }
 

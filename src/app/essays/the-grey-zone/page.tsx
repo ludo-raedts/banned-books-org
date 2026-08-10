@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import EssayLayout from '@/components/essay-layout'
 import { essayBySlug } from '@/lib/essays-data'
 import { buildCitationMeta } from '@/lib/citation-meta'

@@ -54,7 +54,7 @@ async function main() {
     if (y > THIS_YEAR) { hard.push({ slug: b.slug, title: b.title, year: y, author, birth, death, why: `future (>${THIS_YEAR})` }); continue }
     if (birth != null && y < birth) { hard.push({ slug: b.slug, title: b.title, year: y, author, birth, death, why: `before author birth (${birth})` }); continue }
     if (birth != null && y < birth + 8) { soft.push({ slug: b.slug, title: b.title, year: y, author, birth, death, why: `author only ${y - birth}y old` }); continue }
-    if (death != null && y > death + 60) { soft.push({ slug: b.slug, title: b.title, year: y, author, birth, death, why: `${y - death}y after author death (${death})` }); continue }
+    if (death != null && y > death + 60) { soft.push({ slug: b.slug, title: b.title, year: y, author, birth, death, why: `${y - death}y after author death (${death})` }); }
   }
 
   hard.sort((a, z) => a.year - z.year)

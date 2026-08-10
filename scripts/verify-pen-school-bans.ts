@@ -45,7 +45,7 @@ function loadCsv(file: string): PenRow[] {
   // banner rows 1-2, real header on line 3
   const rows = parse(text, { columns: true, from_line: 3, skip_empty_lines: true, relax_column_count: true }) as Record<string, string>[]
   return rows
-    .map((r) => ({ title: r['Title'] ?? '', state: r['State'] ?? '', district: r['District'] ?? '' }))
+    .map((r) => ({ title: r.Title ?? '', state: r.State ?? '', district: r.District ?? '' }))
     .filter((r) => r.title)
 }
 

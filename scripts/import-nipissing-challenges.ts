@@ -31,8 +31,8 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { slugify } from '../src/lib/imports/slugify'
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 const APPLY = process.argv.includes('--apply')
 const INPUT_ARG = process.argv.find(a => a.startsWith('--input='))

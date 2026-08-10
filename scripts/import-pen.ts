@@ -19,13 +19,13 @@
 
 import { adminClient } from '../src/lib/supabase'
 import { slugify } from '../src/lib/imports/slugify'
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 // ── Config ──────────────────────────────────────────────────────────────────
 
 const APPLY = process.argv.includes('--apply')
-const LIMIT = parseInt(process.argv.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0') || Infinity
+const LIMIT = parseInt(process.argv.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0', 10) || Infinity
 const YEAR = process.argv.find(a => a.startsWith('--year='))?.split('=')[1] ?? '2024-25'
 
 // Positional column layout per PEN-year file. The school-year datasets differ:
@@ -150,9 +150,9 @@ function formatAuthor(raw: string): string {
 
 // Earliest 4-digit year in the date string. Handles month-year, AY-range, and "24-25".
 function extractYear(s: string): number | null {
-  if (/^\d{2}-\d{2}$/.test(s)) return 2000 + parseInt(s.split('-')[0])
+  if (/^\d{2}-\d{2}$/.test(s)) return 2000 + parseInt(s.split('-')[0], 10)
   const m = s.match(/20\d{2}/g)
-  return m && m.length ? Math.min(...m.map(Number)) : null
+  return m?.length ? Math.min(...m.map(Number)) : null
 }
 
 // Lightweight genre heuristic, mirrors the April seed.

@@ -25,8 +25,8 @@
  *                                 staging file (useful for plumbing tests).
  */
 
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 function loadEnvLocal() {
   const p = join(process.cwd(), '.env.local')

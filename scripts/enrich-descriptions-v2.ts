@@ -52,9 +52,9 @@ const SKIP_GB          = process.argv.includes('--skip-google-books')
 const limitArg         = process.argv.find(a => a.startsWith('--limit='))
 const slugArg          = process.argv.find(a => a.startsWith('--slug='))
 const concArg          = process.argv.find(a => a.startsWith('--concurrency='))
-const LIMIT            = limitArg ? parseInt(limitArg.split('=')[1]) : undefined
+const LIMIT            = limitArg ? parseInt(limitArg.split('=')[1], 10) : undefined
 const SLUG             = slugArg?.split('=')[1] ?? undefined
-const CONCURRENCY      = concArg ? Math.max(1, parseInt(concArg.split('=')[1])) : 1
+const CONCURRENCY      = concArg ? Math.max(1, parseInt(concArg.split('=')[1], 10)) : 1
 
 async function main() {
   console.log(`\n── enrich-descriptions-v2 (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──`)

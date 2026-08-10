@@ -10,7 +10,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { SITE_URL } from '@/lib/canonical-host'
 import {
-  getBookForDate, isPublishableBotdDate, publishedBotdDates, todayYmd,
+  getBookForDate, isPublishableBotdDate, todayYmd,
   reasonPhrases, joinHuman, whereClause,
 } from '@/lib/book-of-the-day'
 import { ShareRow } from '@/components/share-tools'

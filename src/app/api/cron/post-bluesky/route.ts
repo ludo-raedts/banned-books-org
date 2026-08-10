@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { pickDailyBook, buildPost, planBirthdayPicks } from '@/lib/bluesky-post'
 import { createSession, uploadImageBlob, createPost, latestPostCreatedAt, type ExternalEmbed } from '@/lib/bluesky'
 

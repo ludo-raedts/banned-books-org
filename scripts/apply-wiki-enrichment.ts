@@ -22,8 +22,8 @@
  *   node --env-file=.env.local --import tsx scripts/apply-wiki-enrichment.ts --apply --slug=lolita
  */
 
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 function loadEnvLocal() {
   const p = join(process.cwd(), '.env.local')

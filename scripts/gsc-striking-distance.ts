@@ -20,9 +20,9 @@
  *   pnpm tsx scripts/gsc-striking-distance.ts --target-pos=2
  *   pnpm tsx scripts/gsc-striking-distance.ts --include-bots
  */
-import { promises as fs } from 'fs'
-import path from 'path'
-import os from 'os'
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+import os from 'node:os'
 import { authenticate } from '@google-cloud/local-auth'
 import { google } from 'googleapis'
 import type { OAuth2Client } from 'google-auth-library'

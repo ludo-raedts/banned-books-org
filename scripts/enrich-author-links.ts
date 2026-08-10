@@ -158,7 +158,7 @@ function claimString(e: WdEntity, prop: string): string | null {
 }
 
 function p569Year(e: WdEntity): number | null {
-  const v = e.claims['P569']?.[0]?.mainsnak?.datavalue?.value as { time?: string } | undefined
+  const v = e.claims.P569?.[0]?.mainsnak?.datavalue?.value as { time?: string } | undefined
   if (!v?.time) return null
   const m = /^[+-](\d{4,})-/.exec(v.time)
   return m ? +m[1] : null

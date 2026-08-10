@@ -27,7 +27,7 @@
  *   npx tsx --env-file=.env.local scripts/audit-publication-years.ts --threshold=5
  */
 
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 
 const THRESH = (() => {

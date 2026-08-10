@@ -44,7 +44,7 @@ export async function generateMetadata({
   const { slug } = await params
   const ctx = getBanContext(slug)
   const content = CONTEXT_CONTENT[slug]
-  if (!ctx || !ctx.hasHub || !content) return {}
+  if (!ctx?.hasHub || !content) return {}
 
   const href = `/contexts/${slug}`
   return {
@@ -146,7 +146,7 @@ export default async function ContextPage({
   const { slug } = await params
   const ctx = getBanContext(slug)
   const content = CONTEXT_CONTENT[slug]
-  if (!ctx || !ctx.hasHub || !content) notFound()
+  if (!ctx?.hasHub || !content) notFound()
 
   const books = await fetchContextBooks(ctx)
   // Some events (the 1938 Nazi list) cover thousands of titles. Cap the rendered

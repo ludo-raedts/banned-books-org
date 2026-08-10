@@ -97,7 +97,7 @@ async function main() {
 }
 
 // Run as CLI unless imported.
-if (process.argv[1] && process.argv[1].endsWith('enrich-coverage-snapshot.ts')) {
+if (process.argv[1]?.endsWith('enrich-coverage-snapshot.ts')) {
   main().catch((e) => {
     console.error(e)
     process.exit(1)

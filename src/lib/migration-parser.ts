@@ -197,10 +197,7 @@ export function parseSql(sql: string, out: DeclaredArtefacts): void {
 
   // CREATE [UNIQUE] INDEX [CONCURRENTLY] [IF NOT EXISTS] <id> ON ...
   // Index names are not schema-qualified in their CREATE statement.
-  const indexRegex = new RegExp(
-    `create\\s+(?:unique\\s+)?index\\s+(?:concurrently\\s+)?(?:if\\s+not\\s+exists\\s+)?(?:"([^"]+)"|(\\w+))\\s+on\\b`,
-    'gi',
-  )
+  const indexRegex = /create\s+(?:unique\s+)?index\s+(?:concurrently\s+)?(?:if\s+not\s+exists\s+)?(?:"([^"]+)"|(\w+))\s+on\b/gi
   while ((m = indexRegex.exec(sql)) !== null) {
     const name = pickName(m[1], m[2])
     if (name) out.indexes.add(name)

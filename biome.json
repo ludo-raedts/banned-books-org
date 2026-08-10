@@ -1,0 +1,52 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["src/**", "scripts/**", "!scripts/archive/**", "!**/*.md", "!**/*.json", "!**/*.css"]
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off",
+        "useIterableCallbackReturn": "off",
+        "noAssignInExpressions": "off",
+        "noControlCharactersInRegex": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useTemplate": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn"
+      },
+      "complexity": {
+        "noForEach": "off"
+      },
+      "a11y": {
+        "useSemanticElements": "off",
+        "useButtonType": "warn",
+        "noLabelWithoutControl": "warn",
+        "noSvgWithoutTitle": "warn",
+        "useAnchorContent": "warn",
+        "useValidAnchor": "warn",
+        "useKeyWithClickEvents": "warn",
+        "noStaticElementInteractions": "warn",
+        "noAutofocus": "warn",
+        "noRedundantAlt": "warn",
+        "useAriaPropsSupportedByRole": "warn",
+        "noAriaHiddenOnFocusable": "warn"
+      }
+    }
+  },
+  "assist": {
+    "enabled": false
+  }
+}

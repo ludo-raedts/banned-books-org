@@ -297,7 +297,7 @@ function claimQids(e: WdEntity, prop: string): string[] {
 }
 
 function p1476Titles(e: WdEntity): Array<{ language: string; text: string }> {
-  return (e.claims['P1476'] ?? [])
+  return (e.claims.P1476 ?? [])
     .map(c => c.mainsnak?.datavalue?.value as { language?: string; text?: string } | undefined)
     .filter((v): v is { language: string; text: string } => !!v?.language && !!v?.text)
 }
@@ -342,7 +342,7 @@ async function resolveEnglish(title: string, author: string): Promise<EnResult> 
 
     let en: string | null = null
     for (const t of p1476Titles(e)) if (t.language.toLowerCase().startsWith('en')) { en = t.text.trim(); break }
-    if (!en && e.labels['en']?.value) en = e.labels['en'].value.trim()
+    if (!en && e.labels.en?.value) en = e.labels.en.value.trim()
     if (!en) continue
     if (norm(en) === norm(title)) return { english: null, qid, status: 'english-equals-portuguese' }
     return { english: en, qid, status: 'matched' }

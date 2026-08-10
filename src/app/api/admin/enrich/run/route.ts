@@ -7,7 +7,7 @@
 // exporting a function that takes { apply, limit, onProgress } and returns a
 // summary, then add a `case` below.
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { z } from 'zod'
 import { enrichIsbn } from '@/lib/enrich/isbn'

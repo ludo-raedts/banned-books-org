@@ -24,9 +24,9 @@ const OVERWRITE = process.argv.includes('--overwrite')
 const limitArg  = process.argv.find(a => a.startsWith('--limit='))
 const slugArg   = process.argv.find(a => a.startsWith('--slug='))
 const delayArg  = process.argv.find(a => a.startsWith('--delay='))
-const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 999 : 3)
+const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 999 : 3)
 const SLUG      = slugArg?.split('=')[1] ?? null
-const DELAY     = delayArg ? parseInt(delayArg.split('=')[1]) : 500
+const DELAY     = delayArg ? parseInt(delayArg.split('=')[1], 10) : 500
 
 type BanRow = {
   year_started:     number | null
@@ -193,7 +193,7 @@ async function main() {
   // the real, cited note; only a concrete institution/actor/synopsis licenses an
   // LLM expansion.
   const hasGrounding = (b: BookRow) =>
-    !!(b.description_book && b.description_book.trim()) ||
+    !!(b.description_book?.trim()) ||
     b.bans.some(x => x.institution || x.actor)
   const eligible = withBans.filter(hasGrounding)
   const skippedUngrounded = withBans.length - eligible.length

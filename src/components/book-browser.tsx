@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback, useId } from 'react'
+import type React from 'react'
+import { useState, useEffect, useRef, useCallback, useId } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

@@ -46,7 +46,7 @@ async function allAuthors() {
 
 // A display string is "non-Latin" if it contains any char outside the Latin +
 // common-punctuation range (so accented Latin names stay on the Latin side).
-const isLatin = (s: string) => !/[^ -ɏ\s'’.,()\-]/.test(s || '')
+const isLatin = (s: string) => !/[^ -ɏ\s'’.,()-]/.test(s || '')
 const norm = (s: string) => (s || '').toLowerCase().normalize('NFKD').replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim()
 
 async function main() {

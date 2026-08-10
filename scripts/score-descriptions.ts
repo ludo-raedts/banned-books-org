@@ -27,8 +27,8 @@ import { adminClient } from '../src/lib/supabase'
 const APPLY      = process.argv.includes('--apply')
 const limitArg   = process.argv.find(a => a.startsWith('--limit='))
 const concurArg  = process.argv.find(a => a.startsWith('--concurrency='))
-const LIMIT      = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 99999 : 10)
-const CONCURRENCY = concurArg ? parseInt(concurArg.split('=')[1]) : 5
+const LIMIT      = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 99999 : 10)
+const CONCURRENCY = concurArg ? parseInt(concurArg.split('=')[1], 10) : 5
 
 // Heuristic filler phrases — auto-flag score-1 if any match.
 const FILLER_PATTERNS = [

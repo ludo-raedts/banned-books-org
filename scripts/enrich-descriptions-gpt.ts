@@ -23,9 +23,9 @@ const OVERWRITE = process.argv.includes('--overwrite')
 const limitArg  = process.argv.find(a => a.startsWith('--limit='))
 const slugArg   = process.argv.find(a => a.startsWith('--slug='))
 const delayArg  = process.argv.find(a => a.startsWith('--delay='))
-const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 999 : 5)
+const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 999 : 5)
 const SLUG      = slugArg?.split('=')[1] ?? null
-const DELAY     = delayArg ? parseInt(delayArg.split('=')[1]) : 300
+const DELAY     = delayArg ? parseInt(delayArg.split('=')[1], 10) : 300
 
 type BookRow = {
   id:                   number

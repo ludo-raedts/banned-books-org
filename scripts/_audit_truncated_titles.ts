@@ -55,7 +55,7 @@
 //
 //   pnpm tsx --env-file=.env.local scripts/_audit_truncated_titles.ts
 
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 
 type Book = {

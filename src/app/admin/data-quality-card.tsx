@@ -89,7 +89,7 @@ function downloadCsv(rows: DetailData['rows'], metricKey: string, detailType: De
     ]
   }
 
-  const escape = (s: string) => `"${s.replace(/"/g, '""')}"`
+  const csvEscape = (s: string) => `"${s.replace(/"/g, '""')}"`
   const lines = [header, ...rows.map(r => toRow(r).map(escape).join(','))]
   const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
   const url = URL.createObjectURL(blob)

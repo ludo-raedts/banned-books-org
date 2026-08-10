@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { getBBWConfig, updateBBWConfig } from '@/config/banned-books-week'
 import { adminClient } from '@/lib/supabase'

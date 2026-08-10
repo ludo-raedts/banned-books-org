@@ -15,7 +15,7 @@
  *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --apply    # (--write werkt nog als alias)
  *   npx tsx --env-file=.env.local scripts/apply-publication-year-fixes.ts --file=data/other-fixes.json --apply
  */
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import { flagValue, isApply } from './lib/cli'
 

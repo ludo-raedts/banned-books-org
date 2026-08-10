@@ -10,7 +10,7 @@
 // avoids drift between the two paths and makes acceptance #5 (manual approve
 // produces the same downstream shape as auto-approve) trivially true.
 
-import { Client } from 'pg'
+import type { Client } from 'pg'
 import { slugify } from './slugify'
 import { canonicaliseAuthorName } from './canonicalise-author-name'
 
@@ -124,7 +124,7 @@ export async function commitParsedRow(input: CommitInput, pg: Client): Promise<C
 
     // 3. Book
     const slug =
-      input.slug_override && input.slug_override.trim()
+      input.slug_override?.trim()
         ? input.slug_override.trim()
         : pickSlugSource(
             input.title,

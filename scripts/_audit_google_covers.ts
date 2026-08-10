@@ -1,6 +1,6 @@
 import { adminClient } from '../src/lib/supabase'
 import sharp from 'sharp'
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 
 // A real book cover is always portrait. Google Books returns a degenerate
 // horizontal strip (the top sliver of the cover, watermarked) for some books

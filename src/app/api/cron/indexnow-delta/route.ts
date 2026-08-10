@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { runIndexNowDelta } from '@/lib/indexnow-delta'
 
 export const runtime = 'nodejs'

@@ -59,10 +59,10 @@
  *                      One-shot status from another terminal: scripts/enrich-status.sh
  */
 
-import { spawn, spawnSync } from 'child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
-import { resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { catalogReminder } from './audit-scripts-catalog'
 import { captureCoverage } from './enrich-coverage-snapshot'
 

@@ -389,6 +389,7 @@ const PUB_YEAR_PAREN_ANYWHERE =
 // canonical-title logic (Sprint A doctrine: non-Latin → use transliteration)
 // stays consistent.
 const TRANSLITERATION_DIACRITICS =
+  // biome-ignore lint/suspicious/noMisleadingCharacterClass: bare combining marks are matched deliberately — they signal transliteration regardless of base letter
   /[āēīōūĀĒĪŌŪḥṣṭẓḍṛḷĥŝẑṅñĩũĭŏěǎǐǒǔâêîôûñĝŝźżśćń̇ʿʾʼ̄̈̆̌]/
 const TRAILING_ENGLISH_PAREN =
   /\s*\(([A-Za-z][A-Za-z0-9 \-'’.,!?:;]*)\)\s*$/

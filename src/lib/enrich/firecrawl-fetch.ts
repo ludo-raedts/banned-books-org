@@ -43,9 +43,9 @@ export async function firecrawlFetchPage(url: string): Promise<FirecrawlPageResu
     return { ok: false, reason: `firecrawl error: ${json?.error ?? 'malformed response'}` }
   }
   const md = json.data.metadata ?? {}
-  const ogRaw = md['ogImage'] ?? md['og:image']
+  const ogRaw = md.ogImage ?? md['og:image']
   const ogImage = typeof ogRaw === 'string' && ogRaw.startsWith('http') ? ogRaw
     : Array.isArray(ogRaw) && typeof ogRaw[0] === 'string' ? ogRaw[0] : null
-  const finalUrl = typeof md['sourceURL'] === 'string' ? md['sourceURL'] as string : url
+  const finalUrl = typeof md.sourceURL === 'string' ? md.sourceURL as string : url
   return { ok: true, html: json.data.rawHtml ?? '', ogImage, finalUrl }
 }

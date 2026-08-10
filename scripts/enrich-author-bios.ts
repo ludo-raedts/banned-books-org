@@ -519,7 +519,7 @@ async function main() {
       for (const pid of candidates) {
         const d = await fetchPageDetails(pid)
         await sleep(DELAY_MS)
-        if (!!d.extract && (isDisambigExtract(d.extract) || hasDisambigCategory(d.categories))) continue
+        if (d.extract && (isDisambigExtract(d.extract) || hasDisambigCategory(d.categories))) continue
         if (PHOTOS_ONLY) {
           const personSignal =
             extractYearFromCategories(d.categories, 'births') !== null ||

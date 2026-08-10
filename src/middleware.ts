@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/admin-session'
 import { MARKDOWN_TWINS, prefersMarkdown } from '@/lib/markdown-twins'
 

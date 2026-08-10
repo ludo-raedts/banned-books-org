@@ -82,7 +82,7 @@ function stripLeadingEndorsements(text: string): string {
   while (i < lines.length) {
     const line = lines[i].trim()
     if (line === '') { i++; continue }
-    if (/^["'"']/.test(line) || /^[–—\-]/.test(line) || /["'"']\s*[–—\-]/.test(line)) {
+    if (/^["'"']/.test(line) || /^[–—-]/.test(line) || /["'"']\s*[–—-]/.test(line)) {
       i++; continue
     }
     break

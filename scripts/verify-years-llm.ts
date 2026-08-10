@@ -32,7 +32,7 @@
  *   PEN stamped-years watchlist) i.p.v. de hele catalogus.
  */
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 

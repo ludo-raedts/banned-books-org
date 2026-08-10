@@ -50,13 +50,13 @@ export function optionsFromArgv(defaults: Partial<EnrichGenresOptions> = {}): En
   const delayArg  = process.argv.find(a => a.startsWith('--delay='))
   const modelArg  = process.argv.find(a => a.startsWith('--model='))
   // Default apply = no cap (paginate over the whole candidate set); dry-run = 5 samples.
-  const limit = limitArg ? parseInt(limitArg.split('=')[1]) : (apply ? Infinity : 5)
+  const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : (apply ? Infinity : 5)
   return {
     apply,
     overwrite,
     limit,
     slug:  slugArg?.split('=')[1] ?? null,
-    delay: delayArg ? parseInt(delayArg.split('=')[1]) : (defaults.delay ?? 300),
+    delay: delayArg ? parseInt(delayArg.split('=')[1], 10) : (defaults.delay ?? 300),
     model: modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? defaults.model ?? 'gpt-4o-mini',
   }
 }

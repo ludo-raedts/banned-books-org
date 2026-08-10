@@ -28,7 +28,7 @@
 //   npx tsx --env-file=.env.local scripts/_audit_same_author_title_dupes.ts
 //   (writes data/same-author-title-dupes.json + .md)
 
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 
 type Book = {

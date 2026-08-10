@@ -24,8 +24,8 @@ import { checkImageUrl, getPlaceholderHash, PLACEHOLDER_HAMMING_THRESHOLD } from
 const APPLY        = process.argv.includes('--apply')
 const limitArg     = process.argv.find(a => a.startsWith('--limit='))
 const concArg      = process.argv.find(a => a.startsWith('--concurrency='))
-const LIMIT        = limitArg ? parseInt(limitArg.split('=')[1]) : Infinity
-const CONCURRENCY  = concArg  ? parseInt(concArg.split('=')[1])  : 4
+const LIMIT        = limitArg ? parseInt(limitArg.split('=')[1], 10) : Infinity
+const CONCURRENCY  = concArg  ? parseInt(concArg.split('=')[1], 10)  : 4
 const POLITE_DELAY_MS = 200
 
 type Book = { id: number; slug: string; title: string; cover_url: string }

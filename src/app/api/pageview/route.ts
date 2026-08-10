@@ -12,7 +12,7 @@
 // the API request's Referer header will be the page itself, not the
 // original navigation source.
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { createHash } from 'node:crypto'
 import { adminClient } from '@/lib/supabase'
 

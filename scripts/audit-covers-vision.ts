@@ -28,7 +28,7 @@
  *   (default host filter: books.google.com — pass --all to check every cover)
  */
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import { openaiCoverSecondOpinion } from '../src/lib/enrich/openai-cover-second-opinion'
 
@@ -70,7 +70,7 @@ async function olCandidate(b: Book): Promise<{ url: string; coverId: number } | 
 }
 
 async function processBook(sb: ReturnType<typeof adminClient>, b: Book): Promise<Result> {
-  let cur
+  let cur: Awaited<ReturnType<typeof openaiCoverSecondOpinion>>
   try {
     cur = await openaiCoverSecondOpinion({ imageUrl: b.cover_url, title: b.title, titleNative: b.title_native, author: b.author, year: b.year })
   } catch (e) {
@@ -83,7 +83,7 @@ async function processBook(sb: ReturnType<typeof adminClient>, b: Book): Promise
   // contaminated → try to find a correct replacement
   const cand = await olCandidate(b)
   if (cand) {
-    let opinion
+    let opinion: Awaited<ReturnType<typeof openaiCoverSecondOpinion>> | null
     try { opinion = await openaiCoverSecondOpinion({ imageUrl: cand.url, title: b.title, titleNative: b.title_native, author: b.author, year: b.year }) }
     catch { opinion = null }
     if (opinion && opinion.verdict === 'looks_right') {

@@ -31,7 +31,7 @@
 //   npx tsx --env-file=.env.local scripts/merge-paren-suffix-dupes.ts          # dry-run
 //   npx tsx --env-file=.env.local scripts/merge-paren-suffix-dupes.ts --apply  # (--write werkt nog als alias)
 
-import { readFileSync } from 'fs'
+import { readFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import { isApply, flagValue } from './lib/cli'
 

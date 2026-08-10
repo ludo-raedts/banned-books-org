@@ -956,7 +956,7 @@ Wat ik wil dat je doet:
 - Draai stap 1 en toon me data/wiki-enrichment-worklist.md. Vul overrides
   aan voor low/none-confidence rijen. Hertest tot alles 'high' of expliciet
   'skip' is.
-- Draai stap 2 (kosten ~\$0.003 per boek, ~\$0.30 voor 100 boeken). Toon me
+- Draai stap 2 (kosten ~$0.003 per boek, ~$0.30 voor 100 boeken). Toon me
   het _summary.md zodat ik kan zien waar GPT veel/weinig nieuws vond.
 - Draai stap 3 eerst zonder --apply. Scan de log op 'insert (not promote)'
   lines en validation-skips. Daarna pas --apply.

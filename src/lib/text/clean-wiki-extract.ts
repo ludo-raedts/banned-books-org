@@ -52,6 +52,7 @@ export function decodeHtmlEntities(text: string): string {
 // transcriptions (ɐ, ʲ, ˈ, ː, ͡) but not in ordinary running prose, so a
 // bracket that contains any of them is an IPA segment rather than e.g. an
 // Old-Style date like "[O.S. 10 April]".
+// biome-ignore lint/suspicious/noMisleadingCharacterClass: the combining tie bar U+0361 is matched deliberately as a standalone IPA signal
 const IPA_SIGNAL = /[ɐ-˿͡]/u
 
 export function cleanWikiExtract(text: string): string {

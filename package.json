@@ -8,7 +8,8 @@
     "build:dataset": "tsx scripts/build-dataset.ts",
     "start": "next start",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "biome lint src scripts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.0",
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.7",
     "@google-cloud/local-auth": "^3.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/better-sqlite3": "^7.6.13",

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { runFetchNews } from '@/lib/fetch-news'
 
 // Daily fetch — protected by CRON_SECRET. Whether items go straight to

@@ -232,7 +232,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
   }
 
   // 1. Gemini → page URL on a language-appropriate book site.
-  let gemini
+  let gemini: Awaited<ReturnType<typeof geminiCoverSearch>>
   try {
     gemini = await geminiCoverSearch({
       title: c.title,
@@ -313,7 +313,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
 
     // 4. Vision 2nd-opinion runs AGAINST THE MIRROR (OpenAI can always reach
     // our Supabase host; it often can't reach the blocked source CDNs).
-    let opinion
+    let opinion: Awaited<ReturnType<typeof openaiCoverSecondOpinion>>
     try {
       opinion = await openaiCoverSecondOpinion({
         imageUrl: mirrored!.publicUrl,

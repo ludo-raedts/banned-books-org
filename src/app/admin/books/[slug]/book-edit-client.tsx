@@ -109,7 +109,7 @@ export default function BookEditClient({ book }: { book: BookEditData }) {
         title_native_script: titleNativeScript || null,
         title_transliterated: titleTransliterated.trim() || null,
         title_english_meaningful: titleEnglish.trim() || null,
-        first_published_year: year ? parseInt(year) : null,
+        first_published_year: year ? parseInt(year, 10) : null,
         genres: genres.split(',').map(g => g.trim()).filter(Boolean),
         cover_url: coverUrl || null,
         description_book: descriptionBook || null,

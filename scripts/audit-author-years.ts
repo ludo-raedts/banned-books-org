@@ -72,7 +72,7 @@ async function main() {
     if ((b != null && b > THIS_YEAR) || (d != null && d > THIS_YEAR)) { hard.push({ a, earliest: e, why: `future year (b=${b ?? '?'}, d=${d ?? '?'})` }); continue }
     if (b != null && e != null && b > e) { hard.push({ a, earliest: e, why: `born ${b} after earliest book ${e}` }); continue }
     if (b != null && d != null && d - b > 115) { soft.push({ a, earliest: e, why: `lifespan ${d - b}y (${b}–${d})` }); continue }
-    if (b != null && e != null && e - b < 8 && e - b >= 0) { soft.push({ a, earliest: e, why: `first book at age ${e - b}` }); continue }
+    if (b != null && e != null && e - b < 8 && e - b >= 0) { soft.push({ a, earliest: e, why: `first book at age ${e - b}` }); }
   }
 
   hard.sort((x, y) => x.a.display_name.localeCompare(y.a.display_name))

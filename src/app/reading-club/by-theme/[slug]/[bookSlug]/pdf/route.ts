@@ -18,7 +18,7 @@ export async function GET(
 ) {
   const { slug, bookSlug } = await ctx.params
   const detail = await getThemeEntry(slug, bookSlug)
-  if (!detail || !detail.book.slug) notFound()
+  if (!detail?.book.slug) notFound()
 
   const canonicalUrl = `https://www.banned-books.org/reading-club/by-theme/${slug}/${bookSlug}`
   const filename = `${safeFilename(detail.book.title)}-reading-club.pdf`

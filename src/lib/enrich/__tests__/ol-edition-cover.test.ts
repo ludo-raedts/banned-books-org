@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { olEditionCover } from '../covers'
 
 // olEditionCover walks a stored work_id's editions for a real cover — the path

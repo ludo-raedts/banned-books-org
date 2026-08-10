@@ -19,7 +19,7 @@
  *   npx tsx --env-file=.env.local scripts/score-data-quality.ts --apply    # persist
  */
 import { adminClient } from '../src/lib/supabase'
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { isApply } from './lib/cli'
 
 const supabase = adminClient()

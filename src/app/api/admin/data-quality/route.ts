@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { unstable_cache, revalidateTag } from 'next/cache'
 import { requireAdmin } from '@/lib/admin-auth'
 import { adminClient } from '@/lib/supabase'
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
 
   const sp = new URL(req.url).searchParams
   const detail = sp.get('detail')
-  const limit = Math.min(parseInt(sp.get('limit') ?? '100'), 500)
+  const limit = Math.min(parseInt(sp.get('limit') ?? '100', 10), 500)
 
   try {
     if (detail) {

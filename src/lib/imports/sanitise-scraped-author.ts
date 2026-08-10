@@ -55,7 +55,7 @@ const TRAILING_COUNTRY = /\s+\((USA|UK|UAE|U\.S\.A\.|U\.K\.|[A-Z][a-z]+)\)\s*$/
 // "Title – Author" — when the scraper concatenated a book reference with
 // the actual author. We only accept the post-dash segment as a name when
 // it looks like a Western personal name (≤4 capitalised tokens).
-const DASH_AUTHOR = /^(.+?)\s+[\-–—]\s+([A-ZА-ЯĀ-ʯ][\p{L}'-]+(?:\s+[A-ZА-ЯĀ-ʯ][\p{L}'-]+){1,3})\s*$/u
+const DASH_AUTHOR = /^(.+?)\s+[-–—]\s+([A-ZА-ЯĀ-ʯ][\p{L}'-]+(?:\s+[A-ZА-ЯĀ-ʯ][\p{L}'-]+){1,3})\s*$/u
 
 // Title-with-unmatched-paren — clearly a book title that ended up in the
 // authors array (e.g. "Murder on Makajonka Street (Warsaw"). Reject.

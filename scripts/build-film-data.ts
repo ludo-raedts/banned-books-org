@@ -19,7 +19,6 @@
  */
 
 import { adminClient } from '../src/lib/supabase'
-import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { CHAPTER_COUNTRY_CODES, getCentroid } from './lib/country-centroids'

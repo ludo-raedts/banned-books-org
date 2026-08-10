@@ -9,7 +9,7 @@
 // Section 2 (null candidates): current cover that would be REMOVED entirely.
 // Plain <img> tags (Google Books URLs) — bypasses next/image allowlist.
 
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import data from '../data/google-cover-audit.json'
 

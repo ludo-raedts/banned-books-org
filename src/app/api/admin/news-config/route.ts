@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { getNewsConfig, updateNewsConfig } from '@/config/news'
 import { adminClient } from '@/lib/supabase'

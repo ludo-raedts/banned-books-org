@@ -194,7 +194,7 @@ function claimQids(e: WdEntity, prop: string): string[] {
 }
 
 function p1476Titles(e: WdEntity): Array<{ language: string; text: string }> {
-  return (e.claims['P1476'] ?? [])
+  return (e.claims.P1476 ?? [])
     .map(c => c.mainsnak?.datavalue?.value as { language?: string; text?: string } | undefined)
     .filter((v): v is { language: string; text: string } => !!v?.language && !!v?.text)
 }
@@ -248,7 +248,7 @@ async function resolveNative(c: Candidate): Promise<Proposal | Unconfirmed> {
       // Fetch author labels (batched single call).
       const idsParam = authorQids.slice(0, 5).join('|')
       await delay(120)
-      let labels: string[] = []
+      const labels: string[] = []
       try {
         const r = await fetch(
           `${WD_API}?action=wbgetentities&ids=${idsParam}&props=labels|aliases&format=json`,

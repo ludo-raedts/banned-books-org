@@ -38,8 +38,8 @@
  *   --concurrency=N   parallel OL fetches (default 8).
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 function loadEnvLocal() {
   const p = join(process.cwd(), '.env.local')

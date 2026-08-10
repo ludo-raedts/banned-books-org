@@ -36,9 +36,9 @@ const concurArg  = process.argv.find(a => a.startsWith('--concurrency='))
 const modelArg   = process.argv.find(a => a.startsWith('--model='))
 const skipLogArg = process.argv.find(a => a.startsWith('--skip-log='))
 const AUDIT_CSV  = auditArg?.split('=')[1] ?? null
-const LIMIT      = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 99999 : 5)
+const LIMIT      = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 99999 : 5)
 const SLUG       = slugArg?.split('=')[1] ?? null
-const CONCURRENCY = concurArg ? parseInt(concurArg.split('=')[1]) : 3
+const CONCURRENCY = concurArg ? parseInt(concurArg.split('=')[1], 10) : 3
 const MODEL      = modelArg?.split('=')[1] ?? 'gpt-4.1-mini'
 const SKIP_LOG   = skipLogArg?.split('=')[1] ?? null
 
@@ -93,8 +93,8 @@ function parseAudit(filePath: string): AuditRow[] {
     if (fields.length < header.length) continue
     rows.push({
       slug: fields[iSlug],
-      ban_score: parseInt(fields[iBan]),
-      ctx_score: parseInt(fields[iCtx]),
+      ban_score: parseInt(fields[iBan], 10),
+      ctx_score: parseInt(fields[iCtx], 10),
     })
   }
   return rows

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ThemeReadingClubBookPage({ params }: { params: Params }) {
   const { slug, bookSlug } = await params
   const detail = await getThemeEntry(slug, bookSlug)
-  if (!detail || !detail.book.slug) notFound()
+  if (!detail?.book.slug) notFound()
 
   const pageHref = `/reading-club/by-theme/${slug}/${bookSlug}`
   return (

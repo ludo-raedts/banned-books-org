@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { adminClient } from '@/lib/supabase'
 import { notifyIndexNow } from '@/lib/indexnow'

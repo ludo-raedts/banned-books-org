@@ -122,6 +122,6 @@ export function formatBytes(n: number): string {
 
 /** "US" → 🇺🇸 ; anything that isn't a 2-letter code → 🌐 . */
 export function flagEmoji(code: string | null | undefined): string {
-  if (!code || code.length !== 2) return '🌐'
+  if (code?.length !== 2) return '🌐'
   return code.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('')
 }

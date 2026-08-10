@@ -50,7 +50,7 @@ export default async function AdminBooksPage({
   const sp = await searchParams
   const q = (sp.q ?? '').trim()
   const filter: Filter = FILTERS.includes(sp.filter as Filter) ? (sp.filter as Filter) : 'all'
-  const page = Math.max(0, (parseInt(sp.page ?? '1') || 1) - 1)
+  const page = Math.max(0, (parseInt(sp.page ?? '1', 10) || 1) - 1)
 
   const sb = adminClient()
 

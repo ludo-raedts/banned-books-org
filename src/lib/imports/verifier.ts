@@ -28,7 +28,7 @@
 
 import { adminClient } from '../supabase'
 import { slugify } from './slugify'
-import type { ExtractionResult, AuthorRef } from './extraction-types'
+import type { ExtractionResult, } from './extraction-types'
 import type { SourceConfig } from './source-registry'
 
 // Thrown when a candidate's slug is on the CSAM-adjacent blocklist (Bucket A).
@@ -255,7 +255,7 @@ async function matchBook(
 
   // Cross-language fuzzy fallback: spelling/punctuation variants of the English
   // title that the exact-slug tier missed.
-  if (englishTitle && englishTitle.trim() && slugify(englishTitle) !== slug) {
+  if (englishTitle?.trim() && slugify(englishTitle) !== slug) {
     return fuzzyBookByTitle(sb, englishTitle, threshold)
   }
   return fuzzy

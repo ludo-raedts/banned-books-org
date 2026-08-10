@@ -27,7 +27,7 @@
  *   npx tsx --env-file=.env.local scripts/resolve-proposed-years.ts --apply
  */
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 import { authorsAgree } from '../src/lib/enrich/title-match'
@@ -150,7 +150,7 @@ async function main() {
     .filter(r => r.action === 'proposed')
     .map(r => ({ id: r.id, slug: r.slug, title: r.title, author: r.author, db_year: r.db_year, mini_year: r.mini?.first_published_year ?? null }))
   const { ids: processedIds, rows: priorRows } = APPLY ? loadProcessed() : { ids: new Set<number>(), rows: [] as Result[] }
-  let todo = proposed.filter(p => !processedIds.has(p.id))
+  const todo = proposed.filter(p => !processedIds.has(p.id))
   console.log(`Proposed: ${proposed.length}  already-checkpointed: ${processedIds.size}  remaining: ${todo.length}`)
 
   // hydrate isbn13 + current year/work

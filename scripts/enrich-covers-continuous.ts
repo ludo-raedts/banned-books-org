@@ -30,9 +30,9 @@ const ONCE      = process.argv.includes('--once')
 const NO_GOOGLE = process.argv.includes('--no-google')
 const RESET     = process.argv.includes('--reset')
 const limitArg  = process.argv.find(a => a.startsWith('--limit='))
-const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : Infinity
+const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1], 10) : Infinity
 const delayArg  = process.argv.find(a => a.startsWith('--delay='))
-const LOOP_DELAY_S = delayArg ? parseInt(delayArg.split('=')[1]) : 30
+const LOOP_DELAY_S = delayArg ? parseInt(delayArg.split('=')[1], 10) : 30
 
 const OL_DELAY_MS   = 100
 const GB_DELAY_MS   = 300
@@ -48,7 +48,7 @@ async function isValidOLImage(url: string): Promise<boolean> {
   try {
     const res = await fetch(url, { method: 'HEAD', headers: OL_HEADERS })
     if (!res.ok) return false
-    const len = parseInt(res.headers.get('content-length') ?? '0')
+    const len = parseInt(res.headers.get('content-length') ?? '0', 10)
     return len > 1000
   } catch { return false }
 }

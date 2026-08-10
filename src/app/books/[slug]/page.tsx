@@ -975,7 +975,7 @@ export default async function BookPage({
   // (transliterated) title. We OR ilike across all eligible variants ≥ 4
   // chars; PostgREST single-quotes are doubled so they don't break the or()
   // grammar.
-  const escape = (s: string) => s.replace(/'/g, "''")
+  const sqlQuote = (s: string) => s.replace(/'/g, "''")
   const newsTitleVariants = [
     book.title,
     book.title_english_meaningful,
@@ -983,7 +983,7 @@ export default async function BookPage({
     book.title_transliterated,
   ]
     .filter((t): t is string => !!t && t.trim().length >= 4)
-    .map(t => escape(t.trim()))
+    .map(t => sqlQuote(t.trim()))
   const newsOrClause = [
     ...newsTitleVariants.map(t => `title.ilike.%${t}%`),
     ...newsTitleVariants.map(t => `summary.ilike.%${t}%`),
@@ -1539,7 +1539,7 @@ export default async function BookPage({
           mixed active/historical status. Skipped entirely when there's
           nothing to add beyond what `topic` already states, to avoid the
           duplication that suppresses CTR. */}
-      {banSummary && banSummary.complement && (
+      {banSummary?.complement && (
         <p
           data-speakable="complement"
           className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4"

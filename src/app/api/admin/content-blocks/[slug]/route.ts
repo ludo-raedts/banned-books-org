@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { requireAdmin } from '@/lib/admin-auth'
@@ -36,7 +36,7 @@ export async function PATCH(
   const html = bodyMarkdown ? renderContentBlockHtml(bodyMarkdown) : null
 
   if (action === 'save_draft') {
-    if (!bodyMarkdown || !bodyMarkdown.trim()) {
+    if (!bodyMarkdown?.trim()) {
       return NextResponse.json({ error: 'Markdown is empty' }, { status: 400 })
     }
     const { data, error } = await supabase
@@ -59,7 +59,7 @@ export async function PATCH(
   }
 
   if (action === 'publish') {
-    if (!bodyMarkdown || !bodyMarkdown.trim()) {
+    if (!bodyMarkdown?.trim()) {
       return NextResponse.json({ error: 'Cannot publish empty content' }, { status: 400 })
     }
     const { data, error } = await supabase

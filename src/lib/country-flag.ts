@@ -4,7 +4,7 @@
 const FLAGLESS = new Set(['SU', 'CS', 'DD', 'YU'])
 
 export function countryFlag(code: string): string {
-  if (!code || code.length !== 2) return '🚩'
+  if (code?.length !== 2) return '🚩'
   const upper = code.toUpperCase()
   if (FLAGLESS.has(upper)) return '🚩'
   return [...upper]

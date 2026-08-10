@@ -20,8 +20,8 @@
  *     scripts/build-wiki-enrichment-worklist.ts
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 function loadEnvLocal() {
   const p = join(process.cwd(), '.env.local')

@@ -20,7 +20,7 @@ import { enrichDescriptionsV2 } from '../src/lib/enrich/descriptions-v2'
 
 const APPLY = process.argv.includes('--apply')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
-const LIMIT = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? undefined : 8)
+const LIMIT = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? undefined : 8)
 
 const csvEscape = (v: unknown) => {
   const s = v == null ? '' : String(v)

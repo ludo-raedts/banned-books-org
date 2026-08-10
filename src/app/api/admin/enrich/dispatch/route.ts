@@ -6,7 +6,7 @@
 //   GITHUB_DISPATCH_TOKEN   PAT with `actions:write` scope on this repo
 //   GITHUB_REPO             e.g. "ludo-raedts/banned-books-org" (owner/repo)
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { z } from 'zod'
 

@@ -298,7 +298,7 @@ export async function getUniversalQuestions(): Promise<string[]> {
     .select('body_html, status')
     .eq('slug', 'reading-club-universal-questions')
     .maybeSingle()
-  if (!data || data.status !== 'published' || !data.body_html) return []
+  if (data?.status !== 'published' || !data.body_html) return []
   return extractListItems(data.body_html)
 }
 

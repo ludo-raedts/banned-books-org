@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { adminClient } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'

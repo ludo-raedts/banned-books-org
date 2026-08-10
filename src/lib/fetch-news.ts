@@ -231,7 +231,7 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
   const errors: string[] = []
 
   for (const feed of FEEDS) {
-    let items
+    let items: Awaited<ReturnType<typeof parser.parseURL>>['items']
     try {
       const parsed = await parser.parseURL(feed.url)
       items = parsed.items

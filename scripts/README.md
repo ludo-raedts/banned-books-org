@@ -474,6 +474,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 
 | Script | Doet |
 |---|---|
+| `prune-data.ts` | Retentie-sweep van lokale run-artifacts onder `data/` (gitignored families, zie `.gitignore`): verwijdert untracked bestanden ouder dan `--days` (default 90). Getrackte bestanden worden nooit aangeraakt. Dry-run default | `--apply` |
 | `fetch-news.ts` | RSS ophalen, embed + dedup, samenvatten (gpt-4.1-mini), opslaan |
 | `suggest-editorial-classification-gpt.ts` | GPT editorial-classification suggester |
 | `probe-bookshop-isbn.ts` | Test Bookshop.org affiliate deep-link per isbn13 |

@@ -313,8 +313,8 @@ export default async function StatsPage({
 
   // Gridlines at each power of 10 up to (and including) the next one above max.
   const gridTicks: number[] = []
-  for (let exp = 0; Math.pow(10, exp) <= maxDecade * 10; exp++) {
-    const v = Math.pow(10, exp)
+  for (let exp = 0; 10 ** exp <= maxDecade * 10; exp++) {
+    const v = 10 ** exp
     if (v <= 1 || v > maxDecade * 1.5) continue
     gridTicks.push(v)
   }

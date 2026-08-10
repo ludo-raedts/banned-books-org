@@ -46,7 +46,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import { FEATURED_VIDEOS } from '../src/lib/featured-videos'
 
 // ── Config / args ────────────────────────────────────────────────────────────

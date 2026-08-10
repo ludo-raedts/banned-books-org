@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function YoungReadersBookPage({ params }: { params: Params }) {
   const { slug } = await params
   const detail = await getYoungReadersEntry(slug)
-  if (!detail || !detail.book.slug) notFound()
+  if (!detail?.book.slug) notFound()
 
   const pageHref = `/reading-club/young-readers/${slug}`
   return (

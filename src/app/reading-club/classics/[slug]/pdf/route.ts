@@ -15,7 +15,7 @@ function safeFilename(s: string): string {
 export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
   const { slug } = await ctx.params
   const detail = await getClassicsEntry(slug)
-  if (!detail || !detail.book.slug) notFound()
+  if (!detail?.book.slug) notFound()
 
   const canonicalUrl = `https://www.banned-books.org/reading-club/classics/${slug}`
   const filename = `${safeFilename(detail.book.title)}-reading-club.pdf`

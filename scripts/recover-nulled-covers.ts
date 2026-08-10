@@ -29,7 +29,7 @@
  *   npx tsx --env-file=.env.local scripts/recover-nulled-covers.ts --scan-rejected --apply
  */
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import { openaiCoverSecondOpinion } from '../src/lib/enrich/openai-cover-second-opinion'
 import { authorsAgree } from '../src/lib/enrich/title-match'
@@ -101,7 +101,7 @@ async function processBook(sb: ReturnType<typeof adminClient>, b: Book): Promise
   let cands: string[]
   try { cands = await candidates(b) } catch (e) { return { ...b, action: 'error', new_cover: null, note: e instanceof Error ? e.message : 'candidate error' } }
   for (const url of cands) {
-    let op
+    let op: Awaited<ReturnType<typeof openaiCoverSecondOpinion>>
     try { op = await openaiCoverSecondOpinion({ imageUrl: url, title: b.title, titleNative: b.title_native, author: b.author, year: b.year }) }
     catch { continue }
     if (op.verdict === 'looks_right') {

@@ -16,7 +16,7 @@
  *   npx tsx scripts/filter-nfd-subset.ts /tmp/slug-audit.json --json > /tmp/nfd-subset.json
  */
 
-import { readFileSync } from 'fs'
+import { readFileSync } from 'node:fs'
 
 const JSON_OUT = process.argv.includes('--json')
 const path = process.argv.find((a, i) => i >= 2 && !a.startsWith('-'))

@@ -41,8 +41,8 @@ export default function AuthorEditClient({ author }: { author: AuthorEditData })
         display_name: displayName,
         bio: bio || null,
         bio_source_url: bioSourceUrl.trim() || null,
-        birth_year: birthYear ? parseInt(birthYear) : null,
-        death_year: deathYear ? parseInt(deathYear) : null,
+        birth_year: birthYear ? parseInt(birthYear, 10) : null,
+        death_year: deathYear ? parseInt(deathYear, 10) : null,
         birth_country: birthCountry || null,
         photo_url: photoUrl || null,
       }

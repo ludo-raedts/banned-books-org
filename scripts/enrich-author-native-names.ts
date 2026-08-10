@@ -131,7 +131,7 @@ function claimString(e: WdEntity, prop: string): string | null {
 /** All non-deprecated P569 years — some entities carry several (calendar variants). */
 function p569Years(e: WdEntity): number[] {
   const out: number[] = []
-  for (const c of e.claims['P569'] ?? []) {
+  for (const c of e.claims.P569 ?? []) {
     if (c.rank === 'deprecated') continue
     const v = c.mainsnak?.datavalue?.value as { time?: string } | undefined
     if (!v?.time) continue
@@ -143,7 +143,7 @@ function p569Years(e: WdEntity): number[] {
 
 /** P1559 "name in native language" — monolingual text value. */
 function p1559(e: WdEntity): { text: string; language: string } | null {
-  for (const c of e.claims['P1559'] ?? []) {
+  for (const c of e.claims.P1559 ?? []) {
     if (c.rank === 'deprecated') continue
     const v = c.mainsnak?.datavalue?.value as { text?: string; language?: string } | undefined
     if (v?.text && v.language) return { text: v.text.trim(), language: v.language }

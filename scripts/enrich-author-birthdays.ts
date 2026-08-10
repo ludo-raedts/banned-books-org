@@ -145,7 +145,7 @@ function claimQids(e: WdEntity, prop: string): string[] {
 
 /** Parse P569 → {year, month, day} only when precision reaches day level. */
 function p569DayPrecise(e: WdEntity): { year: number; month: number; day: number } | null {
-  const c = e.claims['P569']?.[0]
+  const c = e.claims.P569?.[0]
   const v = c?.mainsnak?.datavalue?.value as { time?: string; precision?: number } | undefined
   if (!v?.time || (v.precision ?? 0) < 11) return null
   const m = /^[+-](\d{4,})-(\d{2})-(\d{2})T/.exec(v.time)

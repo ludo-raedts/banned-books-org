@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server'
 import type Stripe from 'stripe'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import { stripe, STRIPE_PRICE_ID } from '@/lib/stripe'
 import { adminClient } from '@/lib/supabase'
 import { sendDownloadEmail } from '@/lib/email'

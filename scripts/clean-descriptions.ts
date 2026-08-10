@@ -96,7 +96,7 @@ function newestGscPagesSnapshot(): { file: string; endDate: string | null } | nu
 function extractBookSlug(url: string): string | null {
   // Accept both www and non-www, trailing slash, query strings.
   // Example: https://www.banned-books.org/books/the-bluest-eye?utm=x → the-bluest-eye
-  const m = url.match(/banned-books\.org\/books\/([^\/?#]+)/i)
+  const m = url.match(/banned-books\.org\/books\/([^/?#]+)/i)
   if (!m) return null
   return decodeURIComponent(m[1]).toLowerCase()
 }

@@ -41,7 +41,7 @@ export default async function AdminAuthorsPage({
 }) {
   const sp = await searchParams
   const q = (sp.q ?? '').trim()
-  const page = Math.max(0, (parseInt(sp.page ?? '1') || 1) - 1)
+  const page = Math.max(0, (parseInt(sp.page ?? '1', 10) || 1) - 1)
 
   const sb = adminClient()
 

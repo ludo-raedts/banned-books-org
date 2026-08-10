@@ -120,7 +120,7 @@ async function main() {
       .order('id')
       .range(from, from + 999)
     if (error) throw error
-    if (!data || !data.length) break
+    if (!data?.length) break
     for (const b of data as any[]) {
       rows.push({
         id: b.id,

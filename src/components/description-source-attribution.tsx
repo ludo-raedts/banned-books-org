@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 /**
  * Small subtle attribution rendered under description_book on the book

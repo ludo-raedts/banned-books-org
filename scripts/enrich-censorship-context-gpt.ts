@@ -22,9 +22,9 @@ const OVERWRITE = process.argv.includes('--overwrite')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
 const slugArg  = process.argv.find(a => a.startsWith('--slug='))
 const delayArg = process.argv.find(a => a.startsWith('--delay='))
-const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1]) : (APPLY ? 200 : 3)
+const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 200 : 3)
 const SLUG     = slugArg?.split('=')[1] ?? null
-const DELAY    = delayArg ? parseInt(delayArg.split('=')[1]) : 800
+const DELAY    = delayArg ? parseInt(delayArg.split('=')[1], 10) : 800
 
 type BanRow = {
   year_started:    number | null

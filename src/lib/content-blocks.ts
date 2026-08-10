@@ -99,7 +99,7 @@ export async function getPublishedBlockHtml(slug: string): Promise<string | null
     .select('body_html, status')
     .eq('slug', slug)
     .maybeSingle()
-  if (!data || data.status !== 'published' || !data.body_html) return null
+  if (data?.status !== 'published' || !data.body_html) return null
   return data.body_html
 }
 

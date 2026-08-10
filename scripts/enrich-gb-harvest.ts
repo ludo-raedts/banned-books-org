@@ -62,7 +62,6 @@ import {
   GbQuotaError,
   type GbVolume,
 } from '../src/lib/enrich/google-books'
-import { titlesMatch } from '../src/lib/enrich/title-match'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import {
   titleContainment,

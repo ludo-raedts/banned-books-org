@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function InternationalReadingClubBookPage({ params }: { params: Params }) {
   const { slug } = await params
   const detail = await getInternationalEntry(slug)
-  if (!detail || !detail.book.slug) notFound()
+  if (!detail?.book.slug) notFound()
 
   const pageHref = `/reading-club/international/${slug}`
   return (

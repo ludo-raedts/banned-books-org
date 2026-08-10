@@ -30,9 +30,9 @@ const ONCE      = process.argv.includes('--once')
 const NO_GOOGLE = process.argv.includes('--no-google')
 const RESET     = process.argv.includes('--reset')
 const limitArg  = process.argv.find(a => a.startsWith('--limit='))
-const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1]) : Infinity
+const LIMIT     = limitArg ? parseInt(limitArg.split('=')[1], 10) : Infinity
 const delayArg  = process.argv.find(a => a.startsWith('--delay='))
-const LOOP_DELAY_S = delayArg ? parseInt(delayArg.split('=')[1]) : 30
+const LOOP_DELAY_S = delayArg ? parseInt(delayArg.split('=')[1], 10) : 30
 
 const OL_DELAY_MS   = 150
 const GB_DELAY_MS   = 300
@@ -67,7 +67,7 @@ function stripLeadingEndorsements(text: string): string {
   while (i < lines.length) {
     const line = lines[i].trim()
     if (line === '') { i++; continue }
-    if (/^["'"']/.test(line) || /^[–—\-]/.test(line) || /["'"']\s*[–—\-]/.test(line)) {
+    if (/^["'"']/.test(line) || /^[–—-]/.test(line) || /["'"']\s*[–—-]/.test(line)) {
       i++; continue
     }
     break

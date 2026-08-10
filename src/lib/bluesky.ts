@@ -24,7 +24,7 @@ export type ExternalEmbed = {
 
 async function xrpc<T>(method: string, opts: { token?: string; body?: unknown; raw?: ArrayBuffer; contentType?: string }): Promise<T> {
   const headers: Record<string, string> = {}
-  if (opts.token) headers['authorization'] = `Bearer ${opts.token}`
+  if (opts.token) headers.authorization = `Bearer ${opts.token}`
   let body: BodyInit | undefined
   if (opts.raw) {
     headers['content-type'] = opts.contentType ?? 'application/octet-stream'
