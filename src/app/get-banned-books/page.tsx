@@ -282,15 +282,6 @@ export default function GetBannedBooksPage() {
                 Join the banned books reading club →
               </p>
             </Link>
-            <Link
-              href="/reading-list"
-              className="group block px-5 py-4 border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
-            >
-              <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Go deeper</p>
-              <p className="font-serif text-base font-semibold text-gray-900 group-hover:text-oxblood transition-colors">
-                Books about censorship itself →
-              </p>
-            </Link>
           </div>
         </SectionShell>
       </main>

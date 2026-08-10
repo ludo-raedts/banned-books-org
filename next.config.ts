@@ -27,6 +27,19 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Retired 2026-08-08 (portfolio pruning, see the project audit): the
+      // Dua Lipa launch tie-in and the hand-maintained "further reading" list
+      // duplicated /get-banned-books. Preserve external links.
+      {
+        source: '/dua-lipa-manifesto-library',
+        destination: '/get-banned-books',
+        permanent: true,
+      },
+      {
+        source: '/reading-list',
+        destination: '/get-banned-books',
+        permanent: true,
+      },
       // /reasons/blasphemy collapsed into /reasons/religious on 2026-05-20
       // (see migration 20260520150000_merge_blasphemy_into_religious). The
       // standalone page no longer exists; preserve any external links.

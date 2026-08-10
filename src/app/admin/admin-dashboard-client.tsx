@@ -2,23 +2,13 @@
 
 import { cardCls, formatBytes } from './kit'
 import { useState } from 'react'
-import { BarChart2, Zap, RefreshCw, Download, AlertTriangle, Mail } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { BarChart2, Zap, RefreshCw, Download, AlertTriangle } from 'lucide-react'
 import { ZENODO_DOI_URL, ZENODO_RECORD_MANAGE_URL } from '@/lib/zenodo'
 import { useAdminUi } from './admin-ui'
 import DataQualityCard from './data-quality-card'
 import EssayPromptCard from './essay-prompt-card'
 import PipelineCard from './pipeline-card'
 
-export type InboxRow = {
-  uid: number
-  fromName: string | null
-  fromAddress: string | null
-  subject: string | null
-  snippet: string
-  receivedAt: string | null
-  isUnread: boolean
-}
 
 
 interface Props {
@@ -47,8 +37,6 @@ interface Props {
     datasetBuiltAt: string | null
     suspiciousThreshold: number
   }
-  inboxRows: InboxRow[]
-  inboxFetchedAt: string | null
 }
 
 function formatRelativeTime(iso: string | null): string {
@@ -90,121 +78,11 @@ function StatTile({
   )
 }
 
-function InboxCard({ rows, fetchedAt, cardCls }: { rows: InboxRow[]; fetchedAt: string | null; cardCls: string }) {
-  const router = useRouter()
-  const unreadCount = rows.filter(r => r.isUnread).length
-  const [syncState, setSyncState] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [syncError, setSyncError] = useState('')
-
-  async function handleSync() {
-    setSyncState('loading')
-    setSyncError('')
-    try {
-      const res = await fetch('/api/admin/sync-inbox', { method: 'POST', credentials: 'include' })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
-      setSyncState('idle')
-      router.refresh()
-    } catch (err) {
-      setSyncError(err instanceof Error ? err.message : 'Sync failed')
-      setSyncState('error')
-    }
-  }
-
-  return (
-    <div className={`${cardCls} relative`}>
-      {unreadCount > 0 && (
-        <span className="absolute top-4 right-4 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center tabular-nums">
-          {unreadCount}
-        </span>
-      )}
-      <Mail className="w-5 h-5 text-gray-400" />
-      <div>
-        <h2 className="font-semibold text-gray-900">Inbox</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Last 5 e-mail messages. Manual sync only — use Sync now.
-        </p>
-      </div>
-
-      {rows.length === 0 ? (
-        <p className="text-sm text-gray-400 italic mt-1">
-          No messages yet — waiting for the first sync.
-        </p>
-      ) : (
-        <ul className="flex flex-col -mx-2">
-          {rows.map(r => (
-            <li
-              key={r.uid}
-              className="flex items-baseline gap-2 py-1.5 px-2 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              <span
-                className={`shrink-0 w-1.5 h-1.5 rounded-full mt-1.5 ${r.isUnread ? 'bg-blue-500' : 'bg-transparent'}`}
-                aria-label={r.isUnread ? 'Unread' : 'Read'}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span
-                    className={`text-sm truncate ${r.isUnread ? 'font-semibold text-gray-900' : 'text-gray-700'}`}
-                    title={r.fromAddress ?? undefined}
-                  >
-                    {r.fromName ?? r.fromAddress ?? 'Unknown sender'}
-                  </span>
-                  <span className="text-[11px] text-gray-400 tabular-nums shrink-0">
-                    {formatRelativeTime(r.receivedAt)}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 truncate">
-                  {r.subject ?? '(no subject)'}
-                </p>
-                {r.snippet && (
-                  <p className="text-xs text-gray-400 truncate">
-                    {r.snippet}
-                  </p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {syncState === 'error' && (
-        <p className="text-xs text-red-600 -mt-1 break-words">{syncError}</p>
-      )}
-
-      <div className="mt-auto flex items-center justify-between gap-3 pt-2 border-t border-gray-100 flex-wrap">
-        <span className="text-[11px] text-gray-400">
-          {fetchedAt ? `Synced ${formatRelativeTime(fetchedAt)}` : 'Not synced yet'}
-        </span>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleSync}
-            disabled={syncState === 'loading'}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${syncState === 'loading' ? 'animate-spin' : ''}`} aria-hidden />
-            {syncState === 'loading' ? 'Syncing…' : 'Sync now'}
-          </button>
-          <a
-            href="https://mail.zoho.eu/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-brand font-medium hover:underline"
-          >
-            Open in Zoho →
-          </a>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-
 export default function AdminDashboardClient({
   bookCount, authorCount, newsCount, banCount, countryCount, needsEnrichment,
   dbSizeBytes, dbLimitBytes, pageviewsSizeBytes, pageviewsRows,
   dataLastChanged, viewsLastRefreshed, datasetStats,
-  inboxRows, inboxFetchedAt, isLocalDev,
+  isLocalDev,
 }: Props) {
   const [refreshState, setRefreshState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [refreshMsg, setRefreshMsg] = useState('')
@@ -288,7 +166,6 @@ export default function AdminDashboardClient({
         />
 
         {/* Row 1 — Inbox */}
-        <InboxCard rows={inboxRows} fetchedAt={inboxFetchedAt} cardCls={cardCls} />
 
         {/* BBW / Reading Club / Content blocks cards intentionally removed —
             those sections are reachable via the top nav bar, and duplicating

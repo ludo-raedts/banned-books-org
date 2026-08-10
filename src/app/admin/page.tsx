@@ -35,15 +35,15 @@ export default async function AdminPage() {
   const viewsLastRefreshed = logMap.get('last_refreshed') ?? null
   const datasetBuiltAt = logMap.get('dataset_built_at') ?? null
 
-  // ── Dataset orders + DB size + inbox preview ────────────────────────────────
-  // Three independent reads — run them concurrently rather than as a waterfall.
-  // The DB-stats RPC and inbox table may not exist on every env, so each fails
-  // soft to a neutral default and the corresponding card hides gracefully.
+  // ── Dataset orders + DB size ────────────────────────────────────────────────
+  // Independent reads — run them concurrently rather than as a waterfall.
+  // The DB-stats RPC may not exist on every env, so it fails soft to a
+  // neutral default and the corresponding card hides gracefully.
   const SUSPICIOUS_DOWNLOADS_THRESHOLD = 10
   const dbLimitGb = Number(process.env.SUPABASE_DB_LIMIT_GB ?? '8')
   const dbLimitBytes = dbLimitGb * 1024 * 1024 * 1024
 
-  const [datasetOrdersRes, dbStats, inboxResult] = await Promise.all([
+  const [datasetOrdersRes, dbStats] = await Promise.all([
     supabase.from('dataset_orders').select('amount_cents, currency, paid_at, downloads_count'),
     (async () => {
       try {
@@ -60,35 +60,6 @@ export default async function AdminPage() {
         // RPC not yet deployed — card hides the size row gracefully
       }
       return { dbSizeBytes: null, pageviewsSizeBytes: null, pageviewsRows: null }
-    })(),
-    (async () => {
-      try {
-        const { data: inbox } = await supabase
-          .from('inbox_preview')
-          .select('uid, from_name, from_address, subject, snippet, received_at, is_unread, fetched_at')
-          .order('received_at', { ascending: false })
-          .limit(5)
-        if (inbox && inbox.length > 0) {
-          return {
-            rows: inbox.map(r => ({
-              uid: Number(r.uid),
-              fromName: r.from_name ?? null,
-              fromAddress: r.from_address ?? null,
-              subject: r.subject ?? null,
-              snippet: r.snippet ?? '',
-              receivedAt: r.received_at ?? null,
-              isUnread: Boolean(r.is_unread),
-            })),
-            fetchedAt: (inbox[0].fetched_at ?? null) as string | null,
-          }
-        }
-      } catch {
-        // table not yet migrated — card hides gracefully
-      }
-      return {
-        rows: [] as import('./admin-dashboard-client').InboxRow[],
-        fetchedAt: null as string | null,
-      }
     })(),
   ])
 
@@ -107,8 +78,6 @@ export default async function AdminPage() {
   }
 
   const { dbSizeBytes, pageviewsSizeBytes, pageviewsRows } = dbStats
-  const inboxRows = inboxResult.rows
-  const inboxFetchedAt = inboxResult.fetchedAt
 
   return (
     <AdminDashboardClient
@@ -125,8 +94,6 @@ export default async function AdminPage() {
       dataLastChanged={dataLastChanged}
       viewsLastRefreshed={viewsLastRefreshed}
       datasetStats={datasetStats}
-      inboxRows={inboxRows}
-      inboxFetchedAt={inboxFetchedAt}
       isLocalDev={process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production'}
     />
   )

@@ -116,7 +116,6 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/share`, changefreq: 'daily', priority: 0.7 },
     { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9, lastmod: authorsLastMod },
     { loc: `${base}/award-winning-banned-books`, changefreq: 'weekly', priority: 0.8 },
-    { loc: `${base}/dua-lipa-manifesto-library`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2026`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/banned-books/2025`, changefreq: 'weekly', priority: 0.9 },
@@ -129,7 +128,6 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/news`, changefreq: 'daily', priority: 0.8 },
     { loc: `${base}/essays`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/podcasts`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/reading-list`, changefreq: 'monthly', priority: 0.7 },
     // Buy/borrow hub — curated Bookshop.org lists + Kobo + public domain.
     { loc: `${base}/get-banned-books`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/about`, changefreq: 'monthly', priority: 0.5 },
