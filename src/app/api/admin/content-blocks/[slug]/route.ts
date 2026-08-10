@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { requireAdmin } from '@/lib/admin-auth'
 import { renderContentBlockHtml } from '@/lib/markdown'
+import { pathsForBlockSlug } from '@/lib/content-blocks'
+
+// The pages that render content blocks are ISR-cached (24h); bust them so a
+// publish/unpublish shows up immediately instead of after the next window.
+function revalidateBlockPages(slug: string) {
+  for (const path of pathsForBlockSlug(slug)) revalidatePath(path)
+}
 
 type Action = 'save_draft' | 'publish' | 'revert_to_draft'
 
@@ -74,6 +82,7 @@ export async function PATCH(
       content_key: slug,
       action: 'publish',
     })
+    revalidateBlockPages(slug)
     return NextResponse.json(data)
   }
 
@@ -94,6 +103,7 @@ export async function PATCH(
       content_key: slug,
       action: 'revert_to_draft',
     })
+    revalidateBlockPages(slug)
     return NextResponse.json(data)
   }
 

@@ -1,19 +1,68 @@
+// force-dynamic stays (the page reads searchParams, which kills revalidate),
+// but the underlying data is cached below — a request with a warm cache does
+// zero DB queries instead of the six it used to.
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import CountriesControls from '@/components/countries-controls'
 
 const DEFUNCT = ['SU', 'CS', 'DD', 'YU']
 
+type CountryRow = { code: string; name_en: string; description: string | null }
+type BanCountRow = {
+  country_code: string
+  distinct_books: number
+  distinct_active_books: number
+  distinct_books_historical: number
+  distinct_books_contemporary: number
+}
+
+// Shared by the page body and generateMetadata; counts change only on import/
+// enrichment, so a day of staleness is invisible.
+const loadCountriesBase = unstable_cache(
+  async () => {
+    const supabase = adminClient()
+    const [{ data: countries }, { data: banCounts }, { data: reasonsData }] = await Promise.all([
+      // rows: ~90 | reason: country names + codes
+      supabase.from('countries').select('code, name_en, description'),
+      // rows: ~90 | reason: materialized view — distinct banned books per country.
+      // distinct_books is the canonical ranking metric (not total_bans, which is
+      // inflated for the US by PEN America's per-district granularity).
+      supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary'),
+      // rows: ~12 | reason: filter pill options
+      supabase.from('reasons').select('slug').order('slug'),
+    ])
+    return {
+      countries: (countries ?? []) as CountryRow[],
+      banCounts: (banCounts ?? []) as BanCountRow[],
+      reasonSlugs: (reasonsData ?? []).map(r => r.slug as string),
+    }
+  },
+  ['countries-base'],
+  { revalidate: 86400, tags: ['countries'] },
+)
+
+// Per-reason counts, cache-keyed on the reason arg.
+const loadReasonCounts = unstable_cache(
+  async (reasonSlug: string) => {
+    const { data } = await adminClient()
+      .from('mv_country_reason_counts')
+      .select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary')
+      .eq('reason_slug', reasonSlug)
+    return (data ?? []) as BanCountRow[]
+  },
+  ['countries-reason-counts'],
+  { revalidate: 86400, tags: ['countries'] },
+)
+
 export async function generateMetadata(): Promise<Metadata> {
-  const supabase = adminClient()
-  const { data: banCounts } = await supabase.from('mv_ban_counts').select('country_code, distinct_books')
-  const { data: countries } = await supabase.from('countries').select('code')
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
-  const activeCount = (countries ?? [])
+  const { countries, banCounts } = await loadCountriesBase()
+  const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books]))
+  const activeCount = countries
     .filter(c => !DEFUNCT.includes(c.code) && (countMap.get(c.code) ?? 0) > 0)
     .length
   return {
@@ -50,28 +99,17 @@ export default async function CountriesPage({
     : eraFilter === 'contemporary' ? r.distinct_books_contemporary
     : r.distinct_books
 
-  const supabase = adminClient()
-
-  const [{ data: countries }, { data: banCounts }, { data: reasonsData }] = await Promise.all([
-    // rows: ~90 | reason: country names + codes
-    supabase.from('countries').select('code, name_en, description'),
-    // rows: ~90 | reason: materialized view — distinct banned books per country.
-    // distinct_books is the canonical ranking metric (not total_bans, which is
-    // inflated for the US by PEN America's per-district granularity).
-    supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary'),
-    // rows: ~12 | reason: filter pill options
-    supabase.from('reasons').select('slug').order('slug'),
-  ])
+  const { countries, banCounts, reasonSlugs } = await loadCountriesBase()
 
   // count = all-time distinct_books (stable, drives the intro + "all eras" view);
   // eraCountMap = the era-specific count used for the displayed ranking.
-  const countMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_books as number]))
-  const eraCountMap = new Map((banCounts ?? []).map(r => [r.country_code, eraCount(r as EraRow)]))
-  const activeMap = new Map((banCounts ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
-  const availableReasons = (reasonsData ?? []).map(r => r.slug)
+  const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books]))
+  const eraCountMap = new Map(banCounts.map(r => [r.country_code, eraCount(r as EraRow)]))
+  const activeMap = new Map(banCounts.map(r => [r.country_code, r.distinct_active_books]))
+  const availableReasons = reasonSlugs
 
   // ── Base country list ─────────────────────────────────────────────
-  const base = (countries ?? [])
+  const base = countries
     .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
     .filter(c => c.count > 0)
 
@@ -80,12 +118,9 @@ export default async function CountriesPage({
   let filteredActiveMap: Map<string, number> | null = null
 
   if (filterReason) {
-    const { data: reasonRows } = await supabase
-      .from('mv_country_reason_counts')
-      .select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary')
-      .eq('reason_slug', filterReason)
-    filteredCountMap  = new Map((reasonRows ?? []).map(r => [r.country_code, eraCount(r as EraRow)]))
-    filteredActiveMap = new Map((reasonRows ?? []).map(r => [r.country_code, r.distinct_active_books as number]))
+    const reasonRows = await loadReasonCounts(filterReason)
+    filteredCountMap  = new Map(reasonRows.map(r => [r.country_code, eraCount(r as EraRow)]))
+    filteredActiveMap = new Map(reasonRows.map(r => [r.country_code, r.distinct_active_books]))
   }
 
   // ── Merge base with filtered counts, then sort & filter ───────────

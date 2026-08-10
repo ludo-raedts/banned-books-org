@@ -8,7 +8,9 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
-export const dynamic = 'force-dynamic'
+// Plain ISR: no searchParams or request-time APIs here, so revalidate works.
+// Was force-dynamic without a cache layer - every pageview hit the DB.
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Banned books for young readers — Reading Club',

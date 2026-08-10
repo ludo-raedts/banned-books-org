@@ -1,4 +1,7 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate at most every 6h. Was force-dynamic, which made every
+// CDN miss a full table scan against Supabase (the biggest hidden egress
+// cost in the app). Sitemap freshness within 6h is more than crawlers need.
+export const revalidate = 21600
 
 import { adminClient } from '@/lib/supabase'
 import {

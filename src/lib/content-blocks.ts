@@ -61,6 +61,35 @@ export const REQUIRED_BLOCKS_BY_PAGE: Record<string, readonly string[]> = {
   'theme-sexuality': ['theme-sexuality-intro'],
 } as const
 
+// Public route for each page key above. Used by the admin content-block API
+// to revalidate the ISR page a block renders on when it is (un)published —
+// the consuming pages cache for 24h, so without this a publish would stay
+// invisible for up to a day.
+export const PAGE_PATH_BY_KEY: Record<string, string> = {
+  'bbw-hub': '/banned-books-week',
+  'bbw-tile': '/',
+  'reading-club-hub': '/reading-club',
+  'reading-club-currently-challenged': '/reading-club/currently-challenged',
+  'reading-club-international': '/reading-club/international',
+  'reading-club-classics': '/reading-club/classics',
+  'reading-club-themes': '/reading-club/by-theme',
+  'reading-club-young-readers': '/reading-club/young-readers',
+  'theme-lgbtq': '/reading-club/by-theme/lgbtq',
+  'theme-political-dissent': '/reading-club/by-theme/political-dissent',
+  'theme-religious-censorship': '/reading-club/by-theme/religious-censorship',
+  'theme-race-and-racism': '/reading-club/by-theme/race-and-racism',
+  'theme-sexuality': '/reading-club/by-theme/sexuality',
+}
+
+// Every public path that renders the given block slug (via the page mapping).
+export function pathsForBlockSlug(slug: string): string[] {
+  const paths: string[] = []
+  for (const [pageKey, slugs] of Object.entries(REQUIRED_BLOCKS_BY_PAGE)) {
+    if (slugs.includes(slug) && PAGE_PATH_BY_KEY[pageKey]) paths.push(PAGE_PATH_BY_KEY[pageKey])
+  }
+  return paths
+}
+
 // Fetch a published block's HTML for public-page rendering. Returns null when
 // the block is not yet published — callers MUST hide their section in that
 // case rather than rendering an empty box. Uses the public anon-key client.

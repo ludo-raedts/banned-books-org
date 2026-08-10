@@ -18,6 +18,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import PageviewTracker from '@/components/pageview-tracker'
 import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
@@ -291,12 +292,14 @@ export async function generateStaticParams() {
   let offset = 0
   for (;;) {
     // .order('id') keeps .range() pagination stable past the 1000-row page size.
-    const { data } = await sb
+    // withDbRetry: this scan runs at build time and must survive a concurrent
+    // enrichment run tripping the ~8s service_role statement_timeout.
+    const { data } = await withDbRetry(() => sb
       .from('bans')
       .select('book_id')
       .not('book_id', 'is', null)
       .order('id', { ascending: true })
-      .range(offset, offset + 999)
+      .range(offset, offset + 999), 'books-prebuild-bans')
     if (!data || data.length === 0) break
     for (const r of data as { book_id: number }[]) {
       counts.set(r.book_id, (counts.get(r.book_id) ?? 0) + 1)
@@ -316,13 +319,13 @@ export async function generateStaticParams() {
   // as sitemap-books.xml. Paginated because .in() can exceed the 1000-row cap.
   const slugs: { slug: string }[] = []
   for (let i = 0; i < topIds.length; i += 1000) {
-    const { data } = await sb
+    const { data } = await withDbRetry(() => sb
       .from('books')
       .select('slug')
       .eq('is_gated', false)
       .eq('is_blanket_works', false)
       .not('slug', 'is', null)
-      .in('id', topIds.slice(i, i + 1000))
+      .in('id', topIds.slice(i, i + 1000)), 'books-prebuild-slugs')
     for (const r of (data ?? []) as { slug: string }[]) slugs.push({ slug: r.slug })
   }
   return slugs

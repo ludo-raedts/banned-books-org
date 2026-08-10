@@ -7,7 +7,10 @@ export const SITEMAP_BASE_URL = SITE_URL
 
 export const SITEMAP_RESPONSE_HEADERS = {
   'Content-Type': 'application/xml; charset=utf-8',
-  'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+  // s-maxage is what Vercel's CDN (and Cloudflare) actually key on; without it
+  // every edge miss re-rendered the route. The routes themselves are ISR
+  // (revalidate = 21600), so this is belt-and-braces on top of the static cache.
+  'Cache-Control': 'public, max-age=3600, s-maxage=21600, stale-while-revalidate=86400',
 } as const
 
 export type ChangeFreq =

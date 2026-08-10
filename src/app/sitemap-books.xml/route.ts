@@ -1,6 +1,10 @@
-export const dynamic = 'force-dynamic'
+// ISR: regenerate at most every 6h. Was force-dynamic, which made every
+// CDN miss a full table scan against Supabase (the biggest hidden egress
+// cost in the app). Sitemap freshness within 6h is more than crawlers need.
+export const revalidate = 21600
 
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import {
   SITEMAP_BASE_URL,
   SITEMAP_RESPONSE_HEADERS,
@@ -30,14 +34,14 @@ export async function GET() {
   let books: BookRow[] = []
   let offset = 0
   while (true) {
-    const { data } = await supabase
+    const { data } = await withDbRetry(() => supabase
       .from('books')
       .select('slug, title, updated_at, cover_url')
       .not('slug', 'is', null)
       .eq('is_gated', false)
       .eq('is_blanket_works', false) // pseudo-books for author-level (Liste Otto) bans — never index
       .order('updated_at', { ascending: false })
-      .range(offset, offset + 999)
+      .range(offset, offset + 999), 'sitemap-books')
     if (!data || data.length === 0) break
     books = books.concat(data as BookRow[])
     if (data.length < 1000) break
