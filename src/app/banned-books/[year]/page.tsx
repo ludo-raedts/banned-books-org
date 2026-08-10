@@ -81,6 +81,7 @@ export default async function BannedBooksYearPage({
         .from('bans')
         .select('book_id, country_code, countries(name_en), books(id, title, slug, cover_url, book_authors(authors(display_name)))')
         .eq('year_started', yearNum)
+        .order('id', { ascending: true })
         .range(offset, offset + 999)
       if (!data || data.length === 0) break
       rawBans = rawBans.concat(data as unknown as BanRow[])

@@ -99,8 +99,10 @@ export async function searchBooks(params: BookSearchParams): Promise<BookSearchR
   const reason     = params.reason ?? ''
   const year       = params.year && Number.isFinite(params.year) ? params.year : 0
   const sort       = params.sort ?? DEFAULT_BOOK_SORT
-  const offset     = Math.max(0, params.offset ?? 0)
-  const limit      = Math.min(100, Math.max(1, params.limit ?? 48))
+  // Number.isFinite guards against NaN from parseInt on junk query strings
+  // (?limit=abc) — NaN survives Math.min/max and turns .range() into a 500.
+  const offset     = Number.isFinite(params.offset) ? Math.max(0, params.offset!) : 0
+  const limit      = Number.isFinite(params.limit) ? Math.min(100, Math.max(1, params.limit!)) : 48
 
   const supabase = adminClient()
   const hasFilters = !!(q || scope || country || activeOnly || reason || year)
