@@ -4,12 +4,14 @@
 // (<PageviewTracker> below), so the page itself can be cached statically.
 // Drops TTFB on cached hits from ~500ms to ~50ms (CWV ranking signal).
 //
-// Daily (not hourly): every one of the ~15.8k prebuilt pages re-writes on the
-// first request after its TTL expires, and ISR Writes are the largest Vercel
-// infra line. Book data changes slowly (batch enrichment), so 24h is plenty;
-// a just-enriched book that needs to surface immediately is busted on-demand
-// via POST /api/admin/revalidate, and a deploy regenerates everything at once.
-export const revalidate = 86400
+// Weekly, as a staleness CAP, not the freshness signal: ISR Writes are the
+// largest Vercel infra line, and book data only changes through our own
+// write paths. The actual refresh is event-driven — enrich-all.ts calls
+// POST /api/admin/revalidate ('/books/[slug]', type 'page') at the end of an
+// apply run (scripts/lib/revalidate.ts), admin edits bust inline, and a
+// deploy regenerates everything. The 7-day window is the safety net when an
+// ad-hoc script forgets to bust.
+export const revalidate = 604800
 
 import React, { cache } from 'react'
 import type { Metadata } from 'next'

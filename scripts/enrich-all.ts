@@ -64,6 +64,7 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { catalogReminder } from './audit-scripts-catalog'
+import { bustDetailPages } from './lib/revalidate'
 import { captureCoverage } from './enrich-coverage-snapshot'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -443,6 +444,14 @@ async function main() {
     `--before=${runDir}/coverage-before.json`, `--after=${runDir}/coverage-after.json`,
     `--run-dir=${runDir}`, `--out=${resolve(ROOT, `data/enrichment-coverage-report-${new Date().toISOString().slice(0, 10)}.md`)}`,
   ], { stdio: 'inherit' })
+
+  // books/[slug] + authors/[slug] cache for 7 days; this run just changed
+  // their data, so bust both routes now (fail-soft — worst case the ISR
+  // window catches up). See scripts/lib/revalidate.ts.
+  if (APPLY) {
+    banner('Cache bust (detail pages)')
+    await bustDetailPages()
+  }
 
   // The storefront lists live on bookshop.org and don't update themselves —
   // after a run that changed ISBNs or bookshop_status, regenerate + upload.
