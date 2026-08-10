@@ -46,9 +46,11 @@ yarn-error.log*
 supabase/.temp/
 supabase/.branches/
 
-# ad-hoc throwaway scripts (prefix _ marks one-off check/find/inspect helpers
-# that should never be committed; real scripts use kebab-case without prefix)
-scripts/_*.ts
+# scratch/prototype scripts only (_tmp_ prefix). Plain _-prefixed scripts are
+# one-offs/detectors that ARE committed (and archived to scripts/archive/ when
+# done) — see scripts/README.md "Uitstroom". Was scripts/_*.ts, which silently
+# kept 14 documented tools out of git.
+scripts/_tmp_*.ts
 
 # typescript
 *.tsbuildinfo
@@ -182,3 +184,21 @@ next-env.d.ts
 # Bookshop redirect-target audit — resume checkpoint (~5.4k probe results,
 # local-only cache; the derived review-MD/JSON in data/ are the deliverable)
 /data/bookshop-redirect-audit-checkpoint.jsonl
+
+# enrichment run artifacts, backups and caches (timestamped per run, local-only;
+# human-readable audit REPORTS stay committed). Added 2026-08-08 to keep
+# `git status` clean — prune old ones with scripts/prune-data.ts.
+/data/native-title-enrichment-*
+/data/cover-websearch-*
+/data/desc-websearch-*
+/data/bookshop-availability-backup-*
+/data/bookshop-edition-remediation-backup-*
+/data/legacy-books-description-backup-*
+/data/author-birthday-enrichment-*
+/data/author-links-enrichment-*
+/data/interview-candidates-*
+/data/nz-batch-rollback-backup-*
+/data/year-verification-verdicts.jsonl
+/data/source-research/porbase-cache.json
+/data/*.log
+/enrich.log

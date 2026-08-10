@@ -158,6 +158,8 @@ Elk bestaat omdat de generieke importer iets níet kan (hardcoded `scope='govern
 | `import-portugal-estado-novo.ts` | `data/portugal-estado-novo-<date>.json` (José Brandão "Livros Proibidos", ~900 titels; seed gebouwd door `build-portugal-estado-novo-stage0.ts`) | PT Estado-Novo `government`-bans. **AUTHOR-VERIFIED match-before-create** (PT-slug → EN-slug via `title_english_meaningful` → `authorsAgree()`) — het strengste dedup-voorbeeld. `first_published_year` blijft NULL tot PORBASE-verificatie (`verify-portugal-years-porbase.ts`, §6). Uitgevoerd 2026-06-28 | `--apply` |
 | `import-ireland-censorship.ts` | `data/ireland-censorship-<date>.json` (Censorship of Publications Board; ~60 gedateerde titels uit de Ó Drisceoil-catalogus via Notre Dame + Wikipedia; seed gebouwd door `build-ireland-censorship-stage0.ts`) | IE `government`/`historical`-bans (Ierse boek-verboden vervallen na 12 jaar → `historical`; reason `obscenity` = statutaire grond). Berlin-patroon + **extra guard: match-hit die al een IE-ban heeft → SKIP** (geen tweede, jaar-conflicterende ban). Uitgevoerd 2026-08-04 (IE 39 → 98 distinct books) | `--apply` |
 
+| `backfill-utah-statewide-bans.ts` | Utah USBE-lijst (HB 29 / §53G-10-103) | 36 titels die uit ÁLLE Utah public schools moeten; bans op bestaande boeken, `scope_id=4`, regio Utah. Uitgevoerd 2026-07-11 | `--apply` |
+
 **Vuistregel:** JSON met standaard government-bans → `import-africa` als template ·
 school/library challenges → `import-nipissing` · bans bij bestaande boeken → `add-ala-2025`.
 
@@ -292,6 +294,9 @@ CourtListener doet **niet** mee: dat is een render-time live feed
 | `enrich-author-links.ts` | Vul `authors.wikidata_id/website_url/social_links` uit Wikidata (P856 site, P2002/P2003/P2013 social, P214 VIAF); namesake-gated op `birth_year` (P31=Q5 + P569-jaar). Drijft de Person `sameAs` (entity-authority) + zichtbaar link-rijtje in de hero. Sticky via `links_checked_at`; top-N op bans via `--candidates` |
 | `enrich-author-native-names.ts` | **`authors.name_native` (+ `original_language`/`wikidata_id` waar NULL) uit Wikidata** voor auteurs met een niet-Latijns-schrift-naam ("Mo Yan" → 莫言) — hero-h2 + Person `alternateName`, spiegel van `enrich-native-titles`. Namesake-gates ruimer dan enrich-author-links omdat veel dissidente auteurs geen `birth_year` hebben: stored-qid \| P569-jaar \| P800-werk-labelmatch \| reverse-P50-werkzoek. Naam uit P1559 (Latijnse P1559 = Wikidata-fout, genegeerd) → label via P103/P1412→P424 → boek-taal → `--lang=xx`-fallback (alleen ná de entity-eigen taal); zh-spaties/interpunctie getrimd; Latijnse uitkomst = review-only (kolom-doctrine). Scope verplicht: `--country=XX` of `--author-ids=`. Schrijft `data/author-native-names-<date>.md` | apply |
 | **Titels (meertalig)** | |
+| `enrich-original-language.ts` | Backfill van `books.original_language` (Wikidata/heuristiek); review-uitvoer gaat door `apply-original-language-fixes.ts` | apply |
+| `apply-original-language-fixes.ts` | Past de geverifieerde verdicts van de original-language review toe | apply |
+| `apply-manual-native-titles.ts` | Past hand-gecureerde `title_native`-correcties toe (kleine curated lijst, buiten de Wikidata-pipeline om) | apply |
 | `enrich-native-titles.ts` | **`title_native` + `title_native_script` voor anderstalige boeken die onder hun Engelse/vertaalde titel staan** (bv. "Doctor Zhivago" → "Доктор Живаго"). Bron Wikidata (CC-0): `wbsearchentities` (titel + zonder leidend lidwoord) → hard-gate op P31=written-work **én** P50-auteur-match (incl. aliassen/pseudoniemen); P364 wordt NIET als gate gebruikt (vaak leeg). Native titel uit `P1476@origlang` of label. Raakt `title`/`slug` nooit; niet-Latijnse transliteratie blijft NULL (review-gated, vlag in reviewbestand). Idempotent (`.is title_native null`-guard). **Sticky miss-stempel** `native_title_checked_at` (cf. `isbn_checked_at`): bij `--apply` worden hits én definitieve misses (no-search-hit / no-confirmed-work-match) gestempeld; kandidaten-query slaat rijen over die < `--recheck-days` (default 90) geleden gecheckt zijn, transient search-errors blijven ongestempeld, `--book-ids` omzeilt het venster. Ranking op `distinct_countries`. Schrijft `data/native-title-enrichment-<date>.{json,md}`. `--limit` / `--offset` / `--lang=xx` / `--book-ids=` / `--recheck-days=N` / `--apply` | apply |
 | **Identifiers / overig** | |
 | `enrich-isbn.ts` | Missende `isbn13` via OpenLibrary + Google Books |
@@ -323,8 +328,9 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `score-data-quality.ts` | Data-quality classifier over de catalogus |
 | `audit-enrichment-confidence.ts` | **Post-batch confidence + auto-rollback** voor een `enrich-all.ts`-run (laatste fase) (read-only; `--apply` reverteert, CSV-backup vooraf). Native-titels: scoort elke geschreven proposal uit de review-JSON op namesake/leidend-lidwoord-risico (−0.5 geen auteur-gate, −0.2 leidend lidwoord) en reverteert <`--threshold` (default 0.5) — reverteert alléén rijen waarvan `title_native` nog gelijk is aan de proposal (nooit een latere handmatige edit). ISBN/cover: structurele her-verificatie van de this-run writes (`--since=<ISO>`) op host-allowlist + dup-collision. ISBN/cover-semantiek zit al hard-gated vóór de write, dus de echte rollback-waarde zit bij native-titels |
 | `audit-scripts-catalog.ts` | Freshness-check van déze catalogus: flag't scripts die niet in `README.md` staan (draait ook als slot van `enrich-all.ts`) |
+| `audit-botd-week.ts` | Pre-flight voor de komende week book-of-the-day picks: data-gaten (cover/description/bio/foto) per pick + auteur — drijft de wekelijkse `/botd-week` skill |
+| `_audit_original_language_english.ts` | Canonieke detector voor boeken met `original_language='en'` die vermoedelijk anderstalig origineel zijn (backfill-review; zie `enrich-original-language.ts`) |
 | `check-no-desc.ts` | Snelle description-coverage check |
-| `_audit_ban_outcome_granularity.ts` | Meet hoe groot de "niet écht verwijderd — reshelved / access-gated" categorie is die Banned Index als aparte statussen voert maar wij afvlakken naar 3 `action_type`s: verdeling over rows én distinct books, US/non-US-split, keyword-scan op `bans.description` (relocation / access-gate / full removal). Lokaal-only (gitignored) |
 | **Jaren** | |
 | `audit-publication-years.ts` | `first_published_year` vs OpenLibrary → review-artifact |
 | `audit-impossible-years.ts` | Onmogelijke/verdachte publicatiejaren |
@@ -334,7 +340,6 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | **Auteurs** | |
 | `audit-non-person-authors.ts` | Author-rijen die geen persoon zijn (uitgevers/comités/…) |
 | `_audit_author_bio_contamination.ts` | Classificeert author-bios op contaminatie door `enrich-author-bios.ts` (verkeerd Wikipedia-artikel geaccepteerd: boek/film/band/andere persoon) → `data/author-bio-contamination-audit.md`; apply-zijde: `remediate-author-bios.ts` |
-| `_analyze-top-authors.ts` | Rankt auteurs op aantal POSTABLE banned books (zelfde eligibility-gate als de Bluesky-picker) — scoping voor de birthday-push feature: wie moet gedekt zijn en wie heeft al een `birth_year`. Lokaal-only (gitignored) |
 | **Covers** | |
 | `audit-covers-for-placeholders.ts` | Google Books "image not available" placeholders |
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |
@@ -342,7 +347,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `audit-covers-vision.ts` | Vision-audit + auto-remediatie van title-search-gecontamineerde Google-covers (verkeerd boek / interieurpagina) → `data/cover-vision-audit.*`; recovery-zijde: `recover-nulled-covers.ts` |
 | `_montage_google_covers.ts` | Visuele preview-montage van Google-covers → `public/cover-montage.html` (altijd checken vóór cover-fixes appliën) |
 | `_audit_shared_enrichment.ts` | "Most-popular hit"-contaminatie: covers én descriptions die een titel-search op het verkeerde boek plakte → `data/shared-cover-audit.md`, `data/shared-description-audit.md`, `public/shared-cover-suspects.html` (bron-guard zit in `src/lib/enrich/title-match.ts`) |
-| `_audit_ol_title_mismatch.ts` | Sibling van `_audit_shared_enrichment`: vangt het geval waar één boek's `openlibrary_work_id` naar een ánder werk wijst zónder dat een sibling de asset deelt (groepering mist het). Twee-tier (token-overlap + OL-auteur) onderscheidt CONFIRMED van LIKELY_TRANSLATION → `data/ol-title-mismatch-audit.md`. Lokaal-only |
+| `_audit_ol_title_mismatch.ts` | Sibling van `_audit_shared_enrichment`: vangt het geval waar één boek's `openlibrary_work_id` naar een ánder werk wijst zónder dat een sibling de asset deelt (groepering mist het). Twee-tier (token-overlap + OL-auteur) onderscheidt CONFIRMED van LIKELY_TRANSLATION → `data/ol-title-mismatch-audit.md` |
 | `_audit_ol_contamination.ts` | "Poisoned guard"-incident (2026-06-04): herpast de gecorrigeerde OL-guard op elke opgeslagen `openlibrary`-description en bucketet afwijzingen per binding (isbn / work_id / search) → `data/ol-contamination-audit.md`. Read-only. |
 | `remediate-ol-contamination.ts` | Schoont de bevestigde "poisoned guard"-contaminatie op: nullt+flagt OL-descriptions die de gecorrigeerde guard afwijst **én** search-bound zijn of een blurb delen over inconsistente titels. Back-upt origineel naar CSV; `--apply` schrijft. (LLM-follow-up `_audit_llm_ol_contamination.ts` → archief: 0 besmet.) |
 | **Slugs** | |
@@ -350,7 +355,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | `filter-nfd-subset.ts` | Filtert slug-audit naar de NFD-bug subset |
 | **Descriptions / context** | |
 | `_audit_ungrounded_descriptions.ts` | Ongegronde ai-drafted descriptions (read-only sizing) |
-| `_audit_wiki_markup_descriptions.ts` | Telt books waarvan `description`/`description_book` nog rauwe MediaWiki-sectiemarkup draagt (`== Heading ==`) die uit het Wikipedia-enrichment-pad lekte. Her-draaibaar na wiki-enrichment-runs. Lokaal-only (gitignored) |
+| `_audit_wiki_markup_descriptions.ts` | Telt books waarvan `description`/`description_book` nog rauwe MediaWiki-sectiemarkup draagt (`== Heading ==`) die uit het Wikipedia-enrichment-pad lekte. Her-draaibaar na wiki-enrichment-runs |
 | `validate-consensus-descriptions.ts` | Read-only recall/false-positive-meting van de cross-model consensus-pijplijn (3 buckets: known/anonymous/target) — draai dit om een scope te vetten vóór `enrich-descriptions-consensus.ts --apply` |
 
 Afgeronde audits/metingen (ban-vs-context-overlap + keep-narrative 2e-pass + steekproef-helpers,

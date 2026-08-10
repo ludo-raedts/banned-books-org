@@ -1,0 +1,65 @@
+{
+  "generated": "2026-07-03T09:33:32.396Z",
+  "findings": [
+    {
+      "id": 12,
+      "slug": "brave-new-world",
+      "title": "Brave New World",
+      "linkIsbn": "9786074536782",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "un-mundo-feliz-aldous-huxley"
+    },
+    {
+      "id": 33,
+      "slug": "harry-potter-philosophers-stone",
+      "title": "Harry Potter and the Philosopher's Stone",
+      "linkIsbn": "9781781103685",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "harry-potter-e-a-pedra-filosofal-j-k-rowling"
+    },
+    {
+      "id": 57,
+      "slug": "the-master-and-margarita",
+      "title": "The Master and Margarita",
+      "linkIsbn": "9781482625196",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "el-maestro-y-margarita-mijail-bulgakov"
+    },
+    {
+      "id": 92,
+      "slug": "the-stranger",
+      "title": "The Stranger",
+      "linkIsbn": "9782070360024",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "etranger-albert-camus"
+    },
+    {
+      "id": 104,
+      "slug": "to-live-yu-hua",
+      "title": "To Live",
+      "linkIsbn": "9780449901816",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "living-loving-and-learning-leo-f-buscaglia"
+    }
+  ]
+}

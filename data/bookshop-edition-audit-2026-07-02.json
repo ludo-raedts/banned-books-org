@@ -1,0 +1,5298 @@
+{
+  "generatedAt": "2026-07-02T10:23:58.561Z",
+  "scope": "all-valid",
+  "total": 5439,
+  "findings": [
+    {
+      "id": 17,
+      "slug": "the-grapes-of-wrath",
+      "title": "The Grapes of Wrath",
+      "linkIsbn": "9781605148861",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Grapes of Wrath",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 114,
+      "slug": "tobacco-road",
+      "title": "Tobacco Road",
+      "linkIsbn": "9780786199341",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Tobacco Road",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 138,
+      "slug": "the-glass-castle",
+      "title": "The Glass Castle",
+      "linkIsbn": "9781508239741",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Glass Castle",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 169,
+      "slug": "capital-and-ideology",
+      "title": "Capital and Ideology",
+      "linkIsbn": "9780674247680",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Capital and Ideology",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 191,
+      "slug": "the-painted-bird",
+      "title": "The Painted Bird",
+      "linkIsbn": "9781615730803",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Painted Bird",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 199,
+      "slug": "empire-of-storms",
+      "title": "Empire of Storms",
+      "linkIsbn": "9781543602173",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Empire of Storms",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 215,
+      "slug": "mondays-not-coming",
+      "title": "Monday's Not Coming",
+      "linkIsbn": "9781538549834",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Monday's Not Coming",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 229,
+      "slug": "milk-and-honey",
+      "title": "Milk and Honey",
+      "linkIsbn": "9781508229612",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Milk and Honey",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 293,
+      "slug": "house-of-earth-and-blood",
+      "title": "House of Earth and Blood",
+      "linkIsbn": "9781713578772",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "House of Earth and Blood",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 354,
+      "slug": "blended",
+      "title": "Blended",
+      "linkIsbn": "9781508258773",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Blended",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 365,
+      "slug": "call-me-by-your-name",
+      "title": "Call Me By Your Name",
+      "linkIsbn": "9781427291691",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Call Me by Your Name",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 371,
+      "slug": "november-9",
+      "title": "November 9",
+      "linkIsbn": "9781508284987",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "November 9",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 378,
+      "slug": "gracefully-grayson",
+      "title": "Gracefully Grayson",
+      "linkIsbn": "9781094256627",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Gracefully Grayson",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 464,
+      "slug": "yolk",
+      "title": "Yolk",
+      "linkIsbn": "9781797117881",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Yolk",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 466,
+      "slug": "the-sky-is-everywhere",
+      "title": "The Sky is Everywhere",
+      "linkIsbn": "9781469232768",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Sky is Everywhere",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 479,
+      "slug": "the-pants-project",
+      "title": "The Pants Project",
+      "linkIsbn": "9781455125098",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Pants Project",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 486,
+      "slug": "symptoms-of-being-human",
+      "title": "Symptoms of Being Human",
+      "linkIsbn": "9781467623421",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Symptoms of Being Human",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 515,
+      "slug": "the-thousandth-floor",
+      "title": "The Thousandth Floor",
+      "linkIsbn": "9781441704603",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Thousandth Floor",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 527,
+      "slug": "the-drawing-of-the-three",
+      "title": "The Drawing of the Three",
+      "linkIsbn": "9781797106243",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Drawing of the Three",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 545,
+      "slug": "twilight",
+      "title": "Twilight",
+      "linkIsbn": "9781616579173",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Twilight",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 547,
+      "slug": "frankly-in-love",
+      "title": "Frankly in Love",
+      "linkIsbn": "9780593105597",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Frankly in Love",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 548,
+      "slug": "julian-is-a-mermaid",
+      "title": "Julián Is a Mermaid",
+      "linkIsbn": "9781662049828",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Julián Is a Mermaid",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 568,
+      "slug": "misery-stephen-king",
+      "title": "Misery",
+      "linkIsbn": "9781797107318",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Misery",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 630,
+      "slug": "the-girl-with-seven-names",
+      "title": "The Girl with Seven Names",
+      "linkIsbn": "9780008346553",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Girl with Seven Names",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 669,
+      "slug": "the-ginger-man",
+      "title": "The Ginger Man",
+      "linkIsbn": "9781491508114",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Ginger Man, The",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 709,
+      "slug": "three-trapped-tigers",
+      "title": "Three Trapped Tigers",
+      "linkIsbn": "9781536669657",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Three Trapped Tigers",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 776,
+      "slug": "the-subversive-philippines",
+      "title": "The Subversive",
+      "linkIsbn": "9781665239974",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Gender Trouble",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 811,
+      "slug": "gods-little-acre",
+      "title": "God's Little Acre",
+      "linkIsbn": "9780786115419",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "God's Little Acre",
+      "olFormat": "Audio Cassette",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 880,
+      "slug": "open-veins-of-latin-america",
+      "title": "Open Veins of Latin America",
+      "linkIsbn": "9781713592839",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Las Venas Abiertas de América Latina",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 906,
+      "slug": "zinky-boys",
+      "title": "Zinky Boys",
+      "linkIsbn": "9781531873363",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Zinky Boys",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 928,
+      "slug": "metro-2033",
+      "title": "Metro 2033",
+      "linkIsbn": "9781491508183",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Metro 2033",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 968,
+      "slug": "in-the-dream-house",
+      "title": "In the Dream House",
+      "linkIsbn": "9781665180313",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "In the Dream House",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1111,
+      "slug": "the-gentlemans-guide-to-vice-and-virtue",
+      "title": "The Gentleman's Guide to Vice and Virtue",
+      "linkIsbn": "9781538439135",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Gentleman's Guide to Vice and Virtue",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1114,
+      "slug": "beautiful-disaster",
+      "title": "Beautiful Disaster",
+      "linkIsbn": "9781508285014",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Beautiful Disaster",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1138,
+      "slug": "the-ship-we-built",
+      "title": "The Ship We Built",
+      "linkIsbn": "9781662009594",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Ship We Built",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 1141,
+      "slug": "if-i-was-your-girl",
+      "title": "If I Was Your Girl",
+      "linkIsbn": "9781427272935",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "If I Was Your Girl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1150,
+      "slug": "a-curse-of-roses",
+      "title": "A Curse of Roses",
+      "linkIsbn": "9781665019255",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "A Curse of Roses",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1164,
+      "slug": "doctor-sleep",
+      "title": "Doctor Sleep",
+      "linkIsbn": "9781797101354",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Doctor Sleep",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1165,
+      "slug": "foul-is-fair",
+      "title": "Foul is Fair",
+      "linkIsbn": "9781250262745",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Foul is Fair",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1211,
+      "slug": "daughters-unto-devils",
+      "title": "Daughters Unto Devils",
+      "linkIsbn": "9781504716857",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Daughters unto Devils",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1219,
+      "slug": "the-crown-of-gilded-bones",
+      "title": "The Crown of Gilded Bones",
+      "linkIsbn": "9781713548188",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Crown of Gilded Bones",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1280,
+      "slug": "different-seasons-four-novellas",
+      "title": "Different Seasons: Four Novellas",
+      "linkIsbn": "9781797107493",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Different Seasons",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1286,
+      "slug": "fable",
+      "title": "Fable",
+      "linkIsbn": "9781250772169",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Fable",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1298,
+      "slug": "howl",
+      "title": "Howl",
+      "linkIsbn": "9781797138428",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Howl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1309,
+      "slug": "music-from-another-world",
+      "title": "Music From Another World",
+      "linkIsbn": "9781094028941",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Music from Another World",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1315,
+      "slug": "on-writing-a-memoir-of-the-craft",
+      "title": "On Writing: A Memoir of the Craft",
+      "linkIsbn": "9781797107301",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "On Writing",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1321,
+      "slug": "rise",
+      "title": "Rise",
+      "linkIsbn": "9780739338964",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Esperanza Rising",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1349,
+      "slug": "this-is-where-it-ends",
+      "title": "This is Where it Ends",
+      "linkIsbn": "9781511323420",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "This Is Where It Ends",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1362,
+      "slug": "blood-and-honey",
+      "title": "Blood and Honey",
+      "linkIsbn": "9781799940203",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Blood & Honey",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1400,
+      "slug": "tomboy-a-graphic-memoir",
+      "title": "Tomboy: A Graphic Memoir",
+      "linkIsbn": "9781520031422",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Tomboy",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1414,
+      "slug": "she-gets-the-girl",
+      "title": "She Gets the Girl",
+      "linkIsbn": "9781797136226",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "She Gets the Girl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1422,
+      "slug": "fifteen-hundred-miles-from-the-sun",
+      "title": "Fifteen Hundred Miles from the Sun",
+      "linkIsbn": "9781713568001",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Fifteen Hundred Miles from the Sun",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1434,
+      "slug": "the-downstairs-girl",
+      "title": "The Downstairs Girl",
+      "linkIsbn": "9781665221580",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Downstairs Girl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1446,
+      "slug": "every-last-word",
+      "title": "Every Last Word",
+      "linkIsbn": "9781682622049",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Every Last Word",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1494,
+      "slug": "cherry-money-baby",
+      "title": "Cherry Money Baby",
+      "linkIsbn": "9781491581384",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Cherry Money Baby",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1503,
+      "slug": "finders-keepers",
+      "title": "Finders Keepers",
+      "linkIsbn": "9781442384347",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Finders Keepers",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1507,
+      "slug": "girl-parts",
+      "title": "Girl Parts",
+      "linkIsbn": "9781455856251",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Girl Parts",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1516,
+      "slug": "insomnia",
+      "title": "Insomnia",
+      "linkIsbn": "9781797107325",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Insomnia",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1520,
+      "slug": "joyland",
+      "title": "Joyland",
+      "linkIsbn": "9781508218579",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Joyland",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1533,
+      "slug": "layla",
+      "title": "Layla",
+      "linkIsbn": "9781713532125",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Layla",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1625,
+      "slug": "the-regulators",
+      "title": "The Regulators",
+      "linkIsbn": "9781508218678",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Regulators",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1826,
+      "slug": "it-gets-better-coming-out-overcoming-bullying-and-creating-a-life-worth-living",
+      "title": "It Gets Better: Coming Out, Overcoming Bullying, and Creating a Life Worth Living",
+      "linkIsbn": "9781455113385",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "It Gets Better",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1868,
+      "slug": "magical-boy-vol-1",
+      "title": "Magical Boy, Vol 1",
+      "linkIsbn": "9780545465939",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Raven Boys",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 1872,
+      "slug": "meet-cute-diary",
+      "title": "Meet Cute Diary",
+      "linkIsbn": "9781665077019",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Meet Cute Diary",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2013,
+      "slug": "kings-cage",
+      "title": "King's Cage",
+      "linkIsbn": "9781470828394",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "King's Cage Lib/E",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2106,
+      "slug": "excuse-me-while-i-ugly-cry",
+      "title": "Excuse Me While I Ugly Cry",
+      "linkIsbn": "9781665076777",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Excuse Me While I Ugly Cry",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2127,
+      "slug": "fancy-white-trash",
+      "title": "Fancy White Trash",
+      "linkIsbn": "9781522676799",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Fancy White Trash",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2247,
+      "slug": "defy-the-stars",
+      "title": "Defy the Stars",
+      "linkIsbn": "9781478919414",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Defy the Stars Lib/E",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2269,
+      "slug": "every-breath",
+      "title": "Every Breath",
+      "linkIsbn": "9781549121012",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Every breath",
+      "olFormat": "CD Audiobook",
+      "olLanguages": []
+    },
+    {
+      "id": 2283,
+      "slug": "flip",
+      "title": "Flip",
+      "linkIsbn": "9781455813391",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Flip",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 2327,
+      "slug": "homecoming",
+      "title": "Homecoming",
+      "linkIsbn": "9781478980407",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The 100",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2339,
+      "slug": "ice-wolves",
+      "title": "Ice Wolves",
+      "linkIsbn": "9781538497920",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Ice Wolves",
+      "olFormat": "Audiobook",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 2451,
+      "slug": "peace-love-and-baby-ducks",
+      "title": "Peace, Love, and Baby Ducks",
+      "linkIsbn": "9781501284502",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Peace, Love, and Baby Ducks",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2485,
+      "slug": "room",
+      "title": "Room",
+      "linkIsbn": "9781611138436",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Room",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2493,
+      "slug": "rules-for-being-a-girl",
+      "title": "Rules for Being a Girl",
+      "linkIsbn": "9781094118727",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Rules for Being a Girl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2553,
+      "slug": "the-dark-days-club",
+      "title": "The Dark Days Club",
+      "linkIsbn": "9781511358057",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Dark Days Club",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 2569,
+      "slug": "the-impossible-knife-of-memory",
+      "title": "The Impossible Knife of Memory",
+      "linkIsbn": "9781480583344",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Impossible Knife of Memory",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 2579,
+      "slug": "the-nature-of-jade",
+      "title": "The Nature of Jade",
+      "linkIsbn": "9781441869692",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Nature of Jade",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 2601,
+      "slug": "the-voting-booth",
+      "title": "The Voting Booth",
+      "linkIsbn": "9781662003936",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Voting Booth",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2681,
+      "slug": "savage-inequalities-children-in-americas-schools",
+      "title": "Savage Inequalities: Children in America's Schools",
+      "linkIsbn": "9781501265051",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Savage Inequalities",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2685,
+      "slug": "tweak-growing-up-on-methamphetamines",
+      "title": "Tweak: Growing Up on Methamphetamines",
+      "linkIsbn": "9781433209369",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Tweak",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 2693,
+      "slug": "the-war-of-two-queens",
+      "title": "The War of Two Queens",
+      "linkIsbn": "9781713555919",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The War of Two Queens",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2713,
+      "slug": "the-girl-in-white",
+      "title": "The Girl in White",
+      "linkIsbn": "9780739343814",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Devil in the White City",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 2720,
+      "slug": "face-it",
+      "title": "Face It",
+      "linkIsbn": "9780063025349",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Face It Vinyl Edition + MP3",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2730,
+      "slug": "does-my-head-look-big-in-this",
+      "title": "Does My Head Look Big in This?",
+      "linkIsbn": "9781489087997",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Does My Head Look Big in This?",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2870,
+      "slug": "a-queer-history-of-the-united-states",
+      "title": "A Queer History of the United States",
+      "linkIsbn": "9781974918874",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "A Queer History of the United States",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 2940,
+      "slug": "black-nerd-problems-essays",
+      "title": "Black Nerd Problems: Essays",
+      "linkIsbn": "9781797129952",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Black Nerd Problems",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 2960,
+      "slug": "caste-the-origins-of-our-discontents",
+      "title": "Caste: The Origins of Our Discontents",
+      "linkIsbn": "9780593396698",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Caste",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3038,
+      "slug": "feminist-af-a-guide-to-crushing-girlhood",
+      "title": "Feminist AF: A Guide to Crushing Girlhood",
+      "linkIsbn": "9781666520705",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Feminist AF",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3088,
+      "slug": "house-of-rougeaux",
+      "title": "House of Rougeaux",
+      "linkIsbn": "9781941203309",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "House of Rougeaux",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3211,
+      "slug": "pageboy",
+      "title": "Pageboy",
+      "linkIsbn": "9781250897657",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Pageboy",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3296,
+      "slug": "this-book-is-anti-racist-20-lessons-on-how-to-wake-up-take-action-and-do-the-work",
+      "title": "This Book Is Anti-Racist: 20 Lessons on How to Wake Up, Take Action, and Do the Work",
+      "linkIsbn": "9781665036894",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "This Book Is Anti-racist",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3307,
+      "slug": "twas-the-night-before-pride",
+      "title": "Twas the Night Before Pride",
+      "linkIsbn": "9781666568295",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Twas the Night Before Pride",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3606,
+      "slug": "debating-darcy",
+      "title": "Debating Darcy",
+      "linkIsbn": "9781338813722",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Debating Darcy",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3646,
+      "slug": "eona-the-last-dragoneye",
+      "title": "Eona: The Last Dragoneye",
+      "linkIsbn": "9781455813476",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Eona",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 3678,
+      "slug": "firefight",
+      "title": "Firefight",
+      "linkIsbn": "9781511336239",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Firefight",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3780,
+      "slug": "kent-state",
+      "title": "Kent State",
+      "linkIsbn": "9781338636345",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Kent State",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3826,
+      "slug": "mad-honey",
+      "title": "Mad Honey",
+      "linkIsbn": "9780593614099",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Mad Honey",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 3940,
+      "slug": "the-death-cure",
+      "title": "The Death Cure",
+      "linkIsbn": "9781615875870",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Death Cure",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 3944,
+      "slug": "the-end-and-other-beginnings-stories-from-the-future",
+      "title": "The End and Other Beginnings: Stories from the Future",
+      "linkIsbn": "9781094025667",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The End and Other Beginnings",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4000,
+      "slug": "the-short-novels-of-john-steinbeck",
+      "title": "The short novels of John Steinbeck",
+      "linkIsbn": "9781605148861",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Grapes of Wrath",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 4008,
+      "slug": "the-titans-curse",
+      "title": "The Titan's Curse",
+      "linkIsbn": "9781616379247",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Titan's Curse",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 4009,
+      "slug": "the-toll",
+      "title": "The Toll",
+      "linkIsbn": "9781799770442",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Toll",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4255,
+      "slug": "love-and-other-words",
+      "title": "Love and Other Words",
+      "linkIsbn": "9781508264354",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Love and Other Words",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4327,
+      "slug": "ripper-the-secret-life-of-walter-sickert",
+      "title": "Ripper: The Secret Life of Walter Sickert",
+      "linkIsbn": "9781531868710",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Ripper",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4401,
+      "slug": "the-ladys-guide-to-petticoats-and-piracy",
+      "title": "The Lady's Guide to Petticoats and Piracy",
+      "linkIsbn": "9781982553418",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Lady's Guide to Petticoats and Piracy",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4403,
+      "slug": "the-last-book-on-the-left-stories-of-murder-and-mayhem-from-historys-most-notorious-serial-killers",
+      "title": "The Last Book on the Left: Stories of Murder and Mayhem From History's Most Notorious Serial Killers",
+      "linkIsbn": "9781094064277",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Last Book on the Left",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4440,
+      "slug": "unite-me",
+      "title": "Unite Me",
+      "linkIsbn": "9781094048994",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Unite Me",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4458,
+      "slug": "learning-to-breathe",
+      "title": "Learning to Breathe",
+      "linkIsbn": "9781974919468",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Learning to Breathe",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4464,
+      "slug": "beartown",
+      "title": "Beartown",
+      "linkIsbn": "9781508249092",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Beartown",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4487,
+      "slug": "beck",
+      "title": "Beck",
+      "linkIsbn": "9781489408778",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Beck",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4559,
+      "slug": "i-hunt-killers",
+      "title": "I Hunt Killers",
+      "linkIsbn": "9781619699724",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "I Hunt Killers",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4677,
+      "slug": "season-of-storms",
+      "title": "Season of Storms",
+      "linkIsbn": "9781549172250",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Season of Storms",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4749,
+      "slug": "the-drawing-of-the-three-the-prisoner",
+      "title": "The Drawing of the Three - The Prisoner",
+      "linkIsbn": "9781797106243",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Drawing of the Three",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4823,
+      "slug": "thorn",
+      "title": "Thorn",
+      "linkIsbn": "9781094117652",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Thorn",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4839,
+      "slug": "walk-the-edge",
+      "title": "Walk the Edge",
+      "linkIsbn": "9781504698580",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Walk the Edge",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4873,
+      "slug": "everything-is-illuminated",
+      "title": "Everything is Illuminated",
+      "linkIsbn": "9781094063652",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Everything Is Illuminated",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4885,
+      "slug": "irreversible",
+      "title": "Irreversible",
+      "linkIsbn": "9781522650317",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Irreversible",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 4912,
+      "slug": "wild-girls",
+      "title": "Wild Girls",
+      "linkIsbn": "9781536620016",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Wild Girls",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 4991,
+      "slug": "in-the-shadow-of-the-mountain-a-memoir-of-courage",
+      "title": "In the Shadow of the Mountain: A Memoir of Courage",
+      "linkIsbn": "9781250840080",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "In the Shadow of the Mountain",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5007,
+      "slug": "like-other-girls",
+      "title": "Like Other Girls",
+      "linkIsbn": "9781094195827",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Like Other Girls",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5130,
+      "slug": "surrender-your-sons",
+      "title": "Surrender Your Sons",
+      "linkIsbn": "9781662032189",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Surrender Your Sons",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5152,
+      "slug": "the-devouring-gray",
+      "title": "The Devouring Gray",
+      "linkIsbn": "9781974931231",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Devouring Gray",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5162,
+      "slug": "the-fell-of-dark",
+      "title": "The Fell of Dark",
+      "linkIsbn": "9781713592082",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Fell of Dark",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5180,
+      "slug": "the-key-to-you-and-me",
+      "title": "The Key to You and Me",
+      "linkIsbn": "9781799953388",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Key to You and Me",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5256,
+      "slug": "who-i-was-with-her",
+      "title": "Who I Was With Her",
+      "linkIsbn": "9781799941514",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Who I Was With Her",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5269,
+      "slug": "you-dont-live-here",
+      "title": "You Don't Live Here",
+      "linkIsbn": "9781094160795",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "You Don't Live Here",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5669,
+      "slug": "i-stop-somewhere",
+      "title": "I Stop Somewhere",
+      "linkIsbn": "9781427294661",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "I Stop Somewhere",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 5687,
+      "slug": "inkheart",
+      "title": "Inkheart",
+      "linkIsbn": "9780739374955",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Inkheart",
+      "olFormat": "Audiobook",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 5972,
+      "slug": "the-glass-cafe-or-the-stripper-and-the-state-how-my-mother-started-a-war-with-the-system-that-made-us-kind-of-rich-and-a-little-bit-famous",
+      "title": "The Glass Café: Or, The Stripper and the State; How My Mother Started a War with the System that Made Us Kind of Rich and a Little Bit Famous",
+      "linkIsbn": "9781480517875",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Glass Cafe : Or the Stripper and the State; How My Mother Started a War With the System That Made Us Kind of Rich and a Little Bit Famous",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 6060,
+      "slug": "twilight-the-graphic-novel",
+      "title": "Twilight: The Graphic Novel",
+      "linkIsbn": "9781616579173",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Twilight",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 6088,
+      "slug": "we-set-the-dark-on-fire",
+      "title": "We Set the Dark on Fire",
+      "linkIsbn": "9781982610630",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "We Set the Dark on Fire",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 6396,
+      "slug": "the-white-disease",
+      "title": "The White Disease",
+      "linkIsbn": "9780786181902",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "White",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 6404,
+      "slug": "cats-cradle",
+      "title": "Cat's Cradle",
+      "linkIsbn": "9780062314352",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Cat's Cradle Low Price CD",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 6531,
+      "slug": "the-laws-of-life",
+      "title": "The Laws of Life",
+      "linkIsbn": "9781665167475",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The 48 Laws of Power",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 6895,
+      "slug": "tiananmen-de-fan-si",
+      "title": "Tian'anmen de fan si",
+      "linkIsbn": "9781522665571",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "People's Republic of Amnesia, The",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7349,
+      "slug": "gold-for-iron",
+      "title": "Gold for Iron",
+      "linkIsbn": "9781619696006",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Iron Hearted Violet",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7429,
+      "slug": "the-truth-about-muhammad",
+      "title": "The Truth About Muhammad",
+      "linkIsbn": "9780786160259",
+      "isXref": true,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Truth About Muhammad",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 7711,
+      "slug": "sex-plus-learning-loving-and-enjoying-your-body",
+      "title": "Sex Plus: Learning, Loving, and Enjoying Your Body",
+      "linkIsbn": "9781538550984",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Sex Plus",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7749,
+      "slug": "archenemies",
+      "title": "Archenemies",
+      "linkIsbn": "9781427299284",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Archenemies",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7851,
+      "slug": "the-project",
+      "title": "The Project",
+      "linkIsbn": "9781250790231",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Project",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7860,
+      "slug": "blackout",
+      "title": "Blackout",
+      "linkIsbn": "9781665098274",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Blackout",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7872,
+      "slug": "the-guest-list",
+      "title": "The Guest List",
+      "linkIsbn": "9781094156439",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Guest List",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7910,
+      "slug": "the-iron-flower",
+      "title": "The Iron Flower",
+      "linkIsbn": "9781982543310",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Iron Flower",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7914,
+      "slug": "gods-and-monsters",
+      "title": "Gods and Monsters",
+      "linkIsbn": "9781665100922",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Gods & Monsters",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 7960,
+      "slug": "the-school-for-good-and-evil",
+      "title": "The School for Good and Evil",
+      "linkIsbn": "9781467603393",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The School for Good and Evil",
+      "olFormat": "Audio",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 8001,
+      "slug": "hello-universe",
+      "title": "Hello Universe",
+      "linkIsbn": "9781470859480",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Hello, Universe",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8006,
+      "slug": "saint-odd",
+      "title": "Saint Odd",
+      "linkIsbn": "9781469248943",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Saint Odd",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8014,
+      "slug": "elatsoe",
+      "title": "Elatsoe",
+      "linkIsbn": "9781662038426",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Elatsoe",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8185,
+      "slug": "made-you-up",
+      "title": "Made You Up",
+      "linkIsbn": "9781509459728",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Made You Up",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 8199,
+      "slug": "ghost-house",
+      "title": "Ghost House",
+      "linkIsbn": "9781491530382",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Ghost House",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8254,
+      "slug": "the-whole-truth",
+      "title": "The Whole Truth",
+      "linkIsbn": "9781549150814",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Whole Truth",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8264,
+      "slug": "kingdom-of-souls",
+      "title": "Kingdom of Souls",
+      "linkIsbn": "9781982688141",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Kingdom of Souls",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8269,
+      "slug": "march-forward-girl",
+      "title": "March Forward, Girl",
+      "linkIsbn": "9781520091464",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "March Forward, Girl",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8288,
+      "slug": "three-dark-crowns",
+      "title": "Three Dark Crowns",
+      "linkIsbn": "9781441713568",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Three Dark Crowns",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8327,
+      "slug": "grave-peril",
+      "title": "Grave Peril",
+      "linkIsbn": "9781480596917",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Grave Peril",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8344,
+      "slug": "the-fortunes-of-indigo-skye",
+      "title": "The Fortunes of Indigo Skye",
+      "linkIsbn": "9781441869654",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Fortunes of Indigo Skye",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 8366,
+      "slug": "the-betrayed",
+      "title": "The Betrayed",
+      "linkIsbn": "9781665099424",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Betrayed",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8392,
+      "slug": "chain-of-gold",
+      "title": "Chain of Gold",
+      "linkIsbn": "9781442386402",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Chain of Gold",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8453,
+      "slug": "angelfall",
+      "title": "Angelfall",
+      "linkIsbn": "9781469222363",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Angelfall",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8456,
+      "slug": "the-lying-woods",
+      "title": "The Lying Woods",
+      "linkIsbn": "9781982501440",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Lying Woods",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 8488,
+      "slug": "written-in-my-own-hearts-blood",
+      "title": "Written in My Own Heart's Blood",
+      "linkIsbn": "9781490604244",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Written In My Own Heart's Blood",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8612,
+      "slug": "things-in-jars",
+      "title": "Things in Jars",
+      "linkIsbn": "9781508299493",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Things in Jars",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8708,
+      "slug": "dragonflight",
+      "title": "Dragonflight",
+      "linkIsbn": "9781491510971",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Dragonflight",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8742,
+      "slug": "watch-for-me-by-moonlight",
+      "title": "Watch for Me By Moonlight",
+      "linkIsbn": "9781441856265",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Watch for Me by Moonlight",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 8752,
+      "slug": "the-dozier-school-for-boys-forensics-survivors-and-a-painful-past",
+      "title": "The Dozier School for Boys: Forensics, Survivors, and a Painful Past",
+      "linkIsbn": "9781690585664",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Dozier School for Boys",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 8953,
+      "slug": "female-serial-killers-how-and-why-women-become-monsters",
+      "title": "Female Serial Killers: How and Why Women Become Monsters",
+      "linkIsbn": "9781665267915",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Female Serial Killers",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9017,
+      "slug": "its-always-the-husband",
+      "title": "It's Always the Husband",
+      "linkIsbn": "9781427286147",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "It's Always the Husband",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9093,
+      "slug": "the-moviegoer",
+      "title": "The Moviegoer",
+      "linkIsbn": "9780786196623",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Moviegoer",
+      "olFormat": "MP3 CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 9144,
+      "slug": "the-young-world",
+      "title": "The Young World",
+      "linkIsbn": "9781478900801",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Young World",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9170,
+      "slug": "city-of-the-lost-a-rockton-novel",
+      "title": "City of the Lost: A Rockton Novel",
+      "linkIsbn": "9781427279422",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "City of the Lost",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9363,
+      "slug": "the-poppy-war",
+      "title": "The Poppy War",
+      "linkIsbn": "9781538519097",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Poppy War",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9399,
+      "slug": "amsterdam",
+      "title": "Amsterdam",
+      "linkIsbn": "9781664778337",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Amsterdam",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9504,
+      "slug": "the-prime-of-miss-jean-brodie",
+      "title": "The Prime of Miss Jean Brodie",
+      "linkIsbn": "9781470848125",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Prime of Miss Jean Brodie",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9520,
+      "slug": "sigh-gone-a-misfits-memoir-of-great-books-punk-rock-and-the-fight-to-fit-in",
+      "title": "Sigh, Gone: A Misfit's Memoir of Great Books, Punk Rock, and the Fight to Fit In",
+      "linkIsbn": "9781250783288",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Sigh, Gone",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 9540,
+      "slug": "the-professor-and-the-madman-a-tale-of-murder-insanity-and-the-making-of-the-oxford-english-dictionary",
+      "title": "The Professor and the Madman: A Tale of Murder, Insanity, and the Making of the Oxford English Dictionary",
+      "linkIsbn": "9780694520664",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Professor and The Madman",
+      "olFormat": "audio cassette",
+      "olLanguages": []
+    },
+    {
+      "id": 9636,
+      "slug": "catch-and-kill-lies-spies-and-a-conspiracy-to-protect-predators",
+      "title": "Catch and Kill: Lies, Spies, and a Conspiracy to Protect Predators",
+      "linkIsbn": "9781549175459",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Catch and Kill",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9639,
+      "slug": "later",
+      "title": "Later",
+      "linkIsbn": "9781797121741",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Later",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9642,
+      "slug": "color-outside-the-lines-stories-about-love",
+      "title": "Color Outside the Lines: Stories About Love",
+      "linkIsbn": "9781664482562",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Color Outside the Lines",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9674,
+      "slug": "a-flicker-in-the-dark",
+      "title": "A Flicker in the Dark",
+      "linkIsbn": "9781250838841",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "A Flicker in the Dark",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9683,
+      "slug": "reflection-a-twisted-tale",
+      "title": "Reflection: A Twisted Tale",
+      "linkIsbn": "9781982519414",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Reflection : A Twisted Tale",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9707,
+      "slug": "finding-perfect",
+      "title": "Finding Perfect",
+      "linkIsbn": "9781713566366",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Finding Perfect",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9716,
+      "slug": "the-burning-god",
+      "title": "The Burning God",
+      "linkIsbn": "9781799945208",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Burning God",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9717,
+      "slug": "the-dragon-republic",
+      "title": "The Dragon Republic",
+      "linkIsbn": "9781982661823",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Dragon Republic",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9771,
+      "slug": "the-tower-of-nero",
+      "title": "The Tower of Nero",
+      "linkIsbn": "9780593290941",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Tower of Nero",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 9864,
+      "slug": "all-the-stars-and-teeth",
+      "title": "All the Stars and Teeth",
+      "linkIsbn": "9781094167114",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "All the Stars and Teeth",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9909,
+      "slug": "the-true-story-of-hansel-and-gretel-a-novel-of-war-and-survival",
+      "title": "The True Story of Hansel and Gretel: A Novel of War and Survival",
+      "linkIsbn": "9781467677004",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The True Story of Hansel and Gretel",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 9913,
+      "slug": "american-dirt",
+      "title": "American Dirt",
+      "linkIsbn": "9781250260611",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "American Dirt",
+      "olFormat": "Audiobook",
+      "olLanguages": []
+    },
+    {
+      "id": 9955,
+      "slug": "between-sisters",
+      "title": "Between Sisters",
+      "linkIsbn": "9781441866998",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Between Sisters",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9957,
+      "slug": "home-again",
+      "title": "Home Again",
+      "linkIsbn": "9781441844286",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Home Again",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 9983,
+      "slug": "two-more-days-an-anthology",
+      "title": "Two More Days: An Anthology",
+      "linkIsbn": "9781978695986",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Two More Days",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 10063,
+      "slug": "practical-magic",
+      "title": "Practical Magic",
+      "linkIsbn": "9781508243878",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Practical Magic",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 10163,
+      "slug": "the-first-7",
+      "title": "The First 7",
+      "linkIsbn": "9781690563624",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The First 7",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 10199,
+      "slug": "stepsister",
+      "title": "Stepsister",
+      "linkIsbn": "9781338357622",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Stepsister",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 10215,
+      "slug": "the-snow-child",
+      "title": "The Snow Child",
+      "linkIsbn": "9781549147555",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Snow Child",
+      "olFormat": "preloaded digital audio player",
+      "olLanguages": []
+    },
+    {
+      "id": 10231,
+      "slug": "a-good-kind-of-trouble",
+      "title": "A Good Kind of Trouble",
+      "linkIsbn": "9781982641580",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "A Good Kind of Trouble",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 10242,
+      "slug": "the-thirteenth-tale",
+      "title": "The Thirteenth Tale",
+      "linkIsbn": "9780743564175",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Thirteenth Tale",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 13048,
+      "slug": "islam-unveiled-disturbing-questions-about-the-worlds-fastest-growing-faith",
+      "title": "Islam Unveiled: Disturbing Questions About The World's Fastest-Growing Faith",
+      "linkIsbn": "9780786193769",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Islam Unveiled Disturbing Questions About the World's Fastest Growing Faith",
+      "olFormat": "Audio CD",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 16443,
+      "slug": "citizen-tom-paine",
+      "title": "Citizen Tom Paine",
+      "linkIsbn": "9781978666238",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Citizen Tom Paine",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17461,
+      "slug": "of-fire-and-stars",
+      "title": "Of Fire and Stars",
+      "linkIsbn": "9781538499955",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Of Fire and Stars",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17601,
+      "slug": "the-summer-of-jordi-perez",
+      "title": "The Summer of Jordi Perez",
+      "linkIsbn": "9781982501242",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Summer of Jordi Perez",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17602,
+      "slug": "bird-box",
+      "title": "Bird Box",
+      "linkIsbn": "9781483004365",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Bird Box",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17605,
+      "slug": "the-love-curse-of-melody-mcintyre",
+      "title": "The Love Curse of Melody McIntyre",
+      "linkIsbn": "9781799945970",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Love Curse of Melody McIntyre",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17656,
+      "slug": "blindspot-hidden-biases-of-good-people",
+      "title": "Blindspot: Hidden Biases of Good People",
+      "linkIsbn": "9781491528730",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Blindspot",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17671,
+      "slug": "code-of-honor",
+      "title": "Code of Honor",
+      "linkIsbn": "9780545881517",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Code of Honor",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17703,
+      "slug": "daddy-a-novel",
+      "title": "Daddy: A Novel",
+      "linkIsbn": "9781980079958",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Daddy's Girls",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17766,
+      "slug": "crazy-horses-vision",
+      "title": "Crazy Horse's Vision",
+      "linkIsbn": "9781591129103",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Crazy Horse's Vision",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17852,
+      "slug": "the-scapegracers",
+      "title": "The Scapegracers",
+      "linkIsbn": "9781713591948",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Scapegracers",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 17894,
+      "slug": "him",
+      "title": "Him",
+      "linkIsbn": "9781531875909",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "HIM",
+      "olFormat": "mp3 cd",
+      "olLanguages": [
+        "eng"
+      ]
+    },
+    {
+      "id": 17976,
+      "slug": "say-her-name",
+      "title": "Say Her Name",
+      "linkIsbn": "9781664485952",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Say Her Name",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18131,
+      "slug": "make-way-for-dyamonde-daniel",
+      "title": "Make Way for Dyamonde Daniel",
+      "linkIsbn": "9781501236105",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Make Way for Dyamonde Daniel",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18408,
+      "slug": "the-electric-heir",
+      "title": "The Electric Heir",
+      "linkIsbn": "9781978671652",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Electric Heir",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18411,
+      "slug": "celebrate-your-body-2-the-ultimate-puberty-book-for-preteen-and-teen-girls",
+      "title": "Celebrate Your Body 2: The Ultimate Puberty Book for Preteen and Teen Girls",
+      "linkIsbn": "9781713507437",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Celebrate Your Body 2",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18438,
+      "slug": "sister-outsider-essays-and-speeches",
+      "title": "Sister Outsider: Essays and Speeches",
+      "linkIsbn": "9781799984467",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Sister Outsider Lib/E",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18445,
+      "slug": "we-want-to-do-more-than-survive-abolitionist-teaching-and-the-pursuit-of-educational-freedom",
+      "title": "We Want to Do More Than Survive: Abolitionist Teaching and the Pursuit of Educational Freedom",
+      "linkIsbn": "9781974939053",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "We Want to Do More Than Survive",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18462,
+      "slug": "the-edge",
+      "title": "The Edge",
+      "linkIsbn": "9781665042475",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Edge",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18569,
+      "slug": "the-library-of-lost-things",
+      "title": "The Library of Lost Things",
+      "linkIsbn": "9781094004143",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Library of Lost Things",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18654,
+      "slug": "how-to-be-bad",
+      "title": "How to Be Bad",
+      "linkIsbn": "9781522692027",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "How to Be Bad",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18679,
+      "slug": "october-mourning-a-song-for-matthew-shepard",
+      "title": "October Mourning: A Song for Matthew Shepard",
+      "linkIsbn": "9781511360845",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "October Mourning",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18683,
+      "slug": "thunder-rose",
+      "title": "Thunder Rose",
+      "linkIsbn": "9781664629707",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Thunder Rose",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18688,
+      "slug": "the-towering-sky",
+      "title": "The Towering Sky",
+      "linkIsbn": "9781538590133",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Towering Sky",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18699,
+      "slug": "broken-things",
+      "title": "Broken Things",
+      "linkIsbn": "9781982551407",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Broken Things",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18708,
+      "slug": "the-life-and-medieval-times-of-kit-sweetly",
+      "title": "The Life and (Medieval) Times of Kit Sweetly",
+      "linkIsbn": "9781662007774",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Life and Medieval Times of Kit Sweetly",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18714,
+      "slug": "white-bird",
+      "title": "White Bird",
+      "linkIsbn": "9781984847485",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "White Bird",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18726,
+      "slug": "crown-of-feathers",
+      "title": "Crown of Feathers",
+      "linkIsbn": "9781508276654",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Crown of Feathers",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18777,
+      "slug": "written-in-bone-buried-lives-of-jamestown-and-colonial-maryland",
+      "title": "Written in Bone: Buried Lives of Jamestown and Colonial Maryland",
+      "linkIsbn": "9781531879259",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Written in Bone",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18829,
+      "slug": "the-darkness-outside-us",
+      "title": "The Darkness Outside Us",
+      "linkIsbn": "9781665096683",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Darkness Outside Us",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18850,
+      "slug": "hidden-figures-the-true-story-of-four-black-women-and-the-space-race",
+      "title": "Hidden Figures: The True Story of Four Black Women and the Space Race",
+      "linkIsbn": "9781441709653",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Hidden Figures Lib/E",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18864,
+      "slug": "the-falling-in-love-montage",
+      "title": "The Falling in Love Montage",
+      "linkIsbn": "9781094161105",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "The Falling in Love Montage",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18866,
+      "slug": "how-we-fight-white-supremacy",
+      "title": "How We Fight White Supremacy",
+      "linkIsbn": "9781549129445",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "How We Fight White Supremacy",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18942,
+      "slug": "freedom-in-congo-square",
+      "title": "Freedom in Congo Square",
+      "linkIsbn": "9781520078526",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "Freedom in Congo Square",
+      "olFormat": "audio cd",
+      "olLanguages": []
+    },
+    {
+      "id": 18948,
+      "slug": "on-the-come-up-a-novel-based-on-a-true-story",
+      "title": "On the Come Up: A Novel, Based on a True Story",
+      "linkIsbn": "9781480590205",
+      "isXref": false,
+      "flags": [
+        "audio"
+      ],
+      "olTitle": "On the Come Up",
+      "olFormat": "mp3 cd",
+      "olLanguages": []
+    },
+    {
+      "id": 998,
+      "slug": "born-a-crime",
+      "title": "Born a Crime",
+      "linkIsbn": "9781713641704",
+      "isXref": true,
+      "flags": [
+        "audio",
+        "non_english"
+      ],
+      "olTitle": "Prohibido nacer",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1418,
+      "slug": "born-a-crime-stories-from-a-south-african-childhood",
+      "title": "Born a Crime: Stories from a South African Childhood",
+      "linkIsbn": "9781713641704",
+      "isXref": true,
+      "flags": [
+        "audio",
+        "non_english"
+      ],
+      "olTitle": "Prohibido nacer",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 10050,
+      "slug": "golden-son",
+      "title": "Golden Son",
+      "linkIsbn": "9781713568551",
+      "isXref": false,
+      "flags": [
+        "audio",
+        "non_english"
+      ],
+      "olTitle": "Hijo dorado",
+      "olFormat": "audio cd",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 11,
+      "slug": "the-da-vinci-code",
+      "title": "The Da Vinci Code",
+      "linkIsbn": "9786073930178",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Código Da Vinci",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 27,
+      "slug": "the-diary-of-a-young-girl",
+      "title": "The Diary of a Young Girl",
+      "linkIsbn": "9780525565888",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Diario de Anne Frank",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 28,
+      "slug": "the-hunger-games",
+      "title": "The Hunger Games",
+      "linkIsbn": "9781417831739",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hunger Games",
+      "olFormat": null,
+      "olLanguages": [
+        "swe"
+      ]
+    },
+    {
+      "id": 29,
+      "slug": "the-perks-of-being-a-wallflower",
+      "title": "The Perks of Being a Wallflower",
+      "linkIsbn": "9781476732459",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Las ventajas de ser invisible",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 38,
+      "slug": "captain-underpants",
+      "title": "Captain Underpants",
+      "linkIsbn": "9780439226486",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Las aventuras del Capitán Calzoncillos",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 59,
+      "slug": "madame-bovary",
+      "title": "Madame Bovary",
+      "linkIsbn": "9781508442387",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Madame Bovary",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 65,
+      "slug": "for-whom-the-bell-tolls",
+      "title": "For Whom the Bell Tolls",
+      "linkIsbn": "9781451682908",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "For Whom the Bell Tolls [Bulgarian]",
+      "olFormat": null,
+      "olLanguages": [
+        "bul"
+      ]
+    },
+    {
+      "id": 66,
+      "slug": "portnoys-complaint",
+      "title": "Portnoy's Complaint",
+      "linkIsbn": "9788483466308",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El mal de Portnoy",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 72,
+      "slug": "the-tin-drum",
+      "title": "The Tin Drum",
+      "linkIsbn": "9788466330725",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El tambor de hojalata",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 74,
+      "slug": "the-picture-of-dorian-gray",
+      "title": "The Picture of Dorian Gray",
+      "linkIsbn": "9782253002888",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Le Portrait de Dorian Gray",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 83,
+      "slug": "the-giver",
+      "title": "The Giver",
+      "linkIsbn": "9780358354741",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Dador",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 88,
+      "slug": "darkness-at-noon",
+      "title": "Darkness at Noon",
+      "linkIsbn": "9788499087436",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El cero y el infinito",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 90,
+      "slug": "the-second-sex",
+      "title": "The Second Sex",
+      "linkIsbn": "9786073113755",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Segundo Sexo / the Second Sex",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 92,
+      "slug": "the-stranger",
+      "title": "The Stranger",
+      "linkIsbn": "9782070360024",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "L’étranger",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 93,
+      "slug": "the-decameron",
+      "title": "The Decameron",
+      "linkIsbn": "9781020686900",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Stories of Boccaccio (the Decameron)",
+      "olFormat": null,
+      "olLanguages": [
+        "ita"
+      ]
+    },
+    {
+      "id": 95,
+      "slug": "canto-general",
+      "title": "Canto General",
+      "linkIsbn": "9788437609300",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Canto general",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 96,
+      "slug": "the-house-of-the-spirits",
+      "title": "The House of the Spirits",
+      "linkIsbn": "9788466380812",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Casa de Los Espíritus",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 97,
+      "slug": "the-war-of-the-end-of-the-world",
+      "title": "The War of the End of the World",
+      "linkIsbn": "9788490625613",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "La guerra del fin del mundo",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 129,
+      "slug": "fight-club",
+      "title": "Fight Club",
+      "linkIsbn": "9789861737393",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Dou zhen ju le bu",
+      "olFormat": null,
+      "olLanguages": [
+        "chi"
+      ]
+    },
+    {
+      "id": 131,
+      "slug": "enders-game",
+      "title": "Ender's Game",
+      "linkIsbn": "9788490707890",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El juego de Ender",
+      "olFormat": "blanda",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 134,
+      "slug": "a-court-of-thorns-and-roses",
+      "title": "A Court of Thorns and Roses",
+      "linkIsbn": "9786073913225",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Corte de Rosas y Espinas 1 / a Court of Thorns and Roses 1",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 150,
+      "slug": "the-story-of-ferdinand",
+      "title": "The Story of Ferdinand",
+      "linkIsbn": "9781595191533",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El Cuento De Ferdinando / the Story of Ferdinand",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 152,
+      "slug": "el-senor-presidente",
+      "title": "El Señor Presidente",
+      "linkIsbn": "9781015611214",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Señor Presidente",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 200,
+      "slug": "a-court-of-mist-and-fury",
+      "title": "A Court of Mist and Fury",
+      "linkIsbn": "9786073913195",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Corte de Niebla y Furia / a Court of Mist and Fury",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 204,
+      "slug": "a-court-of-frost-and-starlight",
+      "title": "A Court of Frost and Starlight",
+      "linkIsbn": "9786073913201",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Una Corte de Hielo y Estrellas",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 212,
+      "slug": "kingdom-of-ash",
+      "title": "Kingdom of Ash",
+      "linkIsbn": "9798890981608",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Reino de Cenizas / Kingdom of Ash",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 214,
+      "slug": "a-court-of-silver-flames",
+      "title": "A ​Court of Silver Flames",
+      "linkIsbn": "9786073913218",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Corte de Llamas Plateadas / a Court of Silver Flames",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 244,
+      "slug": "homegoing",
+      "title": "Homegoing",
+      "linkIsbn": "9789577412300",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Homegoing",
+      "olFormat": null,
+      "olLanguages": [
+        "chi"
+      ]
+    },
+    {
+      "id": 252,
+      "slug": "life-is-funny",
+      "title": "Life is Funny",
+      "linkIsbn": "9788418395758",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mujercitas",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 277,
+      "slug": "maddaddam",
+      "title": "MaddAddam",
+      "linkIsbn": "9788418107887",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Maddaddam / Spanish Edition",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 385,
+      "slug": "ugly-love",
+      "title": "Ugly Love",
+      "linkIsbn": "9786073911030",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Ugly Love",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 416,
+      "slug": "crescent-city",
+      "title": "Crescent City",
+      "linkIsbn": "9788410190108",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Casa de Tierra y Sangre",
+      "olFormat": "Hardcover",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 507,
+      "slug": "daughter-of-smoke-and-bone",
+      "title": "Daughter of Smoke and Bone",
+      "linkIsbn": "9786073828512",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hija de Humo y Hueso / Daughter of Smoke and Bone",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 518,
+      "slug": "the-witch-boy",
+      "title": "The Witch Boy",
+      "linkIsbn": "9781443168809",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Garçon Sorcière",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 543,
+      "slug": "a-dance-with-dragons",
+      "title": "A Dance with Dragons",
+      "linkIsbn": "9780307951229",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Danza de dragones",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 570,
+      "slug": "germinal",
+      "title": "Germinal",
+      "linkIsbn": "9782253004226",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Germinal",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 573,
+      "slug": "we-zamyatin",
+      "title": "We",
+      "linkIsbn": "9781947384033",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Мы (Аннотировано)",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "rus"
+      ]
+    },
+    {
+      "id": 595,
+      "slug": "east-of-eden",
+      "title": "East of Eden",
+      "linkIsbn": "9786070787720",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Al Este Del Edén",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 617,
+      "slug": "taseer-of-lahore",
+      "title": "Taseer of Lahore",
+      "linkIsbn": "9783161484100",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "SLEEPARALIS",
+      "olFormat": "Hardcover",
+      "olLanguages": [
+        "cze",
+        "som"
+      ]
+    },
+    {
+      "id": 658,
+      "slug": "emile-or-on-education",
+      "title": "Emile, or On Education",
+      "linkIsbn": "9780274105977",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Émile, Ou, de L'éducation",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 689,
+      "slug": "tango-slawomir-mrozek",
+      "title": "Tango",
+      "linkIsbn": "9782226035509",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Tango",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 712,
+      "slug": "el-monte-lydia-cabrera",
+      "title": "El Monte",
+      "linkIsbn": "9780897290098",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El monte",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 766,
+      "slug": "nada-carmen-laforet",
+      "title": "Nada",
+      "linkIsbn": "9780812977714",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nada",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 767,
+      "slug": "bodas-de-sangre",
+      "title": "Bodas de sangre",
+      "linkIsbn": "9781492977506",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Bodas de Sangre",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 771,
+      "slug": "fontamara",
+      "title": "Fontamara",
+      "linkIsbn": "9780719006623",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Fontamara",
+      "olFormat": null,
+      "olLanguages": [
+        "ita"
+      ]
+    },
+    {
+      "id": 787,
+      "slug": "the-death-of-artemio-cruz",
+      "title": "The Death of Artemio Cruz",
+      "linkIsbn": "9789681683931",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Obras Reunidas I/ Collected Works I (Obras Reunidas)",
+      "olFormat": "Hardcover",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 788,
+      "slug": "justine-de-sade",
+      "title": "Justine",
+      "linkIsbn": "9781720764250",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Justine, Ou les Malheurs de la Vertu (French Edition)",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 804,
+      "slug": "the-general-in-his-labyrinth",
+      "title": "The General in His Labyrinth",
+      "linkIsbn": "9781400034963",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El general en su laberinto",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 806,
+      "slug": "tintin-in-the-land-of-soviets",
+      "title": "The Tintin series",
+      "linkIsbn": "9782203001022",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Tintin en Amérique",
+      "olFormat": "Hardcover",
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 819,
+      "slug": "justine-or-misfortunes-of-virtue",
+      "title": "Justine, or the Misfortunes of Virtue",
+      "linkIsbn": "9781720764250",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Justine, Ou les Malheurs de la Vertu (French Edition)",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 908,
+      "slug": "patriot-navalny",
+      "title": "Patriot",
+      "linkIsbn": "9786075698762",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Patriota : Memorias / Patriot",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 979,
+      "slug": "on-the-hong-kong-city-state",
+      "title": "On the Hong Kong City-State",
+      "linkIsbn": "9786073902809",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Los Tres Mosqueteros",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 992,
+      "slug": "the-adventures-of-tom-sawyer",
+      "title": "The Adventures of Tom Sawyer",
+      "linkIsbn": "9781500313531",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Huckleberry Finns Abenteuer und Fahrten",
+      "olFormat": null,
+      "olLanguages": [
+        "ger"
+      ]
+    },
+    {
+      "id": 1097,
+      "slug": "house-of-sky-and-breath",
+      "title": "House of Sky and Breath",
+      "linkIsbn": "9786073813976",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Ciudad Medialuna",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1102,
+      "slug": "one-last-stop",
+      "title": "One Last Stop",
+      "linkIsbn": "9786073808439",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Última Parada",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1107,
+      "slug": "drama-a-graphic-novel",
+      "title": "Drama: A Graphic Novel",
+      "linkIsbn": "9781443125222",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Drame",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 1167,
+      "slug": "how-the-garcia-girls-lost-their-accents",
+      "title": "How the Garcia Girls Lost Their Accents",
+      "linkIsbn": "9781400096947",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "De cómo las muchachas García perdieron el acento",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1190,
+      "slug": "the-tommyknockers",
+      "title": "The Tommyknockers",
+      "linkIsbn": "9782226039262",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Les Tommyknockers",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 1193,
+      "slug": "turtles-all-the-way-down",
+      "title": "Turtles All the Way Down",
+      "linkIsbn": "9786073161145",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mil Veces Hasta Siempre",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1338,
+      "slug": "the-institute",
+      "title": "The Institute",
+      "linkIsbn": "9780593311219",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El instituto",
+      "olFormat": "paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1344,
+      "slug": "the-outsider",
+      "title": "The Outsider",
+      "linkIsbn": "9780593311486",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El visitante",
+      "olFormat": "Trade Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1392,
+      "slug": "nick-and-charlie-a-heartstopper-novella",
+      "title": "Nick and Charlie: A Heartstopper Novella",
+      "linkIsbn": "9786078828128",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nick y Charlie",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1413,
+      "slug": "pinkalicious",
+      "title": "Pinkalicious",
+      "linkIsbn": "9780061799594",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Pinkalicious",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1451,
+      "slug": "holding-up-the-universe",
+      "title": "Holding Up the Universe",
+      "linkIsbn": "9786070740237",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Aquí Empieza Todo",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1492,
+      "slug": "born-at-midnight",
+      "title": "Born at Midnight",
+      "linkIsbn": "9780312624675",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Born At Midnight",
+      "olFormat": null,
+      "olLanguages": [
+        "enm"
+      ]
+    },
+    {
+      "id": 1501,
+      "slug": "definitely-dead",
+      "title": "Definitely Dead",
+      "linkIsbn": "9788466323703",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Definitivamente muerta",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1601,
+      "slug": "the-day-of-the-jackal",
+      "title": "The Day of the Jackal",
+      "linkIsbn": "9788497930468",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Chacal/ The Day of The Jackal",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1656,
+      "slug": "the-little-prince",
+      "title": "The Little Prince",
+      "linkIsbn": "9789563100945",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Principito",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 1692,
+      "slug": "miss-peregrine-s-home-for-peculiar-children",
+      "title": "Miss Peregrine’s Home for Peculiar Children",
+      "linkIsbn": "9786070734915",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Miss Peregrine y los niños peculiares",
+      "olFormat": "paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2009,
+      "slug": "catching-fire",
+      "title": "Catching Fire",
+      "linkIsbn": "9788937832994",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Catching Fire",
+      "olFormat": null,
+      "olLanguages": [
+        "kor"
+      ]
+    },
+    {
+      "id": 2046,
+      "slug": "the-circle",
+      "title": "The Circle",
+      "linkIsbn": "9781945540622",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Circulo / the Circle",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2066,
+      "slug": "dig",
+      "title": "Dig",
+      "linkIsbn": "9781500313531",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Huckleberry Finns Abenteuer und Fahrten",
+      "olFormat": null,
+      "olLanguages": [
+        "ger"
+      ]
+    },
+    {
+      "id": 2075,
+      "slug": "one-of-us-is-next",
+      "title": "One of Us is Next",
+      "linkIsbn": "9788420486260",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Alguien está mintiendo",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2082,
+      "slug": "the-nickel-boys",
+      "title": "The Nickel Boys",
+      "linkIsbn": "9781644732700",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Los chicos de la Nickel",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2102,
+      "slug": "the-lesbianas-guide-to-catholic-school",
+      "title": "The Lesbiana's Guide to Catholic School",
+      "linkIsbn": "9798890980212",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Guía para Lesbianas en un Colegio Católico / the Lesbiana's Guide to Catholic Sc Hool",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2241,
+      "slug": "david-and-goliath-underdogs-misfits-and-the-art-of-battling-giants",
+      "title": "David and Goliath: Underdogs, Misfits, and the Art of Battling Giants",
+      "linkIsbn": "9788950952891",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Dawit kwa Golliat",
+      "olFormat": null,
+      "olLanguages": [
+        "kor"
+      ]
+    },
+    {
+      "id": 2389,
+      "slug": "many-waters",
+      "title": "Many Waters",
+      "linkIsbn": "9786075277479",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Torrente de Aguas Turbulentas",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 2636,
+      "slug": "zorro",
+      "title": "Zorro",
+      "linkIsbn": "9782253118305",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Zorro",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 2722,
+      "slug": "al-capone-does-my-shirts",
+      "title": "Al Capone Does My Shirts",
+      "linkIsbn": "9789575708184",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Ka peng lao da bang wo xi chen shan",
+      "olFormat": null,
+      "olLanguages": [
+        "chi"
+      ]
+    },
+    {
+      "id": 2922,
+      "slug": "band-together",
+      "title": "Band Together",
+      "linkIsbn": "9788494616785",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Leñadoras Todas a una / Lumberjanes Band Together",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3042,
+      "slug": "frankissstein",
+      "title": "Frankissstein",
+      "linkIsbn": "9788426406439",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Frankissstein : una Historia de Amor / Frankissstein",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3158,
+      "slug": "lumberjanes-a-birds-eye-view",
+      "title": "Lumberjanes: A Bird's Eye View",
+      "linkIsbn": "9788494785276",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Leñadoras 7 / Lumberjanes 7",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3281,
+      "slug": "the-new-jim-crow-mass-incarceration-in-the-age-of-colorblindness",
+      "title": "The New Jim Crow: Mass Incarceration in the Age of Colorblindness",
+      "linkIsbn": "9781620972748",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El color de la justicia",
+      "olFormat": "paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3299,
+      "slug": "time-after-crime",
+      "title": "Time After Crime",
+      "linkIsbn": "9788412235876",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Leñadoras. Las pasajeras del tiempo",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3496,
+      "slug": "brown-girl-dreaming",
+      "title": "Brown Girl Dreaming",
+      "linkIsbn": "9781644733295",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Niña Morena Sueña / Brown Girl Dreaming",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3589,
+      "slug": "hamlet",
+      "title": "Hamlet",
+      "linkIsbn": "9786555522068",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hamlet",
+      "olFormat": null,
+      "olLanguages": [
+        "por"
+      ]
+    },
+    {
+      "id": 3650,
+      "slug": "european-art-to-1850",
+      "title": "European Art to 1850",
+      "linkIsbn": "9786555522068",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hamlet",
+      "olFormat": null,
+      "olLanguages": [
+        "por"
+      ]
+    },
+    {
+      "id": 3844,
+      "slug": "medusa",
+      "title": "Medusa",
+      "linkIsbn": "9786075575445",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Medusa",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3855,
+      "slug": "mummies-made-in-egypt",
+      "title": "Mummies Made in Egypt",
+      "linkIsbn": "9788426126948",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Momias de Egipto",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3882,
+      "slug": "pretties",
+      "title": "Pretties",
+      "linkIsbn": "9788410298828",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Pretties (Spanish Edition)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 3903,
+      "slug": "shakespeare-remains-theater-to-film-early-modern-to-postmodern",
+      "title": "Shakespeare Remains: Theater to Film, Early Modern to Postmodern",
+      "linkIsbn": "9780801439742",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Shakespeare remains",
+      "olFormat": null,
+      "olLanguages": [
+        "epo"
+      ]
+    },
+    {
+      "id": 4397,
+      "slug": "the-italian-renaissance",
+      "title": "The Italian Renaissance",
+      "linkIsbn": "9786555522068",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hamlet",
+      "olFormat": null,
+      "olLanguages": [
+        "por"
+      ]
+    },
+    {
+      "id": 4407,
+      "slug": "the-mythology-book",
+      "title": "The Mythology Book",
+      "linkIsbn": "9782070318643",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Les Aventures d'Alice au pays des merveilles",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 4509,
+      "slug": "crazy-rich-asians",
+      "title": "Crazy Rich Asians",
+      "linkIsbn": "9789863615569",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Feng kuang Yazhou fu hao",
+      "olFormat": null,
+      "olLanguages": [
+        "chi"
+      ]
+    },
+    {
+      "id": 4517,
+      "slug": "discovery-of-witches",
+      "title": "Discovery of Witches",
+      "linkIsbn": "9788466332323",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Descubrimiento de Las Brujas / a Discovery of Witches",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 4625,
+      "slug": "nightbane",
+      "title": "Nightbane",
+      "linkIsbn": "9788419507228",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nightbane (Spanish Edition)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 4965,
+      "slug": "frio-cae-blanco",
+      "title": "Frío cae blanco",
+      "linkIsbn": "9786075571997",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Frío Cae Blanco",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5318,
+      "slug": "the-paper-bag-princess",
+      "title": "The Paper Bag Princess",
+      "linkIsbn": "9781988747545",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Bana-Phrionnsa a' Phoca Phàipeir",
+      "olFormat": null,
+      "olLanguages": [
+        "gla"
+      ]
+    },
+    {
+      "id": 5320,
+      "slug": "the-ultimate-art-museum",
+      "title": "The Ultimate Art Museum",
+      "linkIsbn": "9781838663650",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mejor Museo Del Mundo (the Ultimate Art Museum) (Spanish Edition)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5338,
+      "slug": "quien-es-carmen-sandiego",
+      "title": "¿Quién es Carmen Sandiego?",
+      "linkIsbn": "9781328526816",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "¿Quién Es Carmen Sandiego?",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5441,
+      "slug": "arte-para-ninos-con-6-grandes-artistas",
+      "title": "Arte para niños con 6 grandes artistas",
+      "linkIsbn": "9788467725827",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Arte para niños con 6 Grandes Artistas",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5477,
+      "slug": "catwoman-soulstealer",
+      "title": "Catwoman: Soulstealer",
+      "linkIsbn": "9786073171885",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Catwoman",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5480,
+      "slug": "challenger-deep",
+      "title": "Challenger Deep",
+      "linkIsbn": "9788469833735",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El abismo",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5517,
+      "slug": "dr-buenavista-look",
+      "title": "Dr. Buenavista, Look",
+      "linkIsbn": "9788491013334",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Look! Dr. Buenavista",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5525,
+      "slug": "el-abismo",
+      "title": "El abismo",
+      "linkIsbn": "9788469833735",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "El abismo",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5739,
+      "slug": "lore-olympus-volume-one",
+      "title": "Lore Olympus: Volume One",
+      "linkIsbn": "9788418040443",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Lore Olympus",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5974,
+      "slug": "the-great-american-dust-bowl-a-graphic-novel",
+      "title": "The Great American Dust Bowl: A Graphic Novel",
+      "linkIsbn": "9786070785580",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Las Uvas de la Ira (Premio Nobel de Literatura 1962) / the Grapes of Wrath",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 5995,
+      "slug": "the-renaissance",
+      "title": "The Renaissance",
+      "linkIsbn": "9780393971705",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Anthology of Renaissance music",
+      "olFormat": null,
+      "olLanguages": [
+        "lat"
+      ]
+    },
+    {
+      "id": 6032,
+      "slug": "the-way-i-used-to-be",
+      "title": "The Way I Used to Be",
+      "linkIsbn": "9788419743671",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Tal Como Era / the Way I Used to Be",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 6260,
+      "slug": "the-magic-mountain",
+      "title": "The Magic Mountain",
+      "linkIsbn": "9781533581662",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "La montaña mágica",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 6263,
+      "slug": "jew-suss-feuchtwanger",
+      "title": "Jud Süß",
+      "linkIsbn": "9781015954694",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Jud Süß.",
+      "olFormat": null,
+      "olLanguages": [
+        "ger"
+      ]
+    },
+    {
+      "id": 6368,
+      "slug": "the-spanish-civil-war",
+      "title": "The Spanish Civil War",
+      "linkIsbn": "9788466344692",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "La guerra civil española",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 6376,
+      "slug": "nguyen-khi",
+      "title": "Nguyên khí",
+      "linkIsbn": "9781496095343",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nguyen Khi",
+      "olFormat": null,
+      "olLanguages": [
+        "vie"
+      ]
+    },
+    {
+      "id": 6477,
+      "slug": "make-something-up",
+      "title": "Make Something Up",
+      "linkIsbn": "9788439734178",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Invéntale Algo",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 6490,
+      "slug": "damaged-goods",
+      "title": "Damaged Goods",
+      "linkIsbn": "9781034719823",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "क्षतिग्रस्त सामग्री",
+      "olFormat": null,
+      "olLanguages": [
+        "hin"
+      ]
+    },
+    {
+      "id": 6606,
+      "slug": "histoire-ancienne-de-leglise",
+      "title": "Histoire ancienne de l'Eglise",
+      "linkIsbn": "9780274476169",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Histoire Ancienne de l'Eglise; Volume 2",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 6676,
+      "slug": "traite-de-morale",
+      "title": "Traité de morale",
+      "linkIsbn": "9782711605262",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nicolas Malebranche",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 6712,
+      "slug": "xianggang-80-nian-dai-min-zhu-yun-dong-kou-shu-li-shi",
+      "title": "Xianggang 80 nian dai min zhu yun dong kou shu li shi",
+      "linkIsbn": "9789629371999",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Xianggang 80 nian dai min zhu yun dong kou shu li shi",
+      "olFormat": null,
+      "olLanguages": [
+        "chi"
+      ]
+    },
+    {
+      "id": 6740,
+      "slug": "tong-shi-wo-zhu-chang",
+      "title": "Tong shi wo zhu chang",
+      "linkIsbn": "9786077356509",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Herencia",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 6999,
+      "slug": "bao-xiao-jiao-shi-11",
+      "title": "Bao xiao jiao shi. 11",
+      "linkIsbn": "9782070318643",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Les Aventures d'Alice au pays des merveilles",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 7147,
+      "slug": "liu-si-wei-yuan-yong-mei-wan-liu-si-shi-er-nian-te-kan",
+      "title": "Liu si wei yuan yong mei wan : liu si shi er nian te kan",
+      "linkIsbn": "9782070318643",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Les Aventures d'Alice au pays des merveilles",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 7215,
+      "slug": "mu-ji-tian-an-men-di-san-juan",
+      "title": "Mu ji tian an men. Di san juan",
+      "linkIsbn": "9786555522068",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hamlet",
+      "olFormat": null,
+      "olLanguages": [
+        "por"
+      ]
+    },
+    {
+      "id": 7282,
+      "slug": "love-in-the-open-air",
+      "title": "Love in the Open Air",
+      "linkIsbn": "9788466337205",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "BAILE EN EL AIRE (LA ISLA DE LAS TRES HERMANAS 1)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 7354,
+      "slug": "the-poverty-of-philosophy",
+      "title": "The Poverty of Philosophy",
+      "linkIsbn": "9781021310644",
+      "isXref": true,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Misère de la Philosophie",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 7390,
+      "slug": "psychopathia-sexualis",
+      "title": "Psychopathia Sexualis",
+      "linkIsbn": "9781511482516",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Psychopathia Sexualis",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 7467,
+      "slug": "fear-and-trembling",
+      "title": "Fear and Trembling",
+      "linkIsbn": "9781546570219",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Tars-O Larz (Fear and Trembling)",
+      "olFormat": null,
+      "olLanguages": [
+        "per"
+      ]
+    },
+    {
+      "id": 7511,
+      "slug": "brut",
+      "title": "Brut",
+      "linkIsbn": "9781021724359",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Roman de Brut",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 7531,
+      "slug": "annales-de-philosophie-chretienne",
+      "title": "Annales de philosophie chrétienne",
+      "linkIsbn": "9780274648238",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Annales de Philosophie Chrétienne",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 9818,
+      "slug": "know-my-name",
+      "title": "Know My Name",
+      "linkIsbn": "9788418187933",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Tengo un Nombre / Know My Name",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 13004,
+      "slug": "islamic-aesthetics-an-introduction",
+      "title": "Islamic Aesthetics: an Introduction",
+      "linkIsbn": "9780748617357",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "ISLAMIC AESTHETICS: AN INTRODUCTION.",
+      "olFormat": null,
+      "olLanguages": [
+        "und"
+      ]
+    },
+    {
+      "id": 13464,
+      "slug": "hunting-adeline",
+      "title": "Hunting Adeline",
+      "linkIsbn": "9788418483912",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hunting Adeline (Te Encontraré)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 13761,
+      "slug": "mujeres",
+      "title": "Mujeres",
+      "linkIsbn": "9788433920997",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mujeres",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 13835,
+      "slug": "la-torre-de-cubos",
+      "title": "La torre de cubos",
+      "linkIsbn": "9789505815159",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "La torre de cubos",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 14230,
+      "slug": "no-habra-mas-penas-ni-olvido",
+      "title": "No habrá más penas ni olvido",
+      "linkIsbn": "9789500704090",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "No Habra Mas Pena Ni Olvidos",
+      "olFormat": "Paperback",
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 14662,
+      "slug": "nach-paris",
+      "title": "Nach Paris !",
+      "linkIsbn": "9781523493937",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Nach Paris!",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 14670,
+      "slug": "lalsace-sous-la-domination-allemande",
+      "title": "L’Alsace sous la domination allemande",
+      "linkIsbn": "9781385936566",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Alsace Sous la Domination Allemande",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 14791,
+      "slug": "siona-a-paris",
+      "title": "Siona à Paris",
+      "linkIsbn": "9781022351097",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Siona À Paris...",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 14835,
+      "slug": "le-bureau-de-placement",
+      "title": "Le bureau de placement",
+      "linkIsbn": "9781006737428",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Bureau de Placement",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 14956,
+      "slug": "la-hyene-enragee",
+      "title": "La hyène enragée",
+      "linkIsbn": "9781019921913",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Hyène Enragée",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 15168,
+      "slug": "la-corrida",
+      "title": "La Corrida",
+      "linkIsbn": "9782246343516",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "La corrida",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 16567,
+      "slug": "le-passe-simple",
+      "title": "Le Passé simple",
+      "linkIsbn": "9782070377282",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Le passé simple / Driss Chraïbi.",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 16572,
+      "slug": "mohammed-vi-derriere-les-masques",
+      "title": "Mohammed VI: Derrière les masques",
+      "linkIsbn": "9782369420453",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mohammed VI",
+      "olFormat": null,
+      "olLanguages": [
+        "fre"
+      ]
+    },
+    {
+      "id": 16749,
+      "slug": "in-evil-hour",
+      "title": "In Evil Hour",
+      "linkIsbn": "9780307475770",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Mala Hora / in Evil Hour",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 16885,
+      "slug": "un-silencio-lleno-de-murmullos",
+      "title": "Un silencio lleno de murmullos",
+      "linkIsbn": "9786073921640",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Silencio Lleno de Murmullos (Novela) / a Silence Full of Whispers (a Novel)",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 16897,
+      "slug": "geografia-general-de-los-estados-unidos-de-colombia",
+      "title": "Geografía general de los Estados Unidos de Colombia",
+      "linkIsbn": "9781017132977",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Geografia General Física y Política de Los Estados Unidos de Colombia y Geografia Particular de la Ciudad de Bogotá",
+      "olFormat": null,
+      "olLanguages": [
+        "spa"
+      ]
+    },
+    {
+      "id": 19272,
+      "slug": "zum-kampf-um-die-psychoanalyse",
+      "title": "Zum Kampf um die Psychoanalyse",
+      "linkIsbn": "9781020449079",
+      "isXref": false,
+      "flags": [
+        "non_english"
+      ],
+      "olTitle": "Zum Kampf Um Die Psychoanalyse",
+      "olFormat": null,
+      "olLanguages": [
+        "ger"
+      ]
+    }
+  ]
+}

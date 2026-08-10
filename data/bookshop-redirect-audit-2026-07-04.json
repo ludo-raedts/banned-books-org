@@ -1,0 +1,4387 @@
+{
+  "generated": "2026-07-04T07:55:08.893Z",
+  "findings": [
+    {
+      "id": 12,
+      "slug": "brave-new-world",
+      "title": "Brave New World",
+      "linkIsbn": "9786074536782",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "un-mundo-feliz-aldous-huxley"
+    },
+    {
+      "id": 33,
+      "slug": "harry-potter-philosophers-stone",
+      "title": "Harry Potter and the Philosopher's Stone",
+      "linkIsbn": "9781781103685",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "harry-potter-e-a-pedra-filosofal-j-k-rowling"
+    },
+    {
+      "id": 57,
+      "slug": "the-master-and-margarita",
+      "title": "The Master and Margarita",
+      "linkIsbn": "9781482625196",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "el-maestro-y-margarita-mijail-bulgakov"
+    },
+    {
+      "id": 92,
+      "slug": "the-stranger",
+      "title": "The Stranger",
+      "linkIsbn": "9782070360024",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "etranger-albert-camus"
+    },
+    {
+      "id": 104,
+      "slug": "to-live-yu-hua",
+      "title": "To Live",
+      "linkIsbn": "9780449901816",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing",
+        "verified_after_2026-07-02"
+      ],
+      "redirectSlug": "living-loving-and-learning-leo-f-buscaglia"
+    },
+    {
+      "id": 310,
+      "slug": "merlin-saga",
+      "title": "Merlin Saga",
+      "linkIsbn": "9780441006687",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-lost-years-of-merlin-t-a-barron"
+    },
+    {
+      "id": 334,
+      "slug": "ready-or-not",
+      "title": "Ready or Not",
+      "linkIsbn": "9780061479892",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "all-american-girl-meg-cabot"
+    },
+    {
+      "id": 344,
+      "slug": "doing-it-lets-talk-about-sex",
+      "title": "Doing It!: Let's Talk About Sex",
+      "linkIsbn": "9781492665021",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "be-strong-be-wise-the-young-adult-s-guide-to-sexual-assault-awareness-and-personal-safety-amy-r-carpenter"
+    },
+    {
+      "id": 364,
+      "slug": "alex-rider-adventure",
+      "title": "Alex Rider Adventure",
+      "linkIsbn": "9780142412121",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "snakehead-anthony-horowitz"
+    },
+    {
+      "id": 374,
+      "slug": "the-testaments",
+      "title": "The Testaments",
+      "linkIsbn": "9798217009114",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-handmaid-s-tale-deluxe-edition-40th-anniversary-edition-margaret-atwood"
+    },
+    {
+      "id": 399,
+      "slug": "cinderella-is-dead",
+      "title": "Cinderella Is Dead",
+      "linkIsbn": "9788418027222",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "cenicienta-ha-muerto-kalynn-bayron"
+    },
+    {
+      "id": 416,
+      "slug": "crescent-city",
+      "title": "Crescent City",
+      "linkIsbn": "9781635577020",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "house-of-earth-and-blood-sarah-j-maas"
+    },
+    {
+      "id": 438,
+      "slug": "boy-girl-boy",
+      "title": "Boy Girl Boy",
+      "linkIsbn": "9781416926849",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "13-thirteen-stories-that-capture-the-agony-and-ecstasy-of-being-thirteen-james-howe"
+    },
+    {
+      "id": 452,
+      "slug": "spy-x-family",
+      "title": "Spy x Family",
+      "linkIsbn": "9784088828435",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "65331-65328-65337-65318-65313-65325-65321-65324-65337-65304-tatsuya-endo"
+    },
+    {
+      "id": 502,
+      "slug": "maus-1-a-survivors-tale-my-father-bleeds-history",
+      "title": "Maus 1: A Survivor's Tale: My Father Bleeds History",
+      "linkIsbn": "9780679406419",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-complete-maus-a-survivor-s-tale-art-spiegelman"
+    },
+    {
+      "id": 509,
+      "slug": "the-dark-artifices",
+      "title": "The Dark Artifices",
+      "linkIsbn": "9781442468412",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "lord-of-shadows-cassandra-clare"
+    },
+    {
+      "id": 510,
+      "slug": "monstress",
+      "title": "Monstress",
+      "linkIsbn": "9780606400565",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "blood-marjorie-liu"
+    },
+    {
+      "id": 512,
+      "slug": "rainbow-trilogy",
+      "title": "Rainbow Trilogy",
+      "linkIsbn": "9780688003470",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-merlin-trilogy-mary-stewart"
+    },
+    {
+      "id": 520,
+      "slug": "perfect",
+      "title": "Perfect",
+      "linkIsbn": "9780062009548",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "pretty-little-liars-tv-tie-in-edition-sara-shepard"
+    },
+    {
+      "id": 573,
+      "slug": "we-zamyatin",
+      "title": "We",
+      "linkIsbn": "9781947384033",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "1052-1099-1040-1085-1085-1086-1090-1080-1088-1086-1074-1072-1085-1086-1048-1089-1090-1086-1088-1080-1103"
+    },
+    {
+      "id": 575,
+      "slug": "life-and-fate",
+      "title": "Life and Fate",
+      "linkIsbn": "9781530968442",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "zhizn-i-sud-ba-chast-tret-ja-vasily-grossman"
+    },
+    {
+      "id": 591,
+      "slug": "the-blind-owl",
+      "title": "The Blind Owl",
+      "linkIsbn": "9780415434034",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "sadeq-hedayat-his-work-and-his-wondrous-world-homa-katouzian"
+    },
+    {
+      "id": 656,
+      "slug": "two-treatises-of-government",
+      "title": "Two Treatises of Government",
+      "linkIsbn": "9781544196930",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "two-treatise-of-government-john-locke-john-locke"
+    },
+    {
+      "id": 662,
+      "slug": "the-sleepless-world",
+      "title": "The Sleepless World",
+      "linkIsbn": "9780316037723",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "ghost-in-the-wires-my-adventures-as-the-world-s-most-wanted-hacker-kevin-mitnick"
+    },
+    {
+      "id": 716,
+      "slug": "the-crime-of-father-amaro",
+      "title": "The Crime of Father Amaro",
+      "linkIsbn": "9781857546842",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "el-crimen-del-padre-amaro-eca-de-queiros"
+    },
+    {
+      "id": 751,
+      "slug": "the-dwarf-cho-se-hui",
+      "title": "The Dwarf",
+      "linkIsbn": "9780060234843",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "prince-caspian-the-return-to-narnia-c-s-lewis"
+    },
+    {
+      "id": 781,
+      "slug": "devil-on-the-cross",
+      "title": "Devil on the Cross",
+      "linkIsbn": "9781797034461",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "study-guide-city-of-thieves-by-david-benioff-supersummary-supersummary"
+    },
+    {
+      "id": 787,
+      "slug": "the-death-of-artemio-cruz",
+      "title": "The Death of Artemio Cruz",
+      "linkIsbn": "9789681683931",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "obras-reunidas-i-fundaciones-mexicanas-la-muerte-de-artemio-cruz-los-anos-con-laura-diaz-carlos-fuentes"
+    },
+    {
+      "id": 789,
+      "slug": "les-120-journees-de-sodome",
+      "title": "Les 120 Journées de Sodome",
+      "linkIsbn": "9781515435839",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-120-days-of-sodom-an-unfinished-manuscript-on-power-transgression-and-the-limits-of-reason-marquis-de-sade"
+    },
+    {
+      "id": 831,
+      "slug": "time-of-silence-martin-santos",
+      "title": "Time of Silence",
+      "linkIsbn": "9781018616797",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-christian-pattern-or-the-imitation-of-jesus-christ-2-george-hickes"
+    },
+    {
+      "id": 850,
+      "slug": "el-filibusterismo",
+      "title": "El Filibusterismo",
+      "linkIsbn": "9781604249897",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-reign-of-greed-jose-rizal"
+    },
+    {
+      "id": 862,
+      "slug": "morning-in-jenin",
+      "title": "Morning in Jenin",
+      "linkIsbn": "9781608190461",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "mornings-in-jenin-a-novel-susan-abulhawa"
+    },
+    {
+      "id": 872,
+      "slug": "rama-retold",
+      "title": "Rama Retold",
+      "linkIsbn": "9788189999261",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "rama-anant-pai"
+    },
+    {
+      "id": 883,
+      "slug": "five-bandits",
+      "title": "Five Bandits",
+      "linkIsbn": "9781477838617",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-phantom-bandit-frank-bonham"
+    },
+    {
+      "id": 903,
+      "slug": "memed-my-hawk",
+      "title": "Memed, My Hawk",
+      "linkIsbn": "9781590171851",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "they-burn-the-thistles-yashar-kemal"
+    },
+    {
+      "id": 907,
+      "slug": "voices-from-chernobyl",
+      "title": "Voices from Chernobyl",
+      "linkIsbn": "9781628974997",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "chernobyl-prayer-a-chronicle-of-the-future-svetlana-alexievich"
+    },
+    {
+      "id": 919,
+      "slug": "the-descent-of-man",
+      "title": "The Descent of Man",
+      "linkIsbn": "9781451686142",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-origin-of-species-charles-darwin"
+    },
+    {
+      "id": 923,
+      "slug": "the-age-of-reason-paine",
+      "title": "The Age of Reason",
+      "linkIsbn": "9781596250048",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "common-sense-thomas-paine"
+    },
+    {
+      "id": 924,
+      "slug": "the-system-of-nature",
+      "title": "The System of Nature",
+      "linkIsbn": "9780879752569",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "an-anthology-of-atheism-and-rationalism-gordon-stein"
+    },
+    {
+      "id": 925,
+      "slug": "letters-concerning-the-english-nation",
+      "title": "Letters Concerning the English Nation",
+      "linkIsbn": "9780140443868",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "letters-on-england-francois-voltaire"
+    },
+    {
+      "id": 957,
+      "slug": "they-burn-the-thistles",
+      "title": "They Burn the Thistles",
+      "linkIsbn": "9781590171394",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "memed-my-hawk-yashar-kemal"
+    },
+    {
+      "id": 976,
+      "slug": "viral-murong-xuecun",
+      "title": "Viral: China's COVID Coverups",
+      "linkIsbn": "9781620977927",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "deadly-quiet-city-true-stories-from-wuhan-murong-xuecun"
+    },
+    {
+      "id": 979,
+      "slug": "on-the-hong-kong-city-state",
+      "title": "On the Hong Kong City-State",
+      "linkIsbn": "9786073902809",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "los-tres-mosqueteros-alexandre-dumas"
+    },
+    {
+      "id": 986,
+      "slug": "oral-history-democratic-movement-hk",
+      "title": "An Oral History of the Democratic Movement of Hong Kong in the 1980s",
+      "linkIsbn": "9789622098091",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "political-development-in-hong-kong-state-political-society-and-civil-society-ma-ngok"
+    },
+    {
+      "id": 1001,
+      "slug": "abortion-internationally",
+      "title": "Abortion Internationally",
+      "linkIsbn": "9781421427294",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "abortion-across-borders-transnational-travel-and-access-to-abortion-services-associate-professor-christabelle-sethna"
+    },
+    {
+      "id": 1017,
+      "slug": "the-thing-wentworth-james",
+      "title": "The Thing",
+      "linkIsbn": "9780358724520",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-things-they-carried-tim-o-brien"
+    },
+    {
+      "id": 1021,
+      "slug": "the-hindu-art-of-love",
+      "title": "The Hindu Art of Love",
+      "linkIsbn": "9781480477056",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-kama-sutra-vatsyayana"
+    },
+    {
+      "id": 1022,
+      "slug": "the-black-prophet",
+      "title": "The Black Prophet",
+      "linkIsbn": "9780143133582",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-prophet-kahlil-gibran"
+    },
+    {
+      "id": 1024,
+      "slug": "questions-and-answers-on-communism",
+      "title": "Questions and Answers on Communism",
+      "linkIsbn": "9780511704086",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "antony-and-cleopatra-the-cambridge-dover-wilson-shakespeare"
+    },
+    {
+      "id": 1030,
+      "slug": "intimate-embrace",
+      "title": "Intimate Embrace",
+      "linkIsbn": "9781480477056",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-kama-sutra-vatsyayana"
+    },
+    {
+      "id": 1031,
+      "slug": "snatches-and-lays",
+      "title": "Snatches and Lays",
+      "linkIsbn": "9780548287439",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "doric-lays-john-c-crawford"
+    },
+    {
+      "id": 1069,
+      "slug": "marx-sang-pendidik-revolusioner",
+      "title": "Marx Sang Pendidik Revolusioner",
+      "linkIsbn": "9789400776562",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "karl-marx-the-revolutionary-as-educator-associate-professor-school-of-education-robin-small"
+    },
+    {
+      "id": 1074,
+      "slug": "politics-of-a-police-state",
+      "title": "Politics of a Police State",
+      "linkIsbn": "9781891620027",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "fear-no-evil-natan-sharansky"
+    },
+    {
+      "id": 1078,
+      "slug": "the-winning-side-huy-duc",
+      "title": "The Winning Side",
+      "linkIsbn": "9781554686360",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "freakonomics-a-rogue-economist-explores-the-hidden-side-of-everything-stephen-j-dubner"
+    },
+    {
+      "id": 1083,
+      "slug": "a-spoon-on-earth",
+      "title": "A Spoon on Earth",
+      "linkIsbn": "9780548147849",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "history-of-the-donner-party-a-tragedy-of-the-sierra-c-f-mcglashan"
+    },
+    {
+      "id": 1131,
+      "slug": "the-green-mile",
+      "title": "The Green Mile",
+      "linkIsbn": "9780451190499",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-two-dead-girls-stephen-king"
+    },
+    {
+      "id": 1158,
+      "slug": "assassination-classroom-vol-6",
+      "title": "Assassination Classroom, Vol. 6",
+      "linkIsbn": "9781974710140",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "assassination-classroom-complete-box-set-includes-volumes-1-21-with-premium-yusei-matsui"
+    },
+    {
+      "id": 1169,
+      "slug": "last-sacrifice",
+      "title": "Last Sacrifice",
+      "linkIsbn": "9781440678592",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "vampire-academy-richelle-mead"
+    },
+    {
+      "id": 1235,
+      "slug": "eon-dragoneye-reborn",
+      "title": "Eon: Dragoneye Reborn",
+      "linkIsbn": "9780553819885",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-two-pearls-of-wisdom-alison-goodman-alison-goodman"
+    },
+    {
+      "id": 1240,
+      "slug": "hidden",
+      "title": "Hidden",
+      "linkIsbn": "9780345413376",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-amber-spyglass-his-dark-materials-book-iii-philip-pullman"
+    },
+    {
+      "id": 1256,
+      "slug": "a-good-man-is-hard-to-find-and-other-stories",
+      "title": "A Good Man is Hard to Find And Other Stories",
+      "linkIsbn": "9780813519777",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "a-good-man-is-hard-to-find-flannery-o-connor-frederick-asals"
+    },
+    {
+      "id": 1273,
+      "slug": "blockade-billy",
+      "title": "Blockade Billy",
+      "linkIsbn": "9781501111679",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-bazaar-of-bad-dreams-stories-stephen-king"
+    },
+    {
+      "id": 1289,
+      "slug": "fairy-tail-vol-5",
+      "title": "Fairy Tail, Vol. 5",
+      "linkIsbn": "9781981988273",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-christmas-carol-a-christmas-carol-in-prose-being-a-ghost-story-of-christmas-dickens-charles-charles"
+    },
+    {
+      "id": 1317,
+      "slug": "persepolis-2-the-story-of-a-return",
+      "title": "Persepolis 2: The Story of a Return",
+      "linkIsbn": "9781417640416",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "persepolis-the-story-of-a-childhood-marjane-satrapi"
+    },
+    {
+      "id": 1320,
+      "slug": "rainbow-high",
+      "title": "Rainbow High",
+      "linkIsbn": "9781439115343",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "rainbow-boys-alex-sanchez"
+    },
+    {
+      "id": 1366,
+      "slug": "collected-poems-1947-1980",
+      "title": "Collected Poems 1947-1980",
+      "linkIsbn": "9780061139758",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug",
+        "verified_after_2026-07-02"
+      ],
+      "redirectSlug": "collected-poems-1947-1997-allen-ginsberg"
+    },
+    {
+      "id": 1426,
+      "slug": "heartstopper-vol-1",
+      "title": "Heartstopper, Vol. 1",
+      "linkIsbn": "9789877478433",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "heartstopper-una-serie-de-netflix-la-novela-gr-fica-con-la-que-comenz-todo-alice-oseman"
+    },
+    {
+      "id": 1450,
+      "slug": "gravity",
+      "title": "Gravity",
+      "linkIsbn": "9780525581062",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "in-the-ring-sierra-isley"
+    },
+    {
+      "id": 1479,
+      "slug": "home-after-dark",
+      "title": "Home After Dark",
+      "linkIsbn": "9781641813877",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-pilgrim-s-progress-john-bunyan"
+    },
+    {
+      "id": 1480,
+      "slug": "lexicon",
+      "title": "Lexicon",
+      "linkIsbn": "9781329820418",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-call-of-the-wild-jack-london"
+    },
+    {
+      "id": 1506,
+      "slug": "ghost-world",
+      "title": "Ghost World",
+      "linkIsbn": "9781560977841",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "maggie-the-mechanic-a-love-and-rockets-book-jaime-hernandez"
+    },
+    {
+      "id": 1656,
+      "slug": "the-little-prince",
+      "title": "The Little Prince",
+      "linkIsbn": "9789563100945",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "el-principito-antoine-de-saint-exupery"
+    },
+    {
+      "id": 1696,
+      "slug": "true-believer",
+      "title": "True Believer",
+      "linkIsbn": "9780759514386",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "at-first-sight-nicholas-sparks"
+    },
+    {
+      "id": 1776,
+      "slug": "chaz-bono",
+      "title": "Chaz Bono",
+      "linkIsbn": "9780452298002",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "transition-becoming-who-i-was-always-meant-to-be-billie-fitzpatraick"
+    },
+    {
+      "id": 1928,
+      "slug": "sovereign",
+      "title": "Sovereign",
+      "linkIsbn": "9781588368836",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "julius-caesar-william-shakespeare"
+    },
+    {
+      "id": 1935,
+      "slug": "the-beautiful-something-else",
+      "title": "The Beautiful Something Else",
+      "linkIsbn": "9780547348667",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-god-delusion-richard-dawkins"
+    },
+    {
+      "id": 1936,
+      "slug": "the-dog-knight",
+      "title": "The Dog Knight",
+      "linkIsbn": "9798855115475",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "harry-potter-and-the-prisoner-of-azkaban-j-k-rowling"
+    },
+    {
+      "id": 1941,
+      "slug": "the-house-that-whispers",
+      "title": "The House that Whispers",
+      "linkIsbn": "9780060194338",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "shy-boy-the-horse-that-came-in-from-the-wild-monty-roberts"
+    },
+    {
+      "id": 1958,
+      "slug": "this-winter-a-heartstopper-novella",
+      "title": "This Winter - A Heartstopper Novella",
+      "linkIsbn": "9781338885132",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "this-winter-alice-oseman"
+    },
+    {
+      "id": 1985,
+      "slug": "soul-eater-vol-14",
+      "title": "Soul Eater, Vol. 14",
+      "linkIsbn": "9780759530485",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "soul-eater-vol-2-atsushi-ohkubo"
+    },
+    {
+      "id": 2072,
+      "slug": "look",
+      "title": "Look",
+      "linkIsbn": "9780525428022",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "looking-for-alaska-deluxe-edition-john-green"
+    },
+    {
+      "id": 2255,
+      "slug": "dont-ask-me-where-im-from",
+      "title": "Don't Ask Me Where I'm From",
+      "linkIsbn": "9781797034461",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "study-guide-city-of-thieves-by-david-benioff-supersummary-supersummary"
+    },
+    {
+      "id": 2335,
+      "slug": "i-am-the-messenger",
+      "title": "I Am the Messenger",
+      "linkIsbn": "9780307433480",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "charly-s-epic-fiascos-kelli-london"
+    },
+    {
+      "id": 2359,
+      "slug": "kin",
+      "title": "Kin",
+      "linkIsbn": "9780061957888",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "don-quixote-edith-grossman"
+    },
+    {
+      "id": 2393,
+      "slug": "meg-nightstalkers",
+      "title": "MEG: Nightstalkers",
+      "linkIsbn": "9781250621528",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "meg-generations-steve-alten"
+    },
+    {
+      "id": 2421,
+      "slug": "no-judgements",
+      "title": "No Judgements",
+      "linkIsbn": "9780140447477",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "critique-of-pure-reason-immanuel-kant"
+    },
+    {
+      "id": 2467,
+      "slug": "princess-in-the-spotlight",
+      "title": "Princess in the Spotlight",
+      "linkIsbn": "9780061958465",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-princess-diaries-meg-cabot"
+    },
+    {
+      "id": 2501,
+      "slug": "see-all-the-stars",
+      "title": "See All the Stars",
+      "linkIsbn": "9781432860844",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "number-the-stars-lois-lowry"
+    },
+    {
+      "id": 2580,
+      "slug": "the-princess-present-a-princess-diaries-book",
+      "title": "The Princess Present: A Princess Diaries Book",
+      "linkIsbn": "9780060754341",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "holiday-princess-a-princess-diaries-book-meg-cabot"
+    },
+    {
+      "id": 2618,
+      "slug": "underworld",
+      "title": "Underworld",
+      "linkIsbn": "9780545387699",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "abandon-meg-cabot"
+    },
+    {
+      "id": 2648,
+      "slug": "antiracist-baby",
+      "title": "Antiracist Baby",
+      "linkIsbn": "9781443190800",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "b-b-antiraciste-ibram-x-kendi"
+    },
+    {
+      "id": 2667,
+      "slug": "happily-ever-after",
+      "title": "Happily Ever After",
+      "linkIsbn": "9780754663904",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-unfamiliar-shelley-timothy-webb"
+    },
+    {
+      "id": 2713,
+      "slug": "the-girl-in-white",
+      "title": "The Girl in White",
+      "linkIsbn": "9780375725609",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-devil-in-the-white-city-murder-magic-and-madness-at-the-fair-that-changed-america-erik-larson"
+    },
+    {
+      "id": 2715,
+      "slug": "the-ruby-code",
+      "title": "The Ruby Code",
+      "linkIsbn": "9781250065001",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "hello-ruby-adventures-in-coding-linda-liukas"
+    },
+    {
+      "id": 2756,
+      "slug": "sarah-bishop",
+      "title": "Sarah Bishop",
+      "linkIsbn": "9780812996562",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "confessions-augustine"
+    },
+    {
+      "id": 2774,
+      "slug": "the-magical-misfits",
+      "title": "The Magical Misfits",
+      "linkIsbn": "9780316419864",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-magic-misfits-the-second-story-alec-azam"
+    },
+    {
+      "id": 2775,
+      "slug": "the-magical-misfits-the-minor-third",
+      "title": "The Magical Misfits: The Minor Third",
+      "linkIsbn": "9780316526395",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-magic-misfits-the-second-story-alec-azam"
+    },
+    {
+      "id": 2776,
+      "slug": "the-magical-misfits-the-second-story",
+      "title": "The Magical Misfits: The Second Story",
+      "linkIsbn": "9780316391832",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-magic-misfits-the-second-story-alec-azam"
+    },
+    {
+      "id": 2792,
+      "slug": "foundations-in-personal-finance-2022-4th-edition",
+      "title": "Foundations in Personal Finance, 2022, 4th Edition",
+      "linkIsbn": "9781404187795",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-money-answer-book-quick-answers-for-your-everyday-financial-questions-answers-to-over-100-of-your-questions-on-personal-finance-budgeting-savin"
+    },
+    {
+      "id": 2822,
+      "slug": "october-sky-rocket-boys",
+      "title": "October Sky/Rocket Boys",
+      "linkIsbn": "9780440235507",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "rocket-boys-homer-hickam"
+    },
+    {
+      "id": 2834,
+      "slug": "totally-joe",
+      "title": "Totally Joe",
+      "linkIsbn": "9781493565146",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "tom-sawyer-mark-twain"
+    },
+    {
+      "id": 2836,
+      "slug": "saga-vol-1",
+      "title": "Saga, Vol. 1",
+      "linkIsbn": "9780606324328",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "saga-volume-one-brian-k-vaughan"
+    },
+    {
+      "id": 2924,
+      "slug": "barrons-ap-psychology-premium",
+      "title": "Barron's AP Psychology Premium",
+      "linkIsbn": "9781506297774",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "ap-psychology-premium-2026-prep-book-with-3-practice-tests-comprehensive-review-online-practice-allyson-j-weseley-ed-d"
+    },
+    {
+      "id": 2980,
+      "slug": "click-vol-5",
+      "title": "Click, Vol. 5",
+      "linkIsbn": "9780762311637",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "latin-american-financial-markets-developments-in-financial-innovations-harvey-arbelaez"
+    },
+    {
+      "id": 3094,
+      "slug": "how-to-fight-racism-young-readers-edition-a-guide-to-standing-up-for-racial-justice",
+      "title": "How to Fight Racism Young Readers Edition: A Guide to Standing Up for Racial Justice",
+      "linkIsbn": "9780310751045",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "how-to-fight-racism-a-guide-to-standing-up-for-racial-justice-jemar-tisby"
+    },
+    {
+      "id": 3132,
+      "slug": "jackalope-springs-eternal",
+      "title": "Jackalope Springs Eternal",
+      "linkIsbn": "9781684153800",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "lumberjanes-vol-12-grace-ellis"
+    },
+    {
+      "id": 3160,
+      "slug": "lumberjanes-a-terrible-plan",
+      "title": "Lumberjanes: A Terrible Plan",
+      "linkIsbn": "9780606382359",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "terrible-plan-noelle-stevenson"
+    },
+    {
+      "id": 3204,
+      "slug": "on-a-roll",
+      "title": "On a Roll",
+      "linkIsbn": "9781608869572",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "lumberjanes-vol-9-grace-ellis"
+    },
+    {
+      "id": 3209,
+      "slug": "otherworldly",
+      "title": "Otherworldly",
+      "linkIsbn": "9780060739614",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-otherworldlies-jennifer-anne-kogler"
+    },
+    {
+      "id": 3240,
+      "slug": "salt-the-water",
+      "title": "Salt the Water",
+      "linkIsbn": "9781015431416",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "roughing-it-mark-twain"
+    },
+    {
+      "id": 3244,
+      "slug": "should-parents-be-allowed-to-choose-the-sex-of-their-children",
+      "title": "Should Parents Be Allowed to Choose the Sex of their Children",
+      "linkIsbn": "9780737755947",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "should-parents-be-allowed-to-choose-the-gender-of-their-children-tamara-thompson"
+    },
+    {
+      "id": 3265,
+      "slug": "the-broken-halo",
+      "title": "The Broken Halo",
+      "linkIsbn": "9781454949022",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "deadendia-the-divine-order-hamish-steele"
+    },
+    {
+      "id": 3266,
+      "slug": "the-day-changes-everything",
+      "title": "The Day Changes Everything",
+      "linkIsbn": "9781146677417",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "pickwick-papers-volume-3-charles-dickens"
+    },
+    {
+      "id": 3268,
+      "slug": "the-diablos-curse",
+      "title": "The Diablo's Curse",
+      "linkIsbn": "9781402246647",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "horrid-henry-and-the-mummy-s-curse-francesca-simon"
+    },
+    {
+      "id": 3272,
+      "slug": "the-feeling-of-falling-in-love",
+      "title": "The Feeling of Falling in Love",
+      "linkIsbn": "9781771642491",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-hidden-life-of-trees-what-they-feel-how-they-communicate-discoveries-from-a-secret-world-peter-wohlleben"
+    },
+    {
+      "id": 3273,
+      "slug": "the-feminism-book",
+      "title": "The Feminism Book",
+      "linkIsbn": "9781958437414",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-vindication-of-the-rights-of-woman-mary-wollstonecraft"
+    },
+    {
+      "id": 3290,
+      "slug": "the-third-person",
+      "title": "The Third Person",
+      "linkIsbn": "9781612930992",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-turn-of-the-screw-henry-james"
+    },
+    {
+      "id": 3314,
+      "slug": "wandering-son-vol-5",
+      "title": "Wandering Son, Vol. 5",
+      "linkIsbn": "9780192813336",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "william-wordsworth-william-wordsworth"
+    },
+    {
+      "id": 3315,
+      "slug": "wandering-son-vol-6",
+      "title": "Wandering Son, Vol. 6",
+      "linkIsbn": "9781607620679",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "evelina-or-the-history-of-a-young-lady-s-entrance-into-the-world-frances-burney"
+    },
+    {
+      "id": 3316,
+      "slug": "wandering-son-vol-7",
+      "title": "Wandering Son, Vol. 7",
+      "linkIsbn": "9780143039525",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "fairy-tales-penguin-classics-deluxe-edition-hans-christian-andersen"
+    },
+    {
+      "id": 3331,
+      "slug": "whats-diversity",
+      "title": "What's diversity?",
+      "linkIsbn": "9781529095906",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "through-the-looking-glass-lewis-carroll"
+    },
+    {
+      "id": 3335,
+      "slug": "when-they-call-you-a-terrorist-young-adult-edition-a-story-of-black-lives-matter-and-the-power-to-change-the-world",
+      "title": "When They Call You a Terrorist (Young Adult Edition): A Story of Black Lives Matter and the Power to Change the World",
+      "linkIsbn": "9781838855215",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "when-they-call-you-a-terrorist-patrisse-khan-cullors"
+    },
+    {
+      "id": 3353,
+      "slug": "frequently-asked-questions-about-dating-teen-life",
+      "title": "Frequently Asked Questions About Dating: Teen Life",
+      "linkIsbn": "9781404219694",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dating-vanessa-baish"
+    },
+    {
+      "id": 3356,
+      "slug": "how-can-teen-pregnancy-be-reduced",
+      "title": "How Can Teen Pregnancy Be Reduced",
+      "linkIsbn": "9781601526144",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "how-can-teen-pregancy-be-reduced-barbara-sheen"
+    },
+    {
+      "id": 3368,
+      "slug": "what-if-someone-i-know-is-gay-answers-to-questions-about-what-it-means-to-be-gay-and-lesbian",
+      "title": "What If Someone I Know is Gay? Answers to Questions About What It Means to be Gay and Lesbian?",
+      "linkIsbn": "9781442482975",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "what-if-answers-to-questions-about-what-it-means-to-be-gay-and-lesbian-associate-professor-eric-marcus"
+    },
+    {
+      "id": 3389,
+      "slug": "dragon-ball-vol-1",
+      "title": "Dragon Ball, Vol. 1",
+      "linkIsbn": "9781591161691",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dragon-ball-vol-14-heaven-and-earth-akira-toriyama"
+    },
+    {
+      "id": 3395,
+      "slug": "dragon-ball-vol-7",
+      "title": "Dragon Ball, Vol. 7",
+      "linkIsbn": "9781591161691",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dragon-ball-vol-14-heaven-and-earth-akira-toriyama"
+    },
+    {
+      "id": 3403,
+      "slug": "locke-and-key-vol-6-alpha-and-omega",
+      "title": "Locke and Key, Vol. 6: Alpha and Omega",
+      "linkIsbn": "9781631408465",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "locke-key-small-world-deluxe-edition-joe-hill"
+    },
+    {
+      "id": 3462,
+      "slug": "art-of-the-ancient-mediterranean-world",
+      "title": "Art of the Ancient Mediterranean World",
+      "linkIsbn": "9789004251007",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "rituals-of-triumph-in-the-mediterranean-world-anthony-spalinger"
+    },
+    {
+      "id": 3480,
+      "slug": "bites-and-bones-flip-book-scary-stories-to-sink-your-teeth-into",
+      "title": "Bites and Bones Flip Book: Scary Stories to Sink Your Teeth Into",
+      "linkIsbn": "9780545346771",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "bones-terrifying-tales-to-haunt-your-dreams-lois-metzger"
+    },
+    {
+      "id": 3580,
+      "slug": "studies-in-the-history-of-palestine-during-the-middle-ages",
+      "title": "Studies in the History of Palestine During the Middle Ages",
+      "linkIsbn": "9781478006237",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "militarization-a-reader-gustaaf-houtman"
+    },
+    {
+      "id": 3586,
+      "slug": "afghanistan-the-revolution",
+      "title": "Afghanistan - The Revolution",
+      "linkIsbn": "9781429923071",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-world-is-flat-3-0-a-brief-history-of-the-twenty-first-century-thomas-l-friedman"
+    },
+    {
+      "id": 3598,
+      "slug": "the-young-guardia",
+      "title": "The Young Guardia",
+      "linkIsbn": "9783752491517",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "guardia-blanca"
+    },
+    {
+      "id": 3624,
+      "slug": "drug-use-on-your-streets",
+      "title": "Drug Use on Your Streets",
+      "linkIsbn": "9780823926152",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "drugs-on-your-streets-gabrielle-i-edwards"
+    },
+    {
+      "id": 3636,
+      "slug": "early-humans-discover-how-the-worlds-first-people-lived",
+      "title": "Early Humans: Discover How the World's First People Lived",
+      "linkIsbn": "9780385093798",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-dream-of-the-red-chamber-tsao-hsueh-chin"
+    },
+    {
+      "id": 3648,
+      "slug": "european-art-since-1850",
+      "title": "European Art Since 1850",
+      "linkIsbn": "9781377932064",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-harvard-classics-virgil-s-aeneid-volume-13-charles-w-eliot"
+    },
+    {
+      "id": 3734,
+      "slug": "hate-groups",
+      "title": "Hate Groups",
+      "linkIsbn": "9781378949436",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-harvard-classics-volume-12-charles-w-1834-1926-eliot"
+    },
+    {
+      "id": 3812,
+      "slug": "life-of-a-soldier",
+      "title": "Life of a Soldier",
+      "linkIsbn": "9781847870223",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "genocide-adam-jones"
+    },
+    {
+      "id": 3843,
+      "slug": "medieval-life",
+      "title": "Medieval Life",
+      "linkIsbn": "9781101153635",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-iliad-homer"
+    },
+    {
+      "id": 3853,
+      "slug": "mosque",
+      "title": "Mosque",
+      "linkIsbn": "9780748109128",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "my-forbidden-face-latifa"
+    },
+    {
+      "id": 3857,
+      "slug": "mysteries-of-history",
+      "title": "Mysteries of History",
+      "linkIsbn": "9781374963559",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "kidnapped-robert-louis-stevenson"
+    },
+    {
+      "id": 3878,
+      "slug": "pirate-discover-the-pirates-who-terrorized-the-seas-from-the-mediterranean-to-the-caribbean",
+      "title": "Pirate: Discover the Pirates Who Terrorized the Seas from the Mediterranean to the Caribbean",
+      "linkIsbn": "9781589802278",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "discovering-pirates"
+    },
+    {
+      "id": 3894,
+      "slug": "school-violence",
+      "title": "School Violence",
+      "linkIsbn": "9788466373302",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "el-coraz-n-de-las-tinieblas-heart-of-darkness-joseph-conrad"
+    },
+    {
+      "id": 3905,
+      "slug": "sisters-hermanas",
+      "title": "Sisters/Hermanas",
+      "linkIsbn": "9780743488815",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "my-sister-s-keeper-a-novel-jodi-picoult"
+    },
+    {
+      "id": 3962,
+      "slug": "the-holocaust-survival-and-resistance",
+      "title": "The Holocaust: Survival and Resistance",
+      "linkIsbn": "9780545459389",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "i-survived-the-nazi-invasion-1944-i-survived-9-lauren-tarshis"
+    },
+    {
+      "id": 3974,
+      "slug": "the-legend-of-drizzt-vol-2-exile",
+      "title": "The Legend of Drizzt, Vol. 2: Exile",
+      "linkIsbn": "9780786954025",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "exile-the-legend-of-drizzt-r-a-salvatore"
+    },
+    {
+      "id": 3976,
+      "slug": "the-legend-of-drizzt-vol-6-the-halflings-gem",
+      "title": "The legend of Drizzt, Vol. 6: The Halfling's Gem",
+      "linkIsbn": "9781600109973",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dungeons-dragons-forgotten-realms-the-legend-of-drizzt-omnibus-volume-1-andrew-dabb"
+    },
+    {
+      "id": 3995,
+      "slug": "the-roman-news",
+      "title": "The Roman News",
+      "linkIsbn": "9781935814115",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "robinson-crusoe"
+    },
+    {
+      "id": 4014,
+      "slug": "then-again-maybe-i-wont",
+      "title": "Then Again, Maybe I Won't",
+      "linkIsbn": "9780425193792",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "tales-of-a-fourth-grade-nothing-judy-blume"
+    },
+    {
+      "id": 4021,
+      "slug": "top-10-worst-creepy-egyptians-mummies-you-wouldnt-want-to-meet",
+      "title": "Top 10 Worst Creepy Egyptians Mummies You Wouldn't Want to Meet",
+      "linkIsbn": "9781433940798",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "creepy-egyptian-mummies-david-stewart"
+    },
+    {
+      "id": 4022,
+      "slug": "top-10-worst-things-about-ancient-egypt-you-wouldnt-want-to-know",
+      "title": "Top 10 Worst Things About Ancient Egypt You Wouldn't Want To Know!",
+      "linkIsbn": "9781433966880",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "things-about-ancient-egypt-you-wouldn-t-want-to-know-victoria-england"
+    },
+    {
+      "id": 4023,
+      "slug": "top-10-worst-things-about-ancient-greece-you-wouldnt-want-to-know",
+      "title": "Top 10 Worst Things about Ancient Greece You Wouldn't Want to Know!",
+      "linkIsbn": "9781433966910",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "things-about-ancient-greece-you-wouldn-t-want-to-know-victoria-england"
+    },
+    {
+      "id": 4037,
+      "slug": "vincents-starry-night-and-other-stories-a-childrens-history-of-art",
+      "title": "Vincent's Starry Night and Other Stories: A Children's History of Art",
+      "linkIsbn": "9781780676159",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "vincent-s-starry-nights-and-other-stories-michael-bird"
+    },
+    {
+      "id": 4049,
+      "slug": "vive-la-france-the-french-resistance-w-w-2",
+      "title": "Vive La France The French Resistance W.W.2",
+      "linkIsbn": "9780674286108",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "fighters-in-the-shadows-a-new-history-of-the-french-resistance-professor-of-modern-history-robert-gildea"
+    },
+    {
+      "id": 4053,
+      "slug": "we-were-there-too-young-people-in-us-history",
+      "title": "We Were There Too! Young People in US History",
+      "linkIsbn": "9780374382520",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "we-were-there-too-young-people-in-u-s-history-national-book-award-finalist-phillip-hoose"
+    },
+    {
+      "id": 4081,
+      "slug": "you-wouldnt-want-to-be-a-slave-in-greece-a-life-youd-rather-not-have",
+      "title": "You Wouldn't Want to be a Slave in Greece!: A Life You'd Rather Not Have",
+      "linkIsbn": "9780531271025",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "you-wouldn-t-want-to-be-a-crusader-revised-edition-you-wouldn-t-want-to-history-of-the-world-fiona-macdonald"
+    },
+    {
+      "id": 4087,
+      "slug": "a-story-of-medicine-in-50-discoveries-from-mummies-to-gene-splicing",
+      "title": "A Story of Medicine in 50 Discoveries: From Mummies to Gene Splicing",
+      "linkIsbn": "9780884485322",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-history-of-medicine-in-50-discoveries-gale-eaton"
+    },
+    {
+      "id": 4093,
+      "slug": "all-you-need-is-kill-book-1",
+      "title": "All You Need is Kill, Book 1",
+      "linkIsbn": "9780316040938",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "on-killing-the-psychological-cost-of-learning-to-kill-in-war-and-society-lt-col-dave-grossman-com"
+    },
+    {
+      "id": 4121,
+      "slug": "blue-period-vol-6",
+      "title": "Blue Period, Vol. 6",
+      "linkIsbn": "9781432659332",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-pilgrim-of-our-lady-of-martyrs-a-monthly-magazine-volume-xx-1904-various-authors"
+    },
+    {
+      "id": 4181,
+      "slug": "find-me",
+      "title": "Find Me",
+      "linkIsbn": "9780062085535",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "unravel-me-tahereh-mafi"
+    },
+    {
+      "id": 4185,
+      "slug": "frida-kahlo-1907-1954-pain-and-passion",
+      "title": "Frida Kahlo, 1907-1954: Pain and Passion",
+      "linkIsbn": "9783836500845",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "frida-kahlo-andrea-kettenmann"
+    },
+    {
+      "id": 4199,
+      "slug": "greek-legends-and-stories",
+      "title": "Greek Legends and Stories",
+      "linkIsbn": "9781496071392",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-legend-of-sleepy-hollow-washington-irving"
+    },
+    {
+      "id": 4207,
+      "slug": "henry-taylor-b-side",
+      "title": "Henry Taylor: B Side",
+      "linkIsbn": "9781016135535",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "shakspeare-s-tragedy-of-king-lear-with-notes-adapted-for-schools-john-hunter-william-shakespeare"
+    },
+    {
+      "id": 4239,
+      "slug": "kill-shakespeare-vol-2",
+      "title": "Kill Shakespeare, Vol. 2",
+      "linkIsbn": "9780342677559",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-new-variorum-edition-of-shakespeare-the-tempest-1892-horace-howard-furness"
+    },
+    {
+      "id": 4241,
+      "slug": "kill-shakespeare-vol-3-the-tide-of-blood",
+      "title": "Kill Shakespeare, Vol. 3 - The Tide of Blood",
+      "linkIsbn": "9781603606462",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "kill-shakespeare-second-folio-anthony-del-col"
+    },
+    {
+      "id": 4247,
+      "slug": "last-man-the-royal-cup",
+      "title": "Last Man: The Royal Cup",
+      "linkIsbn": "9780486111124",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "twelfth-night-or-what-you-will-william-shakespeare"
+    },
+    {
+      "id": 4273,
+      "slug": "medicine-a-graphic-history",
+      "title": "Medicine: A Graphic History",
+      "linkIsbn": "9780679748403",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "maus-i-ii-paperback-box-set-art-spiegelman"
+    },
+    {
+      "id": 4309,
+      "slug": "rain",
+      "title": "Rain",
+      "linkIsbn": "9781439198988",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "this-side-of-paradise-f-scott-fitzgerald"
+    },
+    {
+      "id": 4341,
+      "slug": "sister-wendys-story-of-painting-the-essential-guide-to-the-history-of-western-art",
+      "title": "Sister Wendy's Story of Painting: The Essential Guide to the History of Western Art",
+      "linkIsbn": "9780281083305",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "sister-wendy-s-100-best-loved-paintings-sister-wendy-beckett"
+    },
+    {
+      "id": 4369,
+      "slug": "the-body-book-for-boys",
+      "title": "The Body Book for Boys",
+      "linkIsbn": "9781935814115",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "robinson-crusoe"
+    },
+    {
+      "id": 4389,
+      "slug": "the-history-of-archaeology-great-excavations-of-the-world",
+      "title": "The History of Archaeology: Great Excavations of the World",
+      "linkIsbn": "9780281073665",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-seven-storey-mountain-thomas-merton"
+    },
+    {
+      "id": 4395,
+      "slug": "the-island-of-dr-moreau",
+      "title": "The Island of Dr. Moreau",
+      "linkIsbn": "9781515415824",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-island-of-doctor-moreau-h-g-wells"
+    },
+    {
+      "id": 4453,
+      "slug": "yayoi-kusama",
+      "title": "Yayoi Kusama",
+      "linkIsbn": "9780847868391",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "kusama-cosmic-nature-alexandra-munroe"
+    },
+    {
+      "id": 4489,
+      "slug": "beginnings-battle-of-jericho-hill",
+      "title": "Beginnings - Battle of Jericho Hill",
+      "linkIsbn": "9781982110208",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "stephen-king-s-the-dark-tower-beginnings-the-complete-graphic-novel-series-jae-lee"
+    },
+    {
+      "id": 4492,
+      "slug": "beginnings-the-long-road-home",
+      "title": "Beginnings - The Long Road Home",
+      "linkIsbn": "9781727884869",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "anne-of-avonlea-l-m-montgomery"
+    },
+    {
+      "id": 4493,
+      "slug": "beginnings-treachery",
+      "title": "Beginnings - Treachery",
+      "linkIsbn": "9780801847981",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-metamorphoses-of-ovid-ovid"
+    },
+    {
+      "id": 4498,
+      "slug": "bleach-vol-8",
+      "title": "Bleach, Vol. 8",
+      "linkIsbn": "9781421516035",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "bleach-vol-24-immanent-god-blues-tite-kubo"
+    },
+    {
+      "id": 4503,
+      "slug": "capricous",
+      "title": "Capricous",
+      "linkIsbn": "9781460393253",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "wicked-caprice-anne-mather"
+    },
+    {
+      "id": 4551,
+      "slug": "help-for-the-haunted-heroine",
+      "title": "Help for the Haunted Heroine",
+      "linkIsbn": "9780060779634",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "help-for-the-haunted-a-novel-john-searles"
+    },
+    {
+      "id": 4605,
+      "slug": "manga-shakespere-the-tempest",
+      "title": "Manga Shakespere: The Tempest",
+      "linkIsbn": "9781778786754",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "a-midsummer-night-s-dream-royal-collector-s-edition-case-laminate-hardcover-with-jacket-william-shakespeare"
+    },
+    {
+      "id": 4623,
+      "slug": "my-hero-academia-vigilantes-vol-2",
+      "title": "My Hero Academia, Vigilantes Vol. 2",
+      "linkIsbn": "9781421582719",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "my-hero-academia-school-briefs-vol-5-volume-5-anri-yoshi"
+    },
+    {
+      "id": 4635,
+      "slug": "our-chemical-hearts",
+      "title": "Our Chemical Hearts",
+      "linkIsbn": "9780399546570",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "chemical-hearts-krystal-sutherland"
+    },
+    {
+      "id": 4725,
+      "slug": "the-accidential-bad-girl",
+      "title": "The Accidential Bad Girl",
+      "linkIsbn": "9781419728587",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-accidental-bad-girl-maxine-kaplan"
+    },
+    {
+      "id": 4745,
+      "slug": "the-drawing-of-the-three-house-of-cards",
+      "title": "The Drawing of the Three - House of Cards",
+      "linkIsbn": "9781668021132",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "stephen-king-s-the-dark-tower-the-gunslinger-the-complete-graphic-novel-series-peter-david"
+    },
+    {
+      "id": 4747,
+      "slug": "the-drawing-of-the-three-lady-of-shadows",
+      "title": "The Drawing of the Three - Lady of Shadows",
+      "linkIsbn": "9781668021231",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "stephen-king-s-the-dark-tower-the-drawing-of-the-three-omnibus-peter-david"
+    },
+    {
+      "id": 4763,
+      "slug": "the-gunslinger-the-battle-of-tull",
+      "title": "The Gunslinger - The Battle of Tull",
+      "linkIsbn": "9781982109882",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-battle-of-tull-peter-david"
+    },
+    {
+      "id": 4765,
+      "slug": "the-gunslinger-the-journey-begins",
+      "title": "The Gunslinger - The Journey Begins",
+      "linkIsbn": "9781982109844",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-journey-begins-peter-david"
+    },
+    {
+      "id": 4769,
+      "slug": "the-gunslinger-the-way-station",
+      "title": "The Gunslinger - The Way Station",
+      "linkIsbn": "9781982109905",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-way-station-peter-david"
+    },
+    {
+      "id": 4771,
+      "slug": "the-invisible-life-of-ivan-lsaenko",
+      "title": "The Invisible Life of Ivan lsaenko",
+      "linkIsbn": "9781250081889",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-invisible-life-of-ivan-isaenko-a-novel-scott-stambach"
+    },
+    {
+      "id": 4799,
+      "slug": "the-stand-in",
+      "title": "The Stand-In",
+      "linkIsbn": "9781420953404",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-tempest-annotated-by-henry-n-hudson-with-an-introduction-by-charles-harold-herford-william-shakespeare"
+    },
+    {
+      "id": 4801,
+      "slug": "the-ten-things-we-did-and-probably-shouldnt-have",
+      "title": "The Ten Things We Did (and Probably Shouldn't Have)",
+      "linkIsbn": "9798225066512",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-luckies-christina-soontornvat"
+    },
+    {
+      "id": 4805,
+      "slug": "the-time-of-contempt",
+      "title": "The Time of Contempt",
+      "linkIsbn": "9788498891072",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "tiempo-de-odio-andrzej-sapkowski"
+    },
+    {
+      "id": 4847,
+      "slug": "when-villians-rise",
+      "title": "When Villians Rise",
+      "linkIsbn": "9781501143229",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "hitchcock-francois-truffaut"
+    },
+    {
+      "id": 4925,
+      "slug": "batcat-vol-1",
+      "title": "Batcat, Vol. 1",
+      "linkIsbn": "9798855109245",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "batcat-meggie-ramm"
+    },
+    {
+      "id": 4931,
+      "slug": "bleach-vol-23",
+      "title": "Bleach, Vol. 23",
+      "linkIsbn": "9781421596051",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "bleach-3-in-1-edition-vol-13-includes-vols-37-38-39-tite-kubo"
+    },
+    {
+      "id": 4945,
+      "slug": "court-of-the-undying-season",
+      "title": "Court of the Undying Season",
+      "linkIsbn": "9781250832658",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "court-of-the-undying-seasons-a-m-strickland"
+    },
+    {
+      "id": 4954,
+      "slug": "el-gris",
+      "title": "El gris",
+      "linkIsbn": "9781520066608",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "white-fang-jack-london"
+    },
+    {
+      "id": 4956,
+      "slug": "everything-grows",
+      "title": "Everything Grows",
+      "linkIsbn": "9781941110683",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "girl-in-pieces-deluxe-edition-includes-a-guided-journal-for-reflection-kathleen-glasgow"
+    },
+    {
+      "id": 4966,
+      "slug": "from-archie-to-zach-a-picture-book",
+      "title": "From Archie to Zach: A Picture Book",
+      "linkIsbn": "9781419768347",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "from-archie-to-zack-a-picture-book-vincent-x-kirsch"
+    },
+    {
+      "id": 5001,
+      "slug": "lgbt-families-lesbian-gay-bisexual-and-transgender",
+      "title": "LGBT Families: Lesbian, Gay, Bisexual, and Transgender",
+      "linkIsbn": "9781422236123",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "families-today-hilary-w-poole"
+    },
+    {
+      "id": 5017,
+      "slug": "male-to-female-transgender-and-transfeminine-identities",
+      "title": "Male To Female Transgender and Transfeminine Identities",
+      "linkIsbn": "9781422247006",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "male-to-female-transgender-rin-ryan"
+    },
+    {
+      "id": 5200,
+      "slug": "the-space-between",
+      "title": "The Space Between",
+      "linkIsbn": "9781619252226",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "critical-insights-russia-s-golden-age-print-purchase-includes-free-online-access-rachel-stauffer"
+    },
+    {
+      "id": 5278,
+      "slug": "childrens-book-of-art",
+      "title": "Children's Book of Art",
+      "linkIsbn": "9788491018148",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "el-maravilloso-mago-de-oz-l-frank-baum"
+    },
+    {
+      "id": 5290,
+      "slug": "heartstopper-1-spanish-edition",
+      "title": "Heartstopper 1 (Spanish Edition)",
+      "linkIsbn": "9781338617511",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "heartstopper-2-a-graphic-novel-alice-oseman"
+    },
+    {
+      "id": 5296,
+      "slug": "more-than-a-game-race-gender-and-politics-in-sports",
+      "title": "More Than a Game: Race, Gender, and Politics in Sports",
+      "linkIsbn": "9780252070365",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-sporting-world-of-the-modern-south-patrick-b-miller"
+    },
+    {
+      "id": 5310,
+      "slug": "teos-tutu",
+      "title": "Téo's Tutu",
+      "linkIsbn": "9781984815521",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "t-o-s-tutu-maryann-jacob-macias"
+    },
+    {
+      "id": 5410,
+      "slug": "amanecer",
+      "title": "Amanecer",
+      "linkIsbn": "9780316328326",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "breaking-dawn-stephenie-meyer"
+    },
+    {
+      "id": 5422,
+      "slug": "among-the-imposters",
+      "title": "Among the Imposters",
+      "linkIsbn": "9780689848087",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "among-the-impostors-margaret-peterson-haddix"
+    },
+    {
+      "id": 5447,
+      "slug": "attack-on-titan-end-of-the-world",
+      "title": "Attack on Titan: End of the World",
+      "linkIsbn": "9780385522076",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "revolutionary-wealth-how-it-will-be-created-and-how-it-will-change-our-lives-alvin-toffler"
+    },
+    {
+      "id": 5508,
+      "slug": "dear-justyce",
+      "title": "Dear Justyce",
+      "linkIsbn": "9780606415552",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dear-martin-nic-stone"
+    },
+    {
+      "id": 5567,
+      "slug": "field-notes-on-love",
+      "title": "Field Notes on Love",
+      "linkIsbn": "9781529095906",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "through-the-looking-glass-lewis-carroll"
+    },
+    {
+      "id": 5575,
+      "slug": "flawless",
+      "title": "Flawless",
+      "linkIsbn": "9780062009548",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "pretty-little-liars-tv-tie-in-edition-sara-shepard"
+    },
+    {
+      "id": 5725,
+      "slug": "la-silla-de-pedro",
+      "title": "La silla de Pedro",
+      "linkIsbn": "9780021193172",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "reading-wonders-literature-big-book-peter-s-chair-grade-k-mcgraw-hill"
+    },
+    {
+      "id": 5745,
+      "slug": "luna-nueva",
+      "title": "Luna nueva",
+      "linkIsbn": "9780316007726",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "new-moon-stephenie-meyer"
+    },
+    {
+      "id": 5801,
+      "slug": "near-death-experiences",
+      "title": "Near-Death Experiences",
+      "linkIsbn": "9780415914307",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-near-death-experience-a-reader-jenny-yates"
+    },
+    {
+      "id": 5885,
+      "slug": "rurouni-kenshin-vol-1-meiji-swordsman-romantic-story",
+      "title": "Rurouni Kenshin, Vol. 1: Meiji Swordsman Romantic Story",
+      "linkIsbn": "9781591162490",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "rurouni-kenshin-vol-2-the-two-hitokiri-nobuhiro-watsuki"
+    },
+    {
+      "id": 5909,
+      "slug": "shape",
+      "title": "Shape",
+      "linkIsbn": "9781404803411",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "shapes-in-the-sky-a-book-about-clouds-josepha-sherman"
+    },
+    {
+      "id": 5934,
+      "slug": "the-19th-century",
+      "title": "The 19th Century",
+      "linkIsbn": "9781983788444",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-old-curiosity-shop-charles-dickens"
+    },
+    {
+      "id": 5937,
+      "slug": "the-art-of-breaking-things",
+      "title": "The Art of Breaking Things",
+      "linkIsbn": "9781610392594",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-culture-map-breaking-through-the-invisible-boundaries-of-global-business-erin-meyer"
+    },
+    {
+      "id": 5945,
+      "slug": "the-blood-years",
+      "title": "The Blood Years",
+      "linkIsbn": "9781588361653",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "in-cold-blood-truman-capote"
+    },
+    {
+      "id": 5968,
+      "slug": "the-first-scientist-anaximander-and-his-legacy",
+      "title": "The First Scientist: Anaximander and His Legacy",
+      "linkIsbn": "9788425440595",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "nacimiento-del-pensamiento-cientifico-el-carlo-rovelli"
+    },
+    {
+      "id": 6078,
+      "slug": "washington-d-c",
+      "title": "Washington, D.C",
+      "linkIsbn": "9780674677302",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-poems-of-john-keats-john-keats"
+    },
+    {
+      "id": 6139,
+      "slug": "youth-ministry-3-0-a-manifesto-of-where-weve-been-where-we-are-and-where-we-need-to-go",
+      "title": "Youth Ministry 3.0: A Manifesto of Where We've Been, Where We Are, and Where We Need to Go",
+      "linkIsbn": "9780310179719",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "ministerio-juvenil-3-0-un-manifiesto-de-donde-estuvimos-donde-estamos-y-hacia-donde-debemos-ir-mark-oestreicher"
+    },
+    {
+      "id": 6233,
+      "slug": "meditationes-de-prima-philosophia",
+      "title": "Meditationes de prima philosophia",
+      "linkIsbn": "9780192806963",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "meditations-on-first-philosophy-with-selections-from-the-objections-and-replies-michael-moriarty"
+    },
+    {
+      "id": 6234,
+      "slug": "ethica-ordine-geometrico-demonstrata",
+      "title": "Ethica ordine geometrico demonstrata",
+      "linkIsbn": "9780198752141",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "ethics-oxford-philosophical-texts-benedict-de-spinoza"
+    },
+    {
+      "id": 6236,
+      "slug": "du-contrat-social",
+      "title": "Du contrat social",
+      "linkIsbn": "9780140442014",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-social-contract-jean-jacques-rousseau"
+    },
+    {
+      "id": 6241,
+      "slug": "kritik-der-reinen-vernunft",
+      "title": "Kritik der reinen Vernunft",
+      "linkIsbn": "9780140447477",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "critique-of-pure-reason-immanuel-kant"
+    },
+    {
+      "id": 6260,
+      "slug": "the-magic-mountain",
+      "title": "The Magic Mountain",
+      "linkIsbn": "9781533581662",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "la-monta-a-m-gica-spanish-version-thomas-mann"
+    },
+    {
+      "id": 6269,
+      "slug": "our-bodies-ourselves",
+      "title": "Our Bodies, Ourselves",
+      "linkIsbn": "9781583220245",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "nuestros-cuerpos-nuestras-vidas-la-gu-a-definitiva-para-la-salud-de-la-mujer-latina"
+    },
+    {
+      "id": 6272,
+      "slug": "la-question",
+      "title": "La Question",
+      "linkIsbn": "9780803259607",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-question-henri-alleg"
+    },
+    {
+      "id": 6276,
+      "slug": "quotations-from-chairman-mao-zedong",
+      "title": "Quotations from Chairman Mao Zedong",
+      "linkIsbn": "9781934568354",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "quotations-from-chairman-mao-tse-tung-mao-tse-tung"
+    },
+    {
+      "id": 6313,
+      "slug": "dhundi",
+      "title": "Dhundi",
+      "linkIsbn": "9780343145118",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "mudrarakshasa-vi-347-257-khadatta"
+    },
+    {
+      "id": 6378,
+      "slug": "the-luc-thu-dich",
+      "title": "Thế lực thù địch",
+      "linkIsbn": "9780063412637",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-return-of-the-king-collector-s-edition-being-the-third-part-of-the-lord-of-the-rings-j-r-r-tolkien"
+    },
+    {
+      "id": 6381,
+      "slug": "thoughts-of-a-corpse",
+      "title": "Thoughts of a Corpse",
+      "linkIsbn": "9781020569845",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "leaves-of-grass-including-sands-at-seventy-good-bye-my-fancy-a-backward-glance-o-er-travel-d-roads-walt-whitman"
+    },
+    {
+      "id": 6385,
+      "slug": "a-message-to-man-and-humanity",
+      "title": "A Message to Man and Humanity",
+      "linkIsbn": "9781936830916",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-christmas-carol-with-original-illustrations-in-full-color-dickens-charles-charles"
+    },
+    {
+      "id": 6387,
+      "slug": "curved-river",
+      "title": "Curved River",
+      "linkIsbn": "9780743470827",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-curve-of-the-world-a-novel-marcus-stevens"
+    },
+    {
+      "id": 6442,
+      "slug": "the-story-of-little-black-sambo",
+      "title": "The Story of Little Black Sambo",
+      "linkIsbn": "9781557094148",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "little-black-sambo-helen-bannerman"
+    },
+    {
+      "id": 6445,
+      "slug": "that-was-then-this-is-now",
+      "title": "That Was Then, This Is Now",
+      "linkIsbn": "9780593114384",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "penguin-minis-the-outsiders-s-e-hinton"
+    },
+    {
+      "id": 6455,
+      "slug": "bone-series",
+      "title": "Bone (series)",
+      "linkIsbn": "9780439706407",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "out-from-boneville-jeff-smith"
+    },
+    {
+      "id": 6471,
+      "slug": "his-dark-materials-series",
+      "title": "His Dark Materials (series)",
+      "linkIsbn": "9788417092566",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "la-brujula-dorada-northern-lights-philip-pullman"
+    },
+    {
+      "id": 6494,
+      "slug": "a-way-of-love",
+      "title": "A Way of Love",
+      "linkIsbn": "9781075347559",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-christmas-carol-special-annotation-edition-with-wide-margins-and-text-spacing-for-your-own-notes-charles-dickens"
+    },
+    {
+      "id": 6508,
+      "slug": "hello-sex",
+      "title": "Hello Sex",
+      "linkIsbn": "9781480455597",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "hello-i-lied-m-e-kerr"
+    },
+    {
+      "id": 6521,
+      "slug": "the-reasonableness-of-christianity-as-delivered-in-the-scriptures",
+      "title": "The Reasonableness of Christianity, as Delivered in the Scriptures",
+      "linkIsbn": "9780729405638",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "que-la-religion-chretienne-est-tres-raisonnable-discours-sur-les-miracles-john-locke"
+    },
+    {
+      "id": 6531,
+      "slug": "the-laws-of-life",
+      "title": "The Laws of Life",
+      "linkIsbn": "9781345786774",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-law-of-life-anna-mcclure-sholl"
+    },
+    {
+      "id": 6544,
+      "slug": "lettres-persanes",
+      "title": "Lettres Persanes",
+      "linkIsbn": "9780140442816",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-persian-letters-montesquieu"
+    },
+    {
+      "id": 6572,
+      "slug": "jacques-le-fataliste-et-son-maitre",
+      "title": "Jacques le fataliste et son maître",
+      "linkIsbn": "9780199537952",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "jacques-the-fatalist-and-the-master-denis-diderot"
+    },
+    {
+      "id": 6590,
+      "slug": "mysterious-india",
+      "title": "Mysterious India",
+      "linkIsbn": "9788415211679",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "el-misterio-de-cloomber-the-mystery-of-cloomber-sir-arthur-conan-doyle"
+    },
+    {
+      "id": 6601,
+      "slug": "cease-fire",
+      "title": "Cease-Fire",
+      "linkIsbn": "9781376415285",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "cease-firing-professor-mary-johnston"
+    },
+    {
+      "id": 6602,
+      "slug": "pensees-with-notes-by-voltaire",
+      "title": "Pensées , with notes by Voltaire",
+      "linkIsbn": "9783842486508",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "pascal-s-pensees"
+    },
+    {
+      "id": 6619,
+      "slug": "essai-sur-les-donnees-immediates-de-la-conscience",
+      "title": "Essai sur les données immédiates de la conscience",
+      "linkIsbn": "9781605205717",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "time-and-free-will-an-essay-on-the-immediate-data-of-consciousness-henri-louis-bergson"
+    },
+    {
+      "id": 6621,
+      "slug": "dei-delitti-e-delle-pene",
+      "title": "Dei Delitti e delle pene",
+      "linkIsbn": "9781377093093",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "essay-on-crimes-and-punishments-voltaire"
+    },
+    {
+      "id": 6622,
+      "slug": "les-passions-de-lame",
+      "title": "Les passions de l'âme",
+      "linkIsbn": "9781420926729",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "a-discourse-on-method-and-meditations-on-first-philosophy-rene-descartes"
+    },
+    {
+      "id": 6623,
+      "slug": "hello-world-2",
+      "title": "Hello World. 2",
+      "linkIsbn": "9780060511142",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "teach-us-amelia-bedelia-peggy-parish"
+    },
+    {
+      "id": 6626,
+      "slug": "matiere-et-memoire-essai-sur-la-relation-du-corps-a-lesprit",
+      "title": "Matière et mémoire; essai sur la relation du corps à l'esprit",
+      "linkIsbn": "9788027278916",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "matter-memory-henri-bergson"
+    },
+    {
+      "id": 6633,
+      "slug": "levolution-creatrice",
+      "title": "L'évolution créatrice",
+      "linkIsbn": "9781515423911",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "creative-evolution-henri-louis-bergson"
+    },
+    {
+      "id": 6653,
+      "slug": "sketch-for-a-historical-picture-of-the-progress-of-the-human-mind",
+      "title": "Sketch for a Historical Picture of the Progress of the Human Mind",
+      "linkIsbn": "9780578016665",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "outlines-of-an-historical-view-of-the-progress-of-the-human-mind-antoine-nicholas-condorcet"
+    },
+    {
+      "id": 6663,
+      "slug": "gabriele-dannunzio-all-love-stories",
+      "title": "Gabriele D'Annunzio — All love stories",
+      "linkIsbn": "9781665951647",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "to-all-the-boys-i-ve-loved-before-special-keepsake-edition-jenny-han"
+    },
+    {
+      "id": 6666,
+      "slug": "jean-paul-sartre-all-works",
+      "title": "Jean-Paul Sartre — All works",
+      "linkIsbn": "9780415213677",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "jean-paul-sartre-basic-writings-stephen-priest"
+    },
+    {
+      "id": 6669,
+      "slug": "traite-de-la-nature-et-de-la-grace",
+      "title": "Traité de la nature et de la grace",
+      "linkIsbn": "9780521589956",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "malebranche-the-search-after-truth-nicolas-malebranche"
+    },
+    {
+      "id": 6675,
+      "slug": "memoires",
+      "title": "Mémoires",
+      "linkIsbn": "9781781393796",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-complete-memoirs-of-casanova-the-story-of-my-life-all-volumes-in-a-single-book-illustrated-complete-and-unabridged-giacomo-chevalier-de-sei"
+    },
+    {
+      "id": 6686,
+      "slug": "reisebilder",
+      "title": "Reisebilder",
+      "linkIsbn": "9780979333033",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "travel-pictures-including-the-tour-in-the-harz-norderney-and-book-of-ideas-together-with-the-romantic-school-1887-heinrich-heine"
+    },
+    {
+      "id": 6693,
+      "slug": "de-la-france",
+      "title": "De la France",
+      "linkIsbn": "9780061957888",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "don-quixote-edith-grossman"
+    },
+    {
+      "id": 6697,
+      "slug": "harmonices-mundi",
+      "title": "Harmonices Mundi",
+      "linkIsbn": "9781926842974",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "harmonies-of-the-world-johannes-kepler"
+    },
+    {
+      "id": 6743,
+      "slug": "ping-xing-shi-kong-i-li-zu-ben-tu-de-guo-ji-shi-ye",
+      "title": "Ping xing shi kong I. Li zu ben tu de guo ji shi ye",
+      "linkIsbn": "9780253340252",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-grand-scribe-s-records-volume-v-1-the-hereditary-houses-of-pre-han-china-part-i-ssu-ma-ch-ien"
+    },
+    {
+      "id": 6754,
+      "slug": "tian-an-men-xue-an-jing-wei",
+      "title": "Tian an men xue an jing wei",
+      "linkIsbn": "9781935814115",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "robinson-crusoe"
+    },
+    {
+      "id": 6774,
+      "slug": "du-li-zhi-jing-shen-zi-you-zhi-si-xiang",
+      "title": "Du li zhi jing shen : zi you zhi si xiang",
+      "linkIsbn": "9780804834681",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "romance-of-the-three-kingdoms-volume-2-lo-kuan-chung"
+    },
+    {
+      "id": 6780,
+      "slug": "ma-ma-de-hao-bang-shou",
+      "title": "Ma ma de hao bang shou",
+      "linkIsbn": "9780787980962",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "12-simple-secrets-real-moms-know-getting-back-to-basics-and-raising-happy-kids-michele-borba-ed-d"
+    },
+    {
+      "id": 6787,
+      "slug": "sheng-yu-luan-shi-you-zhong-ze-ren",
+      "title": "Sheng yu luan shi, you zhong ze ren",
+      "linkIsbn": "9781626861312",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-art-of-war-sun-tzu"
+    },
+    {
+      "id": 6829,
+      "slug": "dao-gong-yuan-qu-san-bu",
+      "title": "Dao gong yuan qu san bu",
+      "linkIsbn": "9780385093798",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-dream-of-the-red-chamber-tsao-hsueh-chin"
+    },
+    {
+      "id": 6841,
+      "slug": "beijing-you",
+      "title": "Beijing you",
+      "linkIsbn": "9781335005984",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "if-you-could-see-the-sun-ann-liang"
+    },
+    {
+      "id": 6845,
+      "slug": "xianggang-zheng-zhi-can-yu-xin-xing-tai",
+      "title": "Xianggang zheng zhi can yu xin xing tai",
+      "linkIsbn": "9789386538185",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "tao-te-ching-lao-tzu"
+    },
+    {
+      "id": 6866,
+      "slug": "yu-san-jian-wen-lu",
+      "title": "Yu san jian wen lu",
+      "linkIsbn": "9780553573428",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "a-storm-of-swords-george-r-r-martin"
+    },
+    {
+      "id": 6887,
+      "slug": "mao-zedong-de-da-ji-huang-1958-1962-nian-de-zhongguo-hao-jie-shi",
+      "title": "Mao Zedong de da ji huang : 1958-1962 nian de Zhongguo hao jie shi",
+      "linkIsbn": "9781408886366",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "mao-s-great-famine-the-history-of-china-s-most-devastating-catastrophe-1958-62-frank-dik-tter"
+    },
+    {
+      "id": 6889,
+      "slug": "shi-dai-fei-qing",
+      "title": "Shi dai fei qing",
+      "linkIsbn": "9798225008314",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-dark-secret-special-edition-wings-of-fire-book-four-tui-t-sutherland"
+    },
+    {
+      "id": 6934,
+      "slug": "peichi",
+      "title": "Peichi",
+      "linkIsbn": "9781529213379",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "media-technologies-for-work-and-play-in-east-asia-critical-perspectives-on-japan-and-the-two-koreas-ana-gasc-n-marc-n"
+    },
+    {
+      "id": 6984,
+      "slug": "bao-xiao-jiao-shi-8",
+      "title": "Bao xiao jiao shi. 8",
+      "linkIsbn": "9780253340252",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-grand-scribe-s-records-volume-v-1-the-hereditary-houses-of-pre-han-china-part-i-ssu-ma-ch-ien"
+    },
+    {
+      "id": 7005,
+      "slug": "xianggang-zen-me-le",
+      "title": "Xianggang zen me le?",
+      "linkIsbn": "9789386538185",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "tao-te-ching-lao-tzu"
+    },
+    {
+      "id": 7052,
+      "slug": "chu-mai-zhongguo-quan-gui-zi-ben-zhu-yi-de-qi-yuan-yu-gong-chan-dang-zheng-quan-de-kui-bai",
+      "title": "Chu mai Zhongguo : quan gui zi ben zhu yi de qi yuan yu Gong chan dang zheng quan de kui bai",
+      "linkIsbn": "9780674737297",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "china-s-crony-capitalism-the-dynamics-of-regime-decay-tom-and-margot-pritzker-72-professor-of-government-and-roberts-fellow-minxin-pei"
+    },
+    {
+      "id": 7067,
+      "slug": "zhi-min-di-mei-xue",
+      "title": "Zhi min di mei xue",
+      "linkIsbn": "9781016343930",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "strange-stories-from-a-chinese-studio-herbert-allen-giles"
+    },
+    {
+      "id": 7099,
+      "slug": "tiananmen-zhongguo-de-zhi-shi-fen-zi-yu-ge-ming",
+      "title": "Tian'anmen : Zhongguo de zhi shi fen zi yu ge ming",
+      "linkIsbn": "9781101173725",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-gate-of-heavenly-peace-the-chinese-and-their-revolution-jonathan-d-spence"
+    },
+    {
+      "id": 7113,
+      "slug": "zuo-you-da-ju",
+      "title": "Zuo you da ju",
+      "linkIsbn": "9780812969221",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "as-you-like-it-william-shakespeare"
+    },
+    {
+      "id": 7119,
+      "slug": "jiao-yu-yan",
+      "title": "Jiao yu yan",
+      "linkIsbn": "9781429934381",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "innumeracy-mathematical-illiteracy-and-its-consequences-john-allen-paulos"
+    },
+    {
+      "id": 7121,
+      "slug": "nu-jiao",
+      "title": "Nu jiao",
+      "linkIsbn": "9780375822339",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "stargirl-jerry-spinelli"
+    },
+    {
+      "id": 7127,
+      "slug": "er-qian-ling-si-shi-qi-ye",
+      "title": "Er qian ling si shi qi ye",
+      "linkIsbn": "9781604502794",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "mental-chemistry-charles-f-haanel"
+    },
+    {
+      "id": 7128,
+      "slug": "xing-huo",
+      "title": "Xing huo",
+      "linkIsbn": "9780679645276",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "antifragile-things-that-gain-from-disorder-nassim-nicholas-taleb"
+    },
+    {
+      "id": 7177,
+      "slug": "ri-chang-yun-dong",
+      "title": "Ri chang yun dong",
+      "linkIsbn": "9780062029355",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-true-believer-thoughts-on-the-nature-of-mass-movements-eric-hoffer"
+    },
+    {
+      "id": 7205,
+      "slug": "tianan-men-guang-chang-qing-chang-ji-shi",
+      "title": "Tian'an men guang chang qing chang ji shi",
+      "linkIsbn": "9781935814115",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "robinson-crusoe"
+    },
+    {
+      "id": 7215,
+      "slug": "mu-ji-tian-an-men-di-san-juan",
+      "title": "Mu ji tian an men. Di san juan",
+      "linkIsbn": "9786555522068",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "hamlet-william-shakespeare"
+    },
+    {
+      "id": 7242,
+      "slug": "sex-turned-on",
+      "title": "Sex Turned On",
+      "linkIsbn": "9780141396903",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-nature-of-things-lucretius"
+    },
+    {
+      "id": 7252,
+      "slug": "socialism-in-queensland",
+      "title": "Socialism in Queensland",
+      "linkIsbn": "9781138360082",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-sex-industry-a-survey-of-sex-workers-in-queensland-australia-carole-wood"
+    },
+    {
+      "id": 7262,
+      "slug": "the-screw-reader",
+      "title": "The Screw Reader",
+      "linkIsbn": "9781612930992",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-turn-of-the-screw-henry-james"
+    },
+    {
+      "id": 7269,
+      "slug": "story-of-venus-and-tannhauser",
+      "title": "Story of Venus and Tannhauser",
+      "linkIsbn": "9781018800950",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-story-of-venus-and-tannh-user-in-which-is-set-forth-an-exact-account-of-the-manner-of-state-held-by-madam-venus-goddess-and-meretrix-under-the"
+    },
+    {
+      "id": 7284,
+      "slug": "a-spar-love-affair",
+      "title": "A Spar Love Affair",
+      "linkIsbn": "9781418441241",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "calculus-without-limits-almost-john-c-sparks"
+    },
+    {
+      "id": 7298,
+      "slug": "my-bed-is-not-for-sleeping",
+      "title": "My Bed is not for Sleeping",
+      "linkIsbn": "9781020569845",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "leaves-of-grass-including-sands-at-seventy-good-bye-my-fancy-a-backward-glance-o-er-travel-d-roads-walt-whitman"
+    },
+    {
+      "id": 7313,
+      "slug": "no-game-no-life-volumes-1-2-9",
+      "title": "No Game No Life (Volumes 1, 2, 9)",
+      "linkIsbn": "9783842421660",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "leben-und-schicksale-des-nicolaus-nickleby-und-seiner-familie-ubersetzt-von-carl-kolb-charles-dickens"
+    },
+    {
+      "id": 7326,
+      "slug": "historia-do-mundo-para-as-criancas",
+      "title": "História do Mundo para as Crianças",
+      "linkIsbn": "9781800760776",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-railway-children-with-headphones-edith-nesbit"
+    },
+    {
+      "id": 7354,
+      "slug": "the-poverty-of-philosophy",
+      "title": "The Poverty of Philosophy",
+      "linkIsbn": "9781021310644",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "mis-re-de-la-philosophie-r-ponse-la-philosophie-de-la-mis-re-de-m-proudhon-karl-marx"
+    },
+    {
+      "id": 7358,
+      "slug": "c-o-s-hansard",
+      "title": "C. O.'s Hansard",
+      "linkIsbn": "9781443437745",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "castle-rackrent-anne-thackeray-ritchie"
+    },
+    {
+      "id": 7532,
+      "slug": "little-sister-club-2",
+      "title": "Little Sister Club 2",
+      "linkIsbn": "9781338057126",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "karen-s-big-top-baby-sitters-little-sister-51-ann-m-martin"
+    },
+    {
+      "id": 7574,
+      "slug": "monsters-of-mythology",
+      "title": "Monsters of Mythology",
+      "linkIsbn": "9780808501282",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "heroes-gods-and-monsters-of-the-greek-myths-bernard-evslin"
+    },
+    {
+      "id": 7623,
+      "slug": "black-panther-a-nation-under-our-feet",
+      "title": "Black Panther: A Nation Under Our Feet",
+      "linkIsbn": "9781532143557",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "nation-under-our-feet-part-5-ta-nehisi-coates"
+    },
+    {
+      "id": 7626,
+      "slug": "chicagoland-detective-agency",
+      "title": "Chicagoland Detective Agency",
+      "linkIsbn": "9780761356356",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-drained-brains-caper-book-1-trina-robbins"
+    },
+    {
+      "id": 7635,
+      "slug": "mar-marchen-awakens-romance",
+      "title": "Mär: Märchen Awakens Romance",
+      "linkIsbn": "9781421504896",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "m-r-vol-7-nobuyuki-anzai"
+    },
+    {
+      "id": 7659,
+      "slug": "european-art",
+      "title": "European Art",
+      "linkIsbn": "9780500292716",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "art-since-1900-1900-to-1944-benjamin-h-d-buchloh"
+    },
+    {
+      "id": 7688,
+      "slug": "captain-underpants-and-the-sensational-saga-of-sir-stink-a-lot",
+      "title": "Captain Underpants and the Sensational Saga of Sir Stink-a-Lot",
+      "linkIsbn": "9781338615203",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "captain-underpants-and-the-sensational-saga-of-sir-stinks-a-lot-color-edition-captain-underpants-12-from-the-creator-of-dog-man-dav-pilkey"
+    },
+    {
+      "id": 8130,
+      "slug": "grown-in-60-seconds",
+      "title": "Grown in 60 Seconds",
+      "linkIsbn": "9781933967721",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "denim-diaries-2-grown-in-sixty-seconds-denim-diaries-2-grown-in-sixty-seconds-darrien-lee"
+    },
+    {
+      "id": 8294,
+      "slug": "khaled-hosseinis-the-kite-runner",
+      "title": "Khaled Hosseini's The Kite Runner",
+      "linkIsbn": "9781604131994",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-kite-runner-sterling-professor-of-humanities-harold-bloom"
+    },
+    {
+      "id": 8363,
+      "slug": "the-goddess-legacy-an-original-goddess-test-collection",
+      "title": "The Goddess Legacy: An Original Goddess Test Collection",
+      "linkIsbn": "9781488036361",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-goddess-test-collection-volume-1-an-anthology-aim-e-carter"
+    },
+    {
+      "id": 8708,
+      "slug": "dragonflight",
+      "title": "Dragonflight",
+      "linkIsbn": "9780345484260",
+      "isXref": true,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dragonsong-1-anne-mccaffrey"
+    },
+    {
+      "id": 8761,
+      "slug": "human-body-systems",
+      "title": "Human Body Systems",
+      "linkIsbn": "9780785835059",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-human-body-atlas-how-the-human-body-works-national-geographic"
+    },
+    {
+      "id": 8865,
+      "slug": "black-bird-vol-10",
+      "title": "Black Bird, Vol. 10",
+      "linkIsbn": "9781421530666",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "black-bird-vol-6-kanoko-sakurakouji"
+    },
+    {
+      "id": 9023,
+      "slug": "stranger-than-fanfiction",
+      "title": "Stranger Than Fanfiction",
+      "linkIsbn": "9789877473919",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "mas-extrano-que-un-fanfiction-chris-colfer"
+    },
+    {
+      "id": 9178,
+      "slug": "the-color-master",
+      "title": "The Color Master",
+      "linkIsbn": "9780307744197",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-emerald-circus-jane-yolen"
+    },
+    {
+      "id": 9723,
+      "slug": "drumroll-please",
+      "title": "Drumroll, Please",
+      "linkIsbn": "9781663628510",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "drum-roll-please"
+    },
+    {
+      "id": 9730,
+      "slug": "a-tale-of-magic",
+      "title": "A Tale of Magic",
+      "linkIsbn": "9780316055932",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "a-tale-of-sorcery-chris-colfer"
+    },
+    {
+      "id": 9757,
+      "slug": "the-midwinter-witch",
+      "title": "The Midwinter Witch",
+      "linkIsbn": "9781443180559",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "la-sorciere-du-solstice-lee-knox-ostertag"
+    },
+    {
+      "id": 10657,
+      "slug": "new-china",
+      "title": "New China",
+      "linkIsbn": "9781013424908",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "news-of-china-2-1943-anonymous"
+    },
+    {
+      "id": 10763,
+      "slug": "the-general-masses",
+      "title": "The General Masses",
+      "linkIsbn": "9781015112902",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "millers-river-district-mass-1883-87-88-directory-of-athol-orange-royalston-wendell-templeton-erving-containing-a-general-directory-of-the"
+    },
+    {
+      "id": 11157,
+      "slug": "stalin-on-chinas-revolution",
+      "title": "Stalin on China's Revolution",
+      "linkIsbn": "9781410206893",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "joseph-stalin-on-chinese-revolution-joseph-stalin"
+    },
+    {
+      "id": 11332,
+      "slug": "mother-india",
+      "title": "Mother India",
+      "linkIsbn": "9781014928528",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "a-domestic-guide-to-mothers-in-india-containing-particular-instructions-on-the-management-of-themselves-and-their-children-anonymous"
+    },
+    {
+      "id": 11382,
+      "slug": "sexus",
+      "title": "Sexus",
+      "linkIsbn": "9780802141354",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-mammoth-cheese-sheri-holman"
+    },
+    {
+      "id": 11527,
+      "slug": "club-international",
+      "title": "Club International",
+      "linkIsbn": "9780343472795",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "report-of-executive-committee-of-the-amateur-rifle-club-upon-the-internation-match-anonymous"
+    },
+    {
+      "id": 11679,
+      "slug": "karl-marxs-theory-of-revolution-part-i",
+      "title": "Karl Marx's Theory of Revolution Part I",
+      "linkIsbn": "9781583675182",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "karl-marx-s-theory-of-revolution-iii-hal-draper"
+    },
+    {
+      "id": 12308,
+      "slug": "islam-in-the-modern-world-a-christian-perspective",
+      "title": "Islam in the Modern World a Christian Perspective",
+      "linkIsbn": "9780851114149",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "islam-in-the-modern-world-sir-norman-anderson"
+    },
+    {
+      "id": 12813,
+      "slug": "my-secret-life-part-two",
+      "title": "MY Secret Life Part Two",
+      "linkIsbn": "9781534927490",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "my-secret-life-volumes-i-to-iii"
+    },
+    {
+      "id": 12962,
+      "slug": "introducing-islam-islam-christianity-and-judaism",
+      "title": "Introducing Islam. Islam, Christianity, and Judaism",
+      "linkIsbn": "9781590846988",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "islam-christianity-judaism-amelia-hipps"
+    },
+    {
+      "id": 13008,
+      "slug": "onward-muslim-soldier",
+      "title": "Onward Muslim Soldier",
+      "linkIsbn": "9781621571162",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "onward-muslim-soldiers-how-jihad-still-threatens-america-and-the-west-robert-spencer"
+    },
+    {
+      "id": 13317,
+      "slug": "my-shadow-is-purple",
+      "title": "MY Shadow Is Purple",
+      "linkIsbn": "9781922804914",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-pointy-pony-a-body-positive-unicorn-tale-fifi-abu"
+    },
+    {
+      "id": 13421,
+      "slug": "present-prospects",
+      "title": "Present, Prospects",
+      "linkIsbn": "9780313356124",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "east-asia-s-haunted-present-historical-memories-and-the-resurgence-of-nationalism-kazuhiko-togo"
+    },
+    {
+      "id": 13613,
+      "slug": "confessions-of-a-cannibal",
+      "title": "Confessions of a Cannibal",
+      "linkIsbn": "9781873982471",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "confessions-of-a-flesh-eater-dedalus-original-fiction-david-madsen"
+    },
+    {
+      "id": 14322,
+      "slug": "the-left-hand-of-darkness",
+      "title": "The Left Hand of Darkness",
+      "linkIsbn": "9781101665398",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "the-four-profound-weaves-r-b-lemberg"
+    },
+    {
+      "id": 14325,
+      "slug": "summer-in-a-pioneers-tie",
+      "title": "Summer in a Pioneer's Tie",
+      "linkIsbn": "9798887072531",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "pioneer-summer-a-novel-elena-malisova"
+    },
+    {
+      "id": 14511,
+      "slug": "les-femmes-et-lespionnage",
+      "title": "Les femmes et l’espionnage",
+      "linkIsbn": "9780270194265",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "l-espionnage-et-la-trahison-tude-de-droit-francais-et-de-legislation-compare-robert-detourbet"
+    },
+    {
+      "id": 15074,
+      "slug": "monsieur-et-madame-moloc",
+      "title": "Monsieur et Madame Moloc",
+      "linkIsbn": "9782016152003",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "monsieur-et-madame-moloch-50e-dition-marcel-pr-vost"
+    },
+    {
+      "id": 16426,
+      "slug": "der-einzige-und-sein-eigentum-the-ego-and-his-own",
+      "title": "Der Einzige und sein Eigentum (The Ego and His Own)",
+      "linkIsbn": "9781430474838",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-ego-and-his-own-max-stirner"
+    },
+    {
+      "id": 16465,
+      "slug": "diaries-of-1945",
+      "title": "Diaries of 1945",
+      "linkIsbn": "9780837138152",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-goebbels-diaries-1942-1943-louis-p-lochner"
+    },
+    {
+      "id": 16538,
+      "slug": "the-use-of-life",
+      "title": "The Use of Life",
+      "linkIsbn": "9781477314807",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "using-life-ahmed-naji"
+    },
+    {
+      "id": 16567,
+      "slug": "le-passe-simple",
+      "title": "Le Passé simple",
+      "linkIsbn": "9782070377282",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "passe-simple-driss-chrahibi"
+    },
+    {
+      "id": 16574,
+      "slug": "summary-of-the-general-history-of-africa",
+      "title": "Summary of the General History of Africa",
+      "linkIsbn": "9780520066960",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "unesco-general-history-of-africa-vol-i-abridged-edition-methodology-and-african-prehistory-volume-1-joseph-ki-zerbo"
+    },
+    {
+      "id": 16670,
+      "slug": "the-best-of-henry-miller",
+      "title": "The Best of Henry Miller",
+      "linkIsbn": "9780811201117",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-henry-miller-reader-henry-miller"
+    },
+    {
+      "id": 17443,
+      "slug": "13-art-inventions-children-show-know",
+      "title": "13 Art Inventions Children Show Know",
+      "linkIsbn": "9783791370606",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "13-art-inventions-children-should-know-florian-heine"
+    },
+    {
+      "id": 17448,
+      "slug": "50-sculptures-you-should-know",
+      "title": "50 Sculptures You Should Know",
+      "linkIsbn": "9783791383408",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "50-architects-you-should-know-isabel-kuhl"
+    },
+    {
+      "id": 17845,
+      "slug": "sam-and-the-lucky-money",
+      "title": "Sam and the Lucky Money",
+      "linkIsbn": "9780613058223",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "xiaoshan-di-ya-shui-qian-karen-chinn"
+    },
+    {
+      "id": 18042,
+      "slug": "yasmin-the-zookeeper",
+      "title": "Yasmin the Zookeeper",
+      "linkIsbn": "9781515845812",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "yasmin-la-guardiana-del-zoo-saadia-faruqi"
+    },
+    {
+      "id": 18056,
+      "slug": "tattoo-atlas",
+      "title": "Tattoo Atlas",
+      "linkIsbn": "9781481432801",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "anatomy-of-a-murderer-tim-floreen"
+    },
+    {
+      "id": 18121,
+      "slug": "who-was-maria-tallchief",
+      "title": "Who Was Maria Tallchief?",
+      "linkIsbn": "9780448426754",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "who-is-maria-tallchief-catherine-gourley"
+    },
+    {
+      "id": 18175,
+      "slug": "culturally-and-linguistically-responsive-teaching-and-learning-classroom-practices-for-student-success-grades-k-12",
+      "title": "Culturally and Linguistically Responsive Teaching and Learning – Classroom Practices for Student Success, Grades K-12",
+      "linkIsbn": "9781425817312",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "culturally-and-linguistically-responsive-teaching-and-learning-classroom-practices-for-student-success-sharroky-hollie"
+    },
+    {
+      "id": 18278,
+      "slug": "the-beach-trip",
+      "title": "The Beach Trip",
+      "linkIsbn": "9781479587254",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "viaje-a-la-playa-jacqueline-jules"
+    },
+    {
+      "id": 18306,
+      "slug": "spider-man-in-face-to-face-with-the-lizard",
+      "title": "Spider-Man in Face-to-Face with the Lizard",
+      "linkIsbn": "9781599610146",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "face-to-face-with-the-lizard-daniel-quantz"
+    },
+    {
+      "id": 18314,
+      "slug": "spy-x-family-vol-3",
+      "title": "Spy x Family, Vol. 3",
+      "linkIsbn": "9784088821832",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "65331-65328-65337-65318-65313-65325-65321-65324-65337-65299-tatsuya-endo"
+    },
+    {
+      "id": 18316,
+      "slug": "spy-x-family-vol-4",
+      "title": "Spy x Family, Vol. 4",
+      "linkIsbn": "9784088822297",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "65331-65328-65337-65318-65313-65325-65321-65324-65337-65300-tatsuya-endo"
+    },
+    {
+      "id": 18367,
+      "slug": "vamonos-lets-go",
+      "title": "¡Vámonos! Let's Go!",
+      "linkIsbn": "9780823434428",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "v-monos-let-s-go-ren-colato-la-nez"
+    },
+    {
+      "id": 18498,
+      "slug": "did-i-mention-i-need-you",
+      "title": "Did I Mention I Need You?",
+      "linkIsbn": "9781492632153",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "did-i-mention-i-love-you-estelle-maskame"
+    },
+    {
+      "id": 18503,
+      "slug": "the-fires-of-merlin",
+      "title": "The Fires of Merlin",
+      "linkIsbn": "9780142419212",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-raging-fires-book-3-t-a-barron"
+    },
+    {
+      "id": 18524,
+      "slug": "lola-at-the-library-with-mommy",
+      "title": "Lola at the Library with Mommy",
+      "linkIsbn": "9781623541798",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "lola-at-the-library-anna-mcquinn"
+    },
+    {
+      "id": 18586,
+      "slug": "the-mirror-of-merlin",
+      "title": "The Mirror of Merlin",
+      "linkIsbn": "9780142419229",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-mirror-of-fate-book-4-t-a-barron"
+    },
+    {
+      "id": 18953,
+      "slug": "because",
+      "title": "Because",
+      "linkIsbn": "9781443177290",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "comment-tout-a-commenc-mo-willems"
+    },
+    {
+      "id": 19087,
+      "slug": "klassenkampfe-und-die-diktatur-des-proletariats-in-ungarn",
+      "title": "Klassenkämpfe und die Diktatur des Proletariats in Ungarn",
+      "linkIsbn": "9781019921067",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "klassenk-mpfe-und-diktatur-des-proletariats-in-ungarn-b-la-sz-nt"
+    },
+    {
+      "id": 19122,
+      "slug": "das-kind-als-trager-der-werdenden-gesellschaft",
+      "title": "Das Kind als Träger der werdenden Gesellschaft",
+      "linkIsbn": "9783934616936",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "schriften-zur-konomie-und-wirtschaftsgeschichte-die-industrielle-entwicklung-polens-die-akkumulation-des-kapitals-antikritik-einf-hrung-in-di"
+    },
+    {
+      "id": 19347,
+      "slug": "die-geheimwissenschaft-im-umriss",
+      "title": "Die Geheimwissenschaft im Umriss",
+      "linkIsbn": "9783864711275",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "die-geheimwissenschaft-im-umrisse-dr-rudolf-steiner"
+    },
+    {
+      "id": 20741,
+      "slug": "manuel-de-civilite-pour-les-petites-filles",
+      "title": "Manuel de civilité pour les petites filles",
+      "linkIsbn": "9780984115518",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-young-girl-s-handbook-of-good-manners-for-use-in-educational-establishments-pierre-lou-255-s"
+    },
+    {
+      "id": 21377,
+      "slug": "am-rande-der-nacht",
+      "title": "Am Rande der Nacht",
+      "linkIsbn": "9781843919971",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "at-the-edge-of-the-night-friedo-lampe"
+    },
+    {
+      "id": 21819,
+      "slug": "der-puppenjunge",
+      "title": "Der Puppenjunge",
+      "linkIsbn": "9781401044916",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "the-hustler-john-henry-mackay"
+    },
+    {
+      "id": 21930,
+      "slug": "spanish-testament",
+      "title": "Spanish testament",
+      "linkIsbn": "9780226449616",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_in_slug"
+      ],
+      "redirectSlug": "dialogue-with-death-the-journal-of-a-prisoner-of-the-fascists-in-the-spanish-civil-war-arthur-koestler"
+    },
+    {
+      "id": 22145,
+      "slug": "kasebier-erobert-den-kurfurstendamm",
+      "title": "Käsebier erobert den Kurfürstendamm",
+      "linkIsbn": "9781681372723",
+      "isXref": false,
+      "flags": [
+        "redirect_mismatch",
+        "author_missing"
+      ],
+      "redirectSlug": "k-sebier-takes-berlin-gabriele-tergit"
+    }
+  ]
+}
