@@ -1,10 +1,16 @@
-// ISR: 1h. Driven by ban-count ranking, which only changes on ingestion of
-// new bans — slower than view-driven lists.
-export const revalidate = 3600
+// force-dynamic keeps this heavy page OUT of the build-time prerender (same
+// doctrine as /banned-classics and /banned-childrens-books): the candidate-id
+// scan over the ~5k non-English books takes ~9s on a loaded prod DB, which
+// tripped statement_timeout (57014) during deploy prerender on 2026-08-10 and
+// failed the whole build. The expensive fetch is wrapped in unstable_cache
+// below (daily), so per-request renders stay crawler-safe.
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
+import { withDbRetry } from '@/lib/db-retry'
 import { newTimer } from '@/lib/timing'
 import { TopListBookCard } from '@/components/top-list-card'
 import {
@@ -37,21 +43,24 @@ const HYDRATE = 60
 // candidates (no .order() on a >1000-row table). Now: collect candidate ids
 // (light), rank by pre-aggregated v_book_ban_counts, and embed bans only for
 // the bounded top set.
-async function fetchNonEnglish(timer: ReturnType<typeof newTimer>) {
+async function fetchNonEnglish() {
+  const timer = newTimer('non-english-destination')
   const supabase = adminClient()
 
-  // 1. Candidate ids — non-English, public. Light select, fully paginated.
+  // 1. Candidate ids — non-English, public. Light select, fully paginated,
+  //    each page retried on transient 57014 (the scan runs ~9s total under
+  //    crawler load).
   const ids = await timer.wrap('candidate-ids', async () => {
     const out: number[] = []
     for (let offset = 0; ; offset += 1000) {
-      const { data, error } = await supabase
+      const { data, error } = await withDbRetry(() => supabase
         .from('books')
         .select('id')
         .eq('is_gated', false)
         .not('original_language', 'is', null)
         .neq('original_language', 'en')
         .order('id')
-        .range(offset, offset + 999)
+        .range(offset, offset + 999), 'non-english candidate-ids')
       if (error) throw error
       if (!data || data.length === 0) break
       out.push(...data.map(r => r.id as number))
@@ -84,21 +93,25 @@ async function fetchNonEnglish(timer: ReturnType<typeof newTimer>) {
   const { data: booksRaw } = await timer.wrap('hydrate-top', () =>
     supabase.from('books').select(TOP_LIST_BOOK_SELECT).in('id', keep),
   )
+  timer.end()
   return (booksRaw ?? []) as unknown as TopListBookRow[]
 }
 
-export default async function NonEnglishBannedBooksPage() {
-  const timer = newTimer('non-english-destination')
+// Cache the heavy fetch so a force-dynamic (per-request) render still hits the
+// DB at most once per day — crawler-safe. Same pattern as /banned-classics.
+const getNonEnglishCached = unstable_cache(fetchNonEnglish, ['non-english-banned-books'], {
+  revalidate: 86400,
+  tags: ['non-english-banned-books'],
+})
 
-  const candidates = await fetchNonEnglish(timer)
+export default async function NonEnglishBannedBooksPage() {
+  const candidates = await getNonEnglishCached()
 
   const books = candidates
     .filter(b => b.bans.length > 0)
     .sort((a, b) => b.bans.length - a.bans.length)
     .slice(0, SHOW)
     .map(b => toBookCard(b, langContext(b)))
-
-  timer.end()
 
   const itemListJsonLd = {
     '@context': 'https://schema.org',
