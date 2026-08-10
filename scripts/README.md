@@ -47,9 +47,11 @@ eenmalig, bv. `_apply_csam_block.ts`).
 
 ## 1. Import
 
-### Nieuwe bron gevonden? — plak deze standaardprompt
-Kopieer dit als startprompt in een Claude-sessie zodra je een nieuwe bron hebt.
-Hij dwingt hergebruik af: geen nieuwe machinerie voor dingen die al bestaan.
+### Nieuwe bron gevonden? — zeg `/import-source <URL of bestand>`
+De project-skill `.claude/skills/import-source/SKILL.md` draait Stap 0–5
+hieronder end-to-end, met twee stopmomenten (apply-goedkeuring + needs_review).
+De standaardprompt hieronder blijft als fallback voor sessies zonder de skill;
+hij dwingt hergebruik af: geen nieuwe machinerie voor dingen die al bestaan.
 
 ```text
 Ik heb een nieuwe bron met verboden/gecensureerde boeken: <URL of bestand + korte omschrijving>.

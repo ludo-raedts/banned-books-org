@@ -39,8 +39,9 @@ yarn-error.log*
 
 # claude code
 .claude/*
-# share the project-level settings, keep personal settings/worktrees local
+# share the project-level settings + skills, keep personal settings/worktrees local
 !.claude/settings.json
+!.claude/skills/
 
 # supabase temp
 supabase/.temp/
