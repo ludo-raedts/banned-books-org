@@ -25,19 +25,47 @@
  *   whose CURRENT title_native still equals the proposed value (never clobbers a
  *   later manual edit). Backs up every revert to a CSV first.
  *
+ * YEAR cross-source verification (first_published_year):
+ *   ol-harvest is the only writer of first_published_year and it is
+ *   single-source (OL work.first_publish_date) with no external corroboration —
+ *   the thinnest-verified field of the run. This pass cross-checks each written
+ *   year against Wikidata (P577 on an author-gated entity) and Google Books
+ *   (earliest matching edition year, title+author guarded).
+ *   Scoping: the year write carries no *_checked_at stamp, so this-run writes
+ *   are recovered from data/ol-harvest-proposals.jsonl (every year proposal is
+ *   logged there) + the still-matching guard (current DB value must equal the
+ *   proposal — an already-corrected row is never touched). A verdict cache
+ *   (data/year-verification-verdicts.jsonl, keyed id:year) makes the pass
+ *   incremental: each applied year costs external API calls exactly once.
+ *   Confidence (0..1): start 0.5 (no external evidence — kept, not reverted)
+ *     +0.35 Wikidata P577 within ±1   − 0.35 Wikidata P577 differs by >1
+ *     +0.15 GB earliest within ±1     − 0.25 GB edition PRE-dates year by >1
+ *     (a GB edition LATER than the year is a reprint — neutral, no signal)
+ *   Score < --threshold → revert to NULL (CSV backup; guarded on current value)
+ *   so the row re-enters the normal enrichment funnel. GbQuotaError aborts the
+ *   remainder of the pass without caching false verdicts (GbQuotaError doc).
+ *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/audit-enrichment-confidence.ts \
  *     --since=2026-06-16T10:00:00Z --native-review=data/native-title-enrichment-2026-06-16.json
- *   add --apply to perform reverts, --threshold=0.5 to tune.
+ *   add --apply to perform reverts, --threshold=0.5 to tune,
+ *   --year-limit=N (default 200) to cap external year lookups per run,
+ *   --no-year-verify to skip the year pass entirely.
  */
 import fs from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
-import { isApply, flagValue } from './lib/cli'
+import { isApply, flagValue, intFlag, hasFlag } from './lib/cli'
+import { gbVolumesByTitleAuthor, GbQuotaError, hasGbKey } from '../src/lib/enrich/google-books'
+import { titlesMatch, authorsAgree } from '../src/lib/enrich/title-match'
 
 const APPLY = isApply()
 const SINCE = flagValue('since') ?? null
 const THRESHOLD = parseFloat(flagValue('threshold') ?? '0.5')
+const YEAR_LIMIT = intFlag('year-limit', 200)
+const SKIP_YEAR = hasFlag('no-year-verify')
+const YEAR_PROPOSALS_FILE = flagValue('year-proposals') ?? 'data/ol-harvest-proposals.jsonl'
+const YEAR_VERDICTS_FILE = 'data/year-verification-verdicts.jsonl'
 const sb = adminClient()
 
 function latestNativeReview(): string | null {
@@ -218,15 +246,249 @@ async function verifyIsbnCoverWrites() {
   return { coverReverted, isbnReverted }
 }
 
+// ── Year cross-source verification ─────────────────────────────────────────
+
+const WD_API = 'https://www.wikidata.org/w/api.php'
+const WD_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
+const WD_DELAY_MS = 150
+const MIN_YEAR = 1400
+const MAX_YEAR = new Date().getFullYear() + 1
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms))
+}
+
+function parseYear(d: string | undefined | null): number | null {
+  if (!d) return null
+  const m = d.match(/\b(\d{4})\b/)
+  if (!m) return null
+  const y = parseInt(m[1], 10)
+  return y >= MIN_YEAR && y <= MAX_YEAR ? y : null
+}
+
+async function wdFetch<T>(params: Record<string, string>): Promise<T | null> {
+  const url = `${WD_API}?${new URLSearchParams({ ...params, format: 'json' })}`
+  try {
+    const res = await fetch(url, { headers: WD_HEADERS })
+    await sleep(WD_DELAY_MS)
+    if (!res.ok) return null
+    return (await res.json().catch(() => null)) as T | null
+  } catch {
+    return null
+  }
+}
+
+function claimYear(claim: any): number | null {
+  const t = claim?.mainsnak?.datavalue?.value?.time
+  return typeof t === 'string' ? parseYear(t) : null
+}
+
+function claimItemIds(claims: any, prop: string): string[] {
+  return ((claims?.[prop] ?? []) as any[])
+    .map((c) => c?.mainsnak?.datavalue?.value?.id)
+    .filter((id): id is string => typeof id === 'string')
+}
+
+// Earliest Wikidata P577 (publication date) year across search candidates whose
+// P50 authors match ours. Author-gated STRICTLY: no author, no P50, or no
+// token overlap → no signal (never a title-only namesake match — the exact
+// failure mode this auditor exists for).
+async function wikidataYear(title: string, author: string | null): Promise<number | null> {
+  if (!author) return null
+  const search = await wdFetch<{ search?: { id: string }[] }>({
+    action: 'wbsearchentities', search: title, language: 'en', type: 'item', limit: '5',
+  })
+  const ids = (search?.search ?? []).map((s) => s.id)
+  if (ids.length === 0) return null
+  const entities = await wdFetch<{ entities?: Record<string, any> }>({
+    action: 'wbgetentities', ids: ids.join('|'), props: 'claims',
+  })
+  if (!entities?.entities) return null
+
+  // Batch-resolve the labels of every P50 author QID across all candidates.
+  const authorQids = new Set<string>()
+  for (const id of ids) for (const q of claimItemIds(entities.entities[id]?.claims, 'P50')) authorQids.add(q)
+  if (authorQids.size === 0) return null
+  const labelRes = await wdFetch<{ entities?: Record<string, any> }>({
+    action: 'wbgetentities', ids: [...authorQids].slice(0, 50).join('|'), props: 'labels', languages: 'en',
+  })
+  const labelOf = (q: string): string | null =>
+    labelRes?.entities?.[q]?.labels?.en?.value ?? null
+
+  let earliest: number | null = null
+  for (const id of ids) {
+    const claims = entities.entities[id]?.claims
+    const authorLabels = claimItemIds(claims, 'P50')
+      .map(labelOf)
+      .filter((l): l is string => !!l)
+    if (authorLabels.length === 0) continue
+    if (!authorsAgree(author, authorLabels)) continue
+    for (const c of (claims?.P577 ?? []) as any[]) {
+      const y = claimYear(c)
+      if (y != null && (earliest == null || y < earliest)) earliest = y
+    }
+  }
+  return earliest
+}
+
+// Earliest Google Books edition year across volumes that pass the shared
+// title-containment + author-agreement guards. Throws GbQuotaError upward.
+async function gbEarliestYear(title: string, author: string | null): Promise<number | null> {
+  const volumes = await gbVolumesByTitleAuthor(title, author ?? '', {
+    maxResults: 10,
+    fields: 'items(volumeInfo(title,authors,publishedDate))',
+  })
+  let earliest: number | null = null
+  for (const v of volumes) {
+    const info = v.volumeInfo
+    if (!info.title || !titlesMatch(title, info.title)) continue
+    if (author && !authorsAgree(author, info.authors ?? [])) continue
+    const y = parseYear(info.publishedDate)
+    if (y != null && (earliest == null || y < earliest)) earliest = y
+  }
+  return earliest
+}
+
+interface YearVerdict {
+  id: number
+  slug: string
+  year: number
+  wd: number | null
+  gb: number | null
+  score: number
+  reasons: string[]
+  at: string
+}
+
+function scoreYear(year: number, wd: number | null, gb: number | null): { score: number; reasons: string[] } {
+  let score = 0.5
+  const reasons: string[] = []
+  if (wd != null) {
+    if (Math.abs(wd - year) <= 1) { score += 0.35; reasons.push(`wd-confirms(${wd})`) }
+    else { score -= 0.35; reasons.push(`wd-contradicts(${wd})`) }
+  } else reasons.push('wd-none')
+  if (gb != null) {
+    if (Math.abs(gb - year) <= 1) { score += 0.15; reasons.push(`gb-confirms(${gb})`) }
+    else if (gb < year - 1) { score -= 0.25; reasons.push(`gb-edition-predates(${gb})`) }
+    else reasons.push(`gb-later-reprint(${gb})`) // later edition ≠ evidence against
+  } else reasons.push('gb-none')
+  return { score: Math.max(0, Math.min(1, score)), reasons }
+}
+
+async function verifyYearWrites() {
+  console.log(`\n── first_published_year cross-source verification ──`)
+  if (SKIP_YEAR) {
+    console.log('  --no-year-verify — skipping.')
+    return { verified: 0, contradicted: 0, reverted: 0 }
+  }
+  if (!fs.existsSync(YEAR_PROPOSALS_FILE)) {
+    console.log(`  ${YEAR_PROPOSALS_FILE} not found — skipping (no ol-harvest run to verify).`)
+    return { verified: 0, contradicted: 0, reverted: 0 }
+  }
+
+  // Year proposals from the harvest log, last proposal per book id wins.
+  const proposed = new Map<number, number>()
+  for (const line of fs.readFileSync(YEAR_PROPOSALS_FILE, 'utf8').split('\n')) {
+    if (!line.trim()) continue
+    try {
+      const row = JSON.parse(line)
+      if (typeof row.id === 'number' && typeof row.year === 'number' && row.title_ok !== false) {
+        proposed.set(row.id, row.year)
+      }
+    } catch { /* tolerate torn tail line from an interrupted run */ }
+  }
+
+  // Verdict cache: each applied id:year is verified against the APIs only once.
+  const cached = new Set<string>()
+  if (fs.existsSync(YEAR_VERDICTS_FILE)) {
+    for (const line of fs.readFileSync(YEAR_VERDICTS_FILE, 'utf8').split('\n')) {
+      if (!line.trim()) continue
+      try {
+        const v = JSON.parse(line)
+        cached.add(`${v.id}:${v.year}`)
+      } catch { /* ignore */ }
+    }
+  }
+  const todoIds = [...proposed.keys()].filter((id) => !cached.has(`${id}:${proposed.get(id)}`))
+  console.log(`  proposals: ${proposed.size}  | already verified: ${proposed.size - todoIds.length}  | to check: ${todoIds.length}`)
+  if (todoIds.length === 0) return { verified: 0, contradicted: 0, reverted: 0 }
+
+  // Still-matching guard: only verify rows whose CURRENT value equals the
+  // proposal — dry-run leftovers and manually-corrected rows cost nothing.
+  const rows = await paginate('id, slug, title, first_published_year, book_authors(authors(display_name))', (q) =>
+    q.in('id', todoIds).not('first_published_year', 'is', null),
+  )
+  const applied = rows.filter((r: any) => r.first_published_year === proposed.get(r.id))
+  console.log(`  applied & still-matching: ${applied.length}  (capped at --year-limit=${YEAR_LIMIT})`)
+
+  const verdicts: YearVerdict[] = []
+  const out = fs.createWriteStream(YEAR_VERDICTS_FILE, { flags: 'a' })
+  let quotaHit = false
+  for (const r of applied.slice(0, YEAR_LIMIT)) {
+    const year = r.first_published_year as number
+    const author: string | null = r.book_authors?.[0]?.authors?.display_name ?? null
+    const wd = await wikidataYear(r.title, author)
+    let gb: number | null = null
+    try {
+      gb = hasGbKey() ? await gbEarliestYear(r.title, author) : null
+    } catch (e) {
+      if (e instanceof GbQuotaError) {
+        // Stop mid-pass WITHOUT caching this row: a quota wall must never
+        // freeze a wd-only verdict as final (see GbQuotaError doc).
+        quotaHit = true
+        console.log('  GB quota exhausted — aborting remainder of year pass (resumes next run).')
+        break
+      }
+      throw e
+    }
+    const { score, reasons } = scoreYear(year, wd, gb)
+    const v: YearVerdict = { id: r.id, slug: r.slug, year, wd, gb, score, reasons, at: new Date().toISOString() }
+    verdicts.push(v)
+    out.write(JSON.stringify(v) + '\n')
+    if (score < THRESHOLD) {
+      console.log(`    #${v.id} score=${score.toFixed(2)}  "${r.title}" year=${year}  [${reasons.join('; ')}]`)
+    }
+  }
+  out.end()
+
+  const contradicted = verdicts.filter((v) => v.score < THRESHOLD)
+  const confirmed = verdicts.filter((v) => v.score > 0.5)
+  console.log(`  verified: ${verdicts.length}  | confirmed: ${confirmed.length}  | no-evidence (kept): ${verdicts.length - confirmed.length - contradicted.length}  | below threshold: ${contradicted.length}${quotaHit ? '  (pass incomplete: GB quota)' : ''}`)
+  if (contradicted.length === 0) return { verified: verdicts.length, contradicted: 0, reverted: 0 }
+
+  backupCsv('year', [
+    ['id', 'slug', 'year', 'wd', 'gb', 'score', 'reasons'],
+    ...contradicted.map((v) => [
+      String(v.id), v.slug, String(v.year), String(v.wd ?? ''), String(v.gb ?? ''), v.score.toFixed(2), v.reasons.join('; '),
+    ]),
+  ])
+  if (!APPLY) {
+    console.log('  DRY-RUN — would revert above to NULL. Re-run with --apply.')
+    return { verified: verdicts.length, contradicted: contradicted.length, reverted: contradicted.length }
+  }
+  let reverted = 0
+  for (const v of contradicted) {
+    const { error } = await sb
+      .from('books')
+      .update({ first_published_year: null })
+      .eq('id', v.id)
+      .eq('first_published_year', v.year)
+    if (!error) reverted++
+  }
+  console.log(`  REVERTED ${reverted} year write(s) to NULL (re-enter the enrichment funnel).`)
+  return { verified: verdicts.length, contradicted: contradicted.length, reverted }
+}
+
 async function main() {
   console.log(`Enrichment confidence audit  (threshold=${THRESHOLD}, apply=${APPLY})`)
   const native = await auditNativeTitles()
   const structural = await verifyIsbnCoverWrites()
-  const total = native.reverted + structural.coverReverted + structural.isbnReverted
+  const year = await verifyYearWrites()
+  const total = native.reverted + structural.coverReverted + structural.isbnReverted + year.reverted
   console.log(`\nTotal ${APPLY ? 'reverted' : 'would-revert'}: ${total}` +
-    `  (native=${native.reverted}, cover=${structural.coverReverted}, isbn=${structural.isbnReverted})\n`)
+    `  (native=${native.reverted}, cover=${structural.coverReverted}, isbn=${structural.isbnReverted}, year=${year.reverted})\n`)
   // Machine-readable line for the report generator.
-  console.log('JSON ' + JSON.stringify({ threshold: THRESHOLD, apply: APPLY, native, structural, total }))
+  console.log('JSON ' + JSON.stringify({ threshold: THRESHOLD, apply: APPLY, native, structural, year, total }))
 }
 
 main().catch((e) => {
