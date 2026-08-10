@@ -27,14 +27,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Retired 2026-08-08 (portfolio pruning, see the project audit): the
-      // Dua Lipa launch tie-in and the hand-maintained "further reading" list
-      // duplicated /get-banned-books. Preserve external links.
-      {
-        source: '/dua-lipa-manifesto-library',
-        destination: '/get-banned-books',
-        permanent: true,
-      },
+      // Retired 2026-08-08 (portfolio pruning): the hand-maintained "further
+      // reading" list duplicated /get-banned-books. Preserve external links.
+      // (/dua-lipa-manifesto-library was briefly redirected too, but restored
+      // 2026-08-10 — ambassador hub, kept deliberately.)
       {
         source: '/reading-list',
         destination: '/get-banned-books',

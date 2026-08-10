@@ -116,6 +116,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/share`, changefreq: 'daily', priority: 0.7 },
     { loc: `${base}/most-banned-authors`, changefreq: 'weekly', priority: 0.9, lastmod: authorsLastMod },
     { loc: `${base}/award-winning-banned-books`, changefreq: 'weekly', priority: 0.8 },
+    // Ambassador hub (Dua Lipa champions banned books via Service95) — kept
+    // deliberately after the 2026-08 portfolio pruning; SEO/authority page.
+    { loc: `${base}/dua-lipa-manifesto-library`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/non-english-banned-books`, changefreq: 'weekly', priority: 0.9 },
     { loc: `${base}/banned-books/2026`, changefreq: 'daily', priority: 0.9 },
     { loc: `${base}/banned-books/2025`, changefreq: 'weekly', priority: 0.9 },
