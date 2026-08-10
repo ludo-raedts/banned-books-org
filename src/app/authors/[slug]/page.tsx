@@ -114,8 +114,19 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const supabase = adminClient()
-  const { data: author } = await supabase.from('authors').select('id, display_name').eq('slug', slug).single()
+  const { data: author } = await supabase.from('authors').select('id, display_name, bio, is_placeholder').eq('slug', slug).single()
   if (!author) return {}
+
+  // Thin-page gate: an author page without a bio is name + book list — near-
+  // duplicate of the book pages it links to. ~9k of ~12.8k authors have no bio,
+  // and offering them all for indexing dilutes the site's substance ratio
+  // (relevant after the 2026-05 core-update demotion). noindex,follow keeps
+  // link equity flowing to the book pages; the page itself stays reachable.
+  // Organization "authors" (Disney, OUP, …) render substantive registry copy
+  // instead of the DB bio, so they stay indexable. sitemap-authors.xml applies
+  // the same rule.
+  const hasBio = typeof author.bio === 'string' && author.bio.trim().length > 0
+  const indexable = (hasBio || isOrganizationAuthor(slug)) && !author.is_placeholder
 
   const { data: bookLinks } = await supabase
     .from('book_authors')
@@ -188,6 +199,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
+    ...(indexable ? {} : { robots: { index: false, follow: true } }),
     alternates: { canonical: `/authors/${slug}` },
     openGraph: { title, description },
     twitter: { card: 'summary' },

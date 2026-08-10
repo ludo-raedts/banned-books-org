@@ -22,7 +22,10 @@ export const MARKDOWN_TWINS: Record<string, string> = {
   '/essays/first-amendment-paradox': '/essays/first-amendment-paradox.md',
   '/essays/forbidden-knowledge-iceberg': '/essays/forbidden-knowledge-iceberg.md',
   '/essays/in-whose-name': '/essays/in-whose-name.md',
+  '/essays/one-in-ten': '/essays/one-in-ten.md',
   '/essays/the-grey-zone': '/essays/the-grey-zone.md',
+  '/essays/the-librarians': '/essays/the-librarians.md',
+  '/essays/the-line-we-pretend-not-to-draw': '/essays/the-line-we-pretend-not-to-draw.md',
   '/essays/what-we-document': '/essays/what-we-document.md',
   '/essays/who-hates-beetles': '/essays/who-hates-beetles.md',
 }

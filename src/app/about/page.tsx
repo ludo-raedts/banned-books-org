@@ -44,6 +44,10 @@ async function getStats() {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  // Same @id as the homepage Organization node: one entity, two mentions.
+  // Without it search engines see two unconnected Organizations and the
+  // entity signal dilutes.
+  '@id': 'https://www.banned-books.org/#organization',
   name: 'Banned Books',
   url: 'https://www.banned-books.org',
   description: 'An independent open catalogue of books banned, challenged, or restricted by governments, schools, and libraries worldwide.',

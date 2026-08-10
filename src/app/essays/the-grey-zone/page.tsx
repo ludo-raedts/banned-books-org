@@ -35,10 +35,13 @@ const jsonLd = {
   datePublished: essay.publishedAt,
   dateModified: essay.publishedAt,
   image: 'https://www.banned-books.org/opengraph-image',
-  author: { '@type': 'Organization', name: 'banned-books.org' },
+  // Person author (publicly bylined on /about) — a real-authorship signal,
+  // deliberately not an anonymous Organization byline.
+  author: { '@type': 'Person', name: 'Ludo Raedts', url: 'https://www.banned-books.org/about' },
   publisher: {
     '@type': 'Organization',
-    name: 'banned-books.org',
+    '@id': 'https://www.banned-books.org/#organization',
+    name: 'Banned Books',
     logo: { '@type': 'ImageObject', url: 'https://www.banned-books.org/brand/compact-bb.png' },
   },
   mainEntityOfPage: `https://www.banned-books.org${essay.href}`,

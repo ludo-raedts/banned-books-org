@@ -5,6 +5,7 @@ export const revalidate = 21600
 
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
+import { ORGANIZATION_AUTHOR_SLUGS } from '@/lib/organization-authors'
 import {
   SITEMAP_BASE_URL,
   SITEMAP_RESPONSE_HEADERS,
@@ -17,6 +18,8 @@ type AuthorRow = {
   display_name: string | null
   updated_at: string | null
   photo_url: string | null
+  bio: string | null
+  is_placeholder: boolean | null
 }
 
 export async function GET() {
@@ -31,7 +34,7 @@ export async function GET() {
   while (true) {
     const { data } = await withDbRetry(() => supabase
       .from('authors')
-      .select('slug, display_name, updated_at, photo_url')
+      .select('slug, display_name, updated_at, photo_url, bio, is_placeholder')
       .not('slug', 'is', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + 999), 'sitemap-authors')
@@ -41,8 +44,14 @@ export async function GET() {
     offset += 1000
   }
 
+  // Quality gate, mirroring the noindex rule in authors/[slug]/page.tsx:
+  // only bio-carrying (or curated organization) authors are offered for
+  // indexing. Bio-less pages are name+booklist stubs — listing ~9k of them
+  // dilutes the substance ratio the site is judged on.
   const entries: SitemapEntry[] = authors
     .filter((a): a is AuthorRow & { slug: string } => Boolean(a.slug))
+    .filter((a) => !a.is_placeholder)
+    .filter((a) => (a.bio ?? '').trim().length > 0 || ORGANIZATION_AUTHOR_SLUGS.has(a.slug))
     .map((a) => ({
       loc: `${SITEMAP_BASE_URL}/authors/${a.slug}`,
       lastmod: a.updated_at,
