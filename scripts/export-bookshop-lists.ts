@@ -122,6 +122,17 @@ const LISTS: readonly ListSpec[] = [
     footer: 'Compiled by banned-books.org from PEN America\'s Index of School Book Bans (2024–25). For every district, state, and stated reason behind each title, visit https://banned-books.org.',
     fromSource: 'pen-america-2024-25',
   },
+  // ── Rolling recency list (2026-08-12) ────────────────────────────────────
+  // Freshness lives in the header ("Updated <month year>"), not the title,
+  // so the Bookshop-derived slug stays evergreen. Window rolls forward:
+  // bump yearStartedMin when re-exporting in later years.
+  {
+    slug: 'recently-banned',
+    title: 'Recently Banned Books',
+    header: 'The newest documented book bans — every title here has ban or removal events from 2024 onward, from U.S. school-district removals to national prohibitions abroad. Updated August 2026 from PEN America, the American Library Association, and national censorship registries.',
+    footer: 'Compiled by banned-books.org. New bans are added as they are documented — follow the live record at https://banned-books.org/trending-banned-books.',
+    yearStartedMin: 2024,
+  },
   {
     slug: 'banned-for-violence',
     title: 'Banned for Violent Content',
