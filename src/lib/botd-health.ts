@@ -12,6 +12,8 @@
  * means "nothing left for the pre-flight to fix" and can never go stale or lie.
  */
 
+import { isOrganizationAuthor } from './organization-authors'
+
 // The importer's placeholder bio ("… Their work has been subject to censorship
 // or banning challenges.") and anything about this short is not a real bio.
 const TEMPLATE_BIO_MARKER = 'subject to censorship or banning challenges'
@@ -75,15 +77,24 @@ export function bookGaps(b: BookHealthRow): string[] {
 export function authorGaps(a: AuthorHealthRow): string[] {
   const gaps: string[] = []
   if (a.is_placeholder) gaps.push('IS_PLACEHOLDER (skip enrichment)')
-  if (!a.bio) gaps.push('bio MISSING')
-  else if (a.bio.includes(TEMPLATE_BIO_MARKER)) gaps.push('bio TEMPLATE (importer placeholder)')
-  else if (a.bio.length < THIN_BIO_CHARS) gaps.push(`bio THIN (${a.bio.length} chars)`)
-  if (a.bio && !a.bio_source_type) gaps.push('bio UNSTAMPED (bio_source_type null)')
-  if (!a.photo_url) gaps.push('photo_url MISSING')
+  // Corporate/collective credits have no personal bio, portrait or birth year
+  // to find — the author page renders an organizational-credit paragraph
+  // instead. Flagging those as gaps would make them permanently unfixable
+  // noise in the weekly pre-flight, so only the entity links are checked.
+  const isOrg = isOrganizationAuthor(a.slug)
+  if (!isOrg) {
+    if (!a.bio) gaps.push('bio MISSING')
+    else if (a.bio.includes(TEMPLATE_BIO_MARKER)) gaps.push('bio TEMPLATE (importer placeholder)')
+    else if (a.bio.length < THIN_BIO_CHARS) gaps.push(`bio THIN (${a.bio.length} chars)`)
+    if (a.bio && !a.bio_source_type) gaps.push('bio UNSTAMPED (bio_source_type null)')
+    if (!a.photo_url) gaps.push('photo_url MISSING')
+  }
   if (!a.wikidata_id) gaps.push('wikidata_id MISSING')
   if (!a.website_url && !a.social_links) gaps.push('links MISSING (website_url + social_links null)')
   if (a.links_checked_at == null) gaps.push('links UNPROBED (links_checked_at null)')
-  if (a.birth_year == null) gaps.push('birth_year NULL')
-  else if (a.birth_month == null || a.birth_day == null) gaps.push('birth_month/day NULL (no birthday feature)')
+  if (!isOrg) {
+    if (a.birth_year == null) gaps.push('birth_year NULL')
+    else if (a.birth_month == null || a.birth_day == null) gaps.push('birth_month/day NULL (no birthday feature)')
+  }
   return gaps
 }

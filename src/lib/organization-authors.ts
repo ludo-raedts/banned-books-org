@@ -24,6 +24,10 @@ export const ORGANIZATION_AUTHOR_SLUGS = new Set<string>([
   'editors-of-cider-mill-press',
   'lantern-books-a-division-of-booklight-inc-lantern-books-a-division-of-128-second-place-brooklyn-ny-11231',
   'sam-luen-bookshop',
+  // Lesbian-feminist BDSM collective, San Francisco 1978–1983 (Wikidata
+  // Q1412264). Credited as editor of Coming to Power (1981) — a collective
+  // credit, not a pen name, so it has no birth year, photo or personal bio.
+  'samois',
 ])
 
 export function isOrganizationAuthor(slug: string): boolean {
