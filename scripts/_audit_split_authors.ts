@@ -8,6 +8,13 @@
  *
  * A "fragment" author is a single-token display_name (optionally ending on the
  * source's trailing period): "Han", "Theodore.", "Li", "John.".
+ *
+ * IMPORTANT — not every cluster is the bug. A source that prints co-authors as
+ * bare surnames produces the same shape from CORRECT data: José Brandão's
+ * Estado Novo compilation lists "Cleaver/Newton", which the Portugal importer
+ * rightly split into two real people recorded surname-only. Fusing those would
+ * invent a person. The detector therefore prints each cluster's ban source, and
+ * the reviewer must read the source's own author cell before merging.
  * A "cluster" is a book carrying >= 2 fragment authors — the shape the comma-split
  * produced. Books with exactly one fragment are reported separately (weaker signal:
  * mononym authors like "Homer" or "Colette" are legitimate).
@@ -90,6 +97,33 @@ async function main() {
   const clusterBookIds = [...perBook.entries()].filter(([, a]) => a.length >= 2).map(([b]) => b)
   const loneBookIds = [...perBook.entries()].filter(([, a]) => a.length === 1).map(([b]) => b)
 
+  // Provenance per cluster book: the same fragment shape means opposite things
+  // depending on how the source wrote its author cell (see header).
+  const banIdToBook = new Map<number, number>()
+  for (let i = 0; i < clusterBookIds.length; i += 200) {
+    const { data, error } = await sb.from('bans').select('id, book_id').in('book_id', clusterBookIds.slice(i, i + 200))
+    if (error) throw error
+    for (const b of (data ?? []) as any[]) banIdToBook.set(b.id, b.book_id)
+  }
+  const banIds = [...banIdToBook.keys()]
+  const srcIdsPerBook = new Map<number, Set<number>>()
+  for (let i = 0; i < banIds.length; i += 200) {
+    const { data, error } = await sb.from('ban_source_links').select('ban_id, source_id').in('ban_id', banIds.slice(i, i + 200))
+    if (error) throw error
+    for (const l of (data ?? []) as any[]) {
+      const bk = banIdToBook.get(l.ban_id)!
+      if (!srcIdsPerBook.has(bk)) srcIdsPerBook.set(bk, new Set())
+      srcIdsPerBook.get(bk)!.add(l.source_id)
+    }
+  }
+  const srcName = new Map<number, string>()
+  const allSrcIds = [...new Set([...srcIdsPerBook.values()].flatMap((s) => [...s]))]
+  for (let i = 0; i < allSrcIds.length; i += 200) {
+    const { data, error } = await sb.from('ban_sources').select('id, source_name').in('id', allSrcIds.slice(i, i + 200))
+    if (error) throw error
+    for (const s of (data ?? []) as any[]) srcName.set(s.id, s.source_name)
+  }
+
   const books = new Map<number, { id: number; title: string; slug: string }>()
   for (let i = 0; i < clusterBookIds.length; i += 200) {
     const { data, error } = await sb
@@ -112,8 +146,10 @@ async function main() {
 
   for (const { book, authorIds } of sorted) {
     if (!book) continue
+    const srcs = [...(srcIdsPerBook.get(book.id) ?? [])].map((s) => srcName.get(s) ?? `#${s}`)
     P(`\n## Book ${book.id} — ${book.title}`)
-    P(`https://www.banned-books.org/books/${book.slug}\n`)
+    P(`https://www.banned-books.org/books/${book.slug}`)
+    P(`source: ${srcs.join('; ') || 'unknown'} — read its author cell before merging\n`)
     for (const aid of authorIds.sort((x, y) => x - y)) {
       const a = byId.get(aid)!
       const n = bookCount.get(aid) ?? 0

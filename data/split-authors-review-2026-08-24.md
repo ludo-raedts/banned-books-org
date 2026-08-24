@@ -1,10 +1,11 @@
 # Split-authors — live detector run 2026-08-24
 
-94 cluster book(s) (>= 2 single-token authors); 2101 book(s) with exactly one single-token author (weak signal, mononyms live here too).
+77 cluster book(s) (>= 2 single-token authors); 2101 book(s) with exactly one single-token author (weak signal, mononyms live here too).
 
 
 ## Book 7046 — He Tiananmen mu qin yi qi
 https://www.banned-books.org/books/he-tiananmen-mu-qin-yi-qi
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
 - **`Xu`** (id=5273, slug=`xu`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
@@ -15,6 +16,7 @@ https://www.banned-books.org/books/he-tiananmen-mu-qin-yi-qi
 
 ## Book 7143 — Gong min kang ming yu zhan ling zhong huan : xiang gang ji du tu di xin yang xing si
 https://www.banned-books.org/books/gong-min-kang-ming-yu-zhan-ling-zhong-huan-xiang-gang-ji-du-tu-di-xin-yang-xing-si
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Li`** (id=4607, slug=`li`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Dai`** (id=5171, slug=`dai`, 2 book(s)) — SHARED → unlink from this book — bio: null
@@ -25,6 +27,7 @@ https://www.banned-books.org/books/gong-min-kang-ming-yu-zhan-ling-zhong-huan-xi
 
 ## Book 7188 — Xianggang ren 2.0 : shi jian shang wei jie shu, jin hua yi jing wan cheng
 https://www.banned-books.org/books/xianggang-ren-2-0-shi-jian-shang-wei-jie-shu-jin-hua-yi-jing-wan-cheng
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Luo`** (id=4843, slug=`luo`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Xing`** (id=5414, slug=`xing`, 2 book(s)) — SHARED → unlink from this book — bio: null
@@ -35,6 +38,7 @@ https://www.banned-books.org/books/xianggang-ren-2-0-shi-jian-shang-wei-jie-shu-
 
 ## Book 6631 — Tiananmen : the rape of Peking
 https://www.banned-books.org/books/tiananmen-the-rape-of-peking
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Fathers`** (id=4771, slug=`fathers`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Michael.`** (id=4772, slug=`michael`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -44,6 +48,7 @@ https://www.banned-books.org/books/tiananmen-the-rape-of-peking
 
 ## Book 6786 — Yu san zheng zhi si zhong zou
 https://www.banned-books.org/books/yu-san-zheng-zhi-si-zhong-zou
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
 - **`Jinghui.`** (id=4977, slug=`jinghui`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -51,40 +56,18 @@ https://www.banned-books.org/books/yu-san-zheng-zhi-si-zhong-zou
 - **`Xiaoxiao.`** (id=4980, slug=`xiaoxiao`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 - **`Anthony`** (id=4981, slug=`anthony`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 6588 — Summer of betrayal : a novel
-https://www.banned-books.org/books/summer-of-betrayal-a-novel
-
-- **`Hong`** (id=4702, slug=`hong`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Ying.`** (id=4703, slug=`ying`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Avery`** (id=4704, slug=`avery`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Martha.`** (id=4705, slug=`martha`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 6603 — Beijing spring
 https://www.banned-books.org/books/beijing-spring
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Turnley`** (id=4728, slug=`turnley`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Peter.`** (id=4731, slug=`peter`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 - **`Liu`** (id=4732, slug=`liu`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Melinda.`** (id=4733, slug=`melinda`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
-## Book 6632 — Wild Lily, Prairie Fire : China's Road to Democracy, Yan'an to Tian'anmen, 1942-1989
-https://www.banned-books.org/books/wild-lily-prairie-fire-chinas-road-to-democracy-yanan-to-tiananmen-1942-1989
-
-- **`Benton`** (id=4777, slug=`benton`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Gregor.`** (id=4778, slug=`gregor`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Hunter`** (id=4779, slug=`hunter`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Alan.`** (id=4780, slug=`alan`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
-## Book 6642 — Tiananmen Square = Tʻien-an-men
-https://www.banned-books.org/books/tiananmen-square-t-ien-an-men
-
-- **`Simmie`** (id=4792, slug=`simmie`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Scott.`** (id=4793, slug=`scott`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Nixon`** (id=4794, slug=`nixon`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Bob.`** (id=4795, slug=`bob`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 6677 — Chinese democracy and the crisis of 1989 : Chinese and American reflections
 https://www.banned-books.org/books/chinese-democracy-and-the-crisis-of-1989-chinese-and-american-reflections
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Luo`** (id=4843, slug=`luo`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Ning.`** (id=4844, slug=`ning`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -93,6 +76,7 @@ https://www.banned-books.org/books/chinese-democracy-and-the-crisis-of-1989-chin
 
 ## Book 6773 — Xing jiao yu shi han de
 https://www.banned-books.org/books/xing-jiao-yu-shi-han-de
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zheng`** (id=4662, slug=`zheng`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Shao`** (id=4959, slug=`shao`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
@@ -101,6 +85,7 @@ https://www.banned-books.org/books/xing-jiao-yu-shi-han-de
 
 ## Book 6896 — Zhongguo, kui er bu being
 https://www.banned-books.org/books/zhongguo-kui-er-bu-being
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`He`** (id=4682, slug=`he`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Qinglian.`** (id=5104, slug=`qinglian`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -109,6 +94,7 @@ https://www.banned-books.org/books/zhongguo-kui-er-bu-being
 
 ## Book 6957 — Dui hua x zhan ling
 https://www.banned-books.org/books/dui-hua-x-zhan-ling
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Dai`** (id=5171, slug=`dai`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yaoting.`** (id=5172, slug=`yaoting`, 2 book(s)) — SHARED → unlink from this book [trailing-period: bug victim] — bio: null
@@ -117,6 +103,7 @@ https://www.banned-books.org/books/dui-hua-x-zhan-ling
 
 ## Book 6979 — Xiang gang si chao : ben tu yi shi de xing qi yu zheng yi
 https://www.banned-books.org/books/xiang-gang-si-chao-ben-tu-yi-shi-de-xing-qi-yu-zheng-yi
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Li`** (id=4607, slug=`li`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yi`** (id=4740, slug=`yi`, 3 book(s)) — SHARED → unlink from this book — bio: null
@@ -125,6 +112,7 @@ https://www.banned-books.org/books/xiang-gang-si-chao-ben-tu-yi-shi-de-xing-qi-y
 
 ## Book 7053 — Xianggang yue yu ding ying shang
 https://www.banned-books.org/books/xianggang-yue-yu-ding-ying-shang
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zheng`** (id=4662, slug=`zheng`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Peng`** (id=5285, slug=`peng`, 2 book(s)) — SHARED → unlink from this book — bio: null
@@ -133,6 +121,7 @@ https://www.banned-books.org/books/xianggang-yue-yu-ding-ying-shang
 
 ## Book 7056 — Dui ji ben fa de ji ben kan fa
 https://www.banned-books.org/books/dui-ji-ben-fa-de-ji-ben-kan-fa
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Li`** (id=4607, slug=`li`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Situ`** (id=5291, slug=`situ`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
@@ -141,6 +130,7 @@ https://www.banned-books.org/books/dui-ji-ben-fa-de-ji-ben-kan-fa
 
 ## Book 7071 — Xianggang yue yu cheng dao di
 https://www.banned-books.org/books/xianggang-yue-yu-cheng-dao-di
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zheng`** (id=4662, slug=`zheng`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Peng`** (id=5285, slug=`peng`, 2 book(s)) — SHARED → unlink from this book — bio: null
@@ -149,6 +139,7 @@ https://www.banned-books.org/books/xianggang-yue-yu-cheng-dao-di
 
 ## Book 7110 — Yi guo liang zhi zhi duo shao
 https://www.banned-books.org/books/yi-guo-liang-zhi-zhi-duo-shao
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Liu`** (id=4732, slug=`liu`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Qingquan.`** (id=5365, slug=`qingquan`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -157,66 +148,33 @@ https://www.banned-books.org/books/yi-guo-liang-zhi-zhi-duo-shao
 
 ## Book 7201 — Guo du qi '91 - '92 man hua ji
 https://www.banned-books.org/books/guo-du-qi-91-92-man-hua-ji
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zunzi`** (id=4882, slug=`zunzi`, 14 book(s)) — SHARED → unlink from this book — bio: "Wong Kei-kwan (Chinese: 黃紀鈞, born 1955), better known by his pen name …"
 - **`Ma`** (id=5449, slug=`ma`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yimu`** (id=5491, slug=`yimu`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Long`** (id=5493, slug=`long`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 7214 — Zhou Yongkang nei bu an juan
-https://www.banned-books.org/books/zhou-yongkang-nei-bu-an-juan
-
-- **`Shi`** (id=4904, slug=`shi`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Guangjian.`** (id=5510, slug=`guangjian`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Ji`** (id=5511, slug=`ji`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Weiren`** (id=5512, slug=`weiren`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
-## Book 7224 — Yi du jiu dong : hai zi bi xu zhi de fa lu chang shi
-https://www.banned-books.org/books/yi-du-jiu-dong-hai-zi-bi-xu-zhi-de-fa-lu-chang-shi
-
-- **`Mei`** (id=5524, slug=`mei`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Bisi.`** (id=5525, slug=`bisi`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Weng`** (id=5526, slug=`weng`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Dayang`** (id=5527, slug=`dayang`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 7489 — 性别政治與本土起義
 https://www.banned-books.org/books/xing-bie-zheng-zhi-yu-ben-tu-qi-yi
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Cai`** (id=4901, slug=`cai`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Huang`** (id=4945, slug=`huang`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Huizhen.`** (id=5825, slug=`huizhen`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 - **`Baoqiong`** (id=5827, slug=`baoqiong`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 6582 — Chinese society on the eve of Tiananmen : the impact of reform
-https://www.banned-books.org/books/chinese-society-on-the-eve-of-tiananmen-the-impact-of-reform
-
-- **`Davis`** (id=4691, slug=`davis`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Deborah.`** (id=4692, slug=`deborah`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-- **`Vogel`** (id=4693, slug=`vogel`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
-## Book 6600 — The Broken mirror : China after Tiananmen
-https://www.banned-books.org/books/the-broken-mirror-china-after-tiananmen
-
-- **`Hicks`** (id=4722, slug=`hicks`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Asai`** (id=4724, slug=`asai`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Motofumi.`** (id=4725, slug=`motofumi`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 6610 — Crisis at Tiananmen : reform and reality in modern China
 https://www.banned-books.org/books/crisis-at-tiananmen-reform-and-reality-in-modern-china
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Yi`** (id=4740, slug=`yi`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Mu.`** (id=4741, slug=`mu`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 - **`Thompson`** (id=4742, slug=`thompson`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 6670 — Black hands of Beijing : lives of defiance in China's democracy movement
-https://www.banned-books.org/books/black-hands-of-beijing-lives-of-defiance-in-chinas-democracy-movement
-
-- **`Black`** (id=4831, slug=`black`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Munro`** (id=4833, slug=`munro`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Robin.`** (id=4834, slug=`robin`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 6753 — Youtai ren 3000 nian
 https://www.banned-books.org/books/youtai-ren-3000-nian
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zhang`** (id=4932, slug=`zhang`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Qianhong.`** (id=4933, slug=`qianhong`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
@@ -224,6 +182,7 @@ https://www.banned-books.org/books/youtai-ren-3000-nian
 
 ## Book 7013 — Ting shuo Xizang
 https://www.banned-books.org/books/ting-shuo-xizang
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Wang`** (id=4631, slug=`wang`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Weise`** (id=5203, slug=`weise`, 3 book(s)) — SHARED → unlink from this book — bio: null
@@ -231,6 +190,7 @@ https://www.banned-books.org/books/ting-shuo-xizang
 
 ## Book 7016 — Zhongguo wu fa wei da de 50 ge li you
 https://www.banned-books.org/books/zhongguo-wu-fa-wei-da-de-50-ge-li-you
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Marriott`** (id=5239, slug=`marriott`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Lacroix`** (id=5241, slug=`lacroix`, 2 book(s)) — SHARED → unlink from this book — bio: null
@@ -238,20 +198,15 @@ https://www.banned-books.org/books/zhongguo-wu-fa-wei-da-de-50-ge-li-you
 
 ## Book 7067 — Zhi min di mei xue
 https://www.banned-books.org/books/zhi-min-di-mei-xue
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
 - **`Zhen`** (id=5307, slug=`zhen`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Xiaohui`** (id=5308, slug=`xiaohui`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 7070 — Zhongguo qiao qiao zhan ling quan shi jie
-https://www.banned-books.org/books/zhongguo-qiao-qiao-zhan-ling-quan-shi-jie
-
-- **`Cardenal`** (id=5311, slug=`cardenal`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Araújo`** (id=5313, slug=`araujo`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Heriberto.`** (id=5314, slug=`heriberto`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 7133 — Niu niu yue yue
 https://www.banned-books.org/books/niu-niu-yue-yue
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zunzi`** (id=4882, slug=`zunzi`, 14 book(s)) — SHARED → unlink from this book — bio: "Wong Kei-kwan (Chinese: 黃紀鈞, born 1955), better known by his pen name …"
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
@@ -259,6 +214,7 @@ https://www.banned-books.org/books/niu-niu-yue-yue
 
 ## Book 7150 — Bai bai Bali
 https://www.banned-books.org/books/bai-bai-bali
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zunzi`** (id=4882, slug=`zunzi`, 14 book(s)) — SHARED → unlink from this book — bio: "Wong Kei-kwan (Chinese: 黃紀鈞, born 1955), better known by his pen name …"
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
@@ -266,20 +222,15 @@ https://www.banned-books.org/books/bai-bai-bali
 
 ## Book 7173 — Xuan ju zhi du de zheng zhi xiao guo : Gang shi bi li dai biao zhi de jing yan
 https://www.banned-books.org/books/xuan-ju-zhi-du-de-zheng-zhi-xiao-guo-gang-shi-bi-li-dai-biao-zhi-de-jing-yan
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Cai`** (id=4901, slug=`cai`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Ma`** (id=5449, slug=`ma`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yue.`** (id=5450, slug=`yue`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
-## Book 7363 — 德蘭修女來作我的光 : 加爾各答聖人的私人書札 = Mother Teresa : come be my light : the private writings of the Saint of Calcutta
-https://www.banned-books.org/books/mother-teresa-come-be-my-light-the-private-writings-of-the-saint-of-calcutta
-
-- **`Teresa.`** (id=5676, slug=`teresa`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: "Anjezë Gonxhe Bojaxhiu (26 August 1910 – 5 September 1997), better kno…"
-- **`Kolodiejchuk`** (id=5677, slug=`kolodiejchuk`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: "Brian Kolodiejchuk, MC is a Canadian Catholic priest who served as the…"
-- **`Brian.`** (id=5678, slug=`brian`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 22726 — Crítica do Programa de Gotha, Crítica Programa de Erfrut,...
 https://www.banned-books.org/books/critica-do-programa-de-gotha-critica-programa-de-erfrut
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Lénine`** (id=10239, slug=`lenine`, 15 book(s)) — SHARED → unlink from this book — bio: null
 - **`Marx`** (id=16800, slug=`marx`, 5 book(s)) — SHARED → unlink from this book — bio: null
@@ -287,6 +238,7 @@ https://www.banned-books.org/books/critica-do-programa-de-gotha-critica-programa
 
 ## Book 23096 — Novas Cartas Portuguesas
 https://www.banned-books.org/books/novas-cartas-portuguesas
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Horta`** (id=16854, slug=`horta`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Barreno`** (id=17352, slug=`barreno`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
@@ -294,342 +246,350 @@ https://www.banned-books.org/books/novas-cartas-portuguesas
 
 ## Book 6538 — 1997.9977
 https://www.banned-books.org/books/1997-9977
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Wang`** (id=4631, slug=`wang`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Hai`** (id=4632, slug=`hai`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 6550 — Lili : a novel of Tiananmen
 https://www.banned-books.org/books/lili-a-novel-of-tiananmen
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Wang`** (id=4631, slug=`wang`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Ban.`** (id=4649, slug=`ban`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
-## Book 6581 — The factual account of a search for the June 4 victims
-https://www.banned-books.org/books/the-factual-account-of-a-search-for-the-june-4-victims
-
-- **`Ding`** (id=4625, slug=`ding`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Zilin.`** (id=4690, slug=`zilin`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
-
 ## Book 6587 — Cries For Democracy : Writings and Speeches from the Chinese Democracy Movement
 https://www.banned-books.org/books/cries-for-democracy-writings-and-speeches-from-the-chinese-democracy-movement
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Han`** (id=4605, slug=`han`, 6 book(s)) — SHARED → unlink from this book — bio: null
 - **`Minzhu.`** (id=4701, slug=`minzhu`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
-## Book 6589 — Zola — All works
-https://www.banned-books.org/books/zola-all-works
-
-- **`Zola`** (id=4706, slug=`zola`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: "Émile Édouard Charles Antoine Zola (also US:; French:; 2 April 1840 – …"
-- **`Émile`** (id=4707, slug=`emile`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 6594 — Moving the mountain : my life in China from the cultural revolution to Tiananmen Square
 https://www.banned-books.org/books/moving-the-mountain-my-life-in-china-from-the-cultural-revolution-to-tiananmen-square
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Li`** (id=4607, slug=`li`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Lu.`** (id=4715, slug=`lu`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
-## Book 6660 — Popular protest and political culture in modern China
-https://www.banned-books.org/books/popular-protest-and-political-culture-in-modern-china
-
-- **`Wasserstrom`** (id=4816, slug=`wasserstrom`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Perry`** (id=4818, slug=`perry`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 6700 — The struggle for Tiananmen : anatomy of the 1989 mass movement
 https://www.banned-books.org/books/the-struggle-for-tiananmen-anatomy-of-the-1989-mass-movement
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Lin`** (id=4860, slug=`lin`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Nan.`** (id=4874, slug=`nan`, 1 book(s)) — EXCLUSIVE → safe to rename [trailing-period: bug victim] — bio: null
 
 ## Book 6725 — Tong tu shu gui : qian tu tan pan yi lai de Xianggang xue yun
 https://www.banned-books.org/books/tong-tu-shu-gui-qian-tu-tan-pan-yi-lai-de-xianggang-xue-yun
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Cai`** (id=4901, slug=`cai`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Ziqiang`** (id=4902, slug=`ziqiang`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 6761 — Tian'anmen shang kan Zhongguo
 https://www.banned-books.org/books/tiananmen-shang-kan-zhongguo
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`An`** (id=4943, slug=`an`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Huang`** (id=4945, slug=`huang`, 3 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 6855 — Ji xu yun dong : ba shi hou zi wo yan jiu qing nian 2012
 https://www.banned-books.org/books/ji-xu-yun-dong-ba-shi-hou-zi-wo-yan-jiu-qing-nian-2012
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Wu`** (id=4845, slug=`wu`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Guowei`** (id=5058, slug=`guowei`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 6892 — Tian an men guang chang feng yun lu
 https://www.banned-books.org/books/tian-an-men-guang-chang-feng-yun-lu
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`An`** (id=4943, slug=`an`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Jin`** (id=5098, slug=`jin`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 6958 — Bei zhuang di min yun
-https://www.banned-books.org/books/bei-zhuang-di-min-yun
-
-- **`Fang`** (id=5175, slug=`fang`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Liangzhu`** (id=5176, slug=`liangzhu`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 7085 — Qu guo Bei Han 50 ci, ni wen wo da
 https://www.banned-books.org/books/qu-guo-bei-han-50-ci-ni-wen-wo-da
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zhang`** (id=4932, slug=`zhang`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Chen`** (id=4976, slug=`chen`, 7 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 7112 — Gong min kang ming
 https://www.banned-books.org/books/gong-min-kang-ming
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Andrew.`** (id=4774, slug=`andrew`, 2 book(s)) — SHARED → unlink from this book [trailing-period: bug victim] — bio: null
 - **`Kirk`** (id=5369, slug=`kirk`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 7119 — Jiao yu yan
-https://www.banned-books.org/books/jiao-yu-yan
-
-- **`Zhong`** (id=5377, slug=`zhong`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Mingxin`** (id=5378, slug=`mingxin`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 7145 — Liang ci Tian'anmen shi jian
 https://www.banned-books.org/books/liang-ci-tiananmen-shi-jian
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Yi`** (id=4740, slug=`yi`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Xing`** (id=5414, slug=`xing`, 2 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 7147 — Liu si wei yuan yong mei wan : liu si shi er nian te kan
 https://www.banned-books.org/books/liu-si-wei-yuan-yong-mei-wan-liu-si-shi-er-nian-te-kan
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Deng`** (id=5086, slug=`deng`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Xiaohua`** (id=5420, slug=`xiaohua`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
-## Book 7172 — Jiao yin yu zhan jiao : Zhi lian hui "liu si" qi zhou nian ji nian tu pian ji
-https://www.banned-books.org/books/jiao-yin-yu-zhan-jiao-zhi-lian-hui-liu-si-qi-zhou-nian-ji-nian-tu-pian-ji
-
-- **`Mai`** (id=5447, slug=`mai`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Haihua`** (id=5448, slug=`haihua`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 7187 — Tiao zhan yu zai sheng
 https://www.banned-books.org/books/tiao-zhan-yu-zai-sheng
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Yu`** (id=5468, slug=`yu`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yingshi`** (id=5469, slug=`yingshi`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 7212 — Te qu guan zhi de tiao zhan
 https://www.banned-books.org/books/te-qu-guan-zhi-de-tiao-zhan
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Ye`** (id=5395, slug=`ye`, 3 book(s)) — SHARED → unlink from this book — bio: null
 - **`Gong`** (id=5410, slug=`gong`, 2 book(s)) — SHARED → unlink from this book — bio: null
 
-## Book 7305 — Si jiao yu hui xiang
-https://www.banned-books.org/books/si-jiao-yu-hui-xiang
-
-- **`Feng`** (id=5612, slug=`feng`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-- **`Yulian`** (id=5613, slug=`yulian`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
-
 ## Book 7399 — She yun nian dai : Xianggang kang zheng zheng zhi de gui ji
 https://www.banned-books.org/books/she-yun-nian-dai-xianggang-kang-zheng-zheng-zhi-de-gui-ji
+source: Wikipedia: Book censorship in Hong Kong — read its author cell before merging
 
 - **`Zheng`** (id=4662, slug=`zheng`, 4 book(s)) — SHARED → unlink from this book — bio: null
 - **`Yuan`** (id=5722, slug=`yuan`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 10564 — Stalin Puratchi Mozhikal(revolutionary Sayings of Stalin)
 https://www.banned-books.org/books/stalin-puratchi-mozhikal-revolutionary-sayings-of-stalin
+source: Malaysia Ministry of Home Affairs (KDN) — Senarai Perintah Larangan e-PQ — read its author cell before merging
 
 - **`Stalin`** (id=7529, slug=`stalin`, 10 book(s)) — SHARED → unlink from this book — bio: "Joseph Vissarionovich Stalin (né Dzhugashvili; 18 December [O.S. 6 Dec…"
 - **`Kalaichelvan`** (id=8995, slug=`kalaichelvan`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 11033 — On the Colonial Question
 https://www.banned-books.org/books/on-the-colonial-question
+source: Malaysia Ministry of Home Affairs (KDN) — Senarai Perintah Larangan e-PQ — read its author cell before merging
 
 - **`Stalin`** (id=7529, slug=`stalin`, 10 book(s)) — SHARED → unlink from this book — bio: "Joseph Vissarionovich Stalin (né Dzhugashvili; 18 December [O.S. 6 Dec…"
 - **`Zhukov`** (id=9000, slug=`zhukov`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 12717 — Seri Dasar-dasar Filsafat Islam Prinsip-prinsip Islam (dalam Al-quran)
 https://www.banned-books.org/books/seri-dasar-dasar-filsafat-islam-prinsip-prinsip-islam-dalam-al-quran
+source: Malaysia Ministry of Home Affairs (KDN) — Senarai Perintah Larangan e-PQ — read its author cell before merging
 
 - **`Bahesty`** (id=9035, slug=`bahesty`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Bahonar`** (id=9036, slug=`bahonar`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22566 — Antologia Filosófica
 https://www.banned-books.org/books/antologia-filosofica
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Marx`** (id=16800, slug=`marx`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Engels`** (id=16801, slug=`engels`, 5 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 22568 — Ao Encontro da Pessoa
 https://www.banned-books.org/books/ao-encontro-da-pessoa
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Lacroix`** (id=5241, slug=`lacroix`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Mounier`** (id=16803, slug=`mounier`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22610 — Cadernos de livre expressão
 https://www.banned-books.org/books/cadernos-de-livre-expressao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Egídio`** (id=16846, slug=`egidio`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Gonzalez`** (id=16847, slug=`gonzalez`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22640 — Catolicismo de Vanguarda
 https://www.banned-books.org/books/catolicismo-de-vanguarda
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Domenach`** (id=16879, slug=`domenach`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Montvalon`** (id=16880, slug=`montvalon`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22649 — Chile – Etapa Necessária
 https://www.banned-books.org/books/chile-etapa-necessaria
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Cabral`** (id=16889, slug=`cabral`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Garibaldi`** (id=16890, slug=`garibaldi`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22652 — China e URSS: Dois «Modelos» de Industrialização.
 https://www.banned-books.org/books/china-e-urss-dois-modelos-de-industrializacao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Bettelheim`** (id=16893, slug=`bettelheim`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Maccin`** (id=16894, slug=`maccin`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22710 — As Cooperativas em Questão
 https://www.banned-books.org/books/as-cooperativas-em-questao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Lino`** (id=16952, slug=`lino`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Gorjão`** (id=16953, slug=`gorjao`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22763 — Dicionário Filosófico
 https://www.banned-books.org/books/dicionario-filosofico
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Iudin`** (id=17009, slug=`iudin`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Rosental`** (id=17010, slug=`rosental`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22774 — Djamila Boupacha
 https://www.banned-books.org/books/djamila-boupacha
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Beauvoir`** (id=17021, slug=`beauvoir`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: "French philosopher, novelist, and essayist, the lifelong companion of …"
 - **`Halimi`** (id=17022, slug=`halimi`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22784 — Duas Conferências em Defesa da Paz
 https://www.banned-books.org/books/duas-conferencias-em-defesa-da-paz
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Lamas`** (id=17032, slug=`lamas`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Pascoais`** (id=17033, slug=`pascoais`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22785 — Duas Defesas
 https://www.banned-books.org/books/duas-defesas
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Caraça`** (id=17034, slug=`caraca`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Gomes`** (id=17035, slug=`gomes`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22876 — Foto-Grafias
 https://www.banned-books.org/books/foto-grafias
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Santos`** (id=17126, slug=`santos`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Calvet`** (id=17127, slug=`calvet`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22913 — Hiroxima
 https://www.banned-books.org/books/hiroxima
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Loures`** (id=17164, slug=`loures`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Simões`** (id=17165, slug=`simoes`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 22945 — A Ideologia Alemã
 https://www.banned-books.org/books/a-ideologia-alema
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Marx`** (id=16800, slug=`marx`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Engels`** (id=16801, slug=`engels`, 5 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 22980 — Justiça e Política
 https://www.banned-books.org/books/justica-e-politica
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Zenha`** (id=17234, slug=`zenha`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Vidal`** (id=17235, slug=`vidal`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23118 — Os Panteras Negras
 https://www.banned-books.org/books/os-panteras-negras
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Cleaver`** (id=17375, slug=`cleaver`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Newton`** (id=17376, slug=`newton`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23146 — O Perigo Americano
 https://www.banned-books.org/books/o-perigo-americano
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Goux`** (id=17404, slug=`goux`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Landeau`** (id=17405, slug=`landeau`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23151 — A Planificação Económica
 https://www.banned-books.org/books/a-planificacao-economica
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Efimov`** (id=17410, slug=`efimov`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Anchishkin`** (id=17411, slug=`anchishkin`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23155 — Poemas Bestiais
 https://www.banned-books.org/books/poemas-bestiais
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Camacho`** (id=17415, slug=`camacho`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Helder`** (id=17416, slug=`helder`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23163 — A Política Económica Portuguesa
 https://www.banned-books.org/books/a-politica-economica-portuguesa
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Ribeiro`** (id=17424, slug=`ribeiro`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Moura`** (id=17425, slug=`moura`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23214 — O Racionalismo moderno e as ciências biológicas…
 https://www.banned-books.org/books/o-racionalismo-moderno-e-as-ciencias-biologicas
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Teissier`** (id=17476, slug=`teissier`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Wallon`** (id=17477, slug=`wallon`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23266 — Sarkhan
 https://www.banned-books.org/books/sarkhan
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Lederer`** (id=17529, slug=`lederer`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: "**William Julius Lederer, Jr.** was an American author and naval offic…"
 - **`Burdivk`** (id=17530, slug=`burdivk`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23278 — O Sexo e a Sociedade
 https://www.banned-books.org/books/o-sexo-e-a-sociedade
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Walker`** (id=17542, slug=`walker`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Fletcher`** (id=17543, slug=`fletcher`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23293 — Sobre a Literatura e a Arte
 https://www.banned-books.org/books/sobre-a-literatura-e-a-arte
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Marx`** (id=16800, slug=`marx`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Engels`** (id=16801, slug=`engels`, 5 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 23306 — Sociedades de Transição
 https://www.banned-books.org/books/sociedades-de-transicao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Bettelheim`** (id=16893, slug=`bettelheim`, 2 book(s)) — SHARED → unlink from this book — bio: null
 - **`Sweezy`** (id=17572, slug=`sweezy`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23307 — Sociedades primitivas
 https://www.banned-books.org/books/sociedades-primitivas
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Sousa`** (id=17574, slug=`sousa`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Torres`** (id=17575, slug=`torres`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23309 — Sorge, O Espião Que Veio de Moscovo
 https://www.banned-books.org/books/sorge-o-espiao-que-veio-de-moscovo
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Golakov`** (id=17577, slug=`golakov`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Ponizovsky`** (id=17578, slug=`ponizovsky`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23334 — Textos Filosóficos
 https://www.banned-books.org/books/textos-filosoficos
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Marx`** (id=16800, slug=`marx`, 5 book(s)) — SHARED → unlink from this book — bio: null
 - **`Engels`** (id=16801, slug=`engels`, 5 book(s)) — SHARED → unlink from this book — bio: null
 
 ## Book 23356 — Um Homem do Povo na Revolução
 https://www.banned-books.org/books/um-homem-do-povo-na-revolucao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Vailland`** (id=17626, slug=`vailland`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Manévy`** (id=17627, slug=`manevy`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23392 — O Vietname
 https://www.banned-books.org/books/o-vietname
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Chaouat`** (id=17663, slug=`chaouat`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Bertrand`** (id=17664, slug=`bertrand`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 
 ## Book 23393 — Vietname: Os Escritores Tomam Posição
 https://www.banned-books.org/books/vietname-os-escritores-tomam-posicao
+source: José Brandão, "Livros Proibidos nos Anos da Ditadura de 1933 a 1974" — compilação da censura do Estado Novo (Comissão do Livro Negro sobre o Regime Fascista) — read its author cell before merging
 
 - **`Woolf`** (id=17665, slug=`woolf`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
 - **`Baggulay`** (id=17666, slug=`baggulay`, 1 book(s)) — EXCLUSIVE → safe to rename — bio: null
