@@ -5,16 +5,24 @@
  * WHY: Since 2024 the Utah State Board of Education maintains a list of titles
  * that must be removed from EVERY public school in the state — once a title is
  * removed for "objective sensitive material" by ≥3 districts (or 2 districts +
- * 5 charters) it is banned statewide. As of 2026-07-06 the list holds 36 titles
- * (Different Seasons by Stephen King = the 36th). We already carried all 36 as
- * book rows, but only 2 had a statewide ban row — the other 34 were recorded as
- * district-only, understating them. This adds/normalises one statewide ban per
- * title, sourced to the official USBE list + the HB 29 bill text.
+ * 5 charters) it is banned statewide. As of 2026-08-19 the list holds 37 titles
+ * (Push by Sapphire = the 37th). We already carried all of them as book rows,
+ * but only 2 had a statewide ban row — the rest were recorded as district-only,
+ * understating them. This adds/normalises one statewide ban per title, sourced
+ * to the official USBE list + the HB 29 bill text.
  *
  * SOURCE (authoritative, dated): the USBE "Sensitive Materials Removed in a
  * Public School Setting Statewide" spreadsheet — Title / Author / triggering
  * districts / "Date threshold met". Values below are transcribed from that sheet
- * (downloaded 2026-07-11), not from secondary press.
+ * (first downloaded 2026-07-11 at 36 titles; re-downloaded 2026-08-25, sheet
+ * "last updated August 19, 2026", 37 titles), not from secondary press.
+ *
+ * NOTE on fetching the sheet: the plain SharePoint share link returns an HTML
+ * viewer shell. The xlsx itself comes from the download endpoint:
+ *   …/_layouts/15/download.aspx?share=<token-from-the-share-link>
+ *
+ * Idempotent: re-running upserts the same values for titles already recorded
+ * and inserts only genuinely new ones.
  *
  * Also folds a same-work/same-author duplicate: Different Seasons #14321 → #1280
  * (same OL work OL81621W, same author; #1280 carries the US district bans).
@@ -47,7 +55,7 @@ const SOURCES = [
     source_type: 'web',
   },
 ]
-const ACCESSED_AT = '2026-07-11'
+const ACCESSED_AT = '2026-08-25'
 
 /** book_id, display title (for description), author surname (assertion), date threshold met, triggering districts. */
 type Row = { id: number; title: string; surname: string; date: string; districts: string }
@@ -88,6 +96,7 @@ const ROWS: Row[] = [
   { id: 268,  title: 'A Clash of Kings',                                  surname: 'Martin',   date: '2026-04-27', districts: 'Alpine, Davis, Jordan' },
   { id: 205,  title: 'Lucky',                                             surname: 'Sebold',   date: '2026-06-05', districts: 'Davis, Granite, Tooele, Washington' },
   { id: 1280, title: 'Different Seasons',                                 surname: 'King',     date: '2026-07-06', districts: 'Davis, Jordan, Tooele, Washington' },
+  { id: 253,  title: 'Push',                                              surname: 'Sapphire', date: '2026-08-19', districts: 'Davis, Granite, Washington' },
 ]
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -222,7 +231,7 @@ async function main() {
       if (!t.toLowerCase().includes(r.title.toLowerCase().slice(0, 12).replace(/[^a-z0-9 ].*/, '')))
         console.log(`  note: #${r.id} db-title "${t}" vs list "${r.title}"`)
     }
-    console.log('  all 36 book ids verified ✓')
+    console.log(`  all ${ROWS.length} book ids verified ✓`)
 
     // 1. Merge the Different Seasons duplicate first.
     await mergeDifferentSeasons(pg)
