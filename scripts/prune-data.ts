@@ -40,8 +40,29 @@ const FAMILIES = [
   'firecrawl-',
   'merge-',
   'vague-pen-rollups-backup-',
+  // Finished run artifacts whose deliverable is committed alongside them (the
+  // .md/-rejected.* counterparts) or which a script rebuilds from scratch.
+  // Added 2026-08-26: these families were gitignored but missing here, so ~30 MB
+  // of May/June run logs never aged out of data/.
+  'filler-strip-log-',
+  'description-rewrite-',
+  'description-audit-',
+  'description-filler-flagged-',
+  'clean-descriptions-top-slugs-',
+  'photo-enrichment-',
+  'publication-year-audit', // .md is committed; .json rebuilt by audit-publication-years.ts
+  'resolve-proposed-years', // .md is committed
+  'cover-recovery', // .md + -rejected.* are committed (and tracked files are skipped anyway)
+  'enrich-all.log',
   '_', // leading-underscore scratch dumps
 ]
+
+// Deliberately NOT pruned — expensive resume caches and live cursors that cost
+// real money or a full re-crawl to rebuild. Delete these by hand if you must:
+//   year-llm-verification.*           LLM year-cascade checkpoint (~10 MB)
+//   cover-vision-audit.*              vision-probe results (~3 MB)
+//   bookshop-redirect-audit-*.jsonl   ~5.4k HTTP probes (~2 MB)
+//   ol-harvest-* / gb-harvest-*       launchd cursors + pending proposals (~10 MB)
 
 function trackedFiles(): Set<string> {
   const out = execFileSync('git', ['ls-files', '--', 'data'], { encoding: 'utf8' })
