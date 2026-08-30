@@ -5,12 +5,14 @@
 // full rationale. Same cadence as book detail pages.
 export const revalidate = 604800
 
+import { cache } from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+import { loadRelatedAuthors } from '@/lib/author-relations'
 import PageviewTracker from '@/components/pageview-tracker'
 import DescriptionSourceAttribution from '@/components/description-source-attribution'
 import Breadcrumb from '@/components/breadcrumb'
@@ -111,10 +113,33 @@ export async function generateStaticParams() {
   return ((data ?? []) as { slug: string }[]).map((a) => ({ slug: a.slug }))
 }
 
+// Single canonical author fetch + book-link fetch, shared (via React cache())
+// between generateMetadata and the page component — same request → one query
+// each instead of two. Mirrors getBookBySlug in books/[slug]/page.tsx; the
+// column set is the superset the page needs, and generateMetadata reads its
+// subset off the same row. Without this every author render paid for the
+// authors and book_authors lookups twice.
+const AUTHOR_DETAIL_SELECT =
+  'id, display_name, slug, bio, bio_source_type, bio_source_url, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links'
+
+const getAuthorBySlug = cache(async (slug: string) =>
+  adminClient().from('authors').select(AUTHOR_DETAIL_SELECT).eq('slug', slug).single()
+)
+
+const getBookIdsForAuthor = cache(async (authorId: number): Promise<number[]> => {
+  const { data } = await adminClient()
+    .from('book_authors')
+    .select('book_id')
+    .eq('author_id', authorId)
+  return (data ?? [])
+    .map((bl: { book_id: number | null }) => bl.book_id)
+    .filter((id): id is number => id != null)
+})
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const supabase = adminClient()
-  const { data: author } = await supabase.from('authors').select('id, display_name, bio, is_placeholder').eq('slug', slug).single()
+  const { data: author } = await getAuthorBySlug(slug)
   if (!author) return {}
 
   // Thin-page gate: an author page without a bio is name + book list — near-
@@ -128,12 +153,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const hasBio = typeof author.bio === 'string' && author.bio.trim().length > 0
   const indexable = (hasBio || isOrganizationAuthor(slug)) && !author.is_placeholder
 
-  const { data: bookLinks } = await supabase
-    .from('book_authors')
-    .select('book_id')
-    .eq('author_id', (author as unknown as { id: number }).id)
-
-  const bookIds = (bookLinks ?? []).map((bl: { book_id: number }) => bl.book_id)
+  const bookIds = await getBookIdsForAuthor((author as unknown as { id: number }).id)
   let bannedBookCount = 0
   let countryCount = 0
   let earliestYear: number | null = null
@@ -216,11 +236,9 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params
   const supabase = adminClient()
 
-  const { data: author } = await supabase
-    .from('authors')
-    .select('id, display_name, slug, bio, bio_source_type, bio_source_url, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links')
-    .eq('slug', slug)
-    .single()
+  // Shared with generateMetadata via getAuthorBySlug's React cache() — one
+  // query per request, not two.
+  const { data: author } = await getAuthorBySlug(slug)
 
   if (!author) {
     // Alias fallback: maybe this slug points to an author via
@@ -241,12 +259,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   }
   const a = author as unknown as Author
 
-  const { data: bookLinks } = await supabase
-    .from('book_authors')
-    .select('book_id')
-    .eq('author_id', author.id)
-
-  const bookIds = (bookLinks ?? []).map((bl: any) => bl.book_id).filter(Boolean)
+  const bookIds = await getBookIdsForAuthor(author.id)
 
   let books: Book[] = []
   if (bookIds.length > 0) {
@@ -424,44 +437,17 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
     : null
 
   // ── Other frequently banned authors (top 5 by ban count, excluding this one) ──
-  type RelatedAuthor = { id: number; display_name: string; slug: string; banCount: number }
-  let relatedAuthors: RelatedAuthor[] = []
-  try {
-    // Global top-banned authors come straight from v_top_banned_authors
-    // (entity_id, total_bans — pre-ranked, top 100). The previous approach
-    // embedded books(bans(id)) for 2000 book_author links on EVERY author-page
-    // render just to count — the #2 query site-wide (mean ~80ms, max 7.6s) —
-    // and only ever summed an arbitrary 2000 links, so it wasn't even the true
-    // global top. Pull a small buffer (placeholders / slug-less authors are
-    // filtered out below), then keep the top 5 real authors.
-    const { data: topRanked } = await supabase
-      .from('v_top_banned_authors')
-      .select('entity_id, total_bans')
-      .neq('entity_id', author.id)
-      .order('total_bans', { ascending: false })
-      .limit(20)
-
-    if (topRanked?.length) {
-      const countById = new Map(topRanked.map(r => [Number(r.entity_id), Number(r.total_bans)]))
-      const { data: authorDetails } = await supabase
-        .from('authors')
-        .select('id, display_name, slug')
-        .in('id', [...countById.keys()])
-        .not('slug', 'is', null)
-        .eq('is_placeholder', false)
-      relatedAuthors = (authorDetails ?? [])
-        .map(d => ({
-          id: d.id as number,
-          display_name: d.display_name as string,
-          slug: d.slug as string,
-          banCount: countById.get(d.id as number) ?? 0,
-        }))
-        .sort((x, y) => y.banCount - x.banCount)
-        .slice(0, 5)
-    }
-  } catch {
-    // Non-fatal
-  }
+  //
+  // Global top-banned authors come straight from v_top_banned_authors
+  // (entity_id, total_bans — pre-ranked). The previous approach embedded
+  // books(bans(id)) for 2000 book_author links on EVERY author-page render just
+  // to count — the #2 query site-wide (mean ~80ms, max 7.6s) — and only ever
+  // summed an arbitrary 2000 links, so it wasn't even the true global top.
+  //
+  // The list is the same for every author bar the one excluded, so it is loaded
+  // once into the Data Cache and filtered in memory — two queries per render
+  // become zero on a warm cache. See src/lib/author-relations.ts.
+  const relatedAuthors = await loadRelatedAuthors(author.id)
 
   // Placeholder authors ("Anonymous", "Unknown", "Various") aggregate
   // unrelated books. They are real catalogue navigation points but NOT

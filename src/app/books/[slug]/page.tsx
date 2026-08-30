@@ -21,6 +21,9 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
+import {
+  loadSimilarReasonLinks, loadCountryBans, loadReasonBans, findNewsForTitles,
+} from '@/lib/book-relations'
 import PageviewTracker from '@/components/pageview-tracker'
 import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
@@ -972,72 +975,37 @@ export default async function BookPage({
     .map(([id, v]) => ({ id, slug: v.slug }))[0] ?? null
 
   const bookReasonIds = [...reasonFreqInBook.keys()]
-  // Build a set of news-search title variants. For non-English books the
-  // English meaning often matches news headlines better than the canonical
-  // (transliterated) title. We OR ilike across all eligible variants ≥ 4
-  // chars; PostgREST single-quotes are doubled so they don't break the or()
-  // grammar.
-  const sqlQuote = (s: string) => s.replace(/'/g, "''")
+  // News-search title variants. For non-English books the English meaning often
+  // matches news headlines better than the canonical (transliterated) title, so
+  // every eligible variant ≥ 4 chars is a candidate needle. No SQL quoting
+  // needed any more — the matching happens in memory over the cached published
+  // set instead of as an OR-of-ILIKEs (see src/lib/book-relations.ts).
   const newsTitleVariants = [
     book.title,
     book.title_english_meaningful,
     book.title_native,
     book.title_transliterated,
-  ]
-    .filter((t): t is string => !!t && t.trim().length >= 4)
-    .map(t => sqlQuote(t.trim()))
-  const newsOrClause = [
-    ...newsTitleVariants.map(t => `title.ilike.%${t}%`),
-    ...newsTitleVariants.map(t => `summary.ilike.%${t}%`),
-  ].join(',')
+  ].filter((t): t is string => !!t && t.trim().length >= 4)
 
   // ── Run all relation lookups in parallel ─────────────────────────────────────
-  const [similarMatchesRes, newsRes, countryBansRes, reasonLinksRes] = await Promise.all([
-    bookReasonIds.length >= 1
-      ? supabase
-          .from('ban_reason_links')
-          // Embed is already minimal (book_id only). For common reasons
-          // (political/sexual each ~11k links) this matches tens of thousands of
-          // rows; PostgREST's implicit 1000-row cap then truncated an ARBITRARY,
-          // unordered subset — non-deterministic "similar books" between renders.
-          // Bound it explicitly + deterministically by ban_id. 1000 links is
-          // ample to surface the ≥2-reason-overlap set below.
-          .select('reason_id, bans!inner(book_id)')
-          .in('reason_id', bookReasonIds)
-          .order('ban_id')
-          .limit(1000)
-      : Promise.resolve({ data: null }),
-    newsTitleVariants.length > 0
-      ? supabase
-          .from('news_items')
-          .select('id, title, source_url, source_name, published_at, summary')
-          .eq('status', 'published')
-          .or(newsOrClause)
-          .order('published_at', { ascending: false })
-          .limit(3)
-      : Promise.resolve({ data: null }),
-    primaryCountry
-      ? supabase
-          .from('bans')
-          .select('book_id, year_started, ban_reason_links(reasons(slug))')
-          .eq('country_code', primaryCountry.code)
-          .neq('book_id', book.id)
-          .limit(50)
-      : Promise.resolve({ data: null }),
-    primaryReason
-      ? supabase
-          .from('ban_reason_links')
-          .select('bans!inner(book_id, year_started, country_code, countries(name_en))')
-          .eq('reason_id', primaryReason.id)
-          .limit(100)
-      : Promise.resolve({ data: null }),
+  //
+  // All four are Data-Cache-backed (src/lib/book-relations.ts): none of them is
+  // keyed by this book, only by its country / reason / reason-set, of which
+  // there are at most a few hundred distinct values across the catalogue. On a
+  // warm cache this whole block costs zero PostgREST round-trips, which is what
+  // keeps a catalogue-wide crawl off the database.
+  const [similarMatches, newsItems, countryBans, reasonLinks] = await Promise.all([
+    loadSimilarReasonLinks(bookReasonIds),
+    findNewsForTitles(newsTitleVariants),
+    loadCountryBans(primaryCountry?.code ?? null),
+    loadReasonBans(primaryReason?.id ?? null),
   ])
 
   // ── Process similar books (≥2 reason overlap) ────────────────────────────────
   let similarTopIds: number[] = []
-  if (similarMatchesRes.data) {
+  {
     const bookReasonCounts = new Map<number, Set<number>>()
-    for (const m of similarMatchesRes.data as unknown as { reason_id: number; bans: { book_id: number } }[]) {
+    for (const m of similarMatches) {
       const bookId = m.bans.book_id
       if (bookId === book.id) continue
       if (!bookReasonCounts.has(bookId)) bookReasonCounts.set(bookId, new Set())
@@ -1051,11 +1019,11 @@ export default async function BookPage({
   }
 
   // ── Process country related books ────────────────────────────────────────────
+  // The cached country lookup is not book-specific, so this book is excluded
+  // here rather than with a `.neq()` in the query.
   const countryBookInfo = new Map<number, { year: number | null; reasons: string[] }>()
-  for (const r of (countryBansRes.data ?? []) as unknown as {
-    book_id: number; year_started: number | null
-    ban_reason_links: { reasons: { slug: string } | null }[]
-  }[]) {
+  for (const r of countryBans) {
+    if (r.book_id === book.id) continue
     const reasons = r.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s)
     const existing = countryBookInfo.get(r.book_id)
     if (!existing) {
@@ -1071,9 +1039,7 @@ export default async function BookPage({
 
   // ── Process reason related books ─────────────────────────────────────────────
   const reasonBookInfo = new Map<number, { year: number | null; countryCode: string; countryName: string }>()
-  for (const r of (reasonLinksRes.data ?? []) as unknown as {
-    bans: { book_id: number; year_started: number | null; country_code: string; countries: { name_en: string } | null } | null
-  }[]) {
+  for (const r of reasonLinks) {
     const ban = r.bans
     if (!ban) continue
     const bookId = ban.book_id
@@ -1132,10 +1098,7 @@ export default async function BookPage({
     })
     .filter((b): b is RelatedBookDetail & { year: number | null; countryCode: string; countryName: string } => !!b)
 
-  const recentNews = (newsRes.data ?? []) as {
-    id: number; title: string; source_name: string; source_url: string
-    published_at: string | null; summary: string
-  }[]
+  const recentNews = newsItems
 
   // ── Deduplicated metadata for Related section ────────────────────────────────
   const uniqueCountries = [...new Map(

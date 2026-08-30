@@ -64,7 +64,8 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { catalogReminder } from './audit-scripts-catalog'
-import { bustDetailPages } from './lib/revalidate'
+import { bustChangedPages } from './lib/revalidate'
+import { changedSince } from './lib/changed-rows'
 import { captureCoverage } from './enrich-coverage-snapshot'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -446,11 +447,19 @@ async function main() {
   ], { stdio: 'inherit' })
 
   // books/[slug] + authors/[slug] cache for 7 days; this run just changed
-  // their data, so bust both routes now (fail-soft — worst case the ISR
-  // window catches up). See scripts/lib/revalidate.ts.
+  // their data, so bust the affected pages now (fail-soft — worst case the ISR
+  // window catches up). Targeted, NOT route-wide: `since` is the run-start
+  // stamp, so books.updated_at / authors.updated_at give exactly the rows this
+  // run touched. A route-wide bust would invalidate all ~33k detail pages and
+  // have every one of them rewritten to the ISR cache by the next crawl —
+  // ~120k billed write units for a run that usually changes a few hundred rows.
+  // bustChangedPages() still falls back to route-wide above 5k changed rows.
+  // See scripts/lib/revalidate.ts + scripts/lib/changed-rows.ts.
   if (APPLY) {
     banner('Cache bust (detail pages)')
-    await bustDetailPages()
+    const changed = await changedSince(since)
+    console.log(`  · gewijzigd sinds ${since}: ${changed.bookSlugs.length} boeken, ${changed.authorSlugs.length} auteurs`)
+    await bustChangedPages(changed)
   }
 
   // The storefront lists live on bookshop.org and don't update themselves —
