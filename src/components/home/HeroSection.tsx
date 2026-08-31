@@ -10,16 +10,27 @@ export type HeroCallout =
       kind: 'bbw'
       /** BBW year, e.g. 2026. */
       year: number
-      /** One-line hook under the title. Plain text; default fallback supplied if empty. */
-      subtitle?: string | null
+      /** "Oct 4 – Oct 10", from the DB-backed config. */
+      dateRange: string
+      /**
+       * True only during the actual week. During the lead-up the badge shows
+       * the dates instead of "Now" — a promo window that opens weeks early
+       * must not claim the week is happening.
+       */
+      isLive: boolean
+      /**
+       * Rendered HTML of the `bbw-tile-tagline` content block (the official
+       * campaign line). The callout is only ever built when this is present:
+       * per the content-block doctrine a section hides rather than falling
+       * back to invented copy.
+       */
+      taglineHtml: string
     }
   | {
       kind: 'archive'
       /** Rotation seed (e.g. day-of-year) — picks one of ARCHIVE_QUOTES. */
       seed: number
     }
-
-const DEFAULT_BBW_SUBTITLE = 'Featured selection: 25 books worth defending this year.'
 
 /**
  * Real, verifiable quotes from authors held in the archive. Rotated daily.
@@ -121,31 +132,61 @@ export default function HeroSection({
           <div className="mt-6">
             <HeroSearch bookCount={totalBooks} />
           </div>
-        </div>
-      </div>
 
-      <div className="hidden lg:block absolute top-12 right-12 max-w-[260px]">
-        {callout.kind === 'bbw' ? (
-          <BbwCallout year={callout.year} subtitle={callout.subtitle ?? DEFAULT_BBW_SUBTITLE} />
-        ) : (
-          <ArchiveCallout seed={callout.seed} />
-        )}
+          {/* One instance, two layouts: in the content flow on small screens,
+              absolutely positioned top-right from lg up (the <section> is the
+              positioning context). The archive quote stays desktop-only — it
+              is ambient decoration — but the BBW callout is a time-boxed
+              call to action and has to reach phones too. */}
+          <div
+            className={
+              callout.kind === 'bbw'
+                ? 'mt-8 max-w-[420px] lg:mt-0 lg:absolute lg:top-12 lg:right-12 lg:max-w-[260px]'
+                : 'hidden lg:absolute lg:top-12 lg:right-12 lg:block lg:max-w-[260px]'
+            }
+          >
+            {callout.kind === 'bbw' ? (
+              <BbwCallout
+                year={callout.year}
+                dateRange={callout.dateRange}
+                isLive={callout.isLive}
+                taglineHtml={callout.taglineHtml}
+              />
+            ) : (
+              <ArchiveCallout seed={callout.seed} />
+            )}
+          </div>
+        </div>
       </div>
     </section>
   )
 }
 
-function BbwCallout({ year, subtitle }: { year: number; subtitle: string }) {
+function BbwCallout({
+  year,
+  dateRange,
+  isLive,
+  taglineHtml,
+}: {
+  year: number
+  dateRange: string
+  isLive: boolean
+  taglineHtml: string
+}) {
   return (
     <Link href="/banned-books-week" className="group block">
       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-oxblood text-cream rounded-full text-[10px] font-semibold tracking-wider uppercase mb-2.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-cream" aria-hidden="true" />
-        Now
+        {isLive && <span className="w-1.5 h-1.5 rounded-full bg-cream" aria-hidden="true" />}
+        {isLive ? 'Now' : dateRange}
       </span>
       <p className="font-serif text-base font-semibold leading-tight text-neutral-900 mb-1.5 group-hover:text-oxblood transition-colors">
         Banned Books Week {year}
       </p>
-      <p className="text-xs text-neutral-600 leading-snug mb-1.5">{subtitle}</p>
+      {/* Editor-managed campaign line (bbw-tile-tagline content block). */}
+      <div
+        className="text-xs text-neutral-600 leading-snug mb-1.5"
+        dangerouslySetInnerHTML={{ __html: taglineHtml }}
+      />
       <span className="text-xs text-oxblood font-medium group-hover:underline">
         Explore the hub →
       </span>

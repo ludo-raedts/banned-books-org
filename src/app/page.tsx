@@ -28,7 +28,14 @@ import {
   selectWithLanguageDiversity,
 } from '@/lib/homepage-rotation'
 
-import HeroSection from '@/components/home/HeroSection'
+import HeroSection, { type HeroCallout } from '@/components/home/HeroSection'
+import {
+  getBBWConfig,
+  isBannedBooksWeekActive,
+  isBannedBooksWeekPromoActive,
+  formatBBWDateRange,
+} from '@/config/banned-books-week'
+import { getPublishedBlockHtml, stripOuterParagraph } from '@/lib/content-blocks'
 import StartHereSection from '@/components/home/StartHereSection'
 import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
 import { getBookOfTheDay } from '@/lib/book-of-the-day'
@@ -165,8 +172,7 @@ export default async function HomePage() {
     banCountsRes,
     placeholderAuthorsRes,
     reasonTopBooksRes,
-    bbwConfigRes,
-  ] = await timer.wrap('parallel-batch-11', () => Promise.all([
+  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
     supabase.from('books').select('*', { count: 'exact', head: true }),
     supabase.from('bans').select('*', { count: 'exact', head: true }),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
@@ -187,16 +193,10 @@ export default async function HomePage() {
       .in('reason_slug', REASON_SLUGS)
       .lte('rank', REASON_POOL_DEPTH)
       .order('reason_slug').order('rank'),
-    // bbw_config powers the hero callout (BBW banner when enabled, else the
-    // rotating "From the archive" quote). Read via adminClient (this supabase
-    // var) on purpose — anon hits RLS on the singleton and silently returns
-    // DEFAULTS, which masks an editor-enabled BBW state.
-    supabase.from('bbw_config').select('enabled, year').eq('id', 1).maybeSingle(),
   ]))
 
   const total = totalCountRes.count ?? 0
   const totalBans = totalBansRes.count ?? 0
-  const bbwConfig = (bbwConfigRes.data ?? null) as { enabled: boolean; year: number } | null
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -258,6 +258,33 @@ export default async function HomePage() {
   // come first so popular books anchor that slot; Why-books and Non-English
   // do rotation downstream and accept fewer items if the pool is exhausted.
   const seed = dayOfYear()
+
+  // ── Hero callout ─────────────────────────────────────────────────────────
+  // BBW takes the slot only inside the configured promo window (lead-up + the
+  // week itself), never on `enabled` alone — otherwise the callout appears the
+  // moment the switch is flipped and stays up long after the week has ended.
+  // It also needs the campaign line from the `bbw-tile-tagline` content block;
+  // per the content-block doctrine an unpublished block hides its section
+  // rather than falling back to invented copy, so we drop back to the archive
+  // quote in that case.
+  const callout: HeroCallout = await timer.wrap('hero-callout', async () => {
+    if (!(await isBannedBooksWeekPromoActive())) return { kind: 'archive', seed }
+    const [bbwConfig, dateRange, isLive, taglineHtml] = await Promise.all([
+      getBBWConfig(),
+      formatBBWDateRange(),
+      isBannedBooksWeekActive(),
+      getPublishedBlockHtml('bbw-tile-tagline'),
+    ])
+    if (!taglineHtml) return { kind: 'archive', seed }
+    return {
+      kind: 'bbw',
+      year: bbwConfig.year,
+      dateRange,
+      isLive,
+      taglineHtml: stripOuterParagraph(taglineHtml),
+    }
+  })
+
   const excludeIds = new Set<number>()
 
   const trendingBooks: TopListBook[] = trendingIds
@@ -471,11 +498,7 @@ export default async function HomePage() {
         totalBooks={total}
         countryCount={countryCount}
         totalBans={totalBans}
-        callout={
-          bbwConfig?.enabled
-            ? { kind: 'bbw', year: bbwConfig.year ?? new Date().getFullYear() }
-            : { kind: 'archive', seed }
-        }
+        callout={callout}
       />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}
       <StartHereSection />

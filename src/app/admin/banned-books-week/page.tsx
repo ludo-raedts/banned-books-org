@@ -1,7 +1,17 @@
 import { adminClient } from '@/lib/supabase'
-import { getBBWConfig, formatBBWDateRange, isBannedBooksWeekPromoActive } from '@/config/banned-books-week'
+import {
+  getBBWConfig,
+  formatBBWDateRange,
+  isBannedBooksWeekPromoActive,
+  isBannedBooksWeekActive,
+} from '@/config/banned-books-week'
 import { getAllFeaturedBooksForAdmin } from '@/lib/bbw-data'
-import { getBlocksForPage, REQUIRED_BLOCKS_BY_PAGE, getPublishedBlockHtml } from '@/lib/content-blocks'
+import {
+  getBlocksForPage,
+  REQUIRED_BLOCKS_BY_PAGE,
+  getPublishedBlockHtml,
+  stripOuterParagraph,
+} from '@/lib/content-blocks'
 import BannedBooksWeekAdminClient from './banned-books-week-admin-client'
 
 export const dynamic = 'force-dynamic'
@@ -15,14 +25,16 @@ export default async function AdminBannedBooksWeekPage({
   const config = await getBBWConfig()
   const year = sp.year ? Number(sp.year) : config.year
 
-  const [current, blocks, { count: bookCount }, tileTagline, dateRange, promoActive] = await Promise.all([
-    getAllFeaturedBooksForAdmin(year),
-    getBlocksForPage('bbw-hub'),
-    adminClient().from('books').select('*', { count: 'exact', head: true }),
-    getPublishedBlockHtml('bbw-tile-tagline'),
-    formatBBWDateRange(),
-    isBannedBooksWeekPromoActive(),
-  ])
+  const [current, blocks, { count: bookCount }, tagline, dateRange, promoActive, isLive] =
+    await Promise.all([
+      getAllFeaturedBooksForAdmin(year),
+      getBlocksForPage('bbw-hub'),
+      adminClient().from('books').select('*', { count: 'exact', head: true }),
+      getPublishedBlockHtml('bbw-tile-tagline'),
+      formatBBWDateRange(),
+      isBannedBooksWeekPromoActive(),
+      isBannedBooksWeekActive(),
+    ])
 
   return (
     <BannedBooksWeekAdminClient
@@ -37,11 +49,13 @@ export default async function AdminBannedBooksWeekPage({
         dateRange,
         promoActive,
       }}
-      tilePreview={{
-        title: `Banned Books Week ${config.year} · ${dateRange}`,
-        // tagline content block is rendered HTML; strip the surrounding <p>
-        // tag for inline display in the preview card.
-        tagline: tileTagline ? tileTagline.replace(/^<p>|<\/p>$/g, '').trim() : null,
+      calloutPreview={{
+        year: config.year,
+        dateRange,
+        isLive,
+        // Rendered HTML; strip the surrounding <p> so it sits inline exactly
+        // as the homepage callout renders it.
+        tagline: tagline ? stripOuterParagraph(tagline) : null,
       }}
       requiredBlocks={blocks.map(b => ({
         slug: b.slug,

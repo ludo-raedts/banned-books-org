@@ -47,8 +47,11 @@ interface Props {
     dateRange: string
     promoActive: boolean
   }
-  tilePreview: {
-    title: string
+  calloutPreview: {
+    year: number
+    dateRange: string
+    /** True during the actual week — the badge reads "Now" instead of the dates. */
+    isLive: boolean
     tagline: string | null
   }
   requiredBlocks: RequiredBlockSummary[]
@@ -256,26 +259,34 @@ export default function BannedBooksWeekAdminClient(props: Props) {
 
       <BBWConfigCard initial={props.config} onSave={() => router.refresh()} />
 
-      {/* Tile preview — shows exactly how the homepage tile will render. */}
+      {/* Callout preview — mirrors the homepage hero callout 1:1. */}
       <div className="mb-4 border border-gray-200 rounded-lg p-4 bg-white">
-        <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">Tile preview <span className="text-gray-400 font-normal">(what visitors see on the homepage)</span></div>
-        <div className="border border-brand/40 rounded-lg p-4 bg-white max-w-sm">
-          <svg className="w-5 h-5 text-brand mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          <div className="font-semibold text-sm">{props.tilePreview.title}</div>
-          {props.tilePreview.tagline ? (
+        <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">Homepage callout preview <span className="text-gray-400 font-normal">(what visitors see on the homepage)</span></div>
+        <div className="border border-gray-200 rounded-lg p-4 bg-white max-w-[280px]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-oxblood text-cream rounded-full text-[10px] font-semibold tracking-wider uppercase mb-2.5">
+            {props.calloutPreview.isLive && <span className="w-1.5 h-1.5 rounded-full bg-cream" aria-hidden="true" />}
+            {props.calloutPreview.isLive ? 'Now' : props.calloutPreview.dateRange}
+          </span>
+          <p className="font-serif text-base font-semibold leading-tight text-neutral-900 mb-1.5">
+            Banned Books Week {props.calloutPreview.year}
+          </p>
+          {props.calloutPreview.tagline ? (
             <div
-              className="text-xs text-gray-600 leading-snug mt-1"
-              dangerouslySetInnerHTML={{ __html: props.tilePreview.tagline }}
+              className="text-xs text-neutral-600 leading-snug mb-1.5"
+              dangerouslySetInnerHTML={{ __html: props.calloutPreview.tagline }}
             />
           ) : (
-            <div className="text-xs text-amber-700 mt-1 italic">
-              bbw-tile-tagline content block not yet published — tile will be hidden until it is.
+            <div className="text-xs text-amber-700 mb-1.5 italic">
+              bbw-tile-tagline not published — the callout is hidden and the homepage
+              falls back to the rotating archive quote.
             </div>
           )}
-          <div className="text-[11px] text-brand mt-2">Learn more →</div>
+          <span className="text-xs text-oxblood font-medium">Explore the hub →</span>
         </div>
         <p className="mt-2 text-xs text-gray-500">
-          Title is auto-generated from year + dates. Body text comes from{' '}
+          Shown on the homepage only inside the promo window (lead-up + the week itself),
+          and only while the kill switch is on. The badge shows the dates during the
+          lead-up and flips to &ldquo;Now&rdquo; on the first day of the week. Body text comes from{' '}
           <Link href="/admin/content-blocks/bbw-tile-tagline" className="text-brand hover:underline">bbw-tile-tagline</Link>.
         </p>
       </div>

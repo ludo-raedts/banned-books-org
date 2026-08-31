@@ -103,6 +103,16 @@ export async function getPublishedBlockHtml(slug: string): Promise<string | null
   return data.body_html
 }
 
+// Strip a single outer <p>...</p> wrap so a one-paragraph block can sit inline
+// in a copy slot (a callout subtitle, a tile body) without nesting block
+// elements. The briefs for those blocks ask for plain prose; this is a
+// defensive fallback for editors who write a single paragraph.
+export function stripOuterParagraph(html: string): string {
+  const trimmed = html.trim()
+  const m = /^<p>([\s\S]*?)<\/p>$/i.exec(trimmed)
+  return m ? m[1] : trimmed
+}
+
 // Bulk variant — one round-trip for a whole page. Returns a Map keyed by slug
 // with the HTML for every published block; missing/unpublished blocks are
 // simply absent from the map.

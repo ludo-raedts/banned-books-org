@@ -119,7 +119,14 @@ function projectFeatured(row: FeaturedJoinedRow): FeaturedBookRow | null {
 // ── Public hub: published featured books for a year ──────────────────────────
 
 export async function getPublishedFeaturedBooks(year: number): Promise<FeaturedBookRow[]> {
-  const { data } = await serverClient()
+  // adminClient(), NOT serverClient(): `ban_reason_links` is the one join table
+  // in this chain that never got a `public read` RLS policy in the baseline
+  // (its siblings `bans`, `reasons` and `ban_source_links` all have one). Anon
+  // therefore gets zero rows with no error, and the "Why on challenge lists"
+  // line silently vanishes from every card — while the admin preview, which
+  // reads via service role, still shows it. Same client as /books/[slug] and
+  // /authors/[slug] use for exactly this join.
+  const { data } = await adminClient()
     .from('bbw_featured_selections')
     .select(FEATURED_BOOK_JOIN)
     .eq('year', year)

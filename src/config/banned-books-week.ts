@@ -5,10 +5,11 @@
 // UI at /admin/banned-books-week — no code deploy needed.
 //
 // The fallback values below are used only when the DB row hasn't been seeded
-// yet (fresh environment) or when the read fails. They mirror the seed values
-// in migration 017 so a freshly-cloned dev environment behaves predictably.
+// yet (fresh environment) or when the read fails, so they must mirror the real
+// dates for the current edition — a stale fallback is indistinguishable from a
+// correct one until the DB read fails, and then it ships silently.
 
-import { adminClient, serverClient } from '@/lib/supabase'
+import { adminClient } from '@/lib/supabase'
 
 export type BannedBooksWeekConfig = {
   enabled: boolean
@@ -27,9 +28,11 @@ export type BannedBooksWeekConfig = {
 
 const DEFAULTS: BannedBooksWeekConfig = {
   enabled: false,
-  startDate: '2026-09-27',
-  endDate: '2026-10-03',
-  promoStartDate: '2026-09-01',
+  // Official Banned Books Week 2026 runs Oct 4-10 (bannedbooksweek.org).
+  // Keep these in sync with the DB row in migration 017 / the admin UI.
+  startDate: '2026-10-04',
+  endDate: '2026-10-10',
+  promoStartDate: '2026-09-21',
   year: 2026,
 }
 
@@ -60,7 +63,11 @@ function rowToConfig(row: DbRow): BannedBooksWeekConfig {
 export async function getBBWConfig(): Promise<BannedBooksWeekConfig> {
   if (cached && Date.now() < cached.expiresAt) return cached.config
   try {
-    const { data } = await serverClient()
+    // adminClient(), NOT serverClient(): bbw_config has RLS enabled with no
+    // public-read policy, so an anon SELECT returns `null` with no error and
+    // this helper would silently serve DEFAULTS forever — making the admin
+    // kill switch look like it never persists. Same trap as news_config.
+    const { data } = await adminClient()
       .from('bbw_config')
       .select('enabled, year, start_date, end_date, promo_start')
       .eq('id', 1)
@@ -118,7 +125,7 @@ export async function isBannedBooksWeekPromoActive(now: Date = new Date()): Prom
   return today >= start && today <= c.endDate
 }
 
-// "Sep 27 – Oct 3"-style range string for the homepage tile and other
+// "Oct 4 – Oct 10"-style range string for the homepage callout and other
 // places that show the BBW week at a glance. UTC-anchored so the result
 // is identical regardless of server / client timezone.
 export async function formatBBWDateRange(): Promise<string> {

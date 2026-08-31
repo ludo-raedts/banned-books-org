@@ -387,6 +387,7 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 | `verify-portugal-years-porbase.ts` | **Read-only** review-tool: verifieert PT Estado-Novo `first_published_year` (na import NULL gelaten) tegen PORBASE (Biblioteca Nacional de Portugal); `fpy` blijft NULL — schrijft een reviewlijst, muteert niets. PT year-verify is nog open | scope/read-only |
 | `_scope_fr_otto_bans.ts` / `_scope_fr_wikipedia_bans.ts` | Scope/verken FR ban-bronnen (read-only; Sprint-A Taak 5 FR is nog open) | scope |
 | `mark-cover-override.ts` | Markeert cover als handmatige override (clear cover_url) | tool |
+| `_fix_bbw_featured_data_2026_08_31.ts` | BBW-2026 pre-flight: #641 *The Ukrainian Night* verkeerde auteur (Mychailo Wynnycky → **Marci Shore**, Yale UP 2017) + jacket-pullquote uit de blurb; #1480 *Lexicon* droeg beschrijving én ISBN van *The Call of the Wild* (Lulu 9781329820418 → Penguin 9780143125426). Beide gestempeld `description_source_type='manual'` met bron-URL | one-off |
 
 Afgeronde one-off fixes (cleanup-iran-titles, source-orphan-{canonical,cluster}-bans,
 `_apply_google_cover_fixes`, `_apply_csam_block` ⚠️ destructief-eenmalig, `_apply_fr_nazi_warning_tiers`,
@@ -480,6 +481,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 | `prune-data.ts` | Retentie-sweep van lokale run-artifacts onder `data/` (gitignored families, zie `.gitignore`): verwijdert untracked bestanden ouder dan `--days` (default 90). Getrackte bestanden worden nooit aangeraakt. Dry-run default | `--apply` |
 | `fetch-news.ts` | RSS ophalen, embed + dedup, samenvatten (gpt-4.1-mini), opslaan |
 | `suggest-editorial-classification-gpt.ts` | GPT editorial-classification suggester |
+| `apply-bbw-2026-selection.ts` | Vervangt de Banned Books Week **2026** featured-set: 5 ALA-2025 most-challenged titels + 5 statelijke bans, elk met een geciteerde `custom_blurb` uit onze eigen `bans`-rijen. Publiceert direct (upsert-dan-delete, sectie nooit leeg) omdat de admin-`save_draft` de hele jaargang op `published_at NULL` zet. Dry-run default, `--apply` schrijft |
 | `probe-bookshop-isbn.ts` | Test Bookshop.org affiliate deep-link per isbn13 |
 | `audit-bookshop-editions.ts` | **Read-only:** checkt elk 'valid' Bookshop-link-ISBN via OL op formaat/taal — flagt audio- en anderstalige edities |
 | `_audit_bookshop_redirects.ts` | **Read-only:** HEAD-probe van elke 'valid' Bookshop-deeplink → 308-Location product-slug vs onze titel (titlesMatch/loose + Bookshop-slugger-mimic voor apostrof/accent-artefacten); vangt deeplinks naar een compleet ánder werk ("To Live" → Buscaglia, gevonden door de desc-websearch-pilot 2026-07-03) én anderstalige edities. Checkpoint-resumable (`data/bookshop-redirect-audit-checkpoint.jsonl`, gitignored); review-MD in drie buckets + mismatch-JSON als input voor `remediate-bookshop-editions.ts` |
