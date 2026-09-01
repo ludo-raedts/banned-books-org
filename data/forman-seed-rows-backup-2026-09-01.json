@@ -1,0 +1,70 @@
+{
+ "book_year_before": {
+  "id": 484,
+  "first_published_year": 2001
+ },
+ "bans": [
+  {
+   "id": "390",
+   "book_id": "382",
+   "country_code": "US",
+   "scope_id": "1",
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2010,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T17:21:09.650Z"
+  },
+  {
+   "id": "492",
+   "book_id": "484",
+   "country_code": "US",
+   "scope_id": "1",
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2002,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T17:23:57.743Z"
+  }
+ ],
+ "source_links": [
+  {
+   "ban_id": "390",
+   "source_id": "190",
+   "locator": null
+  },
+  {
+   "ban_id": "492",
+   "source_id": "190",
+   "locator": null
+  }
+ ],
+ "reason_links": [
+  {
+   "ban_id": "390",
+   "reason_id": "5"
+  },
+  {
+   "ban_id": "390",
+   "reason_id": "10"
+  },
+  {
+   "ban_id": "390",
+   "reason_id": "11"
+  },
+  {
+   "ban_id": "492",
+   "reason_id": "5"
+  }
+ ]
+}
