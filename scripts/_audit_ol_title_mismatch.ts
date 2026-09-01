@@ -13,6 +13,19 @@
  * cover, isbn13 and description_book were all that other work's. The title-
  * search fallback picked a "popular hit" whose title shares nothing with ours.
  *
+ * Second population (added 2026-09-01): a book can carry a wrong OL work
+ * WITHOUT ever having openlibrary_work_id set — the contamination arrives
+ * through description_source_url alone. Book 3272 "The Feeling of Falling in
+ * Love" (Mason Deaver) was the case that surfaced this: it held Peter
+ * Wohlleben's *Hidden Life of Trees* blurb AND that work's Penguin ISBN, cited
+ * https://openlibrary.org/works/OL17711762W, and had openlibrary_work_id NULL.
+ * It was therefore invisible to all three existing detectors — the two
+ * shared-enrichment ones need ≥2 books to share the blurb (it was the sole
+ * holder; the real Wohlleben book is not in the DB), and this one used to
+ * require openlibrary_work_id. So when openlibrary_work_id is NULL we now fall
+ * back to the work id parsed out of description_source_url, and the report
+ * labels which of the two bindings each row was checked through.
+ *
  * Method (two tiers, to suppress the dominant false-positive class):
  *  1. For every book with an openlibrary_work_id, fetch the OL work title and
  *     compare significant tokens against the book title. ZERO shared tokens =
@@ -36,6 +49,11 @@
  *   --sample=N        check a random N-book sample (estimate the rate cheaply
  *                     when OpenLibrary is rate-limiting). Default: all books.
  *   --concurrency=N   parallel OL fetches (default 8).
+ *   --binding=X       restrict to one binding: `work_id` (openlibrary_work_id
+ *                     is set) or `desc_url` (it is NULL and only
+ *                     description_source_url cites a work). The desc_url slice
+ *                     is the smaller, never-before-audited one — audit it on
+ *                     its own instead of paying for the whole population.
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
@@ -59,7 +77,6 @@ loadEnvLocal()
 import { adminClient } from '../src/lib/supabase'
 import { titleTokens } from '../src/lib/enrich/title-match'
 
-const OUT_MD = join(process.cwd(), 'data', 'ol-title-mismatch-audit.md')
 const UA = 'banned-books.org-audit-bot (ludo.raedts@voys.nl)'
 
 function argVal(name: string): string | null {
@@ -68,44 +85,98 @@ function argVal(name: string): string | null {
 }
 const CONCURRENCY = Number(argVal('concurrency') ?? '8')
 const SAMPLE = argVal('sample') ? Number(argVal('sample')) : null
+const BINDING = argVal('binding') as 'work_id' | 'desc_url' | null
+if (BINDING && BINDING !== 'work_id' && BINDING !== 'desc_url') {
+  console.error(`--binding must be work_id or desc_url (got "${BINDING}")`)
+  process.exit(1)
+}
+// A --binding run covers only part of the population, so it gets its own file
+// rather than overwriting the full-population report.
+const OUT_MD = join(
+  process.cwd(),
+  'data',
+  BINDING ? `ol-title-mismatch-audit-${BINDING}.md` : 'ol-title-mismatch-audit.md',
+)
 
 type Book = {
   id: number
   title: string
   slug: string
-  openlibrary_work_id: string
+  openlibrary_work_id: string | null
   cover_url: string | null
   description_book: string | null
   description_source_type: string | null
+  description_source_url: string | null
   is_blanket_works: boolean
   author: string | null
+  /** The work id actually checked, from either binding. */
+  ol_work: string
+  /** Which binding supplied ol_work — see the header note on book 3272. */
+  work_binding: 'work_id' | 'desc_url'
 }
 
+const SELECT =
+  'id,title,slug,openlibrary_work_id,cover_url,description_book,' +
+  'description_source_type,description_source_url,is_blanket_works,' +
+  'book_authors(role,authors(display_name))'
+
+/** OLxxxxW out of a https://openlibrary.org/works/OLxxxxW citation. */
+function workIdFromUrl(url: string | null): string | null {
+  const m = (url ?? '').match(/openlibrary\.org\/works\/(OL\d+W)/)
+  return m ? m[1] : null
+}
+
+/**
+ * Two disjoint populations, fetched separately rather than with one PostgREST
+ * .or() so the NULL-work_id branch cannot silently swallow the main one:
+ *   A. openlibrary_work_id IS NOT NULL           → binding 'work_id'
+ *   B. openlibrary_work_id IS NULL but
+ *      description_source_url cites an OL work   → binding 'desc_url'
+ */
 async function fetchAll(): Promise<Book[]> {
   const db = adminClient()
   const rows: Book[] = []
   const PAGE = 1000
+
+  const push = (b: any, ol_work: string, work_binding: Book['work_binding']) => {
+    const ba = b.book_authors ?? []
+    const author =
+      ba.find((x: any) => x.role === 'author')?.authors?.display_name ||
+      ba[0]?.authors?.display_name ||
+      null
+    rows.push({ ...b, author, ol_work, work_binding })
+  }
+
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await db
       .from('books')
-      .select(
-        'id,title,slug,openlibrary_work_id,cover_url,description_book,description_source_type,is_blanket_works,book_authors(role,authors(display_name))',
-      )
+      .select(SELECT)
       .not('openlibrary_work_id', 'is', null)
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw error
     if (!data?.length) break
+    for (const b of data as any[]) push(b, b.openlibrary_work_id, 'work_id')
+    if (data.length < PAGE) break
+  }
+
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await db
+      .from('books')
+      .select(SELECT)
+      .is('openlibrary_work_id', null)
+      .like('description_source_url', '%openlibrary.org/works/%')
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1)
+    if (error) throw error
+    if (!data?.length) break
     for (const b of data as any[]) {
-      const ba = b.book_authors ?? []
-      const author =
-        ba.find((x: any) => x.role === 'author')?.authors?.display_name ||
-        ba[0]?.authors?.display_name ||
-        null
-      rows.push({ ...b, author })
+      const w = workIdFromUrl(b.description_source_url)
+      if (w) push(b, w, 'desc_url')
     }
     if (data.length < PAGE) break
   }
+
   return rows
 }
 
@@ -191,8 +262,17 @@ function sharedTitleTokens(a: string, b: string): number {
 
 async function main() {
   let books = (await fetchAll()).filter(b => !b.is_blanket_works)
+  if (BINDING) books = books.filter(b => b.work_binding === BINDING)
   const population = books.length
-  console.log(`books with openlibrary_work_id (excl. blanket): ${population}`)
+  const popByBinding = {
+    work_id: books.filter(b => b.work_binding === 'work_id').length,
+    desc_url: books.filter(b => b.work_binding === 'desc_url').length,
+  }
+  console.log(
+    `books bound to an OL work (excl. blanket): ${population}` +
+      ` — via openlibrary_work_id: ${popByBinding.work_id},` +
+      ` via description_source_url only: ${popByBinding.desc_url}`,
+  )
   if (SAMPLE && SAMPLE < books.length) {
     for (let i = 0; i < SAMPLE; i++) {
       const j = i + Math.floor(Math.random() * (books.length - i))
@@ -217,7 +297,7 @@ async function main() {
         unverifiable++
         continue
       }
-      const j = await olJson(`https://openlibrary.org/works/${b.openlibrary_work_id}.json`)
+      const j = await olJson(`https://openlibrary.org/works/${b.ol_work}.json`)
       checked++
       if (checked % 250 === 0)
         process.stdout.write(`\r  pass1 ${checked}/${books.length} (${rawSuspects.length} raw suspect)   `)
@@ -268,7 +348,12 @@ async function main() {
   md.push('# OpenLibrary title-mismatch audit')
   md.push('')
   md.push(`Generated ${new Date().toISOString()}.`)
-  md.push(`Population (books with openlibrary_work_id, excl. blanket-works): **${population}**`)
+  md.push(
+    `Population (books bound to an OL work, excl. blanket-works): **${population}**` +
+      ` — via \`openlibrary_work_id\`: ${popByBinding.work_id},` +
+      ` via \`description_source_url\` only: ${popByBinding.desc_url}`,
+  )
+  if (BINDING) md.push(`Mode: restricted to binding **${BINDING}**.`)
   if (SAMPLE) md.push(`Mode: **random sample** of ${books.length}.`)
   md.push(`Checked against OpenLibrary: **${checked}** · fetch errors: ${errors} · unverifiable book titles: ${unverifiable}`)
   md.push(`Raw suspects (zero shared title token): **${rawSuspects.length}**`)
@@ -283,11 +368,11 @@ async function main() {
   md.push('')
 
   const table = (rows: Classified[]) => {
-    md.push('| id | our title | our author | linked OL work | OL author | desc src | /books/ |')
-    md.push('|---|---|---|---|---|---|---|')
+    md.push('| id | our title | our author | linked OL work | OL author | binding | desc src | /books/ |')
+    md.push('|---|---|---|---|---|---|---|---|')
     for (const c of rows) {
       md.push(
-        `| ${c.id} | ${c.title} | ${c.author ?? '—'} | ${c.ol_title} | ${c.ol_authors.join('; ') || '—'} | ${c.description_source_type ?? '—'} | /books/${c.slug} |`,
+        `| ${c.id} | ${c.title} | ${c.author ?? '—'} | ${c.ol_title} (${c.ol_work}) | ${c.ol_authors.join('; ') || '—'} | ${c.work_binding} | ${c.description_source_type ?? '—'} | /books/${c.slug} |`,
       )
     }
     md.push('')
@@ -296,6 +381,12 @@ async function main() {
   md.push(`## CONFIRMED — different title AND different author (${confirmed.length})`)
   md.push('')
   md.push('Linked to a genuinely different book; cover_url / isbn13 / description_book are likely wrong. Prime remediation targets.')
+  md.push('')
+  md.push(
+    'Rows with `binding = desc_url` are the class book 3272 belonged to: no ' +
+      '`openlibrary_work_id`, so `remediate-ol-contamination.ts` treated their ' +
+      '(equally contaminated) `isbn13` as proof of a good binding and spared them.',
+  )
   md.push('')
   table(confirmed)
 

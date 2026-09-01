@@ -1,16 +1,16 @@
 # Data Quality Dry Run
 
-Run at: 2026-08-08T07:47:48.129Z
+Run at: 2026-09-01T13:08:58.565Z
 
 Drie buckets per record: `confident` (automatisch hoog vertrouwen), `default` (geïmporteerd, niets mis), `flagged` (minimaal één probleem).
 
 ## Books
 
-Totaal: **20305**
+Totaal: **20306**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 5223 | 25.7% |
+| confident | 5224 | 25.7% |
 | default | 12822 | 63.1% |
 | flagged | 2260 | 11.1% |
 
@@ -48,8 +48,8 @@ Totaal: **20305**
 
 | Flag | Count |
 |---|---:|
-| only-placeholder-authors | 1556 |
-| cover-placeholder | 723 |
+| only-placeholder-authors | 1557 |
+| cover-placeholder | 722 |
 | no-bans | 1 |
 
 ### Flagged books — sample (eerste 30)
@@ -114,12 +114,12 @@ Totaal: **20305**
 
 ## Authors
 
-Totaal: **12771**
+Totaal: **12744**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 1506 | 11.8% |
-| default | 11245 | 88.1% |
+| confident | 1508 | 11.8% |
+| default | 11216 | 88.0% |
 | flagged | 20 | 0.2% |
 
 ### Confident authors — sample (eerste 25)
@@ -163,7 +163,7 @@ Totaal: **12771**
 
 | ID | Slug | Name | Books | Flags |
 |---:|---|---|---:|---|
-| 33 | anonymous | Anonymous | 1611 | placeholder |
+| 33 | anonymous | Anonymous | 1612 | placeholder |
 | 97 | edna-st-vincent-millay | Edna St. Vincent Millay | 0 | no-books |
 | 103 | nikolai-gogol | Nikolai Gogol | 0 | no-books |
 | 107 | yevgenia-ginzburg | Yevgenia Ginzburg | 0 | no-books |

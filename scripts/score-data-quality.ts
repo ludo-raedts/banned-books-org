@@ -559,22 +559,58 @@ async function main() {
   console.log('DB updated.')
 }
 
+/** Current persisted status per id, so we can write only the rows that move. */
+async function currentStatuses(table: 'books' | 'authors'): Promise<Map<number, string>> {
+  const m = new Map<number, string>()
+  const PAGE = 1000
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from(table)
+      .select('id, data_quality_status')
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1)
+    if (error) throw error
+    if (!data?.length) break
+    for (const r of data as { id: number; data_quality_status: string }[]) {
+      m.set(r.id, r.data_quality_status)
+    }
+    if (data.length < PAGE) break
+  }
+  return m
+}
+
 async function writeVerdicts(
   table: 'books' | 'authors',
   rows: { id: number; status: Quality }[],
   evaluatedAt: string,
 ) {
-  // Per-status bulk update — far fewer round-trips than per-row upserts.
-  // Books default already; we only flip rows whose new status differs.
-  // Easiest correct path: update all rows to their assigned status.
+  // Only rows whose status actually CHANGES are written. Blind-updating every
+  // row to its assigned status (the previous behaviour) meant ~33k row writes
+  // per run, and on 2026-09-01 that tipped a 500-id chunk over the service_role
+  // statement_timeout (57014) and aborted the run half-applied. In practice a
+  // re-score moves a handful of rows, so the diff is tiny and the run is now
+  // safely re-runnable. Reads are cheap; the writes were the problem.
+  //
+  // Trade-off: data_quality_evaluated_at is no longer refreshed on unchanged
+  // rows. It now means "when this verdict last CHANGED", which is the more
+  // useful reading and keeps the write set proportional to the drift.
+  const current = await currentStatuses(table)
+
   const byStatus: Record<Quality, number[]> = { confident: [], default: [], flagged: [] }
-  for (const r of rows) byStatus[r.status].push(r.id)
+  let unchanged = 0
+  for (const r of rows) {
+    if (current.get(r.id) === r.status) {
+      unchanged++
+      continue
+    }
+    byStatus[r.status].push(r.id)
+  }
 
   for (const status of ['confident', 'default', 'flagged'] as Quality[]) {
     const ids = byStatus[status]
     if (ids.length === 0) continue
-    // Chunk to avoid URL-length limits on the .in() filter.
-    const chunkSize = 500
+    // Chunk to keep both the .in() URL and the per-statement row count small.
+    const chunkSize = 200
     for (let i = 0; i < ids.length; i += chunkSize) {
       const chunk = ids.slice(i, i + chunkSize)
       const { error } = await supabase
@@ -589,8 +625,9 @@ async function writeVerdicts(
         throw error
       }
     }
-    console.log(`  ${table} → ${status}: ${ids.length}`)
+    console.log(`  ${table} → ${status}: ${ids.length} changed`)
   }
+  console.log(`  ${table}: ${unchanged} already correct (not rewritten)`)
 }
 
 main().catch((err) => {
