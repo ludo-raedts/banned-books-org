@@ -388,6 +388,7 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 | `_scope_fr_otto_bans.ts` / `_scope_fr_wikipedia_bans.ts` | Scope/verken FR ban-bronnen (read-only; Sprint-A Taak 5 FR is nog open) | scope |
 | `mark-cover-override.ts` | Markeert cover als handmatige override (clear cover_url) | tool |
 | `_fix_bbw_featured_data_2026_08_31.ts` | BBW-2026 pre-flight: #641 *The Ukrainian Night* verkeerde auteur (Mychailo Wynnycky → **Marci Shore**, Yale UP 2017) + jacket-pullquote uit de blurb; #1480 *Lexicon* droeg beschrijving én ISBN van *The Call of the Wild* (Lulu 9781329820418 → Penguin 9780143125426). Beide gestempeld `description_source_type='manual'` met bron-URL | one-off |
+| `_enrich_fsem_5503_by_hand_2026_08_25.ts` | Hand-enrichment van #23466 (FSEM #5503-brochure): geen ISBN/OL/GB/Wikipedia om op te gronden, dus `description_book` met de hand geschreven uit Минюст + SOVA Center en gestempeld `description_source_type='manual'`. Zet ook `title_native_script='cyrillic'`, herschrijft de ban-description (editor-flag eraf, uitspraak-tekst is níet gepubliceerd → grond niet verzinnen), `confidence='verified'` en linkt SOVA als tweede citatie. Cover blijft NULL: er bestaat geen afbeelding op een allowlisted host. ⚠ Het zijn **еговисты-ильинцы**, niet Jehovah's Getuigen — websearch beweert het tegendeel | one-off |
 
 Afgeronde one-off fixes (cleanup-iran-titles, source-orphan-{canonical,cluster}-bans,
 `_apply_google_cover_fixes`, `_apply_csam_block` ⚠️ destructief-eenmalig, `_apply_fr_nazi_warning_tiers`,
