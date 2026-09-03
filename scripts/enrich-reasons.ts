@@ -1,5 +1,6 @@
 /**
- * Classify ban reasons for bans that currently only have 'other' as their reason.
+ * Classify ban reasons for bans that carry no usable reason yet — either only
+ * 'other', or (since 2026-09-03) no reason link at all.
  * Uses GPT-4o-mini to infer reasons from per-event ban context (description,
  * jurisdiction, action_type) layered with book-level fallback context
  * (description_ban, censorship_context, book description).
@@ -9,23 +10,51 @@
  * when the book's plot description is generic. Book-level context is the
  * fallback when the ban event has no description of its own.
  *
+ * Two candidate classes, both "no usable reason on the row":
+ *   - only 'other'      — the original target (~1.7k rows)
+ *   - NO reason link     — used to be skipped outright (the filter required at
+ *     least one existing link), even though an untagged ban is strictly worse
+ *     off than one tagged 'other'. ~147 rows DB-wide, and they are not junk:
+ *     the Utah HB 29 statewide rows and other hand-written imports land here
+ *     with a full per-event description and no tags at all.
+ * Rows that already carry a specific reason are never touched — this script
+ * only fills gaps, it does not re-litigate existing classifications.
+ *
  * Available reason slugs:
  *   lgbtq, sexual, racial, political, religious, violence, language,
  *   drugs, obscenity, moral, blasphemy, other
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts
- *     → dry-run: shows counts and 5 sample classifications, no writes
+ *     → dry-run over the whole catalogue: counts + 5 sample classifications
  *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts --apply
- *     → replaces 'other' reason with inferred reasons in ban_reason_links
+ *     → fills the gap rows in ban_reason_links
+ *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts --book-ids=37,209 --apply
+ *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts --ids-file=data/x.txt --apply
+ *     → SCOPE to those books only. Unscoped the script loads every ban in the
+ *       catalogue (~36k rows over PostgREST) and bills an LLM call per
+ *       candidate, so a targeted follow-up should always pass a scope.
  */
 
+import { readFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { flagValue, isApply } from './lib/cli'
 
-const APPLY = process.argv.includes('--apply')
+const APPLY = isApply()
 const BATCH_SIZE = 8
 const RATE_LIMIT_MS = 150
+
+/** Book-id scope from --book-ids=1,2,3 or --ids-file=<one id per line>. */
+function scopeBookIds(): number[] | null {
+  const inline = flagValue('book-ids')
+  const file = flagValue('ids-file')
+  const raw = inline ?? (file ? readFileSync(file, 'utf8').split(/\s+/).join(',') : null)
+  if (raw == null) return null
+  const ids = [...new Set(raw.split(',').map((s) => parseInt(s.trim(), 10)).filter(Number.isFinite))]
+  if (ids.length === 0) throw new Error('scope flag given but no valid book ids parsed')
+  return ids
+}
 
 const VALID_REASONS = new Set([
   'lgbtq', 'sexual', 'racial', 'political', 'religious',
@@ -138,14 +167,15 @@ async function main() {
     ban_reason_links(reasons(id, slug))
   `
 
+  const scope = scopeBookIds()
+  if (scope) console.log(`Scope: ${scope.length} book id(s) — ${scope.slice(0, 12).join(', ')}${scope.length > 12 ? ', …' : ''}\n`)
+
   let allBans: BanRow[] = []
   let offset = 0
   while (true) {
-    const { data, error } = await supabase
-      .from('bans')
-      .select(SELECT)
-      .range(offset, offset + 999)
-      .order('id')
+    let q = supabase.from('bans').select(SELECT).range(offset, offset + 999).order('id')
+    if (scope) q = q.in('book_id', scope)
+    const { data, error } = await q
     if (error) { console.error('DB error:', error.message); process.exit(1) }
     if (!data || data.length === 0) break
     allBans = allBans.concat(data as unknown as BanRow[])
@@ -153,14 +183,20 @@ async function main() {
     offset += 1000
   }
 
-  // Keep only bans whose reasons are exclusively 'other'
-  const targets = allBans.filter((ban) => {
-    const slugs = ban.ban_reason_links.map(l => l.reasons?.slug).filter(Boolean)
+  // Candidates: no usable reason on the row. Either no link at all, or nothing
+  // but 'other'. A row carrying any specific reason is left alone.
+  const reasonSlugs = (ban: BanRow) => ban.ban_reason_links.map(l => l.reasons?.slug).filter(Boolean)
+  const untagged = allBans.filter((ban) => reasonSlugs(ban).length === 0)
+  const onlyOther = allBans.filter((ban) => {
+    const slugs = reasonSlugs(ban)
     return slugs.length > 0 && slugs.every(s => s === 'other')
   })
+  const targets = [...untagged, ...onlyOther]
 
   console.log(`Total bans loaded            : ${allBans.length}`)
-  console.log(`Bans with only 'other' reason: ${targets.length}`)
+  console.log(`Bans with only 'other' reason: ${onlyOther.length}`)
+  console.log(`Bans with no reason at all   : ${untagged.length}`)
+  console.log(`Candidates                   : ${targets.length}`)
 
   if (targets.length === 0) {
     console.log('Nothing to classify.')
