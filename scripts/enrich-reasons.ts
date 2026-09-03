@@ -20,9 +20,9 @@
  * Rows that already carry a specific reason are never touched — this script
  * only fills gaps, it does not re-litigate existing classifications.
  *
- * Available reason slugs:
- *   lgbtq, sexual, racial, political, religious, violence, language,
- *   drugs, obscenity, moral, blasphemy, other
+ * The reason vocabulary is read from the `reasons` table at runtime, so the
+ * prompt can never offer a slug the DB has no row for (it used to offer
+ * 'blasphemy', which silently dropped every time the model chose it).
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts
@@ -34,6 +34,15 @@
  *     → SCOPE to those books only.
  *   --class=untagged | other | both   (default both) — pick one candidate class
  *   --limit=N                          cap the candidate set (cheap first look)
+ *   --grounded-only                    write ONLY reasons the ban event's own
+ *                                      description states; leave rows whose
+ *                                      description states no ground untagged
+ *                                      instead of guessing from book themes
+ *   --apply-from=data/foo.json         write the decisions of a previous
+ *                                      --report dry-run verbatim (guarded: a
+ *                                      row that has since been tagged is
+ *                                      skipped). Avoids a second LLM pass and
+ *                                      guarantees applied == reviewed
  *   --report=data/foo.md               classify EVERY candidate and write a
  *                                      review artifact. In a dry-run this is
  *                                      how you see all proposals before
@@ -50,7 +59,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 import { newPgClient } from '../src/lib/wikipedia/importer'
-import { flagValue, intFlag, isApply } from './lib/cli'
+import { flagValue, hasFlag, intFlag, isApply } from './lib/cli'
 
 const APPLY = isApply()
 const BATCH_SIZE = 8
@@ -62,6 +71,14 @@ if (!['untagged', 'other', 'both'].includes(CLASS)) {
 }
 const LIMIT = intFlag('limit', 0) // 0 = no cap
 const REPORT = flagValue('report')
+// --grounded-only: write ONLY the reasons the ban event's own description states,
+// never the ones inferred from the book's themes. Rows whose description states
+// no reason are left untagged instead of being filled with book-level guesses.
+const GROUNDED_ONLY = hasFlag('grounded-only')
+// --apply-from=<json>: write the decisions from a previous --grounded-only
+// dry-run instead of re-classifying, so what was reviewed is exactly what lands
+// (and the LLM is billed once, not twice).
+const APPLY_FROM = flagValue('apply-from')
 
 /** Book-id scope from --book-ids=1,2,3 or --ids-file=<one id per line>. */
 function scopeBookIds(): number[] | null {
@@ -74,10 +91,86 @@ function scopeBookIds(): number[] | null {
   return ids
 }
 
-const VALID_REASONS = new Set([
-  'lgbtq', 'sexual', 'racial', 'political', 'religious',
-  'violence', 'language', 'drugs', 'obscenity', 'moral', 'blasphemy', 'other',
-])
+// One-line gloss per slug for the prompt. The VOCABULARY itself comes from the
+// reasons table at runtime (see loadVocabulary) — this map only supplies wording.
+//
+// Why: this list used to be a hardcoded Set that included 'blasphemy', which has
+// no row in the reasons table. Every time the model answered "blasphemy" the id
+// lookup returned undefined and the slug was dropped without a word — three
+// Satanic Verses rows whose descriptions say "banned for blasphemy against
+// Islam" classified fine and then wrote nothing at all. A vocabulary that can
+// silently disagree with the DB is the bug; deriving it from the DB is the fix.
+const REASON_GUIDE: Record<string, string> = {
+  lgbtq: 'LGBTQ+ characters, relationships, or themes',
+  sexual: 'Sexual content, romance, sex education, body topics',
+  racial: 'Race, racism, colonialism, civil rights, slavery, ethnic conflict',
+  political: 'Political ideology, government, war, propaganda',
+  religious: 'Religious content or grounds (any tradition, including critique and blasphemy)',
+  violence: 'Violence or graphic content',
+  language: 'Offensive language / profanity',
+  drugs: 'Drug or substance use',
+  obscenity: 'Obscenity (often overlaps with sexual)',
+  moral: 'Immorality or "inappropriate for age" values',
+  other: 'Last resort only',
+}
+
+/** The reason slugs that actually exist in the DB. Set once in main(). */
+let VALID_REASONS: Set<string> = new Set()
+
+/** Prompt-ready "- slug = gloss" block for the live vocabulary. */
+function vocabularyBlock(): string {
+  return [...VALID_REASONS]
+    .map((slug) => `- ${slug.padEnd(11)} = ${REASON_GUIDE[slug] ?? slug}`)
+    .join('\n')
+}
+
+async function loadVocabulary(supabase: ReturnType<typeof adminClient>): Promise<Map<string, number>> {
+  const { data, error } = await supabase.from('reasons').select('id, slug')
+  if (error) throw new Error(`reasons: ${error.message}`)
+  const map = new Map((data ?? []).map((r) => [r.slug as string, r.id as number]))
+  VALID_REASONS = new Set(map.keys())
+  const undescribed = [...VALID_REASONS].filter((s) => !REASON_GUIDE[s])
+  if (undescribed.length) {
+    console.warn(`⚠ reasons table has slug(s) with no gloss in REASON_GUIDE: ${undescribed.join(', ')}`)
+  }
+  return map
+}
+
+/**
+ * Evidence cues per reason, used ONLY in --grounded-only mode as a verifier on
+ * the model's STATED line. gpt-4o-mini leaks: asked which reason the ban
+ * description states, it will still answer "blasphemy" for a row that says only
+ * "banned under apartheid-era publications law" — the ground comes from what it
+ * knows about the book, not from the text. So a stated slug is kept only when
+ * the description carries a lexical trace of it. Deliberately strict: for a
+ * "sourced reasons only" pass, dropping a paraphrase is the safe error and the
+ * report lists every drop for review.
+ */
+const EVIDENCE_CUES: Record<string, RegExp> = {
+  blasphemy: /blasphem|sacrileg|heres(y|ies)|apostas/i,
+  religious: /religio|islam|muslim|christ|catholic|church|bible|qur.?an|koran|hindu|jewish|juda|prophet|anti-?christian|sacrileg|blasphem/i,
+  sexual: /\bsex|erotic|nudity|nude|explicit|intimate|pornograph|inappropriate content of a sexual|sexual/i,
+  obscenity: /obscen|pornograph|indecen|filth|smut/i,
+  violence: /violen|graphic|gore|brutal|torture|abuse/i,
+  language: /\blanguage\b|profan|swear|curse|vulgar|obscene language|f-word/i,
+  drugs: /\bdrugs?\b|narcotic|alcohol|substance (use|abuse)|marijuana|cocaine|heroin|smoking/i,
+  lgbtq: /lgbt|\bgay\b|lesbian|queer|transgender|trans(sexual|gender)|homosexu|gender (identity|fluid|ideology)|same-?sex|sexual orientation/i,
+  racial: /racis|racial|\brace\b|ethnic|colonial|slavery|insult to the|derogatory|stereotyp|apartheid/i,
+  political: /politic|propaganda|communis|marxis|anti-?war|subversi|sedition|state security|national interest|regime|dissent|revolution/i,
+  moral: /immoral|moral|indecen|inappropriate|unsuitable|age-?inappropriate|values|sensitive material|corrupt|harmful to (minors|children|youth)/i,
+}
+
+/** Keep only the stated slugs the description actually evidences. */
+function verifyStated(stated: string[], description: string): { kept: string[]; dropped: string[] } {
+  const kept: string[] = []
+  const dropped: string[] = []
+  for (const slug of stated) {
+    const cue = EVIDENCE_CUES[slug]
+    if (cue && description && cue.test(description)) kept.push(slug)
+    else dropped.push(slug)
+  }
+  return { kept, dropped }
+}
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -114,18 +207,7 @@ ${ctx.banDescription ? `  Ban description: ${ctx.banDescription.slice(0, 600)}\n
 Book: "${ctx.title}" by ${ctx.author || 'unknown'}
 ${ctx.bookDescription ? `Plot: ${ctx.bookDescription.slice(0, 400)}\n` : ''}
 Choose ALL applicable reason slugs (comma-separated, lowercase). Prefer SPECIFIC reasons. Use 'other' ONLY as a last resort when none of the specific reasons could plausibly apply.
-- lgbtq       = LGBTQ+ characters, relationships, or themes
-- sexual      = Sexual content, romance, sex education, body topics
-- racial      = Race, racism, colonialism, civil rights, slavery, ethnic conflict
-- political   = Political ideology, government, war, propaganda
-- religious   = Religious content (any tradition, including critique)
-- violence    = Violence or graphic content
-- language    = Offensive language / profanity
-- drugs       = Drug or substance use
-- obscenity   = Obscenity (often overlaps with sexual)
-- moral       = Immorality or "inappropriate for age" values
-- blasphemy   = Blasphemy specifically
-- other       = Last resort only
+${vocabularyBlock()}
 
 Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
 
@@ -148,6 +230,67 @@ Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
     const specific = [...new Set(slugs.filter(s => s !== 'other'))]
     return specific.length > 0 ? specific : ['other']
   } catch { return ['other'] }
+}
+
+/**
+ * Two-signal variant for --grounded-only. Splits the classification into what
+ * THIS ban event's description actually states (or unmistakably implies) and
+ * what merely follows from the book's themes. Only the first half is a sourced
+ * fact; the second is inference that happens to sit in the same column, so a
+ * run that cares about the distinction can write the stated half alone.
+ */
+async function classifyGrounded(
+  client: OpenAI,
+  ctx: ClassifyContext,
+): Promise<{ stated: string[]; inferred: string[] }> {
+  const eventMeta = [
+    ctx.actionType, ctx.institution, ctx.region, ctx.countryCode,
+    ctx.yearStarted ? String(ctx.yearStarted) : null,
+  ].filter(Boolean).join(' · ')
+
+  const prompt = `You are tagging one ban event of a book with the reasons it was banned or challenged, and separating SOURCED from INFERRED.
+
+Ban event:
+  ${eventMeta || '(no jurisdiction metadata)'}
+  Ban description: ${ctx.banDescription ? ctx.banDescription.slice(0, 800) : '(none)'}
+
+Book: "${ctx.title}" by ${ctx.author || 'unknown'}
+${ctx.bookBanContext ? `Why this book is commonly banned: ${ctx.bookBanContext.slice(0, 400)}\n` : ''}${ctx.bookDescription ? `Plot: ${ctx.bookDescription.slice(0, 400)}\n` : ''}
+Valid slugs (use ONLY these — nothing else exists in the database):
+${vocabularyBlock()}
+
+Answer on exactly two lines:
+STATED: slugs the BAN DESCRIPTION itself states or unmistakably implies as the ground for THIS action. A description naming the objection ("banned for blasphemy", "over objectionable language", "cited as anti-war propaganda", "asked whether it depicts a sex act", "removed as pornographic") is stated. A description that only records the action ("banned from libraries in X district", "removed after a complaint", "moved to a restricted shelf") states NOTHING, even when you can guess why — write "none" then. Legal or policy language counts only if it names the content objection, not merely a statute number.
+INFERRED: additional slugs that follow from the book's themes but are NOT stated by the description. May be "none".
+
+Output only those two lines, comma-separated slugs, lowercase. Example:
+STATED: language
+INFERRED: violence, sexual`
+
+  try {
+    const res = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
+      max_tokens: 80,
+      // A sourced/inferred split is a gate, not a creative task: at the default
+      // temperature the same row flips between runs (the Tintin Brussels row
+      // states "an insult to the Congolese people" and scored racial on one
+      // pass, nothing on the next).
+      temperature: 0,
+      messages: [{ role: 'user', content: prompt }],
+    })
+    const text = res.choices[0]?.message?.content ?? ''
+    const pick = (label: string): string[] => {
+      const line = text.split('\n').find((l) => l.trim().toUpperCase().startsWith(label))
+      if (!line) return []
+      return [...new Set(line.slice(line.indexOf(':') + 1)
+        .toLowerCase().split(',').map((x) => x.trim())
+        // 'other' is never a *stated* reason — it is the absence of one.
+        .filter((x) => VALID_REASONS.has(x) && x !== 'other'))]
+    }
+    const stated = pick('STATED')
+    const inferred = pick('INFERRED').filter((x) => !stated.includes(x))
+    return { stated, inferred }
+  } catch { return { stated: [], inferred: [] } }
 }
 
 /**
@@ -184,16 +327,79 @@ async function candidateBanIds(scope: number[] | null): Promise<{ untagged: numb
   }
 }
 
+/**
+ * Write the decisions of a previous dry-run (--report's JSON twin) verbatim.
+ * Guarded: a ban that has since acquired reason links is skipped, so this can
+ * never overwrite a classification that arrived after the review.
+ */
+async function applyFromFile(
+  supabase: ReturnType<typeof adminClient>,
+  reasonIdMap: Map<string, number>,
+): Promise<void> {
+  type Decision = { ban_id: number; book_id: number | null; title: string; write: string[] }
+  const parsed = JSON.parse(readFileSync(APPLY_FROM as string, 'utf8')) as
+    { generatedAt: string; mode: string; decisions: Decision[] }
+  const all = parsed.decisions ?? []
+  const writable = all.filter((d) => d.write.length > 0)
+  console.log(`Decisions file : ${APPLY_FROM}`)
+  console.log(`  generated    : ${parsed.generatedAt} (mode ${parsed.mode})`)
+  console.log(`  decisions    : ${all.length}, of which with reasons to write: ${writable.length}`)
+  if (!APPLY) {
+    console.log('\nDRY-RUN — pass --apply to write these decisions.')
+    for (const d of writable.slice(0, 10)) console.log(`  ban ${d.ban_id} "${d.title}" → ${d.write.join(', ')}`)
+    return
+  }
+
+  let written = 0, skipped = 0, errored = 0
+  for (const d of writable) {
+    // exact-state guard: only fill rows that are still untagged
+    const { data: existing, error: qe } = await supabase
+      .from('ban_reason_links').select('reason_id').eq('ban_id', d.ban_id)
+    if (qe) { errored++; console.error(`  ban ${d.ban_id}: ${qe.message}`); continue }
+    if ((existing ?? []).length > 0) {
+      skipped++
+      console.log(`  skip ban ${d.ban_id} "${d.title}": already has ${existing?.length} reason link(s)`)
+      continue
+    }
+    const unknown = d.write.filter((slug) => !reasonIdMap.has(slug))
+    if (unknown.length) {
+      console.warn(`  ⚠ ban ${d.ban_id} "${d.title}": no reasons row for ${unknown.join(', ')} — not written`)
+    }
+    const inserts = d.write
+      .map((slug) => reasonIdMap.get(slug))
+      .filter((id): id is number => id !== undefined)
+      .map((reason_id) => ({ ban_id: d.ban_id, reason_id }))
+    if (inserts.length === 0) {
+      skipped++
+      console.log(`  skip ban ${d.ban_id} "${d.title}": nothing writable (${d.write.join(', ') || 'no slugs'})`)
+      continue
+    }
+    const { error: ie } = await supabase.from('ban_reason_links').insert(inserts)
+    if (ie) { errored++; console.error(`  ban ${d.ban_id}: ${ie.message}`); continue }
+    written++
+    console.log(`  ban ${d.ban_id} "${d.title}" → ${d.write.join(', ')}`)
+  }
+  console.log(`\n── Done ──`)
+  console.log(`Rows written : ${written}`)
+  console.log(`Skipped      : ${skipped} (already tagged / nothing to write)`)
+  console.log(`Errors       : ${errored}`)
+  console.log(`Left untagged by design: ${all.length - writable.length} (description states no reason)`)
+}
+
 async function main() {
   console.log(`\n── enrich-reasons (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──\n`)
 
   const supabase = adminClient()
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  // Load reason slug → id map
-  const { data: reasonRows } = await supabase.from('reasons').select('id, slug')
-  const reasonIdMap = new Map((reasonRows ?? []).map(r => [r.slug, r.id as number]))
+  // Vocabulary + slug → id map, straight from the DB (never hardcoded)
+  const reasonIdMap = await loadVocabulary(supabase)
   const otherId = reasonIdMap.get('other')!
+
+  if (APPLY_FROM) {
+    await applyFromFile(supabase, reasonIdMap)
+    return
+  }
 
   // Load all bans with paginated query (Supabase caps at 1000/request)
   type BanRow = {
@@ -263,7 +469,7 @@ async function main() {
 
   type ReportRow = { banId: number; bookId: number | null; title: string; author: string
     cls: string; country: string; year: number | null; region: string; institution: string
-    desc: string; slugs: string[] }
+    desc: string; slugs: string[]; inferred: string[] }
   const reportRows: ReportRow[] = []
 
   let updated = 0, kept = 0, errored = 0
@@ -274,9 +480,9 @@ async function main() {
 
     const results = await Promise.all(batch.map(async (ban) => {
       const book = ban.books
-      if (!book) return { ban, slugs: ['other'] as string[] }
+      if (!book) return { ban, slugs: ['other'] as string[], inferred: [] as string[] }
       const author = book.book_authors?.[0]?.authors?.display_name ?? ''
-      const slugs = await classifyReasons(openai, {
+      const ctx = {
         title: book.title,
         author,
         bookDescription: book.description_book ?? '',
@@ -287,12 +493,21 @@ async function main() {
         institution: ban.institution ?? '',
         countryCode: ban.country_code ?? '',
         yearStarted: ban.year_started,
-      })
-      return { ban, book, author, slugs }
+      }
+      if (GROUNDED_ONLY) {
+        const { stated, inferred } = await classifyGrounded(openai, ctx)
+        // Verifier: a slug survives only with lexical evidence in the
+        // description. stated == [] afterwards means the row records the action
+        // but no ground — it stays untagged rather than taking a book guess.
+        const { kept, dropped } = verifyStated(stated, ctx.banDescription)
+        return { ban, book, author, slugs: kept, inferred: [...inferred, ...dropped.map((d) => `${d} (unevidenced)`)] }
+      }
+      const slugs = await classifyReasons(openai, ctx)
+      return { ban, book, author, slugs, inferred: [] as string[] }
     }))
 
     for (let j = 0; j < results.length; j++) {
-      const { ban, book, author, slugs } = results[j]
+      const { ban, book, author, slugs, inferred } = results[j]
       const n = i + j + 1
       const title = book?.title ?? `ban#${ban.id}`
 
@@ -302,14 +517,15 @@ async function main() {
           cls: untaggedIds.has(ban.id) ? 'untagged' : "only-'other'",
           country: ban.country_code ?? '', year: ban.year_started,
           region: ban.region ?? '', institution: ban.institution ?? '',
-          desc: ban.description ?? '', slugs,
+          desc: ban.description ?? '', slugs, inferred,
         })
       }
 
       if (!APPLY) {
         if (!REPORT) {
           console.log(`  [${n}/${limit}] "${title}" — ${author}`)
-          console.log(`    Reasons: ${slugs.join(', ')}`)
+          console.log(`    ${GROUNDED_ONLY ? 'Stated' : 'Reasons'}: ${slugs.join(', ') || '(none)'}`)
+          if (GROUNDED_ONLY && inferred.length) console.log(`    Inferred (not written): ${inferred.join(', ')}`)
           console.log()
         } else if (n % 25 === 0 || n === limit) {
           console.log(`  … ${n}/${limit} classified`)
@@ -317,7 +533,9 @@ async function main() {
         continue
       }
 
-      // If the only result is still 'other', skip (nothing to improve)
+      // Nothing usable: either the model found no specific reason at all, or
+      // (--grounded-only) the event description states none. Leave the row as is.
+      if (slugs.length === 0) { kept++; continue }
       if (slugs.length === 1 && slugs[0] === 'other') { kept++; continue }
 
       try {
@@ -356,6 +574,7 @@ async function main() {
     const bySlug = new Map<string, number>()
     for (const r of reportRows) for (const sl of r.slugs) bySlug.set(sl, (bySlug.get(sl) ?? 0) + 1)
     const stillOther = reportRows.filter((r) => r.slugs.length === 1 && r.slugs[0] === 'other')
+    const nothingStated = reportRows.filter((r) => r.slugs.length === 0)
     const noDesc = reportRows.filter((r) => !r.desc)
     const lines: string[] = []
     lines.push(`# enrich-reasons ${APPLY ? 'applied' : 'DRY-RUN'} — class ${CLASS}`)
@@ -363,7 +582,16 @@ async function main() {
     lines.push(`Run: ${new Date().toISOString()} · model gpt-4o-mini · ${reportRows.length} bans classified`)
     lines.push(APPLY ? 'Written to ban_reason_links.' : 'Nothing was written to the database.')
     lines.push('')
-    lines.push(`- would stay 'other' (no specific reason found): **${stillOther.length}**`)
+    if (GROUNDED_ONLY) {
+      lines.push('Mode: **--grounded-only** — only reasons the ban event\'s own description states')
+      lines.push('are written. Slugs under "inferred" follow from the book\'s themes and are')
+      lines.push('deliberately NOT written.')
+      lines.push('')
+      lines.push(`- rows the description states a reason for (would be written): **${reportRows.length - nothingStated.length}**`)
+      lines.push(`- rows whose description states no reason (left untagged): **${nothingStated.length}**`)
+    } else {
+      lines.push(`- would stay 'other' (no specific reason found): **${stillOther.length}**`)
+    }
     lines.push(`- rows without a per-event description (book-level inference only): **${noDesc.length}**`)
     lines.push('')
     lines.push('## Proposed reasons per slug')
@@ -374,21 +602,41 @@ async function main() {
     lines.push('')
     lines.push('## Per row')
     lines.push('')
-    lines.push('| ban | book | title | event | proposed | has per-event description |')
-    lines.push('| --- | --- | --- | --- | --- | --- |')
+    lines.push(`| ban | book | title | event | ${GROUNDED_ONLY ? 'STATED (written) | inferred (dropped)' : 'proposed'} | has per-event description |`)
+    lines.push(`| --- | --- | --- | --- | ${GROUNDED_ONLY ? '--- | ---' : '---'} | --- |`)
     for (const r of reportRows) {
       const event = [r.country, r.year ?? '', r.region, r.institution].filter(Boolean).join(' · ').replace(/\|/g, '/')
-      lines.push(`| ${r.banId} | ${r.bookId ?? '-'} | ${r.title.replace(/\|/g, '/')} | ${event} | ${r.slugs.join(', ')} | ${r.desc ? 'yes' : 'no'} |`)
+      const cols = GROUNDED_ONLY
+        ? `${r.slugs.join(', ') || '—'} | ${r.inferred.join(', ') || '—'}`
+        : r.slugs.join(', ')
+      lines.push(`| ${r.banId} | ${r.bookId ?? '-'} | ${r.title.replace(/\|/g, '/')} | ${event} | ${cols} | ${r.desc ? 'yes' : 'no'} |`)
     }
     lines.push('')
     lines.push('## Rows with a per-event description (the strongest signal)')
     lines.push('')
     for (const r of reportRows.filter((x) => x.desc)) {
-      lines.push(`- **ban ${r.banId}** "${r.title}" → \`${r.slugs.join(', ')}\``)
+      lines.push(`- **ban ${r.banId}** "${r.title}" → \`${r.slugs.join(', ') || 'nothing stated'}\`` +
+        (GROUNDED_ONLY && r.inferred.length ? ` _(dropped: ${r.inferred.join(', ')})_` : ''))
       lines.push(`  > ${r.desc.replace(/\s+/g, ' ').slice(0, 400)}`)
     }
     writeFileSync(REPORT, lines.join('\n') + '\n')
     console.log(`\nreport → ${REPORT} (${reportRows.length} rows)`)
+
+    // Machine-readable twin, so --apply-from can write exactly the reviewed
+    // decisions instead of re-classifying (a second LLM pass would drift).
+    if (!APPLY) {
+      const jsonPath = REPORT.replace(/\.md$/, '') + '.json'
+      writeFileSync(jsonPath, JSON.stringify({
+        generatedAt: new Date().toISOString(),
+        mode: GROUNDED_ONLY ? 'grounded-only' : 'all',
+        model: 'gpt-4o-mini',
+        decisions: reportRows.map((r) => ({
+          ban_id: r.banId, book_id: r.bookId, title: r.title,
+          write: r.slugs, dropped_inferred: r.inferred,
+        })),
+      }, null, 1) + '\n')
+      console.log(`decisions → ${jsonPath}`)
+    }
   }
 
   console.log(`\n── Done ──`)

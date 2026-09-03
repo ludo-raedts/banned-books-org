@@ -1,0 +1,73 @@
+{
+ "generatedAt": "2026-09-03T14:39:59.277Z",
+ "mode": "grounded-only",
+ "model": "gpt-4o-mini",
+ "decisions": [
+  {
+   "ban_id": 13072,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "religious"
+   ],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 13073,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "violence",
+    "religious (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13075,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "religious"
+   ],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 13076,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "religious"
+   ],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 13077,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "violence",
+    "religious (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13078,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "violence",
+    "religious (unevidenced)"
+   ]
+  }
+ ]
+}

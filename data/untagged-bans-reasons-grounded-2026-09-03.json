@@ -1,0 +1,1521 @@
+{
+ "generatedAt": "2026-09-03T14:37:02.744Z",
+ "mode": "grounded-only",
+ "model": "gpt-4o-mini",
+ "decisions": [
+  {
+   "ban_id": 13070,
+   "book_id": 793,
+   "title": "The Adventures of Tintin in the Congo",
+   "write": [],
+   "dropped_inferred": [
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13071,
+   "book_id": 793,
+   "title": "The Adventures of Tintin in the Congo",
+   "write": [
+    "racial"
+   ],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 13072,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "blasphemy"
+   ],
+   "dropped_inferred": [
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 13073,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "religious",
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13075,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "blasphemy"
+   ],
+   "dropped_inferred": [
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 13076,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [
+    "blasphemy"
+   ],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 13077,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "religious",
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13078,
+   "book_id": 6,
+   "title": "The Satanic Verses",
+   "write": [],
+   "dropped_inferred": [
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13079,
+   "book_id": 22,
+   "title": "A Clockwork Orange",
+   "write": [
+    "language"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 13080,
+   "book_id": 22,
+   "title": "A Clockwork Orange",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 13081,
+   "book_id": 200,
+   "title": "A Court of Mist and Fury",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 13082,
+   "book_id": 200,
+   "title": "A Court of Mist and Fury",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13083,
+   "book_id": 123,
+   "title": "All Boys Aren't Blue",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 13084,
+   "book_id": 64,
+   "title": "All Quiet on the Western Front",
+   "write": [
+    "political"
+   ],
+   "dropped_inferred": [
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 13085,
+   "book_id": 64,
+   "title": "All Quiet on the Western Front",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 13087,
+   "book_id": 537,
+   "title": "Aristotle and Dante Discover the Secrets of the Universe",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 13088,
+   "book_id": 365,
+   "title": "Call Me By Your Name",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13089,
+   "book_id": 365,
+   "title": "Call Me By Your Name",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13090,
+   "book_id": 133,
+   "title": "Crank",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "drugs",
+    "sexual",
+    "violence",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 13091,
+   "book_id": 133,
+   "title": "Crank",
+   "write": [
+    "drugs",
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 13092,
+   "book_id": 814,
+   "title": "Did Six Million Really Die?",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 13093,
+   "book_id": 186,
+   "title": "Drama",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13094,
+   "book_id": 186,
+   "title": "Drama",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13095,
+   "book_id": 186,
+   "title": "Drama",
+   "write": [
+    "political",
+    "racial"
+   ],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13096,
+   "book_id": 186,
+   "title": "Drama",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13097,
+   "book_id": 658,
+   "title": "Emile, or On Education",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "religious",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13098,
+   "book_id": 223,
+   "title": "Fallout",
+   "write": [],
+   "dropped_inferred": [
+    "drugs",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13099,
+   "book_id": 223,
+   "title": "Fallout",
+   "write": [],
+   "dropped_inferred": [
+    "drugs",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13100,
+   "book_id": 577,
+   "title": "Fanny Hill",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13101,
+   "book_id": 6225,
+   "title": "Forever Amber",
+   "write": [
+    "sexual",
+    "obscenity"
+   ],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 13102,
+   "book_id": 297,
+   "title": "Heartstopper",
+   "write": [
+    "moral"
+   ],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13103,
+   "book_id": 297,
+   "title": "Heartstopper",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13105,
+   "book_id": 297,
+   "title": "Heartstopper",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13106,
+   "book_id": 267,
+   "title": "It",
+   "write": [
+    "lgbtq"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13107,
+   "book_id": 10,
+   "title": "Lady Chatterley's Lover",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13108,
+   "book_id": 10,
+   "title": "Lady Chatterley's Lover",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13109,
+   "book_id": 752,
+   "title": "Hubert Selby Jr.: Last Exit to Brooklyn",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "drugs",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 13110,
+   "book_id": 217,
+   "title": "Last Night at the Telegraph Club",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "lgbtq",
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13112,
+   "book_id": 51,
+   "title": "Lolita",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13113,
+   "book_id": 202,
+   "title": "Me and Earl and the Dying Girl",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "language",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13114,
+   "book_id": 202,
+   "title": "Me and Earl and the Dying Girl",
+   "write": [],
+   "dropped_inferred": [
+    "language",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13115,
+   "book_id": 557,
+   "title": "Mein Kampf",
+   "write": [
+    "racial"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "political (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13116,
+   "book_id": 54,
+   "title": "Naked Lunch",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "drugs",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13117,
+   "book_id": 54,
+   "title": "Naked Lunch",
+   "write": [],
+   "dropped_inferred": [
+    "drugs",
+    "obscenity",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 13118,
+   "book_id": 54,
+   "title": "Naked Lunch",
+   "write": [],
+   "dropped_inferred": [
+    "drugs",
+    "obscenity",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13119,
+   "book_id": 135,
+   "title": "Nineteen Minutes",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 13120,
+   "book_id": 197,
+   "title": "Out of Darkness",
+   "write": [
+    "language",
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13121,
+   "book_id": 197,
+   "title": "Out of Darkness",
+   "write": [
+    "violence"
+   ],
+   "dropped_inferred": [
+    "sexual",
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13122,
+   "book_id": 197,
+   "title": "Out of Darkness",
+   "write": [
+    "obscenity",
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "violence",
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13123,
+   "book_id": 82,
+   "title": "The Absolutely True Diary of a Part-Time Indian",
+   "write": [],
+   "dropped_inferred": [
+    "language",
+    "sexual",
+    "racial",
+    "drugs",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13125,
+   "book_id": 5,
+   "title": "The Bluest Eye",
+   "write": [],
+   "dropped_inferred": [
+    "racial",
+    "language",
+    "sexual (unevidenced)",
+    "violence (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13126,
+   "book_id": 18,
+   "title": "The Color Purple",
+   "write": [],
+   "dropped_inferred": [
+    "racial",
+    "violence",
+    "sexual",
+    "political (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13127,
+   "book_id": 11,
+   "title": "The Da Vinci Code",
+   "write": [],
+   "dropped_inferred": [
+    "religious (unevidenced)",
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13129,
+   "book_id": 264,
+   "title": "The DUFF: Designated Ugly Fat Friend",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 13130,
+   "book_id": 9,
+   "title": "The Handmaid's Tale",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "political",
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 13131,
+   "book_id": 973,
+   "title": "The Jewel of Medina",
+   "write": [
+    "religious"
+   ],
+   "dropped_inferred": [
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13132,
+   "book_id": 29,
+   "title": "The Perks of Being a Wallflower",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs",
+    "language",
+    "lgbtq"
+   ]
+  },
+  {
+   "ban_id": 13133,
+   "book_id": 29,
+   "title": "The Perks of Being a Wallflower",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual",
+    "drugs",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13134,
+   "book_id": 581,
+   "title": "The Protocols of the Elders of Zion",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "political",
+    "religious",
+    "racial"
+   ]
+  },
+  {
+   "ban_id": 13135,
+   "book_id": 816,
+   "title": "The Red and the Black",
+   "write": [
+    "political"
+   ],
+   "dropped_inferred": [
+    "religious (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13136,
+   "book_id": 605,
+   "title": "The Sorrows of Young Werther",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13137,
+   "book_id": 559,
+   "title": "The Turner Diaries",
+   "write": [
+    "racial",
+    "violence"
+   ],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 13138,
+   "book_id": 7536,
+   "title": "Tilt",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 13140,
+   "book_id": 53,
+   "title": "Tropic of Cancer",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 13141,
+   "book_id": 53,
+   "title": "Tropic of Cancer",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 13142,
+   "book_id": 848,
+   "title": "Watchmen",
+   "write": [],
+   "dropped_inferred": [
+    "violence (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 13143,
+   "book_id": 558,
+   "title": "The Anarchist Cookbook",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "drugs",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 20997,
+   "book_id": 8511,
+   "title": "That Night",
+   "write": [],
+   "dropped_inferred": [
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 22215,
+   "book_id": 9726,
+   "title": "The War that Saved My Life",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 23005,
+   "book_id": 9987,
+   "title": "If You Leave",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 25200,
+   "book_id": 12856,
+   "title": "Mysterious Facts Gods & Demons",
+   "write": [],
+   "dropped_inferred": [
+    "religious",
+    "blasphemy"
+   ]
+  },
+  {
+   "ban_id": 25240,
+   "book_id": 12895,
+   "title": "Isteri Muda yang Berlaku Curang",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 25343,
+   "book_id": 12995,
+   "title": "Petunjuk Membuat Azimat dan Benda Bertuah",
+   "write": [],
+   "dropped_inferred": [
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 26172,
+   "book_id": 11026,
+   "title": "On Sparks",
+   "write": [],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 26397,
+   "book_id": 11436,
+   "title": "Honeymoon Hotel",
+   "write": [],
+   "dropped_inferred": [
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 26451,
+   "book_id": 11488,
+   "title": "We All Need Someone",
+   "write": [],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 26486,
+   "book_id": 11523,
+   "title": "I, Jan Cremer",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 26488,
+   "book_id": 11525,
+   "title": "It's Getting Harder All the Time",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 26856,
+   "book_id": 12568,
+   "title": "Mayat Bertukar Bangkai Khinzir",
+   "write": [],
+   "dropped_inferred": [
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 26954,
+   "book_id": 14317,
+   "title": "Untitled Chinese publication (KDN P.U. (A) 70 / 2026)",
+   "write": [],
+   "dropped_inferred": []
+  },
+  {
+   "ban_id": 29115,
+   "book_id": 16429,
+   "title": "Franz Overbeck und Friedrich Nietzsche, eine Freundschaft",
+   "write": [],
+   "dropped_inferred": [
+    "political"
+   ]
+  },
+  {
+   "ban_id": 29167,
+   "book_id": 149,
+   "title": "Alice's Adventures in Wonderland",
+   "write": [],
+   "dropped_inferred": [
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 29807,
+   "book_id": 600,
+   "title": "Fifty Shades of Grey",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 29808,
+   "book_id": 65,
+   "title": "For Whom the Bell Tolls",
+   "write": [
+    "political"
+   ],
+   "dropped_inferred": [
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 29809,
+   "book_id": 144,
+   "title": "Sophie's Choice",
+   "write": [
+    "political"
+   ],
+   "dropped_inferred": [
+    "racial (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29810,
+   "book_id": 144,
+   "title": "Sophie's Choice",
+   "write": [
+    "sexual"
+   ],
+   "dropped_inferred": [
+    "political",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 29811,
+   "book_id": 74,
+   "title": "The Picture of Dorian Gray",
+   "write": [
+    "obscenity",
+    "moral"
+   ],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 29814,
+   "book_id": 261,
+   "title": "This Book Is Gay",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 29815,
+   "book_id": 7232,
+   "title": "Tokyo Ghoul",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 29843,
+   "book_id": 204,
+   "title": "A Court of Frost and Starlight",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29844,
+   "book_id": 134,
+   "title": "A Court of Thorns and Roses",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29845,
+   "book_id": 201,
+   "title": "A Court of Wings and Ruin",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 29846,
+   "book_id": 201,
+   "title": "A Court of Wings and Ruin",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 29848,
+   "book_id": 199,
+   "title": "Empire of Storms",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 29849,
+   "book_id": 819,
+   "title": "Justine, or the Misfortunes of Virtue",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence",
+    "moral",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 29850,
+   "book_id": 817,
+   "title": "Les Onze Mille Verges",
+   "write": [
+    "obscenity"
+   ],
+   "dropped_inferred": [
+    "sexual",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 29851,
+   "book_id": 205,
+   "title": "Lucky",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 29852,
+   "book_id": 6496,
+   "title": "My Secret Life",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29853,
+   "book_id": 6496,
+   "title": "My Secret Life",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29854,
+   "book_id": 921,
+   "title": "Philosophical Dictionary",
+   "write": [],
+   "dropped_inferred": [
+    "political",
+    "religious",
+    "blasphemy"
+   ]
+  },
+  {
+   "ban_id": 29856,
+   "book_id": 121,
+   "title": "Thirteen Reasons Why",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence",
+    "drugs"
+   ]
+  },
+  {
+   "ban_id": 29857,
+   "book_id": 181,
+   "title": "Water for Elephants",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 29858,
+   "book_id": 181,
+   "title": "Water for Elephants",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 29859,
+   "book_id": 181,
+   "title": "Water for Elephants",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 29860,
+   "book_id": 181,
+   "title": "Water for Elephants",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 29862,
+   "book_id": 84,
+   "title": "A Wrinkle in Time",
+   "write": [],
+   "dropped_inferred": [
+    "religious (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29863,
+   "book_id": 84,
+   "title": "A Wrinkle in Time",
+   "write": [
+    "religious"
+   ],
+   "dropped_inferred": [
+    "blasphemy (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29865,
+   "book_id": 493,
+   "title": "Stamped from the Beginning: The Definitive History of Racist Ideas in America",
+   "write": [],
+   "dropped_inferred": [
+    "racial (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 29866,
+   "book_id": 995,
+   "title": "Death of a Salesman",
+   "write": [],
+   "dropped_inferred": [
+    "language",
+    "sexual",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 29868,
+   "book_id": 220,
+   "title": "Flamer",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 29869,
+   "book_id": 220,
+   "title": "Flamer",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 40542,
+   "book_id": 134,
+   "title": "A Court of Thorns and Roses",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40543,
+   "book_id": 204,
+   "title": "A Court of Frost and Starlight",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40544,
+   "book_id": 214,
+   "title": "A Court of Silver Flames",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "moral",
+    "sexual (unevidenced)",
+    "obscenity (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40545,
+   "book_id": 224,
+   "title": "What Girls Are Made Of",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 40546,
+   "book_id": 201,
+   "title": "A Court of Wings and Ruin",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40549,
+   "book_id": 7536,
+   "title": "Tilt",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 40550,
+   "book_id": 223,
+   "title": "Fallout",
+   "write": [],
+   "dropped_inferred": [
+    "drugs",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40551,
+   "book_id": 265,
+   "title": "Oryx and Crake",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40552,
+   "book_id": 254,
+   "title": "Blankets",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "religious"
+   ]
+  },
+  {
+   "ban_id": 40553,
+   "book_id": 207,
+   "title": "Living Dead Girl",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40554,
+   "book_id": 216,
+   "title": "Damsel",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40555,
+   "book_id": 251,
+   "title": "Like a Love Story",
+   "write": [],
+   "dropped_inferred": [
+    "lgbtq",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40556,
+   "book_id": 192,
+   "title": "Tricks",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 40557,
+   "book_id": 181,
+   "title": "Water for Elephants",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 40558,
+   "book_id": 121,
+   "title": "Thirteen Reasons Why",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs"
+   ]
+  },
+  {
+   "ban_id": 40559,
+   "book_id": 221,
+   "title": "Wicked: The Life and Times of the Wicked Witch of the West",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 40560,
+   "book_id": 135,
+   "title": "Nineteen Minutes",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 40561,
+   "book_id": 29,
+   "title": "The Perks of Being a Wallflower",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "drugs",
+    "lgbtq"
+   ]
+  },
+  {
+   "ban_id": 40563,
+   "book_id": 963,
+   "title": "Breathless",
+   "write": [],
+   "dropped_inferred": [
+    "sexual (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40564,
+   "book_id": 225,
+   "title": "The Carnival at Bray",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 40565,
+   "book_id": 227,
+   "title": "The Handmaid's Tale: The Graphic Novel",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 40566,
+   "book_id": 242,
+   "title": "Red Hood",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 40567,
+   "book_id": 120,
+   "title": "Looking for Alaska",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "language",
+    "drugs",
+    "obscenity"
+   ]
+  },
+  {
+   "ban_id": 40568,
+   "book_id": 252,
+   "title": "Life is Funny",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40569,
+   "book_id": 219,
+   "title": "The Haters",
+   "write": [],
+   "dropped_inferred": [
+    "language",
+    "sexual"
+   ]
+  },
+  {
+   "ban_id": 40570,
+   "book_id": 5,
+   "title": "The Bluest Eye",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "racial",
+    "sexual (unevidenced)",
+    "language (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40571,
+   "book_id": 237,
+   "title": "People Kill People",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "racial",
+    "political",
+    "violence (unevidenced)",
+    "language (unevidenced)"
+   ]
+  },
+  {
+   "ban_id": 40572,
+   "book_id": 231,
+   "title": "A Stolen Life",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "moral"
+   ]
+  },
+  {
+   "ban_id": 40573,
+   "book_id": 268,
+   "title": "A Clash of Kings",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "political"
+   ]
+  },
+  {
+   "ban_id": 40574,
+   "book_id": 205,
+   "title": "Lucky",
+   "write": [],
+   "dropped_inferred": [
+    "sexual",
+    "violence"
+   ]
+  },
+  {
+   "ban_id": 40575,
+   "book_id": 1280,
+   "title": "Different Seasons: Four Novellas",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "language"
+   ]
+  },
+  {
+   "ban_id": 40639,
+   "book_id": 253,
+   "title": "Push",
+   "write": [],
+   "dropped_inferred": [
+    "violence",
+    "sexual",
+    "obscenity"
+   ]
+  }
+ ]
+}
