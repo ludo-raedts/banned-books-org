@@ -31,19 +31,37 @@
  *     → fills the gap rows in ban_reason_links
  *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts --book-ids=37,209 --apply
  *   npx tsx --env-file=.env.local scripts/enrich-reasons.ts --ids-file=data/x.txt --apply
- *     → SCOPE to those books only. Unscoped the script loads every ban in the
- *       catalogue (~36k rows over PostgREST) and bills an LLM call per
- *       candidate, so a targeted follow-up should always pass a scope.
+ *     → SCOPE to those books only.
+ *   --class=untagged | other | both   (default both) — pick one candidate class
+ *   --limit=N                          cap the candidate set (cheap first look)
+ *   --report=data/foo.md               classify EVERY candidate and write a
+ *                                      review artifact. In a dry-run this is
+ *                                      how you see all proposals before
+ *                                      writing anything (the plain dry-run only
+ *                                      prints 5 samples).
+ *
+ * Candidate ids are resolved over a direct Postgres connection first, so a run
+ * loads only the rows it will actually classify instead of the whole ~36k-row
+ * bans table over PostgREST. Every candidate still costs one LLM call, so scope
+ * or --limit any exploratory run.
  */
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
-import { flagValue, isApply } from './lib/cli'
+import { newPgClient } from '../src/lib/wikipedia/importer'
+import { flagValue, intFlag, isApply } from './lib/cli'
 
 const APPLY = isApply()
 const BATCH_SIZE = 8
 const RATE_LIMIT_MS = 150
+
+const CLASS = (flagValue('class') ?? 'both') as 'untagged' | 'other' | 'both'
+if (!['untagged', 'other', 'both'].includes(CLASS)) {
+  throw new Error(`--class must be untagged | other | both (got "${CLASS}")`)
+}
+const LIMIT = intFlag('limit', 0) // 0 = no cap
+const REPORT = flagValue('report')
 
 /** Book-id scope from --book-ids=1,2,3 or --ids-file=<one id per line>. */
 function scopeBookIds(): number[] | null {
@@ -132,6 +150,40 @@ Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
   } catch { return ['other'] }
 }
 
+/**
+ * Candidate ban ids for the requested class, resolved in SQL. PostgREST cannot
+ * express "has no reason link", so doing this over the REST select meant pulling
+ * every ban in the catalogue and filtering in memory.
+ */
+async function candidateBanIds(scope: number[] | null): Promise<{ untagged: number[]; onlyOther: number[] }> {
+  const pg = newPgClient()
+  await pg.connect()
+  try {
+    const scopeSql = scope ? 'and b.book_id = any($1)' : ''
+    const params = scope ? [scope] : []
+    const { rows: untagged } = await pg.query(
+      `select b.id from bans b
+       where not exists (select 1 from ban_reason_links l where l.ban_id = b.id) ${scopeSql}
+       order by b.id`, params)
+    const { rows: onlyOther } = await pg.query(
+      `select b.id from bans b
+       where exists (
+           select 1 from ban_reason_links l join reasons r on r.id = l.reason_id
+           where l.ban_id = b.id and r.slug = 'other')
+         and not exists (
+           select 1 from ban_reason_links l join reasons r on r.id = l.reason_id
+           where l.ban_id = b.id and r.slug <> 'other')
+         ${scopeSql}
+       order by b.id`, params)
+    return {
+      untagged: untagged.map((r) => Number(r.id)),
+      onlyOther: onlyOther.map((r) => Number(r.id)),
+    }
+  } finally {
+    await pg.end()
+  }
+}
+
 async function main() {
   console.log(`\n── enrich-reasons (${APPLY ? 'APPLY' : 'DRY-RUN'}) ──\n`)
 
@@ -170,41 +222,49 @@ async function main() {
   const scope = scopeBookIds()
   if (scope) console.log(`Scope: ${scope.length} book id(s) — ${scope.slice(0, 12).join(', ')}${scope.length > 12 ? ', …' : ''}\n`)
 
-  let allBans: BanRow[] = []
-  let offset = 0
-  while (true) {
-    let q = supabase.from('bans').select(SELECT).range(offset, offset + 999).order('id')
-    if (scope) q = q.in('book_id', scope)
-    const { data, error } = await q
-    if (error) { console.error('DB error:', error.message); process.exit(1) }
-    if (!data || data.length === 0) break
-    allBans = allBans.concat(data as unknown as BanRow[])
-    if (data.length < 1000) break
-    offset += 1000
+  // Candidates: rows with no usable reason — no link at all, or nothing but
+  // 'other'. Resolved in SQL so only these rows travel over PostgREST.
+  const cand = await candidateBanIds(scope)
+  let ids = CLASS === 'untagged' ? cand.untagged
+    : CLASS === 'other' ? cand.onlyOther
+    : [...cand.untagged, ...cand.onlyOther]
+
+  console.log(`Bans with no reason at all   : ${cand.untagged.length}`)
+  console.log(`Bans with only 'other' reason: ${cand.onlyOther.length}`)
+  console.log(`Candidate class              : ${CLASS}`)
+  if (LIMIT > 0 && ids.length > LIMIT) {
+    console.log(`Candidates                   : ${ids.length} → capped at ${LIMIT} (--limit)`)
+    ids = ids.slice(0, LIMIT)
+  } else {
+    console.log(`Candidates                   : ${ids.length}`)
   }
 
-  // Candidates: no usable reason on the row. Either no link at all, or nothing
-  // but 'other'. A row carrying any specific reason is left alone.
-  const reasonSlugs = (ban: BanRow) => ban.ban_reason_links.map(l => l.reasons?.slug).filter(Boolean)
-  const untagged = allBans.filter((ban) => reasonSlugs(ban).length === 0)
-  const onlyOther = allBans.filter((ban) => {
-    const slugs = reasonSlugs(ban)
-    return slugs.length > 0 && slugs.every(s => s === 'other')
-  })
-  const targets = [...untagged, ...onlyOther]
-
-  console.log(`Total bans loaded            : ${allBans.length}`)
-  console.log(`Bans with only 'other' reason: ${onlyOther.length}`)
-  console.log(`Bans with no reason at all   : ${untagged.length}`)
-  console.log(`Candidates                   : ${targets.length}`)
-
-  if (targets.length === 0) {
+  if (ids.length === 0) {
     console.log('Nothing to classify.')
     return
   }
 
-  const limit = APPLY ? targets.length : Math.min(5, targets.length)
-  console.log(`\n${APPLY ? `Classifying ${targets.length} bans…` : `DRY-RUN — showing ${limit} samples:`}\n`)
+  let allBans: BanRow[] = []
+  for (let i = 0; i < ids.length; i += 1000) {
+    const { data, error } = await supabase
+      .from('bans').select(SELECT).in('id', ids.slice(i, i + 1000)).order('id')
+    if (error) { console.error('DB error:', error.message); process.exit(1) }
+    allBans = allBans.concat((data ?? []) as unknown as BanRow[])
+  }
+  const untaggedIds = new Set(cand.untagged)
+  const targets = allBans
+
+  // A dry-run normally prints 5 samples; --report means "classify everything and
+  // write it down" so the full proposal can be reviewed before any write.
+  const limit = APPLY || REPORT ? targets.length : Math.min(5, targets.length)
+  console.log(`\n${APPLY ? `Classifying ${targets.length} bans…`
+    : REPORT ? `DRY-RUN — classifying all ${targets.length} for the report:`
+    : `DRY-RUN — showing ${limit} samples:`}\n`)
+
+  type ReportRow = { banId: number; bookId: number | null; title: string; author: string
+    cls: string; country: string; year: number | null; region: string; institution: string
+    desc: string; slugs: string[] }
+  const reportRows: ReportRow[] = []
 
   let updated = 0, kept = 0, errored = 0
 
@@ -236,10 +296,24 @@ async function main() {
       const n = i + j + 1
       const title = book?.title ?? `ban#${ban.id}`
 
+      if (REPORT) {
+        reportRows.push({
+          banId: ban.id, bookId: book?.id ?? null, title, author: author ?? '',
+          cls: untaggedIds.has(ban.id) ? 'untagged' : "only-'other'",
+          country: ban.country_code ?? '', year: ban.year_started,
+          region: ban.region ?? '', institution: ban.institution ?? '',
+          desc: ban.description ?? '', slugs,
+        })
+      }
+
       if (!APPLY) {
-        console.log(`  [${n}/${limit}] "${title}" — ${author}`)
-        console.log(`    Reasons: ${slugs.join(', ')}`)
-        console.log()
+        if (!REPORT) {
+          console.log(`  [${n}/${limit}] "${title}" — ${author}`)
+          console.log(`    Reasons: ${slugs.join(', ')}`)
+          console.log()
+        } else if (n % 25 === 0 || n === limit) {
+          console.log(`  … ${n}/${limit} classified`)
+        }
         continue
       }
 
@@ -278,6 +352,45 @@ async function main() {
     if (i + BATCH_SIZE < limit) await sleep(RATE_LIMIT_MS)
   }
 
+  if (REPORT && reportRows.length) {
+    const bySlug = new Map<string, number>()
+    for (const r of reportRows) for (const sl of r.slugs) bySlug.set(sl, (bySlug.get(sl) ?? 0) + 1)
+    const stillOther = reportRows.filter((r) => r.slugs.length === 1 && r.slugs[0] === 'other')
+    const noDesc = reportRows.filter((r) => !r.desc)
+    const lines: string[] = []
+    lines.push(`# enrich-reasons ${APPLY ? 'applied' : 'DRY-RUN'} — class ${CLASS}`)
+    lines.push('')
+    lines.push(`Run: ${new Date().toISOString()} · model gpt-4o-mini · ${reportRows.length} bans classified`)
+    lines.push(APPLY ? 'Written to ban_reason_links.' : 'Nothing was written to the database.')
+    lines.push('')
+    lines.push(`- would stay 'other' (no specific reason found): **${stillOther.length}**`)
+    lines.push(`- rows without a per-event description (book-level inference only): **${noDesc.length}**`)
+    lines.push('')
+    lines.push('## Proposed reasons per slug')
+    lines.push('')
+    lines.push('| slug | rows |')
+    lines.push('| --- | --- |')
+    for (const [sl, n] of [...bySlug.entries()].sort((a, b) => b[1] - a[1])) lines.push(`| ${sl} | ${n} |`)
+    lines.push('')
+    lines.push('## Per row')
+    lines.push('')
+    lines.push('| ban | book | title | event | proposed | has per-event description |')
+    lines.push('| --- | --- | --- | --- | --- | --- |')
+    for (const r of reportRows) {
+      const event = [r.country, r.year ?? '', r.region, r.institution].filter(Boolean).join(' · ').replace(/\|/g, '/')
+      lines.push(`| ${r.banId} | ${r.bookId ?? '-'} | ${r.title.replace(/\|/g, '/')} | ${event} | ${r.slugs.join(', ')} | ${r.desc ? 'yes' : 'no'} |`)
+    }
+    lines.push('')
+    lines.push('## Rows with a per-event description (the strongest signal)')
+    lines.push('')
+    for (const r of reportRows.filter((x) => x.desc)) {
+      lines.push(`- **ban ${r.banId}** "${r.title}" → \`${r.slugs.join(', ')}\``)
+      lines.push(`  > ${r.desc.replace(/\s+/g, ' ').slice(0, 400)}`)
+    }
+    writeFileSync(REPORT, lines.join('\n') + '\n')
+    console.log(`\nreport → ${REPORT} (${reportRows.length} rows)`)
+  }
+
   console.log(`\n── Done ──`)
   if (APPLY) {
     console.log(`Updated (replaced 'other'): ${updated}`)
@@ -285,6 +398,7 @@ async function main() {
     console.log(`Errors: ${errored}`)
   } else {
     console.log(`Would classify ${targets.length} bans. Re-run with --apply to write.\n`)
+    if (!REPORT) console.log('Tip: --report=data/<file>.md classifies every candidate and writes a review artifact.\n')
   }
 }
 
