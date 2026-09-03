@@ -32,6 +32,7 @@ import { writeFileSync, readFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
+import { isMappedGenre } from '../src/components/genre-badge'
 import { slugify } from '../src/lib/imports/slugify'
 import { titlesMatch } from '../src/lib/enrich/title-match'
 
@@ -91,6 +92,7 @@ interface Book {
   description_book: string | null
   first_published_year: number | null
   original_language: string | null
+  genres: string[] | null
 }
 interface Author {
   id: number
@@ -106,7 +108,7 @@ async function load() {
   const [books, authors, bookAuthors, bans, banSourceLinks] = await Promise.all([
     paginate<Book>(
       'books',
-      'id, slug, title, isbn13, cover_url, cover_status, description_book, first_published_year, original_language',
+      'id, slug, title, isbn13, cover_url, cover_status, description_book, first_published_year, original_language, genres',
       'id',
     ),
     paginate<Author>('authors', 'id, slug, display_name, birth_year, death_year, bio, photo_url', 'id'),
@@ -257,6 +259,39 @@ async function runChecks(): Promise<Finding[]> {
     severity: 'invariant', count: badYears.length, samples: badYears.slice(0, SAMPLE_CAP),
   })
 
+  // 6. genre slugs outside the canonical vocabulary. `books.genres` is a bare
+  //    text[] with no check constraint, so nothing in the DB stops an importer or
+  //    a script from writing a slug the app does not know. The consequence is
+  //    silent: GenreBadge renders the grey unstyled fallback, and
+  //    collectDiscoverGenres() filters the slug out entirely, so the book
+  //    disappears from the /discover genre wizard. Held at 0 since the 2026-09-03
+  //    vocabulary sweep (scripts/_fix_genre_vocabulary.ts folded 411 stray
+  //    occurrences across 23 slugs). This invariant is what the planned promotion
+  //    of the vocabulary to a `genres` DB table would otherwise buy us.
+  const offVocab: string[] = []
+  for (const b of books) {
+    for (const g of b.genres ?? []) {
+      if (!isMappedGenre(g)) offVocab.push(`book ${b.slug}: "${g}"`)
+    }
+  }
+  findings.push({
+    id: 'genre-off-vocabulary',
+    label: 'genre slug outside the canonical GENRES map (src/components/genre-badge.tsx)',
+    severity: 'invariant', count: offVocab.length, samples: offVocab.slice(0, SAMPLE_CAP),
+  })
+
+  // 7. more genre slugs than the vocabulary allows. The classifier prompt and the
+  //    admin both work to a 1–3 cap; a 4th slug is always an append by a second
+  //    pass that did not read what was already there (64 rows carried an audience
+  //    tag appended onto a full 3-slug set).
+  const overCap = books.filter((b) => (b.genres ?? []).length > 3)
+  findings.push({
+    id: 'genre-over-slug-cap',
+    label: 'book with more than 3 genre slugs (vocabulary allows 1–3)',
+    severity: 'invariant', count: overCap.length,
+    samples: overCap.slice(0, SAMPLE_CAP).map((b) => `${b.slug}: ${JSON.stringify(b.genres)}`),
+  })
+
   // ─────────── DRIFT (compared to baseline) ───────────
 
   // 6. non-person authors (publishers / orgs / anon groups misfiled as people)
@@ -402,6 +437,24 @@ async function runChecks(): Promise<Finding[]> {
     label: 'Spanish-edition row (original_language=en) beside an English row, same author',
     severity: 'drift', count: editionDupes.length,
     samples: editionDupes.slice(0, SAMPLE_CAP),
+  })
+
+  // 16. books whose ONLY genre is literary-fiction. Drift, not an invariant: for
+  //     plenty of books that is the honest answer. But the count is a default
+  //     detector — scripts/import-pen.ts used to stamp it as the fall-through of a
+  //     title-regex ladder, which is how it reached 40% of every classified book.
+  //     Growth past baseline means an import started guessing genres again, which
+  //     an importer must never do. The number comes DOWN as the requeue
+  //     (scripts/_audit_literary_fiction_default.ts --write-worklist, then
+  //     enrich-genres-gpt.ts --ids-file) re-grades rows against a real description.
+  const soloLiteraryFiction = books.filter(
+    (b) => (b.genres ?? []).length === 1 && b.genres?.[0] === 'literary-fiction',
+  )
+  findings.push({
+    id: 'genre-solo-literary-fiction',
+    label: "books whose only genre is literary-fiction (default-stamp proxy)",
+    severity: 'drift', count: soloLiteraryFiction.length,
+    samples: soloLiteraryFiction.slice(0, SAMPLE_CAP).map((b) => `${b.slug}: "${b.title}"`),
   })
 
   return findings

@@ -1,7 +1,7 @@
 /**
  * GPT-powered genre enrichment for books with an empty `genres` array.
  *
- * Picks 1–3 slugs from the fixed 21-slug vocabulary defined in
+ * Picks 1–3 slugs from the fixed 25-slug vocabulary defined in
  * src/components/genre-badge.tsx. Uses title + author + first_published_year +
  * description_book as signal. Returns UNKNOWN-equivalent when nothing fits or
  * the model has no idea — book stays in the candidate pool.
@@ -27,8 +27,20 @@
  *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply --limit=200
  *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply --slug=animal-farm
  *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply --overwrite --slug=animal-farm
+ *
+ * RE-GRADING a worklist (the requeue route). --ids / --ids-file re-grade an explicit
+ * set of book ids and imply --overwrite, so rows that already carry a genre can be
+ * corrected. This is how the literary-fiction stamp left behind by the old
+ * import-pen.ts regex gets undone — scripts/_audit_literary_fiction_default.ts
+ * writes the worklist:
+ *   npx tsx --env-file=.env.local scripts/_audit_literary_fiction_default.ts --write-worklist
+ *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --ids-file=data/genre-requeue-ids.txt
+ *   npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --ids-file=data/genre-requeue-ids.txt --apply
+ * A re-grade that comes back empty/low-confidence LEAVES THE EXISTING VALUE ALONE
+ * (it does not blank the row), so an unrecognised title keeps whatever it had.
  */
 
+import { readFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
@@ -38,6 +50,8 @@ export type EnrichGenresOptions = {
   overwrite: boolean
   limit:     number
   slug:      string | null
+  /** Explicit re-grade worklist. Non-null implies overwrite. */
+  ids:       number[] | null
   delay:     number
   model:     string
 }
@@ -49,20 +63,37 @@ export function optionsFromArgv(defaults: Partial<EnrichGenresOptions> = {}): En
   const slugArg   = process.argv.find(a => a.startsWith('--slug='))
   const delayArg  = process.argv.find(a => a.startsWith('--delay='))
   const modelArg  = process.argv.find(a => a.startsWith('--model='))
+  const idsArg    = process.argv.find(a => a.startsWith('--ids='))
+  const idsFile   = process.argv.find(a => a.startsWith('--ids-file='))
+
+  let ids: number[] | null = null
+  if (idsArg || idsFile) {
+    const raw = idsFile
+      ? readFileSync(idsFile.slice('--ids-file='.length), 'utf8')
+      : idsArg!.slice('--ids='.length)
+    ids = [...new Set(
+      raw.split(/[\s,]+/).map(t => parseInt(t, 10)).filter(n => Number.isFinite(n)),
+    )]
+    if (ids.length === 0) throw new Error('--ids/--ids-file resolved to zero book ids')
+  }
+
   // Default apply = no cap (paginate over the whole candidate set); dry-run = 5 samples.
   const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : (apply ? Infinity : 5)
   return {
     apply,
-    overwrite,
+    // An explicit worklist is always a re-grade of rows that already have a value.
+    overwrite: overwrite || ids != null,
     limit,
     slug:  slugArg?.split('=')[1] ?? null,
+    ids,
     delay: delayArg ? parseInt(delayArg.split('=')[1], 10) : (defaults.delay ?? 300),
     model: modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? defaults.model ?? 'gpt-4o-mini',
   }
 }
 
 // Mirror of GENRES in src/components/genre-badge.tsx. Keep in sync until the
-// vocabulary moves to a DB table.
+// vocabulary moves to a DB table. scripts/_audit_genre_vocabulary.ts fails if the
+// DB ever carries a slug outside the map, which is what catches a missed sync.
 const GENRE_SLUGS = [
   'children',
   'young-adult',
@@ -85,6 +116,14 @@ const GENRE_SLUGS = [
   'experimental',
   'controversial-non-fiction',
   'political-non-fiction',
+  // Added 2026-09-03. picture-book / middle-grade-fiction were already in the DB
+  // and load-bearing for /banned-childrens-books; poetry / drama existed as stray
+  // slugs and, more importantly, the model had no honest slot for a banned poetry
+  // collection or play and was pushing them into literary-fiction.
+  'picture-book',
+  'middle-grade-fiction',
+  'poetry',
+  'drama',
 ] as const
 
 type GenreSlug = typeof GENRE_SLUGS[number]
@@ -115,14 +154,32 @@ Vocabulary (slug → meaning):
 - experimental:            Form-breaking / avant-garde literature
 - controversial-non-fiction: Non-fiction that drew sustained backlash for its claims (Mein Kampf, Anarchist Cookbook, Hit Man, Turner Diaries)
 - political-non-fiction:   Non-fiction whose core subject is political analysis or polemic (NOT memoir, NOT controversial-non-fiction)
+- picture-book:            Illustrated book for pre-readers/early readers, art on every page
+- middle-grade-fiction:    Fiction written for roughly 8–12s (below young-adult)
+- poetry:                  Poetry collection or book-length poem — NOT fiction
+- drama:                   Play or screenplay — NOT fiction
 
 Rules:
 - Pick 1–3 slugs. Prefer the smallest set that captures the work.
 - Combine when honest: a YA dystopian novel = ["young-adult", "dystopian"]. To Kill a Mockingbird = ["coming-of-age", "historical-fiction"].
-- Children's picture books: just ["children"]. Don't add young-adult.
+- Children's picture books: ["children", "picture-book"]. Don't add young-adult.
+- NEVER use literary-fiction as a catch-all for "it's a novel and I'm not sure".
+  It means specifically character/style-driven adult literary fiction. If the book
+  is a novel but you cannot say what KIND of novel, return an empty array — an
+  honest empty answer is wanted, a filler label is not. (literary-fiction was
+  previously stamped on 40% of this catalogue by an importer's regex fallback,
+  which is exactly the failure this rule exists to prevent.)
+- FORM BEATS SUBJECT for comics and verse. A comics adaptation of a prose work is
+  ["graphic-novel", …] — never the source novel's genre: Hinds's The Odyssey is a
+  graphic novel, not literary-fiction; Maus is ["graphic-novel", "memoir"]. Same
+  for poetry and plays: a verse collection is ["poetry"], a play is ["drama"], not
+  literary-fiction.
+- Non-fiction never pairs with a fiction slug. A history book is
+  ["non-fiction", …], never historical-fiction; a political tract is
+  political-non-fiction, never political-fiction.
 - GROUNDING (critical): Only classify if a Description is provided below, OR you reliably know THIS EXACT book — this specific title by this specific author — from training data. If neither holds, return an empty array with confidence "low". NEVER infer genre from the title or author name alone: a title that merely sounds like a diary, a children's book, a memoir, a sci-fi story, etc. is NOT evidence of genre. When there is no description and you don't genuinely recognise the specific book, an empty array IS the correct, expected answer — do not guess.
 - If genuinely unsure or the book isn't in your training data, return an empty array.
-- Never invent slugs. Only the 21 above are allowed.`
+- Never invent slugs. Only the ones listed above are allowed.`
 
 const RESPONSE_SCHEMA = {
   name: 'genre_classification',
@@ -242,7 +299,13 @@ async function fetchCandidates(
       .order('id')
       .range(from, from + PAGE - 1)
 
-    if (opts.slug) {
+    if (opts.ids) {
+      // Chunk the id list: one .in() with thousands of values blows past the
+      // PostgREST URL length limit.
+      const chunk = opts.ids.slice(from, from + PAGE)
+      if (chunk.length === 0) break
+      query = supabase.from('books').select(SELECT_COLS).in('id', chunk).order('id')
+    } else if (opts.slug) {
       query = query.eq('slug', opts.slug)
     } else if (!opts.overwrite) {
       // Empty text[] arrays are stored as '{}'; Supabase needs the raw .filter form.
@@ -255,6 +318,10 @@ async function fetchCandidates(
     const rows = (data ?? []) as unknown as BookRow[]
     all.push(...rows)
 
+    if (opts.ids) {
+      if (from + PAGE >= opts.ids.length) break // id list exhausted
+      continue
+    }
     if (rows.length < PAGE) break               // last page
     if (Number.isFinite(opts.limit) && all.length >= opts.limit) break
     if (opts.slug) break                          // single-target never paginates

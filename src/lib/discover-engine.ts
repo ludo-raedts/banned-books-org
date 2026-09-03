@@ -25,9 +25,13 @@ export const ICONIC_BOOK_SLUGS = new Set<string>([
   'the-bluest-eye',
 ])
 
-export const GENRE_ALIASES: Record<string, string[]> = {
-  'young-adult': ['young-adult', 'young-adult-fiction'],
-}
+// Canonical slug → extra DB slugs that mean the same thing, so a wizard filter
+// still matches rows an import spelled differently. Empty since the 2026-09-03
+// genre-vocabulary sweep folded every synonym away (`young-adult-fiction` →
+// `young-adult` was the last one); kept because the mechanism is the cheap place
+// to absorb a future import's spelling. The off-vocabulary invariant in
+// scripts/audit-integrity.ts is what actually catches new drift.
+export const GENRE_ALIASES: Record<string, string[]> = {}
 
 export const GENRE_BLOCKLIST = new Set<string>([
   'literary-fiction',

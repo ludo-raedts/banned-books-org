@@ -22,6 +22,19 @@ const GENRES: Record<string, { label: string; classes: string }> = {
   'experimental':             { label: 'Experimental',             classes: 'bg-fuchsia-100 text-fuchsia-700' },
   'controversial-non-fiction':{ label: 'Controversial non-fiction',classes: 'bg-orange-100 text-orange-800' },
   'political-non-fiction':    { label: 'Political non-fiction',    classes: 'bg-sky-100 text-sky-700' },
+  // Added 2026-09-03 by the genre-vocabulary audit (scripts/_audit_genre_vocabulary.ts).
+  // These four were already in the DB but outside the map, so they rendered as the
+  // grey fallback badge and were dropped from the /discover wizard:
+  //   • picture-book / middle-grade-fiction — real publishing categories, and
+  //     load-bearing: /banned-childrens-books buckets on exactly these slugs.
+  //   • poetry / drama — neither is fiction, so the classifier previously had no
+  //     honest slot for a banned poetry collection or play and pushed them into
+  //     literary-fiction. Parallel to `essay`, which is here for the same reason.
+  // Every OTHER stray slug folds or drops instead — see scripts/lib/genre-folds.ts.
+  'picture-book':             { label: 'Picture book',             classes: 'bg-pink-100 text-pink-700' },
+  'middle-grade-fiction':     { label: 'Middle grade',             classes: 'bg-blue-100 text-blue-800' },
+  'poetry':                   { label: 'Poetry',                   classes: 'bg-purple-100 text-purple-800' },
+  'drama':                    { label: 'Drama',                    classes: 'bg-amber-100 text-amber-700' },
 }
 
 // Sentence-case fallback for genres not in the map above (e.g. "science",

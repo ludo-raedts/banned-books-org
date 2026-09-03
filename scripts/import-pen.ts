@@ -155,20 +155,26 @@ function extractYear(s: string): number | null {
   return m?.length ? Math.min(...m.map(Number)) : null
 }
 
-// Lightweight genre heuristic, mirrors the April seed.
-function guessGenres(title: string, author: string): string[] {
-  const t = title.toLowerCase(); const a = author.toLowerCase()
-  if (/memoir|diary|autobiography|my life|i am|boy|girl who/.test(t)) return ['memoir']
-  if (/graphic novel|illustrated/.test(t)) return ['graphic-novel']
-  if (/queer|transgender|gay|lesbian|bisexual|pride|lgbtq/.test(t)) return ['young-adult']
-  if (/dragon|throne|court|kingdom|realm|crown|magic|fae|blood and/.test(t)) return ['fantasy']
-  if (/dystopia|hunger|divergent|maze/.test(t)) return ['dystopian', 'young-adult']
-  if (/murder|kill|dark|horror|dead|blood/.test(t)) return ['thriller']
-  if (/history|war|slavery|civil rights|jim crow/.test(t)) return ['historical-fiction']
-  if (/poems?|poetry|verse/.test(t)) return ['literary-fiction']
-  if (/green|anderson|blume|hinton|crutcher|paulsen|lowry|pilkey|dahl|alexie/.test(a)) return ['young-adult']
-  return ['literary-fiction']
-}
+// REMOVED 2026-09-03: guessGenres(title, author).
+//
+// It was a title-regex ladder ending in `return ['literary-fiction']`, so every
+// PEN title that matched nothing got stamped literary-fiction. Measured effect:
+// 6,469 of the 7,976 PEN-sourced books took that fall-through, and 91.9% of PEN
+// books carried EXACTLY what the ladder emitted — which is how literary-fiction
+// ended up on 40% of every classified book in the catalogue.
+//
+// Worse than the default: the stamp made those rows invisible to the real
+// classifier. enrich-genres-gpt.ts targets `genres = '{}'`, so a non-empty stamp
+// permanently excluded the row from ever being graded. And the non-default
+// branches actively mislabelled — "The Rape of Nanking" (history) →
+// historical-FICTION via /war/, "Memoirs of a Geisha" (a novel) → memoir,
+// "History Is All You Left Me" (contemporary YA) → historical-fiction,
+// "Man o' War" (contemporary YA) → historical-fiction.
+//
+// An import records what a source says. It has no business classifying: PEN's
+// spreadsheet carries title, author, district and date, not genre. New books
+// therefore land with `genres: []` and are picked up by the enrichment sweep,
+// which reads a real description and declines when it cannot tell.
 
 async function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -606,7 +612,9 @@ async function main() {
           // Geen OL-jaar → NULL; de year-verify-keten vult later.
           first_published_year: ol.publishYear ?? null,
           ai_drafted: false,
-          genres: guessGenres(ev.title, ev.author),
+          // Empty on purpose — see the note where guessGenres() used to live.
+          // The row enters the enrich-genres-gpt.ts candidate pool instead.
+          genres: [],
           cover_url: ol.coverUrl,
           openlibrary_work_id: ol.workId,
         }).select('id, slug, title').single()

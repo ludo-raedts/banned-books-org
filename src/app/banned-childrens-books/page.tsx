@@ -32,11 +32,19 @@ import Eyebrow from '@/components/section/Eyebrow'
 // Three publishing-format buckets. The directory sorts each book into the
 // most-specific bucket it qualifies for — picture-book wins over middle-grade
 // wins over young-adult — so a book tagged with both `young-adult` (broad)
-// and `middle-grade-fiction` (LLM classifier) lands in the middle-grade
-// section, not the young-adult one.
+// and `middle-grade-fiction` lands in the middle-grade section, not the
+// young-adult one.
+//
+// `picture-book` and `middle-grade-fiction` used to be off-vocabulary slugs that
+// only this page understood; the 2026-09-03 genre-vocabulary audit promoted both
+// into the canonical GENRES map, so they now also render as real badges and
+// appear in the /discover wizard. The dead synonyms this list used to carry
+// (`young-adult-fiction`, `childrens-literature`) were folded away in the same
+// sweep — scripts/_audit_genre_vocabulary.ts, and the off-vocabulary invariant in
+// scripts/audit-integrity.ts, keep them from coming back.
 const PICTURE_TAGS = ['picture-book'] as const
-const MIDDLE_GRADE_TAGS = ['middle-grade-fiction', 'childrens-literature', 'children'] as const
-const YA_TAGS = ['young-adult', 'young-adult-fiction'] as const
+const MIDDLE_GRADE_TAGS = ['middle-grade-fiction', 'children'] as const
+const YA_TAGS = ['young-adult'] as const
 const ALL_TAGS = [...PICTURE_TAGS, ...MIDDLE_GRADE_TAGS, ...YA_TAGS] as const
 
 export const metadata: Metadata = {

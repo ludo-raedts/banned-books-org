@@ -555,7 +555,7 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --apply -
 
           <Script
             name="enrich-genres-gpt.ts"
-            what="Kiest 1–3 genre-slugs uit de vaste 21-slug vocabulary (src/components/genre-badge.tsx) op basis van title + author + first_published_year + description_book. Alleen boeken met een lege genres-array worden geraakt; handmatige edits overleven re-runs. Pagineert over de hele kandidatenset (.range() per 1000, geordend op id) — niet langer gecapt op de eerste 1000 rijen."
+            what="Kiest 1–3 genre-slugs uit de vaste 25-slug vocabulary (src/components/genre-badge.tsx) op basis van title + author + first_published_year + description_book. Alleen boeken met een lege genres-array worden geraakt; handmatige edits overleven re-runs. Pagineert over de hele kandidatenset (.range() per 1000, geordend op id) — niet langer gecapt op de eerste 1000 rijen. Sinds 2026-09-03 kan --ids/--ids-file een expliciete worklist her-beoordelen (impliceert --overwrite) — de requeue-route voor de literary-fiction-stempel."
             tags={['gpt']}
             meta={{
               coverage: <>default: <code className="font-mono">genres = &apos;{'{}'}&apos;</code> (lege array). Met --overwrite: all-rows. Bij apply zonder <code className="font-mono">--limit</code> wordt de <strong>volledige</strong> kandidatenset verwerkt (geen 1000-cap meer).</>,
@@ -580,13 +580,18 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
               { flag: '--limit=N', desc: 'Cap op N boeken (default: alle kandidaten bij apply, 5 bij dry-run)' },
               { flag: '--slug=X', desc: 'Eén boek (werkt met of zonder --overwrite)' },
               { flag: '--overwrite', desc: 'Process ook boeken die al genres hebben' },
+              { flag: '--ids=1,2,3', desc: 'Her-beoordeel exact deze book-ids (impliceert --overwrite)' },
+              { flag: '--ids-file=P', desc: 'Idem, ids uit een bestand (whitespace/comma-gescheiden)' },
               { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 300)' },
               { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
             ]}
             note={
               <>
-                Genre-vocabulary leeft in src/components/genre-badge.tsx (21 slugs). Houd in sync tot vocabulary naar een
-                DB-tabel verhuist. Let op: boeken die het model niet kan plaatsen (UNKNOWN / low-confidence) houden{' '}
+                Genre-vocabulary leeft in src/components/genre-badge.tsx (25 slugs sinds 2026-09-03: picture-book,
+                middle-grade-fiction, poetry en drama erbij). Houd in sync tot de vocabulary naar een DB-tabel verhuist —{' '}
+                <code className="font-mono">audit-integrity.ts</code> faalt nu hard op een slug buiten de map, dus een
+                gemiste sync komt boven. Een re-grade via <code className="font-mono">--ids</code> die leeg terugkomt laat
+                de bestaande waarde staan. Let op: boeken die het model niet kan plaatsen (UNKNOWN / low-confidence) houden{' '}
                 <code className="font-mono">genres = &apos;{'{}'}&apos;</code> en komen elke run terug — dat is geen bug.
                 Na een mini-sweep zijn de overgebleven kandidaten precies die harde gevallen; ruim ze op met{' '}
                 <code className="font-mono">enrich-genres-retry-gpt.ts</code> hieronder.
