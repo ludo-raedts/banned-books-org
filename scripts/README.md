@@ -343,6 +343,7 @@ Schrijven **niets** naar de DB; produceren een rapport/worklist. (Dedup-audits s
 | **Auteurs** | |
 | `audit-non-person-authors.ts` | Author-rijen die geen persoon zijn (uitgevers/comités/…) |
 | `_audit_author_bio_contamination.ts` | Classificeert author-bios op contaminatie door `enrich-author-bios.ts` (verkeerd Wikipedia-artikel geaccepteerd: boek/film/band/andere persoon) → `data/author-bio-contamination-audit.md`; apply-zijde: `remediate-author-bios.ts` |
+| `_audit_author_photo_olid.ts` | **Foto van de verkeerde persoon**: verifieert elke `authors.photo_url` van de vorm `covers.openlibrary.org/a/olid/<OLID>` tegen `/authors/<OLID>.json` met een genormaliseerde achternaam-token-match (diacrieten, `Achternaam, Voornaam`, pseudonyms via `alternate_names`). Vangt de klasse waar de allowlist-invarianten van `audit-integrity.ts` blind zijn: de URL is welgevormd maar wijst naar een ánder mens (Alex London ↔ Mark Twain, 2026-09-07). Checkpointed (~1 req/s, hervat na interrupt) → `data/author-photo-olid-audit.md` + `.json`. Geen `--apply`: fotoschrijfacties vragen eerst een visuele/naam-check per rij, en `barbara-dee`/`michelle-levy` zijn permission-managed. De Wikimedia-helft (Cristina Alger ↔ Madoff-mugshot) is hiermee **niet** te vangen |
 | **Covers** | |
 | `audit-covers-for-placeholders.ts` | Google Books "image not available" placeholders |
 | `_audit_google_covers.ts` | Degenererende horizontale Google-cover-strips |

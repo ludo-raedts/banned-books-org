@@ -186,6 +186,10 @@ next-env.d.ts
 # local-only cache; the derived review-MD/JSON in data/ are the deliverable)
 /data/bookshop-redirect-audit-checkpoint.jsonl
 
+# Author-photo OLID audit — resume checkpoint (one OL probe per author;
+# local-only cache, the derived review MD/JSON in data/ ARE committed)
+/data/author-photo-olid-checkpoint.jsonl
+
 # enrichment run artifacts, backups and caches (timestamped per run, local-only;
 # human-readable audit REPORTS stay committed). Added 2026-08-08 to keep
 # `git status` clean — prune old ones with scripts/prune-data.ts.
