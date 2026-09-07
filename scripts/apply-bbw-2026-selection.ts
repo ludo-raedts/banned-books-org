@@ -15,7 +15,7 @@
 // Five current US challenges (the ALA 2025 list) and five state-level bans, so
 // the section carries the same both-halves argument the hub makes in prose. Every
 // blurb states facts drawn from our own `bans` rows — counts, countries, years,
-// institutions — and each was checked against the DB on 2026-08-31. ALA ranks are
+// institutions — and each was checked against the DB on 2026-09-07. ALA ranks are
 // from ala.org's 2025 list (published April 2026).
 //
 // Diversity rules (src/lib/bbw-suggester.ts) against this set:

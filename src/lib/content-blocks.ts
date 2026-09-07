@@ -37,6 +37,7 @@ export const REQUIRED_BLOCKS_BY_PAGE: Record<string, readonly string[]> = {
   'bbw-hub': [
     'bbw-hero-subtitle',
     'bbw-what-is',
+    'bbw-elsewhere',
     'bbw-why-matters',
     'bbw-other-side',
     'bbw-reading-intro',

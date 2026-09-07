@@ -1,4 +1,4 @@
-// _fix_bbw_featured_data_2026_08_31.ts — one-off, by hand, cited.
+// _fix_bbw_featured_data_2026_09_07.ts — one-off, by hand, cited.
 //
 // Two hard content errors found during the Banned Books Week 2026 pre-flight.
 // Both were rendering live on /banned-books-week (the hub is not behind the
@@ -40,7 +40,7 @@
 // them sticky: the enrichment scripts guard on `description_source_type IS
 // NULL`, and remediate-ol-contamination.ts targets 'openlibrary' rows.
 //
-// Usage:  npx tsx scripts/_fix_bbw_featured_data_2026_08_31.ts [--apply]
+// Usage:  npx tsx scripts/_fix_bbw_featured_data_2026_09_07.ts [--apply]
 
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
