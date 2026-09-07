@@ -5,7 +5,13 @@
 //   1. Wikidata — wbsearchentities → must be human (P31=Q5) AND have a
 //      writer-ish occupation (P106), then take the image (P18) and resolve
 //      it to a Commons thumbnail.
-//   2. OpenLibrary — /search/authors fallback, HEAD-checked photo URL.
+//   2. OpenLibrary — /search/authors fallback, name-gated (namesAgree() from
+//      ./author-name-match) and then HEAD-checked. The name gate is
+//      load-bearing: search relevance is not identity, and without it any
+//      author whose name merely retrieved a photo-bearing record inherited
+//      that record's face (Trombone Shorty got Lauran Paine's, via one of
+//      Paine's ~80 pseudonyms). Found by
+//      scripts/_audit_author_photo_olid.ts, 2026-09-07.
 //   3. Site — Wikipedia title → QID → Wikidata P856 (official website) →
 //      fetch site with a browser UA → JSON-LD Person.image only. We
 //      considered also accepting og:image/twitter:image but they were 4/4
@@ -20,6 +26,7 @@
 
 import { adminClient } from '../supabase'
 import { authorLadder } from './_author-ladder'
+import { namesAgree } from './author-name-match'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
 import { mirrorImageToStorage } from './mirror-image'
 
@@ -131,8 +138,26 @@ async function tryWikidata(name: string): Promise<PhotoResult> {
   return { source: null, url: null, meta: 'wikidata: no human writer with P18 found' }
 }
 
-interface OlAuthorDoc { key?: string; name?: string; work_count?: number; birth_date?: string }
+interface OlAuthorDoc {
+  key?: string
+  name?: string
+  work_count?: number
+  birth_date?: string
+  // /search/authors.json returns these too; they are the cheap evidence the
+  // name gate in tryOpenLibrary() needs before spending a HEAD request.
+  alternate_names?: string[]
+  personal_name?: string
+}
 interface OlAuthorResp { docs?: OlAuthorDoc[] }
+
+// Full author record, fetched ONLY when the search doc's own names don't clear
+// the gate — it carries personal_name + the complete alternate_names list, so a
+// pen name or transliteration still has a chance to prove the identity.
+interface OlAuthorRecord {
+  name?: string
+  personal_name?: string
+  alternate_names?: string[]
+}
 
 // ─── Site source ─────────────────────────────────────────────────────────────
 //
@@ -483,15 +508,54 @@ async function trySite(name: string): Promise<PhotoResult> {
   return { source: null, url: null, meta: `site: ${qid} tried [${tried.join(', ')}]` }
 }
 
+// Does this OL candidate actually NAME the person we searched for? A free-text
+// /search/authors query returns whoever the index thinks is relevant, and
+// relevance is not identity: "Troy Andrews" retrieved Lauran Paine (d. 2001)
+// because Paine's ~80 pseudonyms include "Troy Howard (pseud.)", and this
+// function is what stops his face being written onto Trombone Shorty's row.
+//
+// Two tiers, cheap first:
+//   1. the search doc's own name / personal_name / alternate_names;
+//   2. only if that fails, the full /authors/<olid>.json record — the search
+//      doc's alternate_names are often truncated or absent, and a pen name or
+//      transliteration deserves the chance to prove the identity before we
+//      throw the candidate away.
+// A candidate that clears neither is skipped WITHOUT a HEAD request: a missing
+// photo is always better than a confidently-wrong one.
+async function olCandidateIsSamePerson(
+  name: string,
+  doc: OlAuthorDoc,
+): Promise<{ ok: boolean; via: string }> {
+  if (namesAgree(name, [doc.name, doc.personal_name, ...(doc.alternate_names ?? [])])) {
+    return { ok: true, via: 'search-doc' }
+  }
+  await sleep(DELAY_MS)
+  const record = await fetchJson<OlAuthorRecord>(`https://openlibrary.org/authors/${doc.key}.json`)
+  if (!record) return { ok: false, via: 'record-unavailable' }
+  if (namesAgree(name, [record.name, record.personal_name, ...(record.alternate_names ?? [])])) {
+    return { ok: true, via: 'author-record' }
+  }
+  return { ok: false, via: `name-mismatch (${record.name ?? doc.name ?? '?'})` }
+}
+
 async function tryOpenLibrary(name: string): Promise<PhotoResult> {
   const searchUrl = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(name)}&limit=3`
   const data = await fetchJson<OlAuthorResp>(searchUrl)
   const docs = data?.docs ?? []
   if (docs.length === 0) return { source: null, url: null, meta: 'no openlibrary match' }
 
+  const rejected: string[] = []
   for (const doc of docs) {
     if (!doc.key) continue
     if ((doc.work_count ?? 0) < 1) continue
+
+    // Identity BEFORE image: never spend a HEAD on someone else's photo.
+    const same = await olCandidateIsSamePerson(name, doc)
+    if (!same.ok) {
+      rejected.push(`${doc.key}=${same.via}`)
+      continue
+    }
+
     const photoUrl = `https://covers.openlibrary.org/a/olid/${doc.key}-L.jpg?default=false`
     await sleep(DELAY_MS)
     let head: Response
@@ -499,10 +563,15 @@ async function tryOpenLibrary(name: string): Promise<PhotoResult> {
       head = await fetch(photoUrl, { method: 'HEAD', headers: { 'User-Agent': UA } })
     } catch { continue }
     if (head.ok) {
-      return { source: 'openlibrary', url: photoUrl, meta: `olid=${doc.key} works=${doc.work_count ?? 0}` }
+      return {
+        source: 'openlibrary',
+        url: photoUrl,
+        meta: `olid=${doc.key} works=${doc.work_count ?? 0} name-ok=${same.via}`,
+      }
     }
   }
-  return { source: null, url: null, meta: 'openlibrary: no match with photo' }
+  const why = rejected.length > 0 ? ` rejected[${rejected.join(', ')}]` : ''
+  return { source: null, url: null, meta: `openlibrary: no match with photo${why}` }
 }
 
 export type EnrichAuthorPhotosOpts = {

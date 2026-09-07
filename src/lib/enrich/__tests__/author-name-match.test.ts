@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { matchNames, nameTokens, surnameOf } from '../_audit_author_photo_olid'
+import {
+  isMultiPersonByline,
+  matchNames,
+  nameTokens,
+  namesAgree,
+  surnameOf,
+} from '../author-name-match'
 
 describe('nameTokens', () => {
   it('strips diacritics, lowercases and drops lone initials', () => {
@@ -113,5 +119,77 @@ describe('matchNames', () => {
     const r = matchNames('Петров Константин', ['Leo Tolstoy', 'Толстой, Лев'])
     expect(r.verdict).toBe('NO_NAME_OVERLAP')
     expect(r.matchedOn).toBe('Толстой, Лев')
+  })
+})
+
+describe('namesAgree (the enricher gate)', () => {
+  it('rejects the candidate that put Lauran Paine on Trombone Shorty', () => {
+    // What /search/authors.json?q=Troy+Andrews could return: the pulp writer
+    // whose pseudonyms include "Troy Howard". Relevance is not identity.
+    expect(namesAgree('Troy Andrews', ['Lauran Paine', 'Troy Howard (pseud.)'])).toBe(false)
+  })
+
+  it('accepts the real Troy Andrews record', () => {
+    expect(
+      namesAgree('Troy Andrews', ['Troy Andrews', 'Troy "Trombone Shorty" Andrews']),
+    ).toBe(true)
+  })
+
+  it('rejects rather than guesses when there is nothing to compare', () => {
+    expect(namesAgree('F. M. T. C', ['Maurice Bowra'])).toBe(false)
+    expect(namesAgree('Anyone', [])).toBe(false)
+    expect(namesAgree('Anyone', [undefined, null, '  '])).toBe(false)
+  })
+
+  it('rejects a cross-script candidate it cannot verify', () => {
+    // UNVERIFIABLE must NOT pass the gate — that is exactly where a wrong
+    // photo slips in. The full author record (which carries the native form)
+    // is the second tier that rescues these in tryOpenLibrary().
+    expect(namesAgree('残雪', ['Can Xue'])).toBe(false)
+    expect(namesAgree('Петров Константин Павлович', ['Петров, Константин Павлович'])).toBe(true)
+  })
+})
+
+describe('isMultiPersonByline', () => {
+  it('recognises the anthology bylines in Mark Twain OL alternate_names', () => {
+    expect(isMultiPersonByline('Mark Twain, O. Henry , Edgar Allan Poe, Jack London')).toBe(true)
+    expect(
+      isMultiPersonByline('Mark Twain, Josh Billings, Robt. J. Burdette, Alex Sweet and Melville D. Landon'),
+    ).toBe(true)
+    expect(isMultiPersonByline('and C. M. Bowra (Editors) Anthology. Higham T. F.')).toBe(true)
+    expect(isMultiPersonByline('Higham & Bowra')).toBe(true)
+  })
+
+  it('leaves single-person names alone, including inverted and suffixed ones', () => {
+    expect(isMultiPersonByline('Mark Twain')).toBe(false)
+    expect(isMultiPersonByline('Twain, Mark')).toBe(false) // exactly one comma
+    expect(isMultiPersonByline('Lawrence Kerfman Duby, Jr.')).toBe(false)
+    expect(isMultiPersonByline('Sir Cecil Maurice Bowra')).toBe(false)
+    expect(isMultiPersonByline('Gabriel García Márquez')).toBe(false)
+    expect(isMultiPersonByline('Ed McBain')).toBe(false) // bare "ed" is a name
+  })
+})
+
+describe('the Alex London / Mark Twain regression', () => {
+  // The real OL18319A record: 66 alternate_names, two of which are Twain
+  // anthology bylines that happen to contain "Jack London" and "Alex Sweet".
+  // Scanning those strings for our surname is what let Twain's photo onto
+  // authors #7067 in the first place.
+  const TWAIN_VARIANTS = [
+    'Mark Twain',
+    'Twain, Mark',
+    'Samuel Langhorne Clemens',
+    'Mark Twain, O. Henry , Edgar Allan Poe, Jack London',
+    'Mark Twain, Josh Billings, Robt. J. Burdette, Alex Sweet and Melville D. Landon',
+  ]
+
+  it('no longer clears "Alex London" against Twain', () => {
+    expect(matchNames('Alex London', TWAIN_VARIANTS).verdict).toBe('NO_NAME_OVERLAP')
+    expect(namesAgree('Alex London', TWAIN_VARIANTS)).toBe(false)
+  })
+
+  it('still clears Twain against his own record and his pen name', () => {
+    expect(namesAgree('Mark Twain', TWAIN_VARIANTS)).toBe(true)
+    expect(namesAgree('Samuel Clemens', TWAIN_VARIANTS)).toBe(true)
   })
 })
