@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { adminClient } from '@/lib/supabase'
-import { getBBWConfig } from '@/config/banned-books-week'
+import { getBBWConfig, formatBBWDateRange } from '@/config/banned-books-week'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 import Eyebrow from '@/components/section/Eyebrow'
 import {
@@ -14,6 +14,8 @@ import {
 } from '@/lib/bbw-data'
 import {
   getPublishedBlockMap,
+  getPublishedBlockHtml,
+  stripOuterParagraph,
   REQUIRED_BLOCKS_BY_PAGE,
   type ContentBlockRow,
 } from '@/lib/content-blocks'
@@ -46,11 +48,15 @@ export default async function BannedBooksWeekPage({
   const year = config.year
   const slugs = REQUIRED_BLOCKS_BY_PAGE['bbw-hub']
 
-  const [blockMap, featured, stats, previewBlocks] = await Promise.all([
+  const [blockMap, featured, stats, previewBlocks, dateRange, themeLine] = await Promise.all([
     getPublishedBlockMap(slugs),
     isPreview ? getAllFeaturedBooksForAdmin(year) : getPublishedFeaturedBooks(year),
     getBBWLiveStats(),
     isPreview ? getAllBlocksForPreview(slugs) : Promise.resolve(new Map<string, ContentBlockRow>()),
+    formatBBWDateRange(),
+    // The campaign line lives in the homepage-callout block; reused here so the
+    // official theme is stated once and edited in one place.
+    getPublishedBlockHtml('bbw-tile-tagline'),
   ])
 
   // In preview mode, show every block regardless of status; otherwise only
@@ -142,6 +148,12 @@ export default async function BannedBooksWeekPage({
       </section>
 
       <div className="max-w-3xl mx-auto px-6 md:px-9 pb-14">
+        <FactsPanel
+          year={year}
+          dateRange={dateRange}
+          themeLine={themeLine ? stripOuterParagraph(themeLine) : null}
+        />
+
 
       {/* What is BBW */}
       {whatIs && (
@@ -154,15 +166,37 @@ export default async function BannedBooksWeekPage({
         </section>
       )}
 
-      {/* Parallel national weeks — the hub says BBW is a US effort and that
-          other countries run their own; this is where that gets specific. */}
-      {elsewhere && (
-        <section className="mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Banned Books Week outside the US</h2>
+      {/* Featured books for the year */}
+      {featured.length > 0 && (
+        <section id="featured" className="mb-10 scroll-mt-8">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Featured books for {year}</h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featured.map(f => <FeaturedBookCard key={f.bookId} row={f} />)}
+          </ul>
+        </section>
+      )}
+
+      {/* Reading and discussing */}
+      {readingIntro && (
+        <section id="reading" className="mb-10 scroll-mt-8">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Reading and discussing banned books</h2>
           <div
-            className={proseClass}
-            dangerouslySetInnerHTML={{ __html: elsewhere }}
+            className={`${proseClass} mb-5`}
+            dangerouslySetInnerHTML={{ __html: readingIntro }}
           />
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose">
+            {TRACKS.map(t => (
+              <li key={t.href}>
+                <Link
+                  href={t.href}
+                  className="group block rounded-lg border border-gray-200 p-4 hover:border-oxblood/40 hover:bg-gray-50/50 transition-colors"
+                >
+                  <div className="font-semibold text-sm text-gray-900 group-hover:text-oxblood transition-colors">{t.label}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t.text}</div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
@@ -185,48 +219,15 @@ export default async function BannedBooksWeekPage({
         </section>
       )}
 
-      {/* The other side */}
-      {otherSide && (
-        <section className="mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">The other side</h2>
+      {/* Parallel national weeks — the hub says BBW is a US effort and that
+          other countries run their own; this is where that gets specific. */}
+      {elsewhere && (
+        <section id="elsewhere" className="mb-10 scroll-mt-8">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Banned Books Week outside the US</h2>
           <div
             className={proseClass}
-            dangerouslySetInnerHTML={{ __html: otherSide }}
+            dangerouslySetInnerHTML={{ __html: elsewhere }}
           />
-        </section>
-      )}
-
-      {/* Featured books for the year */}
-      {featured.length > 0 && (
-        <section className="mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Featured books for {year}</h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {featured.map(f => <FeaturedBookCard key={f.bookId} row={f} />)}
-          </ul>
-        </section>
-      )}
-
-      {/* Reading and discussing */}
-      {readingIntro && (
-        <section className="mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Reading and discussing banned books</h2>
-          <div
-            className={`${proseClass} mb-5`}
-            dangerouslySetInnerHTML={{ __html: readingIntro }}
-          />
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose">
-            {TRACKS.map(t => (
-              <li key={t.href}>
-                <Link
-                  href={t.href}
-                  className="group block rounded-lg border border-gray-200 p-4 hover:border-oxblood/40 hover:bg-gray-50/50 transition-colors"
-                >
-                  <div className="font-semibold text-sm text-gray-900 group-hover:text-oxblood transition-colors">{t.label}</div>
-                  <div className="text-xs text-gray-600 mt-1">{t.text}</div>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </section>
       )}
 
@@ -241,6 +242,19 @@ export default async function BannedBooksWeekPage({
         </section>
       )}
 
+      <ArchiveEntryPoints />
+
+      {/* The other side */}
+      {otherSide && (
+        <section className="mb-10">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">The other side</h2>
+          <div
+            className={proseClass}
+            dangerouslySetInnerHTML={{ __html: otherSide }}
+          />
+        </section>
+      )}
+
         {/* Disclaimer */}
         <section className="mt-12">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Sources &amp; disclaimer</h2>
@@ -248,6 +262,108 @@ export default async function BannedBooksWeekPage({
         </section>
       </div>
     </main>
+  )
+}
+
+/**
+ * The one thing a visitor most often arrives for — when is it, what is it
+ * called, who runs it — plus the outbound links to the organisations that
+ * actually run the week. Those links previously existed only in the grey
+ * disclaimer at the very bottom of the page.
+ */
+function FactsPanel({
+  year,
+  dateRange,
+  themeLine,
+}: {
+  year: number
+  dateRange: string
+  themeLine: string | null
+}) {
+  return (
+    <aside className="mb-12 rounded-r-xl border-l-4 border-brand bg-brand-light py-6 pl-6 pr-5">
+      <p className="text-[11px] uppercase tracking-[0.14em] font-semibold text-oxblood">
+        Banned Books Week {year}
+      </p>
+      <p className="mt-2 font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900">
+        {dateRange}
+      </p>
+      {themeLine && (
+        <p
+          className="mt-1 text-sm text-gray-700"
+          dangerouslySetInnerHTML={{ __html: themeLine }}
+        />
+      )}
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 text-sm">
+        <div>
+          <p className="text-[11px] uppercase tracking-wider font-semibold text-gray-700 mb-1.5">
+            The organisers
+          </p>
+          <ul className="space-y-1 text-gray-700">
+            <li>
+              <a href="https://bannedbooksweek.org" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">bannedbooksweek.org</a>{' '}
+              — the coalition that runs the week
+            </li>
+            <li>
+              <a href="https://www.ala.org/bbooks" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">ALA</a>{' '}
+              — the annual most-challenged list
+            </li>
+            <li>
+              <a href="https://pen.org/book-bans/" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">PEN America</a>{' '}
+              — the school book-ban index
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-wider font-semibold text-gray-700 mb-1.5">
+            On this page
+          </p>
+          <ul className="space-y-1 text-gray-700">
+            <li><a href="#featured" className="text-oxblood hover:underline">{featuredAnchorLabel(year)}</a></li>
+            <li><a href="#reading" className="text-oxblood hover:underline">Four reading paths</a></li>
+            <li><a href="#elsewhere" className="text-oxblood hover:underline">The week outside the US</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+function featuredAnchorLabel(year: number): string {
+  return `Ten books worth defending in ${year}`
+}
+
+/**
+ * The site's own material is the reason to be here rather than on the
+ * organisers' pages; before this the hub linked to neither the country
+ * catalogue nor the top-100.
+ */
+function ArchiveEntryPoints() {
+  const items = [
+    { href: '/countries', label: 'Browse by country', text: 'Every country with a documented ban, from national decrees to school districts.' },
+    { href: '/top-100-banned-books', label: 'Top 100 banned books', text: 'The most censored titles worldwide, ranked by documented bans.' },
+    { href: '/dataset', label: 'The open dataset', text: 'Every row, citable and free to reuse under CC-BY-4.0.' },
+  ]
+  return (
+    <section className="mb-10">
+      <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">
+        Look past the week
+      </h2>
+      <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 not-prose">
+        {items.map(i => (
+          <li key={i.href}>
+            <Link
+              href={i.href}
+              className="group block h-full rounded-lg border border-gray-200 p-4 hover:border-oxblood/40 hover:bg-gray-50/50 transition-colors"
+            >
+              <div className="font-semibold text-sm text-gray-900 group-hover:text-oxblood transition-colors">{i.label}</div>
+              <div className="text-xs text-gray-600 mt-1">{i.text}</div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
