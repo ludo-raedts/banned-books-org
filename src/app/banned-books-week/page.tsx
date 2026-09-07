@@ -313,7 +313,21 @@ function FactsPanel({
               <a href="https://pen.org/book-bans/" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">PEN America</a>{' '}
               — the school book-ban index
             </li>
+            <li>
+              <a href="https://www.indexoncensorship.org/bannedbooksweek/" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">Index on Censorship</a>{' '}
+              — runs Banned Books Week UK, same dates
+            </li>
           </ul>
+          {/* Librarians and booksellers arriving here for materials should be
+              sent to the source. We deliberately do not host the campaign
+              artwork ourselves: the coalition licenses it for non-monetized
+              use, this site carries affiliate links and sells a dataset, and
+              reproducing official artwork would undercut the not-affiliated
+              statement the rest of the page is careful about. */}
+          <p className="mt-2 text-gray-700">
+            <a href="https://bannedbooksweek.org/promotional-tools/" target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">Posters, graphics and toolkits</a>{' '}
+            come from the coalition directly.
+          </p>
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-wider font-semibold text-gray-700 mb-1.5">
