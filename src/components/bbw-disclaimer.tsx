@@ -24,7 +24,7 @@ export function BBWDisclaimer({ variant }: { variant: 'short' | 'full' }) {
           href="https://bannedbooksweek.org"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand hover:underline"
+          className="text-oxblood hover:underline"
         >
           bannedbooksweek.org
         </a>{' '}
@@ -33,7 +33,7 @@ export function BBWDisclaimer({ variant }: { variant: 'short' | 'full' }) {
           href="https://www.ala.org/bbooks"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand hover:underline"
+          className="text-oxblood hover:underline"
         >
           ala.org/bbooks
         </a>.
@@ -54,7 +54,7 @@ export function ALAAttribution() {
           href="https://www.ala.org/bbooks/frequentlychallengedbooks/top10"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand hover:underline"
+          className="text-oxblood hover:underline"
         >
           Source
         </a>

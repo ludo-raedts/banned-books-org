@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { adminClient } from '@/lib/supabase'
 import { getBBWConfig } from '@/config/banned-books-week'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
+import Eyebrow from '@/components/section/Eyebrow'
 import {
   getPublishedFeaturedBooks,
   getAllFeaturedBooksForAdmin,
@@ -65,6 +66,7 @@ export default async function BannedBooksWeekPage({
 
   const heroSubtitle = html('bbw-hero-subtitle')
   const whatIs = html('bbw-what-is')
+  const elsewhere = html('bbw-elsewhere')
   const whyMatters = html('bbw-why-matters')
   const otherSide = html('bbw-other-side')
   const readingIntro = html('bbw-reading-intro')
@@ -99,39 +101,67 @@ export default async function BannedBooksWeekPage({
     ],
   }
 
+  // Same article-prose treatment as /methodology, /history and /reading-club so
+  // editorial copy across the site reads as one publication. The hub had been
+  // the odd one out: sans-serif headings, no section rules, and `brand`
+  // (#8B2020) where every other editorial page uses `oxblood` (#5C1010).
+  const proseClass =
+    'prose prose-gray prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-h3:mt-6 prose-h3:mb-2 prose-a:text-oxblood prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 max-w-none'
+
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {isPreview && (
-        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-800">
-          Preview mode — showing all content (incl. drafts and placeholders).
+        <div className="max-w-3xl mx-auto px-6 md:px-9 pt-6">
+          <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+            Preview mode — showing all content (incl. drafts and placeholders).
+          </div>
         </div>
       )}
 
       {/* Hero */}
-      <header className="mb-10">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">Banned Books Week</h1>
-        {heroSubtitle && (
-          <div
-            className="text-lg text-gray-600 leading-relaxed prose prose-gray max-w-none"
-            dangerouslySetInnerHTML={{ __html: heroSubtitle }}
-          />
-        )}
-        <div className="mt-3">
-          <BBWDisclaimer variant="short" />
+      <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <Eyebrow>Banned Books Week · International context</Eyebrow>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-gray-900">
+            Banned Books Week
+          </h1>
+          {heroSubtitle && (
+            <div
+              className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900 prose-p:!my-0 prose-a:text-oxblood"
+              dangerouslySetInnerHTML={{ __html: heroSubtitle }}
+            />
+          )}
+          <div className="mt-4">
+            <BBWDisclaimer variant="short" />
+          </div>
         </div>
-      </header>
+      </section>
+
+      <div className="max-w-3xl mx-auto px-6 md:px-9 pb-14">
 
       {/* What is BBW */}
       {whatIs && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">What is Banned Books Week</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">What is Banned Books Week</h2>
           <div
-            className="prose prose-gray max-w-none"
+            className={proseClass}
             dangerouslySetInnerHTML={{ __html: whatIs }}
+          />
+        </section>
+      )}
+
+      {/* Parallel national weeks — the hub says BBW is a US effort and that
+          other countries run their own; this is where that gets specific. */}
+      {elsewhere && (
+        <section className="mb-10">
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Banned Books Week outside the US</h2>
+          <div
+            className={proseClass}
+            dangerouslySetInnerHTML={{ __html: elsewhere }}
           />
         </section>
       )}
@@ -139,9 +169,9 @@ export default async function BannedBooksWeekPage({
       {/* Why it matters + live stats */}
       {whyMatters && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Why it still matters</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Why it still matters</h2>
           <div
-            className="prose prose-gray max-w-none mb-6"
+            className={`${proseClass} mb-6`}
             dangerouslySetInnerHTML={{ __html: whyMatters }}
           />
           <div className="grid grid-cols-3 gap-4 not-prose">
@@ -150,7 +180,7 @@ export default async function BannedBooksWeekPage({
             <Stat number={stats.recentBans.toLocaleString('en')} label="Bans (last 5 yrs)" />
           </div>
           <p className="text-xs text-gray-500 mt-3">
-            <Link href="/stats" className="hover:underline">Full statistics →</Link>
+            <Link href="/stats" className="text-oxblood hover:underline">Full statistics →</Link>
           </p>
         </section>
       )}
@@ -158,9 +188,9 @@ export default async function BannedBooksWeekPage({
       {/* The other side */}
       {otherSide && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">The other side</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">The other side</h2>
           <div
-            className="prose prose-gray max-w-none"
+            className={proseClass}
             dangerouslySetInnerHTML={{ __html: otherSide }}
           />
         </section>
@@ -169,7 +199,7 @@ export default async function BannedBooksWeekPage({
       {/* Featured books for the year */}
       {featured.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Featured books for {year}</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Featured books for {year}</h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {featured.map(f => <FeaturedBookCard key={f.bookId} row={f} />)}
           </ul>
@@ -179,9 +209,9 @@ export default async function BannedBooksWeekPage({
       {/* Reading and discussing */}
       {readingIntro && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Reading and discussing banned books</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">Reading and discussing banned books</h2>
           <div
-            className="prose prose-gray max-w-none mb-5"
+            className={`${proseClass} mb-5`}
             dangerouslySetInnerHTML={{ __html: readingIntro }}
           />
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose">
@@ -189,9 +219,9 @@ export default async function BannedBooksWeekPage({
               <li key={t.href}>
                 <Link
                   href={t.href}
-                  className="group block rounded-lg border border-gray-200 p-4 hover:border-brand/40 hover:bg-gray-50/50 transition-colors"
+                  className="group block rounded-lg border border-gray-200 p-4 hover:border-oxblood/40 hover:bg-gray-50/50 transition-colors"
                 >
-                  <div className="font-semibold text-sm text-gray-900 group-hover:text-brand transition-colors">{t.label}</div>
+                  <div className="font-semibold text-sm text-gray-900 group-hover:text-oxblood transition-colors">{t.label}</div>
                   <div className="text-xs text-gray-600 mt-1">{t.text}</div>
                 </Link>
               </li>
@@ -203,19 +233,20 @@ export default async function BannedBooksWeekPage({
       {/* What you can do */}
       {whatYouCanDo && (
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">What you can do</h2>
+          <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-4 pb-2 border-b border-oxblood/30">What you can do</h2>
           <div
-            className="prose prose-gray max-w-none"
+            className={proseClass}
             dangerouslySetInnerHTML={{ __html: whatYouCanDo }}
           />
         </section>
       )}
 
-      {/* Disclaimer */}
-      <section className="mt-12">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Sources & disclaimer</h2>
-        <BBWDisclaimer variant="full" />
-      </section>
+        {/* Disclaimer */}
+        <section className="mt-12">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Sources &amp; disclaimer</h2>
+          <BBWDisclaimer variant="full" />
+        </section>
+      </div>
     </main>
   )
 }
@@ -223,7 +254,7 @@ export default async function BannedBooksWeekPage({
 function Stat({ number, label }: { number: string; label: string }) {
   return (
     <div className="border border-gray-200 rounded-lg p-3 bg-white text-center">
-      <div className="text-xl font-bold text-brand">{number}</div>
+      <div className="font-serif text-2xl font-semibold text-oxblood">{number}</div>
       <div className="text-xs text-gray-500 mt-0.5">{label}</div>
     </div>
   )
@@ -245,7 +276,7 @@ function FeaturedBookCard({ row }: { row: FeaturedBookRow }) {
         <div className="w-16 h-24 flex-shrink-0 rounded bg-gray-100" />
       )}
       <div className="flex-1 min-w-0">
-        <Link href={`/books/${b.slug}`} className="font-semibold text-sm hover:text-brand transition-colors block">
+        <Link href={`/books/${b.slug}`} className="font-semibold text-sm hover:text-oxblood transition-colors block">
           {b.title}
         </Link>
         <div className="text-xs text-gray-500 mt-0.5">
