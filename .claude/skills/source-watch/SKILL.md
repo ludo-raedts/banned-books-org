@@ -1,6 +1,6 @@
 ---
 name: source-watch
-description: Monthly delta-check of recurring banned-books sources (PEN America school-year index, Russia minjust FSEM, KDN Malaysia gazette, Utah USBE list, ALA annual lists) against the database — report only when there is something new, with a ready /import-source handoff. Use on the monthly schedule or when the user asks to check the sources.
+description: Monthly delta-check of recurring banned-books sources (PEN America school-year index, Russia minjust FSEM, KDN Malaysia gazette, Utah USBE list, ALA annual lists, Magnusson/EveryLibrary Airtable migration) against the database — report only when there is something new, with a ready /import-source handoff. Use on the monthly schedule or when the user asks to check the sources.
 ---
 
 # Source watch — is there anything new to import?
@@ -42,6 +42,21 @@ watch that silently skips a source is worse than none.
    Aggregates — NOT importable as a source (memory: ALA=aggregates), but a new
    "Top 10 Most Challenged" (each spring) should be cross-checked against
    existing books: bans on already-known titles via `add-ala-2025.ts` pattern.
+6. **Magnusson Book Censorship Database — Airtable migration watch**
+   (`https://www.everylibraryinstitute.org/book_censorship_database_magnusson`)
+   Dr. Tasslyn Magnusson granted permission by e-mail on 2026-08-05 to reference
+   her DB with attribution and said the multi-tab Google Sheet is migrating to
+   **Airtable** ("cleaner data soon"); see `data/outreach-tracker.md` §K
+   (gitignored). This is a MIGRATION watch, not a delta count: fetch the page
+   and check whether the "Access the Data" link still points at
+   `docs.google.com/spreadsheets` (→ `✓ nog Google Sheet, Airtable niet live`)
+   or now at `airtable.com` (→ Δ). Also `⚠` if the page or the sheet link is
+   gone. On Δ: do NOT bulk-import — Magnusson is PEN's upstream feeder, so bulk
+   = re-import of our 22,822 PEN bans with per-district inflation. Handoff =
+   ONE delta-importer via the PEN path (`scripts/README.md` §1, template
+   `import-pen.ts`) scoped to entries newer than PEN's latest index (2024–25),
+   and remind the user of the two open items towards Magnusson (read access
+   to the Airtable, preferred citation form).
 
 ## Also glance at (no fetch quota — only if cheap)
 
