@@ -55,7 +55,6 @@ type BookRow = {
   isbn13: string | null
   original_language: string | null
   first_published_year: number | null
-  description: string | null
   description_book: string | null
   description_ban: string | null
   openlibrary_work_id: string | null
@@ -84,7 +83,6 @@ const ENRICH_FIELDS = [
   'isbn13',
   'original_language',
   'first_published_year',
-  'description',
   'description_book',
   'description_ban',
   'openlibrary_work_id',
@@ -96,19 +94,24 @@ const ENRICH_FIELDS = [
 ] as const
 
 async function getBook(s: ReturnType<typeof adminClient>, id: number): Promise<BookRow | null> {
-  const { data } = await s
+  const { data, error } = await s
     .from('books')
     .select('id, slug, title, ' + ENRICH_FIELDS.join(', '))
     .eq('id', id)
     .maybeSingle()
+  // Never swallow a query error into null: mergePair reads a null DROP as
+  // "already merged — no-op", so a stale column in ENRICH_FIELDS would turn
+  // every pair into a silent, successful-looking skip.
+  if (error) throw new Error(`getBook(${id}): ${error.message}`)
   return (data as unknown as BookRow) ?? null
 }
 
 async function getBans(s: ReturnType<typeof adminClient>, bookId: number): Promise<Ban[]> {
-  const { data } = await s
+  const { data, error } = await s
     .from('bans')
     .select('id, country_code, scope_id, action_type, status, year_started, region, institution, actor, description')
     .eq('book_id', bookId)
+  if (error) throw new Error(`getBans(${bookId}): ${error.message}`)
   return (data ?? []) as Ban[]
 }
 

@@ -1,0 +1,15 @@
+[
+  {
+    "keep": 6305,
+    "drop": 6258,
+    "keep_title": "Azadi",
+    "drop_title": "Azadi: Freedom. Fascism. Fiction.",
+    "confidence": "high",
+    "reasons": [
+      "Same work: OpenLibrary work OL20866284W lists both ISBNs (9781642597066 Haymarket US, 9780143460169 Penguin India)",
+      "Same author (Arundhati Roy, id 110), same first_published_year 2020, byte-identical cover_url",
+      "Both carry the single August 2025 Jammu & Kashmir ban"
+    ],
+    "flags": ["surfaced by the /botd-week pre-flight of 2026-09-21"]
+  }
+]

@@ -328,6 +328,17 @@ async function eligibleBookIds(): Promise<number[]> {
       .select('id')
       .eq('is_gated', false)
       .eq('is_blanket_works', false)
+      // Editorial tier gate: warning_level='extended' is the tier reserved for
+      // titles that only make sense behind heavy framing (Mein Kampf, The
+      // Turner Diaries, the Protocols, Holocaust denial, The Anarchist
+      // Cookbook, a suicide manual, the Christchurch manifesto). The book
+      // pages carry that framing; a daily pick does not — it is broadcast
+      // standalone to Bluesky/LinkedIn/FB/IG and rendered bare on /share,
+      // /embed and the badge. 'context' titles (Lolita, Tintin au Congo, …)
+      // stay in: they are canonical censorship cases and their note travels
+      // with the page. NULL is tolerated so a future nullable column cannot
+      // silently empty the pool.
+      .or('warning_level.is.null,warning_level.neq.extended')
       .not('cover_url', 'is', null)
       .not('description_ban', 'is', null)
       .or(`original_language.is.null,original_language.in.(${LATIN_SCRIPT_LANGS.join(',')})`)
