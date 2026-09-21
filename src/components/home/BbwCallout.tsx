@@ -26,10 +26,10 @@ export type BbwCalloutProps = {
 }
 
 /**
- * The Banned Books Week block: a solid oxblood panel, used in the homepage
- * hero and mirrored 1:1 in the BBW admin preview. It is a time-boxed campaign
- * call to action, so unlike the ambient archive quote it is a filled block
- * rather than a borderless note, and it shows on phones too.
+ * The Banned Books Week block: a cream panel inside an oxblood border, used in
+ * the homepage hero and mirrored 1:1 in the BBW admin preview. It is a
+ * time-boxed campaign call to action, so unlike the ambient archive quote it is
+ * a filled block rather than a borderless note, and it shows on phones too.
  */
 export default function BbwCallout({
   year,
@@ -39,33 +39,33 @@ export default function BbwCallout({
   interactive = true,
 }: BbwCalloutProps) {
   const shell =
-    'group block rounded-lg bg-oxblood p-5 shadow-[0_2px_10px_rgba(92,16,16,0.18)]' +
+    'group block rounded-lg border border-oxblood bg-cream p-5 shadow-[0_1px_3px_rgba(92,16,16,0.08)]' +
     (interactive
-      ? ' transition-colors hover:bg-brand focus-visible:outline-offset-4'
+      ? ' transition-shadow hover:shadow-[0_6px_18px_rgba(92,16,16,0.16)]'
       : '')
 
   const body = (
     <>
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-cream">
-        {isLive && <span className="h-1.5 w-1.5 rounded-full bg-cream" aria-hidden="true" />}
+      {/* The chip is outlined and the CTA filled, so the one saturated shape
+          in the block is the thing to click. */}
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-oxblood/45 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-oxblood">
+        {isLive && <span className="h-1.5 w-1.5 rounded-full bg-oxblood" aria-hidden="true" />}
         {isLive ? 'Now' : dateRange}
       </span>
 
       {/* text-balance keeps the year from orphaning onto its own line in the
           280px hero rail. */}
-      <p className="mt-3 text-balance font-serif text-xl font-semibold leading-tight text-cream">
+      <p className="mt-3 text-balance font-serif text-xl font-semibold leading-tight text-gray-900">
         Banned Books Week {year}
       </p>
 
-      {/* Editor-managed campaign line (bbw-tile-tagline content block). The
-          link colours are forced here: the block's own markup assumes the
-          default light background. */}
+      {/* Editor-managed campaign line (bbw-tile-tagline content block). */}
       <div
-        className="mt-1.5 text-xs leading-snug text-cream/80 [&_a]:text-cream [&_a]:underline"
+        className="mt-1.5 text-xs leading-snug text-neutral-700 [&_a]:text-oxblood [&_a]:underline"
         dangerouslySetInnerHTML={{ __html: taglineHtml }}
       />
 
-      <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-cream px-3 py-1.5 text-xs font-semibold text-oxblood">
+      <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-oxblood px-3 py-1.5 text-xs font-semibold text-cream">
         Explore the hub
         <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
           →
