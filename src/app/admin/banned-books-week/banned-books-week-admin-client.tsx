@@ -6,6 +6,7 @@ import { arrayMove, ToggleSwitch } from '../kit'
 import { useUnsavedChanges } from '../use-unsaved-changes'
 import Link from 'next/link'
 import AdminBackLink from '@/components/admin-back-link'
+import BbwCallout from '@/components/home/BbwCallout'
 import type { FeaturedBookRow } from '@/lib/bbw-data'
 
 type RequiredBlockSummary = { slug: string; title: string; status: 'placeholder' | 'draft' | 'published' }
@@ -262,26 +263,21 @@ export default function BannedBooksWeekAdminClient(props: Props) {
       {/* Callout preview — mirrors the homepage hero callout 1:1. */}
       <div className="mb-4 border border-gray-200 rounded-lg p-4 bg-white">
         <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">Homepage callout preview <span className="text-gray-400 font-normal">(what visitors see on the homepage)</span></div>
-        <div className="border border-gray-200 rounded-lg p-4 bg-white max-w-[280px]">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-oxblood text-cream rounded-full text-[10px] font-semibold tracking-wider uppercase mb-2.5">
-            {props.calloutPreview.isLive && <span className="w-1.5 h-1.5 rounded-full bg-cream" aria-hidden="true" />}
-            {props.calloutPreview.isLive ? 'Now' : props.calloutPreview.dateRange}
-          </span>
-          <p className="font-serif text-base font-semibold leading-tight text-neutral-900 mb-1.5">
-            Banned Books Week {props.calloutPreview.year}
-          </p>
+        <div className="max-w-[280px]">
           {props.calloutPreview.tagline ? (
-            <div
-              className="text-xs text-neutral-600 leading-snug mb-1.5"
-              dangerouslySetInnerHTML={{ __html: props.calloutPreview.tagline }}
+            <BbwCallout
+              year={props.calloutPreview.year}
+              dateRange={props.calloutPreview.dateRange}
+              isLive={props.calloutPreview.isLive}
+              taglineHtml={props.calloutPreview.tagline}
+              interactive={false}
             />
           ) : (
-            <div className="text-xs text-amber-700 mb-1.5 italic">
+            <div className="border border-gray-200 rounded-lg p-4 bg-white text-xs text-amber-700 italic">
               bbw-tile-tagline not published — the callout is hidden and the homepage
               falls back to the rotating archive quote.
             </div>
           )}
-          <span className="text-xs text-oxblood font-medium">Explore the hub →</span>
         </div>
         <p className="mt-2 text-xs text-gray-500">
           Shown on the homepage only inside the promo window (lead-up + the week itself),

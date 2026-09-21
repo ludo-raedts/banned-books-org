@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Eyebrow from '@/components/section/Eyebrow'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
+import BbwCallout from './BbwCallout'
 import HeroSearch from './HeroSearch'
 
 type Stat = { value: string; label: string }
@@ -88,7 +89,7 @@ export default function HeroSection({
   ]
 
   return (
-    <section className="relative pt-12 px-9 pb-10 bg-white">
+    <section className="pt-12 px-9 pb-10 bg-white">
       <div className="max-w-5xl mx-auto">
         <Eyebrow>An international archive of censored literature</Eyebrow>
 
@@ -96,53 +97,58 @@ export default function HeroSection({
           The world&apos;s books under censorship.
         </h1>
 
-        <div className="max-w-[720px]">
-          <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
-            {stats.map(s => (
-              <div key={s.label}>
-                <div className="not-italic font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood">
-                  {s.value}
+        {/* Below the headline the hero splits into a content column and a
+            callout rail. The callout used to be absolutely positioned against
+            the section edge, which parked it outside the page grid and — from
+            lg up to ~1200px — ran it straight through the headline. */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-8 lg:items-start">
+          <div className="max-w-[720px]">
+            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
+              {stats.map(s => (
+                <div key={s.label}>
+                  <div className="not-italic font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
+                    {s.label}
+                  </div>
                 </div>
-                <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
-            Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.
-          </p>
-
-          {ZENODO_DOI_URL && (
-            <p className="mt-2 text-xs text-neutral-500">
-              Citable dataset ·{' '}
-              <a
-                href={ZENODO_DOI_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-oxblood hover:underline"
-              >
-                Zenodo DOI {ZENODO_CONCEPT_DOI}
-              </a>{' '}
-              (CC-BY-4.0)
+            <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
+              Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.
             </p>
-          )}
 
-          <div className="mt-6">
-            <HeroSearch bookCount={totalBooks} />
+            {ZENODO_DOI_URL && (
+              <p className="mt-2 text-xs text-neutral-500">
+                Citable dataset ·{' '}
+                <a
+                  href={ZENODO_DOI_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-oxblood hover:underline"
+                >
+                  Zenodo DOI {ZENODO_CONCEPT_DOI}
+                </a>{' '}
+                (CC-BY-4.0)
+              </p>
+            )}
+
+            <div className="mt-6">
+              <HeroSearch bookCount={totalBooks} />
+            </div>
           </div>
 
-          {/* One instance, two layouts: in the content flow on small screens,
-              absolutely positioned top-right from lg up (the <section> is the
-              positioning context). The archive quote stays desktop-only — it
-              is ambient decoration — but the BBW callout is a time-boxed
-              call to action and has to reach phones too. */}
+          {/* The rail. Its top edge lines up with the rule above the stats.
+              The archive quote stays desktop-only — it is ambient decoration —
+              but the BBW callout is a time-boxed call to action and has to
+              reach phones too. */}
           <div
             className={
               callout.kind === 'bbw'
-                ? 'mt-8 max-w-[420px] lg:mt-0 lg:absolute lg:top-12 lg:right-12 lg:max-w-[260px]'
-                : 'hidden lg:absolute lg:top-12 lg:right-12 lg:block lg:max-w-[260px]'
+                ? 'mt-8 max-w-[420px] lg:max-w-none'
+                : 'hidden lg:mt-8 lg:block'
             }
           >
             {callout.kind === 'bbw' ? (
@@ -159,38 +165,6 @@ export default function HeroSection({
         </div>
       </div>
     </section>
-  )
-}
-
-function BbwCallout({
-  year,
-  dateRange,
-  isLive,
-  taglineHtml,
-}: {
-  year: number
-  dateRange: string
-  isLive: boolean
-  taglineHtml: string
-}) {
-  return (
-    <Link href="/banned-books-week" className="group block">
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-oxblood text-cream rounded-full text-[10px] font-semibold tracking-wider uppercase mb-2.5">
-        {isLive && <span className="w-1.5 h-1.5 rounded-full bg-cream" aria-hidden="true" />}
-        {isLive ? 'Now' : dateRange}
-      </span>
-      <p className="font-serif text-base font-semibold leading-tight text-neutral-900 mb-1.5 group-hover:text-oxblood transition-colors">
-        Banned Books Week {year}
-      </p>
-      {/* Editor-managed campaign line (bbw-tile-tagline content block). */}
-      <div
-        className="text-xs text-neutral-600 leading-snug mb-1.5"
-        dangerouslySetInnerHTML={{ __html: taglineHtml }}
-      />
-      <span className="text-xs text-oxblood font-medium group-hover:underline">
-        Explore the hub →
-      </span>
-    </Link>
   )
 }
 
