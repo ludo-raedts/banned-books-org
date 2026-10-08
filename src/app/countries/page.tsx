@@ -1,62 +1,47 @@
-// force-dynamic stays (the page reads searchParams, which kills revalidate),
-// but the underlying data is cached below — a request with a warm cache does
-// zero DB queries instead of the six it used to.
-export const dynamic = 'force-dynamic'
+// Static (ISR): all filtering happens client-side in <CountriesBrowser>, so the
+// page needs no searchParams and no per-request render. Data is cached 24h —
+// counts only change on import/enrichment.
+export const revalidate = 86400
 
 import CollectionJsonLd from '@/components/collection-json-ld'
 import type { Metadata } from 'next'
 import Link from '@/components/link'
-import { Suspense } from 'react'
 import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
-import CountriesControls from '@/components/countries-controls'
+import CountriesBrowser, { type BanCountRow, type CountryRow } from '@/components/countries-browser'
 
 const DEFUNCT = ['SU', 'CS', 'DD', 'YU']
-
-type CountryRow = { code: string; name_en: string; description: string | null }
-type BanCountRow = {
-  country_code: string
-  distinct_books: number
-  distinct_active_books: number
-  distinct_books_historical: number
-  distinct_books_contemporary: number
-}
 
 // Shared by the page body and generateMetadata; counts change only on import/
 // enrichment, so a day of staleness is invisible.
 const loadCountriesBase = unstable_cache(
   async () => {
     const supabase = adminClient()
-    const [{ data: countries }, { data: banCounts }, { data: reasonsData }] = await Promise.all([
+    const [{ data: countries }, { data: banCounts }, { data: reasonsData }, { data: reasonRows }] = await Promise.all([
       // rows: ~90 | reason: country names + codes
-      supabase.from('countries').select('code, name_en, description'),
+      supabase.from('countries').select('code, name_en'),
       // rows: ~90 | reason: materialized view — distinct banned books per country.
       // distinct_books is the canonical ranking metric (not total_bans, which is
       // inflated for the US by PEN America's per-district granularity).
       supabase.from('mv_ban_counts').select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary'),
       // rows: ~12 | reason: filter pill options
       supabase.from('reasons').select('slug').order('slug'),
+      // rows: ~1k | reason: every (country × reason) count, so the client can filter without a round trip
+      supabase.from('mv_country_reason_counts').select('reason_slug, country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary').range(0, 4999),
     ])
+    const reasonCounts: Record<string, BanCountRow[]> = {}
+    for (const r of (reasonRows ?? []) as (BanCountRow & { reason_slug: string })[]) {
+      const { reason_slug, ...row } = r
+      ;(reasonCounts[reason_slug] ??= []).push(row)
+    }
     return {
       countries: (countries ?? []) as CountryRow[],
       banCounts: (banCounts ?? []) as BanCountRow[],
       reasonSlugs: (reasonsData ?? []).map(r => r.slug as string),
+      reasonCounts,
     }
   },
-  ['countries-base'],
-  { revalidate: 86400, tags: ['countries'] },
-)
-
-// Per-reason counts, cache-keyed on the reason arg.
-const loadReasonCounts = unstable_cache(
-  async (reasonSlug: string) => {
-    const { data } = await adminClient()
-      .from('mv_country_reason_counts')
-      .select('country_code, distinct_books, distinct_active_books, distinct_books_historical, distinct_books_contemporary')
-      .eq('reason_slug', reasonSlug)
-    return (data ?? []) as BanCountRow[]
-  },
-  ['countries-reason-counts'],
+  ['countries-base-v2'],
   { revalidate: 86400, tags: ['countries'] },
 )
 
@@ -73,79 +58,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-function countryFlag(code: string): string {
-  if (DEFUNCT.includes(code)) return '🚩'
-  return [...code.toUpperCase()].map(c =>
-    String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
-  ).join('')
-}
-
-export default async function CountriesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ sort?: string; reason?: string; active?: string; era?: string }>
-}) {
-  const { sort, reason: filterReason = '', active, era = '' } = await searchParams
-  const isAlpha = sort === 'alpha'
-  const filterActive = active === '1'
-  const eraFilter = era === 'historical' || era === 'contemporary' ? era : ''
-
-  // Pick the era-specific distinct-book column. Historical = bans started
-  // before 2000, Contemporary = 2000 onward; without an era filter we use the
-  // all-time distinct_books. (Eras overlap and exclude NULL-year bans, so the
-  // two never sum to distinct_books — see the migration comment.)
-  type EraRow = { distinct_books: number; distinct_books_historical: number; distinct_books_contemporary: number }
-  const eraCount = (r: EraRow) =>
-    eraFilter === 'historical'   ? r.distinct_books_historical
-    : eraFilter === 'contemporary' ? r.distinct_books_contemporary
-    : r.distinct_books
-
-  const { countries, banCounts, reasonSlugs } = await loadCountriesBase()
-
-  // count = all-time distinct_books (stable, drives the intro + "all eras" view);
-  // eraCountMap = the era-specific count used for the displayed ranking.
+export default async function CountriesPage() {
+  const { countries, banCounts, reasonSlugs, reasonCounts } = await loadCountriesBase()
   const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books]))
-  const eraCountMap = new Map(banCounts.map(r => [r.country_code, eraCount(r as EraRow)]))
-  const activeMap = new Map(banCounts.map(r => [r.country_code, r.distinct_active_books]))
-  const availableReasons = reasonSlugs
-
-  // ── Base country list ─────────────────────────────────────────────
-  const base = countries
-    .map(c => ({ ...c, count: countMap.get(c.code) ?? 0, active: activeMap.get(c.code) ?? 0 }))
-    .filter(c => c.count > 0)
-
-  // ── Apply reason filter: single lookup against pre-aggregated view ──
-  let filteredCountMap: Map<string, number> | null = null
-  let filteredActiveMap: Map<string, number> | null = null
-
-  if (filterReason) {
-    const reasonRows = await loadReasonCounts(filterReason)
-    filteredCountMap  = new Map(reasonRows.map(r => [r.country_code, eraCount(r as EraRow)]))
-    filteredActiveMap = new Map(reasonRows.map(r => [r.country_code, r.distinct_active_books]))
-  }
-
-  // ── Merge base with filtered counts, then sort & filter ───────────
-  const isFiltered = !!(filterReason || filterActive || eraFilter)
-
-  const merged = base.map(c => ({
-    ...c,
-    displayCount:  filteredCountMap  ? (filteredCountMap.get(c.code)  ?? 0) : (eraCountMap.get(c.code) ?? 0),
-    displayActive: filteredActiveMap ? (filteredActiveMap.get(c.code) ?? 0) : c.active,
-  }))
-
-  const visible = merged
-    .filter(c => c.displayCount > 0)
-    .filter(c => !filterActive || c.displayActive > 0)
-
-  const sorted = [...visible].sort(isAlpha
-    ? (a, b) => a.name_en.localeCompare(b.name_en)
-    : (a, b) => b.displayCount - a.displayCount
-  )
-
-  const maxCount = sorted[0] ? Math.max(...sorted.map(c => c.displayCount)) : 1
-
-  const activeCountries    = sorted.filter(c => !DEFUNCT.includes(c.code))
-  const historicalCountries = sorted.filter(c => DEFUNCT.includes(c.code))
+  const activeBase = countries
+    .filter(c => (countMap.get(c.code) ?? 0) > 0 && !DEFUNCT.includes(c.code))
+    .sort((a, b) => (countMap.get(b.code) ?? 0) - (countMap.get(a.code) ?? 0))
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -153,13 +71,13 @@ export default async function CountriesPage({
         path="/countries"
         name="Books Banned by Country"
         description="Countries with documented book bans and challenges, from school challenges in the United States to government bans worldwide."
-        items={activeCountries.map(c => ({ name: `Books banned in ${c.name_en}`, path: `/countries/${c.code.toLowerCase()}` }))}
+        items={activeBase.map(c => ({ name: `Books banned in ${c.name_en}`, path: `/countries/${c.code.toLowerCase()}` }))}
       />
       <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Catalogue</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Books Banned by Country</h1>
         <p className="text-gray-700 max-w-2xl leading-relaxed text-sm">
-          {base.filter(c => !DEFUNCT.includes(c.code)).length} countries with documented book bans — from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
+          {activeBase.length} countries with documented book bans — from school challenges in the United States to government bans across Asia, the Middle East, and Latin America.
         </p>
       </div>
 
@@ -180,67 +98,12 @@ export default async function CountriesPage({
         </Link>
       </p>
 
-      {/* Sort + filter controls */}
-      <Suspense>
-        <CountriesControls
-          reasons={availableReasons}
-          current={{ sort: sort ?? 'volume', reason: filterReason, active: filterActive, era: eraFilter }}
-        />
-      </Suspense>
-
-      {isFiltered && (
-        <p className="text-xs text-brand mb-4">
-          Showing {activeCountries.length + historicalCountries.length} countr{activeCountries.length + historicalCountries.length !== 1 ? 'ies' : 'y'} matching your filters.
-        </p>
-      )}
-
-      {/* Country list */}
-      <div className="space-y-1.5 mb-12">
-        {activeCountries.map((c, i) => (
-          <Link key={c.code} href={`/countries/${c.code.toLowerCase()}`} className="flex items-center gap-2 group py-1 rounded-lg hover:bg-gray-50 px-2 -mx-2 transition-colors">
-            {isAlpha
-              ? <span className="w-6 shrink-0" />
-              : <span className="w-6 text-right text-xs text-gray-400 tabular-nums shrink-0">{i + 1}</span>
-            }
-            <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
-            <span className="w-44 shrink-0 text-sm font-medium text-gray-800 group-hover:underline truncate">{c.name_en}</span>
-            <div className="flex-1 flex items-center gap-2 min-w-0">
-              <div
-                className="h-4 rounded bg-red-400 shrink-0"
-                style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, maxWidth: 'calc(100% - 2.5rem)', minWidth: '3px' }}
-              />
-              <span className="text-xs tabular-nums text-gray-500 shrink-0">{c.displayCount}</span>
-            </div>
-            <span className="w-20 text-right shrink-0 text-xs text-red-500 tabular-nums">
-              {!eraFilter && c.displayActive > 0 ? `${c.displayActive} active` : ''}
-            </span>
-          </Link>
-        ))}
-      </div>
-
-      {historicalCountries.length > 0 && (
-        <>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Defunct states
-          </h2>
-          <div className="space-y-1.5 mb-10">
-            {historicalCountries.map(c => (
-              <Link key={c.code} href={`/countries/${c.code.toLowerCase()}`} className="flex items-center gap-3 group py-1 rounded-lg hover:bg-gray-50 px-2 -mx-2 transition-colors">
-                <span className="w-6 shrink-0" />
-                <span className="text-xl leading-none shrink-0 w-8">{countryFlag(c.code)}</span>
-                <span className="w-44 shrink-0 text-sm font-medium text-gray-500 group-hover:underline truncate">{c.name_en}</span>
-                <div className="flex-1 flex items-center gap-2 min-w-0">
-                  <div
-                    className="h-4 rounded bg-gray-400 shrink-0"
-                    style={{ width: `${(c.displayCount / maxCount * 100).toFixed(1)}%`, minWidth: '3px' }}
-                  />
-                  <span className="text-xs tabular-nums text-gray-500">{c.displayCount}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </>
-      )}
+      <CountriesBrowser
+        countries={countries}
+        banCounts={banCounts}
+        reasonCounts={reasonCounts}
+        reasons={reasonSlugs}
+      />
 
       <div className="text-sm text-gray-500 border-t border-gray-200 pt-6">
         <p>

@@ -1,28 +1,18 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
-type Current = { sort: string; reason: string; active: boolean; era: string }
+export type Current = { sort: string; reason: string; active: boolean; era: string }
 
 type Props = {
   reasons: string[]
   current: Current
+  onChange: (next: Current) => void
 }
 
-export default function CountriesControls({ reasons, current }: Props) {
-  const router = useRouter()
-  const pathname = usePathname()
-
+export default function CountriesControls({ reasons, current, onChange }: Props) {
   function update(patch: Partial<Current>) {
-    const next = { ...current, ...patch }
-    const p = new URLSearchParams()
-    if (next.sort && next.sort !== 'volume') p.set('sort', next.sort)
-    if (next.reason) p.set('reason', next.reason)
-    if (next.active) p.set('active', '1')
-    if (next.era) p.set('era', next.era)
-    const qs = p.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+    onChange({ ...current, ...patch })
   }
 
   const hasFilter = !!(current.reason || current.active || current.era)
