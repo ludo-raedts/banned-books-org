@@ -51,9 +51,17 @@ const loadSearchFacets = unstable_cache(
   { revalidate: 3600, tags: ['search-facets'] },
 )
 
+// The filter-less landing view (what crawlers and most visitors get) is the
+// same for everyone, so cache its first 48 results for 10 minutes.
+const loadDefaultResults = unstable_cache(
+  (sort: ReturnType<typeof parseBookSort>) =>
+    searchBooks({ q: '', country: '', reason: '', scope: '', activeOnly: false, sort, offset: 0, limit: 48 }),
+  ['search-default-v1'],
+  { revalidate: 600, tags: ['search-default'] },
+)
+
 export async function generateMetadata(): Promise<Metadata> {
-  const { count } = await adminClient().from('books').select('*', { count: 'exact', head: true })
-  const n = count ?? 0
+  const { totalBooks: n } = await loadSearchFacets()
   return {
     title: `Search — ${n.toLocaleString('en')} banned books`,
     description: `Search a catalogue of ${n.toLocaleString('en')} books banned by governments, schools, and libraries. Filter by country, reason, or institution.`,
@@ -79,7 +87,9 @@ export default async function SearchPage({
     initialResult,
   ] = await Promise.all([
     loadSearchFacets(),
-    searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
+    !q && !country && !reason && !scope && !activeOnly
+      ? loadDefaultResults(sort)
+      : searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
   ])
 
   const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books as number]))

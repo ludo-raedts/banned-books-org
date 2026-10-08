@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import Link from '@/components/link'
@@ -101,24 +102,9 @@ function TrendingListFull({
   )
 }
 
-/**
- * Self-contained server component — fetches top books/authors and renders the widget.
- * Silently renders nothing if the pageviews table or relevant view doesn't exist.
- *
- * @param compact      Sidebar-friendly: no circles, tiny caps labels, flat rank numbers.
- * @param showHeader   Show the heading (stats page uses this; sidebar manages its own).
- * @param mode         'this-week' uses v_top_*_this_week with rank-change vs last week;
- *                     'all-time' uses v_top_*_all_time and hides rank-change.
- */
-export default async function TrendingWidget({
-  compact = false,
-  showHeader = true,
-  mode = 'this-week',
-}: {
-  compact?: boolean
-  showHeader?: boolean
-  mode?: Mode
-}) {
+// Data half cached 10 min per mode: /stats and the sidebar render this on
+// force-dynamic routes, so it used to cost 6 PostgREST queries per visit.
+const loadTrending = unstable_cache(async (mode: Mode): Promise<{ books: TrendingEntry[]; authors: TrendingEntry[] } | null> => {
   const timer = newTimer(`trending-${mode}`)
   const supabase = adminClient()
   const isAllTime = mode === 'all-time'
@@ -200,8 +186,33 @@ export default async function TrendingWidget({
   } catch {
     return null
   }
-
   timer.end('widget-fn-end')
+  return { books, authors }
+
+}, ['trending-widget-v1'], { revalidate: 600, tags: ['trending-widget'] })
+
+/**
+ * Self-contained server component — fetches top books/authors and renders the widget.
+ * Silently renders nothing if the pageviews table or relevant view doesn't exist.
+ *
+ * @param compact      Sidebar-friendly: no circles, tiny caps labels, flat rank numbers.
+ * @param showHeader   Show the heading (stats page uses this; sidebar manages its own).
+ * @param mode         'this-week' uses v_top_*_this_week with rank-change vs last week;
+ *                     'all-time' uses v_top_*_all_time and hides rank-change.
+ */
+export default async function TrendingWidget({
+  compact = false,
+  showHeader = true,
+  mode = 'this-week',
+}: {
+  compact?: boolean
+  showHeader?: boolean
+  mode?: Mode
+}) {
+  const data = await loadTrending(mode)
+  if (!data) return null
+  const { books, authors } = data
+  const isAllTime = mode === 'all-time'
 
   if (books.length === 0 && authors.length === 0) return null
 

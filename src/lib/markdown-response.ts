@@ -41,10 +41,14 @@ export function buildMarkdownDocument(
 }
 
 export function markdownResponse(doc: string): Response {
+  // Point search engines at the HTML original so the twin is never indexed as
+  // a duplicate (it is no longer in the sitemap either).
+  const canonical = /^url: "([^"]+)"$/m.exec(doc)?.[1]
   return new Response(doc, {
     headers: {
       'Content-Type': 'text/markdown; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      ...(canonical ? { Link: `<${canonical}>; rel="canonical"` } : {}),
     },
   })
 }

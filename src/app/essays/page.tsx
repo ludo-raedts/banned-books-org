@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from '@/components/link'
 import EssayCard from '@/components/essay-card'
 import { publishedEssays } from '@/lib/essays-data'
+import CollectionJsonLd from '@/components/collection-json-ld'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
@@ -20,6 +21,12 @@ export default function EssaysIndexPage() {
 
   return (
     <main>
+      <CollectionJsonLd
+        path="/essays"
+        name="Essays — Banned Books"
+        description="Long-form pieces on censorship, what we document, and the editorial choices behind this catalogue."
+        items={essays.map(e => ({ name: e.title, path: e.href }))}
+      />
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-5xl mx-auto">
           <Link

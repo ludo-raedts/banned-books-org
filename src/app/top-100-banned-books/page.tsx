@@ -6,6 +6,7 @@ import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
+import CollectionJsonLd from '@/components/collection-json-ld'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
@@ -92,6 +93,12 @@ export default async function Top100Page() {
 
   return (
     <main>
+      <CollectionJsonLd
+        path="/top-100-banned-books"
+        name="The 100 Most Banned Books in the World"
+        description="A ranked list of the most censored books worldwide, ordered by number of countries that have banned them."
+        items={books.map(b => ({ name: b.title, path: `/books/${b.slug}` }))}
+      />
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-5xl mx-auto">

@@ -3,6 +3,7 @@
 // zero DB queries instead of the six it used to.
 export const dynamic = 'force-dynamic'
 
+import CollectionJsonLd from '@/components/collection-json-ld'
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import { Suspense } from 'react'
@@ -148,6 +149,12 @@ export default async function CountriesPage({
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
+      <CollectionJsonLd
+        path="/countries"
+        name="Books Banned by Country"
+        description="Countries with documented book bans and challenges, from school challenges in the United States to government bans worldwide."
+        items={activeCountries.map(c => ({ name: `Books banned in ${c.name_en}`, path: `/countries/${c.code.toLowerCase()}` }))}
+      />
       <div className="bg-brand-light border-l-4 border-brand pl-6 pr-4 py-6 mb-10 rounded-r-xl">
         <p className="text-xs font-medium uppercase tracking-widest text-brand/70 mb-3">Catalogue</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2">Books Banned by Country</h1>

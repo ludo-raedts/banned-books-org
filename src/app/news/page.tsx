@@ -92,7 +92,10 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-type Matcher = { regex: RegExp; make: (match: string, k: number) => React.ReactNode }
+// Linkified summary = plain strings + serialisable link segments, so a whole
+// page of linkified news can live in unstable_cache (React nodes can't).
+type Seg = string | { href: string; text: string; kind: 'book' | 'country' }
+type Matcher = { regex: RegExp; make: (match: string) => Seg }
 
 // Compile the match regexes ONCE per render instead of once per book×item:
 // with ~20k books and 30 items per page the old inline construction meant
@@ -121,35 +124,34 @@ function buildMatchers(books: BookRef[], countries: CountryRef[]): Matcher[] {
     }
     matchers.push({
       regex: new RegExp(pattern, 'g'),
-      make: (match, k) => <Link key={k} href={`/books/${book.slug}`} className="text-gray-900 underline underline-offset-2 hover:no-underline">{match}</Link>,
+      make: match => ({ href: `/books/${book.slug}`, text: match, kind: 'book' }),
     })
   }
   for (const country of countries) {
     if (country.name_en.length < 4) continue
     matchers.push({
       regex: new RegExp(`\\b${escapeRegex(country.name_en)}\\b`, 'gi'),
-      make: (match, k) => <Link key={k} href={`/countries/${country.code.toLowerCase()}`} className="text-gray-500 underline underline-offset-2 hover:no-underline">{match}</Link>,
+      make: match => ({ href: `/countries/${country.code.toLowerCase()}`, text: match, kind: 'country' }),
     })
   }
   return matchers
 }
 
-function linkify(text: string, matchers: Matcher[]): React.ReactNode[] {
-  type Span = { start: number; end: number; node: React.ReactNode }
+function linkify(text: string, matchers: Matcher[]): Seg[] {
+  type Span = { start: number; end: number; node: Seg }
   const spans: Span[] = []
-  let key = 0
 
   for (const { regex, make } of matchers) {
     regex.lastIndex = 0
     let m: RegExpExecArray | null
     while ((m = regex.exec(text)) !== null) {
-      spans.push({ start: m.index, end: m.index + m[0].length, node: make(m[0], key++) })
+      spans.push({ start: m.index, end: m.index + m[0].length, node: make(m[0]) })
     }
   }
 
   spans.sort((a, b) => a.start - b.start || b.end - a.end)
 
-  const result: React.ReactNode[] = []
+  const result: Seg[] = []
   let pos = 0
   for (const span of spans) {
     if (span.start < pos) continue
@@ -161,6 +163,34 @@ function linkify(text: string, matchers: Matcher[]): React.ReactNode[] {
 
   return result.length > 0 ? result : [text]
 }
+
+// One cached unit per ?page=N: the 30-row query AND the linkified summaries.
+// Linkifying runs ~20k regexes per item, which made every uncached request
+// ~1–2s of CPU; now it happens once per page per 10 minutes. The route stays
+// force-dynamic (searchParams), but its work is cached.
+const loadNewsPage = unstable_cache(
+  async (page: number): Promise<{ items: NewsItem[]; totalCount: number; linked: Record<number, Seg[]> }> => {
+    const offset = (page - 1) * ITEMS_PER_PAGE
+    const [{ data: rawItems, count }, { books, countries }] = await Promise.all([
+      // rows: 30 per page | reason: paginated daily news feed; count drives the pager
+      adminClient()
+        .from('news_items')
+        .select('id, title, headline, source_name, source_url, published_at, summary, published_week, source_language, original_title', { count: 'exact' })
+        .eq('status', 'published')
+        .order('published_at', { ascending: false, nullsFirst: false })
+        .range(offset, offset + ITEMS_PER_PAGE - 1),
+      // full book + country corpus for linkify — cached 24h, see loadLinkifyRefs
+      loadLinkifyRefs(),
+    ])
+    const items = (rawItems ?? []) as NewsItem[]
+    const matchers = buildMatchers(books, countries)
+    const linked: Record<number, Seg[]> = {}
+    for (const item of items) linked[item.id] = linkify(item.summary, matchers)
+    return { items, totalCount: count ?? 0, linked }
+  },
+  ['news-page-v1'],
+  { revalidate: 600, tags: ['news-page'] },
+)
 
 function pageHref(page: number): string {
   return page === 1 ? '/news' : `/news?page=${page}`
@@ -174,25 +204,8 @@ export default async function NewsPage({
   const params = await searchParams
   const requestedPage = parseInt(params.page ?? '1', 10) || 1
   const page = Math.max(1, requestedPage)
-  const offset = (page - 1) * ITEMS_PER_PAGE
-
-  const supabase = adminClient()
-
-  const [{ data: rawItems, count: totalCount }, { books, countries }] = await Promise.all([
-    // rows: 30 per page | reason: paginated daily news feed; count drives the pager
-    supabase
-      .from('news_items')
-      .select('id, title, headline, source_name, source_url, published_at, summary, published_week, source_language, original_title', { count: 'exact' })
-      .eq('status', 'published')
-      .order('published_at', { ascending: false, nullsFirst: false })
-      .range(offset, offset + ITEMS_PER_PAGE - 1),
-    // full book + country corpus for linkify — cached 24h, see loadLinkifyRefs
-    loadLinkifyRefs(),
-  ])
-
-  const items = (rawItems ?? []) as NewsItem[]
-  const matchers = buildMatchers(books, countries)
-  const totalPages = Math.max(1, Math.ceil((totalCount ?? 0) / ITEMS_PER_PAGE))
+  const { items, totalCount, linked } = await loadNewsPage(page)
+  const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE))
 
   // Essays strip only renders on page 1 — paginated pages are meant for
   // deeper news archives, and repeating the same essay strip on every page
@@ -254,7 +267,17 @@ export default async function NewsPage({
                   className="mb-1.5"
                 />
                 <p className="text-sm text-gray-700 leading-relaxed">
-                  {linkify(item.summary, matchers)}
+                  {(linked[item.id] ?? [item.summary]).map((seg, i) =>
+                    typeof seg === 'string' ? seg : (
+                      <Link
+                        key={i}
+                        href={seg.href}
+                        className={`${seg.kind === 'book' ? 'text-gray-900' : 'text-gray-500'} underline underline-offset-2 hover:no-underline`}
+                      >
+                        {seg.text}
+                      </Link>
+                    ),
+                  )}
                 </p>
                 <p className="mt-2 text-xs text-gray-400 flex items-center gap-2 flex-wrap">
                   <a

@@ -5,6 +5,7 @@
 // dedupe + view-lookup logic. Returns null if no data is available so the
 // page degrades cleanly.
 
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import HighlightsStrip, {
@@ -25,7 +26,10 @@ const FULL_SELECT = `
   )
 `
 
-export default async function HighlightsStripBlock() {
+// Data half is cached 10 min: /stats is force-dynamic (searchParams), so
+// without this every visit re-ran 9 PostgREST queries against the top-banned
+// views. The strip only needs hour-level freshness.
+const loadHighlights = unstable_cache(async (): Promise<{ items: HighlightItem[]; authorItems: AuthorHighlightItem[] } | null> => {
   const timer = newTimer('highlights-strip-block')
   const supabase = adminClient()
 
@@ -176,8 +180,14 @@ export default async function HighlightsStripBlock() {
 
     if (items.length === 0 && authorItems.length === 0) return null
 
-    return <HighlightsStrip items={items} authorItems={authorItems} />
+    return { items, authorItems }
   } catch {
     return null
   }
+}, ['highlights-strip-v1'], { revalidate: 600, tags: ['highlights-strip'] })
+
+export default async function HighlightsStripBlock() {
+  const data = await loadHighlights()
+  if (!data) return null
+  return <HighlightsStrip items={data.items} authorItems={data.authorItems} />
 }

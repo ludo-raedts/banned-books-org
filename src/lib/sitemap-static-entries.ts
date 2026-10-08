@@ -184,35 +184,25 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
       changefreq: isBbwActive ? 'daily' : 'monthly',
       priority: isBbwActive ? 0.9 : 0.6,
     },
-    // LLM-facing surfaces. /llms.txt is the curated entry point for AI
-    // crawlers; the .md twins of the long-form prose pages give crawlers
-    // clean markdown without parsing JSX. Listed here so they flow through
-    // sitemap-static.xml, indexnow-delta diffs, and getAllCanonicalUrls().
+    // LLM-facing entry point. The .md twins of the prose pages are NOT listed
+    // (2026-10-08 audit): they duplicate the HTML pages, so search engines
+    // would index two copies. They stay reachable via Accept negotiation, the
+    // `Link: rel=alternate` header on the HTML page, and carry a canonical
+    // Link header pointing back at the HTML (markdown-response.ts).
     { loc: `${base}/llms.txt`, changefreq: 'weekly', priority: 0.5 },
-    { loc: `${base}/methodology.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/data-quality.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/about.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/history.md`, changefreq: 'monthly', priority: 0.5 },
-    { loc: `${base}/why-not-amazon.md`, changefreq: 'monthly', priority: 0.5 },
   ]
 
   // Essay routes are derived from the registry so /essays index, sitemap, and
   // the "More essays" footer can never drift apart. Each essay under /essays/*
-  // ships a `.md` twin (clean markdown for LLM/crawler surfaces) via its
-  // <slug>.md/route.ts — emit that alongside the HTML page so the two never
-  // drift. The flat-href essays (/history, /why-not-amazon) list their .md
-  // twins in STATIC_ENTRIES above.
+  // ships a `.md` twin via its <slug>.md/route.ts; only the HTML page is
+  // listed (see the note above STATIC_ENTRIES' LLM entry).
   const ESSAY_ENTRIES: SitemapEntry[] = publishedEssays().flatMap(e => {
     const html: SitemapEntry = {
       loc: `${base}${e.href}`,
       changefreq: 'monthly',
       priority: e.slug === 'history' ? 0.8 : 0.5,
     }
-    if (!e.href.startsWith('/essays/')) return [html]
-    return [
-      html,
-      { loc: `${base}${e.href}.md`, changefreq: 'monthly', priority: 0.5 },
-    ]
+    return [html]
   })
 
   const READING_CLUB_DETAIL_ENTRIES = await getReadingClubDetailEntries()
