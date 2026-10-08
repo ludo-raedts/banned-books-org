@@ -1,6 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
-import Link from 'next/link'
+import Link from '@/components/link'
 
 type TrendingEntry = {
   rank: number

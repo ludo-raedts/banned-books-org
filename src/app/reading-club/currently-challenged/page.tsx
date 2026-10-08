@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { getCurrentlyChallenged } from '@/lib/reading-club-data'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import { ALAAttribution } from '@/components/bbw-disclaimer'

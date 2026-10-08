@@ -4,7 +4,7 @@
 export const revalidate = 1800
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { TopListBookCard } from '@/components/top-list-card'

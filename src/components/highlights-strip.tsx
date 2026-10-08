@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import BookCoverPlaceholder from './book-cover-placeholder'
 import AuthorAvatar from './author-avatar'
 import type { Book } from './book-browser'

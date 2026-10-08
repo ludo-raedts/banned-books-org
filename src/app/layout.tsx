@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import Image from "next/image";
-import Link from "next/link";
+import Link from '@/components/link';
 import MobileNav from "@/components/mobile-nav";
 import NavLink from "@/components/nav-link";
 import AnalyticsWrapper from "@/components/AnalyticsWrapper";

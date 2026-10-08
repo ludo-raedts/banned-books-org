@@ -2,7 +2,7 @@ export const revalidate = 86400
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { coverAlt } from '@/lib/cover-alt'
 import SectionShell from '@/components/section/SectionShell'

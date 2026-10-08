@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import type { Essay } from '@/lib/essays-data'
 
 export default function EssayCard({ essay, compact = false }: { essay: Essay; compact?: boolean }) {

@@ -3,7 +3,7 @@
 import type React from 'react'
 import { useState, useEffect, useRef, useCallback, useId } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { useRouter } from 'next/navigation'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import GenreBadge from './genre-badge'

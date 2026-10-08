@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { usePathname } from 'next/navigation'
 
 type NavLink = { href: string; label: string; indented?: boolean }

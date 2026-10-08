@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import type { ScoredCandidate } from '@/lib/discover-engine'
 

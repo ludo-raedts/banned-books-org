@@ -8,7 +8,7 @@
 // <a>/<Link> elements. JSON-LD strips the markdown so search engines see
 // the bare answer text.
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import { Fragment } from 'react'
 
 export type FaqItem = { q: string; a: string }

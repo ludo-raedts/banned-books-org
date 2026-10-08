@@ -3,7 +3,7 @@
 export const revalidate = 3600
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { adminClient } from '@/lib/supabase'
 import CopyButton from '@/components/copy-button'

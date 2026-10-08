@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { stripe } from '@/lib/stripe'
 import { adminClient } from '@/lib/supabase'
 import TrackDatasetPurchase from '@/components/track-dataset-purchase'

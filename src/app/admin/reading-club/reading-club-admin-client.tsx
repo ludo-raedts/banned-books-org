@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { useAdminUi } from '../admin-ui'
 import { useUnsavedChanges } from '../use-unsaved-changes'
 import { arrayMove } from '../kit'

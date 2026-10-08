@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process'
 import { statSync } from 'node:fs'
 import { join } from 'node:path'
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 

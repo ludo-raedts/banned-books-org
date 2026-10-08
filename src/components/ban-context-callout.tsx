@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import type { BanContext } from '@/lib/ban-contexts'
 
 // Surfaces the historical/legal context behind a book's ban, drawn from the

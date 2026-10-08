@@ -4,7 +4,7 @@
 // markup four ways.
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'

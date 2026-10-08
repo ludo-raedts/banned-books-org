@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import EssayCard from './essay-card'
 import { otherEssays } from '@/lib/essays-data'
 

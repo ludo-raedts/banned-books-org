@@ -7,7 +7,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'

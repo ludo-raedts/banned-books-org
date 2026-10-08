@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import YouTubeEmbed from '@/components/youtube-embed'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
@@ -18,7 +18,7 @@ const FILM_DURATION = 'PT2M4S'
 
 const FILM_TITLE = 'A World Map of Banned Books'
 const FILM_DESCRIPTION =
-  'A short documentary mapping book censorship across the world — built on the banned-books.org catalogue and PEN America records. The map reflects what is documented, not the full scale of censorship.'
+  'A short documentary mapping book censorship worldwide, built on the banned-books.org catalogue and PEN America records. It shows only what is documented.'
 
 const EMBED_URL = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`
 const WATCH_URL = `https://youtu.be/${YOUTUBE_VIDEO_ID}`

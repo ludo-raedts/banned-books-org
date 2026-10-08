@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { adminClient } from '@/lib/supabase'
 import AdminBackLink from '@/components/admin-back-link'

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'

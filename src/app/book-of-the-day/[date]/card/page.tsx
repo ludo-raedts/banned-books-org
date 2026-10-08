@@ -5,7 +5,7 @@
 // all site chrome via the @media print rules below.
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { SITE_URL } from '@/lib/canonical-host'

@@ -7,7 +7,7 @@
 // components with handlers (ToggleSwitch) are only mounted inside client
 // components, which makes them part of that client bundle automatically.
 
-import Link from 'next/link'
+import Link from '@/components/link'
 
 // ── Styling constants ───────────────────────────────────────────────────────
 

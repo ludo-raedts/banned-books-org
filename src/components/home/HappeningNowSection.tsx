@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'

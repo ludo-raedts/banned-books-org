@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks, parseBookSort, DEFAULT_BOOK_SORT } from '@/lib/book-search'
 import SearchClient from '@/components/search-client'

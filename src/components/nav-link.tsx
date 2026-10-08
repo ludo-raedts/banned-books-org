@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import { usePathname } from 'next/navigation'
 
 export default function NavLink({ href, children }: { href: string; children: React.ReactNode }) {

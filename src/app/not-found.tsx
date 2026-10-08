@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import type { Metadata } from 'next'
 
 // Root 404 boundary. Catches every notFound() call across the app (book,

@@ -3,7 +3,7 @@
 // permalink; also the landing for "← Archive" from a dated page.
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { getBotdArchive } from '@/lib/book-of-the-day'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'

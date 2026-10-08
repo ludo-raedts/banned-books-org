@@ -2,7 +2,7 @@
 // language consistent across Currently Challenged / International / Classics
 // / theme subpages.
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { getBookshopUrl, getBookshopLinkType, BOOKSHOP_REL } from '@/lib/bookshop'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'

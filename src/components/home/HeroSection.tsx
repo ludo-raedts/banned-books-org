@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import Eyebrow from '@/components/section/Eyebrow'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import BbwCallout from './BbwCallout'

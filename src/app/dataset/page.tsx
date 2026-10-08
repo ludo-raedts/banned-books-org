@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL, ZENODO_VERSIONS } from '@/lib/zenodo'
 import DatasetCheckoutButton from '@/components/dataset-checkout-button'
@@ -17,7 +17,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Banned Books Dataset — Free Open CSV (CC-BY) + Full Dataset',
   description:
-    'Free, citeable CSV dataset of book bans worldwide — CC-BY-4.0 with a permanent DOI — plus a full commercial dataset (CSV, JSON, SQLite). Books, countries, years, reasons, and a source citation for every ban.',
+    'Free, citeable CSV dataset of book bans worldwide (CC-BY-4.0, permanent DOI) plus a full dataset in CSV, JSON and SQLite. A source for every ban.',
   alternates: { canonical: '/dataset' },
 }
 

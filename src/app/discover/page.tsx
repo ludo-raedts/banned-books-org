@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { loadDiscoverData } from '@/lib/discover-data'
 import { REGIONS, type SpinScope } from '@/lib/discover-engine'
 import FaqAccordion, { type FaqItem } from '@/components/faq-accordion'

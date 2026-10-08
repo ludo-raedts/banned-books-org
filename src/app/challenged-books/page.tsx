@@ -4,7 +4,7 @@
 export const revalidate = 86400
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import BookCardCompact from '@/components/home/BookCardCompact'
 import SectionShell from '@/components/section/SectionShell'

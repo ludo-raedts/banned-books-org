@@ -3,7 +3,7 @@
 export const revalidate = 86400
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks } from '@/lib/book-search'

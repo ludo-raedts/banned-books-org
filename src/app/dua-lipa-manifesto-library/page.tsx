@@ -2,7 +2,7 @@ export const revalidate = 86400
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'

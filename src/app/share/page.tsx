@@ -8,7 +8,7 @@
 // title here. The heavy daily scan is cached once per UTC day.
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import Image from 'next/image'
 import { SITE_URL } from '@/lib/canonical-host'
 import { getBookOfTheDay, reasonPhrases, joinHuman, whereClause, todayYmd } from '@/lib/book-of-the-day'

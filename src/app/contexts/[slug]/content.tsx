@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import type { ReactNode } from 'react'
 
 // Long-form bodies for the /contexts hub pages, keyed by registry slug. Only

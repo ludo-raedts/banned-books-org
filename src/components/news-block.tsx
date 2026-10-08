@@ -5,7 +5,7 @@
 // items and renders them as a stack of summary cards linking through to
 // /news. Renders nothing if no published news exists yet.
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'

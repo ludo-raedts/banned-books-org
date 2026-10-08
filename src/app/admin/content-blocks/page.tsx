@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import AdminBackLink from '@/components/admin-back-link'
 import { REQUIRED_BLOCKS_BY_PAGE, type ContentBlockRow } from '@/lib/content-blocks'

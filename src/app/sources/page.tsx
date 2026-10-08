@@ -5,7 +5,7 @@
 // the underlying data actually changes.
 export const revalidate = 3600
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'

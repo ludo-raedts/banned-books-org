@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import EssayCard from '@/components/essay-card'
 import { publishedEssays } from '@/lib/essays-data'
 import SectionShell from '@/components/section/SectionShell'

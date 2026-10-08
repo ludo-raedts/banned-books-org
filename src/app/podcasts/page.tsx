@@ -2,7 +2,7 @@
 // dependency — it's a hand-picked, editorially-annotated directory of
 // podcasts about book bans. Every entry was listened-checked and its link
 // verified before shipping; refresh periodically as feeds go dark.
-import Link from 'next/link'
+import Link from '@/components/link'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 

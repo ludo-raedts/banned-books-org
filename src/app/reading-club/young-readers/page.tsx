@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { getYoungReadersTrack } from '@/lib/reading-club-data'
 import { getPublishedBlockMap, REQUIRED_BLOCKS_BY_PAGE } from '@/lib/content-blocks'
 import ReadingClubBookCard from '@/components/reading-club-card'

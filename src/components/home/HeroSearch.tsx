@@ -2,7 +2,7 @@
 
 import { track } from '@vercel/analytics'
 import { Search } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 

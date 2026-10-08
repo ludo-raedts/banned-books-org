@@ -5,7 +5,7 @@
 // inside the root layout with a branded recovery path instead of Next's bare
 // error screen. Layout-level crashes are handled by global-error.tsx.
 import { useEffect } from 'react'
-import Link from 'next/link'
+import Link from '@/components/link'
 
 export default function ErrorPage({
   error,

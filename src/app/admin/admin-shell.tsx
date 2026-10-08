@@ -13,7 +13,7 @@
 // The login page renders bare (no chrome). The public site header/footer are
 // hidden on /admin via the <style> in layout.tsx — the admin has its own bar.
 
-import Link from 'next/link'
+import Link from '@/components/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { LogOut, Menu, X } from 'lucide-react'

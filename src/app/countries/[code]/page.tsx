@@ -6,7 +6,7 @@ export const revalidate = 86400
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'

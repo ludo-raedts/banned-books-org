@@ -61,8 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
   timer.end('metadata-fn-end')
   const n = count ?? 0
   return {
-    title: { absolute: 'Banned Books — International Catalogue of Censored Literature' },
-    description: `An international catalogue of ${n.toLocaleString('en')} books banned by governments and schools worldwide. Browse trending titles, rising titles, the most-banned authors, and books originally written outside English.`,
+    title: { absolute: `Banned Books List ${new Date().getFullYear()} — Censored Books by Country & Reason` },
+    description: `The full list of ${n.toLocaleString('en')} books banned by governments and schools worldwide, by country, year and reason. Every ban cited to a source.`,
     alternates: { canonical: '/' },
   }
 }

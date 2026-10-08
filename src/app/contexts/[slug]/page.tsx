@@ -5,7 +5,7 @@
 // ISR-cached query). Only registry entries with hasHub === true render here.
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import { buildCitationMeta } from '@/lib/citation-meta'
