@@ -121,7 +121,9 @@ const nextConfig: NextConfig = {
         source: '/:path(countries|news|stats|search|banned-classics|banned-childrens-books|non-english-banned-books)',
         missing: ['sort', 'reason', 'active', 'era', 'page', 'country', 'q', 'scope'].map(key => ({ type: 'query' as const, key })),
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' },
+          // Vercel-CDN-Cache-Control: Next overwrites plain Cache-Control on dynamic
+          // routes (verified 2026-10-08), but leaves this Vercel-only header alone.
+          { key: 'Vercel-CDN-Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
         ],
       },
       {
