@@ -27,6 +27,20 @@ uitgezonderd** (Googlebot, Bingbot, Baiduspider, Sogou, DuckDuckBot, search-AI
 bots). Daardoor hebben deze geo-regels geen SEO-effect; Googlebot crawlt
 bovendien nooit vanaf CN/SG-IP's.
 
+## 1b. Rate-limit-regel `image-optimizer-shield` (phase `http_ratelimit`)
+
+Ruleset-id `d38b38828bed4368b2a793148cb35a8c`, rule-id `834174f3d11d47aba749db88bcf903a2`.
+Expressie `http.request.uri.path contains "/_next/image"`, karakteristieken
+`ip.src` + `cf.colo.id`, periode 10 s, blok 10 s, action `block` (→ HTTP 429).
+Beschermt de Vercel image-optimizer tegen scrapers.
+
+**2026-10-08: limiet 60 → 120 per 10 s.** Bij 60 kregen gewone bezoekers
+(2 pageviews op `/countries/us`, ~98 lazy covers) binnen één minuut 149
+image-requests en dus kapotte covers (≈230 legitieme 429's/dag van ~1.500).
+Scrapers (≈14 req/s = 140 per 10 s) blijven geblokkeerd. Terugdraaien: PATCH
+dezelfde rule met `ratelimit.requests_per_period = 60`. Meten: GraphQL
+`httpRequestsAdaptiveGroups` met `edgeResponseStatus: 429` per `clientIP`.
+
 ## 2. Doctrine
 
 - **AI-verkeer is welkom** (search-AI én referrals); alleen expliciete
