@@ -1,10 +1,8 @@
-// force-dynamic keeps this heavy page OUT of the build-time prerender: its
+// Moved from src/app/banned-childrens-books/page.tsx. Rendered by the ISR route
+// src/app/isr-lists/[list]/page.tsx (rewritten from /banned-childrens-books):
+// edge-cached, but kept OUT of the build-time prerender because its
 // multi-country ban aggregation tripped the Supabase statement timeout (57014)
-// when a build ran under DB load, failing the deploy. Rendered on-demand; the
-// expensive fetch is wrapped in unstable_cache so crawlers hit the DB at most
-// once per day, not per request.
-export const dynamic = 'force-dynamic'
-
+// when a build ran under DB load. First request renders, then daily revalidate.
 import type { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import Image from 'next/image'

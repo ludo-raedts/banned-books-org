@@ -1,11 +1,10 @@
-// force-dynamic keeps this heavy page OUT of the build-time prerender: its
-// pre-1970 scan + ban-count aggregation tripped the Supabase statement timeout
-// (57014) whenever a build ran while the DB was under load (e.g. an enrichment
-// run), failing the whole deploy. Rendering on-demand instead makes the build
-// immune; the expensive fetch is wrapped in unstable_cache below so crawlers
-// hit the DB at most once per day, not per request.
-export const dynamic = 'force-dynamic'
-
+// Moved from src/app/banned-classics/page.tsx. Rendered by the ISR route
+// src/app/isr-lists/[list]/page.tsx (rewritten from /banned-classics) so it is
+// statically cached at the edge but still kept OUT of the build-time prerender:
+// its pre-1970 scan + ban-count aggregation tripped the Supabase statement
+// timeout (57014) whenever a build ran while the DB was under load, failing the
+// whole deploy. The route renders on first request (generateStaticParams = [])
+// and revalidates daily; the fetch below is also unstable_cache'd.
 import type { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import Image from 'next/image'

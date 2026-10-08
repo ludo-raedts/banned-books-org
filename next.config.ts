@@ -25,6 +25,16 @@ const nextConfig: NextConfig = {
     formats: ['image/webp'],
     minimumCacheTTL: 31536000,
   },
+  // The three heavy list pages live behind an ISR host route (see
+  // src/app/isr-lists/[list]/page.tsx); public URLs stay unchanged.
+  async rewrites() {
+    return {
+      beforeFiles: ['banned-classics', 'banned-childrens-books', 'non-english-banned-books'].map(slug => ({
+        source: `/${slug}`,
+        destination: `/isr-lists/${slug}`,
+      })),
+    }
+  },
   async redirects() {
     return [
       // Retired 2026-08-08 (portfolio pruning): the hand-maintained "further

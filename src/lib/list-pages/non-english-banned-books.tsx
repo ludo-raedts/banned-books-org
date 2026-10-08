@@ -1,11 +1,8 @@
-// force-dynamic keeps this heavy page OUT of the build-time prerender (same
-// doctrine as /banned-classics and /banned-childrens-books): the candidate-id
-// scan over the ~5k non-English books takes ~9s on a loaded prod DB, which
-// tripped statement_timeout (57014) during deploy prerender on 2026-08-10 and
-// failed the whole build. The expensive fetch is wrapped in unstable_cache
-// below (daily), so per-request renders stay crawler-safe.
-export const dynamic = 'force-dynamic'
-
+// Moved from src/app/non-english-banned-books/page.tsx. Rendered by the ISR
+// route src/app/isr-lists/[list]/page.tsx (rewritten from /non-english-banned-books):
+// edge-cached, but kept OUT of the build-time prerender — the candidate-id scan
+// over ~5k non-English books takes ~9s on a loaded DB and failed the 2026-08-10
+// deploy (57014). First request renders, then daily revalidate.
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import { unstable_cache } from 'next/cache'
