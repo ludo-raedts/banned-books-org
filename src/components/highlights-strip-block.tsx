@@ -26,7 +26,7 @@ const FULL_SELECT = `
   )
 `
 
-// Data half is cached 10 min: /stats is force-dynamic (searchParams), so
+// Data half is cached 1 h: /stats is force-dynamic (searchParams), so
 // without this every visit re-ran 9 PostgREST queries against the top-banned
 // views. The strip only needs hour-level freshness.
 const loadHighlights = unstable_cache(async (): Promise<{ items: HighlightItem[]; authorItems: AuthorHighlightItem[] } | null> => {
@@ -184,7 +184,7 @@ const loadHighlights = unstable_cache(async (): Promise<{ items: HighlightItem[]
   } catch {
     return null
   }
-}, ['highlights-strip-v1'], { revalidate: 600, tags: ['highlights-strip'] })
+}, ['highlights-strip-v1'], { revalidate: 3600, tags: ['highlights-strip'] })
 
 export default async function HighlightsStripBlock() {
   const data = await loadHighlights()

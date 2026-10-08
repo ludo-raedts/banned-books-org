@@ -52,12 +52,12 @@ const loadSearchFacets = unstable_cache(
 )
 
 // The filter-less landing view (what crawlers and most visitors get) is the
-// same for everyone, so cache its first 48 results for 10 minutes.
+// same for everyone, so cache its first 48 results for an hour.
 const loadDefaultResults = unstable_cache(
   (sort: ReturnType<typeof parseBookSort>) =>
     searchBooks({ q: '', country: '', reason: '', scope: '', activeOnly: false, sort, offset: 0, limit: 48 }),
   ['search-default-v1'],
-  { revalidate: 600, tags: ['search-default'] },
+  { revalidate: 3600, tags: ['search-default'] },
 )
 
 export async function generateMetadata(): Promise<Metadata> {

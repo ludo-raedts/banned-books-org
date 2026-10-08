@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { runFetchNews } from '@/lib/fetch-news'
 
 // Daily fetch — protected by CRON_SECRET. Whether items go straight to
@@ -20,5 +21,8 @@ export async function GET(req: NextRequest) {
   }
 
   const result = await runFetchNews(true)
+  // /news pages are cached 1 h (unstable_cache, tag 'news-page'); expire them
+  // as soon as the daily fetch lands so new items show up without waiting.
+  revalidateTag('news-page', 'max')
   return NextResponse.json(result)
 }

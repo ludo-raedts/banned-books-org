@@ -102,7 +102,7 @@ function TrendingListFull({
   )
 }
 
-// Data half cached 10 min per mode: /stats and the sidebar render this on
+// Data half cached 1 h per mode: /stats and the sidebar render this on
 // force-dynamic routes, so it used to cost 6 PostgREST queries per visit.
 const loadTrending = unstable_cache(async (mode: Mode): Promise<{ books: TrendingEntry[]; authors: TrendingEntry[] } | null> => {
   const timer = newTimer(`trending-${mode}`)
@@ -189,7 +189,7 @@ const loadTrending = unstable_cache(async (mode: Mode): Promise<{ books: Trendin
   timer.end('widget-fn-end')
   return { books, authors }
 
-}, ['trending-widget-v1'], { revalidate: 600, tags: ['trending-widget'] })
+}, ['trending-widget-v1'], { revalidate: 3600, tags: ['trending-widget'] })
 
 /**
  * Self-contained server component — fetches top books/authors and renders the widget.

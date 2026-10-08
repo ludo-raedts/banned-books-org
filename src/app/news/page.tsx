@@ -166,7 +166,7 @@ function linkify(text: string, matchers: Matcher[]): Seg[] {
 
 // One cached unit per ?page=N: the 30-row query AND the linkified summaries.
 // Linkifying runs ~20k regexes per item, which made every uncached request
-// ~1–2s of CPU; now it happens once per page per 10 minutes. The route stays
+// ~1–2s of CPU; now it happens once per page per hour. The route stays
 // force-dynamic (searchParams), but its work is cached.
 const loadNewsPage = unstable_cache(
   async (page: number): Promise<{ items: NewsItem[]; totalCount: number; linked: Record<number, Seg[]> }> => {
@@ -189,7 +189,7 @@ const loadNewsPage = unstable_cache(
     return { items, totalCount: count ?? 0, linked }
   },
   ['news-page-v1'],
-  { revalidate: 600, tags: ['news-page'] },
+  { revalidate: 3600, tags: ['news-page'] },
 )
 
 function pageHref(page: number): string {
