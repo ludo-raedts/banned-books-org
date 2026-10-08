@@ -109,24 +109,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // CDN caching for force-dynamic public pages (2026-10-08 audit). These
-        // routes are dynamic only because of searchParams or build-prerender
-        // cost, yet the unfiltered view is identical for every visitor — but
-        // Next marks them `private, no-store`, so every crawler/visitor hit a
-        // function. `missing` limits the rule to param-less requests, so
-        // filtered / paginated / search variants stay uncached. 1 h matches the
-        // unstable_cache TTLs behind these pages; SWR keeps the edge warm.
-        // NOT applied to /discover (random pick) or /banned-books-week (reads
-        // the preview cookie).
-        source: '/:path(countries|news|stats|search|banned-classics|banned-childrens-books|non-english-banned-books)',
-        missing: ['sort', 'reason', 'active', 'era', 'page', 'country', 'q', 'scope'].map(key => ({ type: 'query' as const, key })),
-        headers: [
-          // Vercel-CDN-Cache-Control: Next overwrites plain Cache-Control on dynamic
-          // routes (verified 2026-10-08), but leaves this Vercel-only header alone.
-          { key: 'Vercel-CDN-Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
-        ],
-      },
-      {
         source: '/_next/image(.*)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },

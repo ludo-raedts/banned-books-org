@@ -1,6 +1,6 @@
 # Data Quality Dry Run
 
-Run at: 2026-09-01T13:08:58.565Z
+Run at: 2026-09-16T19:20:49.462Z
 
 Drie buckets per record: `confident` (automatisch hoog vertrouwen), `default` (geïmporteerd, niets mis), `flagged` (minimaal één probleem).
 
@@ -10,9 +10,9 @@ Totaal: **20306**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 5224 | 25.7% |
-| default | 12822 | 63.1% |
-| flagged | 2260 | 11.1% |
+| confident | 5231 | 25.8% |
+| default | 12808 | 63.1% |
+| flagged | 2267 | 11.2% |
 
 ### Confident books — sample (top 25 by score, oudste eerst)
 
@@ -48,8 +48,8 @@ Totaal: **20306**
 
 | Flag | Count |
 |---|---:|
-| only-placeholder-authors | 1557 |
-| cover-placeholder | 722 |
+| only-placeholder-authors | 1555 |
+| cover-placeholder | 731 |
 | no-bans | 1 |
 
 ### Flagged books — sample (eerste 30)
@@ -98,7 +98,6 @@ Totaal: **20306**
 | 78 | song-of-solomon | Song of Solomon | Toni Morrison | 4/5 | editorial |
 | 79 | go-tell-it-on-the-mountain | Go Tell It on the Mountain | James Baldwin | 3/5 | bans, editorial |
 | 96 | the-house-of-the-spirits | The House of the Spirits | Isabel Allende | 4/5 | editorial |
-| 104 | to-live-yu-hua | To Live | Yu Hua | 2/5 | bans, sources, editorial |
 | 117 | myra-breckinridge | Myra Breckinridge | Gore Vidal | 2/5 | bans, sources, editorial |
 | 129 | fight-club | Fight Club | Chuck Palahniuk | 4/5 | editorial |
 | 132 | sold-patricia-mccormick | Sold | Patricia McCormick | 4/5 | editorial |
@@ -111,6 +110,7 @@ Totaal: **20306**
 | 200 | a-court-of-mist-and-fury | A Court of Mist and Fury | Sarah J. Maas | 4/5 | editorial |
 | 205 | lucky-as | Lucky | Alice Sebold | 4/5 | canonical-id |
 | 206 | perfect-eh | Perfect (EH) | Ellen Hopkins | 2/5 | bans, sources, editorial |
+| 215 | mondays-not-coming | Monday's Not Coming | Tiffany D. Jackson | 3/5 | editorial, author-legit |
 
 ## Authors
 
@@ -118,8 +118,8 @@ Totaal: **12744**
 
 | Bucket | Count | % |
 |---|---:|---:|
-| confident | 1508 | 11.8% |
-| default | 11216 | 88.0% |
+| confident | 1513 | 11.9% |
+| default | 11211 | 88.0% |
 | flagged | 20 | 0.2% |
 
 ### Confident authors — sample (eerste 25)
