@@ -12,6 +12,7 @@ import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
+import ThumbBookList from '@/components/thumb-book-list'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
@@ -379,53 +380,18 @@ function BookSection({
         className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30"
         dangerouslySetInnerHTML={{ __html: heading }}
       />
-      <ol className="divide-y divide-neutral-200 bg-white border border-neutral-200 rounded-sm">
-        {books.map((book, i) => {
-          const author = book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', ')
-          const top = book.topCountryName ?? null
-          return (
-            <li key={book.id}>
-              <Link href={`/books/${book.slug}`} className="group flex items-center gap-4 px-4 py-3 hover:bg-cream/50 transition-colors">
-                <span className="w-8 shrink-0 text-right font-serif text-base tabular-nums text-oxblood font-semibold">
-                  {i + 1}
-                </span>
-                <div className="shrink-0 w-10 h-14 rounded overflow-hidden bg-neutral-100">
-                  {book.cover_url ? (
-                    <Image
-                      src={book.cover_url}
-                      alt={coverAlt(book.title, author, book.first_published_year ?? undefined)}
-                      width={40}
-                      height={56}
-                      className="w-full h-full object-cover"
-                      sizes="40px"
-                    />
-                  ) : (
-                    <BookCoverPlaceholder title={book.title} slug={book.slug} className="h-full" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-serif text-base font-medium text-gray-900 leading-snug group-hover:text-oxblood transition-colors truncate">
-                    {book.title}
-                  </p>
-                  <p className="text-xs text-neutral-600 truncate">
-                    {author || '—'}
-                    {book.first_published_year && (
-                      <span className="text-neutral-400"> · {book.first_published_year}</span>
-                    )}
-                  </p>
-                  {top && <p className="text-[11px] text-neutral-500 truncate mt-0.5">{top}</p>}
-                </div>
-                <div className="shrink-0 text-right">
-                  <span className="font-serif text-lg font-semibold tabular-nums text-oxblood">{book.bans.length}</span>
-                  <p className="text-[10px] uppercase tracking-wider text-neutral-500">
-                    {book.bans.length === 1 ? 'ban' : 'bans'}
-                  </p>
-                </div>
-              </Link>
-            </li>
-          )
-        })}
-      </ol>
+      <ThumbBookList
+        rows={books.map(book => ({
+          id: book.id,
+          slug: book.slug,
+          title: book.title,
+          author: book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
+          year: book.first_published_year,
+          cover: book.cover_url,
+          bans: book.bans.length,
+          top: book.topCountryName ?? null,
+        }))}
+      />
     </SectionShell>
   )
 }

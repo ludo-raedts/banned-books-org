@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
 export type StatsFilterValues = {
@@ -13,20 +12,12 @@ type Props = {
   countries: { code: string; name: string }[]
   reasons: string[]
   current: StatsFilterValues
+  onChange: (next: StatsFilterValues) => void
 }
 
-export default function StatsFilters({ countries, reasons, current }: Props) {
-  const router = useRouter()
-  const pathname = usePathname()
-
+export default function StatsFilters({ countries, reasons, current, onChange }: Props) {
   function update(patch: Partial<StatsFilterValues>) {
-    const next = { ...current, ...patch }
-    const p = new URLSearchParams()
-    if (next.country) p.set('country', next.country)
-    if (next.reason) p.set('reason', next.reason)
-    if (next.active) p.set('active', '1')
-    const qs = p.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+    onChange({ ...current, ...patch })
   }
 
   const hasFilter = !!(current.country || current.reason || current.active)
@@ -85,7 +76,7 @@ export default function StatsFilters({ countries, reasons, current }: Props) {
       {/* Clear all */}
       {hasFilter && (
         <button
-          onClick={() => router.push(pathname)}
+          onClick={() => onChange({ country: '', reason: '', active: false })}
           className="px-3 py-1 text-xs text-gray-400 hover:text-gray-600 underline"
         >
           Clear filters

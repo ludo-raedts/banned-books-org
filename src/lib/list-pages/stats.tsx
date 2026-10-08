@@ -1,36 +1,20 @@
-// force-dynamic + unstable_cache: this page awaits searchParams (the timeline
-// filters), which is a request-time API — using it opts the WHOLE route into
-// dynamic rendering, so a plain `revalidate` export never cached anything
-// here: every visit re-scanned the full bans (~36k rows) and book_authors
-// (~21k rows) tables in ~57 sequential PostgREST round trips (20s+ renders).
-// Instead all heavy scanning + aggregation lives in fetchStatsData() below,
-// wrapped in unstable_cache with a 24h TTL — decade-level stats don't need
-// more freshness than that. Filtered requests still render per-request, but
-// they filter the compact cached aggregates instead of hitting the DB.
-export const dynamic = 'force-dynamic'
+// Moved from src/app/stats/page.tsx. Rendered by the ISR route
+// src/app/isr-lists/[list]/page.tsx (rewritten from /stats): edge-cached, but
+// kept OUT of the build-time prerender because the full bans/book_authors scan
+// below (~36k + ~21k rows) is far too heavy to run during a deploy. First request
+// renders, then hourly revalidate. The timeline filters run client-side in
+// <StatsTimeline>, so the page no longer needs searchParams.
 
 import type { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import Link from '@/components/link'
-import { Suspense } from 'react'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import TrendingWidget from '@/components/trending-widget'
-import StatsFilters from '@/components/stats-filters'
+import StatsTimeline, { type TimelineGroup } from '@/components/stats-timeline'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
-
-// Bans grouped by (country, decade, active, reason-set) — compact enough to
-// live in the data cache (a few thousand groups vs ~36k raw rows) while still
-// supporting every combination of the timeline filters.
-type TimelineGroup = {
-  country: string
-  decade: number | null // null = no usable year (missing or < 1000)
-  active: boolean
-  reasons: number[] // indices into StatsData.reasonSlugs
-  count: number
-}
 
 type StatsData = {
   totalBooks: number
@@ -236,7 +220,7 @@ const getStatsCached = unstable_cache(fetchStatsData, ['stats-page'], {
   tags: ['stats-page'],
 })
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateStatsMetadata(): Promise<Metadata> {
   const stats = await getStatsCached()
   const books = stats.totalBooks.toLocaleString('en')
   const bans = stats.totalBanEvents.toLocaleString('en')
@@ -263,16 +247,7 @@ const REASON_COLORS: Record<string, string> = {
 
 const CURRENT_DECADE = Math.floor(new Date().getFullYear() / 10) * 10
 
-export default async function StatsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ country?: string; reason?: string; active?: string }>
-}) {
-  const filters = await searchParams
-  const filterCountry = filters.country ?? ''
-  const filterReason = filters.reason ?? ''
-  const filterActive = filters.active === '1'
-
+export default async function StatsPage() {
   const stats = await getStatsCached()
   const {
     totalBooks, totalBanEvents, top5Countries, topAuthors, topReasons,
@@ -281,54 +256,6 @@ export default async function StatsPage({
   const maxCountry = top5Countries[0]?.count ?? 1
   const maxAuthor = topAuthors[0]?.count ?? 1
   const maxReason = topReasons[0]?.count ?? 1
-
-  // ── Timeline: apply filters, then bucket by decade ─────────────────
-  const reasonFilterIdx = filterReason ? stats.reasonSlugs.indexOf(filterReason) : -1
-  let timelineGroups = stats.timelineGroups
-  if (filterCountry) timelineGroups = timelineGroups.filter((g) => g.country === filterCountry)
-  if (filterReason)  timelineGroups = timelineGroups.filter((g) => reasonFilterIdx !== -1 && g.reasons.includes(reasonFilterIdx))
-  if (filterActive)  timelineGroups = timelineGroups.filter((g) => g.active)
-
-  const isFiltered = !!(filterCountry || filterReason || filterActive)
-
-  const decadeCounts = new Map<number, number>()
-  let matchingBans = 0
-  let timelineWithoutYear = 0
-  for (const g of timelineGroups) {
-    matchingBans += g.count
-    if (g.decade === null) { timelineWithoutYear += g.count; continue }
-    decadeCounts.set(g.decade, (decadeCounts.get(g.decade) ?? 0) + g.count)
-  }
-  const decades = [...decadeCounts.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([decade, count]) => ({ decade, count }))
-  const maxDecade = Math.max(...decades.map((d) => d.count), 1)
-
-  // Log scale so small historical eras stay visible next to the 2020s peak.
-  // log10(count + 1) keeps count=1 at 0 and avoids -Infinity for count=0.
-  const TIMELINE_PX = 112
-  const logMax = Math.log10(maxDecade + 1)
-  const logHeight = (count: number) =>
-    Math.max(Math.round((Math.log10(count + 1) / logMax) * TIMELINE_PX), 4)
-
-  // Gridlines at each power of 10 up to (and including) the next one above max.
-  const gridTicks: number[] = []
-  for (let exp = 0; 10 ** exp <= maxDecade * 10; exp++) {
-    const v = 10 ** exp
-    if (v <= 1 || v > maxDecade * 1.5) continue
-    gridTicks.push(v)
-  }
-
-  // Color buckets so the log-flattened bars still carry a "much / little" signal.
-  const TIMELINE_BUCKETS = [
-    { max: 10,     label: '< 10',     bar: 'bg-red-200', swatch: 'bg-red-200' },
-    { max: 100,    label: '< 100',    bar: 'bg-red-300', swatch: 'bg-red-300' },
-    { max: 500,    label: '< 500',    bar: 'bg-red-400', swatch: 'bg-red-400' },
-    { max: 1000,   label: '< 1,000',  bar: 'bg-red-500', swatch: 'bg-red-500' },
-    { max: 10000,  label: '< 10,000', bar: 'bg-red-700', swatch: 'bg-red-700' },
-    { max: Infinity, label: '≥ 10,000', bar: 'bg-red-900', swatch: 'bg-red-900' },
-  ] as const
-  const bucketFor = (count: number) => TIMELINE_BUCKETS.find((b) => count < b.max) ?? TIMELINE_BUCKETS[TIMELINE_BUCKETS.length - 1]
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -469,112 +396,12 @@ export default async function StatsPage({
         </div>
       </section>
 
-      {/* ── 7. Bans Through History (timeline) ── */}
-      <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 mb-1">Bans Through History</h2>
-        <p className="text-sm text-gray-500 mb-4">
-          From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
-          Bars use a <span className="font-medium">logarithmic scale</span> — each gridline is a 10× increase, so earlier eras stay visible alongside the 2020s peak.
-          {timelineWithoutYear > 0 && (
-            <> {timelineWithoutYear.toLocaleString('en')} bans with no recorded year are excluded.</>
-          )}
-        </p>
-
-        {/* Timeline filter */}
-        <Suspense>
-          <StatsFilters
-            countries={stats.filterCountryOptions}
-            reasons={stats.reasonSlugs}
-            current={{ country: filterCountry, reason: filterReason, active: filterActive }}
-          />
-        </Suspense>
-        {isFiltered && (
-          <p className="text-xs text-brand mb-4">
-            Showing {matchingBans.toLocaleString('en')} ban{matchingBans !== 1 ? 's' : ''} matching your filters.
-          </p>
-        )}
-
-        <div className="flex items-stretch">
-          {/* Y-axis (sticky, outside the horizontal scroll) */}
-          <div
-            className="relative shrink-0 pr-2 select-none"
-            style={{ width: '3rem', height: `${TIMELINE_PX + 32}px` }}
-            aria-hidden
-          >
-            {gridTicks.map(v => {
-              const y = (Math.log10(v + 1) / logMax) * TIMELINE_PX
-              return (
-                <span
-                  key={v}
-                  className="absolute right-2 text-[10px] tabular-nums text-gray-400 leading-none"
-                  style={{ bottom: `${y + 16}px`, transform: 'translateY(50%)' }}
-                >
-                  {v >= 1000 ? `${v / 1000}k` : v}
-                </span>
-              )
-            })}
-          </div>
-
-          <div className="flex-1 overflow-x-auto pb-1" dir="rtl">
-            <div
-              className="relative inline-flex items-end gap-1 min-w-max"
-              style={{ height: `${TIMELINE_PX + 32}px` }}
-              dir="ltr"
-            >
-              {/* Gridlines spanning the full chart width */}
-              {gridTicks.map(v => {
-                const y = (Math.log10(v + 1) / logMax) * TIMELINE_PX
-                return (
-                  <div
-                    key={v}
-                    className="absolute inset-x-0 border-t border-dashed border-gray-200 pointer-events-none"
-                    style={{ bottom: `${y + 16}px` }}
-                  />
-                )
-              })}
-
-              {decades.map((d, i) => {
-                const isOngoing = d.decade === CURRENT_DECADE
-                const barH = logHeight(d.count)
-                const labelClass = i % 2 === 0
-                  ? 'text-[10px] text-gray-400 tabular-nums'
-                  : 'text-[10px] text-gray-400 tabular-nums hidden md:block'
-                const bucket = bucketFor(d.count)
-                return (
-                  <div key={d.decade} className="flex flex-col items-center shrink-0 relative z-10" style={{ width: '2.5rem' }}>
-                    <div className="flex-1 flex items-end relative w-full justify-center">
-                      <div
-                        className={`w-8 rounded-t transition-all ${bucket.bar} ${isOngoing ? 'ring-2 ring-brand ring-offset-1 ring-offset-white' : ''}`}
-                        style={{ height: `${barH}px` }}
-                        title={`${d.decade}s: ${d.count.toLocaleString('en')} ban${d.count !== 1 ? 's' : ''}${isOngoing ? ' (ongoing)' : ''}`}
-                      />
-                      {/* Count label anchored just above the bar */}
-                      <span
-                        className="absolute text-[9px] tabular-nums leading-none pointer-events-none select-none text-gray-500"
-                        style={{ bottom: `${barH + 3}px` }}
-                      >
-                        {d.count.toLocaleString('en')}
-                      </span>
-                    </div>
-                    <span className={labelClass}>{d.decade}s</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Color-bucket legend */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500">
-          <span className="uppercase tracking-wide text-gray-400">Bans per decade:</span>
-          {TIMELINE_BUCKETS.map(b => (
-            <span key={b.label} className="inline-flex items-center gap-1">
-              <span className={`inline-block w-3 h-3 rounded-sm ${b.swatch}`} aria-hidden />
-              <span className="tabular-nums">{b.label}</span>
-            </span>
-          ))}
-        </div>
-      </section>
+      {/* ── 7. Bans Through History (timeline, client-side filters) ── */}
+      <StatsTimeline
+        timelineGroups={stats.timelineGroups}
+        reasonSlugs={stats.reasonSlugs}
+        countryOptions={stats.filterCountryOptions}
+      />
 
       {/* ── 8. Browse by year ── */}
       <section className="mb-16">
