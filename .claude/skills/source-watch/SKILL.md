@@ -57,6 +57,9 @@ watch that silently skips a source is worse than none.
    `import-pen.ts`) scoped to entries newer than PEN's latest index (2024–25),
    and remind the user of the two open items towards Magnusson (read access
    to the Airtable, preferred citation form).
+   **Update 2026-10-10:** the delta-importer exists — `build-magnusson-stage0.ts`
+   + `import-magnusson-delta.ts` (first run on her 2026-10-09 xlsx export: +1,260
+   bans). A new export = re-run those two (delete `data/magnusson/match-cache.json` first).
 
 ## Also glance at (no fetch quota — only if cheap)
 
