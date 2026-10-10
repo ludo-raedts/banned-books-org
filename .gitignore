@@ -203,3 +203,6 @@ next-env.d.ts
 /data/source-research/porbase-cache.json
 /data/*.log
 /enrich.log
+
+# Magnusson Censorship Database raw export (shared privately by the author; attribution-only permission)
+/data/magnusson/
