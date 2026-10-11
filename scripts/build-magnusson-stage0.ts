@@ -55,14 +55,30 @@ export type Stage0Row = {
 
 const s = (v: unknown) => (v == null ? '' : String(v).trim())
 
-// "Maas, Sarah J." → "Sarah J. Maas"; "Kendi, Ibram X. and Reynolds, Jason" → two names.
+// "Maas, Sarah J." → "Sarah J. Maas". Several people in one field are split on
+// ";", " and ", "&", a space before a comma ("Hannah-Jones, Nikole , Watson, Renée")
+// or, failing that, by pairing an even number of comma parts
+// ("Gay, Roxane, Oliver, Tracy Lynne"). "Glaude, Jr., Eddie S." keeps its suffix.
+// A word-initial lowercase L before a consonant is an OCR'd capital I ("lgnatiev").
+const SUFFIX = /^(jr|sr|ii|iii|iv|ph\.?d|m\.?a)\.?$/i
+const fixOcrI = (s: string) => s.replace(/\bl(?=[bcdfgkmnpt])/g, 'I')
+function personName(chunk: string): string[] {
+  const parts = chunk.split(',').map(p => p.trim()).filter(Boolean)
+  const suffix = parts.filter(p => SUFFIX.test(p)).map(p => (/^(jr|sr)$/i.test(p) ? `${p}.` : p))
+  const core = parts.filter(p => !SUFFIX.test(p))
+  const tail = suffix.length ? ` ${suffix.join(' ')}` : ''
+  if (core.length === 2) return [`${core[1]} ${core[0]}${tail}`]
+  if (core.length >= 4 && core.length % 2 === 0 && !tail) {
+    const out: string[] = []
+    for (let i = 0; i < core.length; i += 2) out.push(`${core[i + 1]} ${core[i]}`)
+    return out
+  }
+  return [core.join(', ') + tail]
+}
 export function parseAuthors(raw: string, coAuthors: string): string[] {
-  const parts = [raw, coAuthors].filter(Boolean).join(';')
-    .split(/\s*;\s*|\s+and\s+|\s*&\s*/).map(p => p.trim()).filter(Boolean)
-  const names = parts.map(p => {
-    const m = p.match(/^([^,]+),\s*([^,]+)$/)
-    return (m ? `${m[2]} ${m[1]}` : p).replace(/\s+/g, ' ').trim()
-  })
+  const chunks = [raw, coAuthors].filter(Boolean).join(';')
+    .split(/\s*;\s*|\s+and\s+|\s*&\s*|\s+,\s*/).map(p => p.trim()).filter(Boolean)
+  const names = chunks.flatMap(personName).map(n => fixOcrI(n).replace(/\s+/g, ' ').trim()).filter(Boolean)
   return [...new Set(names)]
 }
 
