@@ -57,6 +57,8 @@ import {
   TITLE_MATCH_THRESHOLD,
 } from '../src/lib/enrich/isbn'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
+import { newPgClient } from '../src/lib/wikipedia/importer'
+import { loadPubYearCeilings, exceedsPubYearCeiling } from '../src/lib/enrich/pub-year-guard'
 
 const APPLY = process.argv.includes('--apply')
 const RESET_CURSOR = process.argv.includes('--reset-cursor')
@@ -148,6 +150,12 @@ function coverUrlFromId(id: number): string {
 
 async function main() {
   const sb = adminClient()
+  // A book banned from a US school/library in year Y existed by Y+1: never fill a
+  // later year (OL edition years on reprints; see fix-provably-wrong-pub-years.ts).
+  const pg = newPgClient(); await pg.connect()
+  const pubYearCeilings = await loadPubYearCeilings(pg)
+  await pg.end()
+  let yearsBlocked = 0
   const cursor = readCursor()
   console.log(
     `\n── enrich-ol-harvest (${APPLY ? 'APPLY' : 'DRY-RUN'}) cursor.lastId=${cursor.lastId} pass=${cursor.pass} ──\n`,
@@ -305,7 +313,9 @@ async function main() {
           .is('cover_url', null)
         if (!error) coversFilled++
       }
-      if (firstYear) {
+      if (firstYear && exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear)) {
+        yearsBlocked++
+      } else if (firstYear) {
         const { error } = await sb
           .from('books')
           .update({ first_published_year: firstYear })
@@ -342,7 +352,7 @@ async function main() {
       }
     } else {
       if (coverUrl) coversFilled++
-      if (firstYear) yearsFilled++
+      if (firstYear && !exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear)) yearsFilled++
       if (recoveredIsbn) isbnsFilled++
       if (backfillWorkId) workIdsFilled++
     }
@@ -359,6 +369,7 @@ async function main() {
   Processed:                      ${limit}${APPLY ? '' : ' (dry-run)'}
   Covers ${APPLY ? 'written' : 'findable'}:           ${coversFilled}
   Years ${APPLY ? 'written' : 'fillable'}:            ${yearsFilled}
+  Years blocked (after first US ban):   ${yearsBlocked}
   ISBNs ${APPLY ? 'written' : 'recoverable'}:           ${isbnsFilled}${isbnDup ? ` (+${isbnDup} dup-collision)` : ''}
   work_id backfilled:             ${workIdsFilled}
   Skipped (title mismatch):       ${contaminated}
