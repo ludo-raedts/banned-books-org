@@ -23,14 +23,13 @@ export const metadata: Metadata = {
 
 async function getStats() {
   const s = adminClient()
-  const [books, bans, sources, countriesRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
+  const [books, bans, sources, countriesRes, yearMinRes, yearMaxRes] = await Promise.all([
     s.from('books').select('*', { count: 'exact', head: true }),
     s.from('bans').select('*', { count: 'exact', head: true }),
     s.from('ban_sources').select('*', { count: 'exact', head: true }),
     s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: true }).limit(1).maybeSingle(),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: false }).limit(1).maybeSingle(),
-    s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
   return {
     books: books.count ?? 0,
@@ -39,7 +38,6 @@ async function getStats() {
     countries: countriesRes.count ?? 0,
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
-    dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,
   }
 }
 
@@ -140,7 +138,10 @@ export default async function DatasetPage() {
         inLanguage: 'en',
       }
     : null
-  if (openDatasetSchema && stats.dataLastChanged) openDatasetSchema.dateModified = stats.dataLastChanged
+  // The Zenodo deposit changes only when a new version is released — its
+  // dateModified is that release date, not the live catalogue's last change.
+  const latestRelease = ZENODO_VERSIONS[0] ?? null
+  if (openDatasetSchema && latestRelease) openDatasetSchema.dateModified = latestRelease.date
 
   const ldHtml = (obj: unknown) => JSON.stringify(obj).replace(/</g, '\\u003c')
 
@@ -233,6 +234,17 @@ export default async function DatasetPage() {
               <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
                 A free, downloadable CSV dataset of the verifiable censorship core — the facts and the source citations behind them. Deposited on Zenodo as a citeable research dataset under CC-BY-4.0, with a permanent, version-independent DOI.
               </p>
+              {latestRelease && (
+                <p className="mt-3 border-l-2 border-oxblood/40 pl-3 text-xs text-neutral-600 leading-relaxed">
+                  <strong className="font-semibold text-gray-900">Periodic snapshot.</strong>{' '}
+                  Latest release:{' '}
+                  <time dateTime={latestRelease.date}>
+                    {new Date(latestRelease.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </time>
+                  . New releases come out a few times a year, so this version can lag well behind the live
+                  catalogue. Need the current state? The full dataset is always up to date.
+                </p>
+              )}
               {ZENODO_DOI_URL ? (
                 <>
                   <TrackedOutboundLink
@@ -274,7 +286,7 @@ export default async function DatasetPage() {
                 </DatasetCheckoutButton>
               </form>
               <p className="mt-3 text-xs text-neutral-500 leading-relaxed">
-                One-time payment via Stripe · instant download · taxes calculated at checkout. The dataset reflects the catalogue at the moment of purchase.
+                One-time payment via Stripe · instant download · taxes calculated at checkout. Always current: the dataset is built from the live catalogue at the moment of purchase.
               </p>
             </div>
 
