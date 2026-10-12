@@ -6,6 +6,8 @@ import { adminClient } from '@/lib/supabase'
 import { getBBWConfig, formatBBWDateRange } from '@/config/banned-books-week'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 import Eyebrow from '@/components/section/Eyebrow'
+import TrackedOutboundLink from '@/components/tracked-outbound-link'
+import { BOOKSHOP_REL, PEN_CALENDAR_2027 } from '@/lib/bookshop'
 import {
   getPublishedFeaturedBooks,
   getAllFeaturedBooksForAdmin,
@@ -242,6 +244,8 @@ export default async function BannedBooksWeekPage({
         </section>
       )}
 
+      <PenCalendarNote />
+
       <ArchiveEntryPoints />
 
       {/* The other side */}
@@ -378,6 +382,40 @@ function ArchiveEntryPoints() {
         ))}
       </ul>
     </section>
+  )
+}
+
+/**
+ * A quiet pointer to PEN America's licensed wall calendar — a way to support
+ * one of the organisers. Not campaign artwork (see the FactsPanel note), so
+ * showing its cover doesn't blur the not-affiliated line.
+ */
+function PenCalendarNote() {
+  return (
+    <aside className="mb-10 flex items-center gap-4 rounded-lg border border-gray-200 p-4">
+      <Image
+        src={PEN_CALENDAR_2027.cover}
+        alt=""
+        width={600}
+        height={600}
+        className="w-16 h-16 flex-shrink-0 rounded-sm border border-gray-200"
+        sizes="64px"
+      />
+      <p className="text-sm text-gray-700 leading-relaxed">
+        Keep the books in view all year: PEN America&rsquo;s{' '}
+        <TrackedOutboundLink
+          eventName="Bookshop Click"
+          eventProperties={{ source: 'banned-books-week', linkType: 'deep', item: 'pen-calendar-2027' }}
+          href={PEN_CALENDAR_2027.url}
+          target="_blank"
+          rel={BOOKSHOP_REL}
+          className="text-oxblood hover:underline"
+        >
+          Banned Books 2027 Wall Calendar
+        </TrackedOutboundLink>
+        , illustrated by Jane Mount. Part of the proceeds goes to PEN America.
+      </p>
+    </aside>
   )
 }
 

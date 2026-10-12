@@ -5,7 +5,7 @@ import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { bookshopListUrl, BOOKSHOP_LISTS } from '@/lib/bookshop-lists'
-import { BOOKSHOP_AFFILIATE_ID, BOOKSHOP_REL } from '@/lib/bookshop'
+import { BOOKSHOP_REL, PEN_CALENDAR_2027 } from '@/lib/bookshop'
 import { getKoboStorefrontUrl, KOBO_REL } from '@/lib/kobo'
 
 export const metadata: Metadata = {
@@ -16,11 +16,6 @@ export const metadata: Metadata = {
 }
 
 const STOREFRONT_URL = 'https://bookshop.org/shop/Banned-books'
-
-// PEN America's officially licensed wall calendar (Rizzoli Universe, ISBN
-// 9780789349293). Deep link verified on Bookshop 2026-10-12. Cover is
-// self-hosted in public/merch/. Swap or drop this block once 2027 is over.
-const CALENDAR_URL = `https://bookshop.org/a/${BOOKSHOP_AFFILIATE_ID}/9780789349293`
 
 // The curated affiliate lists live on bookshop.org under our shop; slugs
 // mirror src/lib/bookshop-lists.ts (which maps reason/scope pages to the
@@ -227,7 +222,7 @@ export default function GetBannedBooksPage() {
             <TrackedOutboundLink
               eventName="Bookshop Click"
               eventProperties={{ source: 'get-banned-books', linkType: 'deep', item: 'pen-calendar-2027' }}
-              href={CALENDAR_URL}
+              href={PEN_CALENDAR_2027.url}
               target="_blank"
               rel={BOOKSHOP_REL}
               className="shrink-0 w-40 sm:w-48"
@@ -235,7 +230,7 @@ export default function GetBannedBooksPage() {
               tabIndex={-1}
             >
               <Image
-                src="/merch/pen-america-banned-books-calendar-2027.jpg"
+                src={PEN_CALENDAR_2027.cover}
                 alt=""
                 width={600}
                 height={600}
@@ -262,7 +257,7 @@ export default function GetBannedBooksPage() {
                 <TrackedOutboundLink
                   eventName="Bookshop Click"
                   eventProperties={{ source: 'get-banned-books', linkType: 'deep', item: 'pen-calendar-2027' }}
-                  href={CALENDAR_URL}
+                  href={PEN_CALENDAR_2027.url}
                   target="_blank"
                   rel={BOOKSHOP_REL}
                   className="inline-flex items-center justify-center rounded-lg border border-oxblood/30 px-5 py-2.5 text-sm font-semibold text-oxblood transition-colors hover:bg-oxblood/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/40"

@@ -46,6 +46,15 @@ export function getBookshopUrl(book: BookshopInput): string {
   return STOREFRONT_URL
 }
 
+// PEN America's officially licensed Banned Books 2027 wall calendar (Rizzoli
+// Universe, ISBN 9780789349293). Deep link verified on Bookshop 2026-10-12;
+// featured on /get-banned-books and /banned-books-week. Cover is self-hosted.
+// Swap or drop both placements once 2027 is over.
+export const PEN_CALENDAR_2027 = {
+  url: `${BASE}/a/${BOOKSHOP_AFFILIATE_ID}/9780789349293`,
+  cover: '/merch/pen-america-banned-books-calendar-2027.jpg',
+} as const
+
 // Author pages have no per-author affiliate format. Send visitors to the
 // storefront so the cookie is still set.
 export function getBookshopAuthorUrl(): string {
