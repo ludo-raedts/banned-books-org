@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from '@/components/link'
 import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { bookshopListUrl, BOOKSHOP_LISTS } from '@/lib/bookshop-lists'
-import { BOOKSHOP_REL } from '@/lib/bookshop'
+import { BOOKSHOP_AFFILIATE_ID, BOOKSHOP_REL } from '@/lib/bookshop'
 import { getKoboStorefrontUrl, KOBO_REL } from '@/lib/kobo'
 
 export const metadata: Metadata = {
@@ -15,6 +16,11 @@ export const metadata: Metadata = {
 }
 
 const STOREFRONT_URL = 'https://bookshop.org/shop/Banned-books'
+
+// PEN America's officially licensed wall calendar (Rizzoli Universe, ISBN
+// 9780789349293). Deep link verified on Bookshop 2026-10-12. Cover is
+// self-hosted in public/merch/. Swap or drop this block once 2027 is over.
+const CALENDAR_URL = `https://bookshop.org/a/${BOOKSHOP_AFFILIATE_ID}/9780789349293`
 
 // The curated affiliate lists live on bookshop.org under our shop; slugs
 // mirror src/lib/bookshop-lists.ts (which maps reason/scope pages to the
@@ -215,8 +221,61 @@ export default function GetBannedBooksPage() {
           </div>
         </SectionShell>
 
+        {/* ── PEN America calendar ─────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="For your wall · PEN America">
+          <div className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-6 sm:gap-8 items-start">
+            <TrackedOutboundLink
+              eventName="Bookshop Click"
+              eventProperties={{ source: 'get-banned-books', linkType: 'deep', item: 'pen-calendar-2027' }}
+              href={CALENDAR_URL}
+              target="_blank"
+              rel={BOOKSHOP_REL}
+              className="shrink-0 w-40 sm:w-48"
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <Image
+                src="/merch/pen-america-banned-books-calendar-2027.jpg"
+                alt=""
+                width={600}
+                height={600}
+                className="w-full h-auto rounded-sm shadow-sm border border-neutral-200"
+                sizes="192px"
+              />
+            </TrackedOutboundLink>
+            <div>
+              <h2 className="font-serif text-xl md:text-2xl font-semibold tracking-tight text-gray-900">
+                The Banned Books 2027 Wall Calendar
+              </h2>
+              <p className="mt-1 text-xs text-neutral-500">
+                PEN America · illustrations by Jane Mount · Rizzoli Universe
+              </p>
+              <p className="mt-3 text-sm text-neutral-700 leading-relaxed">
+                Twelve months of hand-painted spines — <em>Maus</em>,{' '}
+                <em>The Bluest Eye</em>, <em>Gender Queer</em>,{' '}
+                <em>The Hate U Give</em> and dozens more of the titles in our
+                catalogue. Officially licensed by PEN America, whose school-ban
+                index is one of our core sources; part of the proceeds goes to
+                PEN America.
+              </p>
+              <div className="mt-4">
+                <TrackedOutboundLink
+                  eventName="Bookshop Click"
+                  eventProperties={{ source: 'get-banned-books', linkType: 'deep', item: 'pen-calendar-2027' }}
+                  href={CALENDAR_URL}
+                  target="_blank"
+                  rel={BOOKSHOP_REL}
+                  className="inline-flex items-center justify-center rounded-lg border border-oxblood/30 px-5 py-2.5 text-sm font-semibold text-oxblood transition-colors hover:bg-oxblood/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-oxblood/40"
+                >
+                  Get the calendar on Bookshop.org →
+                </TrackedOutboundLink>
+              </div>
+            </div>
+          </div>
+        </SectionShell>
+
         {/* ── Ebooks (Kobo) ────────────────────────────────────────── */}
-        <SectionShell tone="cream" eyebrow="Ebooks">
+        <SectionShell tone="white" eyebrow="Ebooks">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
               Prefer to read digitally?
@@ -243,7 +302,7 @@ export default function GetBannedBooksPage() {
         </SectionShell>
 
         {/* ── Free & public domain ─────────────────────────────────── */}
-        <SectionShell tone="white" eyebrow="Free · Public domain">
+        <SectionShell tone="cream" eyebrow="Free · Public domain">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
               Many banned classics are free
