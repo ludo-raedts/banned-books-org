@@ -1,0 +1,2088 @@
+[
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "7305",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Hillsborough County Public Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:16.431Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "8249",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Union County School District",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:17.702Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "8692",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Ankeny Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:18.198Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "8777",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Lewis Central Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:18.321Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "9566",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Tennessee",
+      "institution": "Knox County Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:19.354Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "9927",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Tennessee",
+      "institution": "Monroe County Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:19.770Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "10603",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Tennessee",
+      "institution": "Rutherford County Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:20.734Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "10877",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Tennessee",
+      "institution": "Wilson County Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:21.140Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "clone",
+    "ban": {
+      "id": "11442",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Katy Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:21.961Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "11817",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Lamar Consolidated Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:22.369Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "12032",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Nacogdoches Independent School District",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:22.770Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_ahern",
+    "ban": {
+      "id": "12519",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "North East Independent School District",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:23.297Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "12870",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Virginia",
+      "institution": "King George County Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:23.812Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "12926",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Wyoming",
+      "institution": "Laramie County School District No. 1",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:23.812Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "13162",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Alaska",
+      "institution": "Matanuska-Susitna Borough School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:23.494Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "13723",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Collier County Public Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:24.588Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "clone",
+    "ban": {
+      "id": "14298",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Escambia County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Unclear",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:25.581Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "14950",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Orange County Public Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:26.849Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15222",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Santa Rosa County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:27.183Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15614",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Adel DeSoto Minburn Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:27.942Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15646",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "AGWSR Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.201Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15850",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Boone Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.513Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15914",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Cardinal Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.513Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15932",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Carlisle Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.513Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "10",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "15973",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Cedar Falls Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.661Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "clone",
+    "ban": {
+      "id": "16052",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Central Lyon Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.815Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "clone",
+    "ban": {
+      "id": "16080",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Central Springs School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.815Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16115",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Chariton Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.815Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16235",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Clear Creek-Amana Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.970Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16443",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Council Bluffs Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:29.289Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16499",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Dallas Center-Grimes Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:29.444Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16647",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Gilbert Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:29.756Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16898",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Knoxville Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.067Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "16977",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Linn-Mar Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.220Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17017",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Lisbon Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.220Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17039",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Louisa-Muscatine Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.220Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17069",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Maquoketa Valley Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.370Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17228",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Missouri Valley Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.523Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17428",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "New Hampton Community Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.848Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17464",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Northeast Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.003Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17492",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Northwood Kensett Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.003Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17613",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Ottumwa Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.159Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17698",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Riceville Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.313Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17726",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Ridge View Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.313Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17782",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Roland-Story Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.470Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17952",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Solon Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.784Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "17992",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "South Tama County Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.784Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "10",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18030",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Southeast Polk Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.784Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18081",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Spencer Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.942Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18198",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Union Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.098Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1",
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18310",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Van Buren County Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.260Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18371",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Waterloo Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.417Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18434",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Waverly-Shell Rock Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.417Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18671",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Winterset Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.894Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18808",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Maine",
+      "institution": "Hermon School Department",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:33.054Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "18870",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Maryland",
+      "institution": "Caroll County School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:33.219Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "19101",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "South Carolina",
+      "institution": "Spartanburg County School District One",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:33.520Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "19402",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Plano Independent School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:34.098Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "19522",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Virginia",
+      "institution": "Hanover County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:34.246Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "22878",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Seminole County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T19:43:56.106Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "23152",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Fort Worth Independent School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T19:43:56.427Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31766",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Utah",
+      "institution": "Canyons School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31767",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Utah",
+      "institution": "Davis School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31768",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Utah",
+      "institution": "Granite School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31769",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Utah",
+      "institution": "Wasatch School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31770",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Conroe Independent School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31771",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Frisco Independent School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "1",
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31772",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Keller Independent School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31773",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "South Carolina",
+      "institution": "Beaufort County School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31774",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Pennsylvania",
+      "institution": "Penncrest School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31775",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Oregon",
+      "institution": "Canby Public School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31776",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Michigan",
+      "institution": "Chippewa Valley Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31777",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Georgia",
+      "institution": "Forsyth County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31778",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Clay County School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31779",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Hernando County Schools",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "31780",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "St. John's County School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:53.176Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "34132",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Indian River County School District",
+      "year_started": 2021,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:43:05.400Z"
+    },
+    "links": [
+      "4055"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "action": "move_hopkins",
+    "ban": {
+      "id": "34133",
+      "book_id": "520",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Prosper Independent School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:43:05.400Z"
+    },
+    "links": [
+      "4055"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  }
+]

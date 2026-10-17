@@ -5,7 +5,7 @@
  * WHY: Since 2024 the Utah State Board of Education maintains a list of titles
  * that must be removed from EVERY public school in the state — once a title is
  * removed for "objective sensitive material" by ≥3 districts (or 2 districts +
- * 5 charters) it is banned statewide. As of 2026-08-19 the list holds 37 titles
+ * 5 charters) it is banned statewide. As of 2026-09-28 the list holds 44 titles
  * (Push by Sapphire = the 37th). We already carried all of them as book rows,
  * but only 2 had a statewide ban row — the rest were recorded as district-only,
  * understating them. This adds/normalises one statewide ban per title, sourced
@@ -15,7 +15,8 @@
  * Public School Setting Statewide" spreadsheet — Title / Author / triggering
  * districts / "Date threshold met". Values below are transcribed from that sheet
  * (first downloaded 2026-07-11 at 36 titles; re-downloaded 2026-08-25, sheet
- * "last updated August 19, 2026", 37 titles), not from secondary press.
+ * "last updated August 19, 2026", 37 titles; re-downloaded 2026-10-17, 44 titles —
+ * seven reached the threshold on 2026-09-28), not from secondary press.
  *
  * NOTE on fetching the sheet: the plain SharePoint share link returns an HTML
  * viewer shell. The xlsx itself comes from the download endpoint:
@@ -55,7 +56,7 @@ const SOURCES = [
     source_type: 'web',
   },
 ]
-const ACCESSED_AT = '2026-08-25'
+const ACCESSED_AT = '2026-10-17'
 
 /** book_id, display title (for description), author surname (assertion), date threshold met, triggering districts. */
 type Row = { id: number; title: string; surname: string; date: string; districts: string }
@@ -97,6 +98,15 @@ const ROWS: Row[] = [
   { id: 205,  title: 'Lucky',                                             surname: 'Sebold',   date: '2026-06-05', districts: 'Davis, Granite, Tooele, Washington' },
   { id: 1280, title: 'Different Seasons',                                 surname: 'King',     date: '2026-07-06', districts: 'Davis, Jordan, Tooele, Washington' },
   { id: 253,  title: 'Push',                                              surname: 'Sapphire', date: '2026-08-19', districts: 'Davis, Granite, Washington' },
+  // 2026-10-17: seven titles added, sheet "Date threshold met" 2026-09-28 (44 titles).
+  { id: 293,  title: 'House of Earth and Blood',                          surname: 'Maas',       date: '2026-09-28', districts: 'Davis, Jordan, Nebo' },
+  { id: 194,  title: 'Identical',                                         surname: 'Hopkins',    date: '2026-09-28', districts: 'Davis, Jordan, Tooele' },
+  { id: 1364, title: 'Kingdom of the Cursed',                             surname: 'Maniscalco', date: '2026-09-28', districts: 'Davis, Jordan, Tooele' },
+  { id: 202,  title: 'Me and Earl and the Dying Girl',                    surname: 'Andrews',    date: '2026-09-28', districts: 'Davis, Granite, Jordan' },
+  // #23993 = Hopkins's Perfect, split off Sara Shepard's #520 by fix-perfect-pen-collapse.ts.
+  { id: 23993, title: 'Perfect',                                          surname: 'Hopkins',    date: '2026-09-28', districts: 'Davis, Jordan, Tooele' },
+  { id: 300,  title: 'Storm and Fury',                                    surname: 'Armentrout', date: '2026-09-28', districts: 'Davis, Jordan, Tooele' },
+  { id: 410,  title: 'The Invisible Life of Addie LaRue',                 surname: 'Schwab',     date: '2026-09-28', districts: 'Davis, Granite, Jordan' },
 ]
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
