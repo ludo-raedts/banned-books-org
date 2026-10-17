@@ -1,0 +1,1015 @@
+[
+  {
+    "title": "Twisted",
+    "action": "move_shepard",
+    "ban": {
+      "id": "13333",
+      "book_id": "391",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Charlotte County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:23.813Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Twisted",
+    "action": "move_showalter",
+    "ban": {
+      "id": "14496",
+      "book_id": "391",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Escambia County Public Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:25.931Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "10"
+    ]
+  },
+  {
+    "title": "Tilt",
+    "action": "move_cumyn",
+    "ban": {
+      "id": "6322",
+      "book_id": "7536",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "North East Independent School District",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:24:03.150Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "1",
+      "4",
+      "7"
+    ]
+  },
+  {
+    "title": "Tilt",
+    "action": "move_cumyn",
+    "ban": {
+      "id": "15955",
+      "book_id": "7536",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Cedar Falls Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.661Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Tilt",
+    "action": "fold_cumyn",
+    "into": "41823",
+    "ban": {
+      "id": "17307",
+      "book_id": "7536",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Nevada Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.687Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Tilt",
+    "action": "fold_hopkins",
+    "into": "18031",
+    "ban": {
+      "id": "41821",
+      "book_id": "23873",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Southeast Polk Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-10-10T20:42:31.041Z"
+    },
+    "links": [
+      "8633",
+      "8666"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Tilt",
+    "action": "fold_hopkins",
+    "into": "18082",
+    "ban": {
+      "id": "41822",
+      "book_id": "23873",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Spencer Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-10-10T20:42:31.689Z"
+    },
+    "links": [
+      "8633",
+      "8666"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Lawn Boy",
+    "action": "move_paulsen",
+    "ban": {
+      "id": "17682",
+      "book_id": "273",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Red Oak School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.313Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1",
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Crush",
+    "action": "move_wolff",
+    "ban": {
+      "id": "17419",
+      "book_id": "2125",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Nevada Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.848Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1",
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Crush",
+    "action": "fold_wolff",
+    "into": "41820",
+    "ban": {
+      "id": "17943",
+      "book_id": "2125",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Sioux Center Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:31.624Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1",
+      "4"
+    ]
+  },
+  {
+    "title": "City of Thieves",
+    "action": "move_london",
+    "ban": {
+      "id": "18766",
+      "book_id": "1686",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Kentucky",
+      "institution": "Boyle County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:33.054Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "5"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_cast",
+    "ban": {
+      "id": "7070",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Hillsborough County Public Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:16.170Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_cast",
+    "ban": {
+      "id": "8040",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Union County School District",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:17.460Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "8491",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Volusia County Schools",
+      "year_started": 2025,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:17.953Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "12221",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "North East Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:22.902Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_shepard",
+    "ban": {
+      "id": "12221",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Texas",
+      "institution": "North East Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:22.902Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_shepard",
+    "ban": {
+      "id": "13297",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Charlotte County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:23.813Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "14075",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Escambia County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:25.239Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_shepard",
+    "ban": {
+      "id": "14734",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Lee County Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Formal Challenge",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:26.246Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_cast",
+    "ban": {
+      "id": "15687",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Alta-Aurelia Community Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.201Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "16096",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Chariton Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.815Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "17292",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Nevada Community School District",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:30.687Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "5",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "clone_cast",
+    "ban": {
+      "id": "30716",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Clay County School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:51.178Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "4",
+      "3",
+      "11"
+    ]
+  },
+  {
+    "title": "Burned",
+    "action": "move_cast",
+    "ban": {
+      "id": "33764",
+      "book_id": "326",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Indian River County School District",
+      "year_started": 2021,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:43:04.487Z"
+    },
+    "links": [
+      "4055"
+    ],
+    "reasons": [
+      "4",
+      "3",
+      "11"
+    ]
+  },
+  {
+    "title": "Blue Moon",
+    "action": "clone_ponti",
+    "ban": {
+      "id": "21256",
+      "book_id": "8770",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Escambia County Public Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:36.943Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "8"
+    ]
+  },
+  {
+    "title": "After",
+    "action": "move_todd",
+    "ban": {
+      "id": "14522",
+      "book_id": "1118",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Florida",
+      "institution": "Escambia County Public Schools",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:25.931Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "After",
+    "action": "fold_todd",
+    "into": "41801",
+    "ban": {
+      "id": "18628",
+      "book_id": "1118",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Western Dubuque Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.742Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "4",
+      "11"
+    ]
+  },
+  {
+    "title": "Male/Female Roles",
+    "action": "clone_ojeda",
+    "ban": {
+      "id": "23030",
+      "book_id": "10010",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Kentucky",
+      "institution": "Boyle County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T19:43:56.269Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1",
+      "11"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "clone_abraham",
+    "ban": {
+      "id": "11282",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Katy Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:21.693Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "clone_ghafoerkhan",
+    "ban": {
+      "id": "11282",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Katy Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:21.693Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "clone_petrikowski",
+    "ban": {
+      "id": "11282",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Katy Independent School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-20T09:33:21.693Z"
+    },
+    "links": [
+      "2068"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "move_petrikowski",
+    "ban": {
+      "id": "16521",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Dallas Center-Grimes Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:29.444Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "move_abraham",
+    "ban": {
+      "id": "18739",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Kentucky",
+      "institution": "Boyle County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.894Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "clone_ghafoerkhan",
+    "ban": {
+      "id": "18739",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "banned",
+      "status": "active",
+      "region": "Kentucky",
+      "institution": "Boyle County Schools",
+      "year_started": 2023,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:32.894Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "move_petrikowski",
+    "ban": {
+      "id": "31059",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "Texarkana Independent School District",
+      "year_started": 2022,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:39:51.916Z"
+    },
+    "links": [
+      "4054"
+    ],
+    "reasons": [
+      "1",
+      "11"
+    ]
+  },
+  {
+    "title": "Gender Identity",
+    "action": "move_petrikowski",
+    "ban": {
+      "id": "34685",
+      "book_id": "1423",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Texas",
+      "institution": "North East Independent School District",
+      "year_started": 2021,
+      "year_ended": null,
+      "actor": null,
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-06-10T13:43:06.747Z"
+    },
+    "links": [
+      "4055"
+    ],
+    "reasons": [
+      "1",
+      "11"
+    ]
+  },
+  {
+    "title": "Forget Me Not",
+    "action": "move_dean",
+    "ban": {
+      "id": "15768",
+      "book_id": "4457",
+      "country_code": "US",
+      "scope_id": "1",
+      "action_type": "restricted",
+      "status": "active",
+      "region": "Iowa",
+      "institution": "Bondurant-Farrar Community School District",
+      "year_started": 2024,
+      "year_ended": null,
+      "actor": "Administration",
+      "description": null,
+      "confidence": "reported",
+      "created_at": "2026-05-22T08:15:28.354Z"
+    },
+    "links": [
+      "2131"
+    ],
+    "reasons": [
+      "1"
+    ]
+  }
+]
