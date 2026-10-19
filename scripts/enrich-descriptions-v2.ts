@@ -42,6 +42,7 @@
  */
 
 import { enrichDescriptionsV2 } from '../src/lib/enrich/descriptions-v2'
+import { idsFlag } from './lib/cli'
 
 const APPLY            = process.argv.includes('--apply')
 const OVERWRITE        = process.argv.includes('--overwrite')
@@ -73,6 +74,7 @@ async function main() {
     limit: LIMIT,
     overwrite: OVERWRITE,
     slug: SLUG,
+    ids: idsFlag() ?? undefined,
     allowLlm: ALLOW_LLM,
     processFlagged: PROCESS_FLAGGED,
     regroundUngrounded: REGROUND,

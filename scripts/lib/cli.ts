@@ -33,3 +33,20 @@ export function intFlag(name: string, def: number): number {
   const n = parseInt(raw, 10)
   return Number.isFinite(n) ? n : def
 }
+
+/**
+ * Optional id scope: `--ids-file=<path>` (JSON array, or ids separated by
+ * commas/whitespace) or `--ids=1,2,3`. Returns null when neither is given, so
+ * callers keep their normal full-catalogue selection. Use it to point an
+ * enricher at one import batch instead of the whole backlog.
+ */
+export function idsFlag(): number[] | null {
+  const file = flagValue('ids-file')
+  const inline = flagValue('ids')
+  if (!file && !inline) return null
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const raw = file ? require('node:fs').readFileSync(file, 'utf8') as string : inline!
+  const trimmed = raw.trim()
+  const list: unknown[] = trimmed.startsWith('[') ? JSON.parse(trimmed) : trimmed.split(/[\s,]+/)
+  return list.map(x => Number(x)).filter(n => Number.isInteger(n) && n > 0)
+}

@@ -32,12 +32,15 @@
 import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
+import { idsFlag } from './lib/cli'
 
 export type EnrichGenresOptions = {
   apply:     boolean
   overwrite: boolean
   limit:     number
   slug:      string | null
+  /** --ids-file= / --ids=: restrict to these book ids */
+  ids?:      number[] | null
   delay:     number
   model:     string
 }
@@ -56,6 +59,7 @@ export function optionsFromArgv(defaults: Partial<EnrichGenresOptions> = {}): En
     overwrite,
     limit,
     slug:  slugArg?.split('=')[1] ?? null,
+    ids:   idsFlag(),
     delay: delayArg ? parseInt(delayArg.split('=')[1], 10) : (defaults.delay ?? 300),
     model: modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? defaults.model ?? 'gpt-4o-mini',
   }
@@ -242,6 +246,7 @@ async function fetchCandidates(
       .order('id')
       .range(from, from + PAGE - 1)
 
+    if (opts.ids?.length) query = query.in('id', opts.ids)
     if (opts.slug) {
       query = query.eq('slug', opts.slug)
     } else if (!opts.overwrite) {

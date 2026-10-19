@@ -31,6 +31,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
+import { idsFlag } from './lib/cli'
 import { authorLadder } from '../src/lib/enrich/_author-ladder'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import { cleanWikiExtract } from '../src/lib/text/clean-wiki-extract'
@@ -41,8 +42,8 @@ const RETRY_SKIPPED = process.argv.includes('--retry-skipped')
 const RESET_CACHE = process.argv.includes('--reset-cache')
 const LIMIT_ARG = process.argv.find(a => a.startsWith('--limit='))
 const LIMIT = LIMIT_ARG ? parseInt(LIMIT_ARG.replace('--limit=', ''), 10) : 50
-const IDS_ARG = process.argv.find(a => a.startsWith('--ids='))
-const IDS = IDS_ARG ? IDS_ARG.replace('--ids=', '').split(',').map(s => parseInt(s.trim(), 10)).filter(n => Number.isFinite(n)) : null
+// --ids=1,2,3 or --ids-file=<path>
+const IDS = idsFlag()
 const DELAY_MS = 200
 const WIKI_UA = 'banned-books.org/1.0 (contact@banned-books.org)'
 const CACHE_PATH = path.resolve(process.cwd(), 'data/enrich-author-bios.state.json')

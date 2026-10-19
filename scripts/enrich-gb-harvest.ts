@@ -53,6 +53,7 @@
  */
 import fs from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
+import { idsFlag } from './lib/cli'
 import {
   gbVolumesByIsbn,
   gbVolumesByTitleAuthor,
@@ -75,6 +76,8 @@ import {
 } from '../src/lib/enrich/isbn'
 
 const APPLY = process.argv.includes('--apply')
+// --ids-file= / --ids=: only these books, cursor ignored and left untouched.
+const IDS = idsFlag()
 const RESET_CURSOR = process.argv.includes('--reset-cursor')
 const BUDGET = (() => {
   const a = process.argv.find((x) => x.startsWith('--budget='))
@@ -143,8 +146,8 @@ async function main() {
   // recovery, the one thing OL's exact-key path can't do for an orphan.
   const PAGE = 1000
   const books: BookRow[] = []
-  for (let from = cursor.lastId; ; ) {
-    const { data, error } = await sb
+  for (let from = IDS ? 0 : cursor.lastId; ; ) {
+    let q = sb
       .from('books')
       .select(
         'id, slug, title, title_native, title_native_script, title_english_meaningful, original_language, first_published_year, cover_url, cover_status, isbn13, book_authors(authors(display_name))',
@@ -155,6 +158,8 @@ async function main() {
       .is('openlibrary_work_id', null)
       .order('id')
       .limit(PAGE)
+    if (IDS) q = q.in('id', IDS)
+    const { data, error } = await q
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
     books.push(...(data as unknown as BookRow[]))
@@ -165,7 +170,7 @@ async function main() {
 
   if (!books.length) {
     console.log('No eligible books past the cursor — full pass complete. Wrapping cursor to 0.')
-    writeCursor({ lastId: 0, pass: cursor.pass + 1 })
+    if (!IDS) writeCursor({ lastId: 0, pass: cursor.pass + 1 })
     return
   }
 
@@ -317,7 +322,7 @@ async function main() {
   }
 
   out.end()
-  if (APPLY) writeCursor({ lastId: lastProcessedId, pass: cursor.pass })
+  if (APPLY && !IDS) writeCursor({ lastId: lastProcessedId, pass: cursor.pass })
 
   console.log(`
 ── Summary ──────────────────────────────
