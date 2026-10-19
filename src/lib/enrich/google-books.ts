@@ -101,8 +101,8 @@ export type GbQueryOpts = {
 // quota wall mid-sweep would stamp thousands of books with false-negative
 // verdicts (isbn_status='not_found', cover rejected, etc.).
 export class GbQuotaError extends Error {
-  constructor() {
-    super('Google Books daily quota exceeded (HTTP 429)')
+  constructor(message = 'Google Books daily quota exceeded (HTTP 429)') {
+    super(message)
     this.name = 'GbQuotaError'
   }
 }
@@ -123,9 +123,38 @@ export function gbQuotaTripped(): boolean {
 // short-window rate limit does not. Retry rate limits, fail fatally on daily.
 const DAILY_QUOTA_RE = /per day|perday|dailylimit/i
 const MAX_RATE_RETRIES = 6
+const MAX_5XX_RETRIES = 3        // per query: 2s, 4s, 8s
+const MAX_CONSECUTIVE_5XX = 5    // queries in a row still failing → treat GB as down
+let consecutive5xx = 0
+
+// Health canary. A degraded Google Books does not only 503: it also answers
+// "200, totalItems 0" for queries that certainly have hits, which callers
+// cannot tell apart from a genuine miss. So before the first query and every
+// CANARY_EVERY queries after that, ask for a book that must exist (Hatchet,
+// Gary Paulsen). No hits → GB is degraded: latch, so callers fall back to
+// OL/Wikipedia instead of recording false "not found" results.
+const CANARY_QUERY = 'intitle:hatchet inauthor:paulsen'
+const CANARY_EVERY = 100
+let callsSinceCanary = CANARY_EVERY
+let inCanary = false
+async function checkCanary(): Promise<void> {
+  inCanary = true
+  try {
+    const hits = await gbVolumes(CANARY_QUERY, { maxResults: 1, fields: 'items(id)', delayMs: 0 })
+    if (!hits.length) {
+      quotaTripped = true
+      console.warn('[google-books] health canary returned no results — Google Books looks degraded; disabling it for this run')
+      throw new GbQuotaError('Google Books degraded (canary query returned no results)')
+    }
+  } finally {
+    inCanary = false
+    callsSinceCanary = 0
+  }
+}
 
 export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
   if (quotaTripped) throw new GbQuotaError()
+  if (!inCanary && ++callsSinceCanary > CANARY_EVERY) await checkCanary()
   const { maxResults = 5, fields = GB_FIELDS_FULL, delayMs = DEFAULT_DELAY_MS } = opts
 
   for (let attempt = 0; ; attempt++) {
@@ -172,6 +201,25 @@ export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<
       quotaTripped = true
       throw new GbQuotaError()
     }
+
+    if (res.status >= 500) {
+      // 5xx = Google Books itself is down (Oct 2026: hours of 503 "Service
+      // temporarily unavailable" on BOTH keys). Returning [] here made callers
+      // record a miss ("no GB data", cover sources_tried) for every book.
+      // Back off and retry; if it persists, latch like an exhausted quota so
+      // callers stop using GB this run instead of writing false negatives.
+      if (attempt < MAX_5XX_RETRIES) {
+        await sleep(2_000 * 2 ** attempt)
+        continue
+      }
+      if (++consecutive5xx >= MAX_CONSECUTIVE_5XX) {
+        quotaTripped = true
+        console.warn(`[google-books] ${consecutive5xx} queries in a row failed with HTTP ${res.status} — Google Books looks down; disabling it for this run`)
+        throw new GbQuotaError(`Google Books unavailable (HTTP ${res.status})`)
+      }
+      return []
+    }
+    consecutive5xx = 0
 
     if (delayMs > 0) await sleep(delayMs)
     if (!res.ok) return []
