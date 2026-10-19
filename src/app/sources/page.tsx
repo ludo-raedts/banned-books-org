@@ -59,6 +59,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['ala.org'],
       },
       {
+        name: 'Book Censorship Database (Tasslyn Magnusson / EveryLibrary Institute)',
+        url: 'https://www.everylibraryinstitute.org/book_censorship_database_magnusson',
+        description:
+          'Dr. Tasslyn Magnusson\'s database of book challenges and removals in US school, public and academic libraries since 2021, with the decision, the law invoked and a primary source for each case. It is one of the sources PEN America\'s index builds on. We use it, with the author\'s permission, for what PEN does not cover: public-library cases, the 2025 removals at the U.S. Naval Academy\'s Nimitz Library, and the 2025–26 school year. Each record also links to the primary source it cites.',
+        match: ['everylibraryinstitute.org'],
+      },
+      {
         name: 'Freedom to Read (Canada)',
         url: 'https://www.freedomtoread.ca/challenged-works/',
         description:
@@ -1245,10 +1252,21 @@ async function fetchBansBySource(): Promise<Map<string, number>> {
   // ban_source_links row. Cuts the response from ~3000 join rows to ~70
   // parent rows × a single integer each. Combined with the 1-hour ISR
   // cache above, this page is effectively free under normal traffic.
-  const { data } = await sb
-    .from('ban_sources')
-    .select('source_url, ban_source_links(count)')
-  for (const row of (data ?? []) as Array<{
+  // ban_sources passed PostgREST's 1,000-row cap (1,115 rows on 2026-10-19), so
+  // page through it; an unpaged select silently dropped the tail.
+  const PAGE = 1000
+  const data: unknown[] = []
+  for (let from = 0; ; from += PAGE) {
+    const { data: page, error } = await sb
+      .from('ban_sources')
+      .select('id, source_url, ban_source_links(count)')
+      .order('id')
+      .range(from, from + PAGE - 1)
+    if (error || !page?.length) break
+    data.push(...page)
+    if (page.length < PAGE) break
+  }
+  for (const row of data as Array<{
     source_url: string | null
     ban_source_links: Array<{ count: number }> | null
   }>) {
