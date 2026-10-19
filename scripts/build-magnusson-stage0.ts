@@ -27,14 +27,14 @@ const OUT = `data/magnusson/stage0-${DATE}.json`
 export const MAGNUSSON_SOURCE_NAME = 'Magnusson Book Censorship Database (EveryLibrary Institute)'
 export const MAGNUSSON_SOURCE_URL = 'https://www.everylibraryinstitute.org/book_censorship_database_magnusson'
 
-const STATES: Record<string, string> = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' }
+export const STATES: Record<string, string> = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' }
 
 const BANNED = new Set(['Banned/Removed', 'Removed', 'Banned/Do Not Order', 'Banned', 'Withdrawn', 'Removed - Curriculum', 'Banned From Library'])
 const RESTRICTED = new Set(['Retained/Restricted', 'Reshelved - Adult', 'Stickered'])
 
 // Placeholder rows — a series or a bare subject heading, not one identifiable book (scope gate).
-const PLACEHOLDER_TITLE = /title (not |un)specified|no further information|title only|\(series\)|\(unknown edition\)|\(vol\. not specified\)|^unspecified series|series\?$/i
-const PLACEHOLDER_AUTHOR = /^(n\/a|unknown|movie|no author specified|no further information available|various)$/i
+export const PLACEHOLDER_TITLE = /title (not |un)specified|no further information|title only|\(series\)|\(unknown edition\)|\(vol\. not specified\)|^unspecified series|series\?$/i
+export const PLACEHOLDER_AUTHOR = /^(n\/a|unknown|movie|no author specified|no further information available|various)$/i
 
 type Raw = Record<string, string | number | null>
 export type Stage0Row = {
@@ -45,7 +45,7 @@ export type Stage0Row = {
   region: string
   institution: string
   year: number
-  scope_slug: 'school' | 'public_library' | 'government'
+  scope_slug: 'school' | 'public_library' | 'government' | 'prison'
   action_type: 'banned' | 'restricted'
   reason_slug: 'other'
   source_url: string | null

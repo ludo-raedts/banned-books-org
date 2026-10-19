@@ -147,7 +147,9 @@ async function main() {
         if (row.authors.some(a => lastName(a) && names.includes(lastName(a)))) hit = { id: m.id, how: `${how}:${m.status}` }
         else mismatch ??= { matched_book_id: m.id, matched_title: b.title, matched_authors: b.authors, how: `${how}:${m.status}` }
       }
-      if (!hit && !mismatch) {
+      // A title hit with the wrong author ("Lucky" → Sebold) may still have the
+      // right book under the same author — try that before holding the row.
+      if (!hit) {
         const af = await authorFuzzy(pg, row.title, row.authors)
         if (af) { hit = { id: af.id, how: 'author-fuzzy' }; authorFuzzyLog.push(`${row.title} [${row.authors[0]}] ⇒ #${af.id} ${af.title} (sim ${af.sim.toFixed(2)})`) }
       }
