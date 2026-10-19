@@ -20,8 +20,14 @@ watch that silently skips a source is worse than none.
 1. **PEN America — Index of School Book Bans** (`https://pen.org/book-bans/`)
    We have all 4 school years through 2024–25 imported per-district (22,822
    pen.org bans). New = a NEW school-year index (typically announced in the
-   fall). Check the page for a dataset newer than 2024–25. If found:
-   handoff to `/import-source` with `import-pen.ts` as template.
+   fall). Check `https://pen.org/book-bans/pen-america-book-ban-index-data/`
+   for a dataset newer than 2024–25. pen.org blocks curl behind Cloudflare,
+   so use the browser. **2025–26:** the report came out Oct 2026 (11,982 bans),
+   but on 2026-10-19 its title-level index was not online yet → `⏳`. When it
+   appears, Magnusson's 2025–26 Airtable rows (801 bans, imported 2026-10-19)
+   already cover part of it. So the handoff is a DELTA through
+   `import-magnusson-delta.ts`'s fuzzy district dedup (thin reader into
+   Stage0Row), NOT plain `import-pen.ts`: its exact-key dedup would double-count.
 2. **Russia — minjust FSEM** (Федеральный список экстремистских материалов,
    `https://minjust.gov.ru/ru/extremist-materials/`)
    We imported batch 1 (RU at 510 distinct books); the full list is ~5,500
