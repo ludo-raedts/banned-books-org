@@ -31,23 +31,37 @@ export type ReviewItem = {
 
 export type ReviewFile = { generated_at: string; items: ReviewItem[] }
 
+// Read the queue UNCACHED. supabase-js download() went through Storage's CDN
+// and Next's fetch cache, and uploads default to cache-control 3600, so the
+// admin page (and every Good/Wrong POST) read copies up to an hour old. Each
+// click then wrote its decision onto that stale copy, wiping earlier decisions
+// (2026-10-20: approved photos kept coming back).
 export async function readReview(): Promise<ReviewFile> {
-  const { data, error } = await adminClient().storage.from(REVIEW_BUCKET).download(REVIEW_PATH)
-  if (error || !data) return { generated_at: '', items: [] }
-  try {
-    return JSON.parse(await data.text()) as ReviewFile
-  } catch {
-    return { generated_at: '', items: [] }
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!base || !key) throw new Error('photo-review: Supabase env missing')
+  const res = await fetch(
+    `${base}/storage/v1/object/authenticated/${REVIEW_BUCKET}/${REVIEW_PATH}?ts=${Date.now()}`,
+    { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: 'no-store' },
+  )
+  // Not created yet → empty queue. Any OTHER failure must throw: returning an
+  // empty queue here would let the next write wipe every decision.
+  if (res.status === 404 || res.status === 400) {
+    const body = await res.text()
+    if (/not.?found/i.test(body)) return { generated_at: '', items: [] }
+    throw new Error(`photo-review read: HTTP ${res.status} ${body.slice(0, 120)}`)
   }
+  if (!res.ok) throw new Error(`photo-review read: HTTP ${res.status}`)
+  return (await res.json()) as ReviewFile
 }
 
 export async function writeReview(file: ReviewFile): Promise<void> {
   const sb = adminClient()
   const body = new Blob([JSON.stringify(file)], { type: 'application/json' })
-  let { error } = await sb.storage.from(REVIEW_BUCKET).upload(REVIEW_PATH, body, { upsert: true, contentType: 'application/json' })
+  let { error } = await sb.storage.from(REVIEW_BUCKET).upload(REVIEW_PATH, body, { upsert: true, contentType: 'application/json', cacheControl: '0' })
   if (error && /bucket not found/i.test(error.message)) {
     await sb.storage.createBucket(REVIEW_BUCKET, { public: false })
-    ;({ error } = await sb.storage.from(REVIEW_BUCKET).upload(REVIEW_PATH, body, { upsert: true, contentType: 'application/json' }))
+    ;({ error } = await sb.storage.from(REVIEW_BUCKET).upload(REVIEW_PATH, body, { upsert: true, contentType: 'application/json', cacheControl: '0' }))
   }
   if (error) throw new Error(`photo-review upload: ${error.message}`)
 }
