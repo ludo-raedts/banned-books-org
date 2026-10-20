@@ -206,3 +206,7 @@ next-env.d.ts
 
 # Magnusson Censorship Database raw export (shared privately by the author; attribution-only permission)
 /data/magnusson/
+
+# author photo vision audit: raw checkpoints/review reports (reviewed null lists + backups ARE committed)
+/data/author-photo-vision-*
+/data/author-photo-recheck-ids.json

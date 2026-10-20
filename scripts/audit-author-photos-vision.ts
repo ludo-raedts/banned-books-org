@@ -20,25 +20,29 @@
  * JSONL checkpoint (data/author-photo-vision-<date>.jsonl), so an interrupted
  * run resumes where it stopped.
  *
- * --apply nulls photo_url ONLY for not_a_person and stamps photo_v2_checked_at so
- * enrich-author-photos-v2 does not re-pick it. enrich-author-bios --photos-only
- * can still re-fetch the same Wikipedia thumbnail: if its page is about
- * something else, the bio is suspect too. The review file flags that case.
+ * REVIEW-ONLY. The first run (2026-10-20) auto-nulled every not_a_person verdict
+ * and was far too trigger-happy: 743 of ~3,150 photos (25%), including people
+ * at a piano, on stage, or in a painting. They were all restored from the
+ * checkpoint. So nothing is written unless you pass a reviewed id list:
+ *   --null-ids-file=<json array of author ids>  (photo_url → NULL + photo_v2_checked_at)
+ * enrich-author-bios --photos-only can still re-fetch the same Wikipedia
+ * thumbnail: if its page is about something else, the bio is suspect too.
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/audit-author-photos-vision.ts --ids-file=data/magnusson/new-author-ids.json
  *   npx tsx --env-file=.env.local scripts/audit-author-photos-vision.ts --limit=200          # any authors with a photo
- *   ... --apply                                                                               # null not_a_person photos
+ *   ... --null-ids-file=reviewed.json                                                          # null ONLY these, after eyeballing the report
  */
 import OpenAI from 'openai'
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
-import { idsFlag, intFlag, isApply } from './lib/cli'
+import { flagValue, idsFlag, intFlag } from './lib/cli'
 
-const APPLY = isApply()
+const NULL_IDS_FILE = flagValue('null-ids-file')
 const IDS = idsFlag()
 const LIMIT = intFlag('limit', 100000)
-const STAMP = new Date().toISOString().slice(0, 10)
+// --tag= gives a separate checkpoint + report (e.g. a re-check with a new prompt)
+const STAMP = flagValue('tag') ?? new Date().toISOString().slice(0, 10)
 const JSONL = `data/author-photo-vision-${STAMP}.jsonl`
 const REPORT = `data/author-photo-vision-${STAMP}.md`
 
@@ -49,13 +53,13 @@ type Result = { id: number; slug: string; name: string; photo_url: string; verdi
 const SYSTEM = `You check author photos for a database of banned books. You get one image plus the author's name and life years. Reply with one JSON object:
 {"verdict": "portrait" | "unsure" | "era_mismatch" | "not_a_person" | "unreadable", "reasoning": "one short sentence"}
 
-- "portrait": a photograph, painting or drawing of one person, and nothing about it contradicts the life years
+- "portrait": the main subject is a human being: a photograph, painting, drawing or illustration of a person, also when they are performing, on stage, at an instrument, outdoors or not facing the camera, and nothing about it contradicts the life years
 - "unsure": a person is visible but it is a group, a tiny or heavily cropped figure, or otherwise hard to judge
 - "era_mismatch": clearly a person, but the image cannot be from the author's lifetime (e.g. a modern colour selfie for someone who died before 1900)
-- "not_a_person": the main subject is not a person: an object, vehicle, animal, gemstone, building, landscape, book cover, logo, map, document or text
+- "not_a_person": NO human being is the main subject: an object, vehicle, animal, gemstone, building, landscape, book cover, poster, logo, map, document or text. If a person is the main subject, it is never "not_a_person".
 - "unreadable": the image did not load or is blank
 
-Do not try to identify the person, and do not judge gender or ethnicity. No prose outside the JSON.`
+Do not try to identify the person, do not ask whether it is \"related to the author\", and do not judge gender or ethnicity. No prose outside the JSON.`
 
 let _openai: OpenAI | null = null
 const openai = () => (_openai ??= new OpenAI())
@@ -102,7 +106,7 @@ async function main() {
     if (data.length < 1000) break
   }
   const todo = rows.slice(0, LIMIT).filter(r => !done.has(r.id) || done.get(r.id)!.photo_url !== r.photo_url)
-  console.log(`${APPLY ? 'APPLY' : 'DRY-RUN'}: ${rows.length} authors with a photo, ${todo.length} to check (${done.size} in checkpoint)`)
+  console.log(`REVIEW: ${rows.length} authors with a photo, ${todo.length} to check (${done.size} in checkpoint)`)
 
   let i = 0
   for (const r of todo) {
@@ -111,10 +115,17 @@ async function main() {
     appendFileSync(JSONL, JSON.stringify(res) + '\n')
     done.set(r.id, res)
     if (verdict !== 'portrait') console.log(`  ${verdict.padEnd(12)} #${r.id} ${r.display_name} — ${reasoning}`)
-    if (APPLY && verdict === 'not_a_person') {
-      await sb.from('authors').update({ photo_url: null, photo_v2_checked_at: new Date().toISOString() }).eq('id', r.id).eq('photo_url', r.photo_url)
-    }
     if (++i % 50 === 0) console.log(`  … ${i}/${todo.length}`)
+  }
+
+  if (NULL_IDS_FILE) {
+    const ids = new Set<number>(JSON.parse(readFileSync(NULL_IDS_FILE, 'utf8')))
+    let n = 0
+    for (const r of rows) if (ids.has(r.id)) {
+      await sb.from('authors').update({ photo_url: null, photo_v2_checked_at: new Date().toISOString() }).eq('id', r.id).eq('photo_url', r.photo_url)
+      n++
+    }
+    console.log(`nulled ${n} reviewed photo(s) from ${NULL_IDS_FILE}`)
   }
 
   const scope = new Set(rows.map(r => r.id))
@@ -128,7 +139,7 @@ async function main() {
   }
   writeFileSync(REPORT, `# Author photo vision audit — ${STAMP}\n\n` +
     `Checked ${all.length}: portrait ${by('portrait').length}, unsure ${by('unsure').length}, era_mismatch ${by('era_mismatch').length}, not_a_person ${by('not_a_person').length}, unreadable ${by('unreadable').length}.\n\n` +
-    section('not_a_person', 'Not a person', APPLY ? 'photo_url nulled by --apply.' : 'Run with --apply to null these.') +
+    section('not_a_person', 'Not a person', 'Check each one; put the confirmed ids in a JSON array and run with --null-ids-file=.') +
     section('era_mismatch', 'Era mismatch', 'Probably a namesake. Check, then fix via the admin portal.') +
     section('unsure', 'Unsure', 'Group shots, tiny or cropped figures.') +
     section('unreadable', 'Unreadable', 'Image did not load (dead link or a host OpenAI cannot fetch).'))
