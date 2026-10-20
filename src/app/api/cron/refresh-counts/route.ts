@@ -16,9 +16,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { error } = await adminClient().rpc('refresh_ban_count_materialized_views')
+  const sb = adminClient()
+  const { error } = await sb.rpc('refresh_ban_count_materialized_views')
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+  // Only refresh_all_materialized_views() stamps 'last_refreshed', so the admin
+  // "Materialized views · Last refresh" stuck at 2026-09-03 while this daily
+  // refresh kept the counts current. Stamp it here too (fail-soft).
+  await sb.from('mv_refresh_log').upsert({ key: 'last_refreshed', updated_at: new Date().toISOString() }, { onConflict: 'key' })
   return NextResponse.json({ ok: true })
 }
