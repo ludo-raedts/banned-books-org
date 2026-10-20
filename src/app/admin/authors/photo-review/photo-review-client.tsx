@@ -15,6 +15,7 @@ type Item = {
   photo_url: string
   verdict: string
   reasoning: string
+  identity_note?: string
   photo_source?: string | null
   bio_source_url?: string | null
   wikidata_id?: string | null
@@ -26,12 +27,14 @@ type Counts = { pending: number; stale: number; ok: number; wrong: number; repla
 type Candidate = { url: string; source: string; label: string; page: string }
 
 const VERDICT_LABEL: Record<string, string> = {
+  identity_mismatch: 'Other person',
   era_mismatch: 'Era mismatch',
   unsure: 'Unsure',
   not_a_person: 'Not a person?',
   unreadable: 'Does not load',
 }
 const VERDICT_CLS: Record<string, string> = {
+  identity_mismatch: 'bg-red-100 text-red-800 border-red-300',
   era_mismatch: 'bg-amber-50 text-amber-800 border-amber-200',
   unsure: 'bg-gray-50 text-gray-700 border-gray-200',
   not_a_person: 'bg-purple-50 text-purple-800 border-purple-200',
@@ -138,6 +141,9 @@ function ReviewCard({ item, onDecide }: {
           </span>
         </div>
         <p className="text-xs text-gray-600 leading-snug">{item.reasoning}</p>
+        {item.identity_note && (
+          <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-1">⚠ {item.identity_note}</p>
+        )}
         <SourcesBlock item={item} />
         <div className="flex-1" />
         <div className="grid grid-cols-2 gap-2">
@@ -219,7 +225,9 @@ export default function PhotoReviewClient() {
     for (const i of items ?? []) m.set(i.verdict, (m.get(i.verdict) ?? 0) + 1)
     return m
   }, [items])
-  const visible = (items ?? []).filter(i => filter === 'all' || i.verdict === filter)
+  // Strongest evidence first: proven other person, then cards with a name hint.
+  const rank = (i: Item) => (i.verdict === 'identity_mismatch' ? 0 : i.identity_note ? 1 : 2)
+  const visible = (items ?? []).filter(i => filter === 'all' || i.verdict === filter).sort((a, b) => rank(a) - rank(b))
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
@@ -246,7 +254,7 @@ export default function PhotoReviewClient() {
       {items && (
         <>
           <div className="flex flex-wrap gap-2 mb-4">
-            {['all', 'era_mismatch', 'unsure', 'not_a_person', 'unreadable'].map(v => {
+            {['all', 'identity_mismatch', 'era_mismatch', 'unsure', 'not_a_person', 'unreadable'].map(v => {
               const n = v === 'all' ? items.length : byVerdict.get(v) ?? 0
               if (v !== 'all' && !n) return null
               return (

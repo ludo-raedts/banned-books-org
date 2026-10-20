@@ -13,7 +13,8 @@
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/publish-photo-review-queue.ts \
- *     --in=data/author-photo-vision-2026-10-19.jsonl,data/author-photo-vision-recheck-2026-10-20.jsonl [--apply]
+ *     --in=data/author-photo-vision-2026-10-19.jsonl,data/author-photo-vision-recheck-2026-10-20.jsonl \
+ *     [--identity=data/author-identity-2026-10-20.jsonl,…] [--apply]
  */
 import { readFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
@@ -22,6 +23,10 @@ import { flagValue, isApply } from './lib/cli'
 
 const APPLY = isApply()
 const INPUTS = (flagValue('in') ?? '').split(',').filter(Boolean)
+// audit-author-identity.ts checkpoints: a photo_ol mismatch (the photo is on ANOTHER
+// author's Open Library page) is queued as 'identity_mismatch' even if vision said
+// portrait; a photo_file mismatch is attached as a hint (file names are noisy).
+const IDENTITY = (flagValue('identity') ?? '').split(',').filter(Boolean)
 const QUEUE_VERDICTS = new Set(['era_mismatch', 'unsure', 'unreadable', 'not_a_person'])
 
 type Row = { id: number; photo_url: string; verdict: string; reasoning: string }
@@ -33,7 +38,18 @@ async function main() {
     const r = JSON.parse(l) as Row
     latest.set(r.id, r)
   }
-  const wanted = [...latest.values()].filter(r => QUEUE_VERDICTS.has(r.verdict))
+  type Check = { source: string; value: string; named: string | null; verdict: string }
+  const hints = new Map<number, string>()
+  for (const f of IDENTITY) for (const l of readFileSync(f, 'utf8').split('\n').filter(Boolean)) {
+    const r = JSON.parse(l) as { id: number; photo_url: string | null; checks: Check[] }
+    const ol = r.checks.find(c => c.source === 'photo_ol' && c.verdict === 'mismatch')
+    const file = r.checks.find(c => c.source === 'photo_file' && c.verdict === 'mismatch')
+    if (ol && r.photo_url) {
+      latest.set(r.id, { id: r.id, photo_url: r.photo_url, verdict: 'identity_mismatch',
+        reasoning: `Photo comes from the Open Library author page of ${ol.named} (${ol.value}), not this author.` })
+    } else if (file?.named) hints.set(r.id, `File name mentions "${file.named}"`)
+  }
+  const wanted = [...latest.values()].filter(r => QUEUE_VERDICTS.has(r.verdict) || r.verdict === 'identity_mismatch')
 
   const sb = adminClient()
   const authors = new Map<number, { slug: string; display_name: string; birth_year: number | null; death_year: number | null; photo_url: string | null }>()
@@ -56,7 +72,7 @@ async function main() {
     if (!a || a.photo_url !== r.photo_url) continue            // photo removed/changed since the audit
     if (decidedKey.has(`${r.id}|${r.photo_url}`)) continue      // a human already decided this photo
     fresh.push({ author_id: r.id, slug: a.slug, name: a.display_name, birth_year: a.birth_year, death_year: a.death_year,
-      photo_url: r.photo_url, verdict: r.verdict, reasoning: r.reasoning })
+      photo_url: r.photo_url, verdict: r.verdict, reasoning: r.reasoning, ...(hints.has(r.id) ? { identity_note: hints.get(r.id) } : {}) })
   }
   const by: Record<string, number> = {}
   for (const f of fresh) by[f.verdict] = (by[f.verdict] ?? 0) + 1

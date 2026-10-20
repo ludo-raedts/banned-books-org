@@ -24,6 +24,8 @@ export type ReviewItem = {
   photo_url: string
   verdict: string
   reasoning: string
+  /** hint from audit-author-identity.ts, e.g. a file name naming someone else */
+  identity_note?: string
   decision?: ReviewDecision
   decided_at?: string
   new_photo_url?: string | null
