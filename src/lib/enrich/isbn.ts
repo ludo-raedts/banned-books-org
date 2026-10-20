@@ -37,7 +37,7 @@
 
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
-import { gbVolumesByTitleAuthor, gbIsbn13, GB_FIELDS_ISBN, GbQuotaError } from './google-books'
+import { gbVolumesByTitleAuthor, gbIsbn13, GB_FIELDS_ISBN, GbQuotaError, gbQuotaTripped } from './google-books'
 
 const OL_DELAY_MS = 400
 const OL_HEADERS = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
@@ -263,9 +263,21 @@ async function searchOL(title: string, author: string): Promise<SearchHit | null
   }
 }
 
+// Set once Google Books is out (quota wall or outage). The run then continues
+// with Open Library only, and misses are NOT stamped: "GB never asked" is not
+// a "not found" verdict, so those rows stay eligible for the next run.
+let gbDown = false
+
 async function searchGoogleBooks(title: string, author: string): Promise<SearchHit | null> {
+  if (gbDown || gbQuotaTripped()) { gbDown = true; return null }
   // delayMs: 0 — the caller's outer loop already sleeps OL_DELAY_MS after this.
-  const volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 5, fields: GB_FIELDS_ISBN, delayMs: 0 })
+  let volumes
+  try {
+    volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 5, fields: GB_FIELDS_ISBN, delayMs: 0 })
+  } catch (e) {
+    if (e instanceof GbQuotaError) { gbDown = true; return null }
+    throw e
+  }
   for (const item of volumes) {
     const isbn = gbIsbn13(item.volumeInfo)
     if (isbn) return { isbn, matchedTitle: item.volumeInfo.title ?? '', matchedAuthors: item.volumeInfo.authors ?? [] }
@@ -276,6 +288,8 @@ async function searchGoogleBooks(title: string, author: string): Promise<SearchH
 export type EnrichIsbnOpts = {
   apply: boolean
   limit?: number
+  /** restrict to these book ids (--ids-file= / --ids=) */
+  ids?: number[] | null
   onProgress?: (msg: string) => void
 }
 
@@ -312,7 +326,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
   const books: BookRow[] = []
   let offset = 0
   while (true) {
-    const { data, error } = await supabase
+    let q = supabase
       .from('books')
       .select('id, slug, title, title_native, title_transliterated, title_english_meaningful, original_language, book_authors(authors(display_name))')
       .is('isbn_checked_at', null)
@@ -321,6 +335,8 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       .not('title', 'ilike', '%— All works%')
       .order('title')
       .range(offset, offset + 999)
+    if (opts.ids?.length) q = q.in('id', opts.ids)
+    const { data, error } = await q
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
     books.push(...(data as unknown as BookRow[]))
@@ -501,7 +517,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
       //     guards (low title-similarity / edition language-mismatch).
       // Keeping them distinct lets a future sweep reopen only 'no_match'
       // rows without re-running true misses.
-      if (opts.apply) {
+      if (opts.apply && !gbDown) {
         const status = rejectedSim > 0 || rejectedEd > 0 ? 'no_match' : 'not_found'
         const { error } = await supabase
           .from('books')

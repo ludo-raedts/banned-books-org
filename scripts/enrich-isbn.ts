@@ -31,6 +31,7 @@
 import { enrichIsbn } from '../src/lib/enrich/isbn'
 import { adminClient } from '../src/lib/supabase'
 
+import { idsFlag } from './lib/cli'
 const APPLY = process.argv.includes('--apply')
 const RETRY = process.argv.includes('--retry')
 const RETRY_ALL = process.argv.includes('--retry-all')
@@ -75,6 +76,7 @@ async function main() {
   if (RETRY || RETRY_ALL) await reopenTriedBooks()
 
   const result = await enrichIsbn({
+    ids: idsFlag(),
     apply: APPLY,
     limit: MAX,
     onProgress: msg => console.log(msg),
