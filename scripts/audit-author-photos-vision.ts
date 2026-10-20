@@ -65,8 +65,23 @@ Do not try to identify the person, do not ask whether it is \"related to the aut
 let _openai: OpenAI | null = null
 const openai = () => (_openai ??= new OpenAI())
 
-async function judge(r: Row): Promise<{ verdict: Verdict; reasoning: string }> {
+// OpenAI's downloader is blocked by some hosts (Wikimedia answers it with 4xx),
+// which made ~160 perfectly loadable photos "unreadable". Fallback: fetch the
+// image ourselves and send it inline as a data URL.
+async function inlineImage(url: string): Promise<string | null> {
+  try {
+    const r = await fetch(url, { headers: { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }, signal: AbortSignal.timeout(15000) })
+    const ct = r.headers.get('content-type') ?? ''
+    if (!r.ok || !ct.startsWith('image/')) return null
+    const buf = Buffer.from(await r.arrayBuffer())
+    return buf.length > 4_000_000 ? null : `data:${ct.split(';')[0]};base64,${buf.toString('base64')}`
+  } catch { return null }
+}
+
+async function judge(r: Row, inline = false): Promise<{ verdict: Verdict; reasoning: string }> {
   const years = r.birth_year || r.death_year ? ` (${r.birth_year ?? '?'}–${r.death_year ?? ''})` : ''
+  const imageUrl = inline ? await inlineImage(r.photo_url) : r.photo_url
+  if (!imageUrl) return { verdict: 'unreadable', reasoning: 'image could not be downloaded (dead link or not an image)' }
   try {
     const res = await openai().chat.completions.create({
       model: 'gpt-4o-mini',
@@ -74,7 +89,7 @@ async function judge(r: Row): Promise<{ verdict: Verdict; reasoning: string }> {
         { role: 'system', content: SYSTEM },
         { role: 'user', content: [
           { type: 'text', text: `Author: ${r.display_name}${years}. Is this an acceptable author photo?` },
-          { type: 'image_url', image_url: { url: r.photo_url, detail: 'low' } },
+          { type: 'image_url', image_url: { url: imageUrl, detail: 'low' } },
         ] },
       ],
       response_format: { type: 'json_object' },
@@ -85,7 +100,8 @@ async function judge(r: Row): Promise<{ verdict: Verdict; reasoning: string }> {
     const ok: Verdict[] = ['portrait', 'unsure', 'era_mismatch', 'not_a_person', 'unreadable']
     return { verdict: ok.includes(p.verdict as Verdict) ? (p.verdict as Verdict) : 'unsure', reasoning: p.reasoning ?? '' }
   } catch (e) {
-    // OpenAI rejects URLs it cannot download — that is "unreadable", not a crash.
+    // OpenAI could not download the URL: retry once with the image inlined.
+    if (!inline) return judge(r, true)
     return { verdict: 'unreadable', reasoning: String(e).slice(0, 160) }
   }
 }
