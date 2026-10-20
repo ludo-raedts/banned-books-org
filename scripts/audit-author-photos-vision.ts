@@ -36,6 +36,7 @@
 import OpenAI from 'openai'
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
+import { approvedPhotoUrls, readReview } from '../src/lib/photo-review'
 import { flagValue, idsFlag, intFlag } from './lib/cli'
 
 const NULL_IDS_FILE = flagValue('null-ids-file')
@@ -105,7 +106,9 @@ async function main() {
     rows.push(...(data as Row[]))
     if (data.length < 1000) break
   }
-  const todo = rows.slice(0, LIMIT).filter(r => !done.has(r.id) || done.get(r.id)!.photo_url !== r.photo_url)
+  // Photos a human marked Good in /admin/authors/photo-review are never re-checked.
+  const approved = approvedPhotoUrls(await readReview())
+  const todo = rows.slice(0, LIMIT).filter(r => !approved.has(r.photo_url) && (!done.has(r.id) || done.get(r.id)!.photo_url !== r.photo_url))
   console.log(`REVIEW: ${rows.length} authors with a photo, ${todo.length} to check (${done.size} in checkpoint)`)
 
   let i = 0
