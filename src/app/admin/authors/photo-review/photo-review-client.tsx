@@ -15,9 +15,15 @@ type Item = {
   photo_url: string
   verdict: string
   reasoning: string
+  photo_source?: string | null
+  bio_source_url?: string | null
+  wikidata_id?: string | null
+  openlibrary_author_id?: string | null
+  website_url?: string | null
+  books?: { title: string; year: number | null }[]
 }
 type Counts = { pending: number; stale: number; ok: number; wrong: number; replaced: number }
-type Candidate = { url: string; source: string; label: string }
+type Candidate = { url: string; source: string; label: string; page: string }
 
 const VERDICT_LABEL: Record<string, string> = {
   era_mismatch: 'Era mismatch',
@@ -35,6 +41,54 @@ const VERDICT_CLS: Record<string, string> = {
 function years(i: Item) {
   if (!i.birth_year && !i.death_year) return null
   return `${i.birth_year ?? '?'}–${i.death_year ?? ''}`
+}
+
+function hostOf(url: string) {
+  try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url }
+}
+
+function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline whitespace-nowrap">
+      {children} ↗
+    </a>
+  )
+}
+
+// Everything a reviewer who does not know this author needs to judge the
+// photo: where the image comes from, where the bio comes from, which books we
+// list them for, and one-click searches to find a known-good photo to compare.
+function SourcesBlock({ item }: { item: Item }) {
+  const firstBook = item.books?.[0]?.title
+  const q = `"${item.name}"${firstBook ? ` "${firstBook}"` : ' author'}`
+  return (
+    <div className="text-[11px] leading-snug text-gray-600 border-t border-gray-100 pt-2 flex flex-col gap-1">
+      {item.books && item.books.length > 0 && (
+        <p><span className="text-gray-400">Books:</span>{' '}
+          {item.books.map(b => `${b.title}${b.year ? ` (${b.year})` : ''}`).join(' · ')}
+        </p>
+      )}
+      <p className="flex flex-wrap gap-x-2 gap-y-0.5">
+        <span className="text-gray-400">Photo from:</span>
+        {item.photo_source
+          ? <ExtLink href={item.photo_source}>{hostOf(item.photo_source)}</ExtLink>
+          : <span>{hostOf(item.photo_url)}</span>}
+      </p>
+      <p className="flex flex-wrap gap-x-2 gap-y-0.5">
+        <span className="text-gray-400">Author:</span>
+        {item.bio_source_url && <ExtLink href={item.bio_source_url}>bio source</ExtLink>}
+        {item.wikidata_id && <ExtLink href={`https://www.wikidata.org/wiki/${item.wikidata_id}`}>Wikidata</ExtLink>}
+        {item.openlibrary_author_id && <ExtLink href={`https://openlibrary.org/authors/${item.openlibrary_author_id}`}>Open Library</ExtLink>}
+        {item.website_url && <ExtLink href={item.website_url}>website</ExtLink>}
+        {!item.bio_source_url && !item.wikidata_id && !item.openlibrary_author_id && !item.website_url && <span>no source on file</span>}
+      </p>
+      <p className="flex flex-wrap gap-x-2 gap-y-0.5">
+        <span className="text-gray-400">Compare:</span>
+        <ExtLink href={`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`}>Google Images</ExtLink>
+        <ExtLink href={`https://www.google.com/search?q=${encodeURIComponent(q)}`}>Google</ExtLink>
+      </p>
+    </div>
+  )
 }
 
 function ReviewCard({ item, onDecide }: {
@@ -83,7 +137,9 @@ function ReviewCard({ item, onDecide }: {
             {VERDICT_LABEL[item.verdict] ?? item.verdict}
           </span>
         </div>
-        <p className="text-xs text-gray-600 leading-snug flex-1">{item.reasoning}</p>
+        <p className="text-xs text-gray-600 leading-snug">{item.reasoning}</p>
+        <SourcesBlock item={item} />
+        <div className="flex-1" />
         <div className="grid grid-cols-2 gap-2">
           <button onClick={() => onDecide(item, 'ok')}
             className="rounded-md border border-green-300 bg-green-50 text-green-800 text-sm font-medium py-1.5 hover:bg-green-100">
@@ -106,14 +162,16 @@ function ReviewCard({ item, onDecide }: {
           ) : (
             <div className="grid grid-cols-3 gap-1.5">
               {shown.map(c => (
-                <button key={c.url} title={`${c.label} · ${c.source}`}
-                  onClick={() => onDecide(item, 'replace', c.url)}
-                  className="group text-left rounded border border-gray-200 hover:border-blue-500 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={c.url} alt={c.label} className="w-full aspect-square object-cover"
-                    onError={() => setBrokenCands(s => new Set(s).add(c.url))} />
-                  <span className="block px-1 py-0.5 text-[10px] leading-tight text-gray-600 line-clamp-3">{c.label}</span>
-                </button>
+                <div key={c.url} className="rounded border border-gray-200 hover:border-blue-500 overflow-hidden flex flex-col">
+                  <button title={`Use this photo: ${c.label} · ${c.source}`} onClick={() => onDecide(item, 'replace', c.url)}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={c.url} alt={c.label} className="w-full aspect-square object-cover"
+                      onError={() => setBrokenCands(s => new Set(s).add(c.url))} />
+                  </button>
+                  <span className="px-1 pt-0.5 text-[10px] leading-tight text-gray-600 line-clamp-3">{c.label}</span>
+                  <a href={c.page} target="_blank" rel="noopener noreferrer"
+                    className="px-1 pb-0.5 text-[10px] text-blue-700 hover:underline">{c.source} ↗</a>
+                </div>
               ))}
             </div>
           )
@@ -177,7 +235,9 @@ export default function PhotoReviewClient() {
       <p className="text-sm text-gray-600 mb-4 max-w-3xl">
         <strong>Good</strong> keeps the photo and future audits skip it. <strong>Wrong</strong> removes it, and
         enrichment will not put it back. <strong>Find other photo</strong> shows candidates from Wikidata, Wikipedia
-        and Open Library, each labelled so you can rule out namesakes; click one to use it.
+        and Open Library, each labelled so you can rule out namesakes; click a photo to use it, or its source link to
+        check it first. Under every card, <strong>Photo from</strong> opens the page the image comes from, and{' '}
+        <strong>Compare</strong> searches the name together with one of their books.
       </p>
 
       {error && <p className="text-sm text-red-600">Failed to load: {error}</p>}

@@ -8,7 +8,7 @@
 // images, and Open Library author photos. All URLs pass isAllowedImageUrl.
 import { isAllowedImageUrl } from '../allowed-image-hosts'
 
-export type PhotoCandidate = { url: string; source: string; label: string }
+export type PhotoCandidate = { url: string; source: string; label: string; page: string }
 
 const UA = { 'User-Agent': 'banned-books.org/1.0 (contact@banned-books.org)' }
 
@@ -34,13 +34,13 @@ async function wikidata(name: string): Promise<PhotoCandidate[]> {
   if (!ids.length) return []
   const e = await getJson<{ entities?: Record<string, WdEntity> }>(
     `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join('|')}&props=claims|descriptions|labels&languages=en&format=json`)
-  const files: { file: string; label: string }[] = []
+  const files: { file: string; label: string; id: string }[] = []
   for (const id of ids) {
     const ent = e?.entities?.[id]
     const human = (ent?.claims?.P31 ?? []).some(c => (c.mainsnak?.datavalue?.value as { id?: string } | undefined)?.id === 'Q5')
     const file = ent?.claims?.P18?.[0]?.mainsnak?.datavalue?.value
     if (!human || typeof file !== 'string') continue
-    files.push({ file, label: `${ent?.labels?.en?.value ?? name}${ent?.descriptions?.en ? ` — ${ent.descriptions.en.value}` : ''}` })
+    files.push({ id, file, label: `${ent?.labels?.en?.value ?? name}${ent?.descriptions?.en ? ` — ${ent.descriptions.en.value}` : ''}` })
   }
   if (!files.length) return []
   // Resolve Commons file names to upload.wikimedia.org thumbnails in one call.
@@ -48,7 +48,7 @@ async function wikidata(name: string): Promise<PhotoCandidate[]> {
     `https://commons.wikimedia.org/w/api.php?action=query&titles=${files.map(f => encodeURIComponent(`File:${f.file}`)).join('|')}&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json`)
   const byTitle = new Map(Object.values(ii?.query?.pages ?? {}).map(p => [p.title.replace(/^File:/, '').replace(/_/g, ' '), p.imageinfo?.[0]?.thumburl]))
   return files
-    .map(f => ({ url: byTitle.get(f.file.replace(/_/g, ' ')) ?? '', source: 'Wikidata', label: f.label }))
+    .map(f => ({ url: byTitle.get(f.file.replace(/_/g, ' ')) ?? '', source: 'Wikidata', label: f.label, page: `https://www.wikidata.org/wiki/${f.id}` }))
     .filter(c => c.url)
 }
 
@@ -58,7 +58,7 @@ async function wikipedia(name: string): Promise<PhotoCandidate[]> {
   return Object.values(r?.query?.pages ?? {})
     .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
     .filter(p => p.thumbnail?.source)
-    .map(p => ({ url: p.thumbnail!.source, source: 'Wikipedia', label: `${p.title}${p.description ? ` — ${p.description}` : ''}` }))
+    .map(p => ({ url: p.thumbnail!.source, source: 'Wikipedia', label: `${p.title}${p.description ? ` — ${p.description}` : ''}`, page: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g, '_'))}` }))
 }
 
 async function openLibrary(name: string): Promise<PhotoCandidate[]> {
@@ -69,7 +69,7 @@ async function openLibrary(name: string): Promise<PhotoCandidate[]> {
     const url = `https://covers.openlibrary.org/a/olid/${d.key}-M.jpg?default=false`
     try {
       const h = await fetch(url, { method: 'HEAD', headers: UA, signal: AbortSignal.timeout(6000) })
-      if (h.ok) out.push({ url, source: 'Open Library', label: `${d.name}${d.birth_date ? ` (b. ${d.birth_date})` : ''}${d.top_work ? ` — ${d.top_work}` : ''}` })
+      if (h.ok) out.push({ url, source: 'Open Library', label: `${d.name}${d.birth_date ? ` (b. ${d.birth_date})` : ''}${d.top_work ? ` — ${d.top_work}` : ''}`, page: `https://openlibrary.org/authors/${d.key}` })
     } catch { /* skip */ }
   }
   return out
