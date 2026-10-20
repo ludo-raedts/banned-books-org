@@ -215,3 +215,5 @@ next-env.d.ts
 /data/author-photo-dead*
 /data/author-photo-loadable-ids.json
 /data/author-photo-autowrong-plan-*.json
+/data/author-photo-partG-*
+/data/author-bio-subject-fail-*

@@ -94,6 +94,7 @@ async function searchWikipedia(name: string): Promise<number[]> {
 }
 
 async function fetchPageDetails(pageId: number): Promise<{
+  title: string
   extract: string | null
   photo: string | null
   categories: string[]
@@ -101,17 +102,84 @@ async function fetchPageDetails(pageId: number): Promise<{
   const url = `https://en.wikipedia.org/w/api.php?action=query&pageids=${pageId}&prop=extracts|pageimages|categories&exintro=true&exsentences=8&pithumbsize=400&pilicense=any&cllimit=50&format=json`
   try {
     const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
-    if (!res.ok) return { extract: null, photo: null, categories: [] }
+    if (!res.ok) return { title: '', extract: null, photo: null, categories: [] }
     const data = await res.json() as WikiPageResult
     const page = Object.values(data?.query?.pages ?? {})[0]
-    if (!page) return { extract: null, photo: null, categories: [] }
+    if (!page) return { title: '', extract: null, photo: null, categories: [] }
     return {
+      title: page.title ?? '',
       extract: page.extract ?? null,
       photo: page.thumbnail?.source ?? null,
       categories: (page.categories ?? []).map(c => c.title),
     }
-  } catch { return { extract: null, photo: null, categories: [] } }
+  } catch { return { title: '', extract: null, photo: null, categories: [] } }
 }
+
+// Page id behind a stored Wikipedia bio_source_url (…/wiki/<Title>), or null.
+async function pageIdForUrl(url: string | null | undefined): Promise<number | null> {
+  const m = url?.match(/^https?:\/\/en\.wikipedia\.org\/wiki\/([^?#]+)/)
+  if (!m) return null
+  try {
+    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${m[1]}&redirects=1&format=json`, { headers: { 'User-Agent': WIKI_UA } })
+    const data = await res.json() as { query?: { pages?: Record<string, { pageid?: number }> } }
+    const id = Object.values(data?.query?.pages ?? {})[0]?.pageid
+    return typeof id === 'number' && id > 0 ? id : null
+  } catch { return null }
+}
+
+// Photos-only name gate (2026-10-20 leak): every token of the author's name
+// must appear in the page TITLE (any order, so Chinese "Du Fei" matches "Fei
+// Du"), with at least two tokens. The old rule took the first search hit that
+// was "a person", which gave pinyin-named authors a tennis player, a hot-pot
+// restaurant, flags and fish.
+// The surname must also be the title's LAST token ("Henry Charles Lea" is not
+// Charles P. Henry, "King Richard" is not C. Richard King); CJK authors may
+// have it FIRST, because Wikipedia titles use native name order there.
+function titleNamesAuthor(title: string, displayName: string, cjk = false): boolean {
+  const toks = (x: string) => bioNorm(x.replace(/\s*\(.*\)\s*$/, '')).split(' ').filter(w => w.length >= 2)
+  const name = toks(displayName)
+  const tt = toks(title)
+  const t = new Set(tt)
+  const surname = name[name.length - 1]
+  const surnameOk = tt[tt.length - 1] === surname || (cjk && tt[0] === surname)
+  return name.length >= 2 && name.every(w => t.has(w)) && surnameOk
+}
+
+// Does the bio intro's SUBJECT (text before "is/was/(born") name this author?
+// Whole-token comparison ("kim" is not "kimberley"), every name token ≥3
+// chars present, surname last (or first for CJK), and middle initials must not
+// conflict with the subject's middle names ("Miguel E. Gallardo" is not "Miguel
+// Ángel Gallardo Paredes", "Kim M. Williams" is not "Kimberley Lynton Williams").
+function subjectNamesAuthor(extractHtml: string, displayName: string, cjk = false): boolean {
+  const intro = stripHtml(extractHtml).slice(0, 240)
+  // Pen names / legal names: "John Griffith London … better known as Jack London",
+  // "Cassandra Clare, born Judith Rumelt": the full author name appears as a phrase.
+  const introN = ` ${bioNorm(intro)} `
+  const nameN = bioNorm(displayName)
+  if (nameN.split(' ').length >= 2 && introN.includes(` ${nameN} `)) return true
+  // Subject = text before the copula / "(" (dates, pronunciation) / ", born" / "née".
+  const cut = intro.search(/\s+(is|was|are|were)\b|\s*\(|,\s+(born|née|nee)\b|,\s+(better )?known\b|,\s+who\b/i)
+  const SUFFIX = new Set(['jr', 'sr', 'ii', 'iii', 'iv'])
+  const subj = bioNorm(cut > 0 ? intro.slice(0, cut) : intro.slice(0, 60)).split(' ').filter(w => w && !SUFFIX.has(w))
+  const all = nameN.split(' ').filter(w => w && !SUFFIX.has(w))
+  // CJK romanised names are made of 2-letter syllables ("Mo Yan"), so accept those there.
+  const main = [...new Set(all.filter(w => w.length >= (cjk ? 2 : 3)))]
+  // A first name may be the short form of the subject's first name (Tim →
+  // Timothy, Ron → Ronnell); the middle-initial check below still rejects
+  // "Kim M. Williams" vs "Kimberley Lynton Williams".
+  const has = (t: string, i: number) => subj.includes(t) || (i === 0 && t.length >= 3 && !!subj[0]?.startsWith(t))
+  if (main.length < 2 || !main.every((t, i) => has(t, i))) return false
+  const surname = main[main.length - 1]
+  if (!(subj[subj.length - 1] === surname || (cjk && subj[0] === surname))) return false
+  const initials = all.slice(1, -1).filter(w => w.length === 1)
+  const middles = subj.slice(1, -1).filter(w => !main.includes(w))
+  if (initials.length && middles.length && !initials.every(i => middles.some(m => m.startsWith(i)))) return false
+  return true
+}
+
+const CJK_RE = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/
+const isCjkAuthor = (a: { original_language: string | null; name_native: string | null }) =>
+  ['zh', 'ja', 'ko'].includes(a.original_language ?? '') || CJK_RE.test(a.name_native ?? '')
 
 async function fetchFullExtract(pageId: number): Promise<string | null> {
   const url = `https://en.wikipedia.org/w/api.php?action=query&pageids=${pageId}&prop=extracts&format=json`
@@ -411,6 +479,7 @@ async function main() {
     name_transliterated: string | null
     name_english: string | null
     original_language: string | null
+    bio_source_url: string | null
   }
 
   const cache = loadCache()
@@ -439,7 +508,7 @@ async function main() {
   while (authors.length < LIMIT) {
     let q = supabase
       .from('authors')
-      .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language')
+      .select('id, display_name, slug, name_native, name_transliterated, name_english, original_language, bio_source_url')
       .not('slug', 'is', null)
       .order('display_name')
       .order('id')
@@ -493,7 +562,11 @@ async function main() {
       // 1a. Gather candidate pages from the first ladder variant that hits.
       let candidates: number[] = []
       let usedVariant = ''
-      for (const variant of ladder) {
+      // Photos-only: when the bio came from a Wikipedia page, that page is the
+      // only acceptable photo source; don't search for a namesake.
+      const bioPage = PHOTOS_ONLY ? await pageIdForUrl(author.bio_source_url) : null
+      if (bioPage) { candidates = [bioPage]; usedVariant = ' [via bio source]' }
+      for (const variant of bioPage ? [] : ladder) {
         candidates = await searchWikipedia(variant.name)
         await sleep(DELAY_MS)
         if (candidates.length) {
@@ -522,28 +595,25 @@ async function main() {
         await sleep(DELAY_MS)
         if (d.extract && (isDisambigExtract(d.extract) || hasDisambigCategory(d.categories))) continue
         if (PHOTOS_ONLY) {
-          const personSignal =
-            extractYearFromCategories(d.categories, 'births') !== null ||
-            extractYearFromCategories(d.categories, 'deaths') !== null ||
-            hasWriterCategory(d.categories)
-          if (personSignal) { picked = d; break }
+          // The bio's own page is trusted as is; a SEARCH hit must name this
+          // author in its title AND be a writer.
+          const named = titleNamesAuthor(d.title, author.display_name, isCjkAuthor(author)) &&
+            (!d.extract || subjectNamesAuthor(d.extract, author.display_name, isCjkAuthor(author)))
+          if (named && hasWriterCategory(d.categories)) {
+            picked = { pageId: pid, ...d }
+            break
+          }
+          // The bio's own page fails the name/writer gate → the BIO is suspect too.
+          if (bioPage) console.log(`⚠ ${author.display_name} — bio source page "${d.title}" fails the name/writer check (bio suspect)`)
           continue
         }
         if (!d.extract || !looksLikeAuthorBio(d.extract, author.display_name, d.categories)) continue
-        // Require the author's FULL name to be the subject — every significant
-        // token (≥3 chars), not just the surname. Rejects same-surname people
-        // (Carrie Underwood for Deborah Underwood) that pass looksLikeAuthorBio.
-        const intro240 = stripHtml(d.extract).slice(0, 240)
-        const cut = intro240.search(/\s+(is|was|are|were)\b|\s*\((?:born|b\.|c\.|\d)|,\s+(better )?known\b|,\s+who\b/i)
-        const subjN = bioNorm(cut > 0 ? intro240.slice(0, cut) : intro240.slice(0, 60))
-        const authToks = [...new Set(bioNorm(author.display_name).split(' ').filter(w => w.length >= 3))]
-        // Require ≥2 significant tokens ALL present in the subject. With only a
-        // surname (initials/mononym names like "A.M. Jenkins"), name-matching
-        // can't disambiguate same-surname people — so don't recover those by
-        // name; leave them bio-less (safe) rather than risk a wrong Jenkins.
-        const fullNameMatch = authToks.length >= 2 && authToks.every(t => subjN.includes(t))
+        // Same subject check as photos-only (whole tokens, surname last, middle initials).
+        const fullNameMatch = subjectNamesAuthor(d.extract, author.display_name, isCjkAuthor(author))
         if (!fullNameMatch) continue
-        picked = d // first candidate whose full name is the subject wins
+        // pageId MUST be set: without it bio_source_url became ?curid=undefined
+        // and the full extract was fetched for page 'undefined' (162 authors, 2026-06-09→10-20).
+        picked = { pageId: pid, ...d } // first candidate whose full name is the subject wins
         break
       }
       if (!picked) {
