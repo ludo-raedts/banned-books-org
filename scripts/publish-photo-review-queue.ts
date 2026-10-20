@@ -7,8 +7,9 @@
  * then re-checks). Queued: verdicts era_mismatch, unsure, unreadable, plus
  * not_a_person rows whose photo is STILL set (the art-like ones excluded from
  * the --null-ids-file batches). Only rows whose current photo_url still equals
- * the audited URL are queued. Earlier decisions in the stored file are kept,
- * and an author already decided for the same photo URL is not re-queued.
+ * the audited URL are queued. Earlier decisions in the stored file are kept, as
+ * are pending items for authors the inputs do not cover; an author already
+ * decided for the same photo URL is not re-queued.
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/publish-photo-review-queue.ts \
@@ -45,7 +46,10 @@ async function main() {
 
   const existing = await readReview()
   const decidedKey = new Set(existing.items.filter(i => i.decision).map(i => `${i.author_id}|${i.photo_url}`))
-  const kept = existing.items.filter(i => i.decision)
+  // Keep every decision, plus pending items for authors these inputs do NOT
+  // cover (so publishing one new checkpoint never drops the older queue).
+  const covered = new Set(latest.keys())
+  const kept = existing.items.filter(i => i.decision || !covered.has(i.author_id))
   const fresh: ReviewItem[] = []
   for (const r of wanted) {
     const a = authors.get(r.id)
@@ -56,7 +60,7 @@ async function main() {
   }
   const by: Record<string, number> = {}
   for (const f of fresh) by[f.verdict] = (by[f.verdict] ?? 0) + 1
-  console.log(`queue: ${fresh.length} pending ${JSON.stringify(by)} · ${kept.length} earlier decisions kept`)
+  console.log(`queue: ${fresh.length} from these inputs ${JSON.stringify(by)} · ${kept.length} earlier items kept (decisions + other authors' pending)`)
   if (!APPLY) { console.log('dry-run — re-run with --apply to upload'); return }
   await writeReview({ generated_at: new Date().toISOString(), items: [...kept, ...fresh] })
   console.log('uploaded → storage admin-data/photo-review.json')
