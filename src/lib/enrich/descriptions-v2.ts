@@ -728,6 +728,8 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
     totalCostUsd: 0,
   }
 
+  let gbStopLogged = false
+
   // Reground overwrites existing text → back up originals first (reversible
   // via re-import). One CSV per run, appended as rows are overwritten.
   let backupPath: string | null = null
@@ -771,7 +773,10 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
         }
         const { error: ue } = await sb.from('books').update(upd).eq('id', row.id)
         if (ue) { log(`    ✗ DB write: ${ue.message}`); result.errors++ }
-      } else if (opts.apply && r.data_quality_status === 'flagged' && !r.description_book && !opts.regroundUngrounded) {
+      } else if (opts.apply && r.data_quality_status === 'flagged' && !r.description_book && !opts.regroundUngrounded
+        // With Google Books down/exhausted, "no source" may just mean "GB not
+        // asked": don't flag, or later default runs would skip the row forever.
+        && !(gbQuotaTripped() && !opts.skipGoogleBooks)) {
         // Make sure the status reflects "still no source" even on retry.
         // SKIP in reground mode: these rows already carry usable (if untracked)
         // text — a failed re-ground must leave them exactly as they were, never
@@ -783,10 +788,17 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
       }
     } catch (e) {
       if (e instanceof GbQuotaError) {
-        // Quota wall: drain the queue so all workers exit cleanly. The throw
-        // happens before any DB write, so this row keeps whatever it had.
-        log(`  ⚠ Google Books daily quota exhausted — stopping; ${queue.length} rows left unprocessed. Resume after the quota resets / is raised.`)
-        queue.length = 0
+        // Quota wall or GB outage. gbQuotaTripped() is now latched, so every
+        // later lookup skips GB: put this row back and carry on with OL,
+        // Wikipedia and the LLM. (This used to drain the queue and stop the
+        // whole run, which on 2026-10-20 left 612/617 new books untouched.)
+        // Rows that find no source are not flagged while GB is out (see above),
+        // so the next run still tries them with GB.
+        if (!gbStopLogged) {
+          gbStopLogged = true
+          log(`  ⚠ ${e.message} — continuing without Google Books; rows without another source stay unflagged for the next run`)
+        }
+        queue.push(row)
         return
       }
       result.errors++
