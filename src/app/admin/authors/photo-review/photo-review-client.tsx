@@ -22,7 +22,7 @@ type Candidate = { url: string; source: string; label: string }
 const VERDICT_LABEL: Record<string, string> = {
   era_mismatch: 'Era mismatch',
   unsure: 'Unsure',
-  not_a_person: 'Art / statue',
+  not_a_person: 'Not a person?',
   unreadable: 'Does not load',
 }
 const VERDICT_CLS: Record<string, string> = {

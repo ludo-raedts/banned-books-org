@@ -64,7 +64,12 @@ export default async function AdminAuthorsPage({
           <h1 className="text-2xl font-bold">Authors</h1>
           <p className="text-sm text-gray-500 mt-1">{(allCount ?? 0).toLocaleString('en')} authors in catalogue</p>
         </div>
-        <AdminBackLink href="/admin" label="Admin dashboard" />
+        <div className="flex items-center gap-4">
+          <Link href="/admin/authors/photo-review" className="text-sm font-medium text-blue-700 hover:underline whitespace-nowrap">
+            Photo review →
+          </Link>
+          <AdminBackLink href="/admin" label="Admin dashboard" />
+        </div>
       </div>
 
       <ListSearch placeholder="Search by name…" />
