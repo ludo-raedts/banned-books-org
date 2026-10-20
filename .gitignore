@@ -210,3 +210,8 @@ next-env.d.ts
 # author photo vision audit: raw checkpoints/review reports (reviewed null lists + backups ARE committed)
 /data/author-photo-vision-*
 /data/author-photo-recheck-ids.json
+/data/author-identity-*
+/data/author-olphoto-ids.json
+/data/author-photo-dead*
+/data/author-photo-loadable-ids.json
+/data/author-photo-autowrong-plan-*.json
