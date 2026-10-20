@@ -11,6 +11,10 @@ const SUPABASE_STORAGE_HOST: string | null = (() => {
 export const ALLOWED_IMAGE_HOSTS = [
   'covers.openlibrary.org',
   'upload.wikimedia.org',
+  // Since ~Oct 2026 Wikipedia pageimages and Commons imageinfo thumburls are served
+  // from thumb.wikimedia.org (upload.wikimedia.org still serves originals). Without
+  // this host every new Wikimedia photo/cover was silently rejected.
+  'thumb.wikimedia.org',
   'books.google.com',
   'books.google.fr',
   'books.google.nl',
