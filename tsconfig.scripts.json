@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "incremental": false
+  },
+  "include": ["next-env.d.ts", "scripts/*.ts"],
+  "exclude": ["node_modules", "scripts/archive"]
+}

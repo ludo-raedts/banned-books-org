@@ -31,8 +31,7 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
-import { google } from 'googleapis'
-import type { OAuth2Client } from 'google-auth-library'
+import { google, type Auth } from 'googleapis'
 
 const SITE = 'sc-domain:banned-books.org'
 const ORIGIN = 'https://www.banned-books.org'
@@ -109,7 +108,7 @@ async function buildPlan(per: number): Promise<Plan> {
   return plan.filter(p => (seen.has(p.url) ? false : (seen.add(p.url), true)))
 }
 
-async function authorize(): Promise<OAuth2Client> {
+async function authorize(): Promise<Auth.OAuth2Client> {
   const keys = JSON.parse(await fs.readFile(CLIENT_FILE, 'utf8'))
   const k = keys.installed ?? keys.web
   const creds = JSON.parse(await fs.readFile(TOKEN_FILE, 'utf8'))

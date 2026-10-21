@@ -186,8 +186,6 @@ async function recordFailure(bookId: number, sourcesTried: string[]) {
     },
     { onConflict: 'book_id', ignoreDuplicates: false },
   )
-  // Manually increment attempts since upsert can't do arithmetic
-  await supabase.rpc('increment_cover_attempts', { bid: bookId }).then(() => {}).catch(() => {})
 }
 
 async function clearFailure(bookId: number) {

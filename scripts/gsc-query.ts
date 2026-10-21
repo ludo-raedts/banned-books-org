@@ -2,8 +2,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { authenticate } from '@google-cloud/local-auth'
-import { google } from 'googleapis'
-import type { OAuth2Client } from 'google-auth-library'
+import { google, type Auth } from 'googleapis'
 
 const SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 const HOME = os.homedir()
@@ -20,7 +19,7 @@ async function readOAuthKeys(): Promise<OAuthKeys> {
   return k
 }
 
-async function loadSavedClient(): Promise<OAuth2Client | null> {
+async function loadSavedClient(): Promise<Auth.OAuth2Client | null> {
   try {
     const k = await readOAuthKeys()
     const credentials = JSON.parse(await fs.readFile(TOKEN_FILE, 'utf8'))
@@ -32,7 +31,7 @@ async function loadSavedClient(): Promise<OAuth2Client | null> {
   }
 }
 
-async function saveCredentials(client: OAuth2Client) {
+async function saveCredentials(client: Auth.OAuth2Client) {
   const k = await readOAuthKeys()
   const payload = {
     type: 'authorized_user',
@@ -44,13 +43,15 @@ async function saveCredentials(client: OAuth2Client) {
   await fs.chmod(TOKEN_FILE, 0o600)
 }
 
-async function authorize(): Promise<OAuth2Client> {
+async function authorize(): Promise<Auth.OAuth2Client> {
   let client = await loadSavedClient()
   if (!client) {
     console.log('No saved token, starting OAuth flow (browser will open)...')
     const fresh = await authenticate({ scopes: SCOPES, keyfilePath: CLIENT_FILE })
-    if (fresh.credentials?.refresh_token) await saveCredentials(fresh as OAuth2Client)
-    client = fresh as OAuth2Client
+    // @google-cloud/local-auth returns a google-auth-library v9 client; googleapis types v10.
+    const freshClient = fresh as unknown as Auth.OAuth2Client
+    if (fresh.credentials?.refresh_token) await saveCredentials(freshClient)
+    client = freshClient
   }
   const at = await client.getAccessToken()
   if (!at.token) throw new Error('Failed to obtain access token; delete ~/.gcp/banned-books-gsc-token.json and retry')

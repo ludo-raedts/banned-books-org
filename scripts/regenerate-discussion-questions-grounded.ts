@@ -136,7 +136,8 @@ async function runExport() {
         .eq('id', bookId).maybeSingle()
       year = (b?.first_published_year as number | null) ?? null
       description = (b?.description_book as string | null) ?? null
-      const authors = ((b?.book_authors ?? []) as { authors: { bio: string | null } | null }[])
+      // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+      const authors = ((b?.book_authors ?? []) as unknown as { authors: { bio: string | null } | null }[])
         .map(x => x.authors?.bio).filter((s): s is string => !!s)
       bio = authors[0] ?? null
     }

@@ -35,7 +35,7 @@ async function main() {
 
   const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 
-  const card = (x: F, kind: 'fix' | 'null') => {
+  const card = (x: F, kind: 'fix' | 'keep') => {
     const cur = urlById.get(x.id) ?? ''
     const next = cur.includes('zoom=3') ? cur.replace('zoom=3', 'zoom=1') : cur
     const link = `<a href="/books/${x.slug}" target="_blank">${esc(x.title)}</a>`

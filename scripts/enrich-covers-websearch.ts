@@ -265,17 +265,17 @@ async function processBook(c: Candidate): Promise<ResultRow> {
   const notes: string[] = []
   let mirrored: { publicUrl: string } | null = null
 
-  async function tryCandidate(cand: ImageCandidate): Promise<boolean> {
+  async function tryCandidate(cand: ImageCandidate): Promise<{ publicUrl: string } | null> {
     row.extractedImageUrl = cand.imageUrl
     row.extractedVia = cand.via
     let m = await mirrorImageToStorage(sb, cand.imageUrl, c.slug, 'book-covers', cand.pageUrl)
-    if (m.ok) { mirrored = { publicUrl: m.publicUrl }; row.mirrorVia = 'direct'; return true }
+    if (m.ok) { row.mirrorVia = 'direct'; return { publicUrl: m.publicUrl } }
     if (/HTTP (403|401|429)|fetch failed/.test(m.reason)) {
       m = await mirrorImageToStorage(sb, weservUrl(cand.imageUrl), c.slug, 'book-covers')
-      if (m.ok) { mirrored = { publicUrl: m.publicUrl }; row.mirrorVia = 'weserv'; return true }
+      if (m.ok) { row.mirrorVia = 'weserv'; return { publicUrl: m.publicUrl } }
     }
     notes.push(`mirror ${cand.via}: ${m.reason}`)
-    return false
+    return null
   }
 
   // Candidate providers, in order. Each candidate is mirrored and then
@@ -307,7 +307,8 @@ async function processBook(c: Candidate): Promise<ResultRow> {
     // sizes — first one that mirrors wins.
     let active: ImageCandidate | null = null
     for (const cand of cands) {
-      if (await tryCandidate(cand)) { active = cand; break }
+      mirrored = await tryCandidate(cand)
+      if (mirrored) { active = cand; break }
     }
     if (!mirrored || !active) continue
 
@@ -316,7 +317,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
     let opinion: Awaited<ReturnType<typeof openaiCoverSecondOpinion>>
     try {
       opinion = await openaiCoverSecondOpinion({
-        imageUrl: mirrored!.publicUrl,
+        imageUrl: mirrored.publicUrl,
         title: c.title,
         titleNative: c.title_native,
         author: c.author,
@@ -343,7 +344,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
     // but never auto-applied. Stop either way — swapping an
     // unclear-but-plausible cover for the next provider's guess only adds
     // wrong-cover risk.
-    row.finalUrl = mirrored!.publicUrl
+    row.finalUrl = mirrored.publicUrl
     row.outcome = opinion.verdict === 'looks_right' ? 'ok' : 'unsure'
     break
   }

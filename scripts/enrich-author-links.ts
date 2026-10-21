@@ -66,7 +66,8 @@ async function loadRankedAuthors(): Promise<AuthorStat[]> {
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw new Error(error.message)
-    const rows = (data ?? []) as Array<{
+    // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+    const rows = (data ?? []) as unknown as Array<{
       id: number
       bans: Array<{ country_code: string | null }> | null
       book_authors: Array<{ authors: { id: number; display_name: string; slug: string } | null }> | null

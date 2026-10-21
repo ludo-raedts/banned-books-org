@@ -34,7 +34,8 @@ async function main() {
     .order('pick_date', { ascending: true })
     .limit(40)
   console.log('\nUpcoming birthday pushes:')
-  for (const r of (data ?? []) as Array<{ pick_date: string; book_id: number; books: { title: string; book_authors: Array<{ authors: { display_name: string } | null }> | null } | null }>) {
+  // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+  for (const r of (data ?? []) as unknown as Array<{ pick_date: string; book_id: number; books: { title: string; book_authors: Array<{ authors: { display_name: string } | null }> | null } | null }>) {
     const author = r.books?.book_authors?.map(ba => ba.authors?.display_name).filter(Boolean).join(', ') ?? '?'
     console.log(`  ${r.pick_date}  ${r.books?.title ?? '?'} — ${author}  (#${r.book_id})`)
   }

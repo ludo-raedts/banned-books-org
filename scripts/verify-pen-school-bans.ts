@@ -110,7 +110,8 @@ async function run() {
         .select('id, region, institution, confidence, books(title)')
         .in('id', slice)
       if (error) throw error
-      for (const b of data as { id: number; region: string | null; institution: string | null; confidence: string; books: { title: string } | null }[]) {
+      // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+      for (const b of data as unknown as { id: number; region: string | null; institution: string | null; confidence: string; books: { title: string } | null }[]) {
         const title = b.books?.title ?? ''
         const dk = `${norm(b.region)}|${norm(b.institution)}`
         const sk = norm(b.region)

@@ -582,7 +582,8 @@ async function fetchByIds(
       .select(columns)
       .in(keyCol, slice)
     if (error) throw new Error(`${table}: ${error.message}`)
-    rows.push(...((data ?? []) as Record<string, unknown>[]))
+    // `columns` is a runtime string, so supabase-js cannot infer the row shape.
+    rows.push(...((data ?? []) as unknown as Record<string, unknown>[]))
   }
   return rows
 }

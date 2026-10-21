@@ -319,7 +319,8 @@ async function loadCandidates(): Promise<Candidate[]> {
       .select('id, title, original_language, book_authors(authors(display_name))')
       .in('id', BOOK_IDS)
     if (error) throw error
-    rows.push(...((data ?? []) as typeof rows))
+    // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+    rows.push(...((data ?? []) as unknown as typeof rows))
   } else {
     // Sticky miss-stamp: skip rows whose last check is inside the window.
     const cutoff = new Date(Date.now() - RECHECK_DAYS * 86_400_000).toISOString()
@@ -350,7 +351,7 @@ async function loadCandidates(): Promise<Candidate[]> {
       const { data, error } = await q
       if (error) throw error
       if (!data || data.length === 0) break
-      rows.push(...(data as typeof rows))
+      rows.push(...(data as unknown as typeof rows)) // many-to-one embed: object, not array
       if (data.length < 1000) break
     }
     console.log(`  pool: ${poolTotal} unfilled — ${poolTotal - rows.length} skipped (checked < ${RECHECK_DAYS}d ago), ${rows.length} eligible`)

@@ -24,8 +24,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { authenticate } from '@google-cloud/local-auth'
-import { google } from 'googleapis'
-import type { OAuth2Client } from 'google-auth-library'
+import { google, type Auth } from 'googleapis'
 
 const SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 const HOME = os.homedir()
@@ -39,7 +38,7 @@ async function readOAuthKeys(): Promise<OAuthKeys> {
   if (!k) throw new Error(`No installed/web block in ${CLIENT_FILE}`)
   return k
 }
-async function authorize(): Promise<OAuth2Client> {
+async function authorize(): Promise<Auth.OAuth2Client> {
   const k = await readOAuthKeys()
   const client = new google.auth.OAuth2(k.client_id, k.client_secret, k.redirect_uris[0])
   try {
@@ -56,7 +55,8 @@ async function authorize(): Promise<OAuth2Client> {
     }
     await fs.writeFile(TOKEN_FILE, JSON.stringify(payload, null, 2))
     await fs.chmod(TOKEN_FILE, 0o600)
-    return fresh as OAuth2Client
+    // @google-cloud/local-auth returns a google-auth-library v9 client; googleapis types v10.
+    return fresh as unknown as Auth.OAuth2Client
   }
 }
 

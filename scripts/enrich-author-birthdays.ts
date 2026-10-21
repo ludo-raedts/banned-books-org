@@ -87,7 +87,8 @@ async function loadAuthorStats(): Promise<AuthorStat[]> {
       .order('id', { ascending: true })
       .range(from, from + PAGE - 1)
     if (error) throw new Error(error.message)
-    const rows = (data ?? []) as Array<{
+    // PostgREST returns many-to-one embeds as a single object; the untyped client infers arrays.
+    const rows = (data ?? []) as unknown as Array<{
       id: number
       bans: Array<{ country_code: string | null }> | null
       book_authors: Array<{ authors: { id: number; display_name: string; slug: string; birth_year: number | null; birth_month: number | null; birth_day: number | null; awards: unknown } | null }> | null
@@ -239,12 +240,12 @@ async function runEnrich() {
 
   console.log(`Candidates: ${candidates.size}   Already have birthday: ${candidates.size - todo.length}   To resolve: ${todo.length}\n`)
 
-  const ok: Array<AuthorStat & { qid: string; month: number; day: number }> = []
+  const ok: Array<AuthorStat & { qid: string; month: number; day: number; year: number }> = []
   const failed: Array<{ author: AuthorStat; reason: string; triedQids: string[] }> = []
   for (const a of todo) {
     const r = await resolveBirthday(a)
     if (r.ok) {
-      ok.push({ ...a, qid: r.qid, month: r.month, day: r.day })
+      ok.push({ ...a, qid: r.qid, month: r.month, day: r.day, year: r.year })
       console.log(`  ✓ ${a.name} → ${String(r.month).padStart(2, '0')}-${String(r.day).padStart(2, '0')} (${r.year}) ${r.qid}`)
     } else {
       failed.push({ author: a, reason: r.reason, triedQids: r.triedQids })

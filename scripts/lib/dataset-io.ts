@@ -14,12 +14,12 @@
  * with mandatory ordering, and CSV writing. Keep it here so both stay in sync.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { writeFile } from 'node:fs/promises'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-export type DatasetClient = ReturnType<typeof createClient>
+export type DatasetClient = SupabaseClient
 export type Row = Record<string, unknown>
 
 // ─── Env ─────────────────────────────────────────────────────────────────────
@@ -124,7 +124,8 @@ async function fetchPageWithRetry(
     let q = supabase.from(table).select(columns)
     for (const col of cols) q = q.order(col, { ascending: true })
     const { data, error } = await q.range(from, from + PAGE - 1)
-    if (!error) return data as Row[]
+    // `columns` is a runtime string, so supabase-js cannot infer the row shape.
+    if (!error) return data as unknown as Row[]
     if (attempt >= maxAttempts || !isTransientError(error)) {
       throw new Error(`fetch ${table}: ${error.message}`)
     }

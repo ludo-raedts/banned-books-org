@@ -45,7 +45,7 @@
  *   data/interview-candidates-<date>.json  machine-readable, all candidates
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { writeFileSync } from 'node:fs'
 import { FEATURED_VIDEOS } from '../src/lib/featured-videos'
 
@@ -220,7 +220,7 @@ async function findFor(entity: Entity): Promise<Candidate[]> {
 }
 
 // ── Build the entity worklist from the canonical ranking views ───────────────
-async function buildEntities(sb: ReturnType<typeof createClient>): Promise<Entity[]> {
+async function buildEntities(sb: SupabaseClient): Promise<Entity[]> {
   const existingAuthorSlugs = new Set(FEATURED_VIDEOS.map((v) => v.authorSlug).filter(Boolean))
   const existingBookSlugs = new Set(FEATURED_VIDEOS.map((v) => v.bookSlug).filter(Boolean))
   const entities: Entity[] = []
