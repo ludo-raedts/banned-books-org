@@ -38,5 +38,37 @@
   "bio_source_url": "https://en.wikipedia.org/?curid=40275158",
   "bio_source_type": "wikipedia",
   "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Kim_Williams_speaks_at_the_Melbourne_Press_Club%2C_3_April_2025_10.jpg/500px-Kim_Williams_speaks_at_the_Melbourne_Press_Club%2C_3_April_2025_10.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ {
+  "id": "17992",
+  "display_name": "John Garvey",
+  "bio": "Guy Edward John Patrick Garvey (born 6 March 1974) is an English musician, singer, songwriter and radio presenter. He is the lead singer and lyricist of the rock band Elbow. He has a weekly show on BBC Radio 6 Music titled Guy Garvey's Finest Hour.",
+  "bio_source_url": "https://en.wikipedia.org/?curid=5788283",
+  "bio_source_type": "wikipedia",
+  "photo_url": null
+ },
+ {
+  "id": "18473",
+  "display_name": "Brian Harrison",
+  "bio": "Sir Brian Howard Harrison (born 9 July 1937) is a British historian and academic. From 1996 to 2004, he was Professor of Modern History at the University of Oxford. From 2000 to 2004, he was also the editor of the Oxford Dictionary of National Biography.",
+  "bio_source_url": "https://en.wikipedia.org/?curid=3500452",
+  "bio_source_type": "wikipedia",
+  "photo_url": null
+ },
+ {
+  "id": "17959",
+  "display_name": "James R. Keller",
+  "bio": "Timothy James Keller (September 23, 1950 – May 19, 2023) was an American Presbyterian pastor, Reformed theologian, and Christian apologist. He was the chairman and co-founder of Redeemer City to City, which trains pastors for service around the world. Keller was also the founding pastor of Redeemer Presbyterian Church in New York City and the author of The New York Times bestselling books The Prodigal God (2008), Prayer (2014), and The Reason for God (2008). The prequel for the latter is Making Sense of God (2016).",
+  "bio_source_url": "https://en.wikipedia.org/?curid=3423584",
+  "bio_source_type": "wikipedia",
+  "photo_url": null
+ },
+ {
+  "id": "17772",
+  "display_name": "John R. Rickford",
+  "bio": "Russell John Rickford (born c. 1975) is an American scholar and activist who is an associate professor in the History Department at Cornell University. He has written the only in-depth biography on Betty Shabazz, the wife of Malcolm X. Rickford's research focuses on the black radical tradition and on black liberal culture after World War II. He lectures on American social and political history, among other subjects.",
+  "bio_source_url": "https://en.wikipedia.org/?curid=33761146",
+  "bio_source_type": "wikipedia",
+  "photo_url": null
  }
 ]

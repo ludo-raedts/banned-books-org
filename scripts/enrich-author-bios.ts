@@ -83,7 +83,7 @@ interface WikiFullExtract {
 // obscure author it returned the most-famous namesake (a footballer, singer,
 // the Where's-Wally author …). The caller now walks these candidates and picks
 // the first that is actually about this author (see the selection loop).
-async function searchWikipedia(name: string): Promise<number[]> {
+export async function searchWikipedia(name: string): Promise<number[]> {
   const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&format=json&srlimit=6`
   try {
     const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
@@ -93,7 +93,7 @@ async function searchWikipedia(name: string): Promise<number[]> {
   } catch { return [] }
 }
 
-async function fetchPageDetails(pageId: number): Promise<{
+export async function fetchPageDetails(pageId: number): Promise<{
   title: string
   extract: string | null
   photo: string | null
@@ -116,7 +116,7 @@ async function fetchPageDetails(pageId: number): Promise<{
 }
 
 // Page id behind a stored Wikipedia bio_source_url (…/wiki/<Title>), or null.
-async function pageIdForUrl(url: string | null | undefined): Promise<number | null> {
+export async function pageIdForUrl(url: string | null | undefined): Promise<number | null> {
   const m = url?.match(/^https?:\/\/en\.wikipedia\.org\/wiki\/([^?#]+)/)
   if (!m) return null
   try {
@@ -135,14 +135,17 @@ async function pageIdForUrl(url: string | null | undefined): Promise<number | nu
 // The surname must also be the title's LAST token ("Henry Charles Lea" is not
 // Charles P. Henry, "King Richard" is not C. Richard King); CJK authors may
 // have it FIRST, because Wikipedia titles use native name order there.
-function titleNamesAuthor(title: string, displayName: string, cjk = false): boolean {
+export function titleNamesAuthor(title: string, displayName: string, cjk = false): boolean {
   const toks = (x: string) => bioNorm(x.replace(/\s*\(.*\)\s*$/, '')).split(' ').filter(w => w.length >= 2)
   const name = toks(displayName)
   const tt = toks(title)
   const t = new Set(tt)
   const surname = name[name.length - 1]
   const surnameOk = tt[tt.length - 1] === surname || (cjk && tt[0] === surname)
-  return name.length >= 2 && name.every(w => t.has(w)) && surnameOk
+  // …and the first name must LEAD ("Ruth Comfort Mitchell Young" is not Mitchell Young).
+  if (name.length < 2) return false
+  const firstOk = cjk || tt[0] === name[0] || (name[0].length >= 3 && !!tt[0]?.startsWith(name[0]))
+  return name.length >= 2 && name.every(w => t.has(w)) && surnameOk && firstOk
 }
 
 // Does the bio intro's SUBJECT (text before "is/was/(born") name this author?
@@ -150,7 +153,7 @@ function titleNamesAuthor(title: string, displayName: string, cjk = false): bool
 // chars present, surname last (or first for CJK), and middle initials must not
 // conflict with the subject's middle names ("Miguel E. Gallardo" is not "Miguel
 // Ángel Gallardo Paredes", "Kim M. Williams" is not "Kimberley Lynton Williams").
-function subjectNamesAuthor(extractHtml: string, displayName: string, cjk = false): boolean {
+export function subjectNamesAuthor(extractHtml: string, displayName: string, cjk = false): boolean {
   const intro = stripHtml(extractHtml).slice(0, 240)
   // Pen names / legal names: "John Griffith London … better known as Jack London",
   // "Cassandra Clare, born Judith Rumelt": the full author name appears as a phrase.
@@ -167,8 +170,11 @@ function subjectNamesAuthor(extractHtml: string, displayName: string, cjk = fals
   // A first name may be the short form of the subject's first name (Tim →
   // Timothy, Ron → Ronnell); the middle-initial check below still rejects
   // "Kim M. Williams" vs "Kimberley Lynton Williams".
-  const has = (t: string, i: number) => subj.includes(t) || (i === 0 && t.length >= 3 && !!subj[0]?.startsWith(t))
-  if (main.length < 2 || !main.every((t, i) => has(t, i))) return false
+  // The author's first name (or initial: "J Michael Bailey" → "John Michael
+  // Bailey") must lead the subject; the other name tokens may sit anywhere.
+  const lead = all[0]
+  if (!cjk && !(subj[0] === lead || (!!subj[0] && (lead.length === 1 || lead.length >= 3) && subj[0].startsWith(lead)))) return false
+  if (main.length < 2 || !main.every(t => subj.includes(t) || (t === lead && !!subj[0]?.startsWith(t)))) return false
   const surname = main[main.length - 1]
   if (!(subj[subj.length - 1] === surname || (cjk && subj[0] === surname))) return false
   const initials = all.slice(1, -1).filter(w => w.length === 1)
@@ -178,7 +184,7 @@ function subjectNamesAuthor(extractHtml: string, displayName: string, cjk = fals
 }
 
 const CJK_RE = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/
-const isCjkAuthor = (a: { original_language: string | null; name_native: string | null }) =>
+export const isCjkAuthor = (a: { original_language: string | null; name_native: string | null }) =>
   ['zh', 'ja', 'ko'].includes(a.original_language ?? '') || CJK_RE.test(a.name_native ?? '')
 
 async function fetchFullExtract(pageId: number): Promise<string | null> {
@@ -312,7 +318,7 @@ function extractNationalityFromCategories(categories: string[]): string | null {
   return null
 }
 
-function hasWriterCategory(categories: string[]): boolean {
+export function hasWriterCategory(categories: string[]): boolean {
   return categories.some(c => {
     const lower = c.toLowerCase()
     return WRITER_CATEGORY_TERMS.some(t => lower.includes(t))
@@ -363,14 +369,14 @@ function looksLikeAuthorBio(extractHtml: string, displayName: string, categories
 // follow a stable pattern: "X may refer to:" (sometimes "X or Y may refer
 // to:") near the top. Stripping HTML first, then checking the first
 // ~120 chars is enough.
-function isDisambigExtract(html: string): boolean {
+export function isDisambigExtract(html: string): boolean {
   const text = stripHtml(html).toLowerCase()
   const head = text.slice(0, 120)
   if (head.startsWith('may refer to')) return true
   return /^[^.!?\n]{0,100}\bmay refer to\b/.test(head)
 }
 
-function hasDisambigCategory(categories: string[]): boolean {
+export function hasDisambigCategory(categories: string[]): boolean {
   return categories.some(c => /\bdisambiguation\b/i.test(c))
 }
 
@@ -767,4 +773,5 @@ async function main() {
   if (!APPLY) console.log(`\nDry-run complete. Re-run with --apply to write to DB.\n`)
 }
 
-main().catch(e => { console.error(e); process.exit(1) })
+// Only run when executed directly; verify-author-photos.ts imports the helpers above.
+if (require.main === module) main().catch(e => { console.error(e); process.exit(1) })
