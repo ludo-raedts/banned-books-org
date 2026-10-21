@@ -78,6 +78,11 @@ verdict; never blanket-resolve.
   **only when no deploy is running** (memory: enrich↔deploy collision), or
   hand the user the ready-made command if the run would outlive the session.
   Its end-of-run hook busts the detail-page caches automatically.
+- Big import (hundreds+ of new bans)? Also bust the relation caches once —
+  `POST /api/admin/revalidate { "tag": "book-relations" }` and
+  `{ "tag": "author-relations" }` — otherwise the "related books/authors"
+  blocks on untouched pages stay up to 7 days old (scripts/README.md §1 step 6;
+  route-wide, so never on a cron).
 - Document the new script (if any) in `scripts/README.md` §1 and register the
   source in `src/lib/imports/source-registry.ts` when it will recur.
 - Commit + push with exact counts in the message; then `/ship` conventions

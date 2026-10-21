@@ -29,11 +29,26 @@
 import { unstable_cache } from 'next/cache'
 import { adminClient } from './supabase'
 
-// Relations change only when bans change, which happens on an import/enrichment
-// cadence — not continuously. Six hours matches the sitemap TTL convention.
-const RELATION_TTL = 21600
-// News lands via the daily fetch-news cron; an hour matches /news itself.
-const NEWS_TTL = 3600
+// Both TTLs equal books/[slug]'s `revalidate` (7 days) ON PURPOSE. Next.js
+// lowers a route's effective ISR window to the shortest unstable_cache/fetch
+// revalidate used during its render (node_modules/next/dist/server/web/
+// spec-extension/unstable-cache.js, the `workUnitStore.revalidate` clamp), so
+// the previous 21600 / 3600 here made every book page regenerate hourly —
+// ~20k background regenerations a day at ~7 Supabase calls each, the single
+// largest Vercel cost line (ISR writes + Observability events).
+//
+// Freshness is event-driven, not time-based:
+//  - relations change on imports/enrichment; enrich-all's end-of-run bust
+//    (scripts/lib/revalidate.ts) and a big-import tag bust (scripts/README.md
+//    §1) cover that;
+//  - news: fetch-news + the admin publish action revalidatePath() exactly the
+//    book pages whose titles the new items mention (src/lib/news-book-match.ts).
+//    A page regeneration then refreshes the shared entry below through its
+//    soft (path) tags. Do NOT revalidateTag(NEWS_ITEMS_TAG) on the daily cron:
+//    every book page carries that tag, so it is a route-wide (soft) bust and
+//    brings the ~20k/day regenerations straight back.
+const RELATION_TTL = 604800
+const NEWS_TTL = 604800
 
 // Tags so a batch script can bust these deliberately via
 // POST /api/admin/revalidate { tag: … } without waiting out the TTL.

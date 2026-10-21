@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { requireAdmin } from '@/lib/admin-auth'
 import { buildIntlCorpus } from '@/lib/reading-club-data'
@@ -26,6 +27,52 @@ const TRACK_TO_PAGE_KEY: Record<string, string> = {
   'international':        'reading-club-international',
   'classics':             'reading-club-classics',
   'young-readers':        'reading-club-young-readers',
+}
+
+// ── Cache busts ──────────────────────────────────────────────────────────────
+//
+// Book pages show a "Reading club" link from ONE shared Data Cache entry
+// (loadReadingClubMemberships, tag 'reading-club', 7-day TTL equal to the
+// page's ISR window). revalidateTag('reading-club') would mark every book
+// page stale — a route-wide bust. Instead we revalidatePath() exactly the
+// book pages in the track's current scope (which, called BEFORE a save's
+// delete step, also covers the books being removed) plus the track's public
+// pages. A page regeneration refreshes the shared entry through its soft
+// (path) tags, so the link is right for those books on their next visit.
+
+type Scope = { table: string; themeSlug: string | null; year: number | null }
+
+async function bustTrackPages(
+  supabase: ReturnType<typeof adminClient>,
+  track: Track,
+  scope: Scope,
+): Promise<void> {
+  let q = supabase.from(scope.table).select('book_id')
+  if (scope.themeSlug) q = q.eq('theme_slug', scope.themeSlug)
+  if (scope.year != null) q = q.eq('year', scope.year)
+  const { data } = await q
+  const ids = ((data ?? []) as { book_id: number | null }[])
+    .map(r => r.book_id)
+    .filter((id): id is number => id != null)
+  if (ids.length > 0) {
+    const { data: books } = await supabase.from('books').select('slug').in('id', ids)
+    for (const b of (books ?? []) as { slug: string | null }[]) {
+      if (b.slug) revalidatePath(`/books/${b.slug}`)
+    }
+  }
+
+  revalidatePath('/reading-club')
+  if (track.startsWith('theme:')) {
+    revalidatePath('/reading-club/by-theme')
+    revalidatePath(`/reading-club/by-theme/${track.slice('theme:'.length)}`)
+    revalidatePath('/reading-club/by-theme/[slug]/[bookSlug]', 'page')
+  } else if (track === 'currently-challenged') {
+    revalidatePath('/reading-club/currently-challenged')
+    revalidatePath('/reading-club/currently-challenged/[year]/[position]', 'page')
+  } else {
+    revalidatePath(`/reading-club/${track}`)
+    revalidatePath(`/reading-club/${track}/[slug]`, 'page')
+  }
 }
 
 // action:'suggest_international' builds the full suggester corpus (whole
@@ -110,6 +157,7 @@ export async function POST(req: NextRequest) {
     if (!Number.isInteger(year) || !Array.isArray(entries)) {
       return NextResponse.json({ error: 'Bad input' }, { status: 400 })
     }
+    await bustTrackPages(supabase, 'currently-challenged', { table: 'reading_club_currently_challenged', themeSlug: null, year })
     const { error: delErr } = await supabase
       .from('reading_club_currently_challenged')
       .delete()
@@ -153,6 +201,10 @@ export async function POST(req: NextRequest) {
 
     const { table, themeSlug } = resolveTrackTable(track)
     if (!table) return NextResponse.json({ error: 'Unknown track' }, { status: 400 })
+
+    // Bust the pages of the books currently in scope BEFORE the delete below,
+    // so books dropped from the list lose their link too.
+    await bustTrackPages(supabase, track, { table, themeSlug, year: null })
 
     // Replace the entire set in scope. Two-step: (1) delete rows whose
     // book_id is NOT in the new picks list (handles "removed from list"),
@@ -234,6 +286,12 @@ export async function POST(req: NextRequest) {
     }
     const { error } = await q
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    await bustTrackPages(supabase, track, {
+      table,
+      themeSlug,
+      year: track === 'currently-challenged' ? Number(body.year) : null,
+    })
 
     await supabase.from('editorial_publish_log').insert({
       content_type: track.startsWith('theme:') ? 'rc_theme'

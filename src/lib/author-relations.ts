@@ -15,8 +15,13 @@
 import { unstable_cache } from 'next/cache'
 import { adminClient } from './supabase'
 
-// Ban counts move on an import cadence; six hours matches book-relations.
-const RELATION_TTL = 21600
+// Equal to authors/[slug]'s `revalidate` (7 days) on purpose: Next.js clamps a
+// route's ISR window to the shortest unstable_cache revalidate hit during the
+// render, so the old 21600 here made every author page a 6-hour ISR page (see
+// src/lib/book-relations.ts for the full note). Ban counts move on an import
+// cadence; enrich-all's end-of-run bust and the big-import tag bust
+// (scripts/README.md §1) keep this fresh.
+const RELATION_TTL = 604800
 
 export const AUTHOR_RELATIONS_TAG = 'author-relations'
 

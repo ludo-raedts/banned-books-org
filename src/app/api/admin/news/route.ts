@@ -1,6 +1,22 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { adminClient } from '@/lib/supabase'
 import { requireAdmin } from '@/lib/admin-auth'
+import { revalidateTag } from 'next/cache'
+import { bustBookPagesForNews } from '@/lib/news-book-match'
+
+// A publish/reject changes /news (tag 'news-page') and the "in the news"
+// block of every book this item mentions. Bust those book pages by path —
+// never the route-wide 'news-items' tag (src/lib/news-book-match.ts).
+async function bustForItem(supabase: ReturnType<typeof adminClient>, id: number): Promise<void> {
+  revalidateTag('news-page', 'max')
+  const { data } = await supabase
+    .from('news_items')
+    .select('title, summary')
+    .eq('id', id)
+    .maybeSingle()
+  const item = data as { title: string; summary: string | null } | null
+  if (item) await bustBookPagesForNews([item]).catch(() => { /* best effort: pages refresh within the 7-day ISR window anyway */ })
+}
 
 function currentMonday(): string {
   const d = new Date()
@@ -44,12 +60,14 @@ export async function PATCH(req: NextRequest) {
       ...textPatch,
     }).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    await bustForItem(supabase, id)
     return NextResponse.json({ ok: true })
   }
 
   if (action === 'reject') {
     const { error } = await supabase.from('news_items').update({ status: 'rejected' }).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    await bustForItem(supabase, id)
     return NextResponse.json({ ok: true })
   }
 
@@ -64,6 +82,7 @@ export async function PATCH(req: NextRequest) {
       published_week: null,
     }).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    await bustForItem(supabase, id)
     return NextResponse.json({ ok: true })
   }
 

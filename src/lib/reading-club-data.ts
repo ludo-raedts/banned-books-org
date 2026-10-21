@@ -720,7 +720,16 @@ const loadReadingClubMemberships = unstable_cache(
     return out
   },
   ['reading-club-memberships'],
-  { revalidate: 3600, tags: ['reading-club'] },
+  // 7 days, deliberately equal to books/[slug]'s own `revalidate`. Next.js
+  // lowers a route's effective ISR window to the SHORTEST revalidate of any
+  // unstable_cache/fetch it touches during render (unstable-cache.js: "if
+  // (workUnitStore.revalidate < options.revalidate) … else workUnitStore
+  // .revalidate = options.revalidate"), so the old 3600 here silently turned
+  // every book page into a 1-hour ISR page. Freshness is event-driven instead:
+  // the admin reading-club publish/save actions revalidatePath() the affected
+  // book pages, and a page regeneration refreshes this entry via its soft
+  // (path) tags. The tag stays for a manual bust via POST /api/admin/revalidate.
+  { revalidate: 604800, tags: ['reading-club'] },
 )
 
 export async function getReadingClubLinkForBook(

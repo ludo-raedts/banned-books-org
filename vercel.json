@@ -1,4 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}\" HEAD -- . ':!data' ':!docs' ':!supabase' ':!private' ':!.claude' ':!*.md' ':!scripts' && git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}\" HEAD -- scripts/build-dataset.ts scripts/lib/dataset-io.ts",
   "crons": [
     {
       "path": "/api/cron/fetch-news",

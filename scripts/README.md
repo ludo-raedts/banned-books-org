@@ -133,6 +133,24 @@ CSV-bronnen die geen Engelse titel meeleveren.
 
 **Stap 5 — Commit + push** met de exacte counts in de message.
 
+**Stap 6 — Cache na een grote import.** `books/[slug]` en `authors/[slug]` draaien
+op een 7-daags ISR-venster en lezen hun "related books" / "related authors" uit
+Data-Cache-entries met dezelfde 7 dagen (tags `book-relations`, `author-relations`;
+zie `src/lib/book-relations.ts` voor waarom die TTL's gelijk moeten zijn aan de
+route-revalidate). De enrich-all end-of-run-bust (`scripts/lib/revalidate.ts`)
+ververst alleen de **gewijzigde** pagina's; de relatie-blokken van *andere*
+pagina's blijven tot 7 dagen oud. Heeft een import veel bans toegevoegd (honderden+),
+bust dan één keer de tags via het bestaande endpoint:
+
+```
+POST https://www.banned-books.org/api/admin/revalidate   (admin_session-cookie)
+{ "tag": "book-relations" }        en daarna        { "tag": "author-relations" }
+```
+
+Let op: een tag-bust is **route-breed** (elke boek-/auteurspagina draagt die tag en
+regenereert bij het eerstvolgende bezoek, ~5 ISR-write-units per pagina). Doe dit
+dus na een grote import, niet na elke point-fix — en nooit vanuit een cron.
+
 ### Gedeelde commit-lib — `src/lib/imports/`
 - **`commitParsedRow` / `commitNewBanForBook`** (`review-commit.ts`) — de herbruikbare,
   transactionele INSERT-plek die directe scripts horen aan te roepen (stap 1).

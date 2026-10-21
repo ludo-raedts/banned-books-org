@@ -82,11 +82,16 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 const SUMMARY_MODEL = 'gpt-4.1-mini'
 const EMBED_MODEL = 'text-embedding-3-small'
 
+export type SavedNewsItem = { title: string; summary: string | null; status: 'published' | 'draft' }
+
 export type FetchNewsResult = {
   saved: number
   skipped: number
   duplicates: number
   errors: string[]
+  // What this run inserted, so the caller can bust exactly the book pages
+  // whose "in the news" block changed (src/lib/news-book-match.ts).
+  savedItems: SavedNewsItem[]
 }
 
 const SUMMARY_SYSTEM = `You write short, neutral news briefs about book bans, censorship, and literary freedom for banned-books.org.
@@ -226,6 +231,7 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
 
   const cutoff = Date.now() - SEVEN_DAYS_MS
   let saved = 0
+  const savedItems: SavedNewsItem[] = []
   let skipped = 0
   let duplicates = 0
   const errors: string[] = []
@@ -288,7 +294,7 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
       if (!brief) { skipped++; continue }
       if (!apply) continue
 
-      const status = config.autoPublish ? 'published' : 'draft'
+      const status: SavedNewsItem['status'] = config.autoPublish ? 'published' : 'draft'
       const insertRow: Record<string, unknown> = {
         title,
         headline: brief.headline,
@@ -314,9 +320,10 @@ export async function runFetchNews(apply = true): Promise<FetchNewsResult> {
         saved++
         existingUrls.add(url)
         justSavedEmbeddings.push(embedding)
+        savedItems.push({ title, summary: brief.summary, status })
       }
     }
   }
 
-  return { saved, skipped, duplicates, errors }
+  return { saved, skipped, duplicates, errors, savedItems }
 }
