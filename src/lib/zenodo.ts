@@ -45,6 +45,13 @@ export type ZenodoVersion = {
 
 export const ZENODO_VERSIONS: ZenodoVersion[] = [
   {
+    version: '2026-10-22',
+    date: '2026-10-22',
+    doi: '10.5281/zenodo.23553493',
+    summary:
+      'Continued growth: ~20,900 books, ~37,800 ban events, ~40,000 source citations (+~682 books, +~1,900 bans, +~3,785 citations vs. the previous release). Largest gains in source citations and reason tagging on existing bans. Descriptor coverage figures refreshed.',
+  },
+  {
     version: '2026-07-07',
     date: '2026-07-07',
     doi: '10.5281/zenodo.21235503',
