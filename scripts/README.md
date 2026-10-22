@@ -398,6 +398,7 @@ Gerichte data-correcties (**schrijven**). Veel zijn one-off (leidende `_` of `_f
 
 | Script | Doet | Type |
 |---|---|---|
+| `fix-pen-suffix-collapse.ts` | Splitst PEN-titels met een initialen-suffix (`Tilt (EH)` vs `Tilt (AC)`) terug naar hun echte auteurs: PEN-CSV's (`data/pen-*.csv`) bepalen per staat+district welk boek bij welke ban hoort; MOVE/CLONE/FOLD van bans + ontbrekende auteur-boeken aanmaken (OL-jaar), backup in `data/`. Config-gedreven (`--title=`), idempotent, dry-run default; draai na een nieuwe PEN-batch met collapsed titels | herbruikbaar |
 | `cleanup-bans-action-type.ts` | Normaliseert niet-canonieke `bans.action_type` | generiek |
 | `cleanup-non-person-authors.ts` | Ruimt non-persoon authors op (uit `audit-non-person-authors.ts`) | gericht |
 | `apply-publication-year-fixes.ts` | Past high-conf jaar-correcties toe (uit `audit-publication-years.ts`) | apply |
@@ -432,7 +433,14 @@ rijen + backup-JSON in `data/`,
 2026-08-07: 2 retitles + slug-alias ("On the" #13397 → PEN-Belarus-brontitel,
 "The Event" #18491 → "Black Hammer, Vol. 2: The Event"), 4 namesake/wiki-schoonmaken
 (#17734 Will, #6166 Health, #2563/#3917 ban-jaar-als-pubjaar), 4 KDN-periodieken
-verwijderd (Times/Time/Novel/Stories) + backup-JSON in `data/`) → `scripts/archive/`.
+verwijderd (Times/Time/Novel/Stories) + backup-JSON in `data/`,
+`_botd_week_2026_08_24` t/m `_botd_week_2026_09_28` — de wekelijkse hand-geschreven
+BOTD-pre-flight-fixes (herhaalbaar via de `/botd-week` skill + `audit-botd-week.ts`; sjabloon
+voor een nieuwe weekfix = het meest recente archief-bestand), `_fix_azadi_merge_2026_09_21`,
+`_fix_book_3272_deaver_2026_09_01`, `_fix_forman_seed_rows_2026_09_01`,
+`_fix_hinds_graphic_novel_genres` — gerichte point-fixes, uitgevoerd,
+`fix-perfect-pen-collapse` — eenmalige split van "Perfect" #520 (Shepard/Hopkins/Ahern),
+gegeneraliseerd naar `fix-pen-suffix-collapse.ts` hieronder) → `scripts/archive/`.
 
 ---
 
@@ -500,6 +508,7 @@ Google Search Console + SEO. OAuth in `~/.gcp/`; data loopt 2–3 dagen achter (
 |---|---|
 | `gsc-query.ts` | Snapshot-query |
 | `gsc-diagnose.ts` | Dagelijkse traffic-breakdown (sitewide + gefilterd) |
+| `gsc-index-check.ts` | URL Inspection-sampler: gestratificeerde steekproef per sitesectie (boeken top/tail, auteurs, landen, redenen, hubs, jaren, …) → hoe ziet Google elke URL (indexed / crawled-not-indexed / canonical overridden)? Read-only; checkpoint `data/gsc/index-check.jsonl` + rapport `data/gsc/index-check-report.md`; `--dry`, `--limit=`, `--per=`, `--report` |
 | `gsc-striking-distance.ts` | "Striking distance" queries (net niet pagina 1) |
 | `bing-diagnose.ts` | Bing Webmaster Tools traffic-breakdown (Bing/Yahoo/DDG/Ecosia, ~5-10% non-Google) |
 
