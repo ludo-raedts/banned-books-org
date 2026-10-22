@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin-auth'
 import { adminClient } from '@/lib/supabase'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
+import { resolveAdminPhotoUrl } from '@/lib/enrich/mirror-image'
 import { readReview, writeReview, type ReviewItem } from '@/lib/photo-review'
 
 export const dynamic = 'force-dynamic'
@@ -105,8 +106,8 @@ export async function POST(req: NextRequest) {
   if (!authorId || !['ok', 'wrong', 'replace'].includes(action ?? '')) {
     return NextResponse.json({ error: 'author_id and action (ok|wrong|replace) required' }, { status: 400 })
   }
-  if (action === 'replace' && !isAllowedImageUrl(body?.photo_url)) {
-    return NextResponse.json({ error: 'photo_url must be on a host in the image allowlist' }, { status: 400 })
+  if (action === 'replace' && typeof body?.photo_url !== 'string') {
+    return NextResponse.json({ error: 'photo_url required for replace' }, { status: 400 })
   }
 
   const file = await readReview()
@@ -116,7 +117,13 @@ export async function POST(req: NextRequest) {
   const sb = adminClient()
   const now = new Date().toISOString()
   if (action === 'wrong' || action === 'replace') {
-    const photo = action === 'replace' ? body!.photo_url! : null
+    let photo: string | null = null
+    if (action === 'replace') {
+      // Pasted URLs from sites outside the allowlist are mirrored into our storage.
+      const r = await resolveAdminPhotoUrl(sb, body!.photo_url!, item.slug, u => isAllowedImageUrl(u))
+      if (!r.ok) return NextResponse.json({ error: r.reason }, { status: 400 })
+      photo = r.url
+    }
     const { error } = await sb.from('authors')
       .update({ photo_url: photo, photo_v2_checked_at: now })
       .eq('id', authorId)

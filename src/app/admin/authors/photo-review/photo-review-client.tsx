@@ -94,14 +94,34 @@ function SourcesBlock({ item }: { item: Item }) {
   )
 }
 
-function ReviewCard({ item, onDecide }: {
+function ReviewCard({ item, onDecide, onUploaded }: {
   item: Item
   onDecide: (item: Item, action: 'ok' | 'wrong' | 'replace', photoUrl?: string) => void
+  onUploaded: (item: Item) => void
 }) {
   const [broken, setBroken] = useState(false)
   const [cands, setCands] = useState<Candidate[] | null>(null)
   const [loadingCands, setLoadingCands] = useState(false)
   const [brokenCands, setBrokenCands] = useState<Set<string>>(new Set())
+  const [pasted, setPasted] = useState('')
+  const [uploading, setUploading] = useState(false)
+  // For sites a server cannot fetch (Cloudflare challenge, e.g. philpeople.org):
+  // save the image in your browser and upload the file.
+  const upload = async (file: File | undefined) => {
+    if (!file) return
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      await adminFetch(`/api/admin/authors/${item.slug}/photo-upload`, { method: 'POST', body: fd })
+      toast(`${item.name}: photo uploaded`, 'success')
+      onUploaded(item)
+    } catch (e) {
+      toast(`Upload failed: ${(e as Error).message}`, 'error')
+    } finally {
+      setUploading(false)
+    }
+  }
   const { toast } = useAdminUi()
 
   const findOther = async () => {
@@ -162,6 +182,22 @@ function ReviewCard({ item, onDecide }: {
           </button>
           <Link href={`/admin/authors/${item.slug}`} className="text-gray-400 hover:text-gray-700">Edit author</Link>
         </div>
+        <form className="flex gap-1" onSubmit={e => {
+          e.preventDefault()
+          const u = pasted.trim()
+          if (/^https:\/\//i.test(u)) onDecide(item, 'replace', u)
+          else toast('Paste an https:// image URL', 'error')
+        }}>
+          <input value={pasted} onChange={e => setPasted(e.target.value)} placeholder="…or paste an image URL (any site)"
+            className="min-w-0 flex-1 text-xs border border-gray-300 rounded px-1.5 py-1" />
+          <button type="submit" disabled={!pasted.trim()}
+            className="text-xs rounded border border-blue-300 bg-blue-50 text-blue-800 px-2 disabled:opacity-40">Use</button>
+        </form>
+        <label className="text-xs text-gray-600 cursor-pointer hover:text-gray-900">
+          {uploading ? 'Uploading…' : <>…or <span className="underline">upload an image file</span> (for sites that block copying)</>}
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" disabled={uploading}
+            onChange={e => upload(e.target.files?.[0])} />
+        </label>
         {cands && (
           shown.length === 0 ? (
             <p className="text-xs text-gray-500">No alternatives found (Wikidata, Wikipedia, Open Library).</p>
@@ -220,6 +256,11 @@ export default function PhotoReviewClient() {
         }))
   }, [toast])
 
+  const removeUploaded = useCallback((item: Item) => {
+    setItems(list => list?.filter(i => i.author_id !== item.author_id) ?? list)
+    setCounts(c => c && { ...c, pending: c.pending - 1, replaced: c.replaced + 1 })
+  }, [])
+
   const byVerdict = useMemo(() => {
     const m = new Map<string, number>()
     for (const i of items ?? []) m.set(i.verdict, (m.get(i.verdict) ?? 0) + 1)
@@ -243,7 +284,8 @@ export default function PhotoReviewClient() {
       <p className="text-sm text-gray-600 mb-4 max-w-3xl">
         <strong>Good</strong> keeps the photo and future audits skip it. <strong>Wrong</strong> removes it, and
         enrichment will not put it back. <strong>Find other photo</strong> shows candidates from Wikidata, Wikipedia
-        and Open Library, each labelled so you can rule out namesakes; click a photo to use it, or its source link to
+        and Open Library, each labelled so you can rule out namesakes; or paste an image URL from any site (photos
+        from sites outside our image allowlist are copied into our own storage). Click a photo to use it, or its source link to
         check it first. Under every card, <strong>Photo from</strong> opens the page the image comes from, and{' '}
         <strong>Compare</strong> searches the name together with one of their books.
       </p>
@@ -269,7 +311,7 @@ export default function PhotoReviewClient() {
             <p className="text-sm text-gray-500">Nothing left to review here.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {visible.slice(0, 60).map(i => <ReviewCard key={i.author_id} item={i} onDecide={decide} />)}
+              {visible.slice(0, 60).map(i => <ReviewCard key={i.author_id} item={i} onDecide={decide} onUploaded={removeUploaded} />)}
             </div>
           )}
           {visible.length > 60 && (

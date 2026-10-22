@@ -3,6 +3,7 @@ import { requireAdmin } from '@/lib/admin-auth'
 import { adminClient } from '@/lib/supabase'
 import { notifyIndexNow } from '@/lib/indexnow'
 import { isAllowedImageUrl } from '@/lib/allowed-image-hosts'
+import { resolveAdminPhotoUrl } from '@/lib/enrich/mirror-image'
 
 const ALLOWED_FIELDS = new Set([
   'display_name', 'bio', 'birth_year', 'death_year', 'birth_country', 'photo_url',
@@ -53,11 +54,14 @@ export async function PATCH(
     const p = updates.photo_url
     if (p === '' || p === null) {
       updates.photo_url = null
-    } else if (!isAllowedImageUrl(typeof p === 'string' ? p : undefined)) {
-      return NextResponse.json(
-        { error: 'photo_url must be an https URL on a host in the image allowlist (src/lib/allowed-image-hosts.ts).' },
-        { status: 400 },
-      )
+    } else if (typeof p !== 'string') {
+      return NextResponse.json({ error: 'photo_url must be a string' }, { status: 400 })
+    } else {
+      // Allowlisted hosts pass as is; any other https image is mirrored into
+      // our own storage (next/image only renders allowlisted hosts).
+      const r = await resolveAdminPhotoUrl(adminClient(), p, slug, u => isAllowedImageUrl(u))
+      if (!r.ok) return NextResponse.json({ error: r.reason }, { status: 400 })
+      updates.photo_url = r.url
     }
   }
 

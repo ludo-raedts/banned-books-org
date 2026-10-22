@@ -93,7 +93,7 @@ function originOf(url: string): string | null {
   try { return new URL(url).origin } catch { return null }
 }
 
-function magicBytesMatch(buf: Buffer, ext: string): boolean {
+export function magicBytesMatch(buf: Buffer, ext: string): boolean {
   if (buf.length < 12) return false
   // JPEG: starts with FF D8 FF
   if (ext === 'jpg') return buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF
@@ -107,4 +107,22 @@ function magicBytesMatch(buf: Buffer, ext: string): boolean {
     return head === 'GIF87a' || head === 'GIF89a'
   }
   return false
+}
+
+// Admin entry point for a photo URL typed or pasted by a human: an allowlisted
+// URL is returned as is; any other https image (a university profile, a
+// publisher site, philpeople.org …) is mirrored into `author-photos` under a
+// UNIQUE key, because mirrors are served with a one-year cache and a re-used
+// `<slug>.jpg` would keep showing the old photo after a replacement.
+export async function resolveAdminPhotoUrl(
+  supabase: SupabaseClient,
+  url: string,
+  slug: string,
+  isAllowed: (u: string) => boolean,
+): Promise<{ ok: true; url: string; mirrored: boolean } | { ok: false; reason: string }> {
+  if (isAllowed(url)) return { ok: true, url, mirrored: false }
+  if (!/^https:\/\//i.test(url)) return { ok: false, reason: 'photo URL must start with https://' }
+  const key = `${slug}-${Date.now().toString(36)}`
+  const m = await mirrorImageToStorage(supabase, url, key)
+  return m.ok ? { ok: true, url: m.publicUrl, mirrored: true } : { ok: false, reason: `could not mirror image: ${m.reason}` }
 }
