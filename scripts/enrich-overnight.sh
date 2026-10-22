@@ -44,7 +44,10 @@ ts() { date '+%d-%m %H:%M'; }
 gb_ok() {
   local key n
   for key in GOOGLE_BOOKS_API_KEY GOOGLE_BOOKS_API_KEY2; do
-    n=$(curl -s -m 20 "https://www.googleapis.com/books/v1/volumes?q=intitle:hatchet+inauthor:paulsen&maxResults=1&key=$(grep "^$key=" .env.local | cut -d= -f2-)" \
+    # Free-text probe, same as the client's: field-restricted queries
+    # (intitle:/inauthor:/isbn:) have been broken since ~2026-09-30 (Google
+    # issue 569300353) and would keep this gate shut while GB itself works.
+    n=$(curl -s -m 20 "https://www.googleapis.com/books/v1/volumes?q=brave+new+world+huxley&maxResults=1&key=$(grep "^$key=" .env.local | cut -d= -f2-)" \
       | python3 -I -c "import json,sys
 try: print(json.load(sys.stdin).get('totalItems') or 0)
 except Exception: print(0)")

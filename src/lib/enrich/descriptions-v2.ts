@@ -43,7 +43,7 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../supabase'
-import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError, gbQuotaTripped } from './google-books'
+import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError, GbUnavailableError, gbQuotaTripped } from './google-books'
 
 type SourceType =
   | 'wikipedia'
@@ -407,13 +407,25 @@ async function olByIsbn(isbn: string): Promise<SourceExtract | null> {
 // Google Books
 // ──────────────────────────────────────────────────────────────────────
 
+let gbUnavailableSeen = false
+
 async function googleBooks(title: string, author: string): Promise<SourceExtract | null> {
   // If the GB daily quota is already known-dead, GB is just one optional source
   // of several — skip it and let Wikipedia/OL carry the row, rather than throwing
   // and aborting the whole run. (A fresh 429 mid-run still throws inside gbVolumes,
   // preserving the existing clean-stop-and-resume behaviour.)
   if (gbQuotaTripped()) return null
-  const volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION, delayMs: 0 })
+  let volumes: Awaited<ReturnType<typeof gbVolumesByTitleAuthor>>
+  try {
+    volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION, delayMs: 0 })
+  } catch (e) {
+    // One GB query path quarantined while GB itself works (Google issue
+    // 569300353). Not latched in the client, so a requeue would loop: treat
+    // as "GB not asked" for this row and keep the no-source flag off below.
+    if (!(e instanceof GbUnavailableError)) throw e
+    gbUnavailableSeen = true
+    return null
+  }
   for (const item of volumes) {
     const desc = item.volumeInfo.description
     if (!desc || desc.length < MIN_DESC_CHARS) continue
@@ -776,7 +788,7 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
       } else if (opts.apply && r.data_quality_status === 'flagged' && !r.description_book && !opts.regroundUngrounded
         // With Google Books down/exhausted, "no source" may just mean "GB not
         // asked": don't flag, or later default runs would skip the row forever.
-        && !(gbQuotaTripped() && !opts.skipGoogleBooks)) {
+        && !((gbQuotaTripped() || gbUnavailableSeen) && !opts.skipGoogleBooks)) {
         // Make sure the status reflects "still no source" even on retry.
         // SKIP in reground mode: these rows already carry usable (if untracked)
         // text — a failed re-ground must leave them exactly as they were, never

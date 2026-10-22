@@ -40,6 +40,10 @@
  *   • --budget=N (default 900) caps GB calls per run, leaving headroom under 1k.
  *   • A 429 mid-run throws GbQuotaError → we stop cleanly (the shared client
  *     latches, so nothing is mis-stamped).
+ *   • GbUnavailableError (one query path quarantined while GB itself works —
+ *     Google issue 569300353, isbn: lookups) → the book is counted as
+ *     skipped-unavailable, NOT as "No GB data", and the cursor is frozen
+ *     before it so the next run re-checks it once that path works again.
  *   • A cursor (data/gb-harvest-cursor.json) records the last book id processed;
  *     the next run resumes after it. When it reaches the end it wraps to 0 and
  *     logs "full pass complete" so a second pass can pick up books that gained
@@ -61,6 +65,7 @@ import {
   gbIsbn13,
   GB_FIELDS_FULL,
   GbQuotaError,
+  GbUnavailableError,
   type GbVolume,
 } from '../src/lib/enrich/google-books'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
@@ -185,8 +190,14 @@ async function main() {
     isbnDup = 0,
     langsFilled = 0,
     yearProposals = 0,
-    noData = 0
+    noData = 0,
+    skippedUnavailable = 0
   let lastProcessedId = cursor.lastId
+  // Once a book's only query path threw GbUnavailableError the cursor must not
+  // move past it: later books still get processed this run, but the next run
+  // resumes from before the first unavailable one.
+  let cursorFrozen = false
+  const advance = (id: number) => { if (!cursorFrozen) lastProcessedId = id }
   let stoppedReason = 'budget/end'
 
   for (const book of books) {
@@ -210,10 +221,16 @@ async function main() {
       } else {
         // Structurally unsearchable by title and has no ISBN → skip without
         // spending a GB call. Still advance the cursor past it.
-        lastProcessedId = book.id
+        advance(book.id)
         continue
       }
     } catch (e) {
+      if (e instanceof GbUnavailableError) {
+        if (!cursorFrozen) console.log(`  [#${book.id}] GB path unavailable (${e.message}) — cursor frozen at ${lastProcessedId}; counting as skipped, not "No GB data"`)
+        cursorFrozen = true
+        skippedUnavailable++
+        continue
+      }
       if (e instanceof GbQuotaError) {
         stoppedReason = 'quota (429)'
         break
@@ -221,9 +238,20 @@ async function main() {
       throw e
     }
 
-    if (!volumes.length) {
+    // Title + author guard on EVERY volume before anything is read from it.
+    // A title search returns the most-popular sibling for an obscure query
+    // (and, while field-restricted queries are broken, runs as free text), so
+    // language/year/category metadata must only come from volumes that are
+    // this book. ISBN-direct binds the edition, so there the guard is skipped.
+    const matched = viaIsbnDirect
+      ? volumes
+      : volumes.filter((v) =>
+          titleContainment(book.title, v.volumeInfo.title ?? '') >= TITLE_MATCH_THRESHOLD &&
+          authorAgrees(author, v.volumeInfo.authors ?? []))
+
+    if (!matched.length) {
       noData++
-      lastProcessedId = book.id
+      advance(book.id)
       await sleep(BOOK_DELAY_MS)
       continue
     }
@@ -232,7 +260,7 @@ async function main() {
     //    means we already have it) ──
     let recoveredIsbn: string | null = null
     if (needIsbn && !viaIsbnDirect && !placeholderUnsearchable) {
-      for (const v of volumes) {
+      for (const v of matched) {
         const cand = gbIsbn13(v.volumeInfo)
         if (!cand) continue
         const mt = v.volumeInfo.title ?? ''
@@ -250,19 +278,19 @@ async function main() {
     let coverUrl: string | null = null
     let coverPlaceholder = false
     if (needCover) {
-      const r = await resolveGbCover(volumes, book.title, { requireTitleMatch: !viaIsbnDirect, expectedAuthor: author })
+      const r = await resolveGbCover(matched, book.title, { requireTitleMatch: !viaIsbnDirect, expectedAuthor: author })
       if (r.kind === 'cover') coverUrl = r.url
       else if (r.kind === 'placeholder') coverPlaceholder = true
       if (coverUrl && !isAllowedImageUrl(coverUrl)) coverUrl = null // structural gate
     }
 
     // ── Metadata from the same volumes ──
-    const languages = [...new Set(volumes.map((v) => v.volumeInfo.language).filter(Boolean) as string[])]
-    const years = volumes.map((v) => parseYear(v.volumeInfo.publishedDate)).filter((y): y is number => y != null)
+    const languages = [...new Set(matched.map((v) => v.volumeInfo.language).filter(Boolean) as string[])]
+    const years = matched.map((v) => parseYear(v.volumeInfo.publishedDate)).filter((y): y is number => y != null)
     const earliestYear = years.length ? Math.min(...years) : null
-    const categories = [...new Set(volumes.flatMap((v) => v.volumeInfo.categories ?? []))]
-    const pages = volumes.map((v) => v.volumeInfo.pageCount).find((p) => p && p > 0) ?? null
-    const publisher = volumes.map((v) => v.volumeInfo.publisher).find(Boolean) ?? null
+    const categories = [...new Set(matched.flatMap((v) => v.volumeInfo.categories ?? []))]
+    const pages = matched.map((v) => v.volumeInfo.pageCount).find((p) => p && p > 0) ?? null
+    const publisher = matched.map((v) => v.volumeInfo.publisher).find(Boolean) ?? null
 
     const nativeForeign = hasNonLatinScript(book.title_native_script) || hasNonLatinScript(book.title_native)
     const langProposal = languages.length === 1 ? languages[0] : null
@@ -317,7 +345,7 @@ async function main() {
     }
 
     if (parts.length) console.log(`  [#${book.id}] ${book.title.slice(0, 44)} → ${parts.join(', ')} (${viaIsbnDirect ? 'isbn' : 'title'})`)
-    lastProcessedId = book.id
+    advance(book.id)
     await sleep(BOOK_DELAY_MS)
   }
 
@@ -331,7 +359,8 @@ async function main() {
   Covers ${APPLY ? 'written' : 'findable'}:           ${coversFilled}${coversPlaceholder ? ` (+${coversPlaceholder} placeholder rejected)` : ''}
   Languages ${APPLY ? 'written' : 'fillable'}:        ${langsFilled}
   Year proposals (review only):   ${yearProposals}
-  No GB data:                     ${noData}
+  No GB data (none title-matched): ${noData}
+  Skipped (GB path unavailable):  ${skippedUnavailable}${cursorFrozen ? ' — cursor frozen before the first one' : ''}
   Stopped:                        ${stoppedReason}
   Cursor now at id:               ${APPLY ? lastProcessedId : cursor.lastId + ' (dry-run, not advanced)'}
   Review worklist:                ${OUT_FILE}

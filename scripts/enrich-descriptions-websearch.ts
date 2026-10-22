@@ -66,7 +66,7 @@ import { geminiCoverSearch } from '../src/lib/enrich/gemini-cover-search'
 import { extractDescriptionFromPage } from '../src/lib/enrich/extract-description-from-page'
 import { getFirecrawlCallCount } from '../src/lib/enrich/firecrawl-fetch'
 import { titlesMatch, authorsAgree } from '../src/lib/enrich/title-match'
-import { gbVolumesByIsbn, GB_FIELDS_DESCRIPTION, gbQuotaTripped } from '../src/lib/enrich/google-books'
+import { gbVolumesByIsbn, GB_FIELDS_DESCRIPTION, gbQuotaTripped, GbUnavailableError } from '../src/lib/enrich/google-books'
 import { isApply, hasFlag, flagValue, intFlag } from './lib/cli'
 
 const APPLY = isApply()
@@ -120,7 +120,7 @@ type RunRow = {
   sourceUrl: string | null
   sourceName: string | null
   geminiConfidence: string | null
-  outcome: 'filled' | 'no_source' | 'guard_reject' | 'judge_reject' | 'error'
+  outcome: 'filled' | 'no_source' | 'guard_reject' | 'judge_reject' | 'error' | 'skipped_unavailable'
   detail: string
   description: string | null
 }
@@ -248,14 +248,23 @@ async function olBlurbByIsbn(isbn: string): Promise<Blurb | null> {
   } catch { return null }
 }
 
-async function discoverAltIsbn(book: Candidate): Promise<{ blurb: Blurb | null; detail: string }> {
+async function discoverAltIsbn(book: Candidate): Promise<{ blurb: Blurb | null; detail: string; gbUnavailable?: boolean }> {
   const isbns = [...new Set([book.bookshop_isbn13, book.isbn13].filter((x): x is string => !!x))]
   if (isbns.length === 0) return { blurb: null, detail: 'no isbn at all' }
   const tried: string[] = []
+  let gbUnavailable = false
   for (const isbn of isbns) {
     // Google Books by ISBN — richest blurbs, and returns title/authors for guards.
     if (!gbQuotaTripped()) {
-      const vols = await gbVolumesByIsbn(isbn, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION })
+      let vols: Awaited<ReturnType<typeof gbVolumesByIsbn>> = []
+      try {
+        vols = await gbVolumesByIsbn(isbn, { maxResults: 3, fields: GB_FIELDS_DESCRIPTION })
+      } catch (e) {
+        // isbn: lookups quarantined (Google issue 569300353): GB was NOT asked,
+        // so a miss below must not count as a verdict for this row.
+        if (!(e instanceof GbUnavailableError)) throw e
+        gbUnavailable = true
+      }
       for (const v of vols) {
         const d = v.volumeInfo.description
         if (d && d.length >= MIN_BLURB_CHARS) {
@@ -271,14 +280,14 @@ async function discoverAltIsbn(book: Candidate): Promise<{ blurb: Blurb | null; 
           }
         }
       }
-      tried.push(`gb:${isbn}`)
+      tried.push(gbUnavailable ? `gb:${isbn}:unavailable` : `gb:${isbn}`)
     }
     const ol = await olBlurbByIsbn(isbn)
     await sleep(600)
     if (ol) return { blurb: ol, detail: `ol isbn:${isbn}` }
     tried.push(`ol:${isbn}`)
   }
-  return { blurb: null, detail: `no blurb via ${tried.join(', ')}` }
+  return { blurb: null, detail: `no blurb via ${tried.join(', ')}`, gbUnavailable }
 }
 
 // ── search mode: Gemini page discovery + page extraction ───────────────
@@ -417,10 +426,12 @@ async function main() {
     }
     try {
       let blurb: Blurb | null = null
+      let gbUnavailable = false
       if (MODE === 'altisbn' || MODE === 'isbn') {
         const r = await discoverAltIsbn(book)
         blurb = r.blurb
         row.detail = r.detail
+        gbUnavailable = !!r.gbUnavailable
       } else {
         const r = await discoverSearch(book, author)
         blurb = r.blurb
@@ -428,7 +439,10 @@ async function main() {
         row.detail = r.detail
       }
       if (!blurb) {
-        row.outcome = 'no_source'
+        // GB's isbn: path was unavailable and nothing else answered: not a
+        // "no source" verdict. Left out of the resume file so the next run
+        // retries the row once that path works again.
+        row.outcome = gbUnavailable ? 'skipped_unavailable' : 'no_source'
       } else {
         row.via = blurb.via
         row.sourceUrl = blurb.sourceUrl
@@ -465,7 +479,7 @@ async function main() {
       row.detail = e instanceof Error ? e.message : String(e)
     }
     rows.push(row)
-    fs.appendFileSync(jsonlPath, JSON.stringify(row) + '\n')
+    if (row.outcome !== 'skipped_unavailable') fs.appendFileSync(jsonlPath, JSON.stringify(row) + '\n')
     const mark = row.outcome === 'filled' ? '✓' : row.outcome === 'error' ? '!' : '·'
     console.log(`  ${mark} [${i + 1}/${candidates.length}] ${book.title.slice(0, 55)} → ${row.outcome}${row.detail ? ` (${row.detail.slice(0, 90)})` : ''}`)
     await sleep(BETWEEN_BOOKS_MS)

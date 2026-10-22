@@ -91,21 +91,27 @@ async function gbCovers(
 ): Promise<Candidate[]> {
   if (!hasGbKey()) return []
   const out: Candidate[] = []
-  try {
-    if (isbn) {
+  // Separate try blocks: an unavailable isbn: path (Google issue 569300353)
+  // must not also drop the title candidates.
+  if (isbn) {
+    try {
       for (const v of (await gbVolumesByIsbn(isbn)).slice(0, 2)) {
         const url = pickGbImageLink(v.volumeInfo)
         if (url) out.push({ url, source: 'Google Books · ISBN' })
       }
+    } catch {
+      /* quota / unavailable / network — other sources still return */
     }
-    if (author) {
+  }
+  if (author) {
+    try {
       for (const v of (await gbVolumesByTitleAuthor(title, author)).slice(0, 3)) {
         const url = pickGbImageLink(v.volumeInfo)
         if (url) out.push({ url, source: 'Google Books · title' })
       }
+    } catch {
+      /* quota / network — other sources still return */
     }
-  } catch {
-    /* quota / network — other sources still return */
   }
   return out
 }

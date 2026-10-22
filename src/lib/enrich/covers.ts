@@ -25,7 +25,7 @@ import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
 import { titlesMatch } from './title-match'
 import { isAllowedImageUrl } from '../allowed-image-hosts'
-import { gbVolumesByTitle, gbVolumesByIsbn, resolveGbCover, GB_FIELDS_COVER, GbQuotaError } from './google-books'
+import { gbVolumesByTitle, gbVolumesByIsbn, resolveGbCover, GB_FIELDS_COVER, GbQuotaError, GbUnavailableError, gbFieldRestrictedBroken } from './google-books'
 
 const OL_DELAY_MS   = 200
 const GB_DELAY_MS   = 600
@@ -406,9 +406,16 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
           if (isbnResult.kind === 'placeholder') placeholderTracker.sawPlaceholder = true
           else if (isbnResult.kind === 'cover') { coverUrl = isbnResult.url; source = 'GB-isbn' }
         } catch (e) {
-          if (!(e instanceof GbQuotaError)) throw e
-          if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
-          gbExhausted = true
+          if (e instanceof GbUnavailableError) {
+            // isbn: lookups are quarantined (Google issue 569300353) while the
+            // rest of GB still works: this source was NOT tried, so it must
+            // not land in sources_tried, and the free-text tier below stays on.
+            newSources.splice(newSources.lastIndexOf('gb_isbn'), 1)
+          } else {
+            if (!(e instanceof GbQuotaError)) throw e
+            if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
+            gbExhausted = true
+          }
         }
       }
 
@@ -436,10 +443,17 @@ export async function enrichCovers(opts: EnrichCoversOpts): Promise<EnrichCovers
         if (!gbExhausted) {
           newSources.push(`gb_title_only${tag}`)
           try {
-            coverUrl = await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker, author)
+            // While field-restricted queries are broken the client would run
+            // `intitle:` as free text anyway — skip it rather than spend two
+            // identical calls per miss.
+            coverUrl = (gbFieldRestrictedBroken() ? null : await gbSearchVerified(`intitle:${variant.title}`, variant.title, placeholderTracker, author))
               ?? await gbSearchVerified(variant.title, variant.title, placeholderTracker, author)
             if (coverUrl) { source = `GB-title-only${tag}`; break }
           } catch (e) {
+            if (e instanceof GbUnavailableError) {
+              newSources.splice(newSources.lastIndexOf(`gb_title_only${tag}`), 1)
+              continue
+            }
             if (!(e instanceof GbQuotaError)) throw e
             if (!gbExhausted) log(`  ⚠ Google Books daily quota exhausted at ${i}/${limit} — continuing with OL/Wikipedia only for the rest of this run.`)
             gbExhausted = true

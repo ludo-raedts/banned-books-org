@@ -107,6 +107,19 @@ export class GbQuotaError extends Error {
   }
 }
 
+// Thrown when ONE query path is unusable while Google Books as a whole still
+// works (see the health probes below). Subclass of GbQuotaError so every
+// existing `instanceof GbQuotaError` catch already treats it as "GB did not
+// answer — skip without stamping". Callers that want to keep using the other
+// GB paths for the rest of the run check for this class FIRST and only drop
+// the one lookup; the shared latch (gbQuotaTripped) stays off.
+export class GbUnavailableError extends GbQuotaError {
+  constructor(message = 'Google Books field-restricted queries unavailable (isbn:/intitle:/inauthor: return no results)') {
+    super(message)
+    this.name = 'GbUnavailableError'
+  }
+}
+
 // Once a daily-quota 429 lands on the LAST key we latch this: every subsequent
 // gbVolumes() throws immediately without a network round-trip, so a long sweep
 // aborts fast instead of hammering a dead quota.
@@ -117,7 +130,9 @@ export function gbQuotaTripped(): boolean {
 
 // Low-level: run a raw Google Books volumes query and return the items array.
 // Returns [] on a genuine miss or transient network/parse failure, but THROWS
-// GbQuotaError on 429 (quota) — see the class doc for why these must differ.
+// GbQuotaError on 429 (quota) — see the class doc for why these must differ —
+// and GbUnavailableError for an `isbn:` query while field-restricted queries
+// are broken (see the health probes).
 // Sleeps `delayMs` AFTER the call so a tight caller loop stays within rate.
 // 429 disambiguation: the per-day quota body says "Queries per day"; a
 // short-window rate limit does not. Retry rate limits, fail fatally on daily.
@@ -127,34 +142,100 @@ const MAX_5XX_RETRIES = 3        // per query: 2s, 4s, 8s
 const MAX_CONSECUTIVE_5XX = 5    // queries in a row still failing → treat GB as down
 let consecutive5xx = 0
 
-// Health canary. A degraded Google Books does not only 503: it also answers
+// Health probes. A degraded Google Books does not only 503: it also answers
 // "200, totalItems 0" for queries that certainly have hits, which callers
 // cannot tell apart from a genuine miss. So before the first query and every
-// CANARY_EVERY queries after that, ask for a book that must exist (Hatchet,
-// Gary Paulsen). No hits → GB is degraded: latch, so callers fall back to
-// OL/Wikipedia instead of recording false "not found" results.
-const CANARY_QUERY = 'intitle:hatchet inauthor:paulsen'
-const CANARY_EVERY = 100
-let callsSinceCanary = CANARY_EVERY
-let inCanary = false
-async function checkCanary(): Promise<void> {
-  inCanary = true
+// PROBE_EVERY queries after that we run two probes:
+//
+//   (a) FREE-TEXT probe (`brave new world huxley`, hundreds of hits). No hits
+//       → GB is down for real: latch quotaTripped like an exhausted quota, so
+//       callers fall back to OL/Wikipedia instead of recording false misses.
+//   (b) FIELD-RESTRICTED probes (`isbn:…`, `intitle:… inauthor:…`). No hits
+//       while (a) succeeds → the PARTIAL regression Google has had since
+//       ~2026-09-30 (Google issue tracker 569300353, P2, unfixed as of
+//       2026-10-22): volumes.list returns 200/totalItems 0 for most queries
+//       that carry a field operator — `isbn:` always, and `intitle:`/
+//       `inauthor:` for nearly every title (verified 2026-10-22 on both keys:
+//       `intitle:animal farm inauthor:orwell`, `intitle:lord of the flies
+//       inauthor:golding`, `inauthor:orwell`, every `isbn:` → 0; `brave new
+//       world huxley`, `hatchet paulsen`, `animal farm orwell` → hundreds).
+//       A structured 0 is therefore NOT evidence of absence. In this mode:
+//         • `isbn:` queries throw GbUnavailableError without a network call
+//           (no free-text equivalent: a bare ISBN as free text returns junk);
+//           callers skip the lookup without stamping not_found/no_match/tried.
+//         • `intitle:`/`inauthor:` queries are rewritten to plain free text
+//           (`intitle:hatchet inauthor:paulsen` → `hatchet paulsen`), which
+//           still works. Every caller already guards free-text results with
+//           title-containment + author-agreement (covers.ts has always used
+//           this path), so precision is unchanged; recall is what we lose
+//           for the quarantined isbn: path only.
+//       Before 2026-10-22 the single canary was itself a field-restricted
+//       query, so it tripped on every run and disabled GB entirely — which
+//       also blocked the free-text cover tier that still works.
+const PROBE_FREE_TEXT = 'brave new world huxley'
+const PROBE_FIELD = ['isbn:9780061120084', 'intitle:hatchet inauthor:paulsen']
+const PROBE_EVERY = 100
+let callsSinceProbe = PROBE_EVERY
+let inProbe = false
+let fieldRestrictedBroken = false
+export function gbFieldRestrictedBroken(): boolean {
+  return fieldRestrictedBroken
+}
+
+const FIELD_OP_RE = /\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):/i
+const ISBN_OP_RE = /\bisbn:/i
+
+export function hasGbFieldOperator(query: string): boolean {
+  return FIELD_OP_RE.test(query)
+}
+
+// `intitle:brave new world inauthor:huxley` → `brave new world huxley`.
+export function stripGbFieldOperators(query: string): string {
+  return query.replace(new RegExp(FIELD_OP_RE.source, 'gi'), '').replace(/\s+/g, ' ').trim()
+}
+
+async function probe(query: string): Promise<boolean> {
+  const hits = await gbVolumes(query, { maxResults: 1, fields: 'items(id)', delayMs: 0 })
+  return hits.length > 0
+}
+
+async function checkHealth(): Promise<void> {
+  inProbe = true
   try {
-    const hits = await gbVolumes(CANARY_QUERY, { maxResults: 1, fields: 'items(id)', delayMs: 0 })
-    if (!hits.length) {
+    if (!(await probe(PROBE_FREE_TEXT))) {
       quotaTripped = true
-      console.warn('[google-books] health canary returned no results — Google Books looks degraded; disabling it for this run')
-      throw new GbQuotaError('Google Books degraded (canary query returned no results)')
+      console.warn('[google-books] free-text health probe returned no results — Google Books looks down; disabling it for this run')
+      throw new GbQuotaError('Google Books degraded (free-text probe returned no results)')
+    }
+    let fieldOk = true
+    for (const q of PROBE_FIELD) {
+      if (!(await probe(q))) { fieldOk = false; break }
+    }
+    if (!fieldOk && !fieldRestrictedBroken) {
+      fieldRestrictedBroken = true
+      console.warn(
+        '[google-books] mode: field-restricted queries broken (Google issue 569300353) — ' +
+        'isbn: lookups are skipped as unavailable (no verdict stamped); intitle:/inauthor: lookups run as free text',
+      )
+    } else if (fieldOk && fieldRestrictedBroken) {
+      fieldRestrictedBroken = false
+      console.warn('[google-books] mode: field-restricted queries work again — back to structured queries')
     }
   } finally {
-    inCanary = false
-    callsSinceCanary = 0
+    inProbe = false
+    callsSinceProbe = 0
   }
 }
 
 export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
   if (quotaTripped) throw new GbQuotaError()
-  if (!inCanary && ++callsSinceCanary > CANARY_EVERY) await checkCanary()
+  if (!inProbe) {
+    if (++callsSinceProbe > PROBE_EVERY) await checkHealth()
+    if (fieldRestrictedBroken && hasGbFieldOperator(query)) {
+      if (ISBN_OP_RE.test(query)) throw new GbUnavailableError()
+      query = stripGbFieldOperators(query)
+    }
+  }
   const { maxResults = 5, fields = GB_FIELDS_FULL, delayMs = DEFAULT_DELAY_MS } = opts
 
   for (let attempt = 0; ; attempt++) {
@@ -235,14 +316,16 @@ export async function gbVolumes(query: string, opts: GbQueryOpts = {}): Promise<
 // ── Query builders ──────────────────────────────────────────────────────────
 
 // Exact-edition lookup. Highest precision: the ISBN binds a single edition, so
-// no title-matching guard is needed on the result.
+// no title-matching guard is needed on the result. Throws GbUnavailableError
+// (no network call) while field-restricted queries are broken.
 export function gbVolumesByIsbn(isbn: string, opts: GbQueryOpts = {}): Promise<GbVolume[]> {
   return gbVolumes(`isbn:${isbn}`, { maxResults: 1, ...opts })
 }
 
 // Title (+ optional author) search using the structured operators. Results
 // still need a title-match guard from the caller (search falls back to the
-// most-popular sibling for an obscure query).
+// most-popular sibling for an obscure query). While field-restricted queries
+// are broken this transparently runs as free text (`title author`).
 export function gbVolumesByTitleAuthor(
   title: string,
   author: string,
