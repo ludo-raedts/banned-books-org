@@ -35,10 +35,10 @@ the written description paragraph that interprets a ban is commercial.
 **Coverage at the snapshot used to write this descriptor** (figures move as the
 catalogue grows — the deposited files are the authority):
 
-- ~20,300 books, ~12,800 authors
-- ~35,900 ban events across 119 countries (including defunct states: USSR, East
+- ~20,900 books, ~13,300 authors
+- ~37,800 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
-- ~63,700 ban–reason links and ~36,200 ban–source citations
+- ~68,100 ban–reason links and ~40,000 ban–source citations
 
 **Scope.** This deposit covers *books*. Records must describe a real
 removal/restriction with an institutional actor and a documented decision (see
@@ -145,8 +145,8 @@ decision.
 
 **Verification.** Sources carry a `verification_status`. Archive-verification is
 an ongoing process and the field is mostly unpopulated so far. At the snapshot
-used here, of ~960 source rows the distribution is roughly: `unverified` ≈ 79%,
-empty/`(null)` ≈ 20%, `verified` = 7 rows, `pending` = 2 rows, and `broken` = 0.
+used here, of ~1,100 source rows the distribution is roughly: `unverified` ≈ 81%,
+empty/`(null)` ≈ 18%, `verified` = 10 rows, `pending` = 2 rows, and `broken` = 0.
 **In practical terms, filtering on `verification_status = 'verified'` currently
 returns a near-empty subset (a handful of rows) and is not yet a usable quality
 gate.** Treat it as a lever that becomes useful as verification runs progress,
@@ -177,7 +177,7 @@ the United States' raw row count roughly 2–3× relative to distinct titles.
 - **Raw `bans.csv` row counts** are supporting detail only — never a repression
   ranking.
 
-Worked example (snapshot figures): ~28,700 raw ban rows resolve to ~14,000
+Worked example (snapshot figures): ~37,800 raw ban rows resolve to ~20,900
 distinct books — the gap is overwhelmingly US school-district events for a
 smaller set of titles. A country ranking built on raw rows would massively
 overstate the US relative to a ranking built on distinct banned titles.
