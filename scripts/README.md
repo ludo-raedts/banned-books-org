@@ -485,6 +485,7 @@ Wat BLEEF (gebruikt door de standaard route, zie §1): `review-commit.ts`, `veri
 | Script | Produceert |
 |---|---|
 | `build-dataset.ts` | Betaalde download-dataset ZIP |
+| `renew-dataset-download-tokens.ts` | Nieuwe unieke, tijdelijke downloadlink per betaalde `dataset_orders`-rij (courtesy-update voor kopers; de ZIP zelf is altijd de laatste build). Dry-run; `--apply` schrijft token+expiry en print de link per klant. `--email=a,b` / `--ttl-days=30`. Mailt NIET. |
 | `build-zenodo-dataset.ts` | Open citeerbare dataset voor Zenodo (CC-BY-4.0): 6 slug-keyed CSV's + `schema.json`/README/LICENSE. Dry-run; `--apply` → `private/zenodo/`. Exporteert `buildOpenTables()` (gedeeld met de diff). |
 | `zenodo-descriptor-to-pdf.tsx` | `docs/zenodo/data-descriptor.md` → `data-descriptor.pdf` (marked + @react-pdf/renderer; Arial/Andale-Mono embedded) |
 | `zenodo-deposit-diff.ts` | Vergelijkt de huidige open export met de laatst-gedeponeerde baseline (`docs/zenodo/deposited-manifest.json`) en adviseert of een nieuwe Zenodo-versie nodig is. Leest alléén de open core (commerciële verrijking telt niet mee). `--mark-deposited` her-ankert de baseline ná een deposit. Re-deposit is bewust, niet automatisch — zie `/admin/zenodo`. |
