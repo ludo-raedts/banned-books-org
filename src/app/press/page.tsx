@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { adminClient } from '@/lib/supabase'
 import CopyButton from '@/components/copy-button'
 import SectionShell from '@/components/section/SectionShell'
+import { citedBy, formatCitedDate, type CitedBy } from '@/lib/cited-by'
 
 export const metadata: Metadata = {
   title: 'Press & Media Kit',
@@ -139,6 +140,31 @@ function formatLastUpdated(iso: string | null): string {
   } catch {
     return 'recently'
   }
+}
+
+const CITED_BY_GROUPS: { kind: CitedBy['kind']; heading: string }[] = [
+  { kind: 'research', heading: 'Research & education' },
+  { kind: 'press', heading: 'Press & commentary' },
+]
+
+function CitedByItem({ item }: { item: CitedBy }) {
+  return (
+    <li className="border-l-2 border-oxblood/30 pl-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+        {item.outlet}
+        {item.date && <span className="font-normal normal-case tracking-normal"> · {formatCitedDate(item.date)}</span>}
+      </p>
+      <a
+        href={item.href}
+        target="_blank"
+        rel="noopener"
+        className="font-serif text-base font-semibold leading-snug text-gray-900 hover:text-oxblood hover:underline"
+      >
+        {item.title}
+      </a>
+      <p className="text-xs text-neutral-600 leading-relaxed mt-1">{item.note}</p>
+    </li>
+  )
 }
 
 export default async function PressPage() {
@@ -436,17 +462,33 @@ export default async function PressPage() {
           </div>
         </SectionShell>
 
-        {/* ── Recent coverage ──────────────────────────────────────── */}
-        <SectionShell tone="cream" eyebrow="As seen in">
+        {/* ── Cited by ─────────────────────────────────────────────── */}
+        <SectionShell tone="cream" eyebrow="Cited by">
           <div className="max-w-3xl mx-auto">
             <h2 id="coverage-heading" className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2 pb-3 border-b border-oxblood/30">
-              Recent coverage
+              Publications that use the catalogue
             </h2>
-            <p className="text-sm text-neutral-600 leading-relaxed">
-              This list will be populated as coverage appears. To suggest a citation, email{' '}
+            <p className="text-sm text-neutral-600 mb-6">
+              Pages that cite, footnote or reproduce the catalogue’s records. Hand-verified; passing mentions and social posts are not listed.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {CITED_BY_GROUPS.map(({ kind, heading }) => (
+                <div key={kind}>
+                  <h3 className="font-serif text-lg font-semibold text-gray-900 mb-3">{heading}</h3>
+                  <ul className="space-y-4">
+                    {citedBy(kind).map((c) => (
+                      <CitedByItem key={c.href} item={c} />
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-neutral-500 mt-8">
+              Used the data somewhere we missed? Email{' '}
               <a href="mailto:info@banned-books.org" className="text-oxblood font-medium hover:underline">
                 info@banned-books.org
-              </a>.
+              </a>{' '}
+              and we will add it.
             </p>
           </div>
         </SectionShell>
