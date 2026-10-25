@@ -222,7 +222,7 @@ Uitgevoerd en gepusht (commits af38ee9 → 1c34cf9 + Next-upgrade):
 
 | # | Punt | Status |
 |---|---|---|
-| 13 | Hydration-fout | Oorzaak = Cloudflare: e-mail-obfuscatie herschreef `contact@…` (home-FAQ, /press) → `<EmailLink>` met `<!--email_off-->`. **Blijft over**: CF injecteert op elke pagina `/cdn-cgi/challenge-platform/scripts/jsd/main.js` (JS Detections / managed challenge); dat is een dashboard-schakelaar (Security → Bots → JavaScript Detections uit, of de managed-challenge-regel). Analytics-token kan de zone-settings niet lezen. |
+| 13 | Hydration-fout | **Opgelost.** Oorzaak = Cloudflare e-mail-obfuscatie die `contact@…`/`info@…` herschreef (home-FAQ, /press) → in code `<EmailLink>` met `<!--email_off-->`, en Ludo heeft Scrape Shield → Email Address Obfuscation uitgezet (25 okt ~19:45 Z). Hercheck in schone headless Chrome (Lighthouse): home en /books/1984 zonder React #418. Het challenge-platform-script was niet de oorzaak en is inmiddels ook niet meer aanwezig in de HTML. Enige rest: CF Web-Analytics-beacon `static.cloudflareinsights.com` resolvet niet in de Lighthouse-sandbox (geen echt probleem). |
 | 16 | `/banned-books-week` force-dynamic | ISR 3600 (+archive 86400); kapotte preview weg; `/api/indexnow` verifieert HMAC-token |
 | 17 | Reason-meta telling | één `cache()`-sweep voor metadata én pagina |
 | 18 | Auteurs dubbelfetch / 1.000-cap | één `getBooksForAuthor` (nested embed, chunked) |
@@ -242,4 +242,4 @@ Uitgevoerd en gepusht (commits af38ee9 → 1c34cf9 + Next-upgrade):
 | 15 | Koude ISR long tail | bewust niet: landen prerenderen bij build brak eerder de build onder enrichment-load (d29ffe1); CF HTML-cache-rule blijft een optie |
 | 3, 9 | Data-release, essays | bij Ludo |
 
-Open voor Ludo (3 handelingen): `supabase db push` (migratie 14); Cloudflare JS-Detections/e-mail-obfuscatie uitzetten (13); year-verify run (12).
+Afgerond door Ludo op 25 okt: `supabase db push` (14, hub-pageviews lopen), e-mail-obfuscatie uit (13), WAF-regel 5 AI-agent-uitzondering toegepast (`scripts/cf-waf-exempt-ai-agents.ts`, zie docs/cloudflare-waf.md §6). Nog open: year-verify run (12).
