@@ -201,6 +201,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   }
   const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
+  // The author's most-banned title, for the description tail ("— Looking for
+  // Alaska alone 156 times"): answers "<author> banned books" queries that sit
+  // on Bing page 1 with a ~3% CTR behind a stats-only snippet.
+  const topBook = books.filter(b => !b.is_blanket_works && b.bans.length >= 2).sort((a, b) => b.bans.length - a.bans.length)[0] ?? null
+  const topBookTail = topBook ? ` ${topBook.title} alone ${topBook.bans.length} times.` : ''
 
   // Title — pick the most specific candidate that fits the 70-char visible
   // cap (Google desktop truncates around 70; mobile around 55). Suffix
@@ -231,6 +236,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   } else {
     description = `${bannedBookCount} ${bannedBookCount === 1 ? 'book' : 'books'} by ${author.display_name} ${bannedBookCount === 1 ? 'has' : 'have'} been banned in ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}.`
   }
+  if (topBookTail && bannedBookCount >= 2 && (description + topBookTail).length <= 160) description += topBookTail
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
   const canonicalUrl = `https://www.banned-books.org/authors/${slug}`

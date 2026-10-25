@@ -17,13 +17,16 @@ import type { FaqItem } from '@/components/faq-accordion'
 // the `%s | Banned Books` template, so duplicating it here produced a
 // "… | Banned Books | Banned Books" tag in the rendered HTML.
 export const metadata: Metadata = {
-  title: 'Challenged Books — Attempted Censorship',
+  // Bing (28d): 350 impr at pos 5 with 1.7% CTR behind the old "Attempted
+  // Censorship" wording; the queries are definitional ("what does challenged
+  // mean", "challenged vs banned") and list-seeking.
+  title: 'Challenged books: what it means, and the current list',
   description:
-    'A challenged book is one that has been formally objected to and removed or restricted — most often from a school library. Browse books challenged across the United States and beyond.',
+    'What is a challenged book? An attempt to remove or restrict a title, usually in a school library — how it differs from a ban, and the most-challenged titles.',
   alternates: { canonical: '/challenged-books' },
   openGraph: {
-    title: 'Challenged Books — Attempted Censorship | Banned Books',
-    description: 'A challenged book is one that has been formally objected to and removed or restricted — most often from a school library.',
+    title: 'Challenged books: what it means, and the current list | Banned Books',
+    description: 'What is a challenged book? An attempt to remove or restrict a title, usually in a school library — how it differs from a ban, and the most-challenged titles.',
   },
 }
 

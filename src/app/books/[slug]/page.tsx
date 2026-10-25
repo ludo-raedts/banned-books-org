@@ -217,7 +217,7 @@ const isBlockedSlug = cache(async (slug: string): Promise<boolean> => {
 // column set is a superset of what either consumer needs; metadata reads its
 // subset off the same row. Extracted from BookPage so both go through it.
 const BOOK_DETAIL_SELECT = `
-  id, title, slug, cover_url, description_book, description_ban,
+  id, title, slug, cover_url, description_book, description_ban, description_ban_status,
   description_source_url, description_source_type,
   censorship_context, first_published_year, genres, gutenberg_id, isbn13,
   bookshop_status, bookshop_isbn13, kobo_url, archive_org_id, archive_org_status,
@@ -532,6 +532,20 @@ export async function generateMetadata({
   // whose augmented <title> overflows the 70-char cap, e.g. cyrillic titles),
   // while the sentence tail it may push past the cap is boilerplate.
   let description = buildDescription(withNative(baseTitle))
+  // Question-intent override: Bing shows us on page 1 for "why was <title>
+  // banned" with a 4–6% CTR behind a generic snippet. When the book carries a
+  // usable ban-context sentence (not auto-rejected), lead with the answer.
+  const banCtx = (data.description_ban ?? '').trim()
+  const banCtxOk = banCtx.length >= 60 && data.description_ban_status !== 'auto_rejected_low_quality' && bans.length > 0
+  if (banCtxOk) {
+    // Sentence boundary = terminator followed by whitespace + capital, so
+    // "U.S. schools" does not end the sentence.
+    const firstSentence = banCtx.split(/(?<=[.!?])\s+(?=[A-Z"'(])/)[0].trim()
+    let lead = `Why was ${data.title} banned? ${firstSentence}`
+    const tail = ' Every ban with year, scope and source.'
+    if (lead.length > 160) lead = lead.slice(0, 157).replace(/\s+\S*$/, '') + '…'
+    if (lead.length >= 70) description = (lead + tail).length <= 160 ? lead + tail : lead
+  }
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
   const canonicalUrl = `https://www.banned-books.org/books/${slug}`

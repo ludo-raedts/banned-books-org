@@ -34,9 +34,22 @@ export async function generateMetadata({
   params: Promise<{ year: string }>
 }): Promise<Metadata> {
   const { year } = await params
+  const yearNum = parseInt(year, 10)
+  // Distinct books with a ban starting this year — cheap head-count for the
+  // snippet; the page body re-derives it from the full sweep.
+  let n = 0
+  if (Number.isFinite(yearNum)) {
+    const { data } = await adminClient().from('bans').select('book_id').eq('year_started', yearNum).limit(5000)
+    n = new Set(((data ?? []) as { book_id: number }[]).map(r => r.book_id)).size
+  }
+  const isCurrent = yearNum === CURRENT_YEAR
+  const title = isCurrent ? `Banned Books ${year}: the list so far` : `Books banned in ${year} – the full list`
+  const description = n > 0
+    ? `Which books were banned in ${year}? ${n.toLocaleString('en')} ${n === 1 ? 'title' : 'titles'} with a documented ban starting in ${year}${isCurrent ? ' (updated weekly)' : ''} — by country and reason, each with its source.`
+    : `Every book with a documented ban that began in ${year}, grouped by country — with the censorship reason, scope, and the full source citations behind each entry.`
   return {
-    title: `Books Banned in ${year}`,
-    description: `Every book with a documented ban that began in ${year}, grouped by country — with the censorship reason, scope, and the full source citations behind each entry.`,
+    title,
+    description,
     alternates: { canonical: `/banned-books/${year}` },
   }
 }

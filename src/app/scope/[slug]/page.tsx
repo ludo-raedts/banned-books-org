@@ -75,12 +75,14 @@ export async function generateMetadata({
   const distinctBooks = bookIds.size
 
   const titlePhrase = scopeFaqTitle(scope.slug, scope.label_en)
+  // Bing (28d): /scope/school 886 impr at pos 6, 3.4% CTR — list-intent
+  // queries ("books banned in schools", "school book bans list").
   const title = scope.slug === 'school'
-    ? `Books banned in U.S. schools – every documented case`
+    ? `Books banned in schools – the full list (${distinctBooks.toLocaleString('en')} titles)`
     : `Books banned: ${titlePhrase}`
 
   let description = scope.slug === 'school'
-    ? `${distinctBooks.toLocaleString('en')} books removed, restricted, or challenged in U.S. schools — by district, state, reason, and year.`
+    ? `Which books are banned in schools? ${distinctBooks.toLocaleString('en')} titles removed, restricted or challenged in US school libraries — by state, reason and year, each with its source.`
     : `${distinctBooks.toLocaleString('en')} ${distinctBooks === 1 ? 'book' : 'books'} documented as banned, restricted, or challenged via ${titlePhrase}.`
   if (description.length > 160) description = description.slice(0, 157) + '…'
 

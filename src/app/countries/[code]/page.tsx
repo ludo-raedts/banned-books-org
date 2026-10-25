@@ -42,6 +42,12 @@ export async function generateStaticParams() {
   return [] as { code: string }[]
 }
 
+// Country names that take a definite article in running English prose.
+const ARTICLE_CODES = new Set(['GB', 'US', 'NL', 'PH', 'CZ', 'SU', 'VA', 'AE', 'DO', 'BS', 'GM', 'MV', 'CD', 'CF', 'KM', 'MH', 'SB', 'SC', 'DD'])
+function withArticle(code: string, name: string): string {
+  return ARTICLE_CODES.has(code.toUpperCase()) && !/^the /i.test(name) ? `the ${name}` : name
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -79,13 +85,19 @@ export async function generateMetadata({
   const reasonVariety = reasonSet.size
 
   // ≤ ~50 chars before the ' | Banned Books' suffix (was 63 → 79 total, truncated in SERPs).
-  const title = `Books banned in ${country.name_en} – history and examples`
+  // US: Bing queries read "banned books in america / the us / usa" (the hub sits
+  // on 9.4k impr at 4.2% CTR) — carry those tokens in the title.
+  const title = code.toUpperCase() === 'US'
+    ? 'Banned books in the United States (USA) – full list and history'
+    : `Books banned in ${country.name_en} – history and examples`
 
   let description: string
   if (banCount === 0) {
     description = `Books banned or challenged in ${country.name_en} — censorship history, dates, scope, and source citations for every documented entry.`
+  } else if (code.toUpperCase() === 'US') {
+    description = `Which books are banned in America? ${banCount.toLocaleString('en')} titles banned or challenged in the United States, most by school districts since 2021 — by state and reason.`
   } else if (reasonVariety > 1) {
-    description = `${banCount} ${banCount === 1 ? 'book' : 'books'} banned or challenged in ${country.name_en}, spanning ${reasonVariety} distinct censorship reasons. Browse the catalogue: dates, scope, and source citations.`
+    description = `Which books are banned in ${withArticle(code, country.name_en)}? ${banCount.toLocaleString('en')} ${banCount === 1 ? 'title' : 'titles'}, ${reasonVariety} censorship reasons — the full list with year, who banned it, why, and the source for every entry.`
   } else {
     description = `${banCount} ${banCount === 1 ? 'book' : 'books'} banned or challenged in ${country.name_en}. Browse the catalogue with dates, scope, and source citations on every entry.`
   }
