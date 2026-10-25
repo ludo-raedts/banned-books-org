@@ -21,7 +21,7 @@ Ruleset-id: `9c3ac2cfe19d42f18322daaedac7ef49`. Regels in evaluatievolgorde:
 | 2 | `block` | UA contains TikTokSpider / Bytespider / Amazonbot / CCBot / GPTBot / ClaudeBot / Google-Extended / meta-externalagent / Applebot-Extended | Handhaaft robots.txt `ai-train=no` tegen crawlers die zich er niet aan houden. **Search-AI (OAI-SearchBot, ChatGPT-User, PerplexityBot e.d.) staat hier bewust NIET in** — AI-verwijsverkeer is gewenst. |
 | 3 | `managed_challenge` | `ip.geoip.country eq "SG" and not cf.client.bot` | Tencent-Cloud datacenter-swarm die /books crawlde en de DB overbelastte (2026-06-16). |
 | 4 | `block` | `ip.geoip.country in {"CN" "HK"} and not cf.client.bot` | Residential scraper-botnet, juli 2026 — zie §3. Rule-id `f09e5357d8c64efdbaa3db5ac66ae0d3`. |
-| 5 | `managed_challenge` | `not cf.client.bot and ip.geoip.asnum in {AWS 16509/14618, GCP 15169/396982, Azure 8075/8068, DO 14061, OVH 16276, Hetzner 24940, Vultr 20473, Linode 63949, Alibaba 45102, Tencent 132203, …}` | Datacenter-crawl site-breed challengen (2026-08-29, verbreed vanaf /books+/authors). **Zie §6: raakt ook niet-geverifieerde AI-zoek/assistent-bots** — uitzondering klaar in `scripts/cf-waf-exempt-ai-agents.ts`. Rule-id `04b151c914cf436daa048975d08ce331`. |
+| 5 | `managed_challenge` | `not cf.client.bot and ip.geoip.asnum in {AWS 16509/14618, GCP 15169/396982, Azure 8075/8068, DO 14061, OVH 16276, Hetzner 24940, Vultr 20473, Linode 63949, Alibaba 45102, Tencent 132203, …}` | Datacenter-crawl site-breed challengen (2026-08-29, verbreed vanaf /books+/authors). Sinds 2026-10-25 `and not (UA contains PerplexityBot / Perplexity-User / Claude-User / Claude-SearchBot / ChatGPT-User / OAI-SearchBot / DuckAssistBot / MistralAI-User / Meta-ExternalFetcher)` — zie §6. Rule-id `04b151c914cf436daa048975d08ce331`. |
 
 `not cf.client.bot` in regel 3+4 = **geverifieerde crawlers zijn altijd
 uitgezonderd** (Googlebot, Bingbot, Baiduspider, Sogou, DuckDuckBot, search-AI
@@ -169,7 +169,7 @@ en de user-triggered fetchers (`*-User`, DuckAssistBot) staan er nooit op. Ze dr
 vanuit AWS/GCP/Azure → managed challenge → 403 voor een bot. Dat is in strijd met §2 en
 met robots.txt (`ai-input=yes`).
 
-Fix (klaar, nog niet toegepast — vereist een token met *Zone WAF: Edit*):
+Fix — **toegepast 2026-10-25 ~19:30 Z** (door Ludo, via het script; herhaalbaar/idempotent):
 
 ```bash
 pnpm tsx --env-file=.env.local scripts/cf-waf-exempt-ai-agents.ts --apply
