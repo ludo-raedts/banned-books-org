@@ -8,11 +8,11 @@ import YouTubeEmbed from '@/components/youtube-embed'
 export const metadata: Metadata = {
   title: 'History of Book Banning — From Ancient Rome to Today',
   description:
-    'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Comstock, Lady Chatterley and today\u2019s school removals.',
+    'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Lady Chatterley and today\u2019s school removals.',
   openGraph: {
     title: 'History of Book Banning — From Ancient Rome to Today',
     description:
-      'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Comstock, Lady Chatterley and today\u2019s school removals.',
+      'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Lady Chatterley and today\u2019s school removals.',
     type: 'article',
   },
   alternates: {
