@@ -32,7 +32,7 @@ function loadEnvLocal() {
 }
 loadEnvLocal()
 
-const UA = { headers: { 'User-Agent': 'banned-books.org desc-audit (ludo.raedts@voys.nl)' } }
+const UA = { headers: { 'User-Agent': 'banned-books.org desc-audit (contact@banned-books.org)' } }
 const CONCURRENCY = 6
 
 const norm = (s: string) =>

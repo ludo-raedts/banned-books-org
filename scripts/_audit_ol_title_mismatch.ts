@@ -77,7 +77,7 @@ loadEnvLocal()
 import { adminClient } from '../src/lib/supabase'
 import { titleTokens } from '../src/lib/enrich/title-match'
 
-const UA = 'banned-books.org-audit-bot (ludo.raedts@voys.nl)'
+const UA = 'banned-books.org-audit-bot (contact@banned-books.org)'
 
 function argVal(name: string): string | null {
   const hit = process.argv.slice(2).find(a => a.startsWith(`--${name}=`))

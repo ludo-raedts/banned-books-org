@@ -8,11 +8,11 @@ import YouTubeEmbed from '@/components/youtube-embed'
 export const metadata: Metadata = {
   title: 'History of Book Banning — From Ancient Rome to Today',
   description:
-    'A history of censorship from the burning of the Library of Alexandria to modern school board challenges. How book banning evolved across 2,000 years.',
+    'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Comstock, Lady Chatterley and today\u2019s school removals.',
   openGraph: {
     title: 'History of Book Banning — From Ancient Rome to Today',
     description:
-      'A history of censorship from the burning of the Library of Alexandria to modern school board challenges. How book banning evolved across 2,000 years.',
+      'Who banned books, and why, across 2,000 years: Qin Shi Huang, the Index Librorum Prohibitorum, the 1933 Nazi burnings, Comstock, Lady Chatterley and today\u2019s school removals.',
     type: 'article',
   },
   alternates: {
@@ -27,8 +27,13 @@ const jsonLd = {
   headline: 'The Long Shadow of Censorship: A History of Banned Books',
   description:
     'An in-depth look at the history of banned books, from ancient censorship to modern book bans, including Nazi book burnings and contemporary debates on free speech.',
-  author: { '@type': 'Organization', name: 'banned-books.org' },
-  publisher: { '@type': 'Organization', name: 'banned-books.org' },
+  author: { '@type': 'Person', name: 'Ludo Raedts', url: 'https://www.banned-books.org/about' },
+  publisher: {
+    '@type': 'Organization',
+    '@id': 'https://www.banned-books.org/#organization',
+    name: 'Banned Books',
+    logo: { '@type': 'ImageObject', url: 'https://www.banned-books.org/brand/compact-bb.png' },
+  },
   mainEntityOfPage: 'https://www.banned-books.org/history',
   about: ['Book banning', 'Censorship', 'Freedom of speech', 'Nazi book burnings', 'Mein Kampf'],
 }

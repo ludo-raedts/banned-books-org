@@ -64,8 +64,8 @@ const loadDefaultResults = unstable_cache(
 export async function generateMetadata(): Promise<Metadata> {
   const { totalBooks: n } = await loadSearchFacets()
   return {
-    title: `Search — ${n.toLocaleString('en')} banned books`,
-    description: `Search a catalogue of ${n.toLocaleString('en')} books banned by governments, schools, and libraries. Filter by country, reason, or institution.`,
+    title: `Full List of ${n.toLocaleString('en')} Banned Books — Search & Filter`,
+    description: `Is a book banned? Search ${n.toLocaleString('en')} banned and challenged books by title or author, filter by country, reason, year and who banned it. Every entry cites its source.`,
     alternates: { canonical: '/search' },
   }
 }
