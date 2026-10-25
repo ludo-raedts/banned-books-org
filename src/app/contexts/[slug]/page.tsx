@@ -5,6 +5,7 @@
 // ISR-cached query). Only registry entries with hasHub === true render here.
 
 import type { Metadata } from 'next'
+import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
@@ -182,6 +183,7 @@ export default async function ContextPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="max-w-3xl mx-auto px-6 py-10">
+        <BreadcrumbJsonLd items={[{ label: 'Home', href: '/' }, { label: ctx.title }]} />
         <Link
           href={content.backLink.href}
           className="inline-block text-sm text-neutral-400 hover:text-oxblood mb-8 transition-colors"

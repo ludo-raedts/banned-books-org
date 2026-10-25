@@ -20,6 +20,7 @@ import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from '@/components/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { DEFAULT_ROBOTS, GOOGLE_ONLY_NOINDEX, isCoreBook } from '@/lib/robots-meta'
+import { isOrganizationAuthor } from '@/lib/organization-authors'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
 import {
@@ -1173,8 +1174,13 @@ export default async function BookPage({
       const personAwards = parseAwards(
         book.book_authors.find(ba => ba.authors?.display_name === a.display_name)?.authors?.awards,
       )
+      // Organization "authors" (Disney, OUP, …) are Organization nodes on their
+      // own page (#organization); everyone else is a Person (#person). Emitting
+      // the same @id here links Book→author to that entity across pages.
+      const isOrg = !!a.slug && isOrganizationAuthor(a.slug)
       return {
-        '@type': 'Person',
+        '@type': isOrg ? 'Organization' : 'Person',
+        ...(a.slug ? { '@id': `https://www.banned-books.org/authors/${a.slug}#${isOrg ? 'organization' : 'person'}` } : {}),
         name: a.display_name,
         ...(a.slug ? { url: `https://www.banned-books.org/authors/${a.slug}` } : {}),
         ...(personAwards.length > 0 ? { award: personAwards.map(awardSchemaText) } : {}),

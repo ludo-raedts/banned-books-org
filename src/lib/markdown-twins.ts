@@ -3,11 +3,11 @@
 //
 // The HTML pages live at e.g. /about and /essays/the-grey-zone; the markdown
 // twins at /about.md and /essays/the-grey-zone.md. An agent that GETs the HTML
-// URL with `Accept: text/markdown` is rewritten to the twin by the middleware,
+// URL with `Accept: text/markdown` is rewritten to the twin by the proxy (src/proxy.ts),
 // so it never has to know the `.md` naming convention. The homepage maps to
 // /llms.txt, which is the curated markdown entry point for the whole site.
 //
-// IMPORTANT: keep these keys in sync with the `matcher` in src/middleware.ts.
+// IMPORTANT: keep these keys in sync with the `matcher` in src/proxy.ts.
 // Next.js requires the matcher to be a static literal, so it cannot import this
 // map — any path added here must also be added there, or negotiation silently
 // won't run for it.

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import PageviewTracker from '@/components/pageview-tracker'
+import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import { adminClient } from '@/lib/supabase'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import { coverAlt } from '@/lib/cover-alt'
@@ -216,6 +217,7 @@ export default async function BannedBooksYearPage({
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-10">
+      <BreadcrumbJsonLd items={[{ label: 'Home', href: '/' }, { label: 'Banned books by year', href: '/banned-books' }, { label: String(yearNum) }]} />
       <PageviewTracker entityType="page" path={`/banned-books/${yearNum}`} />
       <script
         type="application/ld+json"

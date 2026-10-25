@@ -12,6 +12,7 @@ import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import CitationBlock from '@/components/citation-block'
 import YearStrip from '@/components/year-strip'
+import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import PageviewTracker from '@/components/pageview-tracker'
 import BookCardCompact from '@/components/home/BookCardCompact'
 import SectionShell from '@/components/section/SectionShell'
@@ -461,6 +462,7 @@ export default async function CountryPage({
 
   return (
     <main>
+      <BreadcrumbJsonLd items={[{ label: 'Home', href: '/' }, { label: 'Countries', href: '/countries' }, { label: country.name_en }]} />
       <PageviewTracker entityType="country" path={`/countries/${code.toLowerCase()}`} />
       <script
         type="application/ld+json"

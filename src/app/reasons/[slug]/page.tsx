@@ -74,6 +74,7 @@ import Eyebrow from '@/components/section/Eyebrow'
 import FaqSection from '@/components/home/FaqSection'
 import CitationBlock from '@/components/citation-block'
 import YearStrip from '@/components/year-strip'
+import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import PageviewTracker from '@/components/pageview-tracker'
 import type { FaqItem } from '@/components/faq-accordion'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
@@ -338,6 +339,7 @@ export default async function ReasonPage({
 
   return (
     <main>
+      <BreadcrumbJsonLd items={[{ label: 'Home', href: '/' }, { label: 'Reasons', href: '/reasons' }, { label }]} />
       <PageviewTracker entityType="reason" path={`/reasons/${slug}`} />
       <script
         type="application/ld+json"

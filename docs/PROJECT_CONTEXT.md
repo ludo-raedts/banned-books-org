@@ -303,7 +303,7 @@ src/
 │   │   ├── committer.ts              # DB transaction for direct-write or queued branch
 │   │   └── run-import-job.ts         # Orchestrator: seven phases with retry-safe phase gates
 │   └── migration-parser.ts           # Parser for both pg_dump and hand-written migration SQL
-└── middleware.ts                     # Gate /admin/* on `admin_session` cookie
+└── proxy.ts                          # (was middleware.ts) Gate /admin/* on `admin_session` cookie + markdown Accept-negotiation
 
 supabase/
 ├── config.toml                       # Supabase CLI configuration

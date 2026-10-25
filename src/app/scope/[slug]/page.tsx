@@ -4,6 +4,7 @@
 export const revalidate = 86400
 
 import type { Metadata } from 'next'
+import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from '@/components/link'
@@ -485,6 +486,7 @@ export default async function ScopePage({
 
   return (
     <main>
+      <BreadcrumbJsonLd items={[{ label: 'Home', href: '/' }, { label: `Book bans in ${scope.label_en.toLowerCase()} settings` }]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}

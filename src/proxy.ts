@@ -2,7 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/admin-session'
 import { MARKDOWN_TWINS, prefersMarkdown } from '@/lib/markdown-twins'
 
-export async function middleware(request: NextRequest) {
+// Next 16: the `middleware` file convention is deprecated → `proxy` (same
+// request/response API, same matcher). Renamed 2026-10-25.
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Markdown content negotiation for prose pages that have a `.md` twin.
