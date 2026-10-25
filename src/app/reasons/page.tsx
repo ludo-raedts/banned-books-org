@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     // Bing (28d): 510 impr @5.9% at pos 5 — question-first snippet.
     title: `Why are books banned? ${n} reasons, ranked`,
-    description: `Why are books banned? ${n} reasons ranked by how many books they hit — political and sexual content, LGBTQ+ themes, religion, race, violence — with examples and sources.`,
+    description: `Why are books banned? ${n} reasons ranked by how many books they hit — political and sexual content, LGBTQ+ themes, religion, race, violence — with examples.`,
     alternates: { canonical: '/reasons' },
   }
 }
