@@ -44,6 +44,7 @@ export default async function HappeningNowSection() {
   // news passthrough.
   const latestEssay = publishedEssays()[0]
   if (items.length === 0 && !latestEssay) return null
+  const currentYear = new Date().getUTCFullYear()
 
   return (
     <SectionShell tone="white" eyebrow="Happening now">
@@ -54,6 +55,12 @@ export default async function HappeningNowSection() {
         viewAllLabel="All news"
         accent="black"
       />
+      <p className="-mt-4 mb-5 text-sm text-gray-600">
+        Every ban recorded this year, by country and reason:{' '}
+        <Link href={`/banned-books/${currentYear}`} className="font-medium text-oxblood hover:underline">
+          banned books {currentYear} →
+        </Link>
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)

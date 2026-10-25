@@ -451,6 +451,7 @@ export default async function CountryPage({
     latestBanYear,
     topReasonNames: topReasons.map(r => reasonPhrase(r.slug)),
     notableBookTitles,
+    bansSince2020: banSweep.years.filter(y => y >= 2020).length,
   })
 
   // Hero stats — same shape as /scope/[slug] and /reasons/[slug] for

@@ -14,8 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const { count } = await adminClient().from('reasons').select('*', { count: 'exact', head: true })
   const n = count ?? 0
   return {
-    title: `Why Books Are Banned — ${n} Documented Reasons`,
-    description: 'Explore the most common reasons books are banned: political content, sexual themes, LGBTQ+ representation, religious offence, and more.',
+    // Bing (28d): 510 impr @5.9% at pos 5 — question-first snippet.
+    title: `Why are books banned? ${n} reasons, ranked`,
+    description: `Why are books banned? ${n} reasons ranked by how many books they hit — political and sexual content, LGBTQ+ themes, religion, race, violence — with examples and sources.`,
     alternates: { canonical: '/reasons' },
   }
 }

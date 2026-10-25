@@ -25,9 +25,10 @@ const ITEMS_PER_PAGE = 30
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Book Ban News — Latest Censorship Updates',
+    // Bing (28d): 1,147 impr @5.5% — lead with recency and what the page is.
+    title: 'Book ban news: this week\u2019s challenges, removals and rulings',
     description:
-      'Daily-updated coverage of book bans and censorship worldwide: newly challenged titles, school and library removals, legislation, court rulings, and reversals.',
+      'What happened in book censorship this week? Daily news on challenged titles, school and library removals, new laws, court rulings and reversals, with sources.',
     alternates: { canonical: '/news' },
   }
 }

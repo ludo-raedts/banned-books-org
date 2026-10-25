@@ -26,6 +26,7 @@ function articulate(name: string): string {
 }
 
 export type CountryFaqInputs = {
+  bansSince2020?: number        // documented bans (events) with year_started >= 2020
   countryCode: string
   countryName: string
   totalBanCount: number
@@ -57,6 +58,7 @@ export function buildCountryFaq({
   latestBanYear,
   topReasonNames,
   notableBookTitles,
+  bansSince2020,
 }: CountryFaqInputs): FaqItem[] {
   if (totalBanCount === 0) return []
 
@@ -71,6 +73,15 @@ export function buildCountryFaq({
     q: `How many books are banned in ${articulate(countryName)}?`,
     a: `${totalBanCount} ${totalBanCount === 1 ? 'book is' : 'books are'} documented as banned or challenged in ${articulate(countryName)}.${topReasonClause}`,
   })
+
+  // 1b. Recent wave — searchers ask "how many books have been banned in X
+  // since 2020"; answer with the documented event count for this decade.
+  if (bansSince2020 && bansSince2020 > 0) {
+    items.push({
+      q: `How many books have been banned in ${articulate(countryName)} since 2020?`,
+      a: `This catalogue records ${bansSince2020.toLocaleString('en')} documented ${bansSince2020 === 1 ? 'ban or challenge' : 'bans and challenges'} in ${articulate(countryName)} with a start date of 2020 or later${latestBanYear ? `, the most recent in ${latestBanYear}` : ''}. Each entry cites its source; see the by-year links on this page for the breakdown.`,
+    })
+  }
 
   // 2. (Editorial, top-5 only) Who decides
   if (facts) {
