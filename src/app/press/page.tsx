@@ -7,6 +7,7 @@ import Link from '@/components/link'
 import Image from 'next/image'
 import { adminClient } from '@/lib/supabase'
 import CopyButton from '@/components/copy-button'
+import EmailLink from '@/components/email-link'
 import SectionShell from '@/components/section/SectionShell'
 import { citedBy, formatCitedDate, type CitedBy } from '@/lib/cited-by'
 
@@ -485,9 +486,7 @@ export default async function PressPage() {
             </div>
             <p className="text-xs text-neutral-500 mt-8">
               Used the data somewhere we missed? Email{' '}
-              <a href="mailto:info@banned-books.org" className="text-oxblood font-medium hover:underline">
-                info@banned-books.org
-              </a>{' '}
+              <EmailLink email="info@banned-books.org" className="text-oxblood font-medium hover:underline" />{' '}
               and we will add it.
             </p>
           </div>
@@ -502,9 +501,7 @@ export default async function PressPage() {
             <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
               <dt className="text-neutral-500">Press inquiries</dt>
               <dd>
-                <a href="mailto:info@banned-books.org" className="text-oxblood font-medium hover:underline">
-                  info@banned-books.org
-                </a>
+                <EmailLink email="info@banned-books.org" className="text-oxblood font-medium hover:underline" />
               </dd>
               <dt className="text-neutral-500">Response time</dt>
               <dd className="text-neutral-700">Within 48 hours</dd>

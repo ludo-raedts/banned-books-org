@@ -2,10 +2,62 @@
 // no per-request mutations, content changes on enrichment cycles.
 export const revalidate = 86400
 
+import { cache } from 'react'
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
+
+// ── Light sweep over a reason's ban links ───────────────────────────────────
+// One paginated pass yields every aggregate the page AND its metadata need
+// (distinct books, per-book event counts, countries, years, active/total
+// counts) WITHOUT hydrating thousands of full book rows. Shared via React
+// cache() so generateMetadata and the page run it once per request — the
+// metadata used to read a separate 2,000-link sample, so the <meta
+// description> book count disagreed with the H1 for the big reasons
+// (political 10.9k, moral 5.1k, sexual 3.3k, lgbtq 2.8k books).
+type ReasonSweep = {
+  bookCountById: Map<number, number>   // book_id → events citing this reason
+  countryBanCounts: Map<string, number>
+  yearSet: Set<number>
+  totalBans: number
+  activeBans: number
+}
+
+const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
+  const supabase = adminClient()
+  const sweep: ReasonSweep = {
+    bookCountById: new Map(),
+    countryBanCounts: new Map(),
+    yearSet: new Set(),
+    totalBans: 0,
+    activeBans: 0,
+  }
+  let offset = 0
+  while (true) {
+    const { data, error } = await supabase
+      .from('ban_reason_links')
+      .select('bans(book_id, country_code, year_started, status)')
+      .eq('reason_id', reasonId)
+      // Stable order (ban_id unique for a fixed reason_id) or .range() skips past 1000.
+      .order('ban_id')
+      .range(offset, offset + 999)
+    if (error) throw error
+    if (!data || data.length === 0) break
+    for (const bl of data) {
+      const ban = bl.bans as unknown as { book_id?: number; country_code?: string; year_started?: number | null; status?: string } | null
+      if (!ban) continue
+      sweep.totalBans++
+      if (ban.status === 'active') sweep.activeBans++
+      if (ban.book_id) sweep.bookCountById.set(ban.book_id, (sweep.bookCountById.get(ban.book_id) ?? 0) + 1)
+      if (ban.country_code) sweep.countryBanCounts.set(ban.country_code, (sweep.countryBanCounts.get(ban.country_code) ?? 0) + 1)
+      if (ban.year_started != null) sweep.yearSet.add(ban.year_started)
+    }
+    if (data.length < 1000) break
+    offset += 1000
+  }
+  return sweep
+})
 import { searchBooks } from '@/lib/book-search'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
@@ -81,23 +133,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   let bookCount = 0
   let topCountryNames: string[] = []
   if (reason) {
-    const { data: links } = await supabase
-      .from('ban_reason_links')
-      .select('bans(country_code, book_id)')
-      .eq('reason_id', reason.id)
-      .limit(2000)
+    // Same full sweep the page renders from (cache()d) — counts now match the H1.
+    const { bookCountById, countryBanCounts } = await getReasonSweep(reason.id)
+    bookCount = bookCountById.size
 
-    const bookIds = new Set<number>()
-    const countryCounts = new Map<string, number>()
-    for (const l of (links ?? []) as unknown as { bans: { country_code: string; book_id: number } | null }[]) {
-      const ban = l.bans
-      if (!ban) continue
-      bookIds.add(ban.book_id)
-      countryCounts.set(ban.country_code, (countryCounts.get(ban.country_code) ?? 0) + 1)
-    }
-    bookCount = bookIds.size
-
-    const topCodes = [...countryCounts.entries()]
+    const topCodes = [...countryBanCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
       .map(([c]) => c)
@@ -145,43 +185,11 @@ export default async function ReasonPage({
   const { data: reason } = await supabase.from('reasons').select('id, slug').eq('slug', slug).single()
   if (!reason) notFound()
 
-  // ── Light sweep over this reason's ban links ─────────────────────────────────
-  // One pass yields every aggregate the page needs (distinct books, per-book
-  // event counts, countries, years, active/total counts) WITHOUT hydrating
-  // thousands of full book rows. The full catalogue is served client-side by
-  // <ReasonCatalogueBrowser> via /api/books, so the page stays light + cacheable
-  // (previously this fetched all ~5.8k books server-side and forced dynamic
-  // rendering via searchParams).
-  const bookCountById = new Map<number, number>()   // book_id → events citing this reason
-  const countryBanCounts = new Map<string, number>()
-  const yearSet = new Set<number>()
-  let totalBans = 0
-  let activeBans = 0
-  {
-    let offset = 0
-    while (true) {
-      const { data, error } = await supabase
-        .from('ban_reason_links')
-        .select('bans(book_id, country_code, year_started, status)')
-        .eq('reason_id', reason.id)
-        // Stable order (ban_id unique for a fixed reason_id) or .range() skips past 1000.
-        .order('ban_id')
-        .range(offset, offset + 999)
-      if (error) throw error
-      if (!data || data.length === 0) break
-      for (const bl of data) {
-        const ban = bl.bans as unknown as { book_id?: number; country_code?: string; year_started?: number | null; status?: string } | null
-        if (!ban) continue
-        totalBans++
-        if (ban.status === 'active') activeBans++
-        if (ban.book_id) bookCountById.set(ban.book_id, (bookCountById.get(ban.book_id) ?? 0) + 1)
-        if (ban.country_code) countryBanCounts.set(ban.country_code, (countryBanCounts.get(ban.country_code) ?? 0) + 1)
-        if (ban.year_started != null) yearSet.add(ban.year_started)
-      }
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  }
+  // Light sweep (see getReasonSweep above; shared with generateMetadata). The
+  // full catalogue is served client-side by <ReasonCatalogueBrowser> via
+  // /api/books, so the page stays light + cacheable (previously this fetched
+  // all ~5.8k books server-side and forced dynamic rendering via searchParams).
+  const { bookCountById, countryBanCounts, yearSet, totalBans, activeBans } = await getReasonSweep(reason.id)
 
   const bookCount = bookCountById.size
   const countries = countryBanCounts.size

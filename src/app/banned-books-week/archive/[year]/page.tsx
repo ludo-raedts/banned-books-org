@@ -5,7 +5,9 @@ import { getBBWConfig } from '@/config/banned-books-week'
 import { getPublishedFeaturedBooks } from '@/lib/bbw-data'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 
-export const dynamic = 'force-dynamic'
+// ISR: archive years are immutable once the week has passed; the admin
+// publish flow revalidates on change. Rendered on demand (no static params).
+export const revalidate = 86400
 
 // Archive route: only renders for years that are strictly in the past relative
 // to the configured year. Current and future years redirect to the live hub.

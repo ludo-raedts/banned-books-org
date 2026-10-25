@@ -136,9 +136,34 @@ const getBookIdsForAuthor = cache(async (authorId: number): Promise<number[]> =>
     .filter((id): id is number => id != null)
 })
 
+// Books + their bans for an author, fetched ONCE per request and shared by
+// generateMetadata and the page (React cache()). Bans ride along as a nested
+// embed under books, so PostgREST's 1,000-row max-rows cap (which silently
+// truncated the old top-level `bans.in(book_id, …)` metadata query for
+// PEN-heavy authors) does not apply. `.in('id', …)` is chunked: a handful of
+// placeholder authors (Anonymous, Various) link >1,000 books and would
+// otherwise exceed the URL length cap.
+const getBooksForAuthor = cache(async (authorId: number): Promise<Book[]> => {
+  const bookIds = await getBookIdsForAuthor(authorId)
+  if (bookIds.length === 0) return []
+  const supabase = adminClient()
+  const CHUNK = 300
+  const out: Book[] = []
+  for (let i = 0; i < bookIds.length; i += CHUNK) {
+    const { data } = await supabase
+      .from('books')
+      .select(`
+        id, title, slug, cover_url, first_published_year, genres, is_blanket_works,
+        bans(id, status, country_code, year_started, year_ended, action_type, countries(name_en), ban_reason_links(reasons(slug)))
+      `)
+      .in('id', bookIds.slice(i, i + CHUNK))
+    out.push(...(((data as unknown as Book[]) ?? [])))
+  }
+  return out.sort((a, b) => a.title.localeCompare(b.title))
+})
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const supabase = adminClient()
   const { data: author } = await getAuthorBySlug(slug)
   if (!author) return {}
 
@@ -153,22 +178,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const hasBio = typeof author.bio === 'string' && author.bio.trim().length > 0
   const indexable = (hasBio || isOrganizationAuthor(slug)) && !author.is_placeholder
 
-  const bookIds = await getBookIdsForAuthor((author as unknown as { id: number }).id)
+  // Same books+bans fetch the page uses (cache()d) — no second bans query.
+  const books = await getBooksForAuthor((author as unknown as { id: number }).id)
   let bannedBookCount = 0
   let countryCount = 0
   let earliestYear: number | null = null
   let topReasonSlug: string | null = null
-  if (bookIds.length > 0) {
-    const { data: bans } = await supabase
-      .from('bans')
-      .select('book_id, country_code, year_started, ban_reason_links(reasons(slug))')
-      .in('book_id', bookIds)
-    const banRows = (bans ?? []) as unknown as {
-      book_id: number
-      country_code: string
-      year_started: number | null
-      ban_reason_links: { reasons: { slug: string } | null }[]
-    }[]
+  if (books.length > 0) {
+    const banRows = books.flatMap(b => b.bans.map(bn => ({ book_id: b.id, ...bn })))
     bannedBookCount = new Set(banRows.map(b => b.book_id)).size
     countryCount = new Set(banRows.map(b => b.country_code)).size
     const years = banRows.map(b => b.year_started).filter((y): y is number => y != null)
@@ -222,7 +239,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ...(indexable ? {} : { robots: { index: false, follow: true } }),
     alternates: { canonical: `/authors/${slug}` },
     openGraph: { title, description },
-    twitter: { card: 'summary' },
+    twitter: { card: 'summary_large_image' },  // author pages ship a 1200×630 card (opengraph-image.tsx)
     other: buildCitationMeta({
       entityType: 'author',
       title: author.display_name,
@@ -234,6 +251,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function AuthorPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  // Mixed-case paths (/BOOKS/1984 style) served 200 with a lowercase canonical;
+  // 308 them like /countries/[code] does so one URL carries the signals.
+  if (slug !== slug.toLowerCase()) permanentRedirect(`/authors/${slug.toLowerCase()}`)
   const supabase = adminClient()
 
   // Shared with generateMetadata via getAuthorBySlug's React cache() — one
@@ -259,20 +279,8 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   }
   const a = author as unknown as Author
 
-  const bookIds = await getBookIdsForAuthor(author.id)
-
-  let books: Book[] = []
-  if (bookIds.length > 0) {
-    const { data } = await supabase
-      .from('books')
-      .select(`
-        id, title, slug, cover_url, first_published_year, genres, is_blanket_works,
-        bans(id, status, country_code, year_started, year_ended, action_type, countries(name_en), ban_reason_links(reasons(slug)))
-      `)
-      .in('id', bookIds)
-      .order('title')
-    books = (data as unknown as Book[]) ?? []
-  }
+  // Shared with generateMetadata (cache()) — one books+bans fetch per request.
+  const books = await getBooksForAuthor(author.id)
 
   // Blanket-works pseudo-books ("Toutes ses œuvres", Liste Otto) stand in for
   // a ban on the author's ENTIRE oeuvre — they are not catalogued titles. Keep

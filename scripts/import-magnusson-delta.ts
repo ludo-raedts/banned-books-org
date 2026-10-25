@@ -209,7 +209,7 @@ async function main() {
   for (const a of toAttach) { await insertBan(a.book_id, a.row); banCount++ }
   for (const group of plannedNewBooks.values()) {
     const [first, ...rest] = group
-    let r
+    let r: Awaited<ReturnType<typeof commitParsedRow>>
     try { r = await commitParsedRow({
       title: first.title, authors: first.authors, slug_override: (first as { slug_override?: string }).slug_override ?? null, year: first.year, country_code: 'US',
       scope_slug: first.scope_slug, action_type: first.action_type, ban_status: 'active', reason_slug: 'other',

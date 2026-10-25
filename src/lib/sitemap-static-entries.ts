@@ -144,9 +144,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/timeline`, changefreq: 'monthly', priority: 0.8 },
     { loc: `${base}/privacy`, changefreq: 'yearly', priority: 0.3 },
     { loc: `${base}/challenged-books`, changefreq: 'weekly', priority: 0.9 },
-    // Catalogue browse/search landing — the "Books" breadcrumb target on every
-    // book page, previously discoverable only via internal links.
-    { loc: `${base}/search`, changefreq: 'weekly', priority: 0.8 },
+    // /search is deliberately NOT listed: an internal search results page in a
+    // sitemap is against Google's guidance; it stays index,follow and is linked
+    // from every book page's breadcrumb.
     // Censorship-event context hubs — long-form Article pages cross-linked from
     // country/book pages and from the on-book context callouts. (The legacy
     // /laws/loi-gayssot URL 301-redirects to /contexts/loi-gayssot.)
@@ -189,7 +189,8 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     // would index two copies. They stay reachable via Accept negotiation, the
     // `Link: rel=alternate` header on the HTML page, and carry a canonical
     // Link header pointing back at the HTML (markdown-response.ts).
-    { loc: `${base}/llms.txt`, changefreq: 'weekly', priority: 0.5 },
+    // /llms.txt is not listed either: it is a machine entry point at its
+    // well-known path (llmstxt.org convention), not a page to rank.
   ]
 
   // Essay routes are derived from the registry so /essays index, sitemap, and

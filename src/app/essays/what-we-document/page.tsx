@@ -1,15 +1,22 @@
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import EssayLayout from '@/components/essay-layout'
-import { essayBySlug } from '@/lib/essays-data'
+import { essayBySlug, essayMetaDescription } from '@/lib/essays-data'
 import { buildCitationMeta } from '@/lib/citation-meta'
 
 const essay = essayBySlug('what-we-document')!
 
 export const metadata: Metadata = {
   title: essay.title,
-  description: essay.dek,
-  openGraph: { title: essay.title, description: essay.dek, type: 'article' },
+  description: essayMetaDescription(essay),
+  openGraph: {
+    title: essay.title,
+    description: essayMetaDescription(essay),
+    type: 'article',
+    // Essays have no per-page card; fall back to the site card so
+    // summary_large_image previews are not imageless.
+    images: ['https://www.banned-books.org/opengraph-image'],
+  },
   alternates: {
     canonical: essay.href,
     types: { 'text/markdown': `${essay.href}.md` },
@@ -30,7 +37,7 @@ const jsonLd = {
   headline: essay.title,
   description: essay.dek,
   datePublished: essay.publishedAt,
-  dateModified: essay.publishedAt,
+  dateModified: essay.updatedAt ?? essay.publishedAt,
   image: 'https://www.banned-books.org/opengraph-image',
   // Person author (publicly bylined on /about) — a real-authorship signal,
   // deliberately not an anonymous Organization byline.

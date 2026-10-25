@@ -9,15 +9,32 @@
 // the bare answer text.
 
 import Link from '@/components/link'
+import EmailLink from '@/components/email-link'
 import { Fragment } from 'react'
 
 export type FaqItem = { q: string; a: string }
 
-function renderAnswer(text: string): React.ReactNode {
+// Bare e-mail addresses in answers render via <EmailLink> so Cloudflare's
+// e-mail obfuscation cannot rewrite them (hydration mismatch, React #418).
+const EMAIL_RE = /([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi
+
+export function renderAnswer(text: string, linkClass = 'text-brand hover:underline'): React.ReactNode {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
   return parts.map((part, i) => {
     const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
-    if (!m) return <Fragment key={i}>{part}</Fragment>
+    if (!m) {
+      const chunks = part.split(EMAIL_RE)
+      if (chunks.length === 1) return <Fragment key={i}>{part}</Fragment>
+      return (
+        <Fragment key={i}>
+          {chunks.map((c, j) =>
+            j % 2 === 1
+              ? <EmailLink key={j} email={c} className={linkClass} />
+              : <Fragment key={j}>{c}</Fragment>,
+          )}
+        </Fragment>
+      )
+    }
     const label = m[1]
     const href = m[2]
     const isExternal = /^https?:\/\//.test(href)
@@ -26,7 +43,7 @@ function renderAnswer(text: string): React.ReactNode {
         <a
           key={i}
           href={href}
-          className="text-brand hover:underline"
+          className={linkClass}
           target="_blank"
           rel="noopener"
         >
@@ -35,14 +52,14 @@ function renderAnswer(text: string): React.ReactNode {
       )
     }
     return (
-      <Link key={i} href={href} className="text-brand hover:underline">
+      <Link key={i} href={href} className={linkClass}>
         {label}
       </Link>
     )
   })
 }
 
-function stripMarkdown(text: string): string {
+export function stripMarkdown(text: string): string {
   return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
 }
 

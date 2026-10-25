@@ -8,6 +8,7 @@ export type Essay = {
   title: string                 // Used for nav, cards, og:title fallback.
   dek: string                   // Short standfirst shown on cards and in the hero.
   publishedAt: string           // ISO date (YYYY-MM-DD). Used for sorting and og:article meta.
+  updatedAt?: string            // ISO date of the last substantive revision (JSON-LD dateModified). Omit = never revised.
   readingTimeMin: number        // Manually set. Roughly words / 200, rounded up.
   relatedBookSlugs: string[]    // Curated. Looked up in books table by EssayRelatedBooks.
   draft?: boolean               // If true, hidden from index/footer/sitemap.
@@ -47,6 +48,7 @@ export const ESSAYS: Essay[] = [
     title: 'In whose name: the reasons people give for banning books',
     dek: 'Nobody bans a book and says they want to hide it — there is always a reason, and the reason always names someone who must be protected. What the catalogue’s reason data reveals about the vocabulary of censorship.',
     publishedAt: '2026-06-03',
+    updatedAt: '2026-06-04',   // figures refreshed after the ban-reason cleanup
     readingTimeMin: 11,
     relatedBookSlugs: ['1984', 'the-satanic-verses', 'the-decameron', 'and-tango-makes-three', 'gender-queer', 'brave-new-world'],
   },
@@ -127,4 +129,20 @@ export function essayBySlug(slug: string): Essay | undefined {
 
 export function otherEssays(currentSlug: string, limit = 3): Essay[] {
   return publishedEssays().filter(e => e.slug !== currentSlug).slice(0, limit)
+}
+
+// <meta description> for an essay. The dek is editorial (up to ~300 chars)
+// and gets truncated mid-sentence in SERPs (~155 chars visible); this takes
+// whole sentences from the dek up to 155 chars, falling back to a hard cut.
+export function essayMetaDescription(e: Essay): string {
+  const MAX = 155
+  if (e.dek.length <= MAX) return e.dek
+  const sentences = e.dek.match(/[^.!?]+[.!?]+(\s|$)/g) ?? []
+  let out = ''
+  for (const sent of sentences) {
+    if ((out + sent).trim().length > MAX) break
+    out += sent
+  }
+  out = out.trim()
+  return out.length >= 60 ? out : e.dek.slice(0, MAX - 1).trimEnd() + '…'
 }

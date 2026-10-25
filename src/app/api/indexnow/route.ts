@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { submitToIndexNow } from '@/lib/indexnow'
+import { SESSION_COOKIE, safeEqual, verifySessionToken } from '@/lib/admin-session'
 
 const MAX_URLS = 10_000
 
@@ -9,10 +10,12 @@ async function isAuthorized(request: NextRequest): Promise<boolean> {
   if (!secret) return false
 
   const auth = request.headers.get('authorization') ?? ''
-  if (auth.startsWith('Bearer ') && auth.slice(7) === secret) return true
+  if (auth.startsWith('Bearer ') && safeEqual(auth.slice(7), secret)) return true
 
+  // Admin sessions are HMAC tokens (exp.sig), never the raw secret — the old
+  // `=== secret` compare could never match a real login.
   const cookieStore = await cookies()
-  return cookieStore.get('admin_session')?.value === secret
+  return verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value, secret)
 }
 
 export async function POST(request: NextRequest) {

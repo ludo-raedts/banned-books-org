@@ -785,6 +785,9 @@ export default async function BookPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  // Mixed-case paths (/BOOKS/1984 style) served 200 with a lowercase canonical;
+  // 308 them like /countries/[code] does so one URL carries the signals.
+  if (slug !== slug.toLowerCase()) permanentRedirect(`/books/${slug.toLowerCase()}`)
   const supabase = adminClient()
 
   // Bucket A: a blocked slug renders the content-free tombstone and nothing

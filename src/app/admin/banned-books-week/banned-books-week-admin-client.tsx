@@ -327,8 +327,8 @@ export default function BannedBooksWeekAdminClient(props: Props) {
         >
           {busy === 'publish' ? 'Publishing…' : 'Publish'}
         </button>
-        <Link href={`/banned-books-week?preview=draft`} target="_blank" className="text-sm text-brand hover:underline">
-          Preview draft →
+        <Link href="/banned-books-week" target="_blank" className="text-sm text-brand hover:underline">
+          View live page →
         </Link>
         {picksDirty && !busy && <span className="text-xs text-amber-600 self-center">Unsaved changes</span>}
         {msg && <span className="text-xs text-green-700">{msg}</span>}

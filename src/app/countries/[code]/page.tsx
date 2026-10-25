@@ -92,7 +92,9 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/countries/${code.toLowerCase()}` },
-    openGraph: { title, description },
+    // Setting openGraph here replaces the layout's object wholesale, which
+    // had dropped the site card (imageless summary_large_image previews).
+    openGraph: { title, description, images: ['https://www.banned-books.org/opengraph-image'] },
     other: buildCitationMeta({
       entityType: 'country',
       title: `Book censorship in ${country.name_en}`,

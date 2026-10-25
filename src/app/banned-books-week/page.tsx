@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import Image from 'next/image'
-import { cookies } from 'next/headers'
-import { adminClient } from '@/lib/supabase'
 import { getBBWConfig, formatBBWDateRange } from '@/config/banned-books-week'
 import { BBWDisclaimer } from '@/components/bbw-disclaimer'
 import Eyebrow from '@/components/section/Eyebrow'
@@ -10,7 +8,6 @@ import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { BOOKSHOP_REL, PEN_CALENDAR_2027 } from '@/lib/bookshop'
 import {
   getPublishedFeaturedBooks,
-  getAllFeaturedBooksForAdmin,
   getBBWLiveStats,
   type FeaturedBookRow,
 } from '@/lib/bbw-data'
@@ -19,10 +16,15 @@ import {
   getPublishedBlockHtml,
   stripOuterParagraph,
   REQUIRED_BLOCKS_BY_PAGE,
-  type ContentBlockRow,
 } from '@/lib/content-blocks'
 
-export const dynamic = 'force-dynamic'
+// ISR: the hub reads only published blocks/picks. Admin saves + publishes call
+// revalidatePath (api/admin/banned-books-week, content-blocks, bbw-config), so
+// edits land immediately; the hourly cap covers the live-stats counters. The
+// former `?preview=draft` mode (force-dynamic + cookies on every public hit)
+// never worked — it compared the HMAC session cookie to the raw secret — and
+// drafts are reviewed in /admin/banned-books-week instead.
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Banned Books Week — International Context',
@@ -38,39 +40,23 @@ const TRACKS = [
   { href: '/reading-club/by-theme',               label: 'By theme',                   text: 'LGBTQ+, political dissent, religious censorship, race, sexuality.' },
 ] as const
 
-export default async function BannedBooksWeekPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ preview?: string }>
-}) {
-  const sp = await searchParams
-  const isPreview = sp.preview === 'draft' && (await isAdmin())
-
+export default async function BannedBooksWeekPage() {
   const config = await getBBWConfig()
   const year = config.year
   const slugs = REQUIRED_BLOCKS_BY_PAGE['bbw-hub']
 
-  const [blockMap, featured, stats, previewBlocks, dateRange, themeLine] = await Promise.all([
+  const [blockMap, featured, stats, dateRange, themeLine] = await Promise.all([
     getPublishedBlockMap(slugs),
-    isPreview ? getAllFeaturedBooksForAdmin(year) : getPublishedFeaturedBooks(year),
+    getPublishedFeaturedBooks(year),
     getBBWLiveStats(),
-    isPreview ? getAllBlocksForPreview(slugs) : Promise.resolve(new Map<string, ContentBlockRow>()),
     formatBBWDateRange(),
     // The campaign line lives in the homepage-callout block; reused here so the
     // official theme is stated once and edited in one place.
     getPublishedBlockHtml('bbw-tile-tagline'),
   ])
 
-  // In preview mode, show every block regardless of status; otherwise only
-  // published blocks render and unpublished sections are hidden.
-  const html = (slug: string): string | null => {
-    if (isPreview) {
-      const r = previewBlocks.get(slug)
-      if (!r) return null
-      return r.body_html ?? `<p class="opacity-50 italic">[brief: ${escapeHtml(r.placeholder_brief)}]</p>`
-    }
-    return blockMap.get(slug) ?? null
-  }
+  // Only published blocks render; unpublished sections are hidden.
+  const html = (slug: string): string | null => blockMap.get(slug) ?? null
 
   const heroSubtitle = html('bbw-hero-subtitle')
   const whatIs = html('bbw-what-is')
@@ -122,14 +108,6 @@ export default async function BannedBooksWeekPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {isPreview && (
-        <div className="max-w-3xl mx-auto px-6 md:px-9 pt-6">
-          <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-800">
-            Preview mode — showing all content (incl. drafts and placeholders).
-          </div>
-        </div>
-      )}
-
       {/* Hero */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-3xl mx-auto">
@@ -466,24 +444,3 @@ function FeaturedBookCard({ row }: { row: FeaturedBookRow }) {
   )
 }
 
-async function isAdmin(): Promise<boolean> {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
-  const secret = process.env.ADMIN_SECRET
-  return !!secret && !!session && session === secret
-}
-
-async function getAllBlocksForPreview(slugs: readonly string[]): Promise<Map<string, ContentBlockRow>> {
-  const out = new Map<string, ContentBlockRow>()
-  if (slugs.length === 0) return out
-  const { data } = await adminClient()
-    .from('content_blocks')
-    .select('*')
-    .in('slug', slugs as string[])
-  for (const r of (data ?? []) as ContentBlockRow[]) out.set(r.slug, r)
-  return out
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
-}

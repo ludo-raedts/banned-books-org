@@ -271,7 +271,7 @@ let gbDown = false
 async function searchGoogleBooks(title: string, author: string): Promise<SearchHit | null> {
   if (gbDown || gbQuotaTripped()) { gbDown = true; return null }
   // delayMs: 0 — the caller's outer loop already sleeps OL_DELAY_MS after this.
-  let volumes
+  let volumes: Awaited<ReturnType<typeof gbVolumesByTitleAuthor>>
   try {
     volumes = await gbVolumesByTitleAuthor(title, author, { maxResults: 5, fields: GB_FIELDS_ISBN, delayMs: 0 })
   } catch (e) {

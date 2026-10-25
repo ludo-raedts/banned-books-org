@@ -14,8 +14,9 @@ import { adminClient } from '@/lib/supabase'
 export const alt = 'Banned book — Banned Books archive'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
-// Re-renders along with the page on the ISR cycle.
-export const revalidate = 3600
+// Same weekly ISR cadence as the page (busted together on enrichment); the
+// card used to regenerate hourly — 358 KB PNG, ~2 s per share preview.
+export const revalidate = 604800
 
 type Params = { params: Promise<{ slug: string }> }
 

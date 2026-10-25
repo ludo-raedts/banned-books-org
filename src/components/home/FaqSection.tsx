@@ -1,41 +1,6 @@
-import Link from '@/components/link'
-import { Fragment } from 'react'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
-import type { FaqItem } from '@/components/faq-accordion'
-
-function renderAnswer(text: string): React.ReactNode {
-  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
-  return parts.map((part, i) => {
-    const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
-    if (!m) return <Fragment key={i}>{part}</Fragment>
-    const label = m[1]
-    const href = m[2]
-    const isExternal = /^https?:\/\//.test(href)
-    if (isExternal) {
-      return (
-        <a
-          key={i}
-          href={href}
-          className="text-oxblood hover:underline"
-          target="_blank"
-          rel="noopener"
-        >
-          {label}
-        </a>
-      )
-    }
-    return (
-      <Link key={i} href={href} className="text-oxblood hover:underline">
-        {label}
-      </Link>
-    )
-  })
-}
-
-function stripMarkdown(text: string): string {
-  return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
-}
+import { type FaqItem, renderAnswer, stripMarkdown } from '@/components/faq-accordion'
 
 export default function FaqSection({
   items,
@@ -84,7 +49,7 @@ export default function FaqSection({
               </span>
             </summary>
             <div className="px-4 md:px-5 pb-5 text-sm leading-relaxed text-neutral-700 max-w-[600px]">
-              {renderAnswer(item.a)}
+              {renderAnswer(item.a, 'text-oxblood hover:underline')}
             </div>
           </details>
         ))}
