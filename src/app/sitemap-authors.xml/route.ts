@@ -3,69 +3,11 @@
 // cost in the app). Sitemap freshness within 6h is more than crawlers need.
 export const revalidate = 21600
 
-import { adminClient } from '@/lib/supabase'
-import { withDbRetry } from '@/lib/db-retry'
-import { ORGANIZATION_AUTHOR_SLUGS } from '@/lib/organization-authors'
-import {
-  SITEMAP_BASE_URL,
-  SITEMAP_RESPONSE_HEADERS,
-  renderUrlset,
-  type SitemapEntry,
-} from '@/lib/sitemap-xml'
+import { buildAuthorEntries } from '@/lib/sitemap-entities'
+import { SITEMAP_RESPONSE_HEADERS, renderUrlset } from '@/lib/sitemap-xml'
 
-type AuthorRow = {
-  slug: string
-  display_name: string | null
-  updated_at: string | null
-  photo_url: string | null
-  bio: string | null
-  is_placeholder: boolean | null
-}
-
+// Bio-carrying (Google-indexable) authors only — mirrors the noindex rule in
+// authors/[slug]/page.tsx. All authors: sitemap-authors-all.xml (Bing).
 export async function GET() {
-  const supabase = adminClient()
-
-  // updated_at lives behind the trigger added in migration 20260515143605
-  // and bumps on every author UPDATE (bio fill, photo enrichment, etc.).
-  // Author photo emits as an Image Sitemap entry — ~2.5k authors have one
-  // and they're under-discoverable in Google Images right now.
-  let authors: AuthorRow[] = []
-  let offset = 0
-  while (true) {
-    const { data } = await withDbRetry(() => supabase
-      .from('authors')
-      .select('slug, display_name, updated_at, photo_url, bio, is_placeholder')
-      .not('slug', 'is', null)
-      .order('updated_at', { ascending: false })
-      .range(offset, offset + 999), 'sitemap-authors')
-    if (!data || data.length === 0) break
-    authors = authors.concat(data as AuthorRow[])
-    if (data.length < 1000) break
-    offset += 1000
-  }
-
-  // Quality gate, mirroring the noindex rule in authors/[slug]/page.tsx:
-  // only bio-carrying (or curated organization) authors are offered for
-  // indexing. Bio-less pages are name+booklist stubs — listing ~9k of them
-  // dilutes the substance ratio the site is judged on.
-  const entries: SitemapEntry[] = authors
-    .filter((a): a is AuthorRow & { slug: string } => Boolean(a.slug))
-    .filter((a) => !a.is_placeholder)
-    .filter((a) => (a.bio ?? '').trim().length > 0 || ORGANIZATION_AUTHOR_SLUGS.has(a.slug))
-    .map((a) => ({
-      loc: `${SITEMAP_BASE_URL}/authors/${a.slug}`,
-      lastmod: a.updated_at,
-      changefreq: 'monthly',
-      priority: 0.6,
-      ...(a.photo_url
-        ? {
-            images: [{
-              loc: a.photo_url,
-              ...(a.display_name ? { title: `${a.display_name} — author portrait` } : {}),
-            }],
-          }
-        : {}),
-    }))
-
-  return new Response(renderUrlset(entries), { headers: SITEMAP_RESPONSE_HEADERS })
+  return new Response(renderUrlset(await buildAuthorEntries('core')), { headers: SITEMAP_RESPONSE_HEADERS })
 }

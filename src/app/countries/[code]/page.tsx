@@ -75,7 +75,8 @@ export async function generateMetadata({
   }
   const reasonVariety = reasonSet.size
 
-  const title = `Books banned in ${country.name_en} – censorship history and examples`
+  // ≤ ~50 chars before the ' | Banned Books' suffix (was 63 → 79 total, truncated in SERPs).
+  const title = `Books banned in ${country.name_en} – history and examples`
 
   let description: string
   if (banCount === 0) {

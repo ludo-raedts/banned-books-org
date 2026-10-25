@@ -19,6 +19,7 @@ import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from '@/components/link'
 import { notFound, permanentRedirect } from 'next/navigation'
+import { DEFAULT_ROBOTS, GOOGLE_ONLY_NOINDEX, isCoreBook } from '@/lib/robots-meta'
 import { adminClient } from '@/lib/supabase'
 import { withDbRetry } from '@/lib/db-retry'
 import {
@@ -413,7 +414,10 @@ export async function generateMetadata({
   const topReasonSlug = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0]
   const topReasonPhrase = topReasonSlug ? BOOK_REASON_PHRASE[topReasonSlug] : null
 
-  // Title-candidate ladder — pick the first that fits the 70-char visible cap.
+  // Title-candidate ladder — pick the first that fits the 55-char cap (the
+  // layout appends ' | Banned Books', 16 chars; Google/Bing truncate the
+  // visible title around 60–70 chars — the 2026-10-25 audit measured live
+  // book titles at 75 chars, i.e. cut mid-hook).
   // Strategy: keep the most concrete value-add (the "for {reason}" token,
   // which the snippet hook relies on) for as long as possible by dropping
   // author or country first. Vague "Why it was banned" is the last-resort
@@ -447,6 +451,7 @@ export async function generateMetadata({
   // hook the US-only competitor can't show. Below threshold we fall through to
   // the unchanged reason/country ladder.
   const banCount = bans.length
+  const TITLE_MAX = 55
   const BAN_COUNT_TITLE_MIN = 5
   if (banCount >= BAN_COUNT_TITLE_MIN) {
     const times = `Banned ${banCount} times`
@@ -506,8 +511,8 @@ export async function generateMetadata({
   // token — richness (reason/country hooks) outranks the native title.
   let title = titleCandidates
     .flatMap(c => (withNative(c) !== c ? [withNative(c), c] : [c]))
-    .find(c => c.length <= 70) ?? data.title
-  if (title.length > 70) title = title.slice(0, 67) + '…'
+    .find(c => c.length <= TITLE_MAX) ?? data.title
+  if (title.length > TITLE_MAX) title = title.slice(0, TITLE_MAX - 1) + '…'
 
   const buildDescription = (bt: string): string => {
     if (bans.length === 0) {
@@ -537,9 +542,14 @@ export async function generateMetadata({
     onlineDate: data.first_published_year ? String(data.first_published_year) : undefined,
   })
 
+  // Indexable-core pilot: thin single-ban pages without blurb+cover are
+  // hidden from Google only (see src/lib/robots-meta.ts); Bing & co. keep them.
+  const coreIndexable = isCoreBook({ banCount, description: data.description_book, coverUrl: data.cover_url })
+
   return {
     title,
     description,
+    robots: coreIndexable ? DEFAULT_ROBOTS : GOOGLE_ONLY_NOINDEX,
     alternates: { canonical: `/books/${slug}` },
     openGraph: {
       title,

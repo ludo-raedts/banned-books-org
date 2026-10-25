@@ -11,6 +11,7 @@ import Image from 'next/image'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import Link from '@/components/link'
 import { notFound, permanentRedirect } from 'next/navigation'
+import { DEFAULT_ROBOTS, GOOGLE_ONLY_NOINDEX } from '@/lib/robots-meta'
 import { adminClient } from '@/lib/supabase'
 import { loadRelatedAuthors } from '@/lib/author-relations'
 import PageviewTracker from '@/components/pageview-tracker'
@@ -236,7 +237,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
-    ...(indexable ? {} : { robots: { index: false, follow: true } }),
+    // Google-only noindex since 2026-10-25 (was all engines) — Bing indexes
+    // and ranks these pages; see src/lib/robots-meta.ts.
+    robots: indexable ? DEFAULT_ROBOTS : GOOGLE_ONLY_NOINDEX,
     alternates: { canonical: `/authors/${slug}` },
     openGraph: { title, description },
     twitter: { card: 'summary_large_image' },  // author pages ship a 1200×630 card (opengraph-image.tsx)

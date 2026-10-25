@@ -148,7 +148,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const title = `Books banned for ${reasonPhrase(slug)} – examples and censorship patterns`
+  // ≤ ~55 chars before the ' | Banned Books' suffix (was 68 → 84 total, truncated in SERPs).
+  const title = `Books banned for ${reasonPhrase(slug)} – list and examples`
 
   const labelLower = label === 'LGBTQ+' ? 'LGBTQ+' : label.toLowerCase()
   const countryList =
