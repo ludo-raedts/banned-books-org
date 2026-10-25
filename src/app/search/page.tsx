@@ -7,6 +7,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import PageviewTracker from '@/components/pageview-tracker'
 import { unstable_cache } from 'next/cache'
 import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
@@ -104,6 +105,7 @@ export default async function SearchPage({
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
+      <PageviewTracker entityType="page" path="/search" />
       <header className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-3">
           Search the database of {totalCount.toLocaleString('en')} banned books

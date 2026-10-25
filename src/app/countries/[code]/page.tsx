@@ -11,6 +11,8 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { adminClient } from '@/lib/supabase'
 import ReasonBadge from '@/components/reason-badge'
 import CitationBlock from '@/components/citation-block'
+import YearStrip from '@/components/year-strip'
+import PageviewTracker from '@/components/pageview-tracker'
 import BookCardCompact from '@/components/home/BookCardCompact'
 import SectionShell from '@/components/section/SectionShell'
 import SectionHeader from '@/components/section/SectionHeader'
@@ -162,22 +164,26 @@ export default async function CountryPage({
     .order('title')
     .range(0, 99)
 
-  // Paginated sweep of every ban for this country → book_ids + reason freqs.
+  // Paginated sweep of every ban for this country → book_ids + reason freqs
+  // + start years (timeline, span stat and the by-year strip — previously
+  // derived from the 100-book grid page, which under-counted e.g. US 2024).
   async function loadBanSweep() {
     const ids: number[] = []
+    const years: number[] = []
     const reasonCounts = new Map<number, number>()
     let offset = 0
     while (true) {
       const { data: idRows } = await supabase
         .from('bans')
-        .select('book_id, ban_reason_links(reason_id)')
+        .select('book_id, year_started, ban_reason_links(reason_id)')
         .eq('country_code', upperCode)
         // Stable order or .range() skips rows past 1000 and undercounts.
         .order('id')
         .range(offset, offset + 999)
       if (!idRows || idRows.length === 0) break
-      for (const row of idRows as unknown as { book_id: number; ban_reason_links: { reason_id: number }[] }[]) {
+      for (const row of idRows as unknown as { book_id: number; year_started: number | null; ban_reason_links: { reason_id: number }[] }[]) {
         ids.push(row.book_id)
+        if (row.year_started != null) years.push(row.year_started)
         for (const link of row.ban_reason_links ?? []) {
           reasonCounts.set(link.reason_id, (reasonCounts.get(link.reason_id) ?? 0) + 1)
         }
@@ -185,7 +191,7 @@ export default async function CountryPage({
       if (idRows.length < 1000) break
       offset += 1000
     }
-    return { ids, reasonCounts }
+    return { ids, years, reasonCounts }
   }
 
   const [
@@ -320,9 +326,8 @@ export default async function CountryPage({
   }
 
   // Build timeline: bans by decade (or by year if ≤ 30 distinct years)
-  const countryBansForTimeline = books.flatMap(b =>
-    b.bans.map(ban => ban.year_started)
-  ).filter((y): y is number => !!y)
+  // Every ban's start year for the country (full sweep, not the 100-book grid).
+  const countryBansForTimeline = banSweep.years
 
   const yearCounts = new Map<number, number>()
   for (const y of countryBansForTimeline) yearCounts.set(y, (yearCounts.get(y) ?? 0) + 1)
@@ -456,6 +461,7 @@ export default async function CountryPage({
 
   return (
     <main>
+      <PageviewTracker entityType="country" path={`/countries/${code.toLowerCase()}`} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
@@ -533,6 +539,8 @@ export default async function CountryPage({
                 )}
               </p>
             )}
+
+            <YearStrip yearCounts={yearCounts} className="mt-6" />
 
             {country.description && (
               <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-700">

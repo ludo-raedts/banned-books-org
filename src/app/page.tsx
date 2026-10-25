@@ -7,6 +7,7 @@
 export const revalidate = 1800
 
 import type { Metadata } from 'next'
+import PageviewTracker from '@/components/pageview-tracker'
 import { adminClient } from '@/lib/supabase'
 import { newTimer } from '@/lib/timing'
 import { reasonLabel } from '@/components/reason-badge'
@@ -491,6 +492,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <PageviewTracker entityType="page" path="/" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(websiteJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldHtml(organizationJsonLd) }} />
 

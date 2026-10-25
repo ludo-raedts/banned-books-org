@@ -47,7 +47,7 @@ const TOP_N_GLOBAL = 50
 const TOP_N_PER_REASON = 10
 const EXCLUDED_REASON_SLUGS = new Set(['other'])
 const WIKI_API = 'https://en.wikipedia.org/w/api.php'
-const USER_AGENT = 'banned-books.org-enrichment-bot (ludo.raedts@voys.nl)'
+const USER_AGENT = 'banned-books.org-enrichment-bot (contact@banned-books.org)'
 
 // ─── CLI scope flags ─────────────────────────────────────────────────────────
 // Default scope (no flags): top 50 globally + top 10 per ban reason.

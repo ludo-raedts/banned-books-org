@@ -1,4 +1,5 @@
 import Link from '@/components/link'
+import PageviewTracker from '@/components/pageview-tracker'
 import type { ReactNode } from 'react'
 import EssayRelatedBooks from './essay-related-books'
 import MoreEssays from './more-essays'
@@ -39,6 +40,7 @@ export default function EssayLayout({ essay, hero, children }: Props) {
 
   return (
     <main>
+      <PageviewTracker entityType="page" path={essay.href} />
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative pt-10 md:pt-14 px-6 md:px-9 pb-10 md:pb-14 bg-white">
         <div className="max-w-3xl mx-auto">

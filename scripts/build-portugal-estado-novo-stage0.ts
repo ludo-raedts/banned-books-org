@@ -70,7 +70,7 @@ const SOURCE_URL =
 const WD_API = 'https://www.wikidata.org/w/api.php'
 const WD_ENTITY = 'https://www.wikidata.org/wiki/Special:EntityData'
 const UA =
-  'banned-books.org source research (https://www.banned-books.org; ludo.raedts@voys.nl)'
+  'banned-books.org source research (https://www.banned-books.org; contact@banned-books.org)'
 
 // ── flags ─────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2)

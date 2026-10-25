@@ -19,7 +19,12 @@ import { adminClient } from '@/lib/supabase'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const ENTITY_TYPES = new Set(['book', 'author'])
+// book/author identify the row by entity_id; country/reason/page identify it
+// by `path` (entity_id = 0) — see migration 20261025180000.
+const ENTITY_TYPES = new Set(['book', 'author', 'country', 'reason', 'page'])
+const PATH_ENTITY_TYPES = new Set(['country', 'reason', 'page'])
+// Only our own hub/editorial routes may be recorded by path.
+const TRACKED_PATH_RE = /^\/(countries\/[a-z]{2}|reasons\/[a-z-]+|essays\/[a-z0-9-]+|banned-books\/\d{4}|search|news|history|top-100-banned-books|timeline|countries|reasons)?$/
 
 const BOT_PATTERNS = [
   'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider',
@@ -95,12 +100,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({})) as {
       entity_type?: string
       entity_id?: number
+      path?: string
       referrer?: string | null
     }
     const entityType = body.entity_type
-    const entityId = body.entity_id
     if (!entityType || !ENTITY_TYPES.has(entityType)) return new NextResponse(null, { status: 204 })
-    if (typeof entityId !== 'number' || !Number.isFinite(entityId)) return new NextResponse(null, { status: 204 })
+    let entityId = body.entity_id
+    let path: string
+    if (PATH_ENTITY_TYPES.has(entityType)) {
+      const p = typeof body.path === 'string' ? body.path.trim() : ''
+      if (p.length > 120 || !TRACKED_PATH_RE.test(p)) return new NextResponse(null, { status: 204 })
+      path = p
+      entityId = 0
+    } else {
+      if (typeof entityId !== 'number' || !Number.isFinite(entityId)) return new NextResponse(null, { status: 204 })
+      path = `/${entityType}s/${entityId}`
+    }
 
     const cookie = request.headers.get('cookie') ?? ''
     if (cookie.includes('bb_internal=true')) return new NextResponse(null, { status: 204 })
@@ -121,7 +136,7 @@ export async function POST(request: NextRequest) {
       request.headers.get('x-vercel-ip-country') ?? null
 
     await adminClient().from('pageviews').insert({
-      path: `/${entityType}s/${entityId}`,
+      path,
       entity_type: entityType,
       entity_id: entityId,
       country,

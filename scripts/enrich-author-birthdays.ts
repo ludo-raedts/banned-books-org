@@ -49,7 +49,7 @@ const isGiant = (name: string) => CURATED_GIANTS.some(g => name.toLowerCase().in
 
 const WD_API = 'https://www.wikidata.org/w/api.php'
 const WD_ENTITY = 'https://www.wikidata.org/wiki/Special:EntityData'
-const UA = 'banned-books.org author-birthday enrichment (https://www.banned-books.org; ludo.raedts@voys.nl)'
+const UA = 'banned-books.org author-birthday enrichment (https://www.banned-books.org; contact@banned-books.org)'
 const MIN_BANS = 2
 const HUMAN = 'Q5'
 const NON_PERSON = new Set(['Anonymous', 'Unknown', 'Various', 'Various Authors'])

@@ -78,7 +78,7 @@ async function fetchBatch(ids: string[]): Promise<Map<string, WorkMeta>> {
   const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=title,publisher,cover_i&limit=${ids.length}`
   const out = new Map<string, WorkMeta>()
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'banned-books.org cover audit (ludo.raedts@voys.nl)' } })
+    const res = await fetch(url, { headers: { 'User-Agent': 'banned-books.org cover audit (contact@banned-books.org)' } })
     if (!res.ok) { console.error(`  batch HTTP ${res.status}`); return out }
     const json = await res.json() as { docs?: { cover_i?: number; title?: string; publisher?: string[] }[] }
     for (const d of json.docs ?? []) {

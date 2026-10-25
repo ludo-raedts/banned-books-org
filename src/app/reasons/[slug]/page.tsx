@@ -20,6 +20,7 @@ type ReasonSweep = {
   bookCountById: Map<number, number>   // book_id → events citing this reason
   countryBanCounts: Map<string, number>
   yearSet: Set<number>
+  yearCounts: Map<number, number>
   totalBans: number
   activeBans: number
 }
@@ -30,6 +31,7 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
     bookCountById: new Map(),
     countryBanCounts: new Map(),
     yearSet: new Set(),
+    yearCounts: new Map(),
     totalBans: 0,
     activeBans: 0,
   }
@@ -51,7 +53,10 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
       if (ban.status === 'active') sweep.activeBans++
       if (ban.book_id) sweep.bookCountById.set(ban.book_id, (sweep.bookCountById.get(ban.book_id) ?? 0) + 1)
       if (ban.country_code) sweep.countryBanCounts.set(ban.country_code, (sweep.countryBanCounts.get(ban.country_code) ?? 0) + 1)
-      if (ban.year_started != null) sweep.yearSet.add(ban.year_started)
+      if (ban.year_started != null) {
+        sweep.yearSet.add(ban.year_started)
+        sweep.yearCounts.set(ban.year_started, (sweep.yearCounts.get(ban.year_started) ?? 0) + 1)
+      }
     }
     if (data.length < 1000) break
     offset += 1000
@@ -68,6 +73,8 @@ import SectionHeader from '@/components/section/SectionHeader'
 import Eyebrow from '@/components/section/Eyebrow'
 import FaqSection from '@/components/home/FaqSection'
 import CitationBlock from '@/components/citation-block'
+import YearStrip from '@/components/year-strip'
+import PageviewTracker from '@/components/pageview-tracker'
 import type { FaqItem } from '@/components/faq-accordion'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForReason, bookshopListUrl } from '@/lib/bookshop-lists'
@@ -190,7 +197,7 @@ export default async function ReasonPage({
   // full catalogue is served client-side by <ReasonCatalogueBrowser> via
   // /api/books, so the page stays light + cacheable (previously this fetched
   // all ~5.8k books server-side and forced dynamic rendering via searchParams).
-  const { bookCountById, countryBanCounts, yearSet, totalBans, activeBans } = await getReasonSweep(reason.id)
+  const { bookCountById, countryBanCounts, yearSet, yearCounts, totalBans, activeBans } = await getReasonSweep(reason.id)
 
   const bookCount = bookCountById.size
   const countries = countryBanCounts.size
@@ -331,6 +338,7 @@ export default async function ReasonPage({
 
   return (
     <main>
+      <PageviewTracker entityType="reason" path={`/reasons/${slug}`} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldHtml(collectionJsonLd) }}
@@ -403,6 +411,8 @@ export default async function ReasonPage({
                 {intro}
               </p>
             )}
+
+            <YearStrip yearCounts={yearCounts} className="mt-6" />
           </div>
         </div>
       </section>

@@ -13,17 +13,19 @@ import { useEffect } from 'react'
 // passed in the POST body because the route's Referer header would be
 // the page itself, not the navigation source.
 
-type Props = {
-  entityType: 'book' | 'author'
-  entityId: number
-}
+// book/author rows are keyed by entityId; country/reason/page rows by `path`
+// (hub + editorial pages, since 2026-10-25 — see /api/pageview).
+type Props =
+  | { entityType: 'book' | 'author'; entityId: number; path?: undefined }
+  | { entityType: 'country' | 'reason' | 'page'; path: string; entityId?: undefined }
 
-export default function PageviewTracker({ entityType, entityId }: Props) {
+export default function PageviewTracker({ entityType, entityId, path }: Props) {
   useEffect(() => {
     // sendBeacon when available: survives a fast page-close better than fetch.
     const payload = JSON.stringify({
       entity_type: entityType,
-      entity_id: entityId,
+      entity_id: entityId ?? 0,
+      path,
       referrer: typeof document !== 'undefined' ? document.referrer || null : null,
     })
     try {
@@ -41,7 +43,7 @@ export default function PageviewTracker({ entityType, entityId }: Props) {
       body: payload,
       keepalive: true,
     }).catch(() => { /* swallow */ })
-  }, [entityType, entityId])
+  }, [entityType, entityId, path])
 
   return null
 }

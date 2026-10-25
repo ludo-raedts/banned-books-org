@@ -68,7 +68,7 @@ const BOOK_IDS = (flagValue('book-ids') ?? '')
 
 const WD_API = 'https://www.wikidata.org/w/api.php'
 const WD_ENTITY = 'https://www.wikidata.org/wiki/Special:EntityData'
-const UA = 'banned-books.org native-title enrichment (https://www.banned-books.org; ludo.raedts@voys.nl)'
+const UA = 'banned-books.org native-title enrichment (https://www.banned-books.org; contact@banned-books.org)'
 
 const sb = adminClient()
 

@@ -63,7 +63,7 @@ const SKIP_EXISTING = ARGV.includes('--skip-existing')
 const DRY_LLM = ARGV.includes('--dry-llm')
 
 const WIKI_API = 'https://en.wikipedia.org/w/api.php'
-const USER_AGENT = 'banned-books.org-enrichment-bot (ludo.raedts@voys.nl)'
+const USER_AGENT = 'banned-books.org-enrichment-bot (contact@banned-books.org)'
 const MAX_ARTICLE_CHARS = 30000 // cap article text fed to GPT
 
 type WorklistEntry = {

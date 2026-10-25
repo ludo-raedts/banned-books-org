@@ -1687,7 +1687,15 @@ export default async function BookPage({
                             </Link>
                           </td>
                           <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap text-xs sm:text-sm">
-                            {c.year_started ?? '—'}
+                            {/* Year → /banned-books/[year]: the year hubs were near-orphans
+                                (1 inbound link site-wide) although Bing ranks them. */}
+                            {c.year_started != null && c.year_started >= 1000
+                              ? (
+                                <Link href={`/banned-books/${c.year_started}`} className="hover:underline">
+                                  {c.year_started}
+                                </Link>
+                              )
+                              : (c.year_started ?? '—')}
                             {c.status === 'historical' && (
                               <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-500">
                                 lifted

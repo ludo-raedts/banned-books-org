@@ -29,7 +29,7 @@
 import { adminClient } from '../src/lib/supabase'
 import { isApply } from './lib/cli'
 
-const UA = 'banned-books-org-research/1.0 (award enrichment; ludo.raedts@voys.nl)'
+const UA = 'banned-books-org-research/1.0 (award enrichment; contact@banned-books.org)'
 
 // Book ids that title-matched a Pulitzer work but are a DIFFERENT book.
 const EXCLUDE_BOOK_IDS = new Set<number>([1286]) // "Fable" (Adrienne Young) vs Faulkner's "A Fable"

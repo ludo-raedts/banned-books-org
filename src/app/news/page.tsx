@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageviewTracker from '@/components/pageview-tracker'
 import { unstable_cache } from 'next/cache'
 import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
@@ -334,6 +335,7 @@ export default async function NewsPage({
 
   return (
     <main>
+      <PageviewTracker entityType="page" path="/news" />
       <section className="relative pt-10 md:pt-12 px-6 md:px-9 pb-8 bg-white">
         <div className="max-w-5xl mx-auto">
           <Link
