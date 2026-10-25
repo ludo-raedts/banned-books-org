@@ -215,3 +215,31 @@ Week 2–3: 1 + 2 (indexeerbare kern + sitemap-filter, met nulmeting via `gsc-in
 (titels, hub-snippets, year-hub-links); 14 (meetgat).
 Doorlopend: 9 (essays), 3 (maandelijkse data-release), 10 (bio-backlog), 12 (jaarstempels).
 Herijken: 8 en 16 weken na stap 1, met dezelfde 108-URL-check en de Bing-dagreeks.
+
+## 7. Status na de uitvoering (zelfde dag, 25 okt avond)
+
+Uitgevoerd en gepusht (commits af38ee9 → 1c34cf9 + Next-upgrade):
+
+| # | Punt | Status |
+|---|---|---|
+| 13 | Hydration-fout | Oorzaak = Cloudflare: e-mail-obfuscatie herschreef `contact@…` (home-FAQ, /press) → `<EmailLink>` met `<!--email_off-->`. **Blijft over**: CF injecteert op elke pagina `/cdn-cgi/challenge-platform/scripts/jsd/main.js` (JS Detections / managed challenge); dat is een dashboard-schakelaar (Security → Bots → JavaScript Detections uit, of de managed-challenge-regel). Analytics-token kan de zone-settings niet lezen. |
+| 16 | `/banned-books-week` force-dynamic | ISR 3600 (+archive 86400); kapotte preview weg; `/api/indexnow` verifieert HMAC-token |
+| 17 | Reason-meta telling | één `cache()`-sweep voor metadata én pagina |
+| 18 | Auteurs dubbelfetch / 1.000-cap | één `getBooksForAuthor` (nested embed, chunked) |
+| 19 | API-clamp | `/api/books` limit ≤96, offset ≤25k |
+| 8 | OG/snippets | og:image op landen + essays; essay-description ≤155; auteurs `summary_large_image`; boek-OG-card ISR 7d |
+| 4 | Sitemap/canonical-hygiëne | `/search` + `/llms.txt` uit sitemap-static; root-canonical weg; mixed-case slugs 308 (pad-segment `/BOOKS/` is alleen op Vercel een 200 — Next zelf 404't; laten) |
+| 1+2 | Indexeerbare kern | **Google-only** `<meta name="googlebot" content="noindex,follow">` buiten de kern (≥2 bans óf blurb+cover): 9.089 kern / 11.803 Google-noindex. Auteurs-noindex ook Google-only gemaakt. `sitemap.xml` = kern (9.084 boeken + 3.802 auteurs); nieuw `sitemap-full.xml` (20.892 + 13.336) alleen bij Bing ingediend (API, status Pending). Nulmeting: 1/108. |
+| 5 | Titels | boek-ladder cap 70→55 (vóór suffix), land/reason-hub-titels ingekort |
+| 6 | Hub-snippets | `/countries`, `/history`, `/search` herschreven (vraag-eerst); /history Article met Person-byline |
+| 7 | Year-hubs | jaar-links in ban-clusters op boekpagina's; `<YearStrip>` op land- en reason-hubs (echte tellingen uit de volledige sweep) |
+| 14 | Meetgat | migratie `20261025180000_pageviews_hub_entity_types.sql` + API + tracker op /, landen, reasons, essays, year-hubs, search, news. **Migratie nog niet toegepast** (deploy-classifier): `supabase db push` draaien; tot dan worden hub-inserts stil geweigerd. |
+| 20 | Onderhoud | `middleware.ts` → `proxy.ts`; Biome 0 errors; e-mailadres uit 12 script-UA's; Next 16.4.3 / React 19.3.1 (zie build-log in commit) |
+| 21 | Structured data | BreadcrumbList op land/reason/scope/context/year; Book→author `@id` (#person/#organization) |
+| 11 | Puntfixes | 7 besmette beschrijvingen genuld; Fellowship/7 Generations/1619 Born on the Water (OL, ISBN geverifieerd), Quran + Untitled 12 (handgeschreven, bron Wikipedia); 7-Generations-cover; Ashaari Muhammad Wikidata-id (geen vrije foto). `untitled-12` is een echte titel (Kaur Kender), Chetusan ×3 zijn drie taalversies — geen fouten. Integrity exit 0, shared-desc-drift 23→19. |
+| 10 | 520 auteurs zonder bio | plan in `data/author-bio-backlog-plan-2026-10-25.md` |
+| 12 | PEN-jaarstempels | ids-file klaar: `data/pen-stamped-residue-2026-10-25.json` (331). Draaien: `pnpm tsx --env-file=.env.local scripts/verify-years-llm.ts --ids-file=data/pen-stamped-residue-2026-10-25.json --dry-run` → review → `--apply` |
+| 15 | Koude ISR long tail | bewust niet: landen prerenderen bij build brak eerder de build onder enrichment-load (d29ffe1); CF HTML-cache-rule blijft een optie |
+| 3, 9 | Data-release, essays | bij Ludo |
+
+Open voor Ludo (3 handelingen): `supabase db push` (migratie 14); Cloudflare JS-Detections/e-mail-obfuscatie uitzetten (13); year-verify run (12).
