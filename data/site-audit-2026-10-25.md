@@ -243,3 +243,23 @@ Uitgevoerd en gepusht (commits af38ee9 → 1c34cf9 + Next-upgrade):
 | 3, 9 | Data-release, essays | bij Ludo |
 
 Afgerond door Ludo op 25 okt: `supabase db push` (14, hub-pageviews lopen), e-mail-obfuscatie uit (13), WAF-regel 5 AI-agent-uitzondering toegepast (`scripts/cf-waf-exempt-ai-agents.ts`, zie docs/cloudflare-waf.md §6). Nog open: year-verify run (12).
+
+## 8. Content-ronde 26 okt (Bing-data → content)
+
+- Volledige Bing-export (2.101 query-rijen, 1.545 pagina-rijen) geaggregeerd; vraag-intentie
+  ("why was X banned", "is X banned") zit op positie 2–4 met 4–6% CTR achter generieke snippets.
+- 14 topboeken: `description_ban` handgeschreven met ALA-Top-10-jaren + redenen en PEN-tellingen
+  per schooljaar (`human_curated`). Boek-meta opent nu met "Why was X banned? <eerste zin>".
+- Snippets herschreven: `/countries/us` (USA/America), landen (lidwoord-bewust), auteurs (meest
+  verboden titel in de staart), jaar-hubs (echte aantallen), `/challenged-books`, `/scope/school`,
+  `/news`, `/reasons`. Landen-FAQ: "since 2020"-vraag. Home linkt naar `/banned-books/2026`.
+- Jaren: PEN-residu (331) door `verify-years-llm` + `resolve-proposed-years --ids-file` (nieuw);
+  OL-titelmatch blijkt onbetrouwbaar (The Stand-In → 1670), daarom handmatig 13 zekere jaren gezet
+  (Afterglow 2023, The Deep Dark 2024, Racial Justice 2022, Body Book for Boys 2010, The Elements
+  2007, Annotated Art 1995, Sculpture 1994, Leonardo da Vinci 1994, Zara Hossain Is Here 2021,
+  When Villains Rise 2020, Manga Shakespeare: The Tempest 2007, Nevertheless We Persisted 2018,
+  The World that Belongs to Us 2020). 5 PEN-titeltypo's gecorrigeerd; auteur "Sabina Kahan"
+  → "Sabina Khan" samengevoegd (alias-rij). Integrity exit 0; slug-drift-baseline 892 → 921
+  geaccepteerd (slugs blijven bij titelcorrecties).
+- Nog voor Ludo: Jane Eyre-rij 5850 verwijderen (SQL in chat); lege auteursrij 1052 (sabina-kahan)
+  verwijderen; de 263 "no OL year"-rijen blijven op de watchlist.
