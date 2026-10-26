@@ -91,7 +91,7 @@ type Topic = {
 // "the source records no reason" — never a reason ("Banned for other
 // reasons"). Links with basis='inferred' were classified from the book's
 // themes, not stated by the ban's source (migration 20261026090000).
-const HEADLINE_ALLOWS_INFERRED = true
+const HEADLINE_ALLOWS_INFERRED = false
 function isHeadlineReason(link: { basis?: string | null; reasons: { slug: string } | null }): boolean {
   if (!link.reasons || link.reasons.slug === 'other') return false
   return HEADLINE_ALLOWS_INFERRED || link.basis !== 'inferred'
