@@ -25,6 +25,8 @@ const slugArg     = process.argv.find(a => a.startsWith('--slug='))
 const slugsFileArg = process.argv.find(a => a.startsWith('--slugs-file='))
 const SLUG        = slugArg?.split('=')[1] ?? null
 const SLUGS_FILE  = slugsFileArg?.split('=')[1] ?? null
+// --dump=<path> writes every proposed change as JSON (dry-run review)
+const DUMP        = process.argv.find(a => a.startsWith('--dump='))?.split('=')[1] ?? null
 const MIN_BAN_LEN = 60
 const MIN_CTX_LEN = 80
 
@@ -84,12 +86,48 @@ const TRAILING_CLAUSE_FILLERS = [
 ]
 
 function splitSentences(text: string): string[] {
-  // Split on . ! ? followed by space + capital, but keep the punctuation
+  // Split on . ! ? (optionally followed by a closing quote — `…as "Other." There`)
+  // followed by space + capital, but keep the punctuation
   return text
-    .split(/(?<=[.!?])\s+(?=[A-Z"'“(])/g)
+    .split(/(?<=[.!?]["”’]?)\s+(?=[A-Z"'“(])/g)
     .map(s => s.trim())
     .filter(Boolean)
 }
+
+// "Nothing is documented" sentences (2026-10-26 inventory: ~5.4k rows, dozens of
+// GPT phrasings — "No specific legal challenges or public statements…", "There
+// are no records of a lawsuit…", "No specific reason for the ban was made
+// public."). They state an absence in OUR sources as a fact about the world, and
+// add nothing the bans table doesn't. Matched structurally instead of per
+// phrasing: a negated opening + a documentation/legal noun. Sentences carrying a
+// year are left alone — "no challenge until 2005, when…" holds a real fact.
+const NEG_OPENING = /^(?:as of (?:now|today|\w+ \d{4}),\s*)?(?:there (?:is|are|was|were|have been|has been) )?no\b|^(?:the )?specific (?:scenes|passages|details|reasons?|school district|banning authority|district|content)\b[^.]*\b(?:not|never) (?:been )?(?:publicly )?(?:documented|disclosed|detailed|made public|specified|identified|reported|available)|^(?:the )?(?:details|reasons?) (?:of|for|behind) [^.]*\b(?:not|never) (?:been )?(?:publicly )?(?:documented|disclosed|detailed|made public|specified)/i
+const NEG_TOPIC = /\b(?:lawsuits?|legal|statements?|responses?|proceedings?|challenges?|reasons?|records?|reinstate\w*|lifted|actions?|documented|disclosed|made public|passages|scenes|district|authority)\b/i
+const HAS_YEAR = /\b(?:1[5-9]\d\d|20\d\d)\b/
+
+function isNothingDocumented(s: string): boolean {
+  return NEG_OPENING.test(s) && NEG_TOPIC.test(s) && !HAS_YEAR.test(s)
+}
+
+// "Other" is the importer's placeholder when a source records no reason (PEN
+// rows default to it) — never an "official reason". Whole sentence when the
+// reason is its subject; otherwise cut from the clause that introduces it to
+// the end of the sentence (the tail is filler: "…without detailed explanation").
+const OTHER_QUOTED = /["“]other[.,]?["”]/i
+const OTHER_SUBJECT = /^(?:the |a )?(?:official |stated |specific )?(?:reasons?|ban was enacted|restriction was enacted|ban was implemented)\b/i
+const OTHER_CLAUSE = /(?:,\s*|\s+)(?:with|citing|for|due to|under|labell?ed|categori[sz]ed|classified|also|and)\b[^,;]*?["“]other[.,]?["”][^.]*\.?$/i
+
+// Ban-still-in-force claims. Unsourced for current PEN rows, and plainly false
+// on historical ones (Nazi 1938 "the ban remains in effect"). Status lives in
+// the bans table.
+const REMAINS_SENTENCE = /^(?:the |this )?(?:ban|bans|restriction|prohibition)s? (?:remains?|is still|has remained|remain) (?:in effect|in place|active|a historical record|unchallenged|upheld)\b/i
+const REMAINS_CLAUSE = /(?:,\s*|\s+)(?:and|with) (?:the )?(?:ban|restriction) (?:remains?|remaining|still) (?:in effect|in place|active)[^.]*\.?$/i
+
+// "The administration cited these reasons…" — the reasons on PEN rows are mostly
+// LLM-inferred (enrich-reasons.ts), never cited by anyone.
+const CITED_THESE = /^the (?:school )?administration cited (?:these|those|the) reasons/i
+// "…, but no formal lawsuit…" / "…, but there is no record…" tail on an otherwise factual sentence.
+const BUT_NO_CLAUSE = /,?\s*(?:but|although|though|and) (?:there (?:is|are|was|were) )?no (?:formal |public |known |documented |specific )*(?:record|records|lawsuit|legal|public|reports?|evidence|statements?)\b[^.]*\.?$/i
 
 function stripFiller(text: string | null): { stripped: string; removed: number } {
   if (!text) return { stripped: '', removed: 0 }
@@ -97,8 +135,24 @@ function stripFiller(text: string | null): { stripped: string; removed: number }
   let removed = 0
   let kept = sentences.filter(s => {
     const isFiller = WHOLE_SENTENCE_FILLERS.some(re => re.test(s))
+      || isNothingDocumented(s)
+      || REMAINS_SENTENCE.test(s)
+      || CITED_THESE.test(s)
+      || (OTHER_QUOTED.test(s) && OTHER_SUBJECT.test(s))
     if (isFiller) { removed++; return false }
     return true
+  })
+  // Clause-level cuts on sentences that also carry real content. A cut that
+  // leaves a stub (< 30 chars) drops the sentence instead.
+  kept = kept.flatMap(s => {
+    let r = s
+    let cut = false
+    for (const re of [OTHER_CLAUSE, REMAINS_CLAUSE, BUT_NO_CLAUSE]) {
+      const before = r
+      r = r.replace(re, '')
+      if (r !== before) { removed++; cut = true; r = r.replace(/[,;:\s]+$/, '') + '.' }
+    }
+    return cut && r.length < 30 ? [] : [r]
   })
   // Apply trailing-clause stripping to remaining sentences
   kept = kept.map(s => {
@@ -113,6 +167,9 @@ function stripFiller(text: string | null): { stripped: string; removed: number }
     }
     return result.trim()
   })
+  // Nothing removed → return the text untouched (re-joining would collapse
+  // paragraph breaks and register as a spurious change).
+  if (removed === 0) return { stripped: text, removed }
   return { stripped: kept.join(' ').replace(/\s{2,}/g, ' ').trim(), removed }
 }
 
@@ -189,6 +246,8 @@ async function main() {
 
   const supabase = adminClient()
   let changed = 0, sampleShown = 0, needsRewrite = 0
+  const dump: { slug: string; field: string; old: string; new: string | null }[] = []
+  const pending: { id: number; update: Record<string, string | null> }[] = []
   let banChangedCount = 0, ctxChangedCount = 0, banEmptyAfter = 0, ctxEmptyAfter = 0
 
   for (const b of target) {
@@ -203,11 +262,16 @@ async function main() {
 
     const newBan = banChanged ? banResult.stripped : (b.description_ban ?? '')
     const newCtx = ctxChanged ? ctxResult.stripped : (b.censorship_context ?? '')
-    const banTooShort = newBan.length < MIN_BAN_LEN
-    const ctxTooShort = newCtx.length < MIN_CTX_LEN
+    const banTooShort = banChanged && newBan.length < MIN_BAN_LEN
+    const ctxTooShort = ctxChanged && newCtx.length < MIN_CTX_LEN
     if (banTooShort) banEmptyAfter++
     if (ctxTooShort) ctxEmptyAfter++
     const flag = banTooShort || ctxTooShort
+
+    if (DUMP) {
+      if (banChanged) dump.push({ slug: b.slug, field: 'description_ban', old: b.description_ban ?? '', new: banTooShort ? null : newBan })
+      if (ctxChanged) dump.push({ slug: b.slug, field: 'censorship_context', old: b.censorship_context ?? '', new: ctxTooShort ? null : newCtx })
+    }
 
     if (sampleShown < 5) {
       console.log('━━━', b.slug)
@@ -227,10 +291,7 @@ async function main() {
       const update: Record<string, string | null> = {}
       if (banChanged) update.description_ban = banTooShort ? null : newBan
       if (ctxChanged) update.censorship_context = ctxTooShort ? null : newCtx
-      if (Object.keys(update).length) {
-        const { error } = await supabase.from('books').update(update).eq('id', b.id)
-        if (error) console.error('  ✗ DB error:', error.message)
-      }
+      if (Object.keys(update).length) pending.push({ id: b.id, update })
       // Log new values
       fs.appendFileSync(logPath, [
         b.slug, banResult.removed, ctxResult.removed,
@@ -251,6 +312,22 @@ async function main() {
     }
   }
 
+  // Flush DB writes with bounded concurrency (one row per request was ~3 rows/s
+  // → ~50 min for a full-catalogue run). Backup CSV is already on disk.
+  if (APPLY && pending.length) {
+    const CONCURRENCY = 12
+    let next = 0, done = 0, failed = 0
+    await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
+      while (next < pending.length) {
+        const { id, update } = pending[next++]
+        const { error } = await supabase.from('books').update(update).eq('id', id)
+        if (error) { failed++; console.error(`  ✗ DB error (id ${id}):`, error.message) }
+        if (++done % 500 === 0) console.log(`  …${done}/${pending.length} written`)
+      }
+    }))
+    console.log(`DB writes: ${done - failed} ok, ${failed} failed`)
+  }
+  if (DUMP) { fs.writeFileSync(DUMP, JSON.stringify(dump, null, 1)); console.log(`Dump: ${DUMP} (${dump.length} field changes)`) }
   console.log(`\nChanged: ${changed} books  (ban: ${banChangedCount}, ctx: ${ctxChangedCount})`)
   console.log(`Too short after strip: ban ${banEmptyAfter}, ctx ${ctxEmptyAfter}, distinct books ${needsRewrite}`)
   if (APPLY) {
