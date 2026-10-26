@@ -729,6 +729,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               height={200}
               className="rounded-lg shadow-md object-cover object-top w-[120px] h-[150px] sm:w-[160px] sm:h-[200px]"
               sizes="160px"
+              priority
             />
           </div>
         )}
