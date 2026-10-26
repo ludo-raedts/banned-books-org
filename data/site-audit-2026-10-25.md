@@ -277,3 +277,15 @@ Bookshop herprobe op de 184: 114 `valid`, 70 `not_found` (was voor allemaal de b
 status). 382 pagina's gebust, integrity exit 0. Rapport: `data/foreign-isbn-fix-2026-10-26.md`.
 Spiegelgeval (niet-Engels origineel met Engelse vertaal-ISBN, ~330) bewust gelaten: de Engelse
 vertaling is de editie die bezoekers kopen.
+
+## 10. Kleine hygiëne (26 okt, avond)
+
+- Home: meta-telling was een planner-schatting (21.451) naast de exacte 20.934 op de pagina → exact.
+- Home: book-of-the-day-kop h3 → h2 (Lighthouse heading-order); footer-affiliate-noot gray-400 → gray-500 (contrast).
+- `/banned-childrens-books` (Bing 462 impr @3,9%): vraag-eerst snippet. Pagina geeft lokaal bij koude DB een
+  statement-timeout (57014); op productie ISR-gecached — bekend patroon, niet opgelost.
+- Titel "Delores Claiborne" → "Dolores Claiborne".
+- Cover-recovery (`recover-nulled-covers --scan-rejected`) op 40 rejected-placeholder-rijen: 0 nieuwe covers —
+  de 649 resterende zijn uitgeput voor OL-edities.
+- Beschrijvingen via ISBN voor de 283 bekeken boeken zonder blurb: 0 opbrengst zolang de Google-Books-client
+  "unavailable" meldt (zie memory google-books-partial-regression); OL alleen kent deze titels niet.
