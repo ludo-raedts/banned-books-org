@@ -36,6 +36,8 @@ import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
 import BanContextCallout from '@/components/ban-context-callout'
 import { contextsForBook } from '@/lib/ban-contexts'
+import { buildBanRowSummary } from '@/lib/ban-summary'
+import { institutionContextsForBans } from '@/lib/institution-contexts'
 import { equivalentTitles } from '@/lib/native-title'
 import { explainerForReasonSlugs } from '@/lib/reason-explainers'
 import { videoForBook } from '@/lib/featured-videos'
@@ -230,7 +232,7 @@ const BOOK_DETAIL_SELECT = `
   awards,
   book_authors(authors(display_name, slug, awards)),
   bans(
-    id, year_started, year_ended, action_type, status, country_code, region, institution, description,
+    id, year_started, year_ended, action_type, status, country_code, region, institution, actor, description,
     countries(name_en),
     scopes(label_en),
     ban_reason_links(reasons(id, slug)),
@@ -591,6 +593,7 @@ type Ban = {
   country_code: string
   region: string | null
   institution: string | null
+  actor: string | null
   description: string | null
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
@@ -641,6 +644,7 @@ type BookDetail = {
   cover_url: string | null
   description_book: string | null
   description_ban: string | null
+  description_ban_status: string | null
   description_source_url: string | null
   description_source_type:
     | 'wikipedia' | 'wikipedia_translated' | 'openlibrary' | 'google_books'
@@ -913,12 +917,29 @@ export default async function BookPage({
   // small italic sub-row that's easy to miss. For an otherwise-sparse page this
   // is the most specific, per-book content we hold. Deduped, no query. When we
   // promote, the in-table sub-row is suppressed to avoid showing it twice.
-  const promotedBanNotes = book.description_ban
+  // description_ban flagged as a mere restatement of the ban rows (or otherwise
+  // auto-rejected) is not shown — see scripts/flag-restatement-ban-descriptions.ts.
+  const banDescription = book.description_ban_status === 'auto_rejected_low_quality'
+    ? null
+    : book.description_ban
+  const promotedBanNotes = banDescription
     ? []
     : [...new Set(
         sortedBans.map(b => b.description?.trim()).filter((d): d is string => !!d),
       )]
   const hasPromotedBanNote = promotedBanNotes.length > 0
+
+  // (b) Neither → a deterministic, source-attributed summary of the ban rows
+  // (where / when / how; what the source does not record). No query.
+  const banRowSummary = banDescription || hasPromotedBanNote
+    ? null
+    : buildBanRowSummary(book.title, book.bans)
+
+  // Sourced background for districts with documented mass removals (the
+  // institution, not this title). Shown alongside whatever ban text we have.
+  // Capped at 2 — a widely-banned title (Beloved) matches ten districts, and
+  // ten ~70-word paragraphs would bury the book's own content.
+  const institutionContexts = institutionContextsForBans(book.bans).slice(0, 2)
 
   // Hand-curated primary-source clip for this title, if any (e.g. the author
   // discussing the ban). Privacy-safe facade embed. See lib/featured-videos.ts.
@@ -1587,18 +1608,49 @@ export default async function BookPage({
 
       {/* Why it was banned — the synthesized description_ban when we have one,
           else (a) the promoted raw per-ban note(s). */}
-      {(book.description_ban || hasPromotedBanNote) && (
+      {(banDescription || hasPromotedBanNote || banRowSummary) && (
         <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
-          <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">Why it was banned</h2>
-          {book.description_ban ? (
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{book.description_ban}</p>
-          ) : (
+          <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">
+            {banDescription || hasPromotedBanNote ? 'Why it was banned' : 'Where and when it was banned'}
+          </h2>
+          {banDescription ? (
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
+          ) : hasPromotedBanNote ? (
             <div className="space-y-2">
               {promotedBanNotes.map((note, i) => (
                 <p key={i} className="text-gray-700 leading-relaxed">{note}</p>
               ))}
             </div>
+          ) : banRowSummary && (
+            <div className="space-y-2">
+              <p className="text-gray-700 leading-relaxed">
+                {banRowSummary.sentences.join(' ')}
+                {banRowSummary.more && <> {banRowSummary.more}</>}
+              </p>
+              {banRowSummary.sourceNote && (
+                <p className="text-sm text-gray-500">{banRowSummary.sourceNote}</p>
+              )}
+            </div>
           )}
+          {institutionContexts.map((ctx) => (
+            <div key={ctx.institution} className="mt-4 border-t border-red-100 pt-3">
+              <h3 className="text-[11px] font-medium uppercase tracking-widest text-red-700/70 mb-1">
+                Context · {ctx.institution}
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-800">{ctx.text}</p>
+              <p className="mt-1 text-xs text-gray-500">
+                Sources:{' '}
+                {ctx.sources.map((src, i) => (
+                  <React.Fragment key={src.url}>
+                    {i > 0 && ', '}
+                    <a href={src.url} target="_blank" rel="noopener" className="underline underline-offset-2 hover:text-gray-700">
+                      {src.name}
+                    </a>
+                  </React.Fragment>
+                ))}
+              </p>
+            </div>
+          ))}
         </section>
       )}
 
