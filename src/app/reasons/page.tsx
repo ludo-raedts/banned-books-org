@@ -9,6 +9,7 @@ import type { Metadata } from 'next'
 import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
+import { THEMES } from '@/lib/themes'
 
 export async function generateMetadata(): Promise<Metadata> {
   // 'other' (= no reason recorded) is not ranked on the page — don't count it.
@@ -117,6 +118,36 @@ export default async function ReasonsPage() {
         </p>
       </div>
 
+      {/* Themes: what banned books FEATURE (book_themes), as opposed to the
+          reason a source records — PEN America's headline categories. */}
+      <section className="mb-10">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Themes in banned books</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {THEMES.map(t => (
+            <Link
+              key={t.slug}
+              href={`/themes/${t.slug}`}
+              className="border border-neutral-300 rounded-xl p-5 bg-white transition-colors hover:border-gray-500"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <span className="text-2xl" aria-hidden="true">{t.icon}</span>
+                  <h3 className="text-lg font-bold mt-1">{t.title}</h3>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold tabular-nums text-brand">{t.penStats[0].pct}%</div>
+                  <div className="text-xs opacity-70">of US school bans {t.penStats[0].year}</div>
+                </div>
+              </div>
+              <p className="text-xs leading-relaxed text-gray-600">
+                Rarely the stated reason, but {t.penStats[0].pct}% of the titles banned in US schools in {t.penStats[0].year} featured {t.penStats[0].measure} (PEN America).
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Reasons recorded by sources</h2>
       <div className="grid sm:grid-cols-2 gap-4">
         {reasons.map(r => (
           <Link

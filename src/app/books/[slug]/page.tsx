@@ -31,6 +31,7 @@ import Breadcrumb from '@/components/breadcrumb'
 import ReasonBadge, { reasonLabel } from '@/components/reason-badge'
 import BanActionBadge from '@/components/ban-action-badge'
 import GenreBadge from '@/components/genre-badge'
+import { themeByKey } from '@/lib/themes'
 import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
@@ -242,6 +243,7 @@ const BOOK_DETAIL_SELECT = `
   created_at, updated_at,
   data_quality_status, data_quality_evaluated_at,
   awards,
+  book_themes(theme),
   book_authors(authors(display_name, slug, awards)),
   bans(
     id, year_started, year_ended, action_type, status, country_code, region, institution, actor, description,
@@ -689,6 +691,7 @@ type BookDetail = {
   data_quality_status: DataQualityStatus
   data_quality_evaluated_at: string | null
   awards: unknown
+  book_themes?: { theme: string }[]
   book_authors: { authors: { display_name: string; slug: string | null; awards: unknown } | null }[]
   bans: Ban[]
 }
@@ -1537,6 +1540,26 @@ export default async function BookPage({
               {book.genres.map((slug) => (
                 <GenreBadge key={slug} slug={slug} />
               ))}
+            </div>
+          )}
+          {/* Book-level themes (book_themes) — what the book features, linked
+              to the theme hub; deliberately not styled as a ban reason. */}
+          {(book.book_themes ?? []).length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {(book.book_themes ?? []).map(({ theme }) => {
+                const t = themeByKey(theme)
+                if (!t) return null
+                return (
+                  <Link
+                    key={theme}
+                    href={`/themes/${t.slug}`}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border border-neutral-300 text-gray-700 hover:border-gray-500"
+                  >
+                    <span aria-hidden="true">{t.icon}</span>
+                    {t.chip}
+                  </Link>
+                )
+              })}
             </div>
           )}
           <p className="text-sm font-medium text-red-500">

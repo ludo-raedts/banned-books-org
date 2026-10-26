@@ -71,6 +71,7 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
 })
 import { searchBooks } from '@/lib/book-search'
 import { reasonPhrase } from '@/lib/reason-phrases'
+import { THEMES } from '@/lib/themes'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 import ReasonCatalogueBrowser, { type ApiBook } from '@/components/reason-catalogue-browser'
 import BookCardCompact from '@/components/home/BookCardCompact'
@@ -287,6 +288,8 @@ export default async function ReasonPage({
   const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
 
   let reasonLead: string | null = null
+  // Theme hub that covers the same ground as a book-level theme (lgbtq, racial).
+  const themeLink = THEMES.find(t => t.reasonSlug === slug) ?? null
   // Shown on hubs where part of the count is theme-classified, not a recorded reason.
   const themeNote = themeCount > 0
     ? `${themeCount.toLocaleString('en')} further ${themeCount === 1 ? 'book was' : 'books were'} removed from US schools and libraries and ${themeCount === 1 ? 'features' : 'feature'} ${phrase}. Their sources (PEN America's Index of School Book Bans, the Magnusson database) record where, when and how a book was removed — not the reason given — so for these the theme is classified from the book's content, not from the ban.`
@@ -453,6 +456,12 @@ export default async function ReasonPage({
             {themeNote && (
               <p className="mt-4 rounded-r-lg border-l-4 border-slate-300 bg-slate-50 px-4 py-3 text-sm leading-relaxed text-gray-700">
                 {themeNote}{' '}
+                {themeLink && (
+                  <>
+                    <Link href={`/themes/${themeLink.slug}`} className="underline underline-offset-2 hover:text-gray-900">{themeLink.title}</Link>
+                    {' · '}
+                  </>
+                )}
                 <Link href="/methodology" className="underline underline-offset-2 hover:text-gray-900">Methodology</Link>
               </p>
             )}

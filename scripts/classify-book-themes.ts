@@ -42,6 +42,7 @@ import { isApply, flagValue, intFlag } from './lib/cli'
 const APPLY = isApply()
 const SAMPLE = intFlag('sample', 0)
 const CONCURRENCY = intFlag('concurrency', 6)
+const OL_CONCURRENCY = intFlag('ol-concurrency', 10)
 const IDS = flagValue('ids')?.split(',').map(Number).filter(Boolean) ?? null
 const MODEL = 'gpt-4.1-mini'
 const OL_CACHE = path.resolve('data', 'ol-subjects-cache.json')
@@ -98,7 +99,7 @@ async function loadOlSubjects(cands: Candidate[]): Promise<Map<string, string[]>
   const missing = [...new Set(cands.map(c => c.ol).filter((x): x is string => !!x && !(x in cache)))]
   if (missing.length) console.log(`  Open Library: fetching subjects for ${missing.length} works…`)
   let done = 0
-  await pool(missing, 4, async (id) => {
+  await pool(missing, OL_CONCURRENCY, async (id) => {
     try {
       const res = await fetch(`https://openlibrary.org/works/${id}.json`, { headers: { 'User-Agent': 'banned-books.org theme classifier' } })
       const j = res.ok ? await res.json() as { subjects?: unknown[]; subject_people?: unknown[] } : {}
@@ -128,6 +129,18 @@ For each theme answer yes/no and, for yes, give "evidence": the shortest EXACT q
 Reply as JSON: {"lgbtq":{"yes":bool,"evidence":string|null},"poc":{"yes":bool,"evidence":string|null}}`
 }
 
+// Evidence that describes a work's ORIGIN, not its characters ("a Japanese
+// manga series", "east asian style") — 14 false poc hits in the full run.
+const ORIGIN_NOT_CHARACTERS = /\b(manga|manhwa|manhua|anime|east asian style|hepburn|japanese:|korean:|chinese:)/i
+const CREATOR = /\b(author|writer|poet|illustrator|novelist|written by)\b/i
+
+/** Gates every kept verdict must pass — also re-applied to stored verdicts on --apply. */
+function passesGates(t: Theme, evidence: string | null): boolean {
+  if (!evidence || !THEME_TERMS[t].test(evidence) || CREATOR.test(evidence)) return false
+  if (t === 'poc' && ORIGIN_NOT_CHARACTERS.test(evidence)) return false
+  return true
+}
+
 async function classify(client: OpenAI, c: Candidate, subjects: string[]): Promise<Verdict> {
   const res = await client.chat.completions.create({
     model: MODEL,
@@ -145,9 +158,9 @@ async function classify(client: OpenAI, c: Candidate, subjects: string[]): Promi
     const pieces = (evidence ?? '').split(/\s*;\s*/).filter(p => p.trim().length >= 3)
     const verified = yes && pieces.length > 0
       && pieces.every(p => haystack.includes(norm(p)))
-      && THEME_TERMS[t].test(evidence ?? '')
-      // The creator's identity is not the book's theme ("a novel by Mexican author…").
-      && !/\b(author|writer|poet|illustrator|novelist|written by)\b/i.test(evidence ?? '')
+      // Theme named explicitly; not the creator's identity ("a novel by Mexican
+      // author…"); not the work's origin ("a Japanese manga series").
+      && passesGates(t, evidence)
     out[t] = { yes, evidence, verified }
   }
   return out
@@ -165,7 +178,7 @@ function readVerdicts(): Map<number, Verdict> {
 
 async function apply() {
   const verdicts = [...readVerdicts().values()]
-  const rows = verdicts.flatMap(v => THEMES.filter(t => v[t]?.verified).map(t => ({ book_id: v.book_id, theme: t, evidence: v[t].evidence })))
+  const rows = verdicts.flatMap(v => THEMES.filter(t => v[t]?.verified && passesGates(t, v[t].evidence)).map(t => ({ book_id: v.book_id, theme: t, evidence: v[t].evidence })))
   console.log(`\n── apply: ${rows.length} verified theme rows from ${verdicts.length} verdicts ──`)
   for (const t of THEMES) console.log(`  ${t}: ${rows.filter(r => r.theme === t).length}`)
   const pg = newPgClient()
