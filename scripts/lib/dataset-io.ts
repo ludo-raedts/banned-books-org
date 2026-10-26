@@ -118,7 +118,10 @@ async function fetchPageWithRetry(
   cols: string[],
   from: number,
   PAGE: number,
-  maxAttempts = 5,
+  // 7 attempts = 2+4+8+16+32+64 s ≈ 2 min of backoff. 5 attempts (~30 s) lost a
+  // production deploy on 2026-10-26 when a batch script's UPDATE burst held the
+  // DB past the statement timeout for longer than that.
+  maxAttempts = 7,
 ): Promise<Row[] | null> {
   for (let attempt = 1; ; attempt++) {
     let q = supabase.from(table).select(columns)
@@ -129,7 +132,7 @@ async function fetchPageWithRetry(
     if (attempt >= maxAttempts || !isTransientError(error)) {
       throw new Error(`fetch ${table}: ${error.message}`)
     }
-    // Exponential backoff (2s, 4s, 8s, 16s) to ride out the read-load spike.
+    // Exponential backoff (2s … 64s) to ride out the load spike.
     const waitMs = 1000 * 2 ** attempt
     console.log(
       `    ⚠ ${table} page @${from} timed out (attempt ${attempt}/${maxAttempts}); retrying in ${waitMs / 1000}s`,
