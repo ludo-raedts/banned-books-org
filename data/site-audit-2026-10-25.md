@@ -263,3 +263,17 @@ Afgerond door Ludo op 25 okt: `supabase db push` (14, hub-pageviews lopen), e-ma
   geaccepteerd (slugs blijven bij titelcorrecties).
 - Nog voor Ludo: Jane Eyre-rij 5850 verwijderen (SQL in chat); lege auteursrij 1052 (sabina-kahan)
   verwijderen; de 263 "no OL year"-rijen blijven op de watchlist.
+
+## 9. Buitenlandse-editie-ISBN's op Engelstalige boeken (26 okt)
+
+586 boeken met `original_language='en'` droegen een ISBN uit een niet-Engelse registratiegroep
+(978-2 FR, 978-3 DE, 978-84 ES, 978-88 IT, 978-5 RU, …) — o.a. `/books/1984` (Grasset) en
+`/books/the-handmaids-tale` (Fischer). Dat voedde de Book-JSON-LD (`isbn` ≠ `inLanguage`),
+de Bookshop-deeplinks en de cover-lookups. Nieuw script `scripts/fix-foreign-edition-isbns.ts`
+(dry-run default, checkpoint, pageview-geordend): 382 gefixt (198 via de al geprobeerde
+`bookshop_isbn13`, 184 via OL-werk-edities met uitgeverscore), 204 onopgelost (Carlsen/Prestel/
+Japanse/Spaanse edities waar het 'en'-label zelf twijfelachtig is; 66 zonder OL-werk).
+Bookshop herprobe op de 184: 114 `valid`, 70 `not_found` (was voor allemaal de buitenlandse
+status). 382 pagina's gebust, integrity exit 0. Rapport: `data/foreign-isbn-fix-2026-10-26.md`.
+Spiegelgeval (niet-Engels origineel met Engelse vertaal-ISBN, ~330) bewust gelaten: de Engelse
+vertaling is de editie die bezoekers kopen.
