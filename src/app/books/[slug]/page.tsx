@@ -73,7 +73,7 @@ type Ban_ = {
   description: string | null
   country_code: string
   countries: { name_en: string } | null
-  ban_reason_links: { reasons: { id: number; slug: string } | null }[]
+  ban_reason_links: { basis?: string | null; reasons: { id: number; slug: string } | null }[]
 }
 type FaqItem = { q: string; a: string }
 // `topic.scope` = single-country or multi-country roll-up; `topic.reason` =
@@ -86,6 +86,17 @@ type Topic = {
   scope: { kind: 'country'; name: string; code: string } | { kind: 'multi'; count: number }
   reason: { label: string; slug: string } | null
 }
+// Which reason links may carry a headline claim ("Banned for {reason}" in the
+// <title>, H1 subtitle, FAQ answers). 'other' is the importers' placeholder for
+// "the source records no reason" — never a reason ("Banned for other
+// reasons"). Links with basis='inferred' were classified from the book's
+// themes, not stated by the ban's source (migration 20261026090000).
+const HEADLINE_ALLOWS_INFERRED = true
+function isHeadlineReason(link: { basis?: string | null; reasons: { slug: string } | null }): boolean {
+  if (!link.reasons || link.reasons.slug === 'other') return false
+  return HEADLINE_ALLOWS_INFERRED || link.basis !== 'inferred'
+}
+
 function buildBanSummary(
   bookTitle: string,
   authorStr: string,
@@ -110,7 +121,7 @@ function buildBanSummary(
   for (const b of sortedBans) {
     for (const link of b.ban_reason_links) {
       const slug = link.reasons?.slug
-      if (slug) reasonCount.set(slug, (reasonCount.get(slug) ?? 0) + 1)
+      if (slug && isHeadlineReason(link)) reasonCount.set(slug, (reasonCount.get(slug) ?? 0) + 1)
     }
   }
   // Tie-break by slug so the headline reason is deterministic. Without it,
@@ -172,6 +183,7 @@ function buildBanSummary(
     if (!country || seenCountries.has(country)) continue
     seenCountries.add(country)
     const reasonsForBan = ban.ban_reason_links
+      .filter(isHeadlineReason)
       .map(l => l.reasons?.slug)
       .filter((s): s is string => !!s)
       .map(s => BOOK_REASON_PHRASE[s] ?? s)
@@ -235,7 +247,7 @@ const BOOK_DETAIL_SELECT = `
     id, year_started, year_ended, action_type, status, country_code, region, institution, actor, description,
     countries(name_en),
     scopes(label_en),
-    ban_reason_links(reasons(id, slug)),
+    ban_reason_links(basis, reasons(id, slug)),
     ban_source_links(ban_sources(source_name, source_url))
   )
 `
@@ -376,7 +388,7 @@ export async function generateMetadata({
   type MetaBan = {
     country_code: string
     countries: { name_en: string } | null
-    ban_reason_links: { reasons: { slug: string } | null }[]
+    ban_reason_links: { basis?: string | null; reasons: { slug: string } | null }[]
   }
   const bans = (data.bans as unknown as MetaBan[]) ?? []
   const authorList = (data.book_authors as unknown as { authors: { display_name: string } | null }[])
@@ -409,7 +421,7 @@ export async function generateMetadata({
   for (const b of bans) {
     for (const l of b.ban_reason_links) {
       const s = l.reasons?.slug
-      if (s) reasonCounts.set(s, (reasonCounts.get(s) ?? 0) + 1)
+      if (s && isHeadlineReason(l)) reasonCounts.set(s, (reasonCounts.get(s) ?? 0) + 1)
     }
   }
   // Same deterministic tie-break as buildBanSummary (see note there): keeps the
@@ -597,7 +609,7 @@ type Ban = {
   description: string | null
   countries: { name_en: string } | null
   scopes: { label_en: string } | null
-  ban_reason_links: { reasons: { id: number; slug: string } | null }[]
+  ban_reason_links: { basis?: string | null; reasons: { id: number; slug: string } | null }[]
   ban_source_links: { ban_sources: { source_name: string; source_url: string } | null }[]
 }
 
@@ -621,6 +633,8 @@ type BanCluster = {
   // not just the first — so secondary citations are not hidden.
   sources: { source_name: string; source_url: string }[]
   reason_slugs: Set<string>
+  /** Slugs with at least one link the source itself states (not inferred). */
+  stated_reason_slugs: Set<string>
   description: string | null
   bans: Ban[]
   // action_type → count of bans of that type within the cluster.
@@ -771,6 +785,7 @@ function clusterBans(bans: Ban[]): BanCluster[] {
         scope_label: ban.scopes?.label_en ?? null,
         sources: [],
         reason_slugs: new Set<string>(),
+        stated_reason_slugs: new Set<string>(),
         description: ban.description,
         bans: [],
         action_counts: new Map<string, number>(),
@@ -782,7 +797,11 @@ function clusterBans(bans: Ban[]): BanCluster[] {
     }
     c.bans.push(ban)
     c.action_counts.set(ban.action_type, (c.action_counts.get(ban.action_type) ?? 0) + 1)
-    for (const l of ban.ban_reason_links) if (l.reasons) c.reason_slugs.add(l.reasons.slug)
+    for (const l of ban.ban_reason_links) {
+      if (!l.reasons) continue
+      c.reason_slugs.add(l.reasons.slug)
+      if (l.basis !== 'inferred') c.stated_reason_slugs.add(l.reasons.slug)
+    }
     for (const l of ban.ban_source_links) {
       const s = l.ban_sources
       if (s && !c.sources.some((x) => x.source_url === s.source_url)) c.sources.push(s)
@@ -790,7 +809,7 @@ function clusterBans(bans: Ban[]): BanCluster[] {
     if (c.description == null && ban.description) c.description = ban.description
     // 'historical' wins over 'active' for cluster status if any member is lifted —
     // surfaces the "some bans rescinded" signal without losing it in the aggregate.
-    if (ban.status === 'historical' && c.status !== 'historical') c.status = 'historical'
+    if ((ban.status === 'historical' || ban.status === 'rescinded') && c.status !== 'historical') c.status = 'historical'
 
     if (ban.region === 'Nation') {
       c.nation_count++
@@ -1014,7 +1033,8 @@ export default async function BookPage({
   for (const b of book.bans) {
     for (const link of b.ban_reason_links) {
       const r = link.reasons
-      if (!r) continue
+      // 'other' = "no reason recorded" — not a theme to cross-link on.
+      if (!r || r.slug === 'other') continue
       const existing = reasonFreqInBook.get(r.id)
       reasonFreqInBook.set(r.id, { count: (existing?.count ?? 0) + 1, slug: r.slug })
     }
@@ -1158,7 +1178,7 @@ export default async function BookPage({
 
   const uniqueReasonSlugs = [...new Set(
     book.bans.flatMap(b => b.ban_reason_links.map(l => l.reasons?.slug).filter(Boolean) as string[])
-  )]
+  )].filter(s => s !== 'other')
 
   const primaryAuthor = book.book_authors[0]?.authors
 
@@ -1792,7 +1812,7 @@ export default async function BookPage({
                           <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1">
                               {[...c.reason_slugs].map((slug) => (
-                                <ReasonBadge key={slug} slug={slug} />
+                                <ReasonBadge key={slug} slug={slug} inferred={!c.stated_reason_slugs.has(slug)} />
                               ))}
                             </div>
                           </td>
@@ -1878,6 +1898,12 @@ export default async function BookPage({
               <span className="inline-flex items-center px-1 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-500">lifted</span>
               <span>ban since rescinded</span>
             </div>
+            {banClusters.some((c) => [...c.reason_slugs].some((s) => !c.stated_reason_slugs.has(s))) && (
+              <div className="flex items-center gap-1.5">
+                <ReasonBadge slug="moral" inferred />
+                <span>dashed reason: inferred from the book&apos;s content — the source records no reason</span>
+              </div>
+            )}
             <Link href="/challenged-books" className="text-blue-600 hover:underline">More on these terms →</Link>
           </dl>
         </section>

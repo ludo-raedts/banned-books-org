@@ -546,11 +546,14 @@ async function main() {
           .eq('ban_id', ban.id)
         if (de) throw de
 
-        // Insert new reason links
+        // Insert new reason links. Outside --grounded-only the model may draw
+        // on the BOOK's themes rather than the ban event → mark the link
+        // basis='inferred' so the site never presents it as the ban's stated
+        // reason (migration 20261026090000).
         const inserts = slugs
           .map(slug => reasonIdMap.get(slug))
           .filter((id): id is number => id !== undefined)
-          .map(reason_id => ({ ban_id: ban.id, reason_id }))
+          .map(reason_id => ({ ban_id: ban.id, reason_id, ...(GROUNDED_ONLY ? {} : { basis: 'inferred' as const }) }))
 
         if (inserts.length === 0) {
           await supabase.from('ban_reason_links').insert({ ban_id: ban.id, reason_id: otherId })
