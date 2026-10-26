@@ -25,6 +25,7 @@
  * Usage:
  *   npx tsx --env-file=.env.local scripts/resolve-proposed-years.ts --dry-run --limit=30
  *   npx tsx --env-file=.env.local scripts/resolve-proposed-years.ts --apply
+ *   --ids-file=data/foo.json  → only the proposed rows whose id is in that JSON array
  */
 
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
@@ -146,8 +147,13 @@ function loadProcessed(): { ids: Set<number>; rows: Result[] } {
 
 async function main() {
   const sb = adminClient()
+  // --ids-file=<json array of book ids>: scope to one audit (e.g. the PEN
+  // year-stamp residue) instead of every 'proposed' row ever accumulated.
+  const idsFile = process.argv.find(x => x.startsWith('--ids-file='))?.split('=')[1]
+  const only = idsFile ? new Set<number>(JSON.parse(readFileSync(idsFile, 'utf8')) as number[]) : null
   const proposed: Prop[] = (JSON.parse(readFileSync('data/year-llm-verification.json', 'utf8')) as any[])
     .filter(r => r.action === 'proposed')
+    .filter(r => !only || only.has(Number(r.id)))
     .map(r => ({ id: r.id, slug: r.slug, title: r.title, author: r.author, db_year: r.db_year, mini_year: r.mini?.first_published_year ?? null }))
   const { ids: processedIds, rows: priorRows } = APPLY ? loadProcessed() : { ids: new Set<number>(), rows: [] as Result[] }
   const todo = proposed.filter(p => !processedIds.has(p.id))
