@@ -54,10 +54,11 @@ import type { RisingBook } from '@/components/home/RisingCard'
 
 export async function generateMetadata(): Promise<Metadata> {
   const timer = newTimer('metadata')
-  // Planner-estimated count: close enough for the meta description, avoids a
-  // full COUNT(*) scan on every metadata revalidation.
-  const { count } = await timer.wrap('books-count-estimated', () =>
-    adminClient().from('books').select('*', { count: 'estimated', head: true }),
+  // Exact count. The planner estimate drifted to 21,451 while the hero (and
+  // every other surface) says 20,934 — a visible snippet/page mismatch. A
+  // COUNT(*) over ~20k rows is milliseconds and runs once per ISR cycle.
+  const { count } = await timer.wrap('books-count', () =>
+    adminClient().from('books').select('*', { count: 'exact', head: true }),
   )
   timer.end('metadata-fn-end')
   const n = count ?? 0
