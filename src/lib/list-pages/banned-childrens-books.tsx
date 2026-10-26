@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   // children's books"); lead with the question and the age groups.
   title: "Banned children's books – the full list by age group",
   description:
-    "Which children's books are banned? Picture books, middle-grade and YA titles pulled from schools and libraries, ranked by recorded bans — with the reason and source for each.",
+    "Which children's books are banned? Picture books, middle-grade and YA titles pulled from schools and libraries, ranked by recorded bans, with reason and source.",
   alternates: { canonical: '/banned-childrens-books' },
 }
 
