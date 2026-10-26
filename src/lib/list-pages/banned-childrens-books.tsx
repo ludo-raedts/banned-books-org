@@ -39,9 +39,11 @@ const YA_TAGS = ['young-adult', 'young-adult-fiction'] as const
 const ALL_TAGS = [...PICTURE_TAGS, ...MIDDLE_GRADE_TAGS, ...YA_TAGS] as const
 
 export const metadata: Metadata = {
-  title: "Banned children's books — picture books, middle grade, young adult",
+  // Bing (28d): 462 impr at pos 6, 3.9% CTR — list-intent query ("banned
+  // children's books"); lead with the question and the age groups.
+  title: "Banned children's books – the full list by age group",
   description:
-    "Books written and published for readers under 18 that adults tried to keep from them. Documented bans and challenges across the catalogue, sorted by number of recorded bans.",
+    "Which children's books are banned? Picture books, middle-grade and YA titles pulled from schools and libraries, ranked by recorded bans — with the reason and source for each.",
   alternates: { canonical: '/banned-childrens-books' },
 }
 

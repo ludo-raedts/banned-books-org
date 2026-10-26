@@ -244,7 +244,7 @@ export default function RootLayout({
                 </a>
               </div>
             </div>
-            <p className="mt-2 leading-relaxed text-gray-400">
+            <p className="mt-2 leading-relaxed text-gray-500">
               Some outbound book links may be affiliate links. They help support this project at no extra cost to you.
             </p>
           </div>

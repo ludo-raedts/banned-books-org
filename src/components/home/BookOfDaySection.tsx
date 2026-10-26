@@ -87,9 +87,9 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
           </div>
 
           <div className="min-w-0">
-            <h3 className="book-title font-serif text-2xl font-semibold tracking-tight text-neutral-900">
+            <h2 className="book-title font-serif text-2xl font-semibold tracking-tight text-neutral-900">
               {book.title}
-            </h3>
+            </h2>
             {book.author && (
               <p className="mt-1 text-xs font-medium text-oxblood">
                 {book.author}
