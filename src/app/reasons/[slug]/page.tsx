@@ -18,6 +18,10 @@ import { adminClient } from '@/lib/supabase'
 // (political 10.9k, moral 5.1k, sexual 3.3k, lgbtq 2.8k books).
 type ReasonSweep = {
   bookCountById: Map<number, number>   // book_id → events citing this reason
+  // Books with at least one link a source records (basis NULL). The rest are
+  // PEN/Magnusson school removals whose theme was classified from the book's
+  // content (ban_reason_links.basis = 'inferred', migration 20261026090000).
+  statedBookIds: Set<number>
   countryBanCounts: Map<string, number>
   yearSet: Set<number>
   yearCounts: Map<number, number>
@@ -29,6 +33,7 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
   const supabase = adminClient()
   const sweep: ReasonSweep = {
     bookCountById: new Map(),
+    statedBookIds: new Set(),
     countryBanCounts: new Map(),
     yearSet: new Set(),
     yearCounts: new Map(),
@@ -39,7 +44,7 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
   while (true) {
     const { data, error } = await supabase
       .from('ban_reason_links')
-      .select('bans(book_id, country_code, year_started, status)')
+      .select('basis, bans(book_id, country_code, year_started, status)')
       .eq('reason_id', reasonId)
       // Stable order (ban_id unique for a fixed reason_id) or .range() skips past 1000.
       .order('ban_id')
@@ -52,6 +57,7 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
       sweep.totalBans++
       if (ban.status === 'active') sweep.activeBans++
       if (ban.book_id) sweep.bookCountById.set(ban.book_id, (sweep.bookCountById.get(ban.book_id) ?? 0) + 1)
+      if (ban.book_id && (bl as { basis?: string | null }).basis !== 'inferred') sweep.statedBookIds.add(ban.book_id)
       if (ban.country_code) sweep.countryBanCounts.set(ban.country_code, (sweep.countryBanCounts.get(ban.country_code) ?? 0) + 1)
       if (ban.year_started != null) {
         sweep.yearSet.add(ban.year_started)
@@ -94,7 +100,7 @@ const REASON_INTROS: Record<string, string> = {
   drugs: 'Drug use as a topic has been used to ban books both as a moral objection (particularly in books aimed at young readers) and as a pretext to suppress politically inconvenient authors. William S. Burroughs\'s Naked Lunch — depicting heroin addiction — was prosecuted in multiple countries. Today, the category primarily appears in US school challenges targeting young adult fiction that deals honestly with addiction.',
   obscenity: 'Obscenity as a legal standard has been notoriously difficult to define — the US Supreme Court\'s "I know it when I see it" formulation captures the problem. The Obscene Publications Act (UK, 1857) and the Comstock Act (US, 1873) gave authorities sweeping powers that were used not just against pornography but against serious literary works. The landmark 1960 Lady Chatterley trial in Britain, in which the jury acquitted Penguin Books, effectively ended literary obscenity prosecutions in the English-speaking world.',
   moral: 'Broad moral grounds — "indecent," "corrupting to youth," "contrary to public morals" — have historically served as catch-all categories for banning books that challenged prevailing social norms. Ireland\'s Censorship Board, operating under the 1929 Censorship of Publications Act, banned thousands of books on these grounds, including works by the country\'s most celebrated authors.',
-  language: 'Language bans target books written in suppressed minority languages as instruments of cultural oppression. The Russian Empire banned Ukrainian-language publications in 1863 and again in 1876. Stalin\'s USSR suppressed dozens of Soviet minority languages. Spain\'s Franco regime restricted Catalan, Basque, and Galician publishing. To ban a language is to attempt to erase a culture.',
+  language: 'Offensive language — profanity, slurs, and crude or "vulgar" dialogue — is one of the most frequently cited grounds in school and library challenges in the United States and Canada. The objection is usually to individual words rather than to a book\'s subject: Of Mice and Men, The Catcher in the Rye and The Absolutely True Diary of a Part-Time Indian have all been challenged over their language. Books that quote racial slurs to depict racism, such as Adventures of Huckleberry Finn, are challenged on these grounds as well.',
   other: 'Some censorship acts resist categorization. Books have been banned for defaming a head of state, revealing state secrets, causing public disorder, or simply because the author was inconvenient. The "other" category documents the creative range of pretexts authorities have used when the standard justifications didn\'t apply.',
 }
 
@@ -139,11 +145,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { data: reason } = await supabase.from('reasons').select('id').eq('slug', slug).single()
 
   let bookCount = 0
+  let statedCount = 0
   let topCountryNames: string[] = []
   if (reason) {
     // Same full sweep the page renders from (cache()d) — counts now match the H1.
-    const { bookCountById, countryBanCounts } = await getReasonSweep(reason.id)
+    const { bookCountById, statedBookIds, countryBanCounts } = await getReasonSweep(reason.id)
     bookCount = bookCountById.size
+    statedCount = statedBookIds.size
 
     const topCodes = [...countryBanCounts.entries()]
       .sort((a, b) => b[1] - a[1])
@@ -175,6 +183,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   } else {
     description = `${bookCount} ${bookCount === 1 ? 'book' : 'books'} banned for ${labelLower} content. Examples, dates, scope, and source citations for every documented entry.`
   }
+  // Mostly-inferred hubs (lgbtq, violence, racial…): lead with the books whose
+  // source records the reason; the school removals count as theme, not reason.
+  const themeCount = bookCount - statedCount
+  if (themeCount > 0 && statedCount > 0) {
+    description = `${statedCount.toLocaleString('en')} ${statedCount === 1 ? 'book' : 'books'} banned with ${reasonPhrase(slug)} as the recorded reason, plus ${themeCount.toLocaleString('en')} US school and library removals featuring it.`
+  }
   if (description.length > 160) description = description.slice(0, 157) + '…'
 
   return { title, description, alternates: { canonical: `/reasons/${slug}` } }
@@ -198,9 +212,11 @@ export default async function ReasonPage({
   // full catalogue is served client-side by <ReasonCatalogueBrowser> via
   // /api/books, so the page stays light + cacheable (previously this fetched
   // all ~5.8k books server-side and forced dynamic rendering via searchParams).
-  const { bookCountById, countryBanCounts, yearSet, yearCounts, totalBans, activeBans } = await getReasonSweep(reason.id)
+  const { bookCountById, statedBookIds, countryBanCounts, yearSet, yearCounts, totalBans, activeBans } = await getReasonSweep(reason.id)
 
   const bookCount = bookCountById.size
+  const statedCount = statedBookIds.size
+  const themeCount = bookCount - statedCount
   const countries = countryBanCounts.size
   const availableYears = [...yearSet].sort((a, b) => b - a)
   const earliestBanYear = yearSet.size > 0 ? Math.min(...yearSet) : null
@@ -223,7 +239,13 @@ export default async function ReasonPage({
 
   // Hydrate the top books by reason-scoped event count: top 12 for the "Most
   // banned" cards, top 50 for the JSON-LD ItemList. One .in() (≤50 ids).
-  const rankedIds = [...bookCountById.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id)
+  // Books whose source records the reason rank first — they are the examples
+  // a "banned for {reason}" hub can stand behind; theme-classified school
+  // removals follow.
+  const rankedIds = [...bookCountById.entries()]
+    .sort((a, b) =>
+      Number(statedBookIds.has(b[0])) - Number(statedBookIds.has(a[0])) || b[1] - a[1])
+    .map(([id]) => id)
   const topIds = rankedIds.slice(0, 50)
   let topBooks: Book[] = []
   if (topIds.length > 0) {
@@ -265,10 +287,17 @@ export default async function ReasonPage({
   const sentencePhrase = phrase.charAt(0).toUpperCase() + phrase.slice(1)
 
   let reasonLead: string | null = null
+  // Shown on hubs where part of the count is theme-classified, not a recorded reason.
+  const themeNote = themeCount > 0
+    ? `${themeCount.toLocaleString('en')} further ${themeCount === 1 ? 'book was' : 'books were'} removed from US schools and libraries and ${themeCount === 1 ? 'features' : 'feature'} ${phrase}. Their sources (PEN America's Index of School Book Bans, the Magnusson database) record where, when and how a book was removed — not the reason given — so for these the theme is classified from the book's content, not from the ban.`
+    : null
   if (bookCount > 0) {
-    const head = `${bookCount} ${bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for ${phrase} worldwide`
-    const tail = earliestBanYear ? ` since ${earliestBanYear}` : ''
+    const head = themeCount > 0
+      ? `${statedCount} ${statedCount === 1 ? 'book has' : 'books have'} been banned or challenged with ${phrase} recorded as the reason`
+      : `${bookCount} ${bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for ${phrase} worldwide`
+    const tail = earliestBanYear && themeCount === 0 ? ` since ${earliestBanYear}` : ''
     reasonLead = `${head}${tail}.`
+    if (themeNote) reasonLead += ` ${themeNote}`
     if (topCountries.length >= 2) {
       const names = topCountries.slice(0, 3).map(c => c.name_en).join(', ')
       reasonLead += ` ${sentencePhrase} bans are most frequently documented in ${names}.`
@@ -278,7 +307,12 @@ export default async function ReasonPage({
   // Hero stats — same shape as /scope/[slug] for cross-page consistency.
   type Stat = { value: string; label: string }
   const heroStats: Stat[] = []
-  heroStats.push({ value: bookCount.toLocaleString('en'), label: bookCount === 1 ? 'Book' : 'Books' })
+  if (themeCount > 0) {
+    heroStats.push({ value: statedCount.toLocaleString('en'), label: 'Reason on record' })
+    heroStats.push({ value: themeCount.toLocaleString('en'), label: 'US removals by theme' })
+  } else {
+    heroStats.push({ value: bookCount.toLocaleString('en'), label: bookCount === 1 ? 'Book' : 'Books' })
+  }
   heroStats.push({ value: totalBans.toLocaleString('en'), label: totalBans === 1 ? 'Documented event' : 'Documented events' })
   if (countries > 0) heroStats.push({ value: countries.toLocaleString('en'), label: countries === 1 ? 'Country' : 'Countries' })
   if (activeBans > 0) heroStats.push({ value: activeBans.toLocaleString('en'), label: 'Currently active' })
@@ -312,7 +346,9 @@ export default async function ReasonPage({
   const faqItems: FaqItem[] = []
   faqItems.push({
     q: `How many books have been banned for ${phrase}?`,
-    a: `${bookCount.toLocaleString('en')} ${bookCount === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.${
+    a: `${themeCount > 0
+      ? `${statedCount.toLocaleString('en')} ${statedCount === 1 ? 'book is' : 'books are'} documented as banned or challenged with ${phrase} as the recorded reason, and ${themeCount.toLocaleString('en')} more removed from US schools and libraries feature ${phrase} (their sources record no reason for those removals).`
+      : `${bookCount.toLocaleString('en')} ${bookCount === 1 ? 'book is' : 'books are'} documented as banned or challenged for ${phrase} in this catalogue.`}${
       topCountries.length >= 1 ? ` ${topCountries[0].name_en} has the most documented cases.` : ''
     }`,
   })
@@ -385,9 +421,15 @@ export default async function ReasonPage({
                     but with inline Links on top-country names — matches the
                     /countries/[code] and /books/[slug] internal-linking
                     pattern (2026-07-06). */}
-                {bookCount} {bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for {phrase} worldwide
-                {earliestBanYear && <> since {earliestBanYear}</>}
-                .
+                {themeCount > 0 ? (
+                  <>{statedCount.toLocaleString('en')} {statedCount === 1 ? 'book has' : 'books have'} been banned or challenged with {phrase} recorded as the reason.</>
+                ) : (
+                  <>
+                    {bookCount} {bookCount === 1 ? 'book has' : 'books have'} been banned or challenged for {phrase} worldwide
+                    {earliestBanYear && <> since {earliestBanYear}</>}
+                    .
+                  </>
+                )}
                 {topCountries.length >= 2 && (
                   <>
                     {' '}{sentencePhrase} bans are most frequently documented in{' '}
@@ -405,6 +447,13 @@ export default async function ReasonPage({
                     .
                   </>
                 )}
+              </p>
+            )}
+
+            {themeNote && (
+              <p className="mt-4 rounded-r-lg border-l-4 border-slate-300 bg-slate-50 px-4 py-3 text-sm leading-relaxed text-gray-700">
+                {themeNote}{' '}
+                <Link href="/methodology" className="underline underline-offset-2 hover:text-gray-900">Methodology</Link>
               </p>
             )}
 

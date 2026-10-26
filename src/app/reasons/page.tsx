@@ -11,7 +11,8 @@ import { adminClient } from '@/lib/supabase'
 import { reasonLabel, reasonIcon } from '@/components/reason-badge'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { count } = await adminClient().from('reasons').select('*', { count: 'exact', head: true })
+  // 'other' (= no reason recorded) is not ranked on the page — don't count it.
+  const { count } = await adminClient().from('reasons').select('*', { count: 'exact', head: true }).neq('slug', 'other')
   const n = count ?? 0
   return {
     // Bing (28d): 510 impr @5.9% at pos 5 — question-first snippet.
@@ -45,7 +46,7 @@ const REASON_DESCRIPTIONS: Record<string, string> = {
   drugs: 'Depictions of drug use, especially in books marketed to young adults, face regular challenges. Burroughs\'s Naked Lunch — prosecuted in multiple countries — remains the most famous example of this category.',
   obscenity: 'Obscenity as a legal category has been used to prosecute books from the Victorian era through the 20th century. The Obscene Publications Act (1857) in Britain and the Comstock Act (1873) in the US gave authorities broad powers to seize and destroy publications.',
   moral: 'Broad moral grounds have been invoked to ban books that don\'t fit neatly into other categories — often targeting authors who challenge prevailing social norms around class, gender, or family.',
-  language: 'Language bans have targeted books written in minority or indigenous languages as part of broader cultural suppression campaigns. The Russian Empire\'s 1863 Ems Decree banned Ukrainian-language publications; Spain\'s Franco regime suppressed Catalan, Basque, and Galician literature.',
+  language: 'Offensive language — profanity, slurs and crude dialogue — is among the grounds most often cited in US and Canadian school challenges. The objection is usually to individual words rather than a book\'s subject, from The Catcher in the Rye to Of Mice and Men.',
   other: 'Some bans defy easy categorization, targeting books for defamation, national security grounds, or simply because of who wrote them.',
 }
 
@@ -68,6 +69,32 @@ export default async function ReasonsPage() {
     }
   }
 
+  // Theme-classified links (basis='inferred', migration 20261026090000): PEN /
+  // Magnusson school removals record no reason; their themes were classified
+  // from the book's content. Ranked separately so the cards count reasons a
+  // source records. 11 head-counts on the reason_id index, hourly ISR.
+  const inferredByReason = new Map<string, number>()
+  {
+    const { data: reasonRows } = await supabase.from('reasons').select('id, slug')
+    await Promise.all(((reasonRows ?? []) as { id: number; slug: string }[]).map(async (r) => {
+      const { count } = await supabase
+        .from('ban_reason_links')
+        .select('ban_id', { count: 'exact', head: true })
+        .eq('reason_id', r.id)
+        .eq('basis', 'inferred')
+      inferredByReason.set(r.slug, count ?? 0)
+    }))
+  }
+  for (const [slug, n] of inferredByReason) {
+    if (reasonCounts.has(slug)) reasonCounts.set(slug, Math.max(0, reasonCounts.get(slug)! - n))
+  }
+
+  // 'other' is the importers' placeholder for "the source records no reason" —
+  // not a reason to rank. Kept out of the cards and the percentages; its count
+  // goes in the footnote (the /reasons/other hub still exists).
+  const noReasonCount = reasonCounts.get('other') ?? 0
+  reasonCounts.delete('other')
+
   const totalReasonBans = [...reasonCounts.values()].reduce((a, b) => a + b, 0)
 
   const reasons = [...reasonCounts.entries()]
@@ -75,7 +102,7 @@ export default async function ReasonsPage() {
     .map(([slug, count]) => {
       const raw = (count / totalReasonBans) * 100
       const pct = raw > 0 && raw < 0.5 ? '<1' : raw.toFixed(0)
-      return { slug, count, pct }
+      return { slug, count, pct, themeCount: inferredByReason.get(slug) ?? 0 }
     })
 
   return (
@@ -104,7 +131,10 @@ export default async function ReasonsPage() {
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold tabular-nums text-brand">{r.count}</div>
-                <div className="text-xs opacity-70">{r.pct}% of bans</div>
+                <div className="text-xs opacity-70">{r.pct}% of recorded reasons</div>
+                {r.themeCount > 0 && (
+                  <div className="text-[11px] opacity-60 mt-0.5">+{r.themeCount.toLocaleString('en')} US removals by theme</div>
+                )}
               </div>
             </div>
             <p className="text-xs leading-relaxed opacity-80 line-clamp-3">
@@ -115,7 +145,7 @@ export default async function ReasonsPage() {
       </div>
 
       <p className="mt-6 text-xs text-gray-400">
-        Note: a single ban can be recorded with multiple reasons. Percentages are calculated from the total number of reason assignments, not total bans.
+        Note: a single ban can be recorded with multiple reasons. Percentages are calculated from the total number of reason assignments a source records, not total bans. US school and library removals from PEN America&apos;s index and the Magnusson database carry no recorded reason; their themes are classified from the book&apos;s content and shown separately (“by theme”). A further {noReasonCount.toLocaleString('en')} bans have no recorded reason and no classified theme (<Link href="/reasons/other" className="underline">listed under “other”</Link>).
       </p>
       <p className="mt-3 text-xs text-gray-400">
         <Link href="/top-100-banned-books" className="underline hover:text-gray-600 transition-colors">
