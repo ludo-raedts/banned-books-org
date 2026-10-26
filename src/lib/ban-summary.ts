@@ -12,6 +12,8 @@
 
 export type SummaryBan = {
   year_started: number | null
+  year_ended?: number | null
+  status?: string
   action_type: string
   country_code: string
   region: string | null
@@ -62,7 +64,9 @@ function placeLabel(b: SummaryBan): string {
   const region = b.region && b.region !== 'Nation' ? b.region : null
   if (b.institution) {
     const inst = b.institution.replace(/^the /i, '')
-    const withRegion = region && !inst.includes(region) ? `${inst} (${region})` : inst
+    // "U.S. Naval Academy (Nimitz Library)" already carries parentheses — a
+    // second "(Maryland)" reads badly; region is in the bans table anyway.
+    const withRegion = region && !inst.includes(region) && !inst.includes('(') ? `${inst} (${region})` : inst
     return `the ${withRegion}`.replace(/^the (?=[A-Z][a-z]+ [A-Z][a-z]+ (?:of|for) )/, 'the ')
   }
   return region ? `${region}, ${country}` : country
@@ -93,19 +97,25 @@ export function buildBanRowSummary(title: string, bans: SummaryBan[]): BanSummar
     const years = formatYears(group.map(b => b.year_started).filter((y): y is number => y != null))
     const actor = actorClause(group.find(b => b.actor)?.actor)
     const place = placeLabel(first)
+    // Every ban in the group reversed (status 'rescinded') → say so.
+    const ended = group.map(b => b.year_ended).filter((y): y is number => y != null)
+    const reversed = group.every(b => b.status === 'rescinded')
+    const endYear = ended.length ? ` in ${Math.max(...ended)}` : ''
 
     if (first.institution) {
       const Place = place.charAt(0).toUpperCase() + place.slice(1)
       if (action === 'challenged') return `${title} was challenged at ${place}${years}.`
       const verb = action === 'restricted' ? 'restricted access to' : 'removed'
-      return `${Place} ${verb} ${title}${years}${actor}.`
+      const tail = reversed ? ` The decision was reversed${endYear}.` : ''
+      return `${Place} ${verb} ${title}${years}${actor}.${tail}`
     }
     const scope = first.scopes?.label_en
     const scopePhrase = !scope || scope === 'Government / national'
       ? ''
       : ` (${scope.toLowerCase()})`
     const verb = action === 'restricted' ? 'restricted' : action === 'challenged' ? 'challenged' : 'banned'
-    return `${title} was ${verb} in ${place}${scopePhrase}${years}${actor}.`
+    const tail = reversed ? ` The ban was lifted${endYear}.` : ''
+    return `${title} was ${verb} in ${place}${scopePhrase}${years}${actor}.${tail}`
   })
 
   const rest = ordered.length - shown.length

@@ -1627,7 +1627,10 @@ export default async function BookPage({
                 {banRowSummary.sentences.join(' ')}
                 {banRowSummary.more && <> {banRowSummary.more}</>}
               </p>
-              {banRowSummary.sourceNote && (
+              {/* The generic "sources don't record the reason" note would
+                  contradict an institution context that explains the removals;
+                  PEN's note stays (it describes the source, still true). */}
+              {banRowSummary.sourceNote && (banRowSummary.sourceNote.startsWith('PEN') || institutionContexts.length === 0) && (
                 <p className="text-sm text-gray-500">{banRowSummary.sourceNote}</p>
               )}
             </div>
