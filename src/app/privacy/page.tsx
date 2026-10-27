@@ -145,6 +145,12 @@ export default function PrivacyPage() {
               image CDN, so your IP address does reach Google for that one image.
             </li>
             <li>
+              <strong>Instagram posts</strong> (on the <Link href="/essays/forbidden-library">forbidden
+              library essay</Link>) use the same click-to-load approach: nothing is requested from Instagram
+              until you press &ldquo;Load the post&rdquo;. After that, Instagram&apos;s own embed loads and
+              Meta&apos;s privacy policy applies to it.
+            </li>
+            <li>
               <strong>Bookshop.org reading-list widgets</strong> (on some reason and scope pages) load an
               embedded list from Bookshop.org when they scroll into view, which sends Bookshop the request and
               our affiliate tag. This is the same affiliate relationship described above, delivered as an embed

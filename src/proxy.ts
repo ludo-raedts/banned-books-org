@@ -71,6 +71,7 @@ export const config = {
     '/methodology',
     '/why-not-amazon',
     '/essays/first-amendment-paradox',
+    '/essays/forbidden-library',
     '/essays/forbidden-knowledge-iceberg',
     '/essays/in-whose-name',
     '/essays/one-in-ten',

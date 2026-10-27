@@ -20,6 +20,7 @@ export const MARKDOWN_TWINS: Record<string, string> = {
   '/methodology': '/methodology.md',
   '/why-not-amazon': '/why-not-amazon.md',
   '/essays/first-amendment-paradox': '/essays/first-amendment-paradox.md',
+  '/essays/forbidden-library': '/essays/forbidden-library.md',
   '/essays/forbidden-knowledge-iceberg': '/essays/forbidden-knowledge-iceberg.md',
   '/essays/in-whose-name': '/essays/in-whose-name.md',
   '/essays/one-in-ten': '/essays/one-in-ten.md',

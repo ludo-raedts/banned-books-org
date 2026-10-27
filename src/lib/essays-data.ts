@@ -16,6 +16,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'forbidden-library',
+    href: '/essays/forbidden-library',
+    title: 'The forbidden library',
+    dek: 'Media artist Evgeniy Afonin turned this catalogue’s open dataset into a data sculpture, a turning tower of book covers, one ring per country, and over a hundred thousand people watched it. On the artist, the five-line caption that says what the data cannot, and why the emptiest rings are the most telling.',
+    publishedAt: '2026-10-27',
+    readingTimeMin: 6,
+    relatedBookSlugs: ['the-satanic-verses', 'lady-chatterleys-lover', '1984', 'lolita', 'tropic-of-cancer', 'animal-farm'],
+  },
+  {
     slug: 'the-librarians',
     href: '/essays/the-librarians',
     title: 'Nobody arrested a librarian',
