@@ -19,8 +19,9 @@ export const ESSAYS: Essay[] = [
     slug: 'forbidden-library',
     href: '/essays/forbidden-library',
     title: 'The forbidden library',
-    dek: 'Media artist Evgeniy Afonin turned this catalogue’s open dataset into a data sculpture, a turning tower of book covers, one ring per country, and over a hundred thousand people watched it. On the artist, the five-line caption that says what the data cannot, and why the emptiest rings are the most telling.',
+    dek: 'Media artist Evgeniy Afonin turned this catalogue’s open data into a coil of barbed wire whose barbs are banned books, and over 100,000 people watched. On the artist, the five-line caption that says what the data cannot, and why the thinnest barbs are the most telling.',
     publishedAt: '2026-10-27',
+    updatedAt: '2026-10-29',   // artist's correction: barbs, not rings
     readingTimeMin: 6,
     relatedBookSlugs: ['the-satanic-verses', 'lady-chatterleys-lover', '1984', 'lolita', 'tropic-of-cancer', 'animal-farm'],
   },

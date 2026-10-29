@@ -73,9 +73,11 @@ export default function ForbiddenLibraryPage() {
 
         <p>
           On 26 October 2026 a media artist named Evgeniy Afonin posted a short video to
-          Instagram. It shows a slowly turning tower of rings, each ring a thin band of book
-          covers, each band one country&rsquo;s list of forbidden titles. Small labels float
-          beside them &mdash; a country code, a span of years. He called it{' '}
+          Instagram. It shows a single coil of barbed wire, slowly turning. Each barb on the
+          wire is one country&rsquo;s list of forbidden titles, wound with the covers of the
+          books on it, and one turn of the coil carries several countries. Small labels float
+          beside the barbs &mdash; a country code, a span of years. It took me a second look to
+          see that the books are the barbs. He called it{' '}
           <em>forbidden library</em>, and described it as a data sculpture. Within a day it had
           more than a hundred thousand likes, and TouchDesigner, the real-time graphics software
           he built it in, had reposted it to its own followers.
@@ -86,7 +88,7 @@ export default function ForbiddenLibraryPage() {
           name, under the CC&nbsp;BY&nbsp;4.0 licence it is published with, and the book covers
           to Open Library and the Internet Archive. That is how I found out about it: thousands
           of people I had never met started typing <em>banned-books.org</em> into their phones
-          to see where the rings came from.
+          to see where the books on the wire came from.
         </p>
 
         {/* Click-to-load: no Instagram request until the reader asks for it.
@@ -130,9 +132,9 @@ export default function ForbiddenLibraryPage() {
           until an aircraft outline emerges. Rocket alerts in Israel. A
           Smithsonian parasite collection. The archive is the material; the sculpture is a way of
           making its shape visible. <em>forbidden library</em> is the latest of these, and you can
-          see more of them on{' '}
-          <a href="https://afonin.media/" target="_blank" rel="noopener noreferrer">
-            his site
+          see the others on{' '}
+          <a href="https://www.instagram.com/netzzy/" target="_blank" rel="noopener noreferrer">
+            his Instagram
           </a>
           .
         </p>
@@ -159,12 +161,12 @@ export default function ForbiddenLibraryPage() {
           in which the limits are the thing you see.
         </p>
 
-        <h2>What the rings actually show</h2>
+        <h2>What the barbs actually show</h2>
 
         <p>
           Filter the catalogue to bans by states &mdash; government and customs bans, more or
-          less what his caption describes &mdash; and you get roughly 12,600 titles across 117 countries. But the bands are wildly uneven, and
-          the unevenness is the story:
+          less what his caption describes &mdash; and you get roughly 12,600 titles across
+          117 countries. But the barbs are wildly uneven, and the unevenness is the story:
         </p>
 
         <ul>
@@ -190,18 +192,26 @@ export default function ForbiddenLibraryPage() {
 
         <p>
           Nobody seriously believes Germany is the most censorious country in this dataset or
-          that North Korea forbids six books. The largest rings belong to censors who wrote
+          that North Korea forbids six books. The heaviest barbs belong to censors who wrote
           things down: a regime that lost and left its paperwork behind, a government that
           prints its bans in an official gazette, a dictatorship whose archives were opened.
-          The thinnest rings belong to systems where censorship works well enough that it
+          The thinnest barbs belong to systems where censorship works well enough that it
           doesn&rsquo;t need a list &mdash; where a book never gets printed, imported, or
           mentioned in the first place. A complete ban leaves almost no trace in any record.
         </p>
 
         <p>
           So a sculpture made of these lists is, without ever saying so, also a picture of
-          paperwork. When you watch the tower turn, the empty space between the rings is not
+          paperwork. When you watch the coil turn, the bare wire between the barbs is not
           freedom. It is the part nobody wrote down.
+        </p>
+
+        <p>
+          It is also a picture of ninety years at once. The sculpture shows every list
+          together, so a Nazi index from 1938 sits on the same wire as a Malaysian gazette from
+          last year. Many of these bans were lifted long ago; some died with the state that
+          issued them. Each book&rsquo;s page here says, where the sources allow, whether a ban
+          is still in force or has become history.
         </p>
 
         <h2>The books that cross borders</h2>
@@ -242,11 +252,11 @@ export default function ForbiddenLibraryPage() {
 
         <p>
           If you build something with the data &mdash; a sculpture, a paper, a lesson, a map
-          &mdash; I would like to see it. And if you came here from the video: the rings are
+          &mdash; I would like to see it. And if you came here from the video: the barbs are
           made of real books. Every one of them has a page on this site, with the countries
           that banned it and the sources that say so. Start with the{' '}
-          <Link href="/countries">countries</Link>, or with the book that appears in the most
-          rings of all,{' '}
+          <Link href="/countries">countries</Link>, or with the book that hangs on the most
+          barbs of all,{' '}
           <Link href="/books/the-satanic-verses"><em>The Satanic Verses</em></Link>.
         </p>
       </EssayLayout>
