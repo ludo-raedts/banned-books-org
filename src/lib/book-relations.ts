@@ -157,7 +157,7 @@ export function loadReasonBans(reasonId: number | null): Promise<ReasonBanRow[]>
 
 // ── News ─────────────────────────────────────────────────────────────────────
 //
-// One cached fetch of every published item (389 rows / ~296 KB, well under the
+// One cached fetch of every published item (~610 KB by 2026-10-31, under the
 // 2 MB Data Cache entry ceiling) replaces a per-book OR-of-ILIKEs.
 const loadPublishedNews = unstable_cache(
   async (): Promise<NewsItem[]> => {
@@ -177,15 +177,30 @@ const loadPublishedNews = unstable_cache(
  * title or summary, newest first — the in-memory equivalent of the ILIKE OR
  * this replaces. Matching is case-insensitive substring, same as `ilike %…%`.
  */
-export async function findNewsForTitles(
+export function findNewsForTitles(
   titleVariants: string[],
   limit = 3,
 ): Promise<NewsItem[]> {
-  const needles = titleVariants
-    .map(t => t.trim().toLowerCase())
-    .filter(t => t.length >= 4)
-  if (needles.length === 0) return []
+  const needles = [...new Set(
+    titleVariants.map(t => t.trim().toLowerCase()).filter(t => t.length >= 4),
+  )].sort()
+  if (needles.length === 0) return Promise.resolve([])
+  return _newsForNeedles(needles.join('\n'), limit)
+}
 
+// Per-book result cache in front of the shared blob. Runtime Cache bills per
+// 8 KB read unit (from 2027-01-29), so reading the whole table (~80 units) on
+// every book render was the dominant cost; this entry is ~1 unit, and the blob
+// is only read on a miss. Freshness is unchanged: a revalidatePath() of the
+// book page refreshes this entry through the same soft (path) tags.
+const _newsForNeedles = unstable_cache(
+  async (key: string, limit: number): Promise<NewsItem[]> =>
+    matchNews(key.split('\n'), limit),
+  ['book-news-matches'],
+  { revalidate: NEWS_TTL, tags: [NEWS_ITEMS_TAG] },
+)
+
+async function matchNews(needles: string[], limit: number): Promise<NewsItem[]> {
   const news = await loadPublishedNews()
   const hits: NewsItem[] = []
   for (const item of news) {
