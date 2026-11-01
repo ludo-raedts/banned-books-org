@@ -1,0 +1,20 @@
+[
+  {
+    "keep": 1071,
+    "drop": 13335,
+    "keep_title": "Memoir Shamsiah Fakeh: Dari AWAS ke Rejimen ke-10",
+    "drop_title": "Memoir Shamsiah Fakeh dari Awas ke Rejimen Ke-10",
+    "confidence": "high",
+    "reasons": ["same work: KDN e-PQ gazette P.U. (A) 69 (2026-02-11) re-minted the Article 19-sourced seed row"],
+    "flags": ["DROP author = Anonymous placeholder"]
+  },
+  {
+    "keep": 1072,
+    "drop": 13337,
+    "keep_title": "Komrad Asi Rejimen 10: Dalam Denyut Nihilisme Sejarah",
+    "drop_title": "KOMRAD ASI (REJIMEN 10) Dalam Denyut Nihilisme Sejarah",
+    "confidence": "high",
+    "reasons": ["same work: KDN e-PQ gazette P.U. (A) 79 (2026-02-12) re-minted the Article 19-sourced seed row"],
+    "flags": ["KEEP author = Anonymous placeholder; gazette names AZIZ SURIANI (author #8736 on DROP) — fixed by _fix_my_kdn_dupes_2026_11_01.ts"]
+  }
+]
