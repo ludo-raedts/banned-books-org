@@ -47,12 +47,22 @@ async function fetchYearBooks(yearNum: number): Promise<YearBooks> {
   const supabase = adminClient()
   let rawBans: BanRow[] = []
   for (let offset = 0; ; offset += 1000) {
-    const { data } = await supabase
-      .from('bans')
-      .select('book_id, country_code, countries(name_en), books(id, title, slug, cover_url, book_authors(authors(display_name)))')
-      .eq('year_started', yearNum)
-      .order('id', { ascending: true })
-      .range(offset, offset + 999)
+    // A failed page must throw, not end the sweep: treating an error (e.g. a
+    // 57014 statement timeout under DB load) as "no rows" got an empty result
+    // cached for 24h, and /banned-books/2021 + 2024 rendered "No bans" while
+    // the DB held thousands. Throwing keeps the last good ISR page instead.
+    let data: unknown[] | null = null
+    for (let attempt = 1; ; attempt++) {
+      const res = await supabase
+        .from('bans')
+        .select('book_id, country_code, countries(name_en), books(id, title, slug, cover_url, book_authors(authors(display_name)))')
+        .eq('year_started', yearNum)
+        .order('id', { ascending: true })
+        .range(offset, offset + 999)
+      if (!res.error) { data = res.data; break }
+      if (attempt >= 3) throw new Error(`year-books ${yearNum} @${offset}: ${res.error.code} ${res.error.message}`)
+      await new Promise(r => setTimeout(r, 1000 * attempt))
+    }
     if (!data || data.length === 0) break
     rawBans = rawBans.concat(data as unknown as BanRow[])
     if (data.length < 1000) break

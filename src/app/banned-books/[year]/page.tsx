@@ -41,8 +41,10 @@ export async function generateMetadata({
   if (Number.isFinite(yearNum)) {
     const ids = new Set<number>()
     for (let offset = 0; ; offset += 1000) {
-      const { data } = await adminClient().from('bans').select('book_id').eq('year_started', yearNum)
+      const { data, error } = await adminClient().from('bans').select('book_id').eq('year_started', yearNum)
         .order('id', { ascending: true }).range(offset, offset + 999)
+      // Same as getYearBooks: an error must not read as "0 titles".
+      if (error) throw new Error(`year metadata ${yearNum}: ${error.code} ${error.message}`)
       for (const r of (data ?? []) as { book_id: number }[]) ids.add(r.book_id)
       if (!data || data.length < 1000) break
     }
