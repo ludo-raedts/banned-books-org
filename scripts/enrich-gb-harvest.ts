@@ -57,7 +57,7 @@
  */
 import fs from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
-import { idsFlag } from './lib/cli'
+import { idChunks, idsFlag } from './lib/cli'
 import {
   gbVolumesByIsbn,
   gbVolumesByTitleAuthor,
@@ -151,7 +151,8 @@ async function main() {
   // recovery, the one thing OL's exact-key path can't do for an orphan.
   const PAGE = 1000
   const books: BookRow[] = []
-  for (let from = IDS ? 0 : cursor.lastId; ; ) {
+  for (const chunk of idChunks(IDS)) {
+  for (let from = chunk ? 0 : cursor.lastId; ; ) {
     let q = sb
       .from('books')
       .select(
@@ -163,7 +164,7 @@ async function main() {
       .is('openlibrary_work_id', null)
       .order('id')
       .limit(PAGE)
-    if (IDS) q = q.in('id', IDS)
+    if (chunk) q = q.in('id', chunk)
     const { data, error } = await q
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
@@ -171,6 +172,8 @@ async function main() {
     from = data[data.length - 1].id
     if (data.length < PAGE) break
     if (books.length >= BUDGET * 3) break // plenty buffered; we cap by budget anyway
+  }
+  if (books.length >= BUDGET * 3) break
   }
 
   if (!books.length) {

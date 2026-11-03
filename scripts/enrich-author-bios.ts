@@ -31,7 +31,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
-import { idsFlag } from './lib/cli'
+import { idChunks, idsFlag } from './lib/cli'
 import { authorLadder } from '../src/lib/enrich/_author-ladder'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import { cleanWikiExtract } from '../src/lib/text/clean-wiki-extract'
@@ -509,8 +509,9 @@ async function main() {
   // or the source is exhausted.
   const PAGE = 1000
   const authors: AuthorRow[] = []
-  let offset = 0
   let totalScanned = 0
+  for (const chunk of idChunks(IDS)) {
+  let offset = 0
   while (authors.length < LIMIT) {
     let q = supabase
       .from('authors')
@@ -521,7 +522,7 @@ async function main() {
       .range(offset, offset + PAGE - 1)
 
     q = PHOTOS_ONLY ? q.not('bio', 'is', null).is('photo_url', null) : q.is('bio', null)
-    if (IDS) q = q.in('id', IDS)
+    if (chunk) q = q.in('id', chunk)
 
     const { data, error } = await q
     if (error) { console.error('DB error:', error.message); process.exit(1) }
@@ -534,6 +535,8 @@ async function main() {
     }
     if (page.length < PAGE) break
     offset += PAGE
+  }
+  if (authors.length >= LIMIT) break
   }
 
   const target = PHOTOS_ONLY ? 'with bio but no photo' : 'without bio'

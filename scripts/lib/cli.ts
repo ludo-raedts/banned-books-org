@@ -50,3 +50,16 @@ export function idsFlag(): number[] | null {
   const list: unknown[] = trimmed.startsWith('[') ? JSON.parse(trimmed) : trimmed.split(/[\s,]+/)
   return list.map(x => Number(x)).filter(n => Number.isInteger(n) && n > 0)
 }
+
+/**
+ * Split an idsFlag() list into `.in('id', chunk)`-sized batches. PostgREST puts
+ * the list in the URL: ~3,600 ids (the 2026-11-03 Texas import) is ~20 KB and
+ * fails with "Bad Request". Returns [null] when there is no id scope, so callers
+ * can always loop: `for (const chunk of idChunks(IDS)) { …; if (chunk) q = q.in('id', chunk) }`.
+ */
+export function idChunks(ids: number[] | null, size = 300): (number[] | null)[] {
+  if (!ids) return [null]
+  const out: number[][] = []
+  for (let i = 0; i < ids.length; i += size) out.push(ids.slice(i, i + size))
+  return out
+}

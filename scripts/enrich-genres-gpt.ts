@@ -32,7 +32,7 @@
 import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
-import { idsFlag } from './lib/cli'
+import { idChunks, idsFlag } from './lib/cli'
 
 export type EnrichGenresOptions = {
   apply:     boolean
@@ -235,6 +235,7 @@ async function fetchCandidates(
   opts: EnrichGenresOptions,
 ): Promise<BookRow[]> {
   const all: BookRow[] = []
+  for (const chunk of idChunks(opts.ids?.length ? opts.ids : null)) {
   for (let from = 0; ; from += PAGE) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query: any = supabase
@@ -246,7 +247,7 @@ async function fetchCandidates(
       .order('id')
       .range(from, from + PAGE - 1)
 
-    if (opts.ids?.length) query = query.in('id', opts.ids)
+    if (chunk) query = query.in('id', chunk)
     if (opts.slug) {
       query = query.eq('slug', opts.slug)
     } else if (!opts.overwrite) {
@@ -263,6 +264,8 @@ async function fetchCandidates(
     if (rows.length < PAGE) break               // last page
     if (Number.isFinite(opts.limit) && all.length >= opts.limit) break
     if (opts.slug) break                          // single-target never paginates
+  }
+  if (Number.isFinite(opts.limit) && all.length >= opts.limit) break
   }
   return all
 }
