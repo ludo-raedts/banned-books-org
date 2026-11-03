@@ -28,6 +28,8 @@ watch that silently skips a source is worse than none.
    already cover part of it. So the handoff is a DELTA through
    `import-magnusson-delta.ts`'s fuzzy district dedup (thin reader into
    Stage0Row), NOT plain `import-pen.ts`: its exact-key dedup would double-count.
+   Texas 2025–26 is ALSO already in via the Texas Freedom to Read Project
+   tracker (2026-11-03, 6,162 bans / 30 districts) — same district dedup covers it.
 2. **Russia — minjust FSEM** (Федеральный список экстремистских материалов,
    `https://minjust.gov.ru/ru/extremist-materials/`)
    We imported batch 1 (RU at 510 distinct books); the full list is ~5,500

@@ -41,6 +41,14 @@ const RES_PATH = flagValue('resolutions')
 type Verdict = { attach?: number; create?: string; drop?: string; title?: string; authors?: string[] }
 const RESOLUTIONS: Record<string, Verdict> = RES_PATH ? JSON.parse(readFileSync(RES_PATH, 'utf8')) : {}
 const STAMP = IN.match(/(\d{4}-\d{2}-\d{2})/)?.[1] ?? 'run'
+// Other PEN-feeder sources reuse this importer (same per-district dedup) with
+// their own batch source and output dir, e.g. the Texas Freedom to Read Project
+// (build-txftrp-stage0.ts): --out-dir=data/txftrp --batch-source-name=… --batch-source-url=…
+const OUT_DIR = flagValue('out-dir') ?? 'data/magnusson'
+const BATCH_SOURCE_NAME = flagValue('batch-source-name') ?? MAGNUSSON_SOURCE_NAME
+const BATCH_SOURCE_URL = flagValue('batch-source-url') ?? MAGNUSSON_SOURCE_URL
+const ROW_SOURCE_NAME = flagValue('row-source-name') ?? 'News / public record (via Magnusson Book Censorship Database)'
+const BATCH_LABEL = flagValue('batch-label') ?? 'the Magnusson Book Censorship Database'
 
 const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 const STOP = new Set(['school', 'schools', 'district', 'districts', 'county', 'public', 'city', 'unified', 'independent', 'isd', 'usd', 'cisd', 'area', 'community', 'consolidated', 'the', 'of', 'sd', 'csd', 'ps', 'library', 'libraries', 'system', 'board', 'education', 'regional', 'parish', 'township', 'and', 'co', 'no', 'r', 'cusd'])
@@ -50,7 +58,7 @@ const sameDistrict = (a: string, b: string) => !!a && !!b && (a === b || a.inclu
 const lastName = (n: string) => fold(n).replace(/\b(jr|sr|ii|iii)\b\.?/g, '').trim().split(/\s+/).pop() ?? ''
 
 // Title → match result, persisted so the --apply run reuses the dry-run's lookups.
-const CACHE_PATH = 'data/magnusson/match-cache.json'
+const CACHE_PATH = `${OUT_DIR}/match-cache.json`
 const matchCache: Record<string, { id: number; status: string } | null> = existsSync(CACHE_PATH) ? JSON.parse(readFileSync(CACHE_PATH, 'utf8')) : {}
 async function matchCached(title: string) {
   if (title in matchCache) return matchCache[title]
@@ -175,23 +183,23 @@ async function main() {
   }
 
   writeFileSync(CACHE_PATH, JSON.stringify(matchCache))
-  writeFileSync(`data/magnusson/author-fuzzy-${STAMP}.txt`, authorFuzzyLog.join('\n'))
-  writeFileSync(`data/magnusson/needs-review-${STAMP}.json`, JSON.stringify(held, null, 1))
+  writeFileSync(`${OUT_DIR}/author-fuzzy-${STAMP}.txt`, authorFuzzyLog.join('\n'))
+  writeFileSync(`${OUT_DIR}/needs-review-${STAMP}.json`, JSON.stringify(held, null, 1))
   const plan = { attach: toAttach.map(a => ({ book_id: a.book_id, ...a.row })), new_books: [...plannedNewBooks.values()] }
-  writeFileSync(`data/magnusson/plan-${STAMP}.json`, JSON.stringify(plan, null, 1))
+  writeFileSync(`${OUT_DIR}/plan-${STAMP}.json`, JSON.stringify(plan, null, 1))
   console.log({ rows: rows.length, ...stats, new_books: plannedNewBooks.size, held_titles: new Set(held.map(h => h.matched_book_id)).size })
-  if (!APPLY) { console.log('dry-run — plan + needs_review written to data/magnusson/'); await pg.end(); return }
+  if (!APPLY) { console.log(`dry-run — plan + needs_review written to ${OUT_DIR}/`); await pg.end(); return }
 
   // ── apply ────────────────────────────────────────────────────────────────
   const upsertSource = async (name: string, url: string) =>
     (await pg.query(`insert into ban_sources (source_name, source_url, source_type, verification_status, accessed_at)
        values ($1,$2,'web','unverified',now()) on conflict (source_url) do update set accessed_at=now() returning id`, [name, url])).rows[0].id as number
-  const magSrc = await upsertSource(MAGNUSSON_SOURCE_NAME, MAGNUSSON_SOURCE_URL)
+  const magSrc = await upsertSource(BATCH_SOURCE_NAME, BATCH_SOURCE_URL)
   const srcCache = new Map<string, number>()
   const linkSources = async (banId: number, row: Stage0Row) => {
     const ids = [magSrc]
     if (row.source_url) {
-      if (!srcCache.has(row.source_url)) srcCache.set(row.source_url, await upsertSource('News / public record (via Magnusson Book Censorship Database)', row.source_url))
+      if (!srcCache.has(row.source_url)) srcCache.set(row.source_url, await upsertSource(ROW_SOURCE_NAME, row.source_url))
       ids.push(srcCache.get(row.source_url)!)
     }
     for (const id of ids) await pg.query(`insert into ban_source_links (ban_id, source_id) values ($1,$2) on conflict do nothing`, [banId, id])
@@ -213,15 +221,15 @@ async function main() {
     try { r = await commitParsedRow({
       title: first.title, authors: first.authors, slug_override: (first as { slug_override?: string }).slug_override ?? null, year: first.year, country_code: 'US',
       scope_slug: first.scope_slug, action_type: first.action_type, ban_status: 'active', reason_slug: 'other',
-      inclusion_rationale: `Listed as ${first.action_type} (${first.institution}, ${first.region}, ${first.year}) in the Magnusson Book Censorship Database.`,
-      source_url: MAGNUSSON_SOURCE_URL, source_name: MAGNUSSON_SOURCE_NAME, source_type: 'web',
+      inclusion_rationale: `Listed as ${first.action_type} (${first.institution}, ${first.region}, ${first.year}) in ${BATCH_LABEL}.`,
+      source_url: BATCH_SOURCE_URL, source_name: BATCH_SOURCE_NAME, source_type: 'web',
     }, pg) } catch (e) { failed.push({ title: first.title, authors: first.authors, error: String(e) }); continue }
     await pg.query(`update bans set region=$2, institution=$3, confidence='reported' where id=$1`, [r.ban_ids[0], first.region, first.institution])
     await linkSources(r.ban_ids[0], first)
     bookCount++; banCount++
     for (const row of rest) { await insertBan(r.book_id, row); banCount++ }
   }
-  if (failed.length) writeFileSync(`data/magnusson/create-failed-${STAMP}.json`, JSON.stringify(failed, null, 1))
+  if (failed.length) writeFileSync(`${OUT_DIR}/create-failed-${STAMP}.json`, JSON.stringify(failed, null, 1))
   const after = await count()
   console.log('AFTER', after, { books_created: bookCount, bans_created: banCount, create_failed: failed.length,
     delta: { books: after.books - before.books, bans: after.bans - before.bans } })

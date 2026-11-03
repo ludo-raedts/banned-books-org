@@ -218,3 +218,4 @@ next-env.d.ts
 /data/author-photo-partG-*
 /data/author-bio-subject-fail-*
 data/foreign-isbn-fix.jsonl
+/data/txftrp/
