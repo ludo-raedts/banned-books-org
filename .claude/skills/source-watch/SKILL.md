@@ -33,7 +33,8 @@ watch that silently skips a source is worse than none.
    We imported batch 1 (RU at 510 distinct books); the full list is ~5,500
    entries and a full crawl is a KNOWN open backlog — don't re-report the
    backlog as "new". New = list grown beyond the max entry number seen in
-   `data/russia-minjust-batch1.json`. Template: `import-russia-bans.ts`
+   `data/russia-minjust-batch1.json` — or beyond #5523, the last entry checked
+   (2026-11-03; #5500–5523 reviewed, only #5503/#5509/#5523 were books). Template: `import-russia-bans.ts`
    (minjust rows auto-needs_review).
 3. **KDN Malaysia — banned publications gazette**
    (`https://www.moha.gov.my/` penerbitan / KDN list; the historical gazette
@@ -66,6 +67,26 @@ watch that silently skips a source is worse than none.
    **Update 2026-10-10:** the delta-importer exists — `build-magnusson-stage0.ts`
    + `import-magnusson-delta.ts` (first run on her 2026-10-09 xlsx export: +1,260
    bans). A new export = re-run those two (delete `data/magnusson/match-cache.json` first).
+
+7. **PEN Belarus — official Belarusian lists**
+   (`https://bannedbooks.penbelarus.org/en/extremist_list_en/` and
+   `/en/harmful_list_en/`). Entries are numbered and stable; on 2026-11-03 we
+   held extremist #1–126 and harmful #1–271 (the harmful list arrives in dated
+   batches of ~15–30). New = entries above those numbers. Handoff: append rows to
+   a new stage-0 seed in the `_import_bbw_quickwins_2026_11_03.ts` format (same
+   importer pattern; skip songbooks/programmes/pamphlets).
+8. **Hong Kong — zh-yue Wikipedia 香港被禁書刊一覽**
+   (`https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽`). The most current
+   HK table (669 rows on 2026-11-03, newest 2026-07-23); columns flag public
+   library / school / e-library / Correctional Services / complaint. New = rows
+   dated after 2026-07-23. Match by `title_native` first — our HK rows store a
+   pinyin `title` + Chinese `title_native`, so plain slug matching misses them.
+   Skip periodicals, publisher-level and "all works by author" rows.
+9. **Alberta school removals** — CFE–CFLA Canadian Library Challenges Database
+   (`cfe.torontomu.ca/databases/canadian-library-challenges-database`) tallies
+   ~166 titles from access-to-information requests, but it sits behind a login.
+   We hold Edmonton Public + Parkland only. Δ = new public division lists, or
+   CFE data becoming accessible.
 
 ## Also glance at (no fetch quota — only if cheap)
 

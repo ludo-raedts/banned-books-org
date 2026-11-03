@@ -1,0 +1,2440 @@
+{
+ "built": "2026-11-03",
+ "skipped_by": [
+  [
+   107,
+   "White Is the Frozen Expanse. A Collection of Songs Set to Poems by Larysa Hienijuš and Piotra Rusaŭ",
+   "songbook (sheet music), not a book"
+  ],
+  [
+   108,
+   "Minsk Spring",
+   "Naša Niva 1996 publication — newspaper-issue vs book unclear"
+  ],
+  [
+   110,
+   "The National Programme “Free Belarus",
+   "political programme pamphlet"
+  ],
+  [
+   114,
+   "Programme of Constitutional Reforms",
+   "party programme pamphlet"
+  ]
+ ],
+ "rows": [
+  {
+   "key": "BY-extremist-106",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "100 Quotes on Radio Liberty",
+   "authors": [
+    {
+     "display_name": "Svetlana Alexievich"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-02. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-109",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Don’t Make My Prepositions Laugh",
+   "authors": [
+    {
+     "display_name": "Vincuk Viačorka"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-02. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-111",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Neocommunism in Belarus: Ideology, Practice, Prospects",
+   "authors": [
+    {
+     "display_name": "Stanislav Shushkevich"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-02. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-112",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Belarusian Political System and the 2001 Presidential Election",
+   "authors": [
+    {
+     "display_name": "Anonymous"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-02. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": false
+  },
+  {
+   "key": "BY-extremist-113",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Fate of the Lyceum: Autobiographical Notes",
+   "authors": [
+    {
+     "display_name": "Uładzimir Kołas"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-02. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-115",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Merciless Little Waltz",
+   "authors": [
+    {
+     "display_name": "Alaksandr Bal"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-31. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-116",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Night. And You…",
+   "authors": [
+    {
+     "display_name": "Alaksandr Bal"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-31. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-117",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Finish Off the Survivors: The Origins and Meaning of Russian Trumpism",
+   "authors": [
+    {
+     "display_name": "Oleg Kashin"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-07-31. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-118",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Rise of Belarus",
+   "authors": [
+    {
+     "display_name": "Piotra Rudkoŭski"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-119",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Young Front Generation: A History of the Youth Born in 1970–1985",
+   "authors": [
+    {
+     "display_name": "Pavał Sieviaryniec"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-120",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Political System of the Republic of Belarus: A Study Guide",
+   "authors": [
+    {
+     "display_name": "Uładzimir Roŭda"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-121",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Price of Freedom, or Confessions of an Opposition Politician",
+   "authors": [
+    {
+     "display_name": "Siarhiej Skrabiec"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-122",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Bykaŭ on Radio Liberty",
+   "authors": [
+    {
+     "display_name": "Anonymous"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": false
+  },
+  {
+   "key": "BY-extremist-123",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Nonviolence and Belarus",
+   "authors": [
+    {
+     "display_name": "Anonymous"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-08-12. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": false
+  },
+  {
+   "key": "BY-extremist-124",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Return to the Homeland",
+   "authors": [
+    {
+     "display_name": "Anatol Sanacienka"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-09-01. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-125",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Heavenly Flax",
+   "authors": [
+    {
+     "display_name": "Anatol Varšaŭski"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-09-01. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-extremist-126",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Noa",
+   "authors": [
+    {
+     "display_name": "Marc Levy"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Extremist Materials (court-ordered). Decision: 2026-09-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/extremist_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-242",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Wolves. Brotherhood of Vice",
+   "authors": [
+    {
+     "display_name": "Lea Stenberg"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-243",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Wolves. Varg | Veum",
+   "authors": [
+    {
+     "display_name": "Lea Stenberg"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-244",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Well of Death",
+   "authors": [
+    {
+     "display_name": "Céline Denjean"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: France. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-245",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Dead Souls",
+   "authors": [
+    {
+     "display_name": "Han Song"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: China. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-246",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Reciprocity",
+   "authors": [
+    {
+     "display_name": "H.S. Dolores"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-247",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Night Side of the River",
+   "authors": [
+    {
+     "display_name": "Jeanette Winterson"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: United Kingdom. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-248",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Chestnut Man",
+   "authors": [
+    {
+     "display_name": "Søren Sveistrup"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: Denmark. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-249",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Python Whisper",
+   "authors": [
+    {
+     "display_name": "Silje Ulstein"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: Norway. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-250",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Alternat. Enemy Behind Your Back",
+   "authors": [
+    {
+     "display_name": "Mirai Medina"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: Russia. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-251",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Chariot of Time",
+   "authors": [
+    {
+     "display_name": "Tatyana Stepanova"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: Russia. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-252",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Wild Boys",
+   "authors": [
+    {
+     "display_name": "William S. Burroughs"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-253",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The River of My Regrets",
+   "authors": [
+    {
+     "display_name": "Mirai Medina"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: Russia. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-254",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Our Little Fish",
+   "authors": [
+    {
+     "display_name": "Robin Fox"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: United Kingdom. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-255",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "These Witches Don’t Burn",
+   "authors": [
+    {
+     "display_name": "Isabel Sterling"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-256",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Us",
+   "authors": [
+    {
+     "display_name": "Sarina Bowen"
+    },
+    {
+     "display_name": "Elle Kennedy"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA / Canada. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-257",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Him",
+   "authors": [
+    {
+     "display_name": "Sarina Bowen"
+    },
+    {
+     "display_name": "Elle Kennedy"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA / Canada. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-258",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Epic",
+   "authors": [
+    {
+     "display_name": "Sarina Bowen"
+    },
+    {
+     "display_name": "Elle Kennedy"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-05-26. Country of origin: USA / Canada. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-259",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Noa",
+   "authors": [
+    {
+     "display_name": "Marc Levy"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-260",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Illustrated Crimes for Kids: Who Is the Culprit?",
+   "authors": [
+    {
+     "display_name": "Modesto García"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-261",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Illustrated Crimes: Suicide or Murder?",
+   "authors": [
+    {
+     "display_name": "Modesto García"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-262",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Refuge of Death",
+   "authors": [
+    {
+     "display_name": "Maral Atmaca"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-263",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Unreliable Blood",
+   "authors": [
+    {
+     "display_name": "Maria Solovyova"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-264",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Illusion of Falling",
+   "authors": [
+    {
+     "display_name": "Lia Astrum"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-265",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Arachnid",
+   "authors": [
+    {
+     "display_name": "I. V. Ophelia"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-266",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Congruent",
+   "authors": [
+    {
+     "display_name": "Veronika Desmond"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-267",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Few Who Bear Death",
+   "authors": [
+    {
+     "display_name": "Alexis Patton"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-268",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Few Who Bear Darkness",
+   "authors": [
+    {
+     "display_name": "Alexis Patton"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-269",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Sweetpea",
+   "authors": [
+    {
+     "display_name": "C. J. Skuse"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-270",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Room",
+   "authors": [
+    {
+     "display_name": "Hubert Selby Jr."
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "BY-harmful-271",
+   "country_code": "BY",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "A List of Shadows",
+   "authors": [
+    {
+     "display_name": "Jade Presley"
+    }
+   ],
+   "description_ban": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2026-10-07. Documented by PEN Belarus.",
+   "source_url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "source_type": "ngo",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-baoweizhan",
+   "country_code": "HK",
+   "year": 2020,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Xianggang bao wei zhan",
+   "title_native": "香港保衛戰",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Yun Chen",
+     "name_native": "陳雲"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong Public Libraries shelves amid the National Security Law review of politically sensitive titles. First reported 2020-07-04.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-sanjuren",
+   "country_code": "HK",
+   "year": 2021,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Gong min kang ming san ju ren",
+   "title_native": "公民抗命三巨人: 甘地, 馬丁路德・金, 曼德拉",
+   "title_english_meaningful": "3 giants of civil disobedience",
+   "authors": [
+    {
+     "display_name": "Shunqiang Peng",
+     "name_native": "彭順強"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong Public Libraries shelves amid the National Security Law review of politically sensitive titles. First reported 2021-05-29.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 7178
+  },
+  {
+   "key": "HK-bajiu",
+   "country_code": "HK",
+   "year": 2021,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Ba jiu Zhongguo min yun jian zheng bao gao zhuan ji",
+   "title_native": "八九中國民運見証報告專輯",
+   "title_english_meaningful": "Witness reports on the democratic movement of China '89",
+   "authors": [
+    {
+     "display_name": "Zhongguo min zhu yun dong zi liao zhong xin",
+     "name_native": "中國民主運動資料中心"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong Public Libraries shelves amid the National Security Law review of politically sensitive titles. First reported 2021-11-21.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 6710
+  },
+  {
+   "key": "HK-ziyouliuyue",
+   "country_code": "HK",
+   "year": 2021,
+   "scope_slug": "prison",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Zi you liu yue",
+   "title_native": "自由六月：2019年香港「反送中」與自由運動的開端",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "22 Hongkongers"
+    }
+   ],
+   "description_ban": "Banned by the Hong Kong Correctional Services Department (prison library / inmate access). First reported 2021-12-01.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 7362
+  },
+  {
+   "key": "HK-qiutu",
+   "country_code": "HK",
+   "year": 2021,
+   "scope_slug": "prison",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "other",
+   "title": "Qiu tu jian shen",
+   "title_native": "囚徒健身: 60項徒手健身技法, 激發身體潛在能量",
+   "title_english_meaningful": "Convict conditioning",
+   "authors": [
+    {
+     "display_name": "Paul Wade"
+    }
+   ],
+   "description_ban": "Banned by the Hong Kong Correctional Services Department (prison library / inmate access). First reported 2021-12-01.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 7135
+  },
+  {
+   "key": "HK-liusiqianhou",
+   "country_code": "HK",
+   "year": 2022,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Liu si qian hou",
+   "title_native": "六四前後",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Wang Ding",
+     "name_native": "丁望"
+    }
+   ],
+   "description_ban": "Both volumes (上/下, political analysis of the 1989 democracy movement) removed from the Hong Kong Public Libraries e-book collection. First reported 2022-06-27.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 7364
+  },
+  {
+   "key": "HK-chaobao",
+   "country_code": "HK",
+   "year": 2022,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Chao bao Zhongguo",
+   "title_native": "潮爆中国: 新新中国城市文化笔记",
+   "title_english_meaningful": "Chic China chic",
+   "authors": [
+    {
+     "display_name": "Zhaoxing Li",
+     "name_native": "李照兴"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong school libraries. First reported 2022-06-22.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 6785
+  },
+  {
+   "key": "HK-tiananmen",
+   "country_code": "HK",
+   "year": 2023,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Tiananmen Square",
+   "title_native": "Tiananmen Square",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Scott Simmie"
+    },
+    {
+     "display_name": "Bob Nixon"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong Public Libraries shelves amid the National Security Law review of politically sensitive titles. First reported 2023-05-12.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 6642
+  },
+  {
+   "key": "HK-fanxiuli",
+   "country_code": "HK",
+   "year": 2023,
+   "scope_slug": "public_library",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Fan xiu li feng bao cai fang zhan chang",
+   "title_native": "反修例風暴採訪戰場",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "42名新聞工作者 / 42 ming xin wen gong zuo zhe"
+    }
+   ],
+   "description_ban": "Removed from Hong Kong Public Libraries shelves amid the National Security Law review of politically sensitive titles. First reported 2023-05-15.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 17425
+  },
+  {
+   "key": "HK-zouzhuqiao2",
+   "country_code": "HK",
+   "year": 2024,
+   "scope_slug": "public_library",
+   "action_type": "challenged",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Zou zhu qiao. Er",
+   "title_native": "走着瞧. 貳",
+   "title_english_meaningful": "Snapshots across Hong Kong. II",
+   "authors": [
+    {
+     "display_name": "Jian Jiang",
+     "name_native": "姜建"
+    }
+   ],
+   "description_ban": "Subject of a complaint/report seeking its removal from Hong Kong public library shelves. First reported 2024-07-19.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "book_id": 7040
+  },
+  {
+   "key": "HK-aiyutong",
+   "country_code": "HK",
+   "year": 2025,
+   "scope_slug": "public_library",
+   "action_type": "challenged",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Xianggang wo de ai yu tong",
+   "title_native": "香港我的愛與痛",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Chungou Yan",
+     "name_native": "顏純鈎"
+    }
+   ],
+   "description_ban": "Subject of a complaint/report seeking its removal from Hong Kong public library shelves. First reported 2025-07-21.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-yuwaizhiqiu",
+   "country_code": "HK",
+   "year": 2025,
+   "scope_slug": "public_library",
+   "action_type": "challenged",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Yu wai zhi qiu",
+   "title_native": "獄外之囚",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Jiazhen Shao",
+     "name_native": "邵家臻"
+    }
+   ],
+   "description_ban": "Subject of a complaint/report seeking its removal from Hong Kong public library shelves. First reported 2025-07-25.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-liuxia",
+   "country_code": "HK",
+   "year": 2025,
+   "scope_slug": "public_library",
+   "action_type": "challenged",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Liu xia",
+   "title_native": "留下",
+   "title_english_meaningful": "Stay here",
+   "authors": [
+    {
+     "display_name": "Huiqing Liu",
+     "name_native": "劉慧卿"
+    }
+   ],
+   "description_ban": "Subject of a complaint/report seeking its removal from Hong Kong public library shelves. First reported 2025-07-25.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-liuxia2",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "public_library",
+   "action_type": "challenged",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Liu xia, liu xia",
+   "title_native": "留下，留下……",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Jianxing Yang",
+     "name_native": "楊健興"
+    }
+   ],
+   "description_ban": "Subject of a complaint/report seeking its removal from Hong Kong public library shelves. First reported 2026-07-13.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true,
+   "force_create": true
+  },
+  {
+   "key": "HK-troublemaker",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "retail",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "The Troublemaker: How Jimmy Lai Became a Billionaire, Hong Kong's Greatest Dissident, and China's Most Feared Critic",
+   "title_native": "黎智英傳: 從億萬富翁, 到中國最懼怕的批評者",
+   "title_english_meaningful": "The Troublemaker",
+   "authors": [
+    {
+     "display_name": "Mark L. Clifford"
+    }
+   ],
+   "description_ban": "Seized by the Hong Kong Police National Security Department in raids on independent bookshops (One Punch Book Library, 24 Mar 2026; Hunter Bookstore, 24 Jun 2026); bookshop staff arrested on suspicion of publishing seditious publications under the Safeguarding National Security Ordinance. First reported 2026-03-24.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-redflowers",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "customs",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Let Only Red Flowers Bloom: Identity, Belonging, and Dissent in China",
+   "title_native": "唯紅花綻放：習近平時代的認同與歸屬",
+   "title_english_meaningful": "Let Only Red Flowers Bloom",
+   "authors": [
+    {
+     "display_name": "Emily Feng"
+    }
+   ],
+   "description_ban": "Copies of the Traditional Chinese edition (Acropolis, Taiwan) intercepted in an inbound shipment; on 15 Jul 2026 national-security police and Customs raided the bookshops Stay Here and Tin Yuen Book House and arrested five people on suspicion of sedition. First reported 2026-07-15.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-maishuzheyan",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Mai shu zhe yan",
+   "title_native": "賣書者言",
+   "title_english_meaningful": "Where books and lives meet",
+   "authors": [
+    {
+     "display_name": "Xuan Chen",
+     "name_native": "陳璇"
+    }
+   ],
+   "description_ban": "Barred by the Hong Kong Trade Development Council from sale at the 2026 Hong Kong Book Fair. First reported 2026-07-21.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-bianjirenshuo",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Bian ji ren shuo",
+   "title_native": "編輯人說",
+   "title_english_meaningful": "Monologues from the editorial desk",
+   "authors": [
+    {
+     "display_name": "Xiaoming Zhang",
+     "name_native": "張小鳴"
+    }
+   ],
+   "description_ban": "Barred by the Hong Kong Trade Development Council from sale at the 2026 Hong Kong Book Fair. First reported 2026-07-21.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-wuyouhua",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Wu you hua",
+   "title_native": "無憂花",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Xiaohua Deng",
+     "name_native": "鄧小樺"
+    }
+   ],
+   "description_ban": "Barred by the Hong Kong Trade Development Council from sale at the 2026 Hong Kong Book Fair. First reported 2026-07-21.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "HK-zhangailing",
+   "country_code": "HK",
+   "year": 2026,
+   "scope_slug": "retail",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Zai Jiaduoli Shan xun zhao Zhang Ailing",
+   "title_native": "在加多利山尋找張愛玲",
+   "title_english_meaningful": null,
+   "authors": [
+    {
+     "display_name": "Xiqian Feng",
+     "name_native": "馮睎乾"
+    }
+   ],
+   "description_ban": "Pulled from sale in mainland China and Hong Kong. First reported 2026-07-23.",
+   "source_url": "https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽",
+   "source_name": "Wikipedia (Cantonese): 香港被禁書刊一覽 (List of banned publications in Hong Kong)",
+   "source_type": "wikipedia",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-got",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "A Game of Thrones: The Graphic Novel, Volume 1",
+   "authors": [
+    {
+     "display_name": "George R. R. Martin"
+    },
+    {
+     "display_name": "Daniel Abraham"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 23868
+  },
+  {
+   "key": "CA-eps-noughts",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Noughts & Crosses: The Graphic Novel",
+   "authors": [
+    {
+     "display_name": "Ian Edginton"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-davidboring",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "David Boring",
+   "authors": [
+    {
+     "display_name": "Daniel Clowes"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-monsters",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "My Favorite Thing Is Monsters",
+   "authors": [
+    {
+     "display_name": "Emil Ferris"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-americangods",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "American Gods: Shadows",
+   "authors": [
+    {
+     "display_name": "Neil Gaiman"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 17508
+  },
+  {
+   "key": "CA-eps-wicdiv3",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "The Wicked + The Divine, Vol. 3: Commercial Suicide",
+   "authors": [
+    {
+     "display_name": "Kieron Gillen"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 13466
+  },
+  {
+   "key": "CA-eps-zahra",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Zahra's Paradise",
+   "authors": [
+    {
+     "display_name": "Amir Soltani"
+    },
+    {
+     "display_name": "Khalil Bendib"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-colorheaven",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "The Color of Heaven",
+   "authors": [
+    {
+     "display_name": "Kim Dong Hwa"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-bluewarmest",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Blue Is the Warmest Color",
+   "authors": [
+    {
+     "display_name": "Jul Maroh"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-1984gn",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "George Orwell's 1984: The Graphic Novel",
+   "authors": [
+    {
+     "display_name": "Matyáš Namai"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-overeasy",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Over Easy",
+   "authors": [
+    {
+     "display_name": "Mimi Pond"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-juliet",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Juliet Takes a Breath: The Graphic Novel",
+   "authors": [
+    {
+     "display_name": "Gabby Rivera"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-homeafterdark",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Home After Dark",
+   "authors": [
+    {
+     "display_name": "David Small"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-ageofbronze1",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Age of Bronze, Volume 1: A Thousand Ships",
+   "authors": [
+    {
+     "display_name": "Eric Shanower"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 2060
+  },
+  {
+   "key": "CA-eps-lighter",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Lighter Than My Shadow",
+   "authors": [
+    {
+     "display_name": "Katie Green"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-epileptic",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Epileptic",
+   "authors": [
+    {
+     "display_name": "David B."
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-berserk",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Berserk",
+   "authors": [
+    {
+     "display_name": "Kentaro Miura"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials). Volumes listed: Volume 3.",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-blackbird-4",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 4",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-blackbird-5",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 5",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8876
+  },
+  {
+   "key": "CA-eps-blackbird-6",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 6",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8877
+  },
+  {
+   "key": "CA-eps-blackbird-7",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 7",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8878
+  },
+  {
+   "key": "CA-eps-blackbird-8",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 8",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8879
+  },
+  {
+   "key": "CA-eps-blackbird-9",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 9",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8880
+  },
+  {
+   "key": "CA-eps-blackbird-10",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 10",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8865
+  },
+  {
+   "key": "CA-eps-blackbird-11",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 11",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8866
+  },
+  {
+   "key": "CA-eps-blackbird-14",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 14",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8869
+  },
+  {
+   "key": "CA-eps-blackbird-18",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Black Bird, Vol. 18",
+   "authors": [
+    {
+     "display_name": "Kanoko Sakurakōji"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8873
+  },
+  {
+   "key": "CA-eps-blankets",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Blankets",
+   "authors": [
+    {
+     "display_name": "Craig Thompson"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-funhome",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Fun Home",
+   "authors": [
+    {
+     "display_name": "Alison Bechdel"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-genderqueer",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Gender Queer",
+   "authors": [
+    {
+     "display_name": "Maia Kobabe"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-preacher",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Preacher",
+   "authors": [
+    {
+     "display_name": "Garth Ennis"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials). Volumes listed: Books 1–3.",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-eps-saga",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Saga",
+   "authors": [
+    {
+     "display_name": "Brian K. Vaughan"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials). Volumes listed: Volumes 1–2, 4–9.",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 6437
+  },
+  {
+   "key": "CA-eps-sandman",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "The Sandman: Preludes & Nocturnes",
+   "authors": [
+    {
+     "display_name": "Neil Gaiman"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials).",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true,
+   "book_id": 8490
+  },
+  {
+   "key": "CA-eps-trigun",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Trigun Maximum",
+   "authors": [
+    {
+     "display_name": "Yasuhiro Nightow"
+    }
+   ],
+   "description_ban": "Removed from all Edmonton Public Schools libraries accessible to K–12 students as containing an explicit visual depiction of a sexual act, under Alberta Ministerial Order #018/2026 (Standards for the Selection, Availability and Access of School Literary Materials). Volumes listed: Vol. 12.",
+   "source_url": "https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit",
+   "source_name": "Edmonton Public Schools — Materials removed under Ministerial Order #018/2026 (updated 14 Apr 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Edmonton Public Schools",
+   "author_check": true
+  },
+  {
+   "key": "CA-psd-ageofbronze",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Age of Bronze",
+   "authors": [
+    {
+     "display_name": "Eric Shanower"
+    }
+   ],
+   "description_ban": "Withdrawn from circulation at all Parkland School Division sites as meeting the 'explicit visual depictions of sexual acts' criterion of Alberta Ministerial Order #034/2025 (Standards for the Selection, Availability and Access of School Library Materials). Volumes listed: Vol. 1–3.",
+   "source_url": "https://www.psd.ca/download/544661",
+   "source_name": "Parkland School Division — Board report: Standards for the Selection, Availability and Access of School Library Materials (20 Jan 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Parkland School Division",
+   "author_check": true,
+   "book_id": 2060
+  },
+  {
+   "key": "CA-psd-ageofbronze2",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Age of Bronze, Vol. 2: Sacrifice",
+   "authors": [
+    {
+     "display_name": "Eric Shanower"
+    }
+   ],
+   "description_ban": "Withdrawn from circulation at all Parkland School Division sites as meeting the 'explicit visual depictions of sexual acts' criterion of Alberta Ministerial Order #034/2025 (Standards for the Selection, Availability and Access of School Library Materials). Volumes listed: Vol. 1–3.",
+   "source_url": "https://www.psd.ca/download/544661",
+   "source_name": "Parkland School Division — Board report: Standards for the Selection, Availability and Access of School Library Materials (20 Jan 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Parkland School Division",
+   "author_check": true,
+   "book_id": 2061
+  },
+  {
+   "key": "CA-psd-handmaid",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "The Handmaid's Tale: The Graphic Novel",
+   "authors": [
+    {
+     "display_name": "Margaret Atwood"
+    },
+    {
+     "display_name": "Renée Nault"
+    }
+   ],
+   "description_ban": "Withdrawn from circulation at all Parkland School Division sites as meeting the 'explicit visual depictions of sexual acts' criterion of Alberta Ministerial Order #034/2025 (Standards for the Selection, Availability and Access of School Library Materials).",
+   "source_url": "https://www.psd.ca/download/544661",
+   "source_name": "Parkland School Division — Board report: Standards for the Selection, Availability and Access of School Library Materials (20 Jan 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Parkland School Division",
+   "author_check": true
+  },
+  {
+   "key": "CA-psd-monstress",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "Monstress",
+   "authors": [
+    {
+     "display_name": "Marjorie Liu"
+    }
+   ],
+   "description_ban": "Withdrawn from circulation at all Parkland School Division sites as meeting the 'explicit visual depictions of sexual acts' criterion of Alberta Ministerial Order #034/2025 (Standards for the Selection, Availability and Access of School Library Materials). Volumes listed: Vol. 6: The Vow.",
+   "source_url": "https://www.psd.ca/download/544661",
+   "source_name": "Parkland School Division — Board report: Standards for the Selection, Availability and Access of School Library Materials (20 Jan 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Parkland School Division",
+   "author_check": true,
+   "book_id": 510
+  },
+  {
+   "key": "CA-psd-league",
+   "country_code": "CA",
+   "year": 2026,
+   "scope_slug": "school",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "sexual",
+   "title": "The League of Extraordinary Gentlemen",
+   "authors": [
+    {
+     "display_name": "Alan Moore"
+    }
+   ],
+   "description_ban": "Withdrawn from circulation at all Parkland School Division sites as meeting the 'explicit visual depictions of sexual acts' criterion of Alberta Ministerial Order #034/2025 (Standards for the Selection, Availability and Access of School Library Materials). Volumes listed: Vol. 2.",
+   "source_url": "https://www.psd.ca/download/544661",
+   "source_name": "Parkland School Division — Board report: Standards for the Selection, Availability and Access of School Library Materials (20 Jan 2026)",
+   "source_type": "government",
+   "region": "Alberta",
+   "institution": "Parkland School Division",
+   "author_check": true
+  },
+  {
+   "key": "RU-fsem-5523",
+   "country_code": "RU",
+   "year": 2026,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "other",
+   "title": "Мое имя Полынь",
+   "title_native": "Мое имя Полынь",
+   "title_english_meaningful": "My Name Is Polyn",
+   "authors": [
+    {
+     "display_name": "Alena Polyn",
+     "name_native": "Алена Полынь"
+    }
+   ],
+   "description_ban": "Added to the Russian Federal List of Extremist Materials as entry No. 5523 (included 30 Oct 2026) following a decision of the Moscow Regional Court of 8 Sep 2026. Edition: Veligor, Moscow, 2020, 242 pp.; the author writes under the pseudonym Alena Polyn.",
+   "source_url": "https://minjust.gov.ru/ru/extremist-materials/?id=10436",
+   "source_name": "Russian Ministry of Justice — Federal List of Extremist Materials (entry 5523)",
+   "source_type": "government",
+   "region": null,
+   "institution": null,
+   "author_check": true
+  }
+ ]
+}
