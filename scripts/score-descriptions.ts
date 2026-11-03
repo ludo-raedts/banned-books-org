@@ -23,6 +23,7 @@ import OpenAI from 'openai'
 import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY      = process.argv.includes('--apply')
 const limitArg   = process.argv.find(a => a.startsWith('--limit='))
@@ -94,8 +95,9 @@ Return ONLY valid JSON, no other text:
 async function score(client: OpenAI, b: Book): Promise<Score | null> {
   try {
     const res = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 200,
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
+      max_completion_tokens: 200,
       temperature: 0,
       response_format: { type: 'json_object' },
       messages: [{ role: 'user', content: buildPrompt(b) }],

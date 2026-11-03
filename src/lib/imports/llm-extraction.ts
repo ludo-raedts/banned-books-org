@@ -2,17 +2,21 @@ import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { Extraction, type AgreementResult, type AuthorExtraction } from './extraction-types'
 import { EXTRACTION_SYSTEM_PROMPT, EXTRACTION_USER_PROMPT } from './extraction-prompt'
+import {
+  GEMINI_FLASH, GEMINI_FLASH_NO_THINKING, GEMINI_STRONG,
+  OPENAI_FAST, OPENAI_NO_REASONING, OPENAI_STRONG,
+} from '@/lib/llm-models'
 
 export type ModelTier = 'high-volume' | 'high-stakes'
 
 const MODELS = {
   'high-volume': {
-    gemini: 'gemini-2.5-flash',
-    openai: 'gpt-4o-mini',
+    gemini: GEMINI_FLASH,
+    openai: OPENAI_FAST,
   },
   'high-stakes': {
-    gemini: 'gemini-2.5-pro',
-    openai: 'gpt-4o',
+    gemini: GEMINI_STRONG,
+    openai: OPENAI_STRONG,
   },
 } as const
 
@@ -58,9 +62,9 @@ export async function extractWithGemini(
   rawText: string,
   tier: ModelTier = 'high-volume',
 ): Promise<ExtractionWithUsage> {
-  // Flash supports thinkingBudget: 0 to disable thinking; Pro requires thinking on.
+  // Flash runs at minimal thinking; the strong tier keeps its default thinking.
   const thinkingConfig =
-    tier === 'high-volume' ? { thinkingBudget: 0 } : undefined
+    tier === 'high-volume' ? GEMINI_FLASH_NO_THINKING : undefined
   const response = await genai().models.generateContent({
     model: MODELS[tier].gemini,
     contents: EXTRACTION_USER_PROMPT(rawText),
@@ -87,6 +91,7 @@ export async function extractWithOpenAI(
   tier: ModelTier = 'high-volume',
 ): Promise<ExtractionWithUsage> {
   const response = await openai().chat.completions.create({
+    ...OPENAI_NO_REASONING,
     model: MODELS[tier].openai,
     messages: [
       { role: 'system', content: EXTRACTION_SYSTEM_PROMPT },

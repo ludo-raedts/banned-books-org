@@ -489,7 +489,7 @@ npx tsx --env-file=.env.local scripts/enrich-archive-org.ts --apply --offset=100
               cadence: 'na elke import + na judge-run + one-off reground van pre-v2 tekst',
               writes: <><code className="font-mono">books.description_book</code>, <code className="font-mono">books.description_source_url</code>, <code className="font-mono">books.description_source_type</code>, <code className="font-mono">books.data_quality_status</code> (confident bij ≥2 bronnen, default bij 1, flagged bij geen), <code className="font-mono">books.ai_drafted</code> (alleen true voor llm_grounded_*).</>,
               idempotent: 'default ja (alleen NULLs); met --slug/--overwrite destructief',
-              cost: 'gratis + ~$0.001/boek voor LLM synthesis (gpt-4o-mini)',
+              cost: 'gratis + ~$0.001/boek voor LLM synthesis (gpt-6-luna)',
             }}
             command={`# Default — alleen NULL description_book, geen LLM
 npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --apply --concurrency=5
@@ -531,7 +531,7 @@ npx tsx --env-file=.env.local scripts/enrich-descriptions-v2.ts --reground-ungro
               cadence: 'one-off per taal-scope (na wipe + reground); ~10% accept op en',
               writes: <><code className="font-mono">books.description_book</code> + <code className="font-mono">description_source_type=&apos;ai_consensus&apos;</code> + <code className="font-mono">ai_drafted=true</code>; backup naar <code className="font-mono">data/consensus-descriptions-backup-&lt;ts&gt;.csv</code></>,
               idempotent: 'ja — source_type IS NULL guard slaat al-geschreven rijen over',
-              cost: '~$0.003/boek (gpt-4o-mini + gemini-2.5-flash, 3 calls)',
+              cost: '~$0.003/boek (gpt-6-luna + gemini-3.5-flash-lite, 3 calls)',
             }}
             command={`# Dry-run (geen writes) — toont accept / reject / unknown + samples
 npx tsx --env-file=.env.local scripts/enrich-descriptions-consensus.ts --limit=200
@@ -581,7 +581,7 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
               { flag: '--slug=X', desc: 'Eén boek (werkt met of zonder --overwrite)' },
               { flag: '--overwrite', desc: 'Process ook boeken die al genres hebben' },
               { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 300)' },
-              { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
+              { flag: '--model=X', desc: 'Override model (default gpt-6-luna)' },
             ]}
             note={
               <>
@@ -596,7 +596,7 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
 
           <Script
             name="enrich-genres-retry-gpt.ts"
-            what="Tweede-pass genre-enrichment voor de boeken die gpt-4o-mini niet kon plaatsen. Dunne wrapper rond enrich-genres-gpt.ts: zelfde vocabulary, prompt, filter en paginering — maar default-model is gpt-4o (sterker), dat een deel van de obscure / anderstalige / niche titels alsnog herkent. Targets exact dezelfde lege-genres-set, dus draai dit ná de goedkope mini-sweep, niet ervoor."
+            what="Tweede-pass genre-enrichment voor de boeken die gpt-6-luna niet kon plaatsen. Dunne wrapper rond enrich-genres-gpt.ts: zelfde vocabulary, prompt, filter en paginering — maar default-model is gpt-6-sol (sterker), dat een deel van de obscure / anderstalige / niche titels alsnog herkent. Targets exact dezelfde lege-genres-set, dus draai dit ná de goedkope mini-sweep, niet ervoor."
             tags={['gpt']}
             meta={{
               coverage: <>default: <code className="font-mono">genres = &apos;{'{}'}&apos;</code> — de rest die de mini-sweep liet staan. Met --overwrite: all-rows.</>,
@@ -605,7 +605,7 @@ npx tsx --env-file=.env.local scripts/enrich-genres-gpt.ts --apply`}
               idempotent: <>ja — empty/low-confidence resultaten worden nog steeds geskipt; echt onclassificeerbare titels (geen training-data) blijven <code className="font-mono">genres = &apos;{'{}'}&apos;</code></>,
               cost: 'GPT-4o (~10–20× mini per call; alleen de rest-set, dus klein totaal)',
             }}
-            command={`# Dry-run op 5 samples (gpt-4o)
+            command={`# Dry-run op 5 samples (gpt-6-sol)
 npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts
 
 # Ruim de hele rest-set op
@@ -613,14 +613,14 @@ npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply
 
 # Kleine batch / ander model
 npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --limit=50
-npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model=gpt-4.1`}
+npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model=gpt-6.1-sol`}
             flags={[
               { flag: '--apply', desc: 'Schrijf genres naar DB' },
               { flag: '--limit=N', desc: 'Cap op N boeken (default: alle kandidaten bij apply, 5 bij dry-run)' },
               { flag: '--slug=X', desc: 'Eén boek' },
               { flag: '--overwrite', desc: 'Process ook boeken die al genres hebben' },
               { flag: '--delay=N', desc: 'Milliseconds tussen calls (default 300)' },
-              { flag: '--model=X', desc: 'Override model (default gpt-4o)' },
+              { flag: '--model=X', desc: 'Override model (default gpt-6-sol)' },
             ]}
             note={
               <>
@@ -790,7 +790,7 @@ npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --reche
 
           <Script
             name="remediate-author-bios.ts"
-            what="LLM-poort die besmette author-bio's opruimt — bio's die enrich-author-bios.ts (vóór de gate) uit het verkeerde Wikipedia-artikel haalde. Vier foutklassen die alléén een LLM betrouwbaar scheidt: wrong_person (andere persoon, zelfde naam — bv. de microbioloog Suzanne Walker i.p.v. de comics-auteur), not_a_bio (boek/film/band i.p.v. persoon), own_book_blurb, en llm_artifact. gpt-4o-mini classificeert elke bio tegen naam + onze boektitels (correct / wrong_person / not_a_bio / uncertain). Dit is de verplichte verificatie-stap ná een enrich-author-bios recovery-run."
+            what="LLM-poort die besmette author-bio's opruimt — bio's die enrich-author-bios.ts (vóór de gate) uit het verkeerde Wikipedia-artikel haalde. Vier foutklassen die alléén een LLM betrouwbaar scheidt: wrong_person (andere persoon, zelfde naam — bv. de microbioloog Suzanne Walker i.p.v. de comics-auteur), not_a_bio (boek/film/band i.p.v. persoon), own_book_blurb, en llm_artifact. gpt-6-luna classificeert elke bio tegen naam + onze boektitels (correct / wrong_person / not_a_bio / uncertain). Dit is de verplichte verificatie-stap ná een enrich-author-bios recovery-run."
             tags={['gpt', 'destructive']}
             meta={{
               coverage: <>alle auteurs met een <code className="font-mono">bio</code> (of <code className="font-mono">--slugs=</code> voor gerichte test). Bij <code className="font-mono">--apply</code> zonder <code className="font-mono">--limit</code>: de volledige set.</>,
@@ -798,7 +798,7 @@ npx tsx --env-file=.env.local scripts/enrich-author-photos-v2.ts --apply --reche
               writes: <><strong>nullt</strong> <code className="font-mono">bio</code> + verdacht <code className="font-mono">birth_year</code>/<code className="font-mono">death_year</code>/<code className="font-mono">birth_country</code> voor wrong_person + not_a_bio. correct behouden; uncertain naar review-lijst. Backup-CSV vóór elke null.</>,
               output: <><code className="font-mono">data/author-bio-remediation-applied-&lt;ts&gt;.jsonl</code> (alle oordelen) + <code className="font-mono">-backup-&lt;ts&gt;.csv</code> (herstelbron) + <code className="font-mono">-uncertain-&lt;ts&gt;.jsonl</code></>,
               idempotent: 'ja — genullde rijen vallen weg uit de bio-set; classificatie, geen generatie (lage confabulatie)',
-              cost: '~$1-2 voor de volledige set (gpt-4o-mini, classificatie)',
+              cost: '~$1-2 voor de volledige set (gpt-6-luna, classificatie)',
             }}
             command={`# Dry-run — verdeling correct/wrong_person/not_a_bio/uncertain (sample 40)
 npx tsx --env-file=.env.local scripts/remediate-author-bios.ts
@@ -1001,7 +1001,7 @@ Commands:
               writes: <>stap 1 overschrijft <code className="font-mono">description_ban</code>/<code className="font-mono">censorship_context</code> waar de regex matcht (of zet NULL als de rest te kort is); stap 2 overschrijft die NULL-gemaakte velden met gegronde copy uit web_search</>,
               output: <>stap 1: <code className="font-mono">data/filler-strip-{'{backup,log,needs-rewrite}'}-&lt;ts&gt;.csv</code>. stap 2: <code className="font-mono">data/description-{'{backup,rewrite}'}-&lt;ts&gt;.csv</code>. Bij <code className="font-mono">--top=N</code> extra: <code className="font-mono">data/clean-descriptions-top-slugs-&lt;ts&gt;.txt</code>.</>,
               idempotent: 'ja — re-runs leveren een nieuwe set timestamped CSVs op; --apply opnieuw draaien is veilig (strip is regex-deterministisch, rewrite is restartable via --skip-log op het sub-script)',
-              cost: <>stap 1 gratis. stap 2 ~$0,01–0,02 per boek via <code className="font-mono">gpt-4.1-mini</code> + web_search — ~$8 voor een volledige sweep van ~570 zwakke boeken bij concurrency 3 (~2 uur runtime). Met <code className="font-mono">--top=100</code>: max ~$2, doorgaans veel minder omdat de meeste top-100 boeken al schoon zijn.</>,
+              cost: <>stap 1 gratis. stap 2 ~$0,01–0,02 per boek via <code className="font-mono">gpt-6-luna</code> + web_search — ~$8 voor een volledige sweep van ~570 zwakke boeken bij concurrency 3 (~2 uur runtime). Met <code className="font-mono">--top=100</code>: max ~$2, doorgaans veel minder omdat de meeste top-100 boeken al schoon zijn.</>,
             }}
             command={`# Dry-run — toont strip-samples; rewrite-stap wordt geskipt (heeft --apply nodig)
 npx tsx --env-file=.env.local scripts/clean-descriptions.ts
@@ -1062,7 +1062,7 @@ npx tsx --env-file=.env.local scripts/strip-filler-sentences.ts --slug=princess-
 
           <Script
             name="2. score-descriptions.ts"
-            what="Scoort description_ban + censorship_context over de hele catalogus 0–3 op concreetheid (3 = named case/court/district + year+place; 1 = generic; 0 = empty). Filler-detection regex capt automatisch op score 1 als het veld nog generic phrases bevat. Cheap (gpt-4o-mini, ~$1–2 voor volledige library)."
+            what="Scoort description_ban + censorship_context over de hele catalogus 0–3 op concreetheid (3 = named case/court/district + year+place; 1 = generic; 0 = empty). Filler-detection regex capt automatisch op score 1 als het veld nog generic phrases bevat. Cheap (gpt-6-luna, ~$1–2 voor volledige library)."
             tags={['gpt']}
             meta={{
               coverage: 'all-rows',
@@ -1095,7 +1095,7 @@ npx tsx --env-file=.env.local scripts/score-descriptions.ts --apply`}
               writes: <><strong>Overschrijft</strong> <code className="font-mono">description_ban</code> en/of <code className="font-mono">censorship_context</code></>,
               output: <><code className="font-mono">data/description-backup-&lt;ts&gt;.csv</code> (oude waardes), <code className="font-mono">data/description-rewrite-&lt;ts&gt;.csv</code> (nieuwe + source URLs)</>,
               idempotent: 'ja — --skip-log voor resume',
-              cost: <><code className="font-mono">gpt-4.1-mini</code> + web_search, ~$0,01–0,02 per boek</>,
+              cost: <><code className="font-mono">gpt-6-luna</code> + web_search, ~$0,01–0,02 per boek</>,
             }}
             command={`# Dry-run op één slug (audit-CSV moet die slug bevatten)
 npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=data/description-audit-<ts>.csv --slug=the-bluest-eye
@@ -1111,7 +1111,7 @@ npx tsx --env-file=.env.local scripts/rewrite-descriptions-grounded.ts --audit=<
               { flag: '--limit=N', desc: 'Cap op N boeken' },
               { flag: '--slug=<slug>', desc: 'Eén boek' },
               { flag: '--include-2', desc: 'Ook score 2 (default: 0–1)' },
-              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-4.1-mini)' },
+              { flag: '--model=<id>', desc: 'OpenAI model (default gpt-6-luna)' },
               { flag: '--concurrency=N', desc: 'Parallel calls (default 3)' },
               { flag: '--skip-log=<csv>', desc: 'Resume — skip slugs uit eerdere rewrite-log' },
             ]}
@@ -1295,7 +1295,7 @@ npx tsx --env-file=.env.local scripts/score-data-quality.ts --apply`}
 
           <Script
             name="suggest-editorial-classification-gpt.ts"
-            what="GPT-powered classifier voor unclassified boeken. Stuurt metadata + ban context naar gpt-4o-mini met het editorial framework als system prompt; krijgt warning_level + inclusion_rationale + confidence terug als structured JSON. Auto-applies low-risk, flagt high-risk voor manuele review."
+            what="GPT-powered classifier voor unclassified boeken. Stuurt metadata + ban context naar gpt-6-luna met het editorial framework als system prompt; krijgt warning_level + inclusion_rationale + confidence terug als structured JSON. Auto-applies low-risk, flagt high-risk voor manuele review."
             tags={['gpt']}
             meta={{
               coverage: <>only-empty: <code className="font-mono">warning_level=&apos;none&apos;</code> AND <code className="font-mono">inclusion_rationale IS NULL</code></>,
@@ -1317,21 +1317,21 @@ npx tsx --env-file=.env.local scripts/suggest-editorial-classification-gpt.ts --
               { flag: '--apply', desc: 'Auto-apply low-risk; schrijf review file voor high-risk' },
               { flag: '--limit=N', desc: 'Cap (default 100 apply, 3 dry-run)' },
               { flag: '--slug=X', desc: 'Test op één boek' },
-              { flag: '--model=X', desc: 'Override model (default gpt-4o-mini)' },
+              { flag: '--model=X', desc: 'Override model (default gpt-6-luna)' },
             ]}
             note="Drie outcomes: (1) AUTO-APPLY bij warning_level='none' + confidence ≥ medium → rationale geschreven. (2) WRITE + FLAG bij 'context'/'extended' + confidence ≥ medium → rationale geschreven op none tier én gelogd in editorial-review JSON. (3) REVIEW-ONLY bij exclude=true of lage confidence → geen DB-write. Tier-upgrades zijn altijd manueel via admin. De high-risk wachtrij voor manuele tier-beslissing staat in de editorial-review JSON (zie output), niet in een apart script."
           />
 
           <Script
             name="generate-discussion-questions.ts"
-            what="Genereert 5–10 book-specifieke discussion questions voor elke Reading Club rij die er nog geen heeft. Auto-detect provider — prefereert Claude Opus 4.7 met adaptive thinking als ANTHROPIC_API_KEY gezet is, valt anders terug op OpenAI gpt-4o."
+            what="Genereert 5–10 book-specifieke discussion questions voor elke Reading Club rij die er nog geen heeft. Auto-detect provider — prefereert Claude Opus 4.7 met adaptive thinking als ANTHROPIC_API_KEY gezet is, valt anders terug op OpenAI gpt-6-sol."
             tags={['claude', 'gpt']}
             meta={{
               coverage: <>only-empty: Reading Club rijen met leeg <code className="font-mono">discussion_questions</code>. Met --force: all-rows.</>,
               cadence: 'na elke import + one-off',
               writes: <><code className="font-mono">reading_club_rows.discussion_questions</code></>,
               idempotent: 'default ja; --force overschrijft',
-              cost: '~$1–2 voor 50 rijen met Claude Opus 4.7, ~$0.10 met gpt-4o',
+              cost: '~$1–2 voor 50 rijen met Claude Opus 4.7, ~$0.10 met gpt-6-sol',
             }}
             command={`# Genereer voor alle eligible rijen
 npx tsx --env-file=.env.local scripts/generate-discussion-questions.ts --apply

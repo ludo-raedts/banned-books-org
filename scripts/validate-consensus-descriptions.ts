@@ -24,6 +24,7 @@ import { resolve } from 'node:path'
 import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
+import { GEMINI_FLASH, GEMINI_FLASH_NO_THINKING, OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const arg = (k: string) => process.argv.find(a => a.startsWith(`--${k}=`))?.split('=')[1]
 const PER_BUCKET = parseInt(arg('per-bucket') ?? '20', 10)
@@ -67,7 +68,8 @@ function bookContext(b: any): string {
 
 async function genOpenAI(ctx: string): Promise<string> {
   const r = await oai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     messages: [{ role: 'system', content: GEN_SYSTEM }, { role: 'user', content: ctx }],
     temperature: 0.3,
   })
@@ -76,9 +78,9 @@ async function genOpenAI(ctx: string): Promise<string> {
 
 async function genGemini(ctx: string): Promise<string> {
   const r = await genai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: GEMINI_FLASH,
     contents: ctx,
-    config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } },
+    config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: GEMINI_FLASH_NO_THINKING },
   })
   return (r.text ?? '').trim()
 }
@@ -87,7 +89,8 @@ const isUnknown = (s: string) => /^unknown\b/i.test(s.trim()) || s.trim().length
 
 async function judge(title: string, a: string, b: string): Promise<any> {
   const r = await oai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     messages: [
       { role: 'system', content: JUDGE_SYSTEM },
       { role: 'user', content: `Book title: ${title}\n\nDescription 1:\n${a}\n\nDescription 2:\n${b}` },

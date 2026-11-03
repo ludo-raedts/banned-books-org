@@ -27,7 +27,7 @@
  *                     language-specific site lists (douban, thalia, labirint,
  *                     babelio, …) are the ones that fetch clean.
  *
- * Every accepted blurb — regardless of mode — goes through a gpt-4o-mini
+ * Every accepted blurb — regardless of mode — goes through an OPENAI_FAST
  * judge+groom (temp 0): same-book verdict + a 2-4 sentence English
  * description synthesised ONLY from the supplied text. Retail blurbs are
  * marketing copy, so they are NEVER stored literally.
@@ -68,6 +68,7 @@ import { getFirecrawlCallCount } from '../src/lib/enrich/firecrawl-fetch'
 import { titlesMatch, authorsAgree } from '../src/lib/enrich/title-match'
 import { gbVolumesByIsbn, GB_FIELDS_DESCRIPTION, gbQuotaTripped, GbUnavailableError } from '../src/lib/enrich/google-books'
 import { isApply, hasFlag, flagValue, intFlag } from './lib/cli'
+import { OPENAI_COST_PER_TOKEN, OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY = isApply()
 const MODE = flagValue('mode')
@@ -163,7 +164,7 @@ Step 2 — only if same_book: write a 2-4 sentence English description (100-500 
 Return ONLY a JSON object, no prose:
 {"same_book": true|false, "reason": "one short sentence", "description": "..." | null}`
 
-const JUDGE_COST = { input: 0.15 / 1_000_000, output: 0.60 / 1_000_000 } // gpt-4o-mini
+const JUDGE_COST = OPENAI_COST_PER_TOKEN[OPENAI_FAST] ?? OPENAI_COST_PER_TOKEN['gpt-6-luna']
 
 async function judgeAndGroom(
   openai: OpenAI,
@@ -182,8 +183,9 @@ SOURCE'S AUTHORS: ${blurb.sourceAuthors.join('; ') || '(none)'}
 SOURCE TEXT:
 ${blurb.text.slice(0, MAX_GROOM_INPUT)}`
   const res = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    max_tokens: 300,
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
+    max_completion_tokens: 300,
     temperature: 0,
     response_format: { type: 'json_object' },
     messages: [

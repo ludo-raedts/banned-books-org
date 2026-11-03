@@ -5,12 +5,13 @@
 // risk is "right page wrong cover" — e.g. Douban shows several editions and
 // Gemini picked a wrong one, or a publisher page has unrelated thumbnails.
 //
-// We ask gpt-4o-mini with image-vision to look at the actual pixels and say
+// We ask OPENAI_FAST with image-vision to look at the actual pixels and say
 // whether the picture credibly shows the cover of the named book. Cheap
 // (~$0.0001 per image) and orthogonal to Gemini's grounding signal, so a
 // hallucinated-but-page-verified candidate will still get caught here.
 
 import OpenAI from 'openai'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '@/lib/llm-models'
 
 let _openai: OpenAI | null = null
 function openai(): OpenAI {
@@ -58,7 +59,8 @@ export async function openaiCoverSecondOpinion(input: SecondOpinionInput): Promi
   if (input.year) metadataLines.push(`Year: ${input.year}`)
 
   const response = await openai().chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'user', content: [
@@ -68,7 +70,7 @@ export async function openaiCoverSecondOpinion(input: SecondOpinionInput): Promi
     ],
     response_format: { type: 'json_object' },
     temperature: 0,
-    max_tokens: 200,
+    max_completion_tokens: 200,
   })
 
   const text = response.choices[0]?.message?.content ?? '{}'

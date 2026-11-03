@@ -17,6 +17,7 @@
 
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY     = process.argv.includes('--apply')
 const OVERWRITE = process.argv.includes('--overwrite')
@@ -66,8 +67,9 @@ Rules:
 async function generate(client: OpenAI, book: BookRow): Promise<string | null> {
   try {
     const res = await client.chat.completions.create({
-      model:       'gpt-4o-mini',
-      max_tokens:  300,
+      ...OPENAI_NO_REASONING,
+      model:       OPENAI_FAST,
+      max_completion_tokens:  300,
       temperature: 0.1,
       messages: [{ role: 'user', content: buildPrompt(book) }],
     })

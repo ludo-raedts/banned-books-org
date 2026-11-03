@@ -16,6 +16,7 @@ import { appendFileSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 import { censorshipContextQualityGate } from '../src/lib/censorship-context-quality'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY    = process.argv.includes('--apply')
 const OVERWRITE = process.argv.includes('--overwrite')
@@ -95,8 +96,9 @@ Rules:
 async function generateContext(client: OpenAI, book: BookRow): Promise<string | null> {
   try {
     const res = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 400,
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
+      max_completion_tokens: 400,
       temperature: 0.2,
       messages: [{ role: 'user', content: buildPrompt(book) }],
     })

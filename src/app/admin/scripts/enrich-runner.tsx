@@ -168,7 +168,7 @@ export default function EnrichRunner() {
             <li><code className="font-mono">SUPABASE_SERVICE_ROLE_KEY</code></li>
             <li><code className="font-mono">OPENAI_API_KEY</code> (for GPT steps)</li>
             <li><code className="font-mono">GOOGLE_AI_API_KEY</code> (for Gemini, used by the import-job verifier)</li>
-            <li><code className="font-mono">ANTHROPIC_API_KEY</code> <em>(optional — falls back to gpt-4o if absent)</em></li>
+            <li><code className="font-mono">ANTHROPIC_API_KEY</code> <em>(optional — falls back to gpt-6-sol if absent)</em></li>
             <li><code className="font-mono">DATABASE_URL</code> (for scripts using direct pg client)</li>
           </ul>
         </div>

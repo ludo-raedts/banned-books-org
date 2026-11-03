@@ -7,7 +7,7 @@
  *      filler-strip-needs-rewrite-<ts>.csv met de slugs die hertekend
  *      moeten worden.
  *
- *   2. rewrite-descriptions-grounded.ts — gpt-4.1-mini + web_search.
+ *   2. rewrite-descriptions-grounded.ts — OPENAI_FAST + web_search.
  *      Pikt vanzelf de net-geproduceerde needs-rewrite CSV op en herschrijft
  *      de zwakke velden met gegronde, named-case copy.
  *
@@ -215,7 +215,7 @@ function main() {
 
   const rewriteArgs = [`--audit=${csv}`, '--apply']
   if (SLUG) rewriteArgs.push(`--slug=${SLUG}`)
-  run('Stap 2/2  rewrite-descriptions-grounded.ts (gpt-4.1-mini + web_search)',
+  run('Stap 2/2  rewrite-descriptions-grounded.ts (OPENAI_FAST + web_search)',
     'scripts/rewrite-descriptions-grounded.ts', rewriteArgs)
 
   console.log('\n══ klaar ══')

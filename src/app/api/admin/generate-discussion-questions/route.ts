@@ -16,7 +16,7 @@ import {
 
 // One-shot endpoint that scans every Reading Club track for rows missing
 // discussion_questions, calls the LLM (Claude if ANTHROPIC_API_KEY is set,
-// else OpenAI gpt-4o), and writes the results back. Sequential calls — no
+// else OpenAI OPENAI_STRONG), and writes the results back. Sequential calls — no
 // fan-out — so a slow/failing run can be aborted by closing the request.
 //
 // maxDuration is bumped to 300s so a moderate batch (~50 books at ~5 sec

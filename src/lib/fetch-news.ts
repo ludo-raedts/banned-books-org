@@ -2,6 +2,7 @@ import Parser from 'rss-parser'
 import OpenAI from 'openai'
 import { adminClient } from './supabase'
 import { getNewsConfig } from '@/config/news'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '@/lib/llm-models'
 
 export type Feed = {
   name: string
@@ -79,7 +80,7 @@ function stripTrailingPublisher(title: string, publisher: string): string {
 }
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
-const SUMMARY_MODEL = 'gpt-4.1-mini'
+const SUMMARY_MODEL = OPENAI_FAST
 const EMBED_MODEL = 'text-embedding-3-small'
 
 export type SavedNewsItem = { title: string; summary: string | null; status: 'published' | 'draft' }
@@ -125,8 +126,9 @@ export async function summarize(
     ? `\nSource language: ${language}. Translate as needed; output English only.`
     : ''
   const res = await openai.chat.completions.create({
+    ...OPENAI_NO_REASONING,
     model: SUMMARY_MODEL,
-    max_tokens: 260,
+    max_completion_tokens: 260,
     temperature: 0.8,
     response_format: { type: 'json_object' },
     messages: [

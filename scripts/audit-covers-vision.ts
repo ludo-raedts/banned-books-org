@@ -9,7 +9,7 @@
  *
  * For each targeted book:
  *   1. Vision-verify the CURRENT cover with openaiCoverSecondOpinion
- *      (gpt-4o-mini looks at the pixels + metadata).
+ *      (OPENAI_FAST looks at the pixels + metadata).
  *      - looks_right / unsure  → keep (no change).
  *      - wrong_book / not_a_cover / unreadable → remediate:
  *   2. Remediate: OpenLibrary search by title+author → take the matched work's

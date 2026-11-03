@@ -38,13 +38,14 @@ import path from 'node:path'
 import OpenAI from 'openai'
 import { newPgClient } from '../src/lib/wikipedia/importer'
 import { isApply, flagValue, intFlag } from './lib/cli'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY = isApply()
 const SAMPLE = intFlag('sample', 0)
 const CONCURRENCY = intFlag('concurrency', 6)
 const OL_CONCURRENCY = intFlag('ol-concurrency', 10)
 const IDS = flagValue('ids')?.split(',').map(Number).filter(Boolean) ?? null
-const MODEL = 'gpt-4.1-mini'
+const MODEL = OPENAI_FAST
 const OL_CACHE = path.resolve('data', 'ol-subjects-cache.json')
 const VERDICTS = path.resolve('data', 'book-themes-classify.jsonl')
 const THEMES = ['lgbtq', 'poc'] as const
@@ -143,6 +144,7 @@ function passesGates(t: Theme, evidence: string | null): boolean {
 
 async function classify(client: OpenAI, c: Candidate, subjects: string[]): Promise<Verdict> {
   const res = await client.chat.completions.create({
+    ...OPENAI_NO_REASONING,
     model: MODEL,
     temperature: 0,
     response_format: { type: 'json_object' },

@@ -4,7 +4,7 @@
  * Wrong-subject photos keep slipping in through name-based lookups: a gemstone,
  * an actress namesake, a book cover, and in Oct 2026 a Panoz Esperante car for
  * "Andrea Robertson". No structural check catches these, so this script shows
- * each photo to gpt-4o-mini together with the author's name and life years and
+ * each photo to OPENAI_FAST together with the author's name and life years and
  * asks a narrow question: is this a portrait of a person, and does its era fit?
  * It does NOT try to recognise who the person is.
  *
@@ -38,6 +38,7 @@ import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs
 import { adminClient } from '../src/lib/supabase'
 import { approvedPhotoUrls, readReview } from '../src/lib/photo-review'
 import { flagValue, idsFlag, intFlag } from './lib/cli'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const NULL_IDS_FILE = flagValue('null-ids-file')
 const IDS = idsFlag()
@@ -84,7 +85,8 @@ async function judge(r: Row, inline = false): Promise<{ verdict: Verdict; reason
   if (!imageUrl) return { verdict: 'unreadable', reasoning: 'image could not be downloaded (dead link or not an image)' }
   try {
     const res = await openai().chat.completions.create({
-      model: 'gpt-4o-mini',
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
       messages: [
         { role: 'system', content: SYSTEM },
         { role: 'user', content: [
@@ -94,7 +96,7 @@ async function judge(r: Row, inline = false): Promise<{ verdict: Verdict; reason
       ],
       response_format: { type: 'json_object' },
       temperature: 0,
-      max_tokens: 120,
+      max_completion_tokens: 120,
     })
     const p = JSON.parse(res.choices[0]?.message?.content ?? '{}') as { verdict?: string; reasoning?: string }
     const ok: Verdict[] = ['portrait', 'unsure', 'era_mismatch', 'not_a_person', 'unreadable']

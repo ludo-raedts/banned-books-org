@@ -1217,7 +1217,7 @@ function GenerateQuestionsBanner({
       title: `Generate questions for ${count} book${count === 1 ? '' : 's'}?`,
       body:
         `Each book makes one LLM call (~5 seconds). Approximate cost: ` +
-        `${count <= 25 ? '$0.05–$0.10 with gpt-4o' : `$${(count * 0.002).toFixed(2)} with gpt-4o`}. ` +
+        `${count <= 25 ? '$0.05–$0.10 with gpt-6-sol' : `$${(count * 0.002).toFixed(2)} with gpt-6-sol`}. ` +
         `Existing questions are preserved.`,
       confirmLabel: 'Generate',
     })

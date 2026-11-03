@@ -32,6 +32,7 @@ import OpenAI from 'openai'
 import { franc } from 'franc-min'
 import { adminClient } from '../supabase'
 import { titleLadder } from './_title-ladder'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '@/lib/llm-models'
 
 const OL_DELAY_MS = 600
 const SENTENCE_FINAL = new Set(['.', '?', '!', '"', '’', '”'])
@@ -156,8 +157,9 @@ async function generateWithGPT(
 ): Promise<string | null> {
   try {
     const res = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 300,
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
+      max_completion_tokens: 300,
       messages: [{
         role: 'user',
         content: `Write a 2–3 sentence description of the book "${title}"${author ? ` by ${author}` : ''}. Summarise the plot, themes, and why it's significant. Output only the description text, nothing else.`,
@@ -188,7 +190,7 @@ export type EnrichDescriptionsOpts = {
   overwrite?: boolean
   slug?: string
   /**
-   * Opt-in switch for the LLM (gpt-4o-mini) fallback when OpenLibrary and
+   * Opt-in switch for the LLM (OPENAI_FAST) fallback when OpenLibrary and
    * Google Books both return no description. Default false because
    * un-grounded LLM text is what the 2026-05-28 judge run cleaned up.
    * Also enabled by `OPENAI_ALLOW_FALLBACK=true` in env.

@@ -34,8 +34,8 @@
  *
  * Environment: ANTHROPIC_API_KEY (preferred) or OPENAI_API_KEY in .env.local.
  *
- * Cost (50 books): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI gpt-4o.
- * Quality is highest with Claude Opus 4.7 for this nuance-heavy task; gpt-4o
+ * Cost (50 books): ~$1–2 with Claude Opus 4.7, ~$0.10 with OpenAI OPENAI_STRONG.
+ * Quality is highest with Claude Opus 4.7 for this nuance-heavy task; OPENAI_STRONG
  * is acceptable.
  *
  * Idempotent by default: re-running without --force only fills rows that are

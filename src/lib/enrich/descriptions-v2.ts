@@ -35,7 +35,7 @@
  * (description_source_type IS NULL) and re-sources them, overwriting only
  * when a verified source resolves and backing up the originals first.
  *
- * For LLM synthesis we use gpt-4o-mini (cheap, ~$0.001 per book) with
+ * For LLM synthesis we use OPENAI_FAST (cheap, <$0.001 per book) with
  * temperature=0 and a strict "only facts from the provided sources"
  * system prompt.
  */
@@ -44,6 +44,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../supabase'
 import { gbVolumesByTitleAuthor, GB_FIELDS_DESCRIPTION, GbQuotaError, GbUnavailableError, gbQuotaTripped } from './google-books'
+import { OPENAI_COST_PER_TOKEN, OPENAI_FAST, OPENAI_NO_REASONING } from '@/lib/llm-models'
 
 type SourceType =
   | 'wikipedia'
@@ -459,10 +460,7 @@ Hard rules:
 
 Output ONLY the description text (or NO_RELIABLE_DESCRIPTION).`
 
-const COSTS: Record<string, { input: number; output: number }> = {
-  'gpt-4o-mini': { input: 0.15 / 1_000_000, output: 0.60 / 1_000_000 },
-  'gpt-4o': { input: 2.50 / 1_000_000, output: 10.00 / 1_000_000 },
-}
+const COSTS = OPENAI_COST_PER_TOKEN
 
 async function synthesise(
   openai: OpenAI,
@@ -484,8 +482,9 @@ ${sourceBlock}`
 
   try {
     const res = await openai.chat.completions.create({
+      ...OPENAI_NO_REASONING,
       model,
-      max_tokens: 250,
+      max_completion_tokens: 250,
       temperature: 0,
       messages: [
         { role: 'system', content: LLM_SYSTEM },
@@ -493,7 +492,7 @@ ${sourceBlock}`
       ],
     })
     const out = res.choices[0]?.message?.content?.trim() ?? null
-    const c = COSTS[model] ?? COSTS['gpt-4o-mini']
+    const c = COSTS[model] ?? COSTS[OPENAI_FAST]
     const cost = (res.usage?.prompt_tokens ?? 0) * c.input + (res.usage?.completion_tokens ?? 0) * c.output
     if (!out) return { text: null, cost }
     if (out === 'NO_RELIABLE_DESCRIPTION') return { text: null, cost }
@@ -595,7 +594,7 @@ async function enrichOne(
   // ── Multi-source: cross-confirmed → confident ────────────────────────
   if (collected.length >= 2) {
     if (opts.allowLlm && openai) {
-      const { text, cost } = await synthesise(openai, 'gpt-4o-mini', row.title, author, collected)
+      const { text, cost } = await synthesise(openai, OPENAI_FAST, row.title, author, collected)
       if (text) {
         // LLM produced a clean synthesis from ≥2 sources.
         return {
@@ -640,7 +639,7 @@ async function enrichOne(
   }
   // Non-English single source OR too-long English: LLM paraphrase if allowed
   if (opts.allowLlm && openai) {
-    const { text, cost } = await synthesise(openai, 'gpt-4o-mini', row.title, author, [only])
+    const { text, cost } = await synthesise(openai, OPENAI_FAST, row.title, author, [only])
     if (text) {
       return {
         description_book: text,
@@ -728,7 +727,7 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
 
   const concurrency = Math.max(1, opts.concurrency ?? 1)
   log(`Candidates: ${candidates.length}`)
-  log(`LLM synthesis: ${opts.allowLlm ? 'enabled (gpt-4o-mini)' : 'disabled (literal-source only)'}`)
+  log(`LLM synthesis: ${opts.allowLlm ? `enabled (${OPENAI_FAST})` : 'disabled (literal-source only)'}`)
   log(`Concurrency: ${concurrency}`)
 
   const result: EnrichDescriptionsV2Result = {

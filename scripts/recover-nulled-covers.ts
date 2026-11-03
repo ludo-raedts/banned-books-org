@@ -7,7 +7,7 @@
  * then the ISBN cover — and keeps the SAME safety gates so we never re-introduce
  * a wrong cover:
  *   - the OL work must author-match (search doc author overlaps ours), and
- *   - every candidate image is vision-verified (gpt-4o-mini) before use.
+ *   - every candidate image is vision-verified (OPENAI_FAST) before use.
  * First looks_right candidate wins → cover_url set, cover_status 'valid'.
  * Nothing found → left as-is (stays nulled).
  *

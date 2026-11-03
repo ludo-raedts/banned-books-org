@@ -33,6 +33,7 @@ import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
 import { idChunks, idsFlag } from './lib/cli'
+import { GEMINI_FLASH, GEMINI_FLASH_NO_THINKING, OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 export type EnrichGenresOptions = {
   apply:     boolean
@@ -61,7 +62,7 @@ export function optionsFromArgv(defaults: Partial<EnrichGenresOptions> = {}): En
     slug:  slugArg?.split('=')[1] ?? null,
     ids:   idsFlag(),
     delay: delayArg ? parseInt(delayArg.split('=')[1], 10) : (defaults.delay ?? 300),
-    model: modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? defaults.model ?? 'gpt-4o-mini',
+    model: modelArg?.split('=')[1] ?? defaults.model ?? OPENAI_FAST,
   }
 }
 
@@ -173,6 +174,7 @@ Return the structured classification. Pick 1–3 slugs that best capture this wo
 async function classify(client: OpenAI, book: BookRow, model: string): Promise<GenreResult | null> {
   try {
     const res = await client.chat.completions.create({
+      ...OPENAI_NO_REASONING,
       model,
       messages: [
         { role: 'system', content: POLICY },
@@ -205,9 +207,9 @@ async function classify(client: OpenAI, book: BookRow, model: string): Promise<G
 async function classifyGemini(genai: GoogleGenAI, book: BookRow): Promise<GenreSlug[] | null> {
   try {
     const res = await genai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_FLASH,
       contents: buildPrompt(book),
-      config: { systemInstruction: POLICY, temperature: 0, thinkingConfig: { thinkingBudget: 0 }, responseMimeType: 'application/json' },
+      config: { systemInstruction: POLICY, temperature: 0, thinkingConfig: GEMINI_FLASH_NO_THINKING, responseMimeType: 'application/json' },
     })
     const txt = (res.text ?? '').trim()
     const json = txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1)

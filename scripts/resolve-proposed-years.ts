@@ -32,11 +32,12 @@ import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 import { authorsAgree } from '../src/lib/enrich/title-match'
+import { OPENAI_NO_REASONING, OPENAI_STRONG } from '../src/lib/llm-models'
 
 const APPLY = process.argv.includes('--apply')
 const LIMIT = (() => { const a = process.argv.find(x => x.startsWith('--limit=')); return a ? parseInt(a.split('=')[1], 10) : Infinity })()
 const CONCURRENCY = 5
-const HEAVY = 'gpt-4o'
+const HEAVY = OPENAI_STRONG
 const CKPT = 'data/resolve-proposed-years.jsonl'
 const YEAR_MIN = -3000, YEAR_MAX = 2026
 
@@ -86,7 +87,7 @@ async function heavy(b: Hydrated, olYear: number | null): Promise<any | null> {
   const u = `Title: ${b.title}\n${b.author ? `Author: ${b.author}\n` : ''}Database year: ${b.db_year}\nJunior-model year: ${b.mini_year ?? 'null'}\nOpenLibrary year: ${olYear ?? 'null'}`
   for (let a = 0; a < 2; a++) {
     try {
-      const r = await openai.chat.completions.create({ model: HEAVY, temperature: 0, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: HEAVY_SYS }, { role: 'user', content: u }] })
+      const r = await openai.chat.completions.create({ ...OPENAI_NO_REASONING, model: HEAVY, temperature: 0, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: HEAVY_SYS }, { role: 'user', content: u }] })
       return JSON.parse(r.choices[0].message.content ?? '{}')
     } catch { if (a === 1) return null; await new Promise(r => setTimeout(r, 1500)) }
   }

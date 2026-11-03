@@ -24,6 +24,7 @@ import { resolve } from 'node:path'
 import OpenAI from 'openai'
 import { GoogleGenAI } from '@google/genai'
 import { adminClient } from '../src/lib/supabase'
+import { GEMINI_FLASH, GEMINI_FLASH_NO_THINKING, OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY = process.argv.includes('--apply')
 const arg = (k: string) => process.argv.find(a => a.startsWith(`--${k}=`))?.split('=')[1]
@@ -103,18 +104,19 @@ async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 async function genOpenAI(ctx: string): Promise<string> {
-  const r = await withRetry(() => oai.chat.completions.create({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: GEN_SYSTEM }, { role: 'user', content: ctx }], temperature: 0.3 }))
+  const r = await withRetry(() => oai.chat.completions.create({ ...OPENAI_NO_REASONING, model: OPENAI_FAST, messages: [{ role: 'system', content: GEN_SYSTEM }, { role: 'user', content: ctx }], temperature: 0.3 }))
   return (r.choices[0]?.message?.content ?? '').trim()
 }
 async function genGemini(ctx: string): Promise<string> {
-  const r = await withRetry(() => genai.models.generateContent({ model: 'gemini-2.5-flash', contents: ctx, config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } } }))
+  const r = await withRetry(() => genai.models.generateContent({ model: GEMINI_FLASH, contents: ctx, config: { systemInstruction: GEN_SYSTEM, temperature: 0.3, thinkingConfig: GEMINI_FLASH_NO_THINKING } }))
   return (r.text ?? '').trim()
 }
 const isUnknown = (s: string) => /^unknown\b/i.test(s.trim()) || s.trim().length < 25
 
 async function judge(title: string, a: string, b: string): Promise<any> {
   const r = await oai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     messages: [{ role: 'system', content: JUDGE_SYSTEM }, { role: 'user', content: `Book title: ${title}\n\nDescription 1:\n${a}\n\nDescription 2:\n${b}` }],
     response_format: { type: 'json_object' }, temperature: 0,
   })
@@ -122,7 +124,8 @@ async function judge(title: string, a: string, b: string): Promise<any> {
 }
 async function synth(title: string, facts: string[]): Promise<string> {
   const r = await oai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     messages: [{ role: 'system', content: SYNTH_SYSTEM }, { role: 'user', content: `Book: ${title}\nConfirmed facts:\n- ${facts.join('\n- ')}` }],
     temperature: 0.2,
   })

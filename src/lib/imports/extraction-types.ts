@@ -95,7 +95,7 @@ export type AuthorRef = {
 //
 // `output` is null when that pass failed; `error` carries the reason in that
 // case. Provider strings are the resolved model identifiers (e.g.
-// 'gemini-2.5-pro', 'gpt-4o-mini') from MODELS[tier] in llm-extraction.ts.
+// 'gemini-3.8-flash', 'gpt-6-luna') from MODELS[tier] in llm-extraction.ts.
 export type PassAudit = {
   provider: string
   output: Extraction | null

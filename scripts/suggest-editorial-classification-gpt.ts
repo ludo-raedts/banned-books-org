@@ -46,6 +46,7 @@ import OpenAI from 'openai'
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY    = process.argv.includes('--apply')
 const limitArg = process.argv.find(a => a.startsWith('--limit='))
@@ -55,7 +56,7 @@ const modelArg = process.argv.find(a => a.startsWith('--model='))
 const LIMIT    = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 100 : 3)
 const SLUG     = slugArg?.split('=')[1] ?? null
 const DELAY    = delayArg ? parseInt(delayArg.split('=')[1], 10) : 400
-const MODEL    = modelArg?.split('=')[1] ?? process.env.OPENAI_MODEL ?? 'gpt-4o-mini'
+const MODEL    = modelArg?.split('=')[1] ?? OPENAI_FAST
 
 // ─── Condensed framework, distilled from the two essays ──────────────────────
 const POLICY = `You are classifying books for banned-books.org, an archive of censored
@@ -228,6 +229,7 @@ Apply the framework. Return the structured classification.`
 async function classify(client: OpenAI, book: BookRow): Promise<ClassResult | null> {
   try {
     const res = await client.chat.completions.create({
+      ...OPENAI_NO_REASONING,
       model: MODEL,
       messages: [
         { role: 'system', content: POLICY },

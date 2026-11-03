@@ -1,5 +1,5 @@
 /**
- * Fetch news from RSS feeds, embed + dedup, summarize with gpt-4.1-mini, save.
+ * Fetch news from RSS feeds, embed + dedup, summarize with OPENAI_FAST, save.
  * Whether items land as 'draft' or 'published' depends on the auto_publish
  * flag in news_config (admin UI). Run dry-run first to sanity-check.
  *

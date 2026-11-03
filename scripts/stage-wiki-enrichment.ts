@@ -45,6 +45,7 @@ loadEnvLocal()
 
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const WORKLIST_PATH = join(process.cwd(), 'data', 'wiki-enrichment-worklist.json')
 const STAGING_DIR = join(process.cwd(), 'data', 'wiki-enrichment-staging')
@@ -294,7 +295,8 @@ async function callGpt(
   user: string,
 ): Promise<Omit<StagingResult, 'book_id' | 'slug' | 'title' | 'author' | 'wikipedia_url' | 'generated_at'>> {
   const resp = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    ...OPENAI_NO_REASONING,
+    model: OPENAI_FAST,
     temperature: 0.1,
     response_format: { type: 'json_object' },
     messages: [

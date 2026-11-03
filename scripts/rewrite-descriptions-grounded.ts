@@ -26,6 +26,7 @@ import {
   descriptionBanQualityGate,
   censorshipContextQualityGate,
 } from '../src/lib/censorship-context-quality'
+import { OPENAI_FAST } from '../src/lib/llm-models'
 
 const APPLY      = process.argv.includes('--apply')
 const INCLUDE_2  = process.argv.includes('--include-2')
@@ -39,7 +40,7 @@ const AUDIT_CSV  = auditArg?.split('=')[1] ?? null
 const LIMIT      = limitArg ? parseInt(limitArg.split('=')[1], 10) : (APPLY ? 99999 : 5)
 const SLUG       = slugArg?.split('=')[1] ?? null
 const CONCURRENCY = concurArg ? parseInt(concurArg.split('=')[1], 10) : 3
-const MODEL      = modelArg?.split('=')[1] ?? 'gpt-4.1-mini'
+const MODEL      = modelArg?.split('=')[1] ?? OPENAI_FAST
 const SKIP_LOG   = skipLogArg?.split('=')[1] ?? null
 
 if (!AUDIT_CSV) {
@@ -202,6 +203,9 @@ async function generate(client: OpenAI, book: Book, needBan: boolean, needCtx: b
     // dropped).
     const resp = await (client as any).responses.create({
       model: MODEL,
+      // gpt-6-* reason by default; 'low' keeps the hidden-token spend well inside
+      // max_output_tokens while still planning the web searches.
+      reasoning: { effort: 'low' },
       input: buildPrompt(book, needBan, needCtx),
       tools: [{ type: 'web_search' }],
       max_output_tokens: 2000,

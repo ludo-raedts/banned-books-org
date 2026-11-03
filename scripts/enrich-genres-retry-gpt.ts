@@ -1,5 +1,5 @@
 /**
- * Genre enrichment RETRY pass — mops up the books that gpt-4o-mini couldn't place.
+ * Genre enrichment RETRY pass — mops up the books that the cheap OPENAI_FAST sweep couldn't place.
  *
  * Why this exists: enrich-genres-gpt.ts only writes genres on a high/medium
  * confidence result. Books the mini model doesn't recognise (obscure / non-English
@@ -8,7 +8,7 @@
  * the remaining `genres = '{}'` candidates ARE precisely those hard cases.
  *
  * This wrapper targets that exact same candidate set but defaults to a stronger
- * model (gpt-4o), which recognises a meaningful slice of them. It shares all logic
+ * model (OPENAI_STRONG), which recognises a meaningful slice of them. It shares all logic
  * with enrich-genres-gpt.ts (same vocabulary, same prompt, same filter, same
  * pagination) — only the default model differs.
  *
@@ -18,13 +18,14 @@
  *   npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts             # dry-run, 5 samples
  *   npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply
  *   npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --limit=50
- *   npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model=gpt-4.1
+ *   npx tsx --env-file=.env.local scripts/enrich-genres-retry-gpt.ts --apply --model=gpt-6.1-sol
  */
 
 import { enrichGenres, optionsFromArgv } from './enrich-genres-gpt'
+import { OPENAI_STRONG } from '../src/lib/llm-models'
 
 // Stronger default than the mini sweep; still overridable with --model=.
-const RETRY_MODEL = 'gpt-4o'
+const RETRY_MODEL = OPENAI_STRONG
 
 const opts = optionsFromArgv({ model: RETRY_MODEL, delay: 300 })
 

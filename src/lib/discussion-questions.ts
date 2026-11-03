@@ -14,7 +14,7 @@
 //     definitive editorial template is delivered separately.
 //
 // Provider auto-detection: prefers Claude Opus 4.7 (best quality on this
-// task) when ANTHROPIC_API_KEY is set, falls back to OpenAI gpt-4o when only
+// task) when ANTHROPIC_API_KEY is set, falls back to OpenAI (OPENAI_STRONG) when only
 // OPENAI_API_KEY is set. Caller can force a provider via the second argument.
 //
 // Output contract: an array of strings, with the LAST item being a deeper
@@ -23,11 +23,12 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
+import { OPENAI_STRONG } from '@/lib/llm-models'
 
 export type Provider = 'claude' | 'openai'
 
 const CLAUDE_MODEL = 'claude-opus-4-7'
-const OPENAI_MODEL = process.env.OPENAI_MODEL ?? 'gpt-4o'
+const OPENAI_MODEL = OPENAI_STRONG
 
 // The editorial prompt. Three placeholders: [TITLE], [AUTHOR], [AUDIENCE].
 // The audience block is only inserted when the caller passes one (used by
@@ -259,7 +260,7 @@ async function callClaude(prompt: string, client?: Anthropic): Promise<string> {
 
 async function callOpenAI(prompt: string, client?: OpenAI): Promise<string> {
   const c = client ?? new OpenAI()
-  // Use response_format json_object — gpt-4o reliably returns valid JSON when
+  // Use response_format json_object — the model reliably returns valid JSON when
   // asked, and the prompt already specifies the exact shape we want.
   const response = await c.chat.completions.create({
     model: OPENAI_MODEL,

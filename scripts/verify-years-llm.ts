@@ -4,8 +4,8 @@
  * OpenLibrary couldn't confirm (see scripts/audit-publication-years.ts).
  *
  * Cascade:
- *   1. gpt-4o-mini ("junior") proposes the FIRST-publication year.
- *   2. Escalate to gpt-4o ("senior" adjudicator) when:
+ *   1. OPENAI_FAST ("junior") proposes the FIRST-publication year.
+ *   2. Escalate to OPENAI_STRONG ("senior" adjudicator) when:
  *        - book HAS a DB year and the junior disagrees (|Δ|≥2) or junior is null/low, OR
  *        - book has NO DB year (backfill) and the junior is ≥medium-confidence.
  *   3. The senior decides from its OWN knowledge; it must return "unsure"/null
@@ -35,6 +35,7 @@
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING, OPENAI_STRONG } from '../src/lib/llm-models'
 
 const CKPT = 'data/year-llm-verification.jsonl'
 
@@ -42,8 +43,8 @@ const APPLY = process.argv.includes('--apply')
 const LIMIT = (() => { const a = process.argv.find(x => x.startsWith('--limit=')); return a ? parseInt(a.split('=')[1], 10) : Infinity })()
 const IDS_FILE = process.argv.find(x => x.startsWith('--ids-file='))?.split('=')[1]
 const CONCURRENCY = 6
-const MINI = 'gpt-4o-mini'
-const SENIOR = 'gpt-4o'
+const MINI = OPENAI_FAST
+const SENIOR = OPENAI_STRONG
 const YEAR_MIN = -3000, YEAR_MAX = 2026
 
 const openai = new OpenAI()
@@ -67,6 +68,7 @@ async function chat<T>(model: string, sys: string, user: string): Promise<T | nu
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const r = await openai.chat.completions.create({
+        ...OPENAI_NO_REASONING,
         model, temperature: 0, response_format: { type: 'json_object' },
         messages: [{ role: 'system', content: sys }, { role: 'user', content: user }],
       })
@@ -242,7 +244,7 @@ async function main() {
   writeFileSync('data/year-llm-verification.json', JSON.stringify(results, null, 2))
 
   const md: string[] = []
-  md.push(`# LLM year verification (gpt-4o-mini → gpt-4o cascade)`)
+  md.push(`# LLM year verification (${MINI} → ${SENIOR} cascade)`)
   md.push(``)
   md.push(`- Processed: ${results.length}`)
   md.push(`- **Changed (existing year corrected): ${by('changed').length}**`)

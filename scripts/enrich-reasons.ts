@@ -60,6 +60,7 @@ import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
 import { newPgClient } from '../src/lib/wikipedia/importer'
 import { flagValue, hasFlag, intFlag, isApply } from './lib/cli'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 const APPLY = isApply()
 const BATCH_SIZE = 8
@@ -213,8 +214,9 @@ Output ONLY the comma-separated slugs, nothing else. Example: lgbtq,sexual`
 
   try {
     const res = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 60,
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
+      max_completion_tokens: 60,
       messages: [{ role: 'user', content: prompt }],
     })
     const text = res.choices[0]?.message?.content?.trim() ?? ''
@@ -269,8 +271,9 @@ INFERRED: violence, sexual`
 
   try {
     const res = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 80,
+      ...OPENAI_NO_REASONING,
+      model: OPENAI_FAST,
+      max_completion_tokens: 80,
       // A sourced/inferred split is a gate, not a creative task: at the default
       // temperature the same row flips between runs (the Tintin Brussels row
       // states "an insult to the Congolese people" and scored racial on one
@@ -582,7 +585,7 @@ async function main() {
     const lines: string[] = []
     lines.push(`# enrich-reasons ${APPLY ? 'applied' : 'DRY-RUN'} — class ${CLASS}`)
     lines.push('')
-    lines.push(`Run: ${new Date().toISOString()} · model gpt-4o-mini · ${reportRows.length} bans classified`)
+    lines.push(`Run: ${new Date().toISOString()} · model ${OPENAI_FAST} · ${reportRows.length} bans classified`)
     lines.push(APPLY ? 'Written to ban_reason_links.' : 'Nothing was written to the database.')
     lines.push('')
     if (GROUNDED_ONLY) {
@@ -632,7 +635,7 @@ async function main() {
       writeFileSync(jsonPath, JSON.stringify({
         generatedAt: new Date().toISOString(),
         mode: GROUNDED_ONLY ? 'grounded-only' : 'all',
-        model: 'gpt-4o-mini',
+        model: OPENAI_FAST,
         decisions: reportRows.map((r) => ({
           ban_id: r.banId, book_id: r.bookId, title: r.title,
           write: r.slugs, dropped_inferred: r.inferred,

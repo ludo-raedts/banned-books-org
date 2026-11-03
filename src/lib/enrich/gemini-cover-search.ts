@@ -1,6 +1,6 @@
 // Gemini-grounded cover-image search.
 //
-// Asks gemini-2.5-flash with the googleSearch tool to find the book's cover.
+// Asks GEMINI_FLASH with the googleSearch tool to find the book's cover.
 // Returns the URL it claims to have seen on the page, plus the source page URL
 // (for anti-hallucination verification downstream) and a confidence label.
 //
@@ -11,6 +11,7 @@
 // the caller treats that as "no cover found".
 
 import { GoogleGenAI } from '@google/genai'
+import { GEMINI_FLASH } from '@/lib/llm-models'
 
 let _genai: GoogleGenAI | null = null
 function genai(): GoogleGenAI {
@@ -136,7 +137,7 @@ export async function geminiCoverSearch(input: CoverSearchInput): Promise<CoverS
   while (true) {
     try {
       response = await genai().models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: GEMINI_FLASH,
         contents: buildPrompt(input),
         config: {
           systemInstruction: buildSystemPrompt(input),

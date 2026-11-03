@@ -10,7 +10,7 @@
  *   - own_book_blurb: bio describes the author's own book, not the author
  *   - correct       : genuinely about this author (incl. legal-name/pen-name)
  *
- * This script asks gpt-4o-mini to CLASSIFY (not generate) each stored bio
+ * This script asks OPENAI_FAST to CLASSIFY (not generate) each stored bio
  * against the author's name + the book titles we actually hold for them. A bio
  * that names one of those titles, or plausibly describes their author, is
  * "correct"; one describing a different profession/entity is not.
@@ -37,6 +37,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import OpenAI from 'openai'
 import { adminClient } from '../src/lib/supabase'
+import { OPENAI_FAST, OPENAI_NO_REASONING } from '../src/lib/llm-models'
 
 // Shared with enrich-author-bios.ts. When we NULL a bio here, the enricher would
 // otherwise re-select it (bio IS NULL), re-run the SAME deterministic Wikipedia
@@ -73,7 +74,7 @@ const arg = (k: string) => process.argv.find((x) => x.startsWith(`--${k}=`))?.sp
 const LIMIT = arg('limit') ? parseInt(arg('limit')!, 10) : Number.POSITIVE_INFINITY
 const SLUGS = arg('slugs')?.split(',').map((s) => s.trim()).filter(Boolean) ?? null
 const CONCURRENCY = arg('concurrency') ? parseInt(arg('concurrency')!, 10) : 6
-const MODEL = arg('model') ?? 'gpt-4o-mini'
+const MODEL = arg('model') ?? OPENAI_FAST
 
 const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
 const BACKUP = `data/author-bio-remediation-backup-${ts}.csv`
@@ -114,6 +115,7 @@ async function classify(openai: OpenAI, r: Row): Promise<{ verdict: Verdict; rea
     `Stored bio:\n"""${r.bio.slice(0, 1200)}"""`
   try {
     const res = await openai.chat.completions.create({
+      ...OPENAI_NO_REASONING,
       model: MODEL,
       temperature: 0,
       response_format: { type: 'json_object' },
