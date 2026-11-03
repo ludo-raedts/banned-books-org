@@ -198,7 +198,7 @@ export default function SearchClient({
           title: b.title,
           cover_url: b.cover_url,
           author: b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
-          banCount: b.bans.length,
+          banCount: b.ban_count ?? b.bans.length,
         }))
         setAuthorSuggestions(mappedAuthors)
         setCountrySuggestions(mappedCountries)

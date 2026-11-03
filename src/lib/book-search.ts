@@ -91,7 +91,40 @@ async function topIdsForSort(
   return []
 }
 
+// Cards need the ban COUNT, the distinct countries and the reason slugs — not
+// every district-level row. A US title with 70 PEN district bans shipped 70
+// {country_code, countries, ban_reason_links} objects in the RSC payload (≈75%
+// of /search and /reasons/* HTML). Collapse to one row per country with the
+// union of its reasons, and carry the true count in ban_count.
+type RawBan = { country_code: string; countries: { name_en: string } | null; ban_reason_links: { reasons: { slug: string } | null }[] }
+function compactBans(books: unknown[]): unknown[] {
+  return books.map(b => {
+    const book = b as { bans?: RawBan[] }
+    if (!Array.isArray(book.bans)) return b
+    const byCountry = new Map<string, { country_code: string; countries: RawBan['countries']; slugs: Set<string> }>()
+    for (const ban of book.bans) {
+      const e = byCountry.get(ban.country_code) ?? { country_code: ban.country_code, countries: ban.countries, slugs: new Set<string>() }
+      for (const l of ban.ban_reason_links ?? []) if (l.reasons?.slug) e.slugs.add(l.reasons.slug)
+      byCountry.set(ban.country_code, e)
+    }
+    return {
+      ...book,
+      ban_count: book.bans.length,
+      bans: [...byCountry.values()].map(e => ({
+        country_code: e.country_code,
+        countries: e.countries,
+        ban_reason_links: [...e.slugs].map(slug => ({ reasons: { slug } })),
+      })),
+    }
+  })
+}
+
 export async function searchBooks(params: BookSearchParams): Promise<BookSearchResult> {
+  const res = await searchBooksRaw(params)
+  return { ...res, books: compactBans(res.books) }
+}
+
+async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResult> {
   const q          = params.q?.trim() ?? ''
   const scope      = params.scope ?? ''
   const country    = params.country ?? ''

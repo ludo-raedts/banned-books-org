@@ -35,6 +35,8 @@ export type Book = {
   genres: string[]
   book_authors: { authors: { display_name: string } | null }[]
   bans: Ban[]
+  /** True ban count when `bans` is collapsed to one row per country (lib/book-search.ts). */
+  ban_count?: number
 }
 
 export type NewsPreview = {
@@ -202,7 +204,7 @@ export default function BookBrowser({
           title: b.title,
           cover_url: b.cover_url,
           author: b.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
-          banCount: b.bans.length,
+          banCount: b.ban_count ?? b.bans.length,
         }))
         setSuggestions(mapped)
         setShowSuggestions(mapped.length > 0)
