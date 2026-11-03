@@ -12,6 +12,11 @@ export const revalidate = 86400
 
 const CURRENT_YEAR = new Date().getFullYear()
 const FIRST_YEAR = 2000
+// Rendered rows cap. Each row is ~3.5 KB of HTML+RSC (cover image markup), and
+// the ISR fallback body must stay under Vercel's 20 MB: 2025 reached 6,600
+// books (23.9 MB) after the Texas 2025–26 import. Counts and the lead still
+// use the full set; the long tail is in the open dataset.
+const LIST_CAP = 1000
 
 function countryFlag(code: string): string {
   if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
@@ -35,15 +40,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { year } = await params
   const yearNum = parseInt(year, 10)
-  // Distinct books with a ban starting this year — cheap head-count for the
-  // snippet; the page body re-derives it from the full sweep.
+  // Distinct books with a ban starting this year, for the snippet. Paged
+  // book_id-only sweep: a single capped read (the old .limit(5000), itself cut
+  // to 1000 by PostgREST) reported 891 titles for 2025 instead of 6,608.
   let n = 0
   if (Number.isFinite(yearNum)) {
-    const { data } = await adminClient().from('bans').select('book_id').eq('year_started', yearNum).limit(5000)
-    n = new Set(((data ?? []) as { book_id: number }[]).map(r => r.book_id)).size
+    const ids = new Set<number>()
+    for (let offset = 0; ; offset += 1000) {
+      const { data } = await adminClient().from('bans').select('book_id').eq('year_started', yearNum)
+        .order('id', { ascending: true }).range(offset, offset + 999)
+      for (const r of (data ?? []) as { book_id: number }[]) ids.add(r.book_id)
+      if (!data || data.length < 1000) break
+    }
+    n = ids.size
   }
   const isCurrent = yearNum === CURRENT_YEAR
-  const title = isCurrent ? `Banned Books ${year}: the list so far` : `Books banned in ${year} – the full list`
+  const title = isCurrent
+    ? `Banned Books ${year}: the list so far`
+    : n > LIST_CAP ? `Books banned in ${year} – the most-banned titles` : `Books banned in ${year} – the full list`
   const description = n > 0
     ? `Which books were banned in ${year}? ${n.toLocaleString('en')} ${n === 1 ? 'title' : 'titles'} with a documented ban starting in ${year}${isCurrent ? ' (updated weekly)' : ''} — by country and reason, each with its source.`
     : `Every book with a documented ban that began in ${year}, grouped by country — with the censorship reason, scope, and the full source citations behind each entry.`
@@ -84,7 +98,7 @@ export default async function BannedBooksYearPage({
   const { year } = await params
   const yearNum = parseInt(year, 10)
 
-  if (isNaN(yearNum) || yearNum < 1000 || yearNum > CURRENT_YEAR + 1) notFound()
+  if (Number.isNaN(yearNum) || yearNum < 1000 || yearNum > CURRENT_YEAR + 1) notFound()
 
   const supabase = adminClient()
 
@@ -127,6 +141,21 @@ export default async function BannedBooksYearPage({
   }
 
   const books = [...bookMap.values()].sort((a, b) => b.bans.length - a.bans.length)
+  const shownBooks = books.slice(0, LIST_CAP)
+
+  // One "🇺🇸 United States ×12" per country instead of repeating the country
+  // for every district-level ban.
+  const countryLine = (bans: BookEntry['bans']) => {
+    const byCode = new Map<string, { name: string; n: number }>()
+    for (const b of bans) {
+      const e = byCode.get(b.countryCode) ?? { name: b.countryName, n: 0 }
+      e.n++
+      byCode.set(b.countryCode, e)
+    }
+    return [...byCode.entries()]
+      .map(([code, { name, n }]) => `${countryFlag(code)} ${name}${n > 1 ? ` ×${n}` : ''}`)
+      .join(' · ')
+  }
 
   // Group by country for the sidebar summary
   const countryTotals = new Map<string, { name: string; count: number }>()
@@ -280,7 +309,7 @@ export default async function BannedBooksYearPage({
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Book list */}
         <div className="flex-1 min-w-0 divide-y divide-gray-100">
-          {books.map((book, i) => (
+          {shownBooks.map((book, i) => (
             <Link
               key={book.id}
               href={`/books/${book.slug}`}
@@ -311,7 +340,7 @@ export default async function BannedBooksYearPage({
                   <p className="text-xs text-gray-500 truncate">{book.author}</p>
                 )}
                 <p className="text-xs text-gray-400 mt-0.5 truncate">
-                  {book.bans.map(b => `${countryFlag(b.countryCode)} ${b.countryName}`).join(' · ')}
+                  {countryLine(book.bans)}
                 </p>
               </div>
               <div className="shrink-0 text-right">
@@ -324,6 +353,13 @@ export default async function BannedBooksYearPage({
               </div>
             </Link>
           ))}
+          {books.length > shownBooks.length && (
+            <p className="pt-4 text-sm text-gray-500">
+              Showing the {shownBooks.length.toLocaleString('en')} most-banned of {books.length.toLocaleString('en')} books.
+              The full list is in the{' '}
+              <Link href="/dataset" className="text-brand hover:underline">open dataset</Link>.
+            </p>
+          )}
         </div>
 
         {/* Country sidebar */}
