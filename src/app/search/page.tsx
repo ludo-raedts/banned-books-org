@@ -54,10 +54,18 @@ const loadSearchFacets = unstable_cache(
 
 // The filter-less landing view (what crawlers and most visitors get) is the
 // same for everyone, so cache its first 48 results for an hour.
+// searchBooks reports DB errors as { books: [], error } instead of throwing, and
+// unstable_cache stored that: on 2026-11-03 prod /search showed "No books match
+// your search" for an hour after a statement timeout during a deploy. Throw on
+// an error/empty result so it is never cached; the page falls back to a live call.
+const DEFAULT_QUERY = { q: '', country: '', reason: '', scope: '', activeOnly: false, offset: 0, limit: 48 } as const
 const loadDefaultResults = unstable_cache(
-  (sort: ReturnType<typeof parseBookSort>) =>
-    searchBooks({ q: '', country: '', reason: '', scope: '', activeOnly: false, sort, offset: 0, limit: 48 }),
-  ['search-default-v1'],
+  async (sort: ReturnType<typeof parseBookSort>) => {
+    const res = await searchBooks({ ...DEFAULT_QUERY, sort })
+    if (res.error || res.books.length === 0) throw new Error(res.error ?? 'empty default search result')
+    return res
+  },
+  ['search-default-v2'],
   { revalidate: 3600, tags: ['search-default'] },
 )
 
@@ -89,7 +97,7 @@ export default async function SearchPage({
   ] = await Promise.all([
     loadSearchFacets(),
     !q && !country && !reason && !scope && !activeOnly
-      ? loadDefaultResults(sort)
+      ? loadDefaultResults(sort).catch(() => searchBooks({ ...DEFAULT_QUERY, sort }))
       : searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
   ])
 
