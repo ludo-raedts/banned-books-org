@@ -1,29 +1,23 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from '@/components/link'
 import { notFound } from 'next/navigation'
 import PageviewTracker from '@/components/pageview-tracker'
 import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
+import YearBookRow from '@/components/year-book-row'
+import YearMoreBooks from '@/components/year-more-books'
 import { adminClient } from '@/lib/supabase'
-import BookCoverPlaceholder from '@/components/book-cover-placeholder'
-import { coverAlt } from '@/lib/cover-alt'
+import { countryFlag, getYearBooks, YEAR_LIST_CAP as LIST_CAP } from '@/lib/year-books'
 
 export const revalidate = 86400
 
 const CURRENT_YEAR = new Date().getFullYear()
 const FIRST_YEAR = 2000
-// Rendered rows cap. Each row is ~3.5 KB of HTML+RSC (cover image markup), and
-// the ISR fallback body must stay under Vercel's 20 MB: 2025 reached 6,600
-// books (23.9 MB) after the Texas 2025–26 import. Counts and the lead still
-// use the full set; the long tail is in the open dataset.
-const LIST_CAP = 1000
-
-function countryFlag(code: string): string {
-  if (['SU', 'CS', 'DD', 'YU'].includes(code)) return '🚩'
-  return [...code.toUpperCase()].map(c =>
-    String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
-  ).join('')
-}
+// Rendered rows cap (YEAR_LIST_CAP, lib/year-books.ts). Each row is ~3.5 KB of
+// HTML+RSC (cover image markup) and the ISR fallback body must stay under
+// Vercel's 20 MB: 2025 reached 6,600 books (23.9 MB) after the Texas 2025–26
+// import. 250 keeps the page near the ~300 KB of the other hubs; the rest loads
+// on demand via <YearMoreBooks> → /api/banned-books/[year]. Counts, lead and FAQ
+// use the full set.
 
 export async function generateStaticParams() {
   const years = []
@@ -68,28 +62,6 @@ export async function generateMetadata({
   }
 }
 
-type BanRow = {
-  book_id: number
-  country_code: string
-  countries: { name_en: string } | null
-  books: {
-    id: number
-    title: string
-    slug: string
-    cover_url: string | null
-    book_authors: { authors: { display_name: string } | null }[]
-  } | null
-}
-
-type BookEntry = {
-  id: number
-  title: string
-  slug: string
-  cover_url: string | null
-  author: string
-  bans: { countryCode: string; countryName: string }[]
-}
-
 export default async function BannedBooksYearPage({
   params,
 }: {
@@ -100,75 +72,9 @@ export default async function BannedBooksYearPage({
 
   if (Number.isNaN(yearNum) || yearNum < 1000 || yearNum > CURRENT_YEAR + 1) notFound()
 
-  const supabase = adminClient()
-
-  let rawBans: BanRow[] = []
-  {
-    let offset = 0
-    while (true) {
-      const { data } = await supabase
-        .from('bans')
-        .select('book_id, country_code, countries(name_en), books(id, title, slug, cover_url, book_authors(authors(display_name)))')
-        .eq('year_started', yearNum)
-        .order('id', { ascending: true })
-        .range(offset, offset + 999)
-      if (!data || data.length === 0) break
-      rawBans = rawBans.concat(data as unknown as BanRow[])
-      if (data.length < 1000) break
-      offset += 1000
-    }
-  }
-
-  // Group bans by book
-  const bookMap = new Map<number, BookEntry>()
-  for (const ban of rawBans) {
-    if (!ban.books) continue
-    const book = ban.books
-    if (!bookMap.has(book.id)) {
-      bookMap.set(book.id, {
-        id: book.id,
-        title: book.title,
-        slug: book.slug,
-        cover_url: book.cover_url,
-        author: book.book_authors.map(ba => ba.authors?.display_name).filter(Boolean).join(', '),
-        bans: [],
-      })
-    }
-    bookMap.get(book.id)!.bans.push({
-      countryCode: ban.country_code,
-      countryName: ban.countries?.name_en ?? ban.country_code,
-    })
-  }
-
-  const books = [...bookMap.values()].sort((a, b) => b.bans.length - a.bans.length)
+  const { books, banCount, countryTotals } = await getYearBooks(yearNum)
   const shownBooks = books.slice(0, LIST_CAP)
-
-  // One "🇺🇸 United States ×12" per country instead of repeating the country
-  // for every district-level ban.
-  const countryLine = (bans: BookEntry['bans']) => {
-    const byCode = new Map<string, { name: string; n: number }>()
-    for (const b of bans) {
-      const e = byCode.get(b.countryCode) ?? { name: b.countryName, n: 0 }
-      e.n++
-      byCode.set(b.countryCode, e)
-    }
-    return [...byCode.entries()]
-      .map(([code, { name, n }]) => `${countryFlag(code)} ${name}${n > 1 ? ` ×${n}` : ''}`)
-      .join(' · ')
-  }
-
-  // Group by country for the sidebar summary
-  const countryTotals = new Map<string, { name: string; count: number }>()
-  for (const ban of rawBans) {
-    const name = ban.countries?.name_en ?? ban.country_code
-    const code = ban.country_code
-    const entry = countryTotals.get(code) ?? { name, count: 0 }
-    entry.count++
-    countryTotals.set(code, entry)
-  }
-  const topCountries = [...countryTotals.entries()]
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 10)
+  const topCountries = countryTotals.slice(0, 10)
 
   // Prev / next year nav (only if within range)
   const prevYear = yearNum - 1 >= FIRST_YEAR ? yearNum - 1 : null
@@ -183,7 +89,7 @@ export default async function BannedBooksYearPage({
   const topCountryNames = topCountries.slice(0, 3).map(([, v]) => v.name)
   let yearLead: string | null = null
   if (books.length > 0) {
-    const head = `${books.length} ${books.length === 1 ? 'book had a documented ban' : 'books had documented bans'} starting in ${year}, across ${countryTotals.size} ${countryTotals.size === 1 ? 'country' : 'countries'} and totalling ${rawBans.length} ${rawBans.length === 1 ? 'ban' : 'bans'}`
+    const head = `${books.length} ${books.length === 1 ? 'book had a documented ban' : 'books had documented bans'} starting in ${year}, across ${countryTotals.length} ${countryTotals.length === 1 ? 'country' : 'countries'} and totalling ${banCount} ${banCount === 1 ? 'ban' : 'bans'}`
     yearLead = topCountryNames.length >= 2
       ? `${head}. The countries with the most documented bans were ${topCountryNames.join(', ')}.`
       : `${head}.`
@@ -214,7 +120,7 @@ export default async function BannedBooksYearPage({
   if (books.length > 0) {
     yearFaq.push({
       q: `How many books were banned in ${year}?`,
-      a: `${books.length} ${books.length === 1 ? 'book' : 'books'} in this catalogue had a documented ban starting in ${year}, with ${rawBans.length} total ${rawBans.length === 1 ? 'ban' : 'bans'} across ${countryTotals.size} ${countryTotals.size === 1 ? 'country' : 'countries'}.`,
+      a: `${books.length} ${books.length === 1 ? 'book' : 'books'} in this catalogue had a documented ban starting in ${year}, with ${banCount} total ${banCount === 1 ? 'ban' : 'bans'} across ${countryTotals.length} ${countryTotals.length === 1 ? 'country' : 'countries'}.`,
     })
   }
   if (topCountryNames.length >= 2) {
@@ -282,7 +188,7 @@ export default async function BannedBooksYearPage({
             Books banned in {year}.
           </h1>
           <p className="text-neutral-600 text-sm">
-            {books.length} {books.length === 1 ? 'book' : 'books'}, {rawBans.length} {rawBans.length === 1 ? 'ban' : 'bans'} documented
+            {books.length} {books.length === 1 ? 'book' : 'books'}, {banCount} {banCount === 1 ? 'ban' : 'bans'} documented
           </p>
         </div>
         <div className="flex items-center gap-3 text-sm shrink-0 mt-1">
@@ -310,55 +216,10 @@ export default async function BannedBooksYearPage({
         {/* Book list */}
         <div className="flex-1 min-w-0 divide-y divide-gray-100">
           {shownBooks.map((book, i) => (
-            <Link
-              key={book.id}
-              href={`/books/${book.slug}`}
-              className="flex items-center gap-4 py-3 group hover:bg-gray-50 -mx-3 px-3 rounded-lg transition-colors"
-            >
-              <span className="w-7 shrink-0 text-right text-xs tabular-nums text-gray-400 font-mono">
-                {i + 1}
-              </span>
-              <div className="shrink-0 w-9 h-12 rounded overflow-hidden bg-gray-100">
-                {book.cover_url ? (
-                  <Image
-                    src={book.cover_url}
-                    alt={coverAlt(book.title, book.author)}
-                    width={36}
-                    height={48}
-                    className="w-full h-full object-cover"
-                    sizes="36px"
-                  />
-                ) : (
-                  <BookCoverPlaceholder title={book.title} slug={book.slug} className="h-full" />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 leading-snug group-hover:underline truncate">
-                  {book.title}
-                </p>
-                {book.author && (
-                  <p className="text-xs text-gray-500 truncate">{book.author}</p>
-                )}
-                <p className="text-xs text-gray-400 mt-0.5 truncate">
-                  {countryLine(book.bans)}
-                </p>
-              </div>
-              <div className="shrink-0 text-right">
-                <span className="text-sm font-bold tabular-nums text-red-500">
-                  {book.bans.length}
-                </span>
-                <p className="text-xs text-gray-400">
-                  {book.bans.length === 1 ? 'ban' : 'bans'}
-                </p>
-              </div>
-            </Link>
+            <YearBookRow key={book.id} book={book} rank={i + 1} />
           ))}
           {books.length > shownBooks.length && (
-            <p className="pt-4 text-sm text-gray-500">
-              Showing the {shownBooks.length.toLocaleString('en')} most-banned of {books.length.toLocaleString('en')} books.
-              The full list is in the{' '}
-              <Link href="/dataset" className="text-brand hover:underline">open dataset</Link>.
-            </p>
+            <YearMoreBooks year={yearNum} shown={shownBooks.length} total={books.length} />
           )}
         </div>
 
