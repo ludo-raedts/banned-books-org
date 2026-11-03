@@ -91,6 +91,10 @@ const BUDGET = (() => {
 
 const CURSOR_FILE = 'data/gb-harvest-cursor.json'
 const OUT_FILE = 'data/gb-harvest-proposals.jsonl'
+// --ids-file runs have no cursor, and books GB has no data for stay orphans, so a
+// daily re-run would retry the same first ~900 forever. Ids attempted under
+// --ids-file are remembered here and skipped next time (delete to retry them).
+const IDS_TRIED_FILE = 'data/gb-harvest-ids-tried.json'
 const MIN_YEAR = 1400
 const MAX_YEAR = new Date().getFullYear() + 1
 const BOOK_DELAY_MS = 120
@@ -151,6 +155,8 @@ async function main() {
   // recovery, the one thing OL's exact-key path can't do for an orphan.
   const PAGE = 1000
   const books: BookRow[] = []
+  const tried = new Set<number>(IDS && fs.existsSync(IDS_TRIED_FILE) ? JSON.parse(fs.readFileSync(IDS_TRIED_FILE, 'utf8')) : [])
+  if (tried.size) console.log(`Skipping ${tried.size} id(s) already attempted in earlier --ids-file runs (${IDS_TRIED_FILE}).`)
   for (const chunk of idChunks(IDS)) {
   for (let from = chunk ? 0 : cursor.lastId; ; ) {
     let q = sb
@@ -168,7 +174,7 @@ async function main() {
     const { data, error } = await q
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
-    books.push(...(data as unknown as BookRow[]))
+    books.push(...(data as unknown as BookRow[]).filter(b => !tried.has(b.id)))
     from = data[data.length - 1].id
     if (data.length < PAGE) break
     if (books.length >= BUDGET * 3) break // plenty buffered; we cap by budget anyway
@@ -200,7 +206,10 @@ async function main() {
   // move past it: later books still get processed this run, but the next run
   // resumes from before the first unavailable one.
   let cursorFrozen = false
-  const advance = (id: number) => { if (!cursorFrozen) lastProcessedId = id }
+  const advance = (id: number) => {
+    if (IDS) tried.add(id)
+    if (!cursorFrozen) lastProcessedId = id
+  }
   let stoppedReason = 'budget/end'
 
   for (const book of books) {
@@ -354,6 +363,7 @@ async function main() {
 
   out.end()
   if (APPLY && !IDS) writeCursor({ lastId: lastProcessedId, pass: cursor.pass })
+  if (APPLY && IDS) fs.writeFileSync(IDS_TRIED_FILE, JSON.stringify([...tried]))
 
   console.log(`
 ── Summary ──────────────────────────────
