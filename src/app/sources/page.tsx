@@ -66,6 +66,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['everylibraryinstitute.org'],
       },
       {
+        name: 'Texas Freedom to Read Project — 2025–26 removal tracker',
+        url: 'https://www.txftrp.org/one_year_of_sb_12_and_sb_13',
+        description:
+          'Volunteer tracker of Texas school-library removals and restrictions in the 2025–26 school year under SB 12, SB 13 and HB 900, built from districts\' own public-information releases: each district × title row links the district record it comes from. PEN America credits the project\'s records requests. We count "removed from collection" as a ban and age/grade restrictions as restricted, following PEN\'s classification where the tracker records it.',
+        match: ['txftrp.org'],
+      },
+      {
         name: 'Freedom to Read (Canada)',
         url: 'https://www.freedomtoread.ca/challenged-works/',
         description:
@@ -154,6 +161,13 @@ const CATEGORIES: readonly Category[] = [
         description:
           'Post-2020 NSL-era list of books removed from Hong Kong public libraries, school libraries, ebook databases, and seized by Customs (CSD). Bilingual Han/Latin titles preserved natively.',
         match: ['Book_censorship_in_Hong_Kong'],
+      },
+      {
+        name: 'Wikipedia (Cantonese) — 香港被禁書刊一覽',
+        url: 'https://zh-yue.wikipedia.org/wiki/香港被禁書刊一覽',
+        description:
+          'The most current Hong Kong list (Cantonese Wikipedia), with per-title flags for public-library, school-library and e-library removals, Correctional Services bans and complaints. Used for 2024–2026 cases not yet on the English list: the national-security raids on independent bookshops, Hong Kong Book Fair exclusions and recent library complaints.',
+        match: ['zh-yue.wikipedia.org'],
       },
       {
         name: 'Wikipedia — List of books banned in New Zealand',
@@ -285,8 +299,8 @@ const CATEGORIES: readonly Category[] = [
         name: 'Malaysian Ministry of Home Affairs — KDN e-PQ register',
         url: 'https://epq.kdn.gov.my/e-pq/index.php?mod=public',
         description:
-          'Senarai Perintah Larangan — the official public register of publication-ban orders issued by the Ministry of Home Affairs (Kementerian Dalam Negeri) under the Printing Presses and Publications Act 1984 and its predecessors. ~3,200 entries 1950–present; each ban\'s gazette legal-notice ("L.N. 263", "P.U. (A) 410", etc.) is preserved as the per-row locator.',
-        match: ['epq.kdn.gov.my'],
+          'Senarai Perintah Larangan — the official public register of publication-ban orders issued by the Ministry of Home Affairs (Kementerian Dalam Negeri) under the Printing Presses and Publications Act 1984 and its predecessors. ~3,200 entries 1950–present; each ban\'s gazette legal-notice ("L.N. 263", "P.U. (A) 410", etc.) is preserved as the per-row locator. Revocation orders ("Pembatalan", via the federal gazette on mylaw.my) mark a ban as lifted.',
+        match: ['epq.kdn.gov.my', 'mylaw.my'],
       },
       {
         name: 'Indian Kanoon — court judgments',
@@ -315,6 +329,13 @@ const CATEGORIES: readonly Category[] = [
         description:
           'State-level US registry of books challenged or removed from Colorado public-school libraries.',
         match: ['cdhe.colorado.gov'],
+      },
+      {
+        name: 'Alberta school divisions — removals under the provincial school-library order',
+        url: 'https://docs.google.com/document/d/14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo/edit',
+        description:
+          'Alberta\'s ministerial order on school library materials required divisions to remove books with explicit visual depictions of sexual acts by January 2026. Edmonton Public Schools publishes its list of removed titles; Parkland School Division listed its removals in a report to its board. Mostly graphic novels.',
+        match: ['14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo', 'psd.ca/download'],
       },
       {
         name: 'Utah State Board of Education — Sensitive Materials Removed Statewide',
