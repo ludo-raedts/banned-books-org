@@ -1,6 +1,5 @@
-import Image from 'next/image'
 import Link from '@/components/link'
-import BookCoverPlaceholder from '@/components/book-cover-placeholder'
+import CoverThumb from '@/components/cover-thumb'
 import { coverAlt } from '@/lib/cover-alt'
 import type { YearBook } from '@/lib/year-books'
 
@@ -16,18 +15,15 @@ export default function YearBookRow({ book, rank }: { book: YearBook; rank: numb
         {rank}
       </span>
       <div className="shrink-0 w-9 h-12 rounded overflow-hidden bg-gray-100">
-        {book.cover_url ? (
-          <Image
-            src={book.cover_url}
-            alt={coverAlt(book.title, book.author)}
-            width={36}
-            height={48}
-            className="w-full h-full object-cover"
-            sizes="36px"
-          />
-        ) : (
-          <BookCoverPlaceholder title={book.title} slug={book.slug} className="h-full" />
-        )}
+        <CoverThumb
+          title={book.title}
+          slug={book.slug}
+          coverUrl={book.cover_url}
+          alt={coverAlt(book.title, book.author)}
+          width={36}
+          height={48}
+          sizes="36px"
+        />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-gray-900 leading-snug group-hover:underline truncate">
