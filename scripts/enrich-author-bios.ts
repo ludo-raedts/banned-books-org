@@ -78,6 +78,22 @@ interface WikiFullExtract {
 
 // ─── Wikipedia helpers ────────────────────────────────────────────────────────
 
+// Wikimedia throttles per User-Agent (HTTP 429). Treating that as "no page"
+// pinned every author of a throttled run in the skip cache (2026-11-05: all
+// 1,567 Texas-import authors), so back off, and if it persists throw instead —
+// the main loop does not cache errors and stops the run.
+export class WikiThrottled extends Error {}
+async function wikiFetch(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
+    if (res.status !== 429 && res.status !== 503) return res
+    if (attempt === 3) throw new WikiThrottled(`Wikipedia throttled (HTTP ${res.status})`)
+    const retryAfter = Number(res.headers.get('retry-after'))
+    await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 5000 * 2 ** attempt)
+  }
+}
+const rethrowThrottle = (e: unknown) => { if (e instanceof WikiThrottled) throw e }
+
 // Return up to 6 candidate page ids (was: only the top hit, srlimit=1). The
 // single-hit search was the root cause of same-name-wrong-person bios — for an
 // obscure author it returned the most-famous namesake (a footballer, singer,
@@ -86,11 +102,11 @@ interface WikiFullExtract {
 export async function searchWikipedia(name: string): Promise<number[]> {
   const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&format=json&srlimit=6`
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
+    const res = await wikiFetch(url)
     if (!res.ok) return []
     const data = await res.json() as WikiSearchResult
     return (data?.query?.search ?? []).map(h => h.pageid).filter((p): p is number => typeof p === 'number')
-  } catch { return [] }
+  } catch (e) { rethrowThrottle(e); return [] }
 }
 
 export async function fetchPageDetails(pageId: number): Promise<{
@@ -101,7 +117,7 @@ export async function fetchPageDetails(pageId: number): Promise<{
 }> {
   const url = `https://en.wikipedia.org/w/api.php?action=query&pageids=${pageId}&prop=extracts|pageimages|categories&exintro=true&exsentences=8&pithumbsize=400&pilicense=any&cllimit=50&format=json`
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
+    const res = await wikiFetch(url)
     if (!res.ok) return { title: '', extract: null, photo: null, categories: [] }
     const data = await res.json() as WikiPageResult
     const page = Object.values(data?.query?.pages ?? {})[0]
@@ -112,7 +128,7 @@ export async function fetchPageDetails(pageId: number): Promise<{
       photo: page.thumbnail?.source ?? null,
       categories: (page.categories ?? []).map(c => c.title),
     }
-  } catch { return { title: '', extract: null, photo: null, categories: [] } }
+  } catch (e) { rethrowThrottle(e); return { title: '', extract: null, photo: null, categories: [] } }
 }
 
 // Page id behind a stored Wikipedia bio_source_url (…/wiki/<Title>), or null.
@@ -120,11 +136,11 @@ export async function pageIdForUrl(url: string | null | undefined): Promise<numb
   const m = url?.match(/^https?:\/\/en\.wikipedia\.org\/wiki\/([^?#]+)/)
   if (!m) return null
   try {
-    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${m[1]}&redirects=1&format=json`, { headers: { 'User-Agent': WIKI_UA } })
+    const res = await wikiFetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${m[1]}&redirects=1&format=json`)
     const data = await res.json() as { query?: { pages?: Record<string, { pageid?: number }> } }
     const id = Object.values(data?.query?.pages ?? {})[0]?.pageid
     return typeof id === 'number' && id > 0 ? id : null
-  } catch { return null }
+  } catch (e) { rethrowThrottle(e); return null }
 }
 
 // Photos-only name gate (2026-10-20 leak): every token of the author's name
@@ -190,12 +206,12 @@ export const isCjkAuthor = (a: { original_language: string | null; name_native: 
 async function fetchFullExtract(pageId: number): Promise<string | null> {
   const url = `https://en.wikipedia.org/w/api.php?action=query&pageids=${pageId}&prop=extracts&format=json`
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': WIKI_UA } })
+    const res = await wikiFetch(url)
     if (!res.ok) return null
     const data = await res.json() as WikiFullExtract
     const page = Object.values(data?.query?.pages ?? {})[0]
     return page?.extract ?? null
-  } catch { return null }
+  } catch (e) { rethrowThrottle(e); return null }
 }
 
 // ─── Data extraction ──────────────────────────────────────────────────────────
@@ -764,6 +780,7 @@ async function main() {
     } catch (err) {
       console.error(`✗ ${author.display_name} — error: ${err instanceof Error ? err.message : String(err)}`)
       skipped++
+      if (err instanceof WikiThrottled) { console.error('Stopping: Wikipedia keeps throttling; re-run later.'); break }
     }
   }
 
