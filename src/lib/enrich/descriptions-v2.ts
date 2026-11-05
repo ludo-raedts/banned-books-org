@@ -690,7 +690,22 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
 
   // Build candidate query.
   let candidates: BookRow[] = []
-  {
+  if (opts.ids?.length) {
+    // Chunked: a few thousand ids in one .in() overflows the PostgREST URL
+    // (Bad Request). Rows that already have a description are left alone
+    // unless --overwrite, so a daily scoped run only picks up the gaps.
+    for (let i = 0; i < opts.ids.length; i += 300) {
+      let q = sb.from('books')
+        .select('id, slug, title, isbn13, description_book, description_source_type, openlibrary_work_id, data_quality_status, book_authors(authors(display_name))')
+        .eq('is_blanket_works', false)
+        .in('id', opts.ids.slice(i, i + 300))
+        .order('id', { ascending: true })
+      if (!opts.overwrite) q = q.is('description_book', null) as typeof q
+      const { data, error } = await q
+      if (error) throw new Error(`DB read: ${error.message}`)
+      candidates = candidates.concat((data ?? []) as unknown as BookRow[])
+    }
+  } else {
     let from = 0
     for (;;) {
       let q = sb.from('books')
@@ -700,8 +715,7 @@ export async function enrichDescriptionsV2(opts: EnrichDescriptionsV2Opts): Prom
         .eq('is_blanket_works', false)
         .order('id', { ascending: true })
         .range(from, from + 999)
-      if (opts.ids?.length) q = q.in('id', opts.ids) as typeof q
-      else if (opts.slug) q = q.eq('slug', opts.slug) as typeof q
+      if (opts.slug) q = q.eq('slug', opts.slug) as typeof q
       else if (opts.regroundUngrounded) {
         // Pre-v2 ungrounded synopses on ISBN-bearing rows.
         q = q.not('isbn13', 'is', null).is('description_source_type', null) as typeof q
