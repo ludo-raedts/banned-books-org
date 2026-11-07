@@ -517,6 +517,13 @@ async function main() {
   process.on('SIGINT', () => { saveCache(cache); console.log('\nInterrupted — cache saved.'); process.exit(130) })
 
   const supabase = adminClient()
+  const earliestBookYear = async (authorId: number): Promise<number | null> => {
+    const { data } = await supabase.from('book_authors')
+      .select('books(first_published_year)').eq('author_id', authorId)
+    const years = ((data ?? []) as unknown as { books: { first_published_year: number | null } | null }[])
+      .map(r => r.books?.first_published_year).filter((y): y is number => typeof y === 'number')
+    return years.length ? Math.min(...years) : null
+  }
 
   // Paginate the candidate set client-side so we can filter out cached
   // skipped IDs without blowing the URL length limit on `.not('id','in',...)`.
@@ -636,6 +643,15 @@ async function main() {
         // Same subject check as photos-only (whole tokens, surname last, middle initials).
         const fullNameMatch = subjectNamesAuthor(d.extract, author.display_name, isCjkAuthor(author))
         if (!fullNameMatch) continue
+        // Era guard: a same-name person born after our author's earliest book
+        // can't have written it before ~17 (Paul Schiller b.1903 vs a 1919 book,
+        // 2026-11-07; real outliers: Paolini and Hinton were 19 at publication).
+        const candBirth = extractYearFromCategories(d.categories, 'births')
+        const firstBook = candBirth === null ? null : await earliestBookYear(author.id)
+        if (candBirth !== null && firstBook !== null && firstBook < candBirth + 17) {
+          console.log(`  · ${author.display_name} — skip "${d.title}": born ${candBirth}, but our earliest book is ${firstBook}`)
+          continue
+        }
         // pageId MUST be set: without it bio_source_url became ?curid=undefined
         // and the full extract was fetched for page 'undefined' (162 authors, 2026-06-09→10-20).
         picked = { pageId: pid, ...d } // first candidate whose full name is the subject wins
