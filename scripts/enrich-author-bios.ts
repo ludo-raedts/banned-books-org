@@ -644,11 +644,12 @@ async function main() {
         const fullNameMatch = subjectNamesAuthor(d.extract, author.display_name, isCjkAuthor(author))
         if (!fullNameMatch) continue
         // Era guard: a same-name person born after our author's earliest book
-        // can't have written it before ~17 (Paul Schiller b.1903 vs a 1919 book,
-        // 2026-11-07; real outliers: Paolini and Hinton were 19 at publication).
+        // can't have written it before ~20 (Paul Schiller b.1903 vs a 1919 book;
+        // Michael Woods b.1983 vs a 2000 book). Costs the rare teen author (Paolini,
+        // Hinton: 19) a bio lookup — acceptable vs. a wrong person on the page.
         const candBirth = extractYearFromCategories(d.categories, 'births')
         const firstBook = candBirth === null ? null : await earliestBookYear(author.id)
-        if (candBirth !== null && firstBook !== null && firstBook < candBirth + 17) {
+        if (candBirth !== null && firstBook !== null && firstBook < candBirth + 20) {
           console.log(`  · ${author.display_name} — skip "${d.title}": born ${candBirth}, but our earliest book is ${firstBook}`)
           continue
         }
