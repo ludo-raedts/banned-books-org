@@ -59,7 +59,7 @@ import {
 } from '../src/lib/enrich/isbn'
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import { newPgClient } from '../src/lib/wikipedia/importer'
-import { loadPubYearCeilings, exceedsPubYearCeiling } from '../src/lib/enrich/pub-year-guard'
+import { loadPubYearCeilings, exceedsPubYearCeiling, loadPubYearFloors, belowPubYearFloor } from '../src/lib/enrich/pub-year-guard'
 import { idsFlag, idChunks } from './lib/cli'
 
 const APPLY = process.argv.includes('--apply')
@@ -159,6 +159,7 @@ async function main() {
   // later year (OL edition years on reprints; see fix-provably-wrong-pub-years.ts).
   const pg = newPgClient(); await pg.connect()
   const pubYearCeilings = await loadPubYearCeilings(pg)
+  const pubYearFloors = await loadPubYearFloors(pg)
   await pg.end()
   let yearsBlocked = 0
   const cursor = readCursor()
@@ -334,7 +335,7 @@ async function main() {
           .is('cover_url', null)
         if (!error) coversFilled++
       }
-      if (firstYear && exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear)) {
+      if (firstYear && (exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear) || belowPubYearFloor(pubYearFloors, book.id, firstYear))) {
         yearsBlocked++
       } else if (firstYear) {
         const { error } = await sb
@@ -373,7 +374,7 @@ async function main() {
       }
     } else {
       if (coverUrl) coversFilled++
-      if (firstYear && !exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear)) yearsFilled++
+      if (firstYear && !exceedsPubYearCeiling(pubYearCeilings, book.id, firstYear) && !belowPubYearFloor(pubYearFloors, book.id, firstYear)) yearsFilled++
       if (recoveredIsbn) isbnsFilled++
       if (backfillWorkId) workIdsFilled++
     }
@@ -390,7 +391,7 @@ async function main() {
   Processed:                      ${limit}${APPLY ? '' : ' (dry-run)'}
   Covers ${APPLY ? 'written' : 'findable'}:           ${coversFilled}
   Years ${APPLY ? 'written' : 'fillable'}:            ${yearsFilled}
-  Years blocked (after first US ban):   ${yearsBlocked}
+  Years blocked (after first US ban or before author age 15): ${yearsBlocked}
   ISBNs ${APPLY ? 'written' : 'recoverable'}:           ${isbnsFilled}${isbnDup ? ` (+${isbnDup} dup-collision)` : ''}
   work_id backfilled:             ${workIdsFilled}
   Skipped (title mismatch):       ${contaminated}

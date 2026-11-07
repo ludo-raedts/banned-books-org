@@ -27,3 +27,23 @@ export function exceedsPubYearCeiling(ceilings: Map<number, number>, bookId: num
   const c = ceilings.get(bookId)
   return c != null && year > c
 }
+
+// Lower bound: an author can't have published before ~15. Taken from the
+// youngest-born credited author with a known birth_year (min over a book's
+// authors would let an anthology's 19th-century contributor lower the floor).
+// OL's search index gave Kavalier & Clay (Chabon, b. 1963) "1957" (2026-11-07).
+export const PUB_YEAR_FLOOR_SQL = `
+  select ba.book_id, max(a.birth_year) + 15 as floor
+  from book_authors ba join authors a on a.id = ba.author_id
+  where a.birth_year is not null
+  group by ba.book_id`
+
+export async function loadPubYearFloors(pg: Client): Promise<Map<number, number>> {
+  const { rows } = await pg.query(PUB_YEAR_FLOOR_SQL)
+  return new Map(rows.map((r) => [Number(r.book_id), Number(r.floor)]))
+}
+
+export function belowPubYearFloor(floors: Map<number, number>, bookId: number, year: number): boolean {
+  const f = floors.get(bookId)
+  return f != null && year < f
+}
