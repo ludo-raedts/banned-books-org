@@ -48,6 +48,7 @@
  *   npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --apply         # write everything
  *   npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --apply --limit=500
  *   npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --reset-cursor  # start over from id 0
+ *   npx tsx --env-file=.env.local scripts/enrich-ol-harvest.ts --ids-file=data/txftrp/book-ids.json --apply  # one import, cursor untouched
  */
 import fs from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
@@ -59,9 +60,13 @@ import {
 import { isAllowedImageUrl } from '../src/lib/allowed-image-hosts'
 import { newPgClient } from '../src/lib/wikipedia/importer'
 import { loadPubYearCeilings, exceedsPubYearCeiling } from '../src/lib/enrich/pub-year-guard'
+import { idsFlag, idChunks } from './lib/cli'
 
 const APPLY = process.argv.includes('--apply')
 const RESET_CURSOR = process.argv.includes('--reset-cursor')
+// --ids-file / --ids: scope to these books (e.g. a fresh import); ignores and
+// never moves the cursor.
+const IDS = idsFlag()
 const LIMIT = (() => {
   const a = process.argv.find((x) => x.startsWith('--limit='))
   return a ? parseInt(a.split('=')[1], 10) : Number.POSITIVE_INFINITY
@@ -165,8 +170,9 @@ async function main() {
   // id beyond the cursor. The two .or() filters are ANDed by PostgREST.
   const PAGE = 1000
   const books: BookRow[] = []
-  for (let from = cursor.lastId; ; ) {
-    const { data, error } = await sb
+  for (const chunk of idChunks(IDS)) {
+  for (let from = chunk ? 0 : cursor.lastId; ; ) {
+    let q = sb
       .from('books')
       .select('id, slug, title, original_language, first_published_year, cover_url, cover_status, isbn13, openlibrary_work_id')
       .eq('is_blanket_works', false)
@@ -175,6 +181,8 @@ async function main() {
       .or('cover_url.is.null,first_published_year.is.null,isbn13.is.null')
       .order('id')
       .limit(PAGE)
+    if (chunk) q = q.in('id', chunk)
+    const { data, error } = await q
     if (error) throw new Error(`DB read: ${error.message}`)
     if (!data?.length) break
     books.push(...(data as unknown as BookRow[]))
@@ -182,10 +190,11 @@ async function main() {
     if (data.length < PAGE) break
     if (books.length >= 20000) break // plenty buffered
   }
+  }
 
   if (!books.length) {
     console.log('No eligible keyable books past the cursor — full pass complete. Wrapping cursor to 0.')
-    if (APPLY) writeCursor({ lastId: 0, pass: cursor.pass + 1 })
+    if (APPLY && !IDS) writeCursor({ lastId: 0, pass: cursor.pass + 1 })
     return
   }
 
@@ -260,6 +269,18 @@ async function main() {
       } else {
         coverId = needCover ? (firstPositive(work.covers) ?? edCover) : null
         firstYear = needYear ? parseYear(work.first_publish_date) : null
+        // Most work records carry no first_publish_date; OL's search index
+        // computes first_publish_year for the same work (sampled 14/15 right
+        // on the 2026-11-03 Texas import; the miss was a wrong work, which the
+        // title guard above already rejects).
+        if (needYear && firstYear == null) {
+          const hit = await fetchJson<{ docs?: { first_publish_year?: number }[] }>(
+            `https://openlibrary.org/search.json?q=key:/works/${workId}&fields=first_publish_year`,
+          )
+          await sleep(OL_DELAY_MS)
+          const y = hit?.docs?.[0]?.first_publish_year
+          if (typeof y === 'number' && y >= MIN_YEAR && y <= MAX_YEAR) firstYear = y
+        }
         subjects = work.subjects?.slice(0, 12) ?? []
         // Backfill the discovered work_id (isbn path only) now that it passed
         // both the edition- and work-title guards.
@@ -362,7 +383,7 @@ async function main() {
   }
 
   out.end()
-  if (APPLY) writeCursor({ lastId: lastProcessedId, pass: cursor.pass })
+  if (APPLY && !IDS) writeCursor({ lastId: lastProcessedId, pass: cursor.pass })
 
   console.log(`
 ── Summary ──────────────────────────────
