@@ -259,6 +259,68 @@ export const INSTITUTION_CONTEXTS: InstitutionContext[] = [
       { name: 'Little Village', url: 'https://littlevillagemag.com/every-book-removed-from-iowa-schools-so-far-in-response-to-sf-496/' },
     ],
   },
+  // ── Texas 2025–26 (TXFTRP tracker, 2026-11-07 research pass) ─────────────
+  // Roughly half of these districts' rows are age restrictions ("aged up" to a
+  // higher grade) rather than withdrawals, so entries say "removed or restricted".
+  {
+    institution: 'New Braunfels ISD',
+    region: 'Texas',
+    years: [2025, 2026],
+    text:
+      'After Texas Senate Bill 13 took effect in September 2025, the New Braunfels ISD board closed its middle and high school libraries on October 13, 2025, to review collections for "indecent, profane, or harmful" content, and reopened them later that month. The district said it flagged titles with internal review tools and third-party vendor resources. Records obtained by the Texas Freedom to Read Project show many titles were moved to older grade levels or restricted rather than withdrawn.',
+    sources: [
+      { name: 'Texas Public Radio', url: 'https://www.tpr.org/education/2025-10-14/new-braunfels-isd-closes-middle-school-high-school-libraries-to-review-collection' },
+      { name: 'Texas Public Radio', url: 'https://www.tpr.org/education/2025-10-24/new-braunfels-isd-to-reopen-middle-high-school-libraries-amid-book-reviews' },
+      { name: 'KSAT', url: 'https://www.ksat.com/news/local/2026/03/26/records-show-new-braunfels-isd-pulling-restricting-more-books-than-it-has-publicly-listed/' },
+    ],
+  },
+  {
+    institution: 'Schertz-Cibolo-Universal City ISD',
+    region: 'Texas',
+    years: [2025, 2026],
+    text:
+      "In September 2025 the Schertz-Cibolo-Universal City ISD board revised its library policy to comply with Texas Senate Bill 13, adding board approval and a public comment period for new titles. District records obtained by the Texas Freedom to Read Project show large numbers of titles removed from elementary, intermediate and junior-high collections in early 2026, most of them remaining available at higher grade levels.",
+    sources: [
+      { name: 'Community Impact', url: 'https://communityimpact.com/san-antonio/education/scucisd-board-updates-local-policy-for-library-collection-process/' },
+      { name: 'District records via TXFTRP', url: 'https://drive.google.com/drive/folders/12ugpGkQWMq3FZQrL__ApplCH61hPglOc?usp=sharing' },
+    ],
+  },
+  {
+    institution: 'Cypress-Fairbanks ISD',
+    region: 'Texas',
+    years: [2025, 2026],
+    text:
+      'Between August 2025 and January 2026, Cypress-Fairbanks ISD removed these titles from school libraries through internal review under its local selection criteria, according to district records compiled by the Texas Freedom to Read Project. In August 2025 the board revised its library policy to comply with new state law, adding "indecent" and "profane" content to prohibited material. PEN America counted 573 book bans in the district in 2025–26.',
+    sources: [
+      { name: 'Community Impact', url: 'https://communityimpact.com/cy-fair-jersey-village/education/cy-fair-isd-revises-pronoun-library-policies-following-direction-from-texas-legislature/' },
+      { name: 'Houston Chronicle', url: 'https://www.houstonchronicle.com/news/houston-texas/education/article/texas-records-8-000-school-book-bans-u-s-22464811.php' },
+    ],
+  },
+  {
+    // 421 of 422 rows are restrictions (moved to an older grade's library).
+    institution: 'McAllen ISD',
+    region: 'Texas',
+    years: [2025, 2025],
+    text:
+      'In fall 2025 McAllen ISD reviewed its library collections to comply with Texas HB 900 (2023) and SB 13 (2025). According to the district, librarians used vendor content tags, published reviews and AI-assisted analysis applying the Miller test to flag books they considered non-compliant or too mature for a grade level. Most flagged titles were moved to libraries serving older students rather than removed. PEN America cited the district’s AI prompts in its 2026 report.',
+    sources: [
+      { name: 'McAllen ISD', url: 'https://www.mcallenisd.org/page/library-book-review-process/' },
+      { name: 'PEN America', url: 'https://pen.org/report/book-bans-spotlight-2026/' },
+    ],
+  },
+  {
+    // The 2025 Conroe rows (via Magnusson) cite the district's "Titles Weeded
+    // for EMB Compliance" list; the list gives no per-title reason.
+    institution: 'Conroe Independent School District',
+    region: 'Texas',
+    years: [2025, 2025],
+    text:
+      'In fall 2025 Conroe ISD weeded titles from its libraries district-wide "in compliance with" Board Policy EMB(Local), which took effect in July 2025. The policy, adopted to implement Texas SB 12 (2025), restricts instruction and programming on sexual orientation and gender identity and bars "pornographic material" from library collections. The district publishes the list of weeded titles on its Library Services page without giving a reason for each one.',
+    sources: [
+      { name: 'Conroe ISD', url: 'https://www.conroeisd.net/page/library-services/' },
+      { name: 'Conroe ISD policy EMB(LOCAL)', url: 'https://policyconnect.org/policy/conroe-isd/EMB' },
+    ],
+  },
 ]
 
 type MatchableBan = { institution: string | null; region: string | null; year_started: number | null }

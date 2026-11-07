@@ -198,6 +198,19 @@ export const BAN_CONTEXTS: BanContext[] = [
       ],
     },
   },
+  {
+    // Sources (read 2026-11-07): Texas Legislature Online bill history + enrolled
+    // analysis for SB 12 / SB 13 (89R); txftrp.org/one_year_of_sb_12_and_sb_13.
+    // Deliberately no causal claim per book: TXFTRP itself reports most removals
+    // came from internal reviews, and some 2025 rows may predate Sept 1, 2025.
+    slug: 'texas-sb13-2025-26',
+    title: 'Texas school library removals under SB 12 and SB 13 (2025–26)',
+    badge: 'Texas · 2025–26 school year',
+    short:
+      'This title appears in the Texas Freedom to Read Project’s record of school library removals and restrictions in the 2025–26 school year, compiled from public information requests to Texas districts. That school year began under Senate Bills 12 and 13, in effect from September 1, 2025; SB 13 gives school boards approval over new library purchases and bars student access to a challenged book until the challenge is decided. The group reports that most removals followed internal reviews by administrators rather than formal challenges.',
+    hasHub: false,
+    match: { sourceUrlIncludes: ['txftrp.org'] },
+  },
 ]
 
 export function getBanContext(slug: string): BanContext | undefined {
