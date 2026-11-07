@@ -37,6 +37,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import sharp from 'sharp'
 import { adminClient } from '../src/lib/supabase'
 import { geminiCoverSearch } from '../src/lib/enrich/gemini-cover-search'
 import { openaiCoverSearch } from '../src/lib/enrich/openai-cover-search'
@@ -175,6 +176,19 @@ type ResultRow = {
   finalUrl: string | null
   outcome: 'ok' | 'unsure' | 'rejected' | 'no_match' | 'extract_failed' | 'mirror_failed' | 'error'
   notes: string
+}
+
+// Book covers are portrait. A landscape image is a seller's photo of a spine
+// or shelf, a site banner (LiveLib promo cards) or an article illustration —
+// the vision check let several through in the 2026-11-07 FR/RU/AR pilots.
+async function isLandscape(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url)
+    const { width, height } = await sharp(Buffer.from(await res.arrayBuffer())).metadata()
+    return width && height && width > height * 1.05 ? `${width}x${height}` : null
+  } catch {
+    return null
+  }
 }
 
 async function removeMirror(sb: ReturnType<typeof adminClient>, slug: string) {
@@ -319,6 +333,14 @@ async function processBook(c: Candidate): Promise<ResultRow> {
       if (mirrored) { active = cand; break }
     }
     if (!mirrored || !active) continue
+
+    const landscape = await isLandscape(mirrored.publicUrl)
+    if (landscape) {
+      notes.push(`${active.via}: landscape ${landscape}, not a cover`)
+      await removeMirror(sb, c.slug)
+      mirrored = null
+      continue
+    }
 
     // 4. Vision 2nd-opinion runs AGAINST THE MIRROR (OpenAI can always reach
     // our Supabase host; it often can't reach the blocked source CDNs).
