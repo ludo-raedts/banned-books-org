@@ -2,7 +2,7 @@
 
 Exact-normalised pairs: **0** (→ data/same-author-title-dupes.json, merge-ready)
 Spaceless pairs (NEW class, review-only): **2**
-Near pairs (review-only): **629**
+Near pairs (review-only): **514**
 
 ## EXACT (merge candidates)
 
@@ -23,7 +23,7 @@ Near pairs (review-only): **629**
   - #1485 "1984: The Graphic Novel" [1984-the-graphic-novel] isbn=9780358359920 yr=2021 cover=manual_override desc=y bans=7
 - one title is a prefix of the other
   - #9 "The Handmaid's Tale" [the-handmaids-tale] isbn=9781586635176 yr=1985 cover=manual_override desc=y bans=126
-  - #227 "The Handmaid's Tale: The Graphic Novel" [the-handmaids-tale-the-graphic-novel] isbn=9780385544856 yr=2019 cover=manual_override desc=y bans=54
+  - #227 "The Handmaid's Tale: The Graphic Novel" [the-handmaids-tale-the-graphic-novel] isbn=9780385544856 yr=2019 cover=manual_override desc=y bans=55
 - one title is a prefix of the other
   - #12 "Brave New World" [brave-new-world] isbn=9781521308578 yr=1932 cover=manual_override desc=y bans=48
   - #2036 "Brave New World: A Graphic Novel" [brave-new-world-a-graphic-novel] isbn=9780063055254 yr=2022 cover=valid desc=y bans=3
@@ -76,9 +76,6 @@ Near pairs (review-only): **629**
   - #1305 "Invisible Monsters Remix" [invisible-monsters-remix] isbn=9781448129768 yr=2012 cover=valid desc=y bans=7
   - #13551 "Invisible Monsters" [invisible-monsters] isbn=9780786162345 yr=1999 cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #8351 "Pastwatch: The Redemption of Christopher Columbus" [pastwatch-the-redemption-of-christopher-columbus] isbn=9780312850586 yr=1996 cover=– desc=y bans=1
-  - #26091 "Pastwatch" [pastwatch] isbn=9781433217203 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #192 "Tricks" [tricks] isbn=9781416950073 yr=2009 cover=valid desc=y bans=135
   - #27793 "Tricks /bk 10" [tricks-bk-10] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
@@ -103,7 +100,7 @@ Near pairs (review-only): **629**
   - #27407 "Miles Morales" [miles-morales] isbn=9780525527114 yr=– cover=valid desc=y bans=1
   - #27413 "Miles Morales shock waves: a Spider-Man graphic n" [miles-morales-shock-waves-a-spider-man-graphic-n] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #186 "Drama" [drama-telgemeier] isbn=9798855134667 yr=2012 cover=valid desc=y bans=18
+  - #186 "Drama" [drama-telgemeier] isbn=9798855134667 yr=2012 cover=valid desc=y bans=19
   - #1107 "Drama: A Graphic Novel" [drama-a-graphic-novel] isbn=9781443125222 yr=2012 cover=valid desc=y bans=57
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
@@ -113,10 +110,10 @@ Near pairs (review-only): **629**
   - #1153 "Assassination Classroom, Vol. 11" [assassination-classroom-vol-11] isbn=– yr=– cover=valid desc=y bans=8
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
-  - #1154 "Assassination Classroom, Vol. 2" [assassination-classroom-vol-2] isbn=– yr=– cover=valid desc=y bans=9
+  - #1154 "Assassination Classroom, Vol. 2" [assassination-classroom-vol-2] isbn=– yr=– cover=valid desc=y bans=10
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
-  - #1155 "Assassination Classroom, Vol. 3" [assassination-classroom-vol-3] isbn=9781421576091 yr=2015 cover=valid desc=y bans=9
+  - #1155 "Assassination Classroom, Vol. 3" [assassination-classroom-vol-3] isbn=9781421576091 yr=2015 cover=valid desc=y bans=10
 - one title is a prefix of the other
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
   - #1156 "Assassination Classroom, Vol. 4" [assassination-classroom-vol-4] isbn=9781518214028 yr=– cover=valid desc=y bans=10
@@ -169,38 +166,29 @@ Near pairs (review-only): **629**
   - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
   - #2659 "Assassination Classroom, Vol. 21" [assassination-classroom-vol-21] isbn=9781544402444 yr=– cover=– desc=y bans=5
 - one title is a prefix of the other
-  - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
-  - #25531 "Assassination classroom. 2, Time for grown-ups" [assassination-classroom-2-time-for-grown-ups] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #203 "Assassination Classroom" [assassination-classroom] isbn=9781421583235 yr=2016 cover=valid desc=y bans=11
-  - #25532 "Assassination classroom. 3, Time for a transfer student" [assassination-classroom-3-time-for-a-transfer-student] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
   - #2607 "Thirteen Plus One" [thirteen-plus-one] isbn=9780525422228 yr=2011 cover=valid desc=y bans=1
   - #25534 "Thirteen" [thirteen] isbn=9781429589857 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #24619 "Out of Oz: the final volume in the Wicked years" [out-of-oz-the-final-volume-in-the-wicked-years] isbn=9781461826514 yr=– cover=valid desc=y bans=1
+  - #24619 "Out of Oz: the final volume in the Wicked years" [out-of-oz-the-final-volume-in-the-wicked-years] isbn=9781461826514 yr=2011 cover=valid desc=y bans=1
   - #26645 "Out of Oz" [out-of-oz] isbn=9780063398375 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=36
-  - #2789 "A Game of Thrones: The Graphic Novel, Vol. 2" [a-game-of-thrones-the-graphic-novel-vol-2] isbn=9780007493043 yr=2012 cover=valid desc=y bans=4
+  - #2789 "A Game of Thrones: The Graphic Novel, Vol. 2" [a-game-of-thrones-the-graphic-novel-vol-2] isbn=9780007493043 yr=2012 cover=valid desc=y bans=7
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=36
-  - #2790 "A Game of Thrones: The Graphic Novel, Vol. 3" [a-game-of-thrones-the-graphic-novel-vol-3] isbn=9780593159705 yr=2014 cover=valid desc=y bans=4
+  - #2790 "A Game of Thrones: The Graphic Novel, Vol. 3" [a-game-of-thrones-the-graphic-novel-vol-3] isbn=9780593159705 yr=2014 cover=valid desc=y bans=6
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=36
-  - #2791 "A Game of Thrones: The Graphic Novel, Vol. 4" [a-game-of-thrones-the-graphic-novel-vol-4] isbn=9780345539717 yr=– cover=valid desc=y bans=4
+  - #2791 "A Game of Thrones: The Graphic Novel, Vol. 4" [a-game-of-thrones-the-graphic-novel-vol-4] isbn=9780345539717 yr=– cover=valid desc=y bans=5
 - one title is a prefix of the other
   - #255 "A Game of Thrones" [a-game-of-thrones] isbn=9780553897845 yr=1996 cover=valid desc=y bans=36
-  - #23868 "A Game of Thrones: The Graphic Novel, Vol. 1" [a-game-of-thrones-the-graphic-novel-vol-1] isbn=9780440423225 yr=– cover=valid desc=y bans=4
+  - #23868 "A Game of Thrones: The Graphic Novel, Vol. 1" [a-game-of-thrones-the-graphic-novel-vol-1] isbn=9780440423225 yr=– cover=valid desc=y bans=7
 - one title is a prefix of the other
   - #545 "Twilight" [twilight] isbn=9780606264693 yr=2005 cover=valid desc=y bans=11
   - #6060 "Twilight: The Graphic Novel" [twilight-the-graphic-novel] isbn=9781905654383 yr=2010 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #545 "Twilight" [twilight] isbn=9780606264693 yr=2005 cover=valid desc=y bans=11
   - #27797 "Twilight. Bk. 1" [twilight-bk-1] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #264 "The DUFF: Designated Ugly Fat Friend" [the-duff-designated-ugly-fat-friend] isbn=9781444927986 yr=2010 cover=valid desc=y bans=45
-  - #25529 "The Duff" [the-duff] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #270 "Juliet Takes a Breath" [juliet-takes-a-breath] isbn=9780593108192 yr=2016 cover=valid desc=y bans=38
   - #1704 "Juliet Takes a Breath: The Graphic Novel" [juliet-takes-a-breath-the-graphic-novel] isbn=9781684156115 yr=2021 cover=valid desc=y bans=5
@@ -215,7 +203,7 @@ Near pairs (review-only): **629**
   - #1139 "Heartstopper, Vol. 5" [heartstopper-vol-5] isbn=9781444957662 yr=2023 cover=rejected_placeholder desc=y bans=6
 - one title is a prefix of the other
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
-  - #1215 "Heartstopper, Vol. 2" [heartstopper-vol-2] isbn=9788682186021 yr=2019 cover=– desc=y bans=11
+  - #1215 "Heartstopper, Vol. 2" [heartstopper-vol-2] isbn=9788682186021 yr=2019 cover=– desc=y bans=13
 - one title is a prefix of the other
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
   - #1216 "Heartstopper, Vol. 4" [heartstopper-vol-4] isbn=9781338617566 yr=2021 cover=valid desc=y bans=10
@@ -229,21 +217,6 @@ Near pairs (review-only): **629**
   - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
   - #5290 "Heartstopper 1 (Spanish Edition)" [heartstopper-1-spanish-edition] isbn=9781338617511 yr=2018 cover=rejected_placeholder desc=y bans=2
 - one title is a prefix of the other
-  - #297 "Heartstopper" [heartstopper] isbn=9781444951387 yr=2018 cover=valid desc=y bans=9
-  - #13308 "Heartstopper Volume 2" [heartstopper-volume-2] isbn=9781444972443 yr=2019 cover=valid desc=y bans=2
-- one title is a prefix of the other
-  - #301 "Chosen" [chosen] isbn=9780312360306 yr=2008 cover=valid desc=y bans=26
-  - #25288 "Chosen: a House of Night Novel" [chosen-a-house-of-night-novel] isbn=– yr=– cover=valid desc=y bans=2
-- one title is a prefix of the other
-  - #1099 "Untamed" [untamed] isbn=9780312596309 yr=2008 cover=valid desc=y bans=13
-  - #26918 "Untamed: A House of Night Novel" [untamed-a-house-of-night-novel] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #1103 "Betrayed" [betrayed] isbn=9780312596293 yr=2007 cover=valid desc=y bans=10
-  - #24253 "Betrayed. The House of Night. Book 2" [betrayed-the-house-of-night-book-2] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #1103 "Betrayed" [betrayed] isbn=9780312596293 yr=2007 cover=valid desc=y bans=10
-  - #24848 "Betrayed: A House of Night Novel" [betrayed-a-house-of-night-novel] isbn=– yr=– cover=valid desc=y bans=2
-- one title is a prefix of the other
   - #7341 "House of Night (series)" [house-of-night-series] isbn=9780312360252 yr=2007 cover=valid desc=y bans=1
   - #9822 "House of Night" [house-of-night] isbn=9781250037237 yr=2007 cover=valid desc=y bans=1
 - one title is a prefix of the other
@@ -254,7 +227,7 @@ Near pairs (review-only): **629**
   - #9822 "House of Night" [house-of-night] isbn=9781250037237 yr=2007 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #8333 "Queen of Babble" [queen-of-babble] isbn=9780330418898 yr=2006 cover=– desc=y bans=3
-  - #24653 "Queen of Babble Gets Hitched" [queen-of-babble-gets-hitched] isbn=9781509827343 yr=– cover=valid desc=y bans=1
+  - #24653 "Queen of Babble Gets Hitched" [queen-of-babble-gets-hitched] isbn=9781509827343 yr=2008 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #345 "Blue Bloods" [blue-bloods] isbn=9780786838929 yr=2006 cover=valid desc=y bans=5
   - #5466 "Blue Bloods: The Graphic Novel" [blue-bloods-the-graphic-novel] isbn=9781423134473 yr=2013 cover=valid desc=y bans=1
@@ -349,9 +322,6 @@ Near pairs (review-only): **629**
   - #381 "Vampire Academy" [vampire-academy] isbn=9781955876407 yr=2007 cover=valid desc=y bans=25
   - #25290 "Vampire Academy Book 1" [vampire-academy-book-1] isbn=9780141387765 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
-  - #7667 "Bitterblue" [bitterblue] isbn=9780575097186 yr=2012 cover=– desc=y bans=8
-  - #24464 "Bitterblue: a Graceling realm book" [bitterblue-a-graceling-realm-book] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #419 "The Essential" [the-essential] isbn=9780810958081 yr=1998 cover=valid desc=y bans=1
   - #18472 "The Essential Edward Hopper" [the-essential-edward-hopper] isbn=9780810958036 yr=1998 cover=– desc=n bans=1
 - one title is a prefix of the other
@@ -375,9 +345,6 @@ Near pairs (review-only): **629**
 - one title is a prefix of the other
   - #452 "Spy x Family" [spy-x-family] isbn=9788419306593 yr=2020 cover=valid desc=y bans=1
   - #18319 "Spy x Family, Vol. 6" [spy-x-family-vol-6] isbn=9781974725137 yr=2021 cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #455 "You: A Novel of Dark Obsession" [you-a-novel-of-dark-obsession] isbn=9781471137358 yr=2014 cover=valid desc=y bans=7
-  - #26492 "You" [you] isbn=9788417834388 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #507 "Daughter of Smoke and Bone" [daughter-of-smoke-and-bone] isbn=9781444753424 yr=2011 cover=valid desc=y bans=5
   - #27116 "Daughter of smoke & bone /BK 1" [daughter-of-smoke-bone-bk-1] isbn=9781955876247 yr=– cover=– desc=y bans=1
@@ -493,10 +460,7 @@ Near pairs (review-only): **629**
   - #998 "Born a Crime" [born-a-crime] isbn=9781770105065 yr=2016 cover=valid desc=y bans=1
   - #1418 "Born a Crime: Stories from a South African Childhood" [born-a-crime-stories-from-a-south-african-childhood] isbn=9783641206437 yr=2016 cover=valid desc=y bans=6
 - one title is a prefix of the other
-  - #1235 "Eon: Dragoneye Reborn" [eon-dragoneye-reborn] isbn=9781409081951 yr=2008 cover=rejected_placeholder desc=y bans=5
-  - #24278 "Eon" [eon] isbn=9780552572088 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #1250 "Check, Please! Book 1: #Hockey" [hockey] isbn=9798855138139 yr=2018 cover=valid desc=y bans=11
+  - #1250 "Check, Please! Book 1: #Hockey" [hockey] isbn=9798855138139 yr=2018 cover=valid desc=y bans=12
   - #7625 "Check, Please!" [check-please] isbn=9781250177964 yr=2018 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #1257 "After Ever Happy" [after-ever-happy] isbn=9781501106415 yr=2015 cover=valid desc=y bans=4
@@ -508,12 +472,6 @@ Near pairs (review-only): **629**
   - #4474 "After We Fell" [after-we-fell] isbn=9781476792569 yr=2014 cover=valid desc=y bans=3
   - #23855 "After" [after-anna-todd] isbn=9781982111007 yr=– cover=valid desc=y bans=5
 - one title is a prefix of the other
-  - #9577 "Projekt 1065: A Novel of World War II" [projekt-1065-a-novel-of-world-war-ii] isbn=9781338050998 yr=2016 cover=– desc=y bans=1
-  - #27473 "Projekt 1065" [projekt-1065] isbn=9780545880169 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #25635 "Babe Conquers the World" [babe-conquers-the-world] isbn=9781629792194 yr=– cover=valid desc=y bans=1
-  - #27007 "Babe conquers the world: the legendary life of Babe" [babe-conquers-the-world-the-legendary-life-of-babe] isbn=9781590789810 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #1287 "Fairy Tail, Vol. 1" [fairy-tail-vol-1] isbn=9798888771464 yr=2006 cover=valid desc=y bans=5
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
 - one title is a prefix of the other
@@ -524,73 +482,58 @@ Near pairs (review-only): **629**
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24536 "Fairy Tail, Vol. 11" [fairy-tail-vol-11] isbn=9788545705970 yr=– cover=valid desc=y bans=1
+  - #24536 "Fairy Tail, Vol. 11" [fairy-tail-vol-11] isbn=9788545705970 yr=2008 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #24537 "Fairy Tail, Vol. 13" [fairy-tail-vol-13] isbn=9781612624839 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24538 "Fairy Tail, Vol. 14" [fairy-tail-vol-14] isbn=9788545706007 yr=– cover=valid desc=y bans=1
+  - #24538 "Fairy Tail, Vol. 14" [fairy-tail-vol-14] isbn=9788545706007 yr=2009 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #24539 "Fairy Tail, Vol. 15" [fairy-tail-vol-15] isbn=9788545706014 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24540 "Fairy Tail, Vol. 16" [fairy-tail-vol-16] isbn=9788545706021 yr=– cover=valid desc=y bans=1
+  - #24540 "Fairy Tail, Vol. 16" [fairy-tail-vol-16] isbn=9788545706021 yr=2009 cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #24541 "Fairy Tail, Vol. 17" [fairy-tail-vol-17] isbn=9788545706038 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24542 "Fairy Tail, Vol. 19" [fairy-tail-vol-19] isbn=9788545706052 yr=– cover=valid desc=y bans=1
+  - #24542 "Fairy Tail, Vol. 19" [fairy-tail-vol-19] isbn=9788545706052 yr=2010 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #24543 "Fairy Tail, Vol. 21" [fairy-tail-vol-21] isbn=9788545706076 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24544 "Fairy Tail, Vol. 22" [fairy-tail-vol-22] isbn=9788545706083 yr=– cover=valid desc=y bans=1
+  - #24544 "Fairy Tail, Vol. 22" [fairy-tail-vol-22] isbn=9788545706083 yr=2010 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #24545 "Fairy Tail, Vol. 23" [fairy-tail-vol-23] isbn=9788545706090 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24546 "Fairy Tail, Vol. 27" [fairy-tail-vol-27] isbn=9781612622699 yr=– cover=valid desc=y bans=1
+  - #24546 "Fairy Tail, Vol. 27" [fairy-tail-vol-27] isbn=9781612622699 yr=2012 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24547 "Fairy Tail, Vol. 3" [fairy-tail-vol-3] isbn=9798888771488 yr=– cover=– desc=y bans=1
+  - #24547 "Fairy Tail, Vol. 3" [fairy-tail-vol-3] isbn=9798888771488 yr=2024 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24548 "Fairy Tail, Vol. 7" [fairy-tail-vol-7] isbn=– yr=– cover=– desc=y bans=1
+  - #24548 "Fairy Tail, Vol. 7" [fairy-tail-vol-7] isbn=9781612621005 yr=2024 cover=– desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24549 "Fairy Tail, Vol. 9" [fairy-tail-vol-9] isbn=– yr=– cover=– desc=y bans=1
+  - #24549 "Fairy Tail, Vol. 9" [fairy-tail-vol-9] isbn=9781612622804 yr=2024 cover=– desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #24550 "Fairy Tail. 18" [fairy-tail-18] isbn=9781612620558 yr=– cover=valid desc=y bans=2
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25346 "Fairy Tail. 16" [fairy-tail-16] isbn=9783551796264 yr=– cover=valid desc=y bans=2
+  - #24550 "Fairy Tail. 18" [fairy-tail-18] isbn=9781612620558 yr=2010 cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #25820 "Fairy Tail 10" [fairy-tail-10] isbn=9781612622811 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25821 "Fairy Tail 11" [fairy-tail-11] isbn=9781612622828 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #25822 "Fairy Tail 12" [fairy-tail-12] isbn=9781646516933 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25823 "Fairy Tail 14" [fairy-tail-14] isbn=9781935429333 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25826 "Fairy Tail 19" [fairy-tail-19] isbn=9781612620565 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #25827 "Fairy Tail 20" [fairy-tail-20] isbn=9781612620572 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25828 "Fairy Tail 22" [fairy-tail-22] isbn=9781612620596 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #25829 "Fairy Tail 4" [fairy-tail-4] isbn=– yr=– cover=valid desc=y bans=1
@@ -599,16 +542,7 @@ Near pairs (review-only): **629**
   - #25830 "Fairy Tail 6" [fairy-tail-6] isbn=9781612620992 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25831 "Fairy Tail 7" [fairy-tail-7] isbn=9781612621005 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
   - #25832 "Fairy Tail 8" [fairy-tail-8] isbn=9781612621012 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #25833 "Fairy Tail 9" [fairy-tail-9] isbn=9781612622804 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7541 "Fairy Tail" [fairy-tail] isbn=9780345501332 yr=2008 cover=– desc=y bans=2
-  - #27889 "Fairy Tail 1" [fairy-tail-1] isbn=9788416905850 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #1294 "Gossip Girl: A Novel" [gossip-girl-a-novel-by-cecily-von-ziegesar] isbn=9780606254205 yr=2002 cover=valid desc=y bans=8
   - #9967 "Gossip Girl" [gossip-girl] isbn=9780329281489 yr=2002 cover=– desc=y bans=2
@@ -649,180 +583,6 @@ Near pairs (review-only): **629**
   - #2032 "Art That Changed the World: Transformative Art Movements and the Paintings That Inspired Them" [art-that-changed-the-world-transformative-art-movements-and-the-paintings-that-inspired-them] isbn=9781465421203 yr=2025 cover=valid desc=n bans=2
   - #17549 "Art That Changed the World" [art-that-changed-the-world] isbn=9781465414359 yr=2013 cover=– desc=y bans=1
 - one title is a prefix of the other
-  - #2034 "Attack on Titan (Series, Title Not Specified)" [attack-on-titan-series-title-not-specified] isbn=9781632367006 yr=2009 cover=rejected_placeholder desc=y bans=2
-  - #27868 "ATTACK ON TITAN SERIES" [attack-on-titan-series] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #2034 "Attack on Titan (Series, Title Not Specified)" [attack-on-titan-series-title-not-specified] isbn=9781632367006 yr=2009 cover=rejected_placeholder desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #3384 "Attack on Titan, Vol 2" [attack-on-titan-vol-2] isbn=9781612626161 yr=2012 cover=valid desc=y bans=9
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #5446 "Attack on Titan: Colossal Edition." [attack-on-titan-colossal-edition] isbn=9781632362957 yr=2024 cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24239 "Attack on Titan 1" [attack-on-titan-1] isbn=9781612620244 yr=– cover=valid desc=y bans=3
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24240 "Attack on Titan 10" [attack-on-titan-10] isbn=9789877243208 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24241 "Attack on Titan 11" [attack-on-titan-11] isbn=9781612626772 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24242 "Attack on Titan 12" [attack-on-titan-12] isbn=9789877243451 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24243 "Attack on Titan 3" [attack-on-titan-3] isbn=9781612620268 yr=– cover=valid desc=y bans=3
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24244 "Attack on Titan 4" [attack-on-titan-4] isbn=9783551742360 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24245 "Attack on Titan 5" [attack-on-titan-5] isbn=9781612626192 yr=– cover=valid desc=y bans=3
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24246 "Attack on Titan 6" [attack-on-titan-6] isbn=9781612622552 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24247 "Attack on Titan 7" [attack-on-titan-7] isbn=9781612626215 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24248 "Attack on Titan 8" [attack-on-titan-8] isbn=9781612626819 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24249 "Attack on Titan 9" [attack-on-titan-9] isbn=9781612625485 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #25632 "Attack on Titan. 34" [attack-on-titan-34] isbn=9784065234174 yr=– cover=valid desc=y bans=2
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26551 "Attack on Titan, Vol 1" [attack-on-titan-vol-1] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26552 "Attack on Titan, Vol 10" [attack-on-titan-vol-10] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26553 "Attack on Titan, Vol 11" [attack-on-titan-vol-11] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26554 "Attack on Titan, Vol 12" [attack-on-titan-vol-12] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26555 "Attack on Titan, Vol 13" [attack-on-titan-vol-13] isbn=9781646515653 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26556 "Attack on Titan, Vol 14" [attack-on-titan-vol-14] isbn=9781612626871 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26557 "Attack on Titan, Vol 15" [attack-on-titan-vol-15] isbn=9780606389556 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26558 "Attack on Titan, Vol 16" [attack-on-titan-vol-16] isbn=9781612628363 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26559 "Attack on Titan, Vol 17" [attack-on-titan-vol-17] isbn=9781632361127 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26560 "Attack on Titan, Vol 19" [attack-on-titan-vol-19] isbn=9781646514885 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26561 "Attack on Titan, Vol 3" [attack-on-titan-vol-3] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26562 "Attack on Titan, Vol 31" [attack-on-titan-vol-31] isbn=9781646514922 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26563 "Attack on Titan, Vol 34" [attack-on-titan-vol-34] isbn=9781646514939 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26564 "Attack on Titan, Vol 4" [attack-on-titan-vol-4] isbn=9781646513758 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26565 "Attack on Titan, Vol 5" [attack-on-titan-vol-5] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26566 "Attack on Titan, Vol 6" [attack-on-titan-vol-6] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26567 "Attack on Titan, Vol 7" [attack-on-titan-vol-7] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26568 "Attack on Titan, Vol 8" [attack-on-titan-vol-8] isbn=9781646514892 yr=– cover=– desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26569 "Attack on Titan, Vol 9" [attack-on-titan-vol-9] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26979 "Attack on Titan. 13" [attack-on-titan-13] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26980 "Attack on Titan. 14" [attack-on-titan-14] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26981 "Attack on Titan. 15" [attack-on-titan-15] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26982 "Attack on Titan. 16" [attack-on-titan-16] isbn=9781632361868 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26983 "Attack on Titan. 17" [attack-on-titan-17] isbn=9784063623031 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26984 "Attack on Titan. 18" [attack-on-titan-18] isbn=9780606389525 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26985 "Attack on Titan. 19" [attack-on-titan-19] isbn=9781632362599 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26986 "Attack on Titan. 20" [attack-on-titan-20] isbn=9781632364548 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26987 "Attack on Titan. 21" [attack-on-titan-21] isbn=9781632363275 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26988 "Attack on Titan. 22" [attack-on-titan-22] isbn=9781632364258 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26989 "Attack on Titan. 23" [attack-on-titan-23] isbn=9783551799432 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26990 "Attack on Titan. 24" [attack-on-titan-24] isbn=9783551799449 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26991 "Attack on Titan. 25" [attack-on-titan-25] isbn=9783551799456 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26992 "Attack on Titan. 26" [attack-on-titan-26] isbn=9781632366542 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26993 "Attack on Titan. 27" [attack-on-titan-27] isbn=9781632367174 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26994 "Attack on Titan. 28" [attack-on-titan-28] isbn=9781632367839 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26995 "Attack on Titan. 29" [attack-on-titan-29] isbn=9781632368287 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26996 "Attack on Titan. 30" [attack-on-titan-30] isbn=9781632369024 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26997 "Attack on Titan. 31" [attack-on-titan-31] isbn=9784065186893 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26998 "Attack on Titan. 32" [attack-on-titan-32] isbn=9784065203224 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26999 "Attack on Titan. 33" [attack-on-titan-33] isbn=9784065220290 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #27845 "Attack on Titan 2" [attack-on-titan-2] isbn=9781612620251 yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #27868 "ATTACK ON TITAN SERIES" [attack-on-titan-series] isbn=– yr=– cover=valid desc=y bans=1
-  - #27901 "Attack on Titan." [attack-on-titan] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #2060 "Age of Bronze, Vol. 1: A Thousand Ships" [age-of-bronze-vol-1-a-thousand-ships] isbn=9781534311640 yr=2000 cover=valid desc=y bans=3
   - #26529 "Age of Bronze." [age-of-bronze] isbn=9781582408453 yr=2001 cover=valid desc=y bans=1
 - one title is a prefix of the other
@@ -844,12 +604,6 @@ Near pairs (review-only): **629**
   - #2205 "BZRK" [bzrk] isbn=9781405259958 yr=2012 cover=valid desc=y bans=3
   - #2207 "BZRK Apocalypse" [bzrk-apocalypse] isbn=9781405263146 yr=2013 cover=valid desc=y bans=2
 - one title is a prefix of the other
-  - #24579 "Hunger: a Gone novel" [hunger-a-gone-novel] isbn=9788817040242 yr=– cover=valid desc=y bans=1
-  - #24989 "Hunger" [hunger] isbn=9780061449062 yr=2009 cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24647 "Plague: a Gone novel" [plague-a-gone-novel] isbn=– yr=– cover=valid desc=y bans=1
-  - #25069 "Plague" [plague] isbn=9780061449147 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #2544 "The Beginning of Everything: Everyone Gets a Tragedy" [the-beginning-of-everything-everyone-gets-a-tragedy] isbn=9781484433645 yr=2013 cover=valid desc=y bans=2
   - #7778 "The Beginning of Everything" [the-beginning-of-everything] isbn=9780062217158 yr=2013 cover=– desc=y bans=3
 - one title is a prefix of the other
@@ -863,10 +617,7 @@ Near pairs (review-only): **629**
   - #8569 "My Hero Academia, Vol. 30: Dabi's Dance" [my-hero-academia-vol-30-dabis-dance] isbn=9783551710970 yr=2023 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #23997 "Lawn Boy" [lawn-boy-paulsen] isbn=9780385746861 yr=2007 cover=valid desc=y bans=3
-  - #24222 "Lawn Boy Returns" [lawn-boy-returns] isbn=9780545398145 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24218 "Flat Broke: The Theory, Practice and Destructive Properties of Greed" [flat-broke-the-theory-practice-and-destructive-properties-of-greed] isbn=– yr=– cover=valid desc=y bans=1
-  - #27214 "Flat Broke" [flat-broke] isbn=9780545558280 yr=– cover=valid desc=y bans=1
+  - #24222 "Lawn Boy Returns" [lawn-boy-returns] isbn=9780545398145 yr=2010 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #2774 "The Magic Misfits" [the-magic-misfits] isbn=9780316419864 yr=2017 cover=valid desc=y bans=1
   - #2775 "The Magic Misfits: The Minor Third" [the-magic-misfits-the-minor-third] isbn=9780316426244 yr=2019 cover=valid desc=y bans=1
@@ -880,14 +631,8 @@ Near pairs (review-only): **629**
   - #3068 "Golden Boy: Blue-Eyed Boy or Girl Next Door" [golden-boy-blue-eyed-boy-or-girl-next-door] isbn=9780297868996 yr=2013 cover=valid desc=y bans=4
   - #18895 "Golden Boy" [golden-boy] isbn=9780297868972 yr=2013 cover=– desc=y bans=3
 - one title is a prefix of the other
-  - #24957 "Fallen in Love" [fallen-in-love] isbn=9780385742627 yr=– cover=valid desc=y bans=1
+  - #24957 "Fallen in Love" [fallen-in-love] isbn=9780385742627 yr=– cover=valid desc=y bans=2
   - #25834 "Fallen" [fallen] isbn=9780385738934 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24957 "Fallen in Love" [fallen-in-love] isbn=9780385742627 yr=– cover=valid desc=y bans=1
-  - #25835 "Fallen in love: a Fallen novel in stories" [fallen-in-love-a-fallen-novel-in-stories] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #25834 "Fallen" [fallen] isbn=9780385738934 yr=– cover=valid desc=y bans=1
-  - #25835 "Fallen in love: a Fallen novel in stories" [fallen-in-love-a-fallen-novel-in-stories] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #3400 "InuYasha Vol. 1" [inuyasha-vol-1] isbn=9788418963391 yr=1996 cover=valid desc=y bans=2
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
@@ -953,7 +698,7 @@ Near pairs (review-only): **629**
   - #26622 "InuYasha, Vol. 2" [inuyasha-vol-2] isbn=9781591162391 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27314 "InuYasha ani-manga Vol. 1. Vol. 1" [inuyasha-ani-manga-vol-1-vol-1] isbn=9781591162025 yr=– cover=valid desc=y bans=1
+  - #27314 "InuYasha ani-manga Vol. 1. Vol. 1" [inuyasha-ani-manga-vol-1-vol-1] isbn=9781591162025 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
   - #27315 "InuYasha ani-manga Vol. 10. Vol. 10" [inuyasha-ani-manga-vol-10-vol-10] isbn=9781591168591 yr=– cover=rejected_placeholder desc=y bans=1
@@ -962,55 +707,55 @@ Near pairs (review-only): **629**
   - #27316 "InuYasha ani-manga Vol. 11. Vol. 11" [inuyasha-ani-manga-vol-11-vol-11] isbn=9781421500225 yr=– cover=rejected_placeholder desc=y bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27317 "InuYasha ani-manga Vol. 2. Vol. 2" [inuyasha-ani-manga-vol-2-vol-2] isbn=9781591167976 yr=– cover=valid desc=y bans=1
+  - #27317 "InuYasha ani-manga Vol. 2. Vol. 2" [inuyasha-ani-manga-vol-2-vol-2] isbn=9781591167976 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
   - #27318 "InuYasha ani-manga Vol. 27. Vol. 27" [inuyasha-ani-manga-vol-27-vol-27] isbn=9781421516851 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27319 "InuYasha ani-manga Vol. 3. Vol. 3" [inuyasha-ani-manga-vol-3-vol-3] isbn=9781591163183 yr=– cover=valid desc=y bans=1
+  - #27319 "InuYasha ani-manga Vol. 3. Vol. 3" [inuyasha-ani-manga-vol-3-vol-3] isbn=9781591163183 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27320 "InuYasha ani-manga Vol. 5. Vol. 5" [inuyasha-ani-manga-vol-5-vol-5] isbn=– yr=– cover=valid desc=y bans=1
+  - #27320 "InuYasha ani-manga Vol. 5. Vol. 5" [inuyasha-ani-manga-vol-5-vol-5] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27321 "InuYasha ani-manga Vol. 7. Vol. 7" [inuyasha-ani-manga-vol-7-vol-7] isbn=9781591166122 yr=– cover=valid desc=y bans=1
+  - #27321 "InuYasha ani-manga Vol. 7. Vol. 7" [inuyasha-ani-manga-vol-7-vol-7] isbn=9781591166122 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27322 "InuYasha ani-manga Vol. 9. Vol. 9" [inuyasha-ani-manga-vol-9-vol-9] isbn=– yr=– cover=– desc=y bans=1
+  - #27322 "InuYasha ani-manga Vol. 9. Vol. 9" [inuyasha-ani-manga-vol-9-vol-9] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
   - #27323 "InuYasha ani-manga Vol.4. Vol. 4" [inuyasha-ani-manga-vol-4-vol-4] isbn=9781591164623 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27324 "InuYasha ani-manga Vol.6. Vol. 6" [inuyasha-ani-manga-vol-6-vol-6] isbn=9781591165941 yr=– cover=valid desc=y bans=1
+  - #27324 "InuYasha ani-manga Vol.6. Vol. 6" [inuyasha-ani-manga-vol-6-vol-6] isbn=9781591165941 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27325 "InuYasha ani-manga Vol.8. Vol. 8" [inuyasha-ani-manga-vol-8-vol-8] isbn=– yr=– cover=– desc=y bans=1
+  - #27325 "InuYasha ani-manga Vol.8. Vol. 8" [inuyasha-ani-manga-vol-8-vol-8] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27326 "InuYasha ani-manga. Vol. 23" [inuyasha-ani-manga-vol-23] isbn=– yr=– cover=rejected_placeholder desc=y bans=1
+  - #27326 "InuYasha ani-manga. Vol. 23" [inuyasha-ani-manga-vol-23] isbn=– yr=– cover=rejected_placeholder desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27327 "InuYasha ani-manga. Vol. 25" [inuyasha-ani-manga-vol-25] isbn=9781421515236 yr=– cover=valid desc=y bans=1
+  - #27327 "InuYasha ani-manga. Vol. 25" [inuyasha-ani-manga-vol-25] isbn=9781421515236 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
   - #27328 "InuYasha ani-manga. Vol. 26" [inuyasha-ani-manga-vol-26] isbn=9781421516844 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27329 "InuYasha ani-manga. Vol. 28" [inuyasha-ani-manga-vol-28] isbn=9781421516868 yr=– cover=– desc=y bans=1
+  - #27329 "InuYasha ani-manga. Vol. 28" [inuyasha-ani-manga-vol-28] isbn=9781421516868 yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27330 "InuYasha ani-manga. Vol. 29" [inuyasha-ani-manga-vol-29] isbn=9781421516875 yr=– cover=– desc=y bans=1
+  - #27330 "InuYasha ani-manga. Vol. 29" [inuyasha-ani-manga-vol-29] isbn=9781421516875 yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7549 "InuYasha" [inuyasha] isbn=9781591165927 yr=1998 cover=– desc=y bans=2
-  - #27331 "InuYasha ani-manga. Vol. 30" [inuyasha-ani-manga-vol-30] isbn=– yr=– cover=rejected_placeholder desc=y bans=1
+  - #27331 "InuYasha ani-manga. Vol. 30" [inuyasha-ani-manga-vol-30] isbn=– yr=– cover=rejected_placeholder desc=n bans=1
 - one title is a prefix of the other
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
   - #26648 "Ranma 1/2, Vol. 10" [ranma-1-2-vol-10] isbn=9781417658305 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
-  - #26649 "Ranma 1/2, Vol. 6" [ranma-1-2-vol-6] isbn=9781569311370 yr=– cover=valid desc=y bans=1
+  - #26649 "Ranma 1/2, Vol. 6" [ranma-1-2-vol-6] isbn=9781569311370 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
   - #26650 "Ranma 1/2, Vol. 12" [ranma-1-2-vol-12] isbn=– yr=– cover=valid desc=y bans=1
@@ -1025,7 +770,7 @@ Near pairs (review-only): **629**
   - #26653 "Ranma 1/2, Vol. 17" [ranma-1-2-vol-17] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
-  - #26654 "Ranma 1/2, Vol. 3" [ranma-1-2-vol-3] isbn=9781417658350 yr=– cover=valid desc=y bans=1
+  - #26654 "Ranma 1/2, Vol. 3" [ranma-1-2-vol-3] isbn=9781417658350 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7597 "Ranma 1/2" [ranma-1-2] isbn=9781637997307 yr=2015 cover=valid desc=y bans=1
   - #26655 "Ranma 1/2, Vol. 4" [ranma-1-2-vol-4] isbn=9781421566177 yr=– cover=valid desc=y bans=1
@@ -1034,7 +779,7 @@ Near pairs (review-only): **629**
   - #26656 "Ranma 1/2, Vol. 5" [ranma-1-2-vol-5] isbn=9781591160649 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
-  - #27304 "Inu Yasha ani-manga Vol. 13. Vol. 13" [inu-yasha-ani-manga-vol-13-vol-13] isbn=9781421502526 yr=– cover=valid desc=y bans=1
+  - #27304 "Inu Yasha ani-manga Vol. 13. Vol. 13" [inu-yasha-ani-manga-vol-13-vol-13] isbn=9781421502526 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
   - #27305 "Inu Yasha ani-manga Vol. 14. Vol. 14" [inu-yasha-ani-manga-vol-14-vol-14] isbn=9781415668009 yr=– cover=– desc=y bans=1
@@ -1043,16 +788,16 @@ Near pairs (review-only): **629**
   - #27306 "Inu Yasha ani-manga Vol. 17. Vol. 17" [inu-yasha-ani-manga-vol-17-vol-17] isbn=9781415698389 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
-  - #27307 "Inu Yasha ani-manga Vol. 18. Vol. 18" [inu-yasha-ani-manga-vol-18-vol-18] isbn=– yr=– cover=– desc=y bans=1
+  - #27307 "Inu Yasha ani-manga Vol. 18. Vol. 18" [inu-yasha-ani-manga-vol-18-vol-18] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
-  - #27308 "Inu Yasha ani-manga Vol. 24. Vol. 24" [inu-yasha-ani-manga-vol-24-vol-24] isbn=9781415591765 yr=– cover=valid desc=y bans=1
+  - #27308 "Inu Yasha ani-manga Vol. 24. Vol. 24" [inu-yasha-ani-manga-vol-24-vol-24] isbn=9781415591765 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
   - #27309 "Inu Yasha ani-manga Vol.15. Vol. 15" [inu-yasha-ani-manga-vol-15-vol-15] isbn=9781435221185 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
-  - #27310 "Inu Yasha ani-manga Vol.16. Vol. 16" [inu-yasha-ani-manga-vol-16-vol-16] isbn=9781421504834 yr=– cover=valid desc=y bans=1
+  - #27310 "Inu Yasha ani-manga Vol.16. Vol. 16" [inu-yasha-ani-manga-vol-16-vol-16] isbn=9781421504834 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
   - #27311 "Inu Yasha ani-manga. Vol. 19" [inu-yasha-ani-manga-vol-19] isbn=– yr=– cover=– desc=y bans=1
@@ -1061,7 +806,7 @@ Near pairs (review-only): **629**
   - #27312 "Inu Yasha ani-manga. Vol. 20" [inu-yasha-ani-manga-vol-20] isbn=9781428724921 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7632 "Inu-Yasha: Ani-Manga" [inu-yasha-ani-manga] isbn=9781428718968 yr=2004 cover=valid desc=y bans=1
-  - #27313 "Inu Yasha ani-manga. Vol. 22" [inu-yasha-ani-manga-vol-22] isbn=– yr=– cover=– desc=y bans=1
+  - #27313 "Inu Yasha ani-manga. Vol. 22" [inu-yasha-ani-manga-vol-22] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #3401 "Locke & Key, Vol. 1: Welcome to Lovecraft" [locke-key-vol-1-welcome-to-lovecraft] isbn=9781631409462 yr=2008 cover=valid desc=y bans=2
   - #7593 "Locke & Key" [locke-key] isbn=9780195805703 yr=2008 cover=valid desc=y bans=2
@@ -1120,9 +865,6 @@ Near pairs (review-only): **629**
   - #3674 "Fever Crumb" [fever-crumb] isbn=9780545222150 yr=2009 cover=valid desc=y bans=2
   - #27186 "Fever Crumb/ Bk. 1" [fever-crumb-bk-1] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
-  - #3901 "Shabanu: Daughter of the Wind" [shabanu-daughter-of-the-wind] isbn=9780606302388 yr=1989 cover=valid desc=y bans=1
-  - #25436 "Shabanu" [shabanu] isbn=9780833551542 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #4008 "The Titan's Curse" [the-titans-curse] isbn=9781423101482 yr=2007 cover=valid desc=y bans=3
   - #27750 "The Titan's Curse: The Graphic Novel" [the-titans-curse-the-graphic-novel] isbn=9798855113129 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
@@ -1157,7 +899,7 @@ Near pairs (review-only): **629**
   - #23919 "Bleach: Volume 21" [bleach-volume-21] isbn=9788483578599 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #4515 "Descender" [descender] isbn=9781632158789 yr=2015 cover=rejected_placeholder desc=y bans=2
-  - #24500 "Descender. The deluxe edition. Volume 1" [descender-the-deluxe-edition-volume-1] isbn=9781534303461 yr=– cover=valid desc=y bans=1
+  - #24500 "Descender. The deluxe edition. Volume 1" [descender-the-deluxe-edition-volume-1] isbn=9781534303461 yr=2017 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #4515 "Descender" [descender] isbn=9781632158789 yr=2015 cover=rejected_placeholder desc=y bans=2
   - #24501 "Descender. Book one, Tin stars" [descender-book-one-tin-stars] isbn=– yr=– cover=– desc=y bans=1
@@ -1204,9 +946,6 @@ Near pairs (review-only): **629**
   - #7592 "Jojo's Bizarre Adventure" [jojos-bizarre-adventure] isbn=9781421510811 yr=2008 cover=– desc=y bans=2
   - #24598 "JoJo's bizarre adventure. Part 4, Diamond is unbreakable. 3" [jojos-bizarre-adventure-part-4-diamond-is-unbreakable-3] isbn=9781974714414 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #25264 "Vanish" [vanish] isbn=9780061935107 yr=– cover=valid desc=y bans=1
-  - #27806 "Vanish: A Firelight Novel" [vanish-a-firelight-novel] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #4615 "Monument 14" [monument-14] isbn=9781444914726 yr=2012 cover=valid desc=y bans=4
   - #4617 "Monument 14: Savage Drift" [monument-14-savage-drift] isbn=– yr=2014 cover=valid desc=y bans=3
 - one title is a prefix of the other
@@ -1229,10 +968,10 @@ Near pairs (review-only): **629**
   - #26538 "Attack on Titan: Before the Fall, Vol. 13" [attack-on-titan-before-the-fall-vol-13] isbn=9781642121711 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26539 "Attack on Titan: Before the Fall, Vol. 15" [attack-on-titan-before-the-fall-vol-15] isbn=9781612629131 yr=– cover=valid desc=y bans=1
+  - #26539 "Attack on Titan: Before the Fall, Vol. 15" [attack-on-titan-before-the-fall-vol-15] isbn=9781612629131 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26540 "Attack on Titan: Before the Fall, Vol. 3" [attack-on-titan-before-the-fall-vol-3] isbn=9781612629155 yr=– cover=valid desc=y bans=1
+  - #26540 "Attack on Titan: Before the Fall, Vol. 3" [attack-on-titan-before-the-fall-vol-3] isbn=9781612629155 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
   - #26541 "Attack on Titan: Before the Fall, Vol. 1" [attack-on-titan-before-the-fall-vol-1] isbn=9781642125887 yr=– cover=valid desc=y bans=1
@@ -1241,7 +980,7 @@ Near pairs (review-only): **629**
   - #26542 "Attack on Titan: Before the Fall, Vol. 16" [attack-on-titan-before-the-fall-vol-16] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26543 "Attack on Titan: Before the Fall, Vol. 2" [attack-on-titan-before-the-fall-vol-2] isbn=– yr=– cover=valid desc=y bans=1
+  - #26543 "Attack on Titan: Before the Fall, Vol. 2" [attack-on-titan-before-the-fall-vol-2] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
   - #26544 "Attack on Titan: Before the Fall, Vol. 4" [attack-on-titan-before-the-fall-vol-4] isbn=9781612628370 yr=– cover=valid desc=y bans=1
@@ -1250,7 +989,7 @@ Near pairs (review-only): **629**
   - #26545 "Attack on Titan: Before the Fall, Vol. 5" [attack-on-titan-before-the-fall-vol-5] isbn=9781612628387 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26546 "Attack on Titan: Before the Fall, Vol. 6" [attack-on-titan-before-the-fall-vol-6] isbn=9781682330319 yr=– cover=valid desc=y bans=1
+  - #26546 "Attack on Titan: Before the Fall, Vol. 6" [attack-on-titan-before-the-fall-vol-6] isbn=9781682330319 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
   - #26547 "Attack on Titan: Before the Fall, Vol. 7" [attack-on-titan-before-the-fall-vol-7] isbn=9781682332498 yr=– cover=valid desc=y bans=1
@@ -1259,7 +998,7 @@ Near pairs (review-only): **629**
   - #26548 "Attack on Titan: Before the Fall, Vol. 8" [attack-on-titan-before-the-fall-vol-8] isbn=9781682333761 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26549 "Attack on Titan: Before the Fall, Vol. 9" [attack-on-titan-before-the-fall-vol-9] isbn=– yr=– cover=valid desc=y bans=1
+  - #26549 "Attack on Titan: Before the Fall, Vol. 9" [attack-on-titan-before-the-fall-vol-9] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
   - #26550 "Attack on Titan: Before the Fall, Vol. 10" [attack-on-titan-before-the-fall-vol-10] isbn=9783646716597 yr=– cover=valid desc=y bans=1
@@ -1271,7 +1010,7 @@ Near pairs (review-only): **629**
   - #26571 "Attack on Titan: Before the Fall, Vol. 14" [attack-on-titan-before-the-fall-vol-14] isbn=9781642124132 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #5445 "Attack on Titan: Before the Fall" [attack-on-titan-before-the-fall] isbn=9781632368294 yr=2011 cover=valid desc=y bans=1
-  - #26572 "Attack on Titan: Before the Fall, Vol. 17" [attack-on-titan-before-the-fall-vol-17] isbn=– yr=– cover=valid desc=y bans=1
+  - #26572 "Attack on Titan: Before the Fall, Vol. 17" [attack-on-titan-before-the-fall-vol-17] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #5488 "Cirque du Freak: The Manga, Vol. 1" [cirque-du-freak-the-manga-vol-1] isbn=9781975320058 yr=2008 cover=valid desc=y bans=2
   - #25317 "Cirque Du Freak" [cirque-du-freak] isbn=9780316066976 yr=– cover=valid desc=y bans=1
@@ -1285,17 +1024,8 @@ Near pairs (review-only): **629**
   - #5971 "The Girl of Fire and Thorns" [the-girl-of-fire-and-thorns] isbn=9781464049378 yr=2011 cover=valid desc=y bans=2
   - #27656 "The Girl of Fire and Thorns Stories" [the-girl-of-fire-and-thorns-stories] isbn=9780062334336 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #25329 "Drowned City" [drowned-city] isbn=9780544673052 yr=– cover=valid desc=y bans=1
-  - #27158 "Drowned city: Hurricane Katrina & New Orleans" [drowned-city-hurricane-katrina-new-orleans] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #6010 "The Summer of Jordi Perez (And the Best Burger in Los Angeles)" [the-summer-of-jordi-perez-and-the-best-burger-in-los-angeles] isbn=9781510727663 yr=2018 cover=valid desc=y bans=1
   - #17601 "The Summer of Jordi Perez" [the-summer-of-jordi-perez] isbn=9781982501242 yr=2018 cover=– desc=y bans=2
-- one title is a prefix of the other
-  - #24394 "Kissing Ted Callahan" [kissing-ted-callahan] isbn=9781484480823 yr=– cover=valid desc=y bans=1
-  - #26624 "Kissing Ted Callahan (and other guys)" [kissing-ted-callahan-and-other-guys] isbn=9780316371513 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #17604 "Black Boy Joy: 17 Stories Celebrating Black Boyhood" [black-boy-joy-17-stories-celebrating-black-boyhood] isbn=9780593379967 yr=2021 cover=– desc=y bans=2
-  - #25311 "Black Boy Joy" [black-boy-joy] isbn=– yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #6248 "How the Red Sun Rose" [how-the-red-sun-rose] isbn=9789629968229 yr=2000 cover=rejected_placeholder desc=y bans=1
   - #6679 "How the Red Sun Rose: The Origins and Development of the Yan'an Rectification Movement, 1930-1945" [how-the-red-sun-rose-the-origins-and-development-of-the-yanan-rectification-movement-1930-1945] isbn=– yr=– cover=valid desc=y bans=1
@@ -1340,13 +1070,13 @@ Near pairs (review-only): **629**
   - #13473 "Tokyo Ghoul: zakki" [tokyo-ghoul-zakki] isbn=9781421596921 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #24808 "Tokyo Ghoul, Vol 11" [tokyo-ghoul-vol-11] isbn=9781421595764 yr=– cover=valid desc=y bans=2
+  - #24808 "Tokyo Ghoul, Vol 11" [tokyo-ghoul-vol-11] isbn=9781421595764 yr=– cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #24809 "Tokyo Ghoul, Vol 13" [tokyo-ghoul-vol-13] isbn=9781421597973 yr=– cover=valid desc=y bans=2
+  - #24809 "Tokyo Ghoul, Vol 13" [tokyo-ghoul-vol-13] isbn=9781421597973 yr=– cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #24810 "Tokyo Ghoul, Vol 14" [tokyo-ghoul-vol-14] isbn=9781421598956 yr=– cover=valid desc=y bans=2
+  - #24810 "Tokyo Ghoul, Vol 14" [tokyo-ghoul-vol-14] isbn=9781421598956 yr=– cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
   - #24811 "Tokyo Ghoul, Vol. 3" [tokyo-ghoul-vol-3] isbn=9781421580388 yr=– cover=valid desc=y bans=1
@@ -1364,7 +1094,7 @@ Near pairs (review-only): **629**
   - #24815 "Tokyo Ghoul., Vol 1" [tokyo-ghoul-vol-1] isbn=9781421582986 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #24816 "Tokyo Ghoul., Vol 10" [tokyo-ghoul-vol-10] isbn=9781421594804 yr=– cover=valid desc=y bans=1
+  - #24816 "Tokyo Ghoul., Vol 10" [tokyo-ghoul-vol-10] isbn=9781421594804 yr=– cover=valid desc=y bans=3
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
   - #24817 "Tokyo Ghoul., Vol 2" [tokyo-ghoul-vol-2] isbn=9781421584102 yr=– cover=valid desc=y bans=2
@@ -1373,22 +1103,7 @@ Near pairs (review-only): **629**
   - #24818 "Tokyo Ghoul., Vol 8" [tokyo-ghoul-vol-8] isbn=9781421592046 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #25246 "Tokyo Ghoul. 10" [tokyo-ghoul-10] isbn=– yr=– cover=valid desc=y bans=2
-- one title is a prefix of the other
-  - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #25247 "Tokyo Ghoul. 11" [tokyo-ghoul-11] isbn=– yr=– cover=rejected_placeholder desc=y bans=1
-- one title is a prefix of the other
-  - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #25248 "Tokyo Ghoul. 12" [tokyo-ghoul-12] isbn=9781974700370 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #25249 "Tokyo Ghoul. 13" [tokyo-ghoul-13] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #25250 "Tokyo Ghoul. 14" [tokyo-ghoul-14] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
-  - #26701 "Tokyo Ghoul, Vol 12" [tokyo-ghoul-vol-12] isbn=– yr=– cover=valid desc=y bans=1
+  - #26701 "Tokyo Ghoul, Vol 12" [tokyo-ghoul-vol-12] isbn=9781974700370 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7232 "Tokyo Ghoul" [tokyo-ghoul] isbn=9781421580364 yr=2011 cover=valid desc=y bans=8
   - #26702 "Tokyo Ghoul, Vol 15" [tokyo-ghoul-vol-15] isbn=9782331041365 yr=– cover=valid desc=y bans=1
@@ -1409,46 +1124,46 @@ Near pairs (review-only): **629**
   - #25377 "Jujutsu kaisen. 1,Ryomen Sukuna (Jujutsu Kaisen, Book 1) (ENTIRE SERIES ADULT)" [jujutsu-kaisen-1-ryomen-sukuna-jujutsu-kaisen-book-1-entire-series-adult] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24325 "Parasyte 1" [parasyte-1] isbn=– yr=– cover=valid desc=y bans=1
+  - #24325 "Parasyte 1" [parasyte-1] isbn=– yr=2007 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24326 "Parasyte 3" [parasyte-3] isbn=9780345498250 yr=– cover=– desc=y bans=1
+  - #24326 "Parasyte 3" [parasyte-3] isbn=9780345498250 yr=2008 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24327 "Parasyte 4" [parasyte-4] isbn=9780345498267 yr=– cover=– desc=y bans=1
+  - #24327 "Parasyte 4" [parasyte-4] isbn=9780345498267 yr=2008 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24328 "Parasyte 5" [parasyte-5] isbn=9780345500335 yr=– cover=– desc=y bans=1
+  - #24328 "Parasyte 5" [parasyte-5] isbn=9780345500335 yr=2008 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24329 "Parasyte 6" [parasyte-6] isbn=9781892213679 yr=– cover=valid desc=y bans=1
+  - #24329 "Parasyte 6" [parasyte-6] isbn=9781892213679 yr=2001 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
   - #24330 "Parasyte 7" [parasyte-7] isbn=9798888776698 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7546 "Parasyte" [parasyte] isbn=9780345496249 yr=2007 cover=– desc=y bans=2
-  - #24331 "Parasyte 8" [parasyte-8] isbn=9780345500366 yr=– cover=– desc=y bans=1
+  - #24331 "Parasyte 8" [parasyte-8] isbn=9780345500366 yr=2009 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #26358 "The Struggle" [the-struggle] isbn=9788408099215 yr=1995 cover=valid desc=y bans=1
   - #26359 "The Struggle & The Awakening" [the-struggle-the-awakening] isbn=9781417825998 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24262 "Chainsaw Man, Vol. 01" [chainsaw-man-vol-01] isbn=9798897223787 yr=– cover=– desc=y bans=1
+  - #24262 "Chainsaw Man, Vol. 01" [chainsaw-man-vol-01] isbn=9798897223787 yr=2023 cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24263 "Chainsaw Man, Vol. 10, 10" [chainsaw-man-vol-10-10] isbn=9788467947991 yr=– cover=valid desc=y bans=1
+  - #24263 "Chainsaw Man, Vol. 10, 10" [chainsaw-man-vol-10-10] isbn=9788467947991 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24264 "Chainsaw Man, Vol. 4" [chainsaw-man-vol-4] isbn=9788467944174 yr=– cover=valid desc=y bans=1
+  - #24264 "Chainsaw Man, Vol. 4" [chainsaw-man-vol-4] isbn=9788467944174 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24265 "Chainsaw Man, Vol. 5" [chainsaw-man-vol-5] isbn=9781974728107 yr=– cover=valid desc=y bans=1
+  - #24265 "Chainsaw Man, Vol. 5" [chainsaw-man-vol-5] isbn=9781974728107 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24266 "Chainsaw Man, Vol. 6" [chainsaw-man-vol-6] isbn=9781974720712 yr=– cover=valid desc=y bans=1
+  - #24266 "Chainsaw Man, Vol. 6" [chainsaw-man-vol-6] isbn=9781974720712 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7590 "Chainsaw Man" [chainsaw-man] isbn=9781974709939 yr=2019 cover=– desc=y bans=1
-  - #24267 "Chainsaw Man, Vol. 8, 8" [chainsaw-man-vol-8-8] isbn=9788380969308 yr=– cover=valid desc=y bans=1
+  - #24267 "Chainsaw Man, Vol. 8, 8" [chainsaw-man-vol-8-8] isbn=9788380969308 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
   - #17606 "Black Butler, Vol. 29" [black-butler-vol-29] isbn=9781975314903 yr=2020 cover=valid desc=y bans=2
@@ -1460,10 +1175,10 @@ Near pairs (review-only): **629**
   - #25662 "Black Butler III" [black-butler-iii] isbn=9781975366445 yr=– cover=– desc=y bans=2
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #26576 "Black Butler, Vol. 12" [black-butler-vol-12] isbn=9780316225342 yr=– cover=valid desc=y bans=1
+  - #26576 "Black Butler, Vol. 12" [black-butler-vol-12] isbn=9780316225342 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #26577 "Black Butler, Vol. 13" [black-butler-vol-13] isbn=9780316237116 yr=– cover=valid desc=y bans=1
+  - #26577 "Black Butler, Vol. 13" [black-butler-vol-13] isbn=9780316237116 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
   - #26578 "Black Butler, Vol. 14" [black-butler-vol-14] isbn=9780316237123 yr=– cover=valid desc=y bans=1
@@ -1475,25 +1190,22 @@ Near pairs (review-only): **629**
   - #26580 "Black Butler, Vol. 1" [black-butler-vol-1] isbn=9780316236973 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #26581 "Black Butler, Vol. 3" [black-butler-vol-3] isbn=9780316237000 yr=– cover=valid desc=y bans=1
+  - #26581 "Black Butler, Vol. 3" [black-butler-vol-3] isbn=9780316237000 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #26582 "Black Butler, Vol. 9" [black-butler-vol-9] isbn=9780316189675 yr=– cover=valid desc=y bans=1
+  - #26582 "Black Butler, Vol. 9" [black-butler-vol-9] isbn=9780316189675 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #27030 "Black butler. IV" [black-butler-iv] isbn=– yr=– cover=– desc=y bans=1
+  - #27030 "Black Butler, Vol. 4" [black-butler-vol-4] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #27031 "Black butler. IX" [black-butler-ix] isbn=– yr=– cover=– desc=y bans=1
+  - #27032 "Black Butler, Vol. 6" [black-butler-vol-6] isbn=– yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #27032 "Black butler. VI" [black-butler-vi] isbn=– yr=– cover=– desc=y bans=1
+  - #27033 "Black Butler, Vol. 7" [black-butler-vol-7] isbn=9780316189637 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #27033 "Black butler. VII" [black-butler-vii] isbn=9780316189637 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #7602 "Black Butler" [black-butler] isbn=9780316080842 yr=2010 cover=– desc=y bans=5
-  - #27034 "Black butler. VIII" [black-butler-viii] isbn=– yr=– cover=– desc=y bans=1
+  - #27034 "Black Butler, Vol. 8" [black-butler-vol-8] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #7606 "Case Closed" [case-closed] isbn=9781421562759 yr=2007 cover=– desc=y bans=2
   - #25691 "Case Closed Vol. 41" [case-closed-vol-41] isbn=9781421536071 yr=– cover=valid desc=y bans=1
@@ -1577,7 +1289,7 @@ Near pairs (review-only): **629**
   - #24035 "Gender Equality and Identity Rights" [gender-equality-and-identity-rights] isbn=9781422236291 yr=– cover=– desc=n bans=2
 - one title is a prefix of the other
   - #7622 "Black Clover" [black-clover] isbn=9781974727186 yr=2021 cover=– desc=y bans=2
-  - #24254 "Black Clover, Vol. 27, 27" [black-clover-vol-27-27] isbn=9781974725144 yr=– cover=valid desc=y bans=1
+  - #24254 "Black Clover, Vol. 27, 27" [black-clover-vol-27-27] isbn=9781974725144 yr=2021 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7622 "Black Clover" [black-clover] isbn=9781974727186 yr=2021 cover=– desc=y bans=2
   - #27035 "Black clover. 7, The magic knight captain conference" [black-clover-7-the-magic-knight-captain-conference] isbn=– yr=– cover=– desc=y bans=1
@@ -1612,29 +1324,17 @@ Near pairs (review-only): **629**
   - #7827 "Champion" [champion] isbn=9780141339627 yr=2013 cover=– desc=y bans=2
   - #27076 "Champion (Legend #3)" [champion-legend-3] isbn=9798897220960 yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
-  - #7828 "Prodigy" [prodigy] isbn=9781629230108 yr=2012 cover=– desc=y bans=2
-  - #27472 "Prodigy: a Legend novel" [prodigy-a-legend-novel] isbn=9780515157772 yr=– cover=– desc=n bans=1
-- one title is a prefix of the other
   - #7916 "Crave" [crave] isbn=9781640638969 yr=2020 cover=– desc=y bans=2
   - #25725 "Crave, Book 5" [crave-book-5] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #7990 "The Librarian of Auschwitz" [the-librarian-of-auschwitz] isbn=9781250842992 yr=2017 cover=– desc=y bans=3
   - #8584 "The Librarian of Auschwitz: The Graphic Novel" [the-librarian-of-auschwitz-the-graphic-novel] isbn=9781529088878 yr=2017 cover=– desc=y bans=1
 - one title is a prefix of the other
-  - #8300 "Darkthaw" [darkthaw] isbn=9781419716638 yr=2015 cover=– desc=y bans=1
-  - #24494 "Darkthaw: a Winterkill novel" [darkthaw-a-winterkill-novel] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #8372 "The Selection" [the-selection] isbn=9780062059949 yr=2012 cover=– desc=y bans=2
   - #8373 "The Selection Stories: The Prince and The Guard" [the-selection-stories-the-prince-and-the-guard] isbn=9780008106089 yr=2014 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #9424 "The Women of Brewster Place: A Novel in Seven Stories" [the-women-of-brewster-place-a-novel-in-seven-stories] isbn=9780453008662 yr=1982 cover=– desc=y bans=1
   - #26380 "The Women of Brewster Place" [the-women-of-brewster-place] isbn=– yr=1999 cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #9471 "Gulp: Adventures on the Alimentary Canal" [gulp-adventures-on-the-alimentary-canal] isbn=9780393081572 yr=2013 cover=– desc=y bans=1
-  - #26787 "Gulp" [gulp] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #9569 "The Watsons Go To Birmingham - 1963" [the-watsons-go-to-birmingham-1963] isbn=9781632451361 yr=1963 cover=valid desc=y bans=2
-  - #27770 "The Watsons Go to Birmingham" [the-watsons-go-to-birmingham] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #13340 "Things I Wanted To Say" [things-i-wanted-to-say] isbn=9781649376718 yr=– cover=valid desc=y bans=1
   - #13341 "Things I Wanted To Say but never did" [things-i-wanted-to-say-but-never-did] isbn=9781945522307 yr=2021 cover=valid desc=y bans=1
@@ -1693,15 +1393,6 @@ Near pairs (review-only): **629**
   - #10151 "Death Note" [death-note] isbn=9781415661055 yr=2005 cover=– desc=y bans=2
   - #10152 "Death Note: Black Edition" [death-note-black-edition] isbn=9781421539645 yr=2010 cover=– desc=y bans=1
 - one title is a prefix of the other
-  - #24915 "Claire" [claire] isbn=9780316032889 yr=– cover=valid desc=y bans=1
-  - #27087 "Claire: a Clique novel" [claire-a-clique-novel] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #25031 "Massie" [massie] isbn=9780316032100 yr=– cover=valid desc=y bans=1
-  - #27389 "Massie: a Clique novel" [massie-a-clique-novel] isbn=– yr=– cover=– desc=y bans=1
-- one title is a prefix of the other
-  - #10261 "Educated: A Memoir" [educated-a-memoir] isbn=9781443452489 yr=2018 cover=– desc=y bans=1
-  - #25797 "Educated" [educated] isbn=9789722533799 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #16510 "Friedrich Engels: A Biography" [friedrich-engels-a-biography] isbn=9783658342784 yr=– cover=valid desc=y bans=1
   - #22457 "Friedrich Engels" [friedrich-engels] isbn=9788437501598 yr=1934 cover=valid desc=y bans=1
 - one title is a prefix of the other
@@ -1748,64 +1439,52 @@ Near pairs (review-only): **629**
   - #16339 "Spanding Illustrated" [spanding-illustrated] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #25320 "D. Gray-Man Vol 2 (D. Gray Man, Book 2)" [d-gray-man-vol-2-d-gray-man-book-2] isbn=9781421547862 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #25321 "D. Gray-Man Vol. 6 (D.Gray Man Book 6)" [d-gray-man-vol-6-d-gray-man-book-6] isbn=9781421510545 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26593 "D. Gray-Man, Vol. 8" [d-gray-man-vol-8] isbn=9781421548159 yr=– cover=valid desc=y bans=1
+  - #26593 "D. Gray-Man, Vol. 8" [d-gray-man-vol-8] isbn=9781421548159 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26594 "D. Gray-Man, Vol. 1" [d-gray-man-vol-1] isbn=9784088736914 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26595 "D. Gray-Man, Vol. 11" [d-gray-man-vol-11] isbn=9781421519982 yr=– cover=– desc=y bans=1
+  - #26595 "D. Gray-Man, Vol. 11" [d-gray-man-vol-11] isbn=9781421519982 yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26596 "D. Gray-Man, Vol. 10" [d-gray-man-vol-10] isbn=9781421515434 yr=– cover=valid desc=y bans=1
+  - #26596 "D. Gray-Man, Vol. 10" [d-gray-man-vol-10] isbn=9781421515434 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26597 "D. Gray-Man, Vol. 12" [d-gray-man-vol-12] isbn=9781421523897 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26598 "D. Gray-Man, Vol. 13" [d-gray-man-vol-13] isbn=9781421506241 yr=– cover=valid desc=y bans=1
+  - #26598 "D. Gray-Man, Vol. 13" [d-gray-man-vol-13] isbn=9781421506241 yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26599 "D. Gray-Man, Vol. 14" [d-gray-man-vol-14] isbn=– yr=– cover=valid desc=y bans=1
+  - #26599 "D. Gray-Man, Vol. 14" [d-gray-man-vol-14] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26600 "D. Gray-Man, Vol. 15" [d-gray-man-vol-15] isbn=9781421527741 yr=– cover=– desc=y bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26601 "D. Gray-Man, Vol. 18" [d-gray-man-vol-18] isbn=9781421535432 yr=– cover=– desc=y bans=1
+  - #26601 "D. Gray-Man, Vol. 18" [d-gray-man-vol-18] isbn=9781421535432 yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26602 "D. Gray-Man, Vol. 2" [d-gray-man-vol-2] isbn=9784088737607 yr=– cover=valid desc=y bans=1
+  - #26602 "D. Gray-Man, Vol. 2" [d-gray-man-vol-2] isbn=9784088737607 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26603 "D. Gray-Man, Vol. 3" [d-gray-man-vol-3] isbn=9781421547879 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26604 "D. Gray-Man, Vol. 4" [d-gray-man-vol-4] isbn=– yr=– cover=valid desc=y bans=1
+  - #26604 "D. Gray-Man, Vol. 4" [d-gray-man-vol-4] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26605 "D. Gray-Man, Vol. 5" [d-gray-man-vol-5] isbn=9784088738321 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26606 "D. Gray-Man, Vol. 6" [d-gray-man-vol-6] isbn=– yr=– cover=valid desc=y bans=1
+  - #26606 "D. Gray-Man, Vol. 6" [d-gray-man-vol-6] isbn=9781421510545 yr=– cover=valid desc=y bans=2
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
-  - #26607 "D. Gray-Man, Vol. 7" [d-gray-man-vol-7] isbn=– yr=– cover=valid desc=y bans=1
+  - #26607 "D. Gray-Man, Vol. 7" [d-gray-man-vol-7] isbn=– yr=– cover=valid desc=n bans=1
 - one title is a prefix of the other
   - #17701 "D. Gray-Man" [d-gray-man] isbn=9781421510538 yr=2023 cover=valid desc=y bans=2
   - #26608 "D. Gray-Man, Vol. 9" [d-gray-man-vol-9] isbn=9781421537733 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #25320 "D. Gray-Man Vol 2 (D. Gray Man, Book 2)" [d-gray-man-vol-2-d-gray-man-book-2] isbn=9781421547862 yr=– cover=valid desc=y bans=1
-  - #26602 "D. Gray-Man, Vol. 2" [d-gray-man-vol-2] isbn=9784088737607 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #25321 "D. Gray-Man Vol. 6 (D.Gray Man Book 6)" [d-gray-man-vol-6-d-gray-man-book-6] isbn=9781421510545 yr=– cover=valid desc=y bans=1
-  - #26606 "D. Gray-Man, Vol. 6" [d-gray-man-vol-6] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #17842 "Girls from Da Hood" [girls-from-da-hood] isbn=9781893196506 yr=2006 cover=– desc=y bans=1
   - #17844 "Girls from Da Hood 2" [girls-from-da-hood-2] isbn=9781601620422 yr=2005 cover=– desc=y bans=1
@@ -1816,9 +1495,6 @@ Near pairs (review-only): **629**
   - #18529 "Lola Loves Stories" [lola-loves-stories] isbn=9781580892582 yr=2010 cover=– desc=y bans=1
   - #18531 "Lola Loves Stories with Daddy" [lola-loves-stories-with-daddy] isbn=9781623541804 yr=2020 cover=– desc=y bans=1
 - one title is a prefix of the other
-  - #18647 "Gideon the Ninth" [gideon-the-ninth] isbn=9781250246110 yr=2019 cover=– desc=y bans=1
-  - #25874 "Gideon" [gideon] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #19692 "Chiropraktik oder Das menschliche Rückgrat als Träger u. Ursache von Gesundheit u. Krankheit" [chiropraktik-oder-das-menschliche-ruckgrat-als-trager-u-ursache-von-gesundheit-u-krankheit] isbn=– yr=1934 cover=– desc=n bans=1
   - #22118 "Chiropraktik" [chiropraktik] isbn=– yr=1935 cover=– desc=n bans=1
 - one title is a prefix of the other
@@ -1828,11 +1504,8 @@ Near pairs (review-only): **629**
   - #22932 "Ho Chi Minh" [ho-chi-minh] isbn=– yr=– cover=valid desc=y bans=1
   - #22933 "Ho Chi Minh/Habib Burguiba" [ho-chi-minh-habib-burguiba] isbn=– yr=– cover=– desc=n bans=1
 - one title is a prefix of the other
-  - #24027 "Fairest: A Memoir" [fairest-a-memoir] isbn=– yr=– cover=valid desc=n bans=1
-  - #24410 "Fairest" [fairest] isbn=9780525561323 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #24291 "Humans" [humans] isbn=9781466847552 yr=– cover=valid desc=y bans=1
-  - #24292 "Humans of New York" [humans-of-new-york] isbn=– yr=– cover=valid desc=y bans=1
+  - #24291 "Humans" [humans] isbn=9781466847552 yr=2013 cover=valid desc=n bans=1
+  - #24292 "Humans of New York" [humans-of-new-york] isbn=– yr=2013 cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #25495 "The Tell-tale Heart" [the-tell-tale-heart] isbn=9781717510211 yr=1976 cover=valid desc=y bans=1
   - #26364 "The Tell Tale Heart & Other Writings" [the-tell-tale-heart-other-writings] isbn=9780451521743 yr=– cover=valid desc=y bans=1
@@ -1840,10 +1513,10 @@ Near pairs (review-only): **629**
   - #26275 "The Fall of the House of Usher" [the-fall-of-the-house-of-usher] isbn=9786257966887 yr=1965 cover=valid desc=y bans=1
   - #26276 "The Fall of the House of Usher & Other Tales" [the-fall-of-the-house-of-usher-other-tales] isbn=9781101066553 yr=1968 cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #24510 "Dr. Stone. 1, Stone world" [dr-stone-1-stone-world] isbn=9788380967403 yr=– cover=– desc=y bans=1
+  - #24510 "Dr. Stone. 1, Stone world" [dr-stone-1-stone-world] isbn=9788380967403 yr=– cover=– desc=n bans=1
   - #26508 "Dr. Stone." [dr-stone] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #24511 "Dr. Stone. 11, First contact" [dr-stone-11-first-contact] isbn=9781974714797 yr=– cover=valid desc=y bans=1
+  - #24511 "Dr. Stone. 11, First contact" [dr-stone-11-first-contact] isbn=9781974714797 yr=2020 cover=valid desc=y bans=1
   - #26508 "Dr. Stone." [dr-stone] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #24512 "Dr. Stone. 16, Medusa vs. science" [dr-stone-16-medusa-vs-science] isbn=– yr=– cover=– desc=y bans=1
@@ -1852,7 +1525,7 @@ Near pairs (review-only): **629**
   - #24513 "Dr. Stone. 2, Two kingdoms of the stone world" [dr-stone-2-two-kingdoms-of-the-stone-world] isbn=– yr=– cover=– desc=y bans=1
   - #26508 "Dr. Stone." [dr-stone] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #24514 "Dr. Stone. 3, Two million years of being" [dr-stone-3-two-million-years-of-being] isbn=– yr=– cover=– desc=y bans=1
+  - #24514 "Dr. Stone. 3, Two million years of being" [dr-stone-3-two-million-years-of-being] isbn=– yr=– cover=– desc=n bans=1
   - #26508 "Dr. Stone." [dr-stone] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #24515 "Dr. Stone. 5, Tale for the ages" [dr-stone-5-tale-for-the-ages] isbn=– yr=– cover=– desc=y bans=1
@@ -1861,23 +1534,11 @@ Near pairs (review-only): **629**
   - #24516 "Dr. Stone. 9, Final battle" [dr-stone-9-final-battle] isbn=– yr=– cover=– desc=y bans=1
   - #26508 "Dr. Stone." [dr-stone] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #24999 "Ink and Bone" [ink-and-bone] isbn=9780749017224 yr=– cover=valid desc=y bans=1
-  - #27302 "Ink and bone: the Great Library" [ink-and-bone-the-great-library] isbn=– yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #25358 "Ghostgirl Series" [ghostgirl-series] isbn=– yr=– cover=valid desc=y bans=1
   - #27244 "Ghostgirl" [ghostgirl] isbn=9781306769501 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #25395 "Lord Jim" [lord-jim] isbn=9798790326530 yr=– cover=valid desc=y bans=1
-  - #25994 "Lord Jim a Tale" [lord-jim-a-tale] isbn=– yr=– cover=valid desc=n bans=1
-- one title is a prefix of the other
   - #25658 "Billy Budd" [billy-budd] isbn=9780486813639 yr=– cover=valid desc=y bans=1
   - #25659 "Billy Budd & Other Tales" [billy-budd-other-tales] isbn=9780451522375 yr=– cover=valid desc=y bans=1
-- one title is a prefix of the other
-  - #26038 "Nevernight (Nevernight Chronicle, Book 1)" [nevernight-nevernight-chronicle-book-1] isbn=9781955876100 yr=– cover=valid desc=y bans=1
-  - #26637 "Nevernight" [nevernight] isbn=9782378760786 yr=– cover=valid desc=y bans=1
-- token Jaccard 1.00
-  - #26097 "Phantom of the Opera" [phantom-of-the-opera] isbn=9798509979514 yr=– cover=valid desc=y bans=2
-  - #27696 "The phantom of the Opera" [the-phantom-of-the-opera] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #26216 "The 100" [the-100] isbn=9781444766882 yr=– cover=valid desc=y bans=1
   - #26217 "The 100, Day 21" [the-100-day-21] isbn=9781444766912 yr=– cover=– desc=y bans=1
@@ -1888,9 +1549,6 @@ Near pairs (review-only): **629**
   - #26424 "Unbroken: an Olympian's journey from airman to castaway to captive" [unbroken-an-olympians-journey-from-airman-to-castaway-to-captive] isbn=– yr=– cover=valid desc=y bans=1
   - #26894 "Unbroken" [unbroken] isbn=9780606355988 yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
-  - #26462 "War Child: A Child Soldier's Story" [war-child-a-child-soldiers-story] isbn=– yr=– cover=valid desc=y bans=1
-  - #26898 "War Child" [war-child] isbn=9781429918756 yr=2009 cover=valid desc=y bans=1
-- one title is a prefix of the other
   - #26791 "Help Yourself" [help-yourself] isbn=9780525945574 yr=2000 cover=valid desc=y bans=1
   - #27265 "Help Yourself for Teens: Real-life Advice for Real-life Challenges" [help-yourself-for-teens-real-life-advice-for-real-life-challenges] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
@@ -1899,9 +1557,6 @@ Near pairs (review-only): **629**
 - one title is a prefix of the other
   - #26971 "Artemis Fowl" [artemis-fowl] isbn=9780141356396 yr=– cover=valid desc=n bans=1
   - #26972 "Artemis Fowl: The Graphic Novel" [artemis-fowl-the-graphic-novel] isbn=– yr=– cover=valid desc=n bans=1
-- one title is a prefix of the other
-  - #27395 "Michael Vey: The Prisoner of Cell 25" [michael-vey-the-prisoner-of-cell-25] isbn=9781637996515 yr=– cover=valid desc=y bans=1
-  - #27397 "Michael Vey: the prisoner of cell 25 / Bk. 1" [michael-vey-the-prisoner-of-cell-25-bk-1] isbn=– yr=– cover=valid desc=y bans=1
 - one title is a prefix of the other
   - #27548 "Star Wars Episode V: The Empire Strikes Back Vol. 1" [star-wars-episode-v-the-empire-strikes-back-vol-1] isbn=– yr=– cover=– desc=n bans=1
   - #27556 "Star Wars: Episode V – The Empire Strikes Back (Vol." [star-wars-episode-v-the-empire-strikes-back-vol] isbn=– yr=– cover=valid desc=y bans=1
