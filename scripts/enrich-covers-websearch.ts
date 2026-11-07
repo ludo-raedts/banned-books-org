@@ -5,7 +5,9 @@
  * language/country batch.
  *
  * Pipeline per book:
- *   1. geminiCoverSearch — Gemini 2.5 flash + Google Search returns the book's
+ *   1. openaiCoverSearch (default; OpenAI web_search, page URL must be among
+ *      the tool's sources) or geminiCoverSearch (--search=gemini; Gemini +
+ *      Google Search) returns the book's
  *      page URL on a language-appropriate book site (site list per language in
  *      src/lib/enrich/gemini-cover-search.ts)
  *   2. extractCoverFromPage — og:image / twitter:image / JSON-LD from that
@@ -25,7 +27,8 @@
  *     → dry-run (mirrors + report, no cover_url writes)
  *   npx tsx --env-file=.env.local scripts/enrich-covers-websearch.ts --country=PT --limit=30 --apply
  *   npx tsx --env-file=.env.local scripts/enrich-covers-websearch.ts --slugs=o-judeu,quando-os-lobos-uivam
- *   Flags: --country=XX | --slugs=a,b | --book-id=1,2 · --limit=N (spread-sampled)
+ *   Flags: --country=XX | --slugs=a,b | --book-id=1,2 | --ids-file=f.json · --limit=N (spread-sampled)
+ *          --search=openai|gemini (page-search provider, default openai)
  *          --out=<tag> (report/JSONL suffix, default <country>-<date>) · --no-resume
  *
  * Output: data/cover-websearch-<tag>.md (+ .jsonl checkpoint) and
@@ -36,18 +39,23 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { adminClient } from '../src/lib/supabase'
 import { geminiCoverSearch } from '../src/lib/enrich/gemini-cover-search'
+import { openaiCoverSearch } from '../src/lib/enrich/openai-cover-search'
 import { extractCoverFromPage } from '../src/lib/enrich/extract-cover-from-page'
 import { openaiCoverSecondOpinion } from '../src/lib/enrich/openai-cover-second-opinion'
 import { mirrorImageToStorage } from '../src/lib/enrich/mirror-image'
 import { firecrawlFetchPage, getFirecrawlCallCount } from '../src/lib/enrich/firecrawl-fetch'
 import { titlesMatch, titleTokens } from '../src/lib/enrich/title-match'
-import { isApply, hasFlag, flagValue, intFlag } from './lib/cli'
+import { isApply, hasFlag, flagValue, intFlag, idsFlag } from './lib/cli'
 
 const APPLY = isApply()
 const COUNTRY = flagValue('country')?.toUpperCase()
 const SLUGS = flagValue('slugs')?.split(',').map(s => s.trim()).filter(Boolean)
 const BOOK_IDS = flagValue('book-id')?.split(',').map(s => parseInt(s.trim(), 10)).filter(Number.isFinite)
+const IDS = idsFlag()
 const LIMIT = intFlag('limit', 30)
+const SEARCH = flagValue('search') ?? 'openai'
+if (SEARCH !== 'openai' && SEARCH !== 'gemini') throw new Error('--search must be openai or gemini')
+const coverSearch = SEARCH === 'gemini' ? geminiCoverSearch : openaiCoverSearch
 const NO_RESUME = hasFlag('no-resume')
 // Batch-level language fallback for books whose original_language is NULL
 // (the whole Estado Novo import, pending the Sprint-A backfill). Drives the
@@ -108,12 +116,12 @@ async function loadCandidates(): Promise<Candidate[]> {
     return ((data ?? []) as unknown as Row[]).map(toCandidate)
   }
 
-  if (!COUNTRY) throw new Error('Pass --country=XX, --slugs=… or --book-id=…')
+  if (!COUNTRY && !IDS) throw new Error('Pass --country=XX, --ids-file=…, --slugs=… or --book-id=…')
 
   // Distinct book ids with a ban in the country (paginated: bans can exceed
-  // the 1000-row cap).
-  const ids = new Set<number>()
-  for (let from = 0; ; from += 1000) {
+  // the 1000-row cap), or the --ids-file scope.
+  const ids = new Set<number>(IDS ?? [])
+  for (let from = 0; COUNTRY && !IDS; from += 1000) {
     const { data, error } = await sb.from('bans').select('book_id')
       .eq('country_code', COUNTRY).order('id').range(from, from + 999)
     if (error) throw new Error(error.message)
@@ -234,7 +242,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
   // 1. Gemini → page URL on a language-appropriate book site.
   let gemini: Awaited<ReturnType<typeof geminiCoverSearch>>
   try {
-    gemini = await geminiCoverSearch({
+    gemini = await coverSearch({
       title: c.title,
       titleNative: c.title_native,
       titleTransliterated: c.title_transliterated,
@@ -245,7 +253,7 @@ async function processBook(c: Candidate): Promise<ResultRow> {
     })
   } catch (e) {
     row.outcome = 'error'
-    row.notes = `gemini call failed: ${e instanceof Error ? e.message : String(e)}`
+    row.notes = `${SEARCH} call failed: ${e instanceof Error ? e.message : String(e)}`
     return row
   }
   row.geminiPageUrl = gemini.pageUrl
@@ -380,8 +388,11 @@ function renderMarkdown(rows: ResultRow[]): string {
   for (const [k, v] of Object.entries(counts).sort()) lines.push(`- **${k}**: ${v}`)
   const totalIn = rows.reduce((s, r) => s + r.geminiInputTokens, 0)
   const totalOut = rows.reduce((s, r) => s + r.geminiOutputTokens, 0)
-  const estCost = (totalIn / 1_000_000) * 0.30 + (totalOut / 1_000_000) * 2.50
-  lines.push(`- Gemini usage: in=${totalIn} out=${totalOut} → est. ~$${estCost.toFixed(4)}`)
+  // Token cost only; OpenAI also bills each web_search call (~$0.01).
+  const estCost = SEARCH === 'gemini'
+    ? (totalIn / 1_000_000) * 0.30 + (totalOut / 1_000_000) * 2.50
+    : (totalIn / 1_000_000) * 0.10 + (totalOut / 1_000_000) * 0.50 + rows.length * 0.01
+  lines.push(`- ${SEARCH} usage: in=${totalIn} out=${totalOut} → est. ~$${estCost.toFixed(4)}`)
   lines.push(`- Firecrawl calls this run: ${getFirecrawlCallCount()}`)
   lines.push('')
   lines.push('## Per-book details')

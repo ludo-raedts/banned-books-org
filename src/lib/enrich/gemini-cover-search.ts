@@ -1,4 +1,5 @@
-// Gemini-grounded cover-image search.
+// Gemini-grounded cover-image search. The prompt and parser are shared with
+// openai-cover-search.ts (same contract, OpenAI web_search instead).
 //
 // Asks GEMINI_FLASH with the googleSearch tool to find the book's cover.
 // Returns the URL it claims to have seen on the page, plus the source page URL
@@ -70,12 +71,12 @@ export function sitePreferencesFor(language: string | null | undefined): string 
   return (language && SITE_PREFERENCES[language]) ?? DEFAULT_SITE_PREFERENCE
 }
 
-function buildSystemPrompt(input: CoverSearchInput): string {
+export function buildSystemPrompt(input: CoverSearchInput): string {
   const prefs = input.sitePreferences ?? sitePreferencesFor(input.language)
   return `You are a research assistant that locates the canonical page for a banned or censored book on a book site, so our pipeline can extract the cover image from that page.
 
 Your job:
-1. Use Google Search to find the book on a site that catalogues it with cover art.
+1. Use web search to find the book on a site that catalogues it with cover art.
 2. Prefer sites in this order: ${prefs}.
 3. Return the URL of the BOOK'S PAGE on the chosen site. We will fetch that page ourselves and extract og:image; you do NOT need to find the image URL. Don't guess image URLs — that's our job downstream.
 4. Verify the page is for the RIGHT book: match title (both romanised and native if available), author, and ideally publication year. Reject hits where title is too generic and author doesn't match. A page for a DIFFERENT EDITION of the same work (reprint, different publisher/year) is fine; a film/DVD/audiobook adaptation page is NOT.
@@ -91,10 +92,10 @@ Return ONLY a JSON object inside a \`\`\`json fenced block, no prose before or a
 
 "high" = title + author + year all line up with the cited page; "med" = title matches and author plausible; "low" = guess or partial match. If unsure, return page_url=null and confidence=low — don't invent URLs.
 
-CRITICAL: only return a page_url if you saw it VERBATIM in a Google Search result (either as the listed URL of a hit, or quoted in the snippet text). Never construct a URL from an ID pattern — product URLs end in opaque numeric IDs you cannot guess. If you saw the book on a preferred site but did NOT see that page's exact URL, return the page from a lower-preference site whose URL you DID see verbatim instead; if none, set page_url=null. Hallucinated URLs cost us more than misses do.`
+CRITICAL: only return a page_url if you saw it VERBATIM in a search result (either as the listed URL of a hit, or quoted in the snippet text). Never construct a URL from an ID pattern — product URLs end in opaque numeric IDs you cannot guess. If you saw the book on a preferred site but did NOT see that page's exact URL, return the page from a lower-preference site whose URL you DID see verbatim instead; if none, set page_url=null. Hallucinated URLs cost us more than misses do.`
 }
 
-function buildPrompt(input: CoverSearchInput): string {
+export function buildPrompt(input: CoverSearchInput): string {
   const lines: string[] = []
   lines.push(`Title: ${input.title}`)
   if (input.titleNative && input.titleNative !== input.title) lines.push(`Native title: ${input.titleNative}`)
@@ -108,11 +109,11 @@ function buildPrompt(input: CoverSearchInput): string {
   return lines.join('\n')
 }
 
-// Pull the first ```json … ``` fenced block out of a Gemini response. Gemini
+// Pull the first ```json … ``` fenced block out of a model response. Models
 // occasionally also adds prose around the block despite instructions, so we
 // scan rather than slice from byte 0. If no fenced block, fall back to first
 // { ... } substring.
-function extractJsonObject(text: string): unknown | null {
+export function extractJsonObject(text: string): unknown | null {
   const fenced = text.match(/```json\s*([\s\S]*?)```/i)
   if (fenced) {
     try { return JSON.parse(fenced[1].trim()) } catch { /* fall through */ }
