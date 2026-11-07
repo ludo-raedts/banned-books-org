@@ -178,14 +178,16 @@ type ResultRow = {
   notes: string
 }
 
-// Book covers are portrait. A landscape image is a seller's photo of a spine
-// or shelf, a site banner (LiveLib promo cards) or an article illustration —
-// the vision check let several through in the 2026-11-07 FR/RU/AR pilots.
+// Book covers are portrait or near-square; picture books can be moderately
+// landscape (Tres con Tango 1.28, Life on Surtsey 1.22). Wider than 1.4 is a
+// 1200x630 social card with a thumbnail of the cover, a site banner (LiveLib
+// promo cards) or a seller's shelf photo — the vision check passed several
+// in the 2026-11-07 Texas run and FR/RU/AR pilots.
 async function isLandscape(url: string): Promise<string | null> {
   try {
     const res = await fetch(url)
     const { width, height } = await sharp(Buffer.from(await res.arrayBuffer())).metadata()
-    return width && height && width > height * 1.05 ? `${width}x${height}` : null
+    return width && height && width > height * 1.4 ? `${width}x${height}` : null
   } catch {
     return null
   }
