@@ -345,6 +345,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['fldoe.org'],
       },
       {
+        name: 'Index Librorum Prohibitorum — 1877 edition (Rome, Pius IX)',
+        url: 'https://archive.org/details/index-librorum-prohibitorum-catholic',
+        description:
+          'The Catholic Church\'s own printed Index of forbidden books, complete to 1876, from the public-domain scan on the Internet Archive. Each entry gives the author and title and the date of the condemning decree, which we record as the ban year; entries carried over from the Tridentine Index of 1564 have no decree date and are recorded as 1564. Authors whose entire output was forbidden ("first class") appear as one "All works" entry. Titles are kept in their original language, mostly Latin, Italian and French; author names were recovered from the scan\'s OCR and normalised where the person could be identified. Entries without a legible decree date are not imported.',
+        match: ['index-librorum-prohibitorum-catholic'],
+      },
+      {
         name: 'Utah State Board of Education — Sensitive Materials Removed Statewide',
         url: 'https://usbe-my.sharepoint.com/:x:/g/personal/davina_sauthoff_schools_utah_gov/IQC62f_kkhOUTKg8QYRsa5glAf1N_fdVRalq8tPXL4FkQWY',
         description:

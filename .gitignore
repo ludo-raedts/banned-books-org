@@ -220,3 +220,6 @@ next-env.d.ts
 data/foreign-isbn-fix.jsonl
 /data/txftrp/
 /data/fldoe/
+
+# Index Librorum Prohibitorum 1877 OCR + stage-0 output (archive.org source)
+data/index-1877/

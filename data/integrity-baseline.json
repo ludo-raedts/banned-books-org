@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-11-09T08:16:52.608Z",
+  "generatedAt": "2026-11-09T14:21:13.911Z",
   "metrics": {
     "non-person-authors": 15,
     "shared-cover-contamination": 0,
     "shared-desc-contamination": 35,
-    "slug-drift": 1055,
+    "slug-drift": 2688,
     "orphan-books": 1,
     "ban-before-publication": 222,
-    "no-cover": 9746,
-    "no-description": 11482,
+    "no-cover": 14250,
+    "no-description": 15976,
     "country-coverage": 119,
     "cross-language-edition-dupes": 13
   }

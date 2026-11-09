@@ -160,7 +160,7 @@ export const BAN_CONTEXTS: BanContext[] = [
       blurb:
         'The Catholic Church’s list of forbidden books (1559–1966) — some 4,000 works Catholics were barred from reading, from Galileo to Sartre.',
     },
-    match: { sourceUrlIncludes: ['index_librorum_prohibitorum'] },
+    match: { sourceUrlIncludes: ['index_librorum_prohibitorum', 'index-librorum-prohibitorum-catholic'] },
   },
   {
     slug: 'portugal-estado-novo',
