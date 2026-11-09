@@ -32,12 +32,12 @@ watch that silently skips a source is worse than none.
    tracker (2026-11-03, 6,162 bans / 30 districts) — same district dedup covers it.
 2. **Russia — minjust FSEM** (Федеральный список экстремистских материалов,
    `https://minjust.gov.ru/ru/extremist-materials/`)
-   We imported batch 1 (RU at 510 distinct books); the full list is ~5,500
-   entries and a full crawl is a KNOWN open backlog — don't re-report the
-   backlog as "new". New = list grown beyond the max entry number seen in
-   `data/russia-minjust-batch1.json` — or beyond #5523, the last entry checked
-   (2026-11-03; #5500–5523 reviewed, only #5503/#5509/#5523 were books). Template: `import-russia-bans.ts`
-   (minjust rows auto-needs_review).
+   The FULL list was imported books-only on 2026-11-09 from the official
+   export `https://minjust.gov.ru/uploaded/files/exportfsm.csv` (#1–#5523;
+   RU at 557 distinct books). New = list grown beyond #5523. Route: re-run
+   `scripts/build-russia-fsem-stage0.ts --fetch --llm` (gate cache makes it
+   cost only the new entries) then `scripts/import-russia-fsem-full.ts`
+   (skips entries already on a ban; dry-run first).
 3. **KDN Malaysia — banned publications gazette**
    (`https://www.moha.gov.my/` penerbitan / KDN list; the historical gazette
    is already in). New = gazette orders dated after our latest MY ban year.
