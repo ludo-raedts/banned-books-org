@@ -32,6 +32,7 @@ const proseClasses =
   'prose-p:leading-relaxed'
 
 type BookRow = { slug: string; title: string; author: string | null }
+type RankedRow = BookRow & { id: number; documented: number }
 
 export function generateStaticParams() {
   return BAN_CONTEXTS.filter((c) => c.hasHub).map((c) => ({ slug: c.slug }))
@@ -67,27 +68,60 @@ export async function generateMetadata({
 // (the signal the /sources page tallies by). Author is the first credited name.
 async function fetchContextBooks(ctx: BanContext): Promise<BookRow[]> {
   const sb = adminClient()
+  const SELECT = 'id, slug, title, cover_url, description_book, book_authors(authors(display_name))'
 
   const shape = (
     rows:
-      | { slug: string; title: string; book_authors: { authors: { display_name: string } | null }[] }[]
+      | {
+          id: number
+          slug: string
+          title: string
+          cover_url: string | null
+          description_book: string | null
+          book_authors: { authors: { display_name: string } | null }[]
+        }[]
       | null,
-  ): BookRow[] =>
-    (rows ?? [])
-      .map((b) => ({
-        slug: b.slug,
-        title: b.title,
-        author: b.book_authors?.[0]?.authors?.display_name ?? null,
-      }))
-      .sort((a, b) => a.title.localeCompare(b.title, 'en'))
+  ): RankedRow[] =>
+    (rows ?? []).map((b) => ({
+      id: b.id,
+      slug: b.slug,
+      title: b.title,
+      author: b.book_authors?.[0]?.authors?.display_name ?? null,
+      documented: (b.cover_url ? 1 : 0) + (b.description_book ? 1 : 0),
+    }))
+
+  // Known works first: a large event (Index 1877 ≈ 4,700 titles, Nazi 1938
+  // ≈ 3,600) only shows DISPLAY_CAP rows, and alphabetical order filled that
+  // window with obscure Latin tracts. Rank by countries banning the book
+  // (Voltaire/Rousseau are banned elsewhere too), then by how documented the
+  // page is (cover, description), then title. v_book_ban_counts is queried
+  // with a literal id list so it stays an index scan (see its migration).
+  const rank = async (rows: RankedRow[]): Promise<BookRow[]> => {
+    const countries = new Map<number, number>()
+    for (let i = 0; i < rows.length; i += 300) {
+      const { data } = await sb
+        .from('v_book_ban_counts')
+        .select('entity_id, distinct_countries')
+        .in('entity_id', rows.slice(i, i + 300).map((r) => r.id))
+      for (const c of data ?? []) countries.set(c.entity_id as number, Number(c.distinct_countries))
+    }
+    return rows
+      .sort(
+        (a, b) =>
+          (countries.get(b.id) ?? 0) - (countries.get(a.id) ?? 0) ||
+          b.documented - a.documented ||
+          a.title.localeCompare(b.title, 'en'),
+      )
+      .map(({ slug, title, author }) => ({ slug, title, author }))
+  }
 
   // Strategy A: explicit slug allowlist.
   if (ctx.match.bookSlugs?.length) {
     const { data } = await sb
       .from('books')
-      .select('slug, title, book_authors(authors(display_name))')
+      .select(SELECT)
       .in('slug', ctx.match.bookSlugs)
-    return shape(data as never)
+    return rank(shape(data as never))
   }
 
   // Strategy B: citation-source substring.
@@ -127,16 +161,16 @@ async function fetchContextBooks(ctx: BanContext): Promise<BookRow[]> {
   }
   if (bookIds.size === 0) return []
 
-  const out: BookRow[] = []
+  const out: RankedRow[] = []
   const bIdList = Array.from(bookIds)
   for (let i = 0; i < bIdList.length; i += 500) {
     const { data } = await sb
       .from('books')
-      .select('slug, title, book_authors(authors(display_name))')
+      .select(SELECT)
       .in('id', bIdList.slice(i, i + 500))
     out.push(...shape(data as never))
   }
-  return out.sort((a, b) => a.title.localeCompare(b.title, 'en'))
+  return rank(out)
 }
 
 export default async function ContextPage({
@@ -151,8 +185,9 @@ export default async function ContextPage({
 
   const books = await fetchContextBooks(ctx)
   // Some events (the 1938 Nazi list) cover thousands of titles. Cap the rendered
-  // DOM to keep the page light; the heading still shows the true total and the
-  // long tail stays reachable via the sitemap and country/reason pages.
+  // DOM to keep the page light; the list is ranked best-known first, the heading
+  // still shows the true total and the long tail stays reachable via the sitemap
+  // and country/reason pages.
   const shownBooks = books.slice(0, DISPLAY_CAP)
 
   const href = `/contexts/${slug}`
@@ -241,7 +276,7 @@ export default async function ContextPage({
           )}
           {books.length > DISPLAY_CAP && (
             <p className="mt-5 text-xs text-neutral-400 italic">
-              Showing the first {DISPLAY_CAP.toLocaleString('en-US')} titles alphabetically, of{' '}
+              Showing the {DISPLAY_CAP.toLocaleString('en-US')} best-known titles, of{' '}
               {books.length.toLocaleString('en-US')} documented under this event.
             </p>
           )}
