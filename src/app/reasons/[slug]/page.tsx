@@ -40,17 +40,21 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
     totalBans: 0,
     activeBans: 0,
   }
-  let offset = 0
+  // Keyset pagination on ban_id (unique for a fixed reason_id): OFFSET made each
+  // page rescan everything before it, and 'religious' (~9k links after the Index
+  // 1877 import) tipped the last pages over statement_timeout in the build.
+  let afterBanId = 0
   while (true) {
     const { data, error } = await supabase
       .from('ban_reason_links')
-      .select('basis, bans(book_id, country_code, year_started, status)')
+      .select('ban_id, basis, bans(book_id, country_code, year_started, status)')
       .eq('reason_id', reasonId)
-      // Stable order (ban_id unique for a fixed reason_id) or .range() skips past 1000.
+      .gt('ban_id', afterBanId)
       .order('ban_id')
-      .range(offset, offset + 999)
+      .limit(1000)
     if (error) throw error
     if (!data || data.length === 0) break
+    afterBanId = data[data.length - 1].ban_id as number
     for (const bl of data) {
       const ban = bl.bans as unknown as { book_id?: number; country_code?: string; year_started?: number | null; status?: string } | null
       if (!ban) continue
@@ -65,7 +69,6 @@ const getReasonSweep = cache(async (reasonId: number): Promise<ReasonSweep> => {
       }
     }
     if (data.length < 1000) break
-    offset += 1000
   }
   return sweep
 })
