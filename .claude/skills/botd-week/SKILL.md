@@ -37,8 +37,23 @@ Book-side gaps are rarer (the rotation's eligibility gate requires cover + ban d
 - `cover_url MISSING` (shouldn't happen): use the cover ladder in `scripts/enrich-covers*.ts` for that one book id; verify visually via the montage habit before writing.
 - `first_published_year NULL`: fill only from Wikipedia/Wikidata, watch the placeholder-year trap (e.g. Iran 1979 batch).
 
+## Step 3b — independent claim check (required for every text you wrote)
+
+You wrote the bios; you will not catch your own generalisations on a re-read. Run a second model over every bio and book description you wrote or rewrote this run (not over bios you only stamped):
+
+```
+pnpm tsx --env-file=.env.local scripts/botd-claim-check.ts --authors=<ids> --books=<ids>
+```
+
+It fetches the cited `bio_source_url` / `description_source_url` fresh, adds our book+ban records, and gives a verdict per atomic claim (supported / distorted / unsupported); exit 1 when anything is flagged. To check before writing, pass drafts via `--draft=drafts.json` (shape in the script header).
+
+- Fix every flag that is right by rewording to what the source/DB actually says (BEFORE/AFTER + row count as usual), then re-run until clean.
+- You may reject a flag that is pedantic, but list it with the reason in the report.
+- Watch the censorship closing sentence most closely. The first run (2026-11-09) found 5 real errors in 9 texts, nearly all there: superlatives ("one of the most frequently removed"), "banned in N countries" when some records were for one district or state, and "removed/pulled" used for `restricted` records. Use our DB terms: "banned or restricted".
+- The judge is not deterministic; a re-run can raise new flags. Treat those the same way.
+
 ## Step 4 — verify & report
 
 - If a dev server is running (try `curl -s -o /dev/null -w "%{http_code}" http://localhost:3030/` then 3000), spot-check one or two updated `/authors/<slug>` pages render the new bio + links.
 - Re-run the audit script; the picks you fixed should now be clean (birthday fields you can't source may legitimately remain open).
-- Final message: per day — title, what was fixed (with row counts), what is left open for user review and why. DB-only changes need no commit; commit+push only if repo files changed.
+- Final message: per day — title, what was fixed (with row counts), what the claim check flagged and how it was resolved, what is left open for user review and why. DB-only changes need no commit; commit+push only if repo files changed.
