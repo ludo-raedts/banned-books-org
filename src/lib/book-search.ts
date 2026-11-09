@@ -67,28 +67,31 @@ const SELECT = `
 // fill the tail with the rest of the catalogue ordered by created_at DESC
 // (so newly added books bubble up above the alphabetical long tail rather
 // than being buried — cold-start mitigation for popularity).
+// Errors are returned, not swallowed: a timed-out view used to yield [] and the
+// page silently fell back to the created_at tail, which /search then cached for
+// an hour as "popular" (2026-11-09, DB slow after a bulk import).
 async function topIdsForSort(
   supabase: ReturnType<typeof adminClient>,
   sort: BookSort,
-): Promise<number[]> {
+): Promise<{ ids: number[]; error?: string }> {
   // entity_id is the stable tiebreaker — without it, ties on views/total_bans
   // shuffle between calls, so the server-rendered first page and a client-side
   // loadMore can return overlapping IDs (duplicate React keys).
   if (sort === 'popular') {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('v_top_books_all_time').select('entity_id, views')
       .order('views', { ascending: false })
       .order('entity_id', { ascending: true })
-    return (data ?? []).map(r => Number(r.entity_id))
+    return { ids: (data ?? []).map(r => Number(r.entity_id)), error: error?.message }
   }
   if (sort === 'bans') {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('v_top_banned_books').select('entity_id, total_bans')
       .order('total_bans', { ascending: false })
       .order('entity_id', { ascending: true })
-    return (data ?? []).map(r => Number(r.entity_id))
+    return { ids: (data ?? []).map(r => Number(r.entity_id)), error: error?.message }
   }
-  return []
+  return { ids: [] }
 }
 
 // Cards need the ban COUNT, the distinct countries and the reason slugs — not
@@ -154,7 +157,8 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
 
     // popular / bans: head = topIds from the view (≤100), tail = rest of
     // books ordered by created_at DESC (title as tiebreaker).
-    const topIds = await topIdsForSort(supabase, sort)
+    const { ids: topIds, error: topError } = await topIdsForSort(supabase, sort)
+    if (topError) return { books: [], total: 0, error: topError }
     const topCount = topIds.length
 
     const headSlice =
@@ -170,7 +174,8 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
         .order('title')
         .range(tailOffset, tailOffset + needTail - 1)
       if (topIds.length > 0) tailQ = tailQ.not('id', 'in', `(${topIds.join(',')})`)
-      const { data } = await tailQ
+      const { data, error: tailError } = await tailQ
+      if (tailError) return { books: [], total: 0, error: tailError.message }
       tailIds = (data ?? []).map(r => Number(r.id))
     }
 
@@ -285,7 +290,8 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
   if (sort === 'alpha') {
     sortedIds = [...sortRows].sort((a, b) => a.title.localeCompare(b.title)).map(r => r.id)
   } else {
-    const topIds = await topIdsForSort(supabase, sort)
+    const { ids: topIds, error: topError } = await topIdsForSort(supabase, sort)
+    if (topError) return { books: [], total: 0, error: topError }
     const rank = new Map<number, number>()
     topIds.forEach((id, i) => rank.set(id, i))
     // Head = view rank (popular/most-banned); tail = created_at DESC so newly
