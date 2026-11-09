@@ -3,14 +3,11 @@ import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
+import { SUPPORT_LINK_MONTHLY, SUPPORT_LINK_ONE_OFF } from '@/lib/support-links'
 
 // ISR: the page is editorial copy plus three grounding counts. Hourly regen
 // keeps the numbers fresh after enrichment cycles without a query per visit.
 export const revalidate = 3600
-
-// Stripe Payment Links (hosted checkout — no third-party JS on our page).
-const SUPPORT_LINK_MONTHLY = 'https://buy.stripe.com/6oU5kC3PY2Ot0iNf677Re01' // $2.50/month
-const SUPPORT_LINK_ONE_OFF = 'https://buy.stripe.com/cNi8wOdqyfBf3uZ2jl7Re00' // $5 one-time
 
 const MONTHLY_GOAL_USD = 200
 

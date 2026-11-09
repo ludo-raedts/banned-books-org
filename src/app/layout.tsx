@@ -5,6 +5,7 @@ import Link from '@/components/link';
 import MobileNav from "@/components/mobile-nav";
 import NavLink from "@/components/nav-link";
 import AnalyticsWrapper from "@/components/AnalyticsWrapper";
+import YearEndSupportAsk from "@/components/year-end-support-ask";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SITE_URL } from '@/lib/canonical-host'
 import "./globals.css";
@@ -249,6 +250,7 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        <YearEndSupportAsk />
         <AnalyticsWrapper />
         <SpeedInsights />
       </body>
