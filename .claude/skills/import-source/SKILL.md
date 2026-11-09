@@ -78,6 +78,13 @@ verdict; never blanket-resolve.
   **only when no deploy is running** (memory: enrich↔deploy collision), or
   hand the user the ready-made command if the run would outlive the session.
   Its end-of-run hook busts the detail-page caches automatically.
+- Refresh the ban-count matviews right after the apply:
+  `select refresh_all_materialized_views();` (~8 s). The hourly cron only
+  refreshes the "rising" views; `mv_ban_counts` otherwise waits for the daily
+  04:15 UTC run, and a country page regenerated before that caches the OLD
+  headline counts for its 24 h revalidate (Index 1877: /countries/va showed
+  119 books while the year chips showed 1,236). Then `bustPaths` the
+  affected `/countries/<cc>`, `/countries`, `/stats`, `/`.
 - Big import (hundreds+ of new bans)? Also bust the relation caches once —
   `POST /api/admin/revalidate { "tag": "book-relations" }` and
   `{ "tag": "author-relations" }` — otherwise the "related books/authors"

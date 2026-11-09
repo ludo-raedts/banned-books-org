@@ -518,10 +518,14 @@ async function main() {
 
   const supabase = adminClient()
   const earliestBookYear = async (authorId: number): Promise<number | null> => {
+    // A ban year also bounds publication from above; it is the only date for
+    // imports that leave first_published_year NULL (Index 1877: decree years).
     const { data } = await supabase.from('book_authors')
-      .select('books(first_published_year)').eq('author_id', authorId)
-    const years = ((data ?? []) as unknown as { books: { first_published_year: number | null } | null }[])
-      .map(r => r.books?.first_published_year).filter((y): y is number => typeof y === 'number')
+      .select('books(first_published_year, bans(year_started))').eq('author_id', authorId)
+    type Row = { books: { first_published_year: number | null; bans: { year_started: number | null }[] | null } | null }
+    const years = ((data ?? []) as unknown as Row[])
+      .flatMap(r => [r.books?.first_published_year, ...(r.books?.bans ?? []).map(b => b.year_started)])
+      .filter((y): y is number => typeof y === 'number')
     return years.length ? Math.min(...years) : null
   }
 
