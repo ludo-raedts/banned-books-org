@@ -89,6 +89,14 @@ watch that silently skips a source is worse than none.
    ~166 titles from access-to-information requests, but it sits behind a login.
    We hold Edmonton Public + Parkland only. Δ = new public division lists, or
    CFE data becoming accessible.
+10. **Florida DOE district removal report** (§ 1006.28(2)(e), HB 1069) —
+   one PDF per school year on fldoe.org (2025–26 = `/file/5574/2526-SDRPS.pdf`,
+   imported 2026-11-09: 620 rows, +418 bans). The department "regularly
+   updates" the list, so Δ = a newer revision of the 2025–26 PDF (more rows than
+   620) or a 2026–27 report. fldoe.org refuses curl (Akamai 403): check in the
+   browser pane, and ask the user to save the PDF. Handoff:
+   `build-fldoe-stage0.ts` → `import-magnusson-delta.ts` (`scripts/README.md` §1);
+   the per-district dedup skips rows already imported.
 
 ## Also glance at (no fetch quota — only if cheap)
 

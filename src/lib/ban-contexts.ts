@@ -211,6 +211,18 @@ export const BAN_CONTEXTS: BanContext[] = [
     hasHub: false,
     match: { sourceUrlIncludes: ['txftrp.org'] },
   },
+  {
+    // Sources (read 2026-11-09): § 1006.28(2)(a)2 and (2)(e), Florida Statutes
+    // (leg.state.fl.us); the FDOE 2025–26 report itself; WLRN 2025-09-19 on
+    // Penguin Random House v. Gibson (M.D. Fla., Aug 13, 2025; appealed Sept 11).
+    slug: 'florida-hb1069-2025-26',
+    title: 'Florida school removals reported under HB 1069 (2025–26)',
+    badge: 'Florida · 2025–26 school year',
+    short:
+      'This title is on the Florida Department of Education’s list of materials that school districts removed or discontinued in the 2025–26 school year after an objection by a parent or county resident. Under § 1006.28 of Florida law, as amended by HB 1069 in 2023, such objections can argue that a book depicts or describes sexual conduct or is inappropriate for the grade level; districts must report every removal, and the department publishes the statewide list. In August 2025 a federal judge ruled parts of HB 1069 unconstitutional; the state has appealed.',
+    hasHub: false,
+    match: { sourceUrlIncludes: ['fldoe.org/file/5574/2526-sdrps'] },
+  },
 ]
 
 export function getBanContext(slug: string): BanContext | undefined {

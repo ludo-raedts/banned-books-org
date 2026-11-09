@@ -338,6 +338,13 @@ const CATEGORIES: readonly Category[] = [
         match: ['14GBhwx8g53_uWO71xY1qbFoUx5_GjhM6F2eFFpM4Jbo', 'psd.ca/download'],
       },
       {
+        name: 'Florida Department of Education — district removal reports (§ 1006.28(2), HB 1069)',
+        url: 'https://www.fldoe.org/file/5574/2526-SDRPS.pdf',
+        description:
+          'Florida law requires every school district to report each book it removed or discontinued after a parent or county resident objected, and the Department of Education publishes the statewide list per school year with title, author, grade level and district. We import the 2025–26 report; each listed title is recorded as removed from that district\'s schools. Removals already in the archive from PEN America for the same book and district are not counted twice.',
+        match: ['fldoe.org'],
+      },
+      {
         name: 'Utah State Board of Education — Sensitive Materials Removed Statewide',
         url: 'https://usbe-my.sharepoint.com/:x:/g/personal/davina_sauthoff_schools_utah_gov/IQC62f_kkhOUTKg8QYRsa5glAf1N_fdVRalq8tPXL4FkQWY',
         description:
