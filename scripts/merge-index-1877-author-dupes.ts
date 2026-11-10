@@ -24,6 +24,7 @@ const PAIRS: { keep: number; drop: number; rename?: string; note: string }[] = [
   { keep: 22872, drop: 4666, note: "Jean le Rond d'Alembert ← \"d'Alembert\" (older split of the Encyclopédie credit)" },
   { keep: 22872, drop: 4667, note: "Jean le Rond d'Alembert ← \"Jean le Rond\" (other half of that split)" },
   { keep: 4809, drop: 23805, rename: 'Nicolas de Condorcet', note: 'Condorcet: existing row (was "Nicholas") ← full-name Index row' },
+  { keep: 659, drop: 23652, note: "Baron d'Holbach (System of Nature, bio) ← \"Paul-Henri Thiry, Baron d'Holbach\" (Index row, 1 book) — found 2026-11-10" },
 ]
 
 const ENRICH_FIELDS = ['bio', 'bio_source_url', 'bio_source_type', 'birth_year', 'death_year', 'birth_country',

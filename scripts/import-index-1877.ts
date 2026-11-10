@@ -31,6 +31,10 @@
  *
  *   npx tsx --env-file=.env.local scripts/import-index-1877.ts            # dry-run
  *   npx tsx --env-file=.env.local scripts/import-index-1877.ts --apply
+ *
+ * Second pass over held rows (2026-11-10): scripts/patch-index-1877-held.ts writes a
+ * patched stage-1 + seq list; run with --date=2026-11-10 --only-seqs=<that list>.
+ * Only those seqs are planned, and the report lists every planned work.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { newPgClient } from '../src/lib/wikipedia/importer'
@@ -44,6 +48,8 @@ const APPLY = isApply()
 const DATE = flagValue('date') ?? '2026-11-09'
 const IN = `data/index-1877/stage1-${DATE}.json`
 const REPORT = `data/index-1877/import-plan-${DATE}.md`
+const ONLY_FILE = flagValue('only-seqs')
+const ONLY: Set<number> | null = ONLY_FILE ? new Set(JSON.parse(readFileSync(ONLY_FILE, 'utf8')) as number[]) : null
 const ANONYMOUS = 'Anonymous'
 // Existing authors without birth_year/VA ban checked by hand as the same person.
 const ALLOW_EXISTING_AUTHOR_IDS = new Set([11720 /* François Rabelais */])
@@ -152,7 +158,7 @@ async function main() {
     authorOf.set(r.seq, { name: name && conf !== 'high' ? expandGiven(name) : name, conf })
   }
 
-  const usable = rows.filter(r => r.llm && (r.llm.class === 'book' || r.llm.class === 'blanket'))
+  const usable = rows.filter(r => r.llm && (r.llm.class === 'book' || r.llm.class === 'blanket') && (!ONLY || ONLY.has(r.seq)))
   const noYear = usable.filter(r => !plausibleYear(r.year))
   const dated = usable.filter(r => plausibleYear(r.year))
 
@@ -314,8 +320,8 @@ async function main() {
     const va = (await pg.query(`select year_started from bans where book_id=$1 and country_code='VA'`, [s.book_id])).rows.map((x: { year_started: number }) => x.year_started)
     md.push(`- ${va.includes(s.r.year!) ? '' : '⚠ '}seq ${s.r.seq} → #${s.book_id} ${s.note}: VA ${va.join('/') || '—'} vs 1877 ${s.r.year} (${s.r.year_basis})`)
   }
-  md.push('', '## Create — every 15th work', ...plan.filter((_, i) => i % 15 === 0).map(p =>
-    `- [${p.kind}] /books/${p.slug} "${p.title}" — ${p.author} — VA ${p.years.map(y => y[0]).join(',')}${p.rows.some(r => r.action_type === 'restricted') ? ' (restricted)' : ''} · seq ${p.rows.map(r => r.seq).join(',')}`))
+  md.push('', ONLY ? '## Create (all)' : '## Create — every 15th work', ...plan.filter((_, i) => ONLY || i % 15 === 0).map(p =>
+    `- [${p.kind}]${p.resumeId ? ` RESUME #${p.resumeId}` : ''} /books/${p.slug} "${p.title}" — ${p.author} — VA ${p.years.map(y => y[0]).join(',')}${p.rows.some(r => r.action_type === 'restricted') ? ' (restricted)' : ''} · seq ${p.rows.map(r => r.seq).join(',')}`))
   md.push('', '## Held (not imported)', ...held.filter(h => h.why !== 'no ban year in the entry').map(h => `- seq ${h.rows.map(r => r.seq).join(',')} "${h.rows[0].llm?.title ?? ''}" — ${h.why}`))
   md.push('', '## Held: no ban year', ...held.filter(h => h.why === 'no ban year in the entry').map(h => `- seq ${h.rows[0].seq} ${authorOf.get(h.rows[0].seq)?.name ?? 'anon'} — "${h.rows[0].llm?.title ?? ''}"`))
   writeFileSync(REPORT, md.join('\n') + '\n')
