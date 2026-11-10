@@ -176,7 +176,7 @@ export default async function DatasetPage() {
     { label: 'Source citations + verification status', open: true },
     { label: 'Aggregate-author flag (is_placeholder)', open: true },
     // Open from the next Zenodo version on; already in the full dataset.
-    { label: 'Register lists — titles on official ban lists, as printed, with their source (public-domain lists; open core from its next version)', open: true },
+    { label: 'Register lists — titles on official ban lists, as printed, with their source (public-domain lists)', open: true },
     { label: 'Editorial prose — book & ban descriptions, censorship context', open: false },
     { label: 'Enrichment — ISBN-13, cover images, author bios & photos, edition data', open: false },
     { label: 'Convenience formats — denormalised JSON + ready-to-query SQLite', open: false },

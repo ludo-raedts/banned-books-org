@@ -45,6 +45,13 @@ export type ZenodoVersion = {
 
 export const ZENODO_VERSIONS: ZenodoVersion[] = [
   {
+    version: '2026-11-10',
+    date: '2026-11-10',
+    doi: '10.5281/zenodo.24109205',
+    summary:
+      'Large import batch: ~29,400 books, ~49,500 ban events, ~59,300 source citations (+~8,443 books, +~11,737 bans, +~19,324 citations vs. the previous release). New: a public-domain register layer (register_lists.csv + register_entries.csv — the 1877 Index of Prohibited Books, 1,118 entries, kept separate and never counted as books) and a books.is_blanket_works column.',
+  },
+  {
     version: '2026-10-22',
     date: '2026-10-22',
     doi: '10.5281/zenodo.23553493',

@@ -1,31 +1,39 @@
 {
-  "markedAt": "2026-10-22",
-  "note": "2026-10-22 (version DOI 10.5281/zenodo.23553493)",
+  "markedAt": "2026-11-10",
+  "note": "2026-11-10 (version DOI 10.5281/zenodo.24109205)",
   "conceptDoi": "10.5281/zenodo.20511553",
   "tables": {
     "books.csv": {
-      "rowCount": 20934,
-      "sha256": "c7c588bb101a59981132d0e4c01f10ca03631ad89725e5f5c923d2f59970fc0a"
+      "rowCount": 29377,
+      "sha256": "1862519eb75057fe051457bb735a8dd70a14ef902393b8ff8330d99812942682"
     },
     "authors.csv": {
-      "rowCount": 13343,
-      "sha256": "715c2dfff9837d515492a20f67939a1dc04a3d3920fe72b81d845516abdedef4"
+      "rowCount": 17825,
+      "sha256": "3eb61b2c3d70022d78db2a11a79195d12bc9e3341d9219bac4a7bde07b51e7a5"
     },
     "bans.csv": {
-      "rowCount": 37760,
-      "sha256": "c641217c95cae8cfa24e5ecd392c57dfff9690d04ad0564b9968901d56ae2583"
+      "rowCount": 49497,
+      "sha256": "d236e7a5d6d19cf8869e021eb8be2d51289424a9b0c9ebd71537498f415218e7"
     },
     "ban_reasons.csv": {
-      "rowCount": 68145,
-      "sha256": "e28ab2e346301cbe8ad8aaebee0929915245cd82644f874e65a3bd14a672beca"
+      "rowCount": 90038,
+      "sha256": "a4caa25eb148d9d9cbc9da18fc3aaa805af45961b43957b51c8f1131d581bbe6"
     },
     "ban_sources.csv": {
-      "rowCount": 39959,
-      "sha256": "293ee6eae6f4c01c04746f5eaa05a10cf778fd57f1705abe9e867a7da87d02b4"
+      "rowCount": 59283,
+      "sha256": "a3c9285172d071e91ff8f30e5d4be940fa23f5b26011cf28d1db37cfdb2ceb22"
     },
     "countries.csv": {
       "rowCount": 119,
       "sha256": "486412d175d9d6632d9069275a5cbf8f68703c73e03931ec2e705dd5b97766b1"
+    },
+    "register_lists.csv": {
+      "rowCount": 1,
+      "sha256": "dfbe961f8ba21096834c6a3be02b1ad24f68d205adcd45c94ce6bbe047f8404f"
+    },
+    "register_entries.csv": {
+      "rowCount": 1118,
+      "sha256": "96cd089109f2a0db20ff6dfee99023b13f42977a404e7b1c9f3357bbd128fd64"
     }
   },
   "enums": {
@@ -184,7 +192,7 @@
     "ZW"
   ],
   "distinct": {
-    "booksWithBan": 20930,
+    "booksWithBan": 29373,
     "countriesWithBan": 119
   }
 }
