@@ -112,6 +112,7 @@ export type RegisterTotal = {
   country_code: string
   year_start: number
   year_end: number | null
+  framing: RegisterList['framing']
   /** Book entries on the list that have no page in our catalogue. */
   furtherTitles: number
 }
@@ -126,7 +127,7 @@ export const getRegisterTotals = unstable_cache(
     const sb = adminClient()
     const { data, error } = await sb
       .from('register_lists')
-      .select('id, slug, title, title_en, country_code, year_start, year_end')
+      .select('id, slug, title, title_en, country_code, year_start, year_end, framing')
       .order('year_start')
     if (error) throw error
     return Promise.all(
@@ -144,7 +145,7 @@ export const getRegisterTotals = unstable_cache(
       }),
     )
   },
-  ['register-totals-v1'],
+  ['register-totals-v2'],
   { revalidate: 86400, tags: ['registers'] },
 )
 
@@ -283,6 +284,14 @@ export function extraAuthorName(e: Pick<RegisterEntry, 'printed_author' | 'autho
   if (!e.author_display) return null
   if (!e.printed_author) return e.author_display
   return foldTokens(e.author_display) === foldTokens(e.printed_author) ? null : e.author_display
+}
+
+/** One clause on what a list of this kind was — for summaries that name several lists. */
+export const FRAMING_SUMMARY: Record<RegisterList['framing'], string> = {
+  denazification: 'Nazi and militarist literature ordered out of libraries and bookshops',
+  repression: 'publications banned by the state',
+  religious: 'books the Church forbade its faithful to read',
+  other: 'titles named on an official list',
 }
 
 export const FRAMING_LABEL: Record<RegisterList['framing'], string> = {

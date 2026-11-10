@@ -15,7 +15,7 @@ import TrendingWidget from '@/components/trending-widget'
 import StatsTimeline, { type TimelineGroup } from '@/components/stats-timeline'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
-import { getRegisterTotals } from '@/lib/registers'
+import { FRAMING_LABEL, FRAMING_SUMMARY, getRegisterTotals } from '@/lib/registers'
 import { requireCount } from '@/lib/require-count'
 
 type StatsData = {
@@ -31,7 +31,7 @@ type StatsData = {
   reasonSlugs: string[] // sorted; doubles as the reason filter options
   filterCountryOptions: { code: string; name: string }[]
   // Large official lists kept as registers — shown beside the book count, never in it.
-  registerLists: { slug: string; name: string; entryCount: number; years: string }[]
+  registerLists: { slug: string; name: string; entryCount: number; years: string; country: string; countryCode: string; kind: string; summary: string }[]
 }
 
 const PAGE = 1000
@@ -211,6 +211,10 @@ async function fetchStatsData(): Promise<StatsData> {
       name: l.title_en ?? l.title,
       entryCount: l.furtherTitles,
       years: l.year_end && l.year_end !== l.year_start ? `${l.year_start}–${l.year_end}` : `${l.year_start}`,
+      country: countryMap.get(l.country_code) ?? l.country_code,
+      countryCode: l.country_code,
+      kind: FRAMING_LABEL[l.framing],
+      summary: FRAMING_SUMMARY[l.framing],
     }))
     .sort((a, b) => b.entryCount - a.entryCount)
 
@@ -312,28 +316,50 @@ export default async function StatsPage() {
         ))}
       </div>
 
-      {/* ── 2b. Register lists: counted beside the catalogue, not in it ── */}
+      {/* ── 2b. Register lists: counted beside the catalogue, not in it ──
+          Says WHICH lists (country, years, what kind) so the number is not a
+          bare total, and why they sit outside the figures above. */}
       {stats.registerLists.length > 0 && (
         <div className="-mt-8 mb-14 rounded-xl border border-dashed border-gray-300 p-4 sm:p-5">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="text-3xl font-bold tabular-nums text-gray-700">
               {stats.registerLists.reduce((a, l) => a + l.entryCount, 0).toLocaleString('en')}
             </span>
-            <span className="text-sm text-gray-600">further titles on official ban lists, kept as registers</span>
+            <span className="text-sm text-gray-600">
+              more titles on {stats.registerLists.length === 1 ? 'one official ban list' : `${stats.registerLists.length} official ban lists`}
+            </span>
           </div>
-          <ul className="mt-2 space-y-1 text-sm text-gray-600">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-600">
+            Some ban lists are too long to document book by book. We publish each of them in full as a{' '}
+            <Link href="/registers" className="underline decoration-gray-300 underline-offset-2 hover:text-gray-900 hover:decoration-gray-500">
+              register
+            </Link>
+            : every title as it was printed, with a link to the original source. These titles have no book page here
+            and are not part of the book, ban or country figures above.
+          </p>
+          <ul className="mt-4 divide-y divide-gray-200 border-t border-gray-200">
             {stats.registerLists.map((l) => (
-              <li key={l.slug}>
-                <Link href={`/registers/${l.slug}`} className="underline decoration-gray-300 underline-offset-2 hover:text-gray-900 hover:decoration-gray-500">
-                  {l.name}
-                </Link>{' '}
-                <span className="tabular-nums text-gray-400">· {l.entryCount.toLocaleString('en')}</span>
+              <li key={l.slug} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                <div className="min-w-0">
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <span aria-hidden>{countryFlag(l.countryCode)} </span>
+                    {l.country} · {l.years}
+                  </p>
+                  <p className="mt-0.5 text-sm">
+                    <Link href={`/registers/${l.slug}`} className="font-medium text-gray-900 underline decoration-gray-300 underline-offset-2 hover:decoration-gray-500">
+                      {l.name}
+                    </Link>
+                  </p>
+                  <p className="mt-0.5 text-sm text-gray-600">
+                    {l.kind}: {l.summary}.
+                  </p>
+                </div>
+                <p className="shrink-0 text-sm tabular-nums text-gray-700">
+                  <span className="font-semibold">{l.entryCount.toLocaleString('en')}</span> titles
+                </p>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-gray-400">
-            Listed entry by entry with their original source, but not included in the book, ban or country figures above.
-          </p>
         </div>
       )}
 
