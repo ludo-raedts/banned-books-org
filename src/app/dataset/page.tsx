@@ -169,6 +169,24 @@ export default async function DatasetPage() {
     },
   ]
 
+  // What a buyer actually receives, stated next to the price and the button so
+  // nobody has to click through to Stripe to find out. Mirrors the ZIP that
+  // scripts/build-dataset.ts writes and the 30-day token the webhook mints.
+  const priceLabel = `$${DATASET_PRICE_USD.toFixed(2)}`
+  const openCoreIncludes = [
+    'Every ban as structured facts: book, country, year, action, status, scope',
+    'Reason taxonomy, source citations and verification status',
+    'Register lists — titles as printed on official ban lists',
+    'Plain CSV tables with a permanent, version-independent DOI',
+  ]
+  const fullDatasetIncludes = [
+    `The whole catalogue: ${stats.books.toLocaleString('en')} books and ${stats.bans.toLocaleString('en')} ban records, each with its sources`,
+    'Book and ban descriptions, ISBN-13s, cover images, author bios and photos',
+    'One ZIP: CSV tables, a single JSON file and a ready-to-query SQLite database',
+    'Instant download — the link is also emailed and stays valid for 30 days',
+    'Perpetual licence for research, journalism and your own analysis',
+  ]
+
   // The field split, stated once. Membership is the argument — no sell copy.
   const comparison: { label: string; open: boolean }[] = [
     { label: 'Structured facts — book, country, year, action type, status, scope', open: true },
@@ -229,13 +247,28 @@ export default async function DatasetPage() {
 
             {/* Open core — Zenodo, CC-BY-4.0, free */}
             <div className="flex flex-col border border-neutral-200 bg-white rounded-sm p-6">
-              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Free CSV download · CC-BY-4.0</p>
+              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Open core · CSV on Zenodo</p>
               <h2 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-gray-900">
                 For citing &amp; verifying
               </h2>
-              <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
-                A free, downloadable CSV dataset of the verifiable censorship core — the facts and the source citations behind them. Deposited on Zenodo as a citeable research dataset under CC-BY-4.0, with a permanent, version-independent DOI.
+              <p className="mt-4 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                <span className="font-serif text-4xl font-semibold tracking-tight text-gray-900">Free</span>
+                <span className="text-xs text-neutral-600">CC-BY-4.0 · no sign-up</span>
               </p>
+              <p className="mt-4 text-sm text-neutral-700 leading-relaxed">
+                The verifiable censorship core — the facts and the source citations behind them — deposited on Zenodo as a citeable research dataset.
+              </p>
+              <div className="mt-4 flex-1">
+                <p className="text-[11px] uppercase tracking-wider text-neutral-500 mb-2">What you get</p>
+                <ul className="flex flex-col gap-1.5 text-sm text-neutral-700 leading-snug">
+                  {openCoreIncludes.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="text-oxblood font-semibold" aria-hidden="true">✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               {latestRelease && (
                 <p className="mt-3 border-l-2 border-oxblood/40 pl-3 text-xs text-neutral-600 leading-relaxed">
                   <strong className="font-semibold text-gray-900">Periodic snapshot.</strong>{' '}
@@ -272,23 +305,43 @@ export default async function DatasetPage() {
 
             {/* Full dataset — commercial, Stripe (unchanged flow) */}
             <div className="flex flex-col border border-neutral-200 bg-white rounded-sm p-6">
-              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Full dataset · ${DATASET_PRICE_USD.toFixed(2)}</p>
+              <p className="text-[11px] uppercase tracking-wider text-neutral-500">Full dataset · CSV, JSON &amp; SQLite</p>
               <h2 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-gray-900">
                 For working with the data
               </h2>
-              <p className="mt-3 text-sm text-neutral-700 leading-relaxed flex-1">
-                The complete working dataset: every open field <em>plus</em> editorial prose, enrichment (ISBNs, covers, author bios), and ready-to-use formats — a denormalised JSON file and a SQLite database.
+              <p className="mt-4 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                <span className="font-serif text-4xl font-semibold tracking-tight text-oxblood tabular-nums">
+                  {priceLabel}
+                </span>
+                <span className="text-xs text-neutral-600">one-time · no subscription</span>
               </p>
+              <p className="mt-4 text-sm text-neutral-700 leading-relaxed">
+                The complete working dataset: everything in the open core <em>plus</em> the editorial and enrichment layers, in formats you can query straight away.
+              </p>
+              <div className="mt-4 flex-1">
+                <p className="text-[11px] uppercase tracking-wider text-neutral-500 mb-2">What you get</p>
+                <ul className="flex flex-col gap-1.5 text-sm text-neutral-700 leading-snug">
+                  {fullDatasetIncludes.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="text-oxblood font-semibold" aria-hidden="true">✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a href="#comparison" className="mt-3 inline-block text-xs text-oxblood font-medium hover:underline">
+                  Compare field by field ↓
+                </a>
+              </div>
               <form action="/api/dataset/checkout" method="POST" className="mt-5">
                 <DatasetCheckoutButton
                   priceUsd={DATASET_PRICE_USD}
                   className="bg-oxblood hover:bg-brand-dark text-cream font-serif font-semibold rounded-sm px-5 py-2.5 text-sm transition-colors"
                 >
-                  Buy and download →
+                  Buy the full dataset · {priceLabel} →
                 </DatasetCheckoutButton>
               </form>
               <p className="mt-3 text-xs text-neutral-500 leading-relaxed">
-                One-time payment via Stripe · instant download · taxes calculated at checkout. Always current: the dataset is built from the live catalogue at the moment of purchase.
+                Secure checkout via Stripe · taxes calculated at checkout. The download is rebuilt from the live catalogue with every site update, so it is always current.
               </p>
             </div>
 
@@ -304,7 +357,7 @@ export default async function DatasetPage() {
       </SectionShell>
 
       {/* ── What's in each ────────────────────────────────────────── */}
-      <SectionShell tone="white" eyebrow="Comparison">
+      <SectionShell tone="white" eyebrow="Comparison" id="comparison">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-6 pb-3 border-b border-oxblood/30">
             What&rsquo;s in each
