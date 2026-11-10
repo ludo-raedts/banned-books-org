@@ -12,7 +12,14 @@ import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { getBanContext, type BanContext } from '@/lib/ban-contexts'
+import { getRegisterList } from '@/lib/registers'
 import { CONTEXT_CONTENT, ContextHero } from './content'
+
+// Hubs whose event also has a register list (/registers/<slug>): titles from the
+// same source that have no catalogue page. Linked below the book list.
+const CONTEXT_REGISTER: Record<string, string> = {
+  'index-librorum-prohibitorum': 'index-1877',
+}
 
 // Hub content is fully static apart from the book list, which changes only when
 // imports land. Daily ISR keeps it fresh without per-request DB load.
@@ -199,7 +206,12 @@ export default async function ContextPage({
   const content = CONTEXT_CONTENT[slug]
   if (!ctx?.hasHub || !content) notFound()
 
-  const books = await fetchContextBooks(ctx.slug)
+  const registerSlug = CONTEXT_REGISTER[ctx.slug]
+  const [books, register] = await Promise.all([
+    fetchContextBooks(ctx.slug),
+    // optional extra: a failed lookup only drops the register link, never the hub
+    registerSlug ? getRegisterList(registerSlug).catch(() => null) : null,
+  ])
   // Some events (the 1938 Nazi list) cover thousands of titles. Cap the rendered
   // DOM to keep the page light; the list is ranked best-known first, the heading
   // still shows the true total and the long tail stays reachable via the sitemap
@@ -294,6 +306,16 @@ export default async function ContextPage({
             <p className="mt-5 text-xs text-neutral-400 italic">
               Showing the {DISPLAY_CAP.toLocaleString('en-US')} best-known titles, of{' '}
               {books.length.toLocaleString('en-US')} documented under this event.
+            </p>
+          )}
+          {register && register.entry_count > 0 && (
+            <p className="mt-5 text-sm text-neutral-600">
+              Another {register.entry_count.toLocaleString('en-US')} titles from this list have
+              no page of their own here. They are listed as printed, with a link to the
+              original, in the{' '}
+              <Link href={`/registers/${register.slug}`} className="text-oxblood underline underline-offset-2">
+                {register.title_en ?? register.title} register
+              </Link>.
             </p>
           )}
         </section>
