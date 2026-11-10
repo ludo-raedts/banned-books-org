@@ -150,15 +150,31 @@ export function queryCoverage(query: string, matched: string): number {
 // the guard that kills "The King of Lies" (John Hart) → King Lear
 // (Shakespeare): identical "King" overlap passes the title gate, but the
 // authors share nothing.
-export function authorAgrees(queryAuthor: string, matchedAuthors: string[]): boolean {
+//
+// `queryTitle` (optional) closes one hole: a GIVEN-NAME-ONLY overlap on a
+// generic title. "Raccolta di novelle" by Carlo Barcù matched an anthology
+// whose editors include a Carlo Gualteruzzi and got its ISBN (2026-11-10). When
+// the title is passed and the only shared word is not the surname, the title
+// must be specific (≥ 3 words of 4+ letters) for the match to stand. Surname
+// spelling variants on a specific title ("Dominicus Baubius" / "Baudius",
+// "Poematum nova editio") therefore still pass.
+export function authorAgrees(queryAuthor: string, matchedAuthors: string[], queryTitle?: string): boolean {
   if (!queryAuthor.trim()) return true
   if (!matchedAuthors.length) return true
   const Q = tokenize(queryAuthor)
   if (Q.size === 0) return true
+  const surname = [...Q].at(-1)
+  let weak = false
   for (const a of matchedAuthors) {
-    for (const w of tokenize(a)) if (Q.has(w)) return true
+    const shared = [...tokenize(a)].filter((w) => Q.has(w))
+    if (shared.length === 0) continue
+    // Strong: the surname, two shared words, or a single-word author name.
+    if (queryTitle === undefined || Q.size === 1 || shared.length >= 2 || shared.includes(surname!)) return true
+    weak = true
   }
-  return false
+  // Words of 4+ letters: short function words ("di", "de", "the") do not make
+  // a title specific.
+  return weak && [...tokenize(queryTitle ?? '')].filter((w) => w.length >= 4).length >= 3
 }
 
 // ISO-639-1 (DB original_language) → ISO-639-2/B (OL languages.key). Only
@@ -428,7 +444,7 @@ export async function enrichIsbn(opts: EnrichIsbnOpts): Promise<EnrichIsbnResult
           if (sim < TITLE_MATCH_THRESHOLD) { rejectedSim++; continue }
           const cov = queryCoverage(variant.title, hit.matchedTitle)
           if (cov < QUERY_COVERAGE_THRESHOLD) { rejectedSim++; continue }
-          if (!authorAgrees(author, hit.matchedAuthors)) { rejectedSim++; continue }
+          if (!authorAgrees(author, hit.matchedAuthors, variant.title)) { rejectedSim++; continue }
           const ed = await verifyEdition(hit.isbn, variant.title, book.original_language)
           await sleep(OL_DELAY_MS)
           if (!ed.ok) { rejectedEd++; continue }

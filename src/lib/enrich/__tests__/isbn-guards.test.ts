@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isPlaceholderTitle, isPinyinOnlyZh, titleContainment, editionLanguageAcceptable } from '../isbn'
+import { isPlaceholderTitle, isPinyinOnlyZh, titleContainment, editionLanguageAcceptable, authorAgrees } from '../isbn'
 
 describe('isPlaceholderTitle', () => {
   it.each([
@@ -131,5 +131,28 @@ describe('editionLanguageAcceptable', () => {
     [null, null],
   ])('accepts %s edition on %s row', (edLang, dbLang) => {
     expect(editionLanguageAcceptable(edLang, dbLang)).toBe(true)
+  })
+})
+
+describe('authorAgrees with a title (given-name-only overlap)', () => {
+  it.each([
+    // 2026-11-10: got the ISBN of an anthology co-edited by a Carlo Gualteruzzi
+    ['Carlo Barcù', ['Anton Francesco Grazzini', 'Giulio Ferrario', 'Carlo Gualteruzzi'], 'Raccolta di novelle', false],
+    ['Dominicus Baubius', ['Dominicus Baudius'], 'Orationes', false],
+    ['John Hart', ['William Shakespeare'], 'The King of Lies', false],
+    // surname spelling variant on a specific title still passes
+    ['Dominicus Baubius', ['Dominicus Baudius'], 'Poematum nova editio', true],
+    ['Saint-Amant', ['Marc-Antoine Girard Saint-Amant'], 'La Rome ridicule, caprice', true],
+    ['Isaac de Beausobre', ['DE BEAUSOBRE-I.'], 'Histoire critique de Manichée', true],
+    ['Stephen King, Peter Straub', ['Stephen King'], 'The Talisman', true],
+    ['Yan Lianke', ['Lianke Yan'], 'Serve the People', true],
+    ['Voltaire', ['Voltaire'], 'Candide', true],
+  ])('%s vs %j on "%s" → %s', (query, matched, title, want) => {
+    expect(authorAgrees(query, matched, title)).toBe(want)
+  })
+
+  it('keeps the two-argument behaviour (any shared word) for callers without a title', () => {
+    expect(authorAgrees('Carlo Barcù', ['Carlo Gualteruzzi'])).toBe(true)
+    expect(authorAgrees('John Hart', ['William Shakespeare'])).toBe(false)
   })
 })

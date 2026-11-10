@@ -259,7 +259,7 @@ async function main() {
       ? volumes
       : volumes.filter((v) =>
           titleContainment(book.title, v.volumeInfo.title ?? '') >= TITLE_MATCH_THRESHOLD &&
-          authorAgrees(author, v.volumeInfo.authors ?? []))
+          authorAgrees(author, v.volumeInfo.authors ?? [], book.title))
 
     if (!matched.length) {
       noData++
@@ -278,7 +278,7 @@ async function main() {
         const mt = v.volumeInfo.title ?? ''
         if (titleContainment(book.title, mt) < TITLE_MATCH_THRESHOLD) continue
         if (queryCoverage(book.title, mt) < QUERY_COVERAGE_THRESHOLD) continue
-        if (!authorAgrees(author, v.volumeInfo.authors ?? [])) continue
+        if (!authorAgrees(author, v.volumeInfo.authors ?? [], book.title)) continue
         const ed = await verifyEdition(cand, book.title, book.original_language)
         if (!ed.ok) continue
         recoveredIsbn = cand
