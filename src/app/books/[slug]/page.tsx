@@ -102,7 +102,7 @@ function buildBanSummary(
   bookTitle: string,
   authorStr: string,
   sortedBans: Ban_[],
-): { topic: Topic; complement: string; faqItems: FaqItem[] } | null {
+): { topic: Topic; facts: string[]; faqItems: FaqItem[] } | null {
   if (sortedBans.length === 0) return null
 
   const baseTitle = authorStr ? `${bookTitle} by ${authorStr}` : bookTitle
@@ -142,11 +142,12 @@ function buildBanSummary(
   // as JSX with inline Links (country → /countries/[code], reason →
   // /reasons/[slug]) so bouncing visitors have an immediate, in-line
   // pathway out of a dead-end fact page.
-  // `complement` = the longer red-quote sentence below the hero, carrying
-  // facts the subtitle deliberately omits (year, multi-country roll-up,
-  // mixed active/historical status). The two MUST NOT repeat each other's
+  // `facts` = the one fact line under that subtitle, carrying what the
+  // subtitle deliberately omits (ban count, earliest year, how many are still
+  // in force, a sample of countries). The two MUST NOT repeat each other's
   // headline — see [[reference-gsc-scripts]] and the gsc-ops doc for why
-  // duplication suppresses CTR.
+  // duplication suppresses CTR. So: no country count here (the subtitle has
+  // it), no reason.
   const topic: Topic = {
     scope: countryList.length === 1
       ? { kind: 'country', name: countryList[0].name, code: countryList[0].code }
@@ -156,23 +157,18 @@ function buildBanSummary(
       : null,
   }
 
-  const complementParts: string[] = []
-  if (earliestYear) {
-    complementParts.push(
-      countryList.length === 1
-        ? `First documented in ${earliestYear}.`
-        : `Earliest documented ban: ${earliestYear}.`,
-    )
-  }
+  const n = sortedBans.length
+  const facts: string[] = [
+    n === 1
+      ? `1 documented ban${earliestYear ? ` in ${earliestYear}` : ''}`
+      : `${n} documented bans`,
+  ]
+  if (n > 1 && earliestYear) facts.push(`earliest in ${earliestYear}`)
+  if (activeBanCount > 0 && n > activeBanCount) facts.push(`${activeBanCount} still active`)
   if (countryList.length >= 3) {
-    complementParts.push(`Documented bans include ${countryList.slice(0, 3).map(c => c.name).join(', ')}, among others.`)
+    const [a, b, c] = countryList.map(x => x.name)
+    facts.push(`including ${a}, ${b} and ${c}`)
   }
-  if (activeBanCount > 0 && sortedBans.length > activeBanCount) {
-    complementParts.push(
-      `${activeBanCount} ${activeBanCount === 1 ? 'ban remains' : 'bans remain'} active today.`,
-    )
-  }
-  const complement = complementParts.join(' ')
 
   // FAQ items: prioritise unique-country Q&As (Google ignores duplicate
   // questions across the same FAQPage). Capped at 5 to stay under the
@@ -210,7 +206,7 @@ function buildBanSummary(
     }
   }
 
-  return { topic, complement, faqItems: items }
+  return { topic, facts, faqItems: items }
 }
 
 // Bucket A blocklist (CSAM-adjacent policy §5b / §6). Read server-side via
@@ -1266,8 +1262,8 @@ export default async function BookPage({
   }
   // Speakable schema — hints to voice-search + AI Overview which parts of
   // the page to read aloud when citing the entry. Points at the H1-zone
-  // topical subtitle ("Banned in X for Y") and the complement red-quote
-  // beneath the hero ("First documented in Y. N bans active."). Both
+  // topical subtitle ("Banned in X for Y") and the fact line right under
+  // it ("15 documented bans · earliest in 1945 · 10 still active"). Both
   // carry the direct-answer content curated for the "why was X banned"
   // query family. Google-supported per Article/WebPage; ignored otherwise.
   bookJsonLd.speakable = {
@@ -1445,12 +1441,27 @@ export default async function BookPage({
               </>
             ) : null
             return (
-              <p
-                data-speakable="topic"
-                className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug"
-              >
-                Banned in {country}{reason}
-              </p>
+              <>
+                <p
+                  data-speakable="topic"
+                  className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug"
+                >
+                  Banned in {country}{reason}
+                </p>
+                {/* The one fact line. It replaces two older summaries that
+                    restated the subtitle: a red "N bans across M countries"
+                    count at the foot of the hero and a quote-styled sentence
+                    below it. Kept as real text in the first screen — it is the
+                    second speakable selector (`complement`). */}
+                <p data-speakable="complement" className="text-sm text-gray-600 leading-snug">
+                  {banSummary.facts.map((fact, i) => (
+                    <React.Fragment key={fact}>
+                      {i > 0 && <span className="text-gray-300"> · </span>}
+                      <span className={i === 0 ? 'font-medium text-red-600' : undefined}>{fact}</span>
+                    </React.Fragment>
+                  ))}
+                </p>
+              </>
             )
           })()}
           {/* Secondary title: English meaning (for transliterated/non-English titles)
@@ -1581,12 +1592,6 @@ export default async function BookPage({
               })}
             </div>
           )}
-          <p className="text-sm font-medium text-red-500">
-            {book.bans.length} ban{book.bans.length === 1 ? '' : 's'}
-            {' across '}
-            {distinctCountries}{' '}
-            {distinctCountries === 1 ? 'country' : 'countries'}
-          </p>
           {readingClubLink && (
             <Link
               href={readingClubLink.href}
@@ -1614,20 +1619,6 @@ export default async function BookPage({
         status={book.data_quality_status}
         entityLabel="book"
       />
-
-      {/* Complement paragraph — facts the H1-zone subtitle (`topic`) leaves
-          out: year of first documented ban, multi-country roll-up, and
-          mixed active/historical status. Skipped entirely when there's
-          nothing to add beyond what `topic` already states, to avoid the
-          duplication that suppresses CTR. */}
-      {banSummary?.complement && (
-        <p
-          data-speakable="complement"
-          className="mb-8 text-base text-gray-800 leading-relaxed border-l-4 border-red-300 pl-4"
-        >
-          {banSummary.complement}
-        </p>
-      )}
 
       {/* Censorship-event context (Liste Otto, the 1938 Nazi list, the Russian
           extremist register, the Loi Gayssot, …). Grounded, written once per
