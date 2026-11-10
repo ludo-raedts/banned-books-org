@@ -57,11 +57,12 @@ export async function generateMetadata(): Promise<Metadata> {
   // Exact count. The planner estimate drifted to 21,451 while the hero (and
   // every other surface) says 20,934 — a visible snippet/page mismatch. A
   // COUNT(*) over ~20k rows is milliseconds and runs once per ISR cycle.
-  const { count } = await timer.wrap('books-count', () =>
+  const { count, error } = await timer.wrap('books-count', () =>
     adminClient().from('books').select('*', { count: 'exact', head: true }),
   )
   timer.end('metadata-fn-end')
-  const n = count ?? 0
+  if (error || !count) throw error ?? new Error('homepage metadata: empty books count')
+  const n = count
   return {
     title: { absolute: `Banned Books List ${new Date().getFullYear()} — Censored Books by Country & Reason` },
     description: `The full list of ${n.toLocaleString('en')} books banned by governments and schools worldwide, by country, year and reason. Every ban cited to a source.`,
@@ -197,7 +198,17 @@ export default async function HomePage() {
       .order('reason_slug').order('rank'),
   ]))
 
-  const total = totalCountRes.count ?? 0
+  // The headline figures must never render from a failed query: a statement
+  // timeout used to fall through to `?? 0`, and ISR then served "0 books
+  // documented · 0 countries" for the whole revalidate window (2026-11-10).
+  // Throwing keeps the last good homepage in the cache instead.
+  for (const res of [totalCountRes, totalBansRes, topBannedRes, countriesRes, banCountsRes]) {
+    if (res.error) throw res.error
+  }
+  if (!totalCountRes.count || !banCountsRes.data?.length) {
+    throw new Error('homepage: empty headline figures — refusing to cache a zero homepage')
+  }
+  const total = totalCountRes.count
   const totalBans = totalBansRes.count ?? 0
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
