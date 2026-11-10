@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
     // pressures the prod PostgREST pool (it shares the same instance), throttle
     // it with `staticGenerationMaxConcurrency` (default 8 pages/worker).
     staticGenerationRetryCount: 2,
+    // 2026-11-10: with the default 8 pages/worker × 3 workers (~24 renders,
+    // ~170 concurrent Supabase calls) the build itself overloaded the DB —
+    // every page timed out while the same pages rendered in 1–2 s with no
+    // build running. 2/worker = 6 renders at once: slower build, no meltdown.
+    staticGenerationMaxConcurrency: 2,
   },
   // Include the generated dataset zip in the dataset download route's bundle.
   // private/ sits outside public/ (intentional — must not be served statically),
