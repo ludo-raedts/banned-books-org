@@ -137,4 +137,4 @@ function main() {
   console.log(`kind: ${[...by(e => e.kind)].map(([k, v]) => `${k} ${v}`).join(', ')}; with ban_year ${out.filter(e => e.ban_year).length}; with page ${out.filter(e => e.printed_page).length}; with author ${out.filter(e => e.author_display).length}`)
   console.log(`→ ${OUT}`)
 }
-main()
+if (process.argv[1]?.endsWith("build-index-1877-register.ts")) main()
