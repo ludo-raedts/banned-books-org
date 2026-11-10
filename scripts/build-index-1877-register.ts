@@ -80,15 +80,41 @@ function pageOfLine(lines: string[]): (line: number) => number | null {
   return (line: number) => {
     // The marker is printed at the page top (or foot); interpolate between chain neighbours.
     let i = chain.findIndex(c => c.line > line)
-    if (i <= 0) return null
-    const a = chain[i - 1], b = chain[i]
+    if (i < 0) return null
+    // Before the first marker: extrapolate back with the first two markers' lines-per-page.
+    const a = i === 0 ? chain[0] : chain[i - 1], b = i === 0 ? chain[1] : chain[i]
     return a.page + Math.floor(((line - a.line) / (b.line - a.line)) * (b.page - a.page))
+  }
+}
+
+// The OCR keeps the printed section letters ("A" … "Z" on their own line) in order,
+// then an APPENDIX with its own A, B, C …. The letter of an entry is the section it
+// stands in — its own headword is often OCR-mangled or an anonymous title keyword.
+// V has no surviving header: inside U, a headword starting with V counts as V.
+function sectionOfLine(lines: string[]): (line: number, headword: string) => string {
+  const appendix = lines.findIndex(l => /^\s*APPENDIX\.?\s*$/.test(l)) + 1 || Infinity
+  const chains: { line: number; letter: string }[][] = [[], []]
+  lines.forEach((l, i) => {
+    const m = /^\s*([A-Z])\s*$/.exec(l)
+    if (!m) return
+    const c = chains[i + 1 > appendix ? 1 : 0]
+    const last = c.at(-1)?.letter ?? '@'
+    // keep strictly increasing letters, at most 3 apart (drops stray OCR capitals)
+    if (m[1] > last && m[1].charCodeAt(0) - last.charCodeAt(0) <= 3) c.push({ line: i + 1, letter: m[1] })
+  })
+  console.log(`sections: ${chains[0].map(c => c.letter).join('')} | appendix ${chains[1].map(c => c.letter).join('')}`)
+  return (line, headword) => {
+    const c = chains[line > appendix ? 1 : 0]
+    const s = [...c].reverse().find(x => x.line <= line)?.letter ?? 'A'
+    return s === 'U' && /^v/i.test(headword) ? 'V' : s
   }
 }
 
 function main() {
   const rows: Row[] = JSON.parse(readFileSync(STAGE, 'utf8'))
-  const page = pageOfLine(readFileSync(TEXT, 'utf8').split('\n'))
+  const text = readFileSync(TEXT, 'utf8').split('\n')
+  const page = pageOfLine(text)
+  const section = sectionOfLine(text)
   const held = heldSeqs()
 
   let head: Row | null = null
@@ -113,15 +139,15 @@ function main() {
     const trusted = src.llm?.author && (src.author_reviewed || (src.llm.author_confidence === 'high' && src.author_guard !== 'demoted'))
     const display = trusted ? src.llm!.author : printed
     if (kind === 'blanket' && !display) { skipped.push({ seq: r.seq, why: 'blanket without author' }); continue }
-    const hw = fold(h.headword || title).replace(/[^A-Za-z]/g, '')
-    const letter = /^[A-Z]/i.test(hw) ? hw[0].toUpperCase() : '#'
+    const letter = section(r.line, fold(h.headword || title).replace(/[^A-Za-z]/g, ''))
     const p = page(r.line)
     out.push({
       source_key: `seq-${r.seq}`,
       edition: '1877',
       kind,
       letter,
-      sort_key: `${fold(h.headword || '').toLowerCase()} ${fold(title).toLowerCase()}`.replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim(),
+      // printed order (the Index is alphabetical; mangled headwords would mis-sort)
+      sort_key: String(r.line).padStart(6, '0'),
       printed_author: printed,
       author_display: display,
       title,
