@@ -6,6 +6,7 @@
 // Every read here is bounded and runs only at ISR time (pages revalidate daily):
 // letter pages are one index range scan on (list_id, letter, sort_key).
 
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 
 export type RegisterList = {
@@ -48,8 +49,9 @@ export type RegisterEntry = {
 const LIST_COLS =
   'id, slug, title, title_en, issuer, country_code, year_start, year_end, framing, intro_md, source_name, source_url, licence_note, page_url_template, entry_count, book_count, matched_count'
 
-/** Rows per letter page. PostgREST caps a response at 1,000 rows. */
-export const REGISTER_PAGE_SIZE = 1000
+/** Rows per letter page. 1,000 made a ~1.6 MB page (the S page of the SBZ list
+ *  alone holds 4,700 entries); 250 keeps the HTML around 400 KB. */
+export const REGISTER_PAGE_SIZE = 250
 
 export const REGISTER_LETTERS = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '#'] as const
 
@@ -103,21 +105,32 @@ export async function getRegisterListsForCountry(code: string): Promise<Pick<Reg
   return data ?? []
 }
 
-/** Entries per letter (all kinds). 27 index-only HEAD counts, run at ISR time only. */
+/** Entries per letter (all kinds): 27 index-only HEAD counts. Shared by every
+ *  letter page of a list through the data cache (TTL = the pages' revalidate),
+ *  so an uncached letter page costs one range scan instead of 28 round trips —
+ *  firing all 27 at once per page exhausted the PostgREST pool under crawl. */
+const _letterCounts = unstable_cache(
+  async (listId: number): Promise<[string, number][]> => {
+    const sb = adminClient()
+    const results = await Promise.all(
+      REGISTER_LETTERS.map(async (l) => {
+        const { count, error } = await sb
+          .from('register_entries')
+          .select('id', { count: 'exact', head: true })
+          .eq('list_id', listId)
+          .eq('letter', l)
+        if (error) throw error
+        return [l, count ?? 0] as [string, number]
+      }),
+    )
+    return results.filter(([, n]) => n > 0)
+  },
+  ['register-letter-counts'],
+  { revalidate: 86400, tags: ['registers'] },
+)
+
 export async function getLetterCounts(listId: number): Promise<Map<string, number>> {
-  const sb = adminClient()
-  const results = await Promise.all(
-    REGISTER_LETTERS.map(async (l) => {
-      const { count, error } = await sb
-        .from('register_entries')
-        .select('id', { count: 'exact', head: true })
-        .eq('list_id', listId)
-        .eq('letter', l)
-      if (error) throw error
-      return [l, count ?? 0] as const
-    }),
-  )
-  return new Map(results.filter(([, n]) => n > 0))
+  return new Map(await _letterCounts(listId))
 }
 
 export async function getLetterEntries(listId: number, letter: string, page: number): Promise<RegisterEntry[]> {

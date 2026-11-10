@@ -8,9 +8,10 @@ import type { Metadata } from 'next'
 import BreadcrumbJsonLd from '@/components/breadcrumb-jsonld'
 import Link from '@/components/link'
 import { notFound } from 'next/navigation'
+import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { buildCitationMeta } from '@/lib/citation-meta'
-import { BAN_CONTEXTS, getBanContext, type BanContext } from '@/lib/ban-contexts'
+import { getBanContext, type BanContext } from '@/lib/ban-contexts'
 import { CONTEXT_CONTENT, ContextHero } from './content'
 
 // Hub content is fully static apart from the book list, which changes only when
@@ -34,8 +35,12 @@ const proseClasses =
 type BookRow = { slug: string; title: string; author: string | null }
 type RankedRow = BookRow & { id: number; documented: number }
 
+// Not prerendered at build: the big hubs (Index 1877 ≈ 4,700 books, Nazi 1938,
+// Malaysia) take ~40 sequential reads each and blew the 60 s per-page build
+// limit whenever the database was busy, failing the whole deploy. They render
+// on first request (300 s function limit) and then serve from ISR.
 export function generateStaticParams() {
-  return BAN_CONTEXTS.filter((c) => c.hasHub).map((c) => ({ slug: c.slug }))
+  return []
 }
 
 export async function generateMetadata({
@@ -66,7 +71,7 @@ export async function generateMetadata({
 // Resolves the books that belong to a context. Two strategies, mirroring the
 // registry matcher: an explicit slug allowlist, or a citation-source substring
 // (the signal the /sources page tallies by). Author is the first credited name.
-async function fetchContextBooks(ctx: BanContext): Promise<BookRow[]> {
+async function fetchContextBooksUncached(ctx: BanContext): Promise<BookRow[]> {
   const sb = adminClient()
   const SELECT = 'id, slug, title, cover_url, description_book, book_authors(authors(display_name))'
 
@@ -173,6 +178,17 @@ async function fetchContextBooks(ctx: BanContext): Promise<BookRow[]> {
   return rank(out)
 }
 
+// The ranked list in the data cache, so an ISR regeneration of a hub (or a
+// metadata pass) does not redo the ~40 reads. Same TTL as the route.
+const fetchContextBooks = unstable_cache(
+  async (slug: string): Promise<BookRow[]> => {
+    const ctx = getBanContext(slug)
+    return ctx ? fetchContextBooksUncached(ctx) : []
+  },
+  ['context-books'],
+  { revalidate: 86400, tags: ['context-books'] },
+)
+
 export default async function ContextPage({
   params,
 }: {
@@ -183,7 +199,7 @@ export default async function ContextPage({
   const content = CONTEXT_CONTENT[slug]
   if (!ctx?.hasHub || !content) notFound()
 
-  const books = await fetchContextBooks(ctx)
+  const books = await fetchContextBooks(ctx.slug)
   // Some events (the 1938 Nazi list) cover thousands of titles. Cap the rendered
   // DOM to keep the page light; the list is ranked best-known first, the heading
   // still shows the true total and the long tail stays reachable via the sitemap
