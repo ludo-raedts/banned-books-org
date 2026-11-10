@@ -262,3 +262,19 @@ export function contextsForBook(book: MatchableBook): BanContext[] {
     return false
   })
 }
+
+/**
+ * The bans a context was matched on — those citing one of its source URLs.
+ * Empty for an editorial `bookSlugs` match, which is tied to the book, not to
+ * a ban row. Lets the page say which of a book's bans the context covers.
+ */
+export function bansForContext<B extends MatchableBook['bans'][number]>(ctx: BanContext, bans: B[]): B[] {
+  const subs = ctx.match.sourceUrlIncludes
+  if (!subs || subs.length === 0) return []
+  return bans.filter((b) =>
+    b.ban_source_links.some((l) => {
+      const url = l.ban_sources?.source_url?.toLowerCase()
+      return !!url && subs.some((sub) => url.includes(sub))
+    }),
+  )
+}

@@ -325,15 +325,22 @@ export const INSTITUTION_CONTEXTS: InstitutionContext[] = [
 
 type MatchableBan = { institution: string | null; region: string | null; year_started: number | null }
 
+function matchesInstitution(ctx: InstitutionContext, b: MatchableBan): boolean {
+  return (
+    b.institution === ctx.institution &&
+    (b.region ?? '') === ctx.region &&
+    b.year_started != null &&
+    b.year_started >= ctx.years[0] &&
+    b.year_started <= ctx.years[1]
+  )
+}
+
 /** Contexts for the book's bans, one per institution, registry order. */
 export function institutionContextsForBans(bans: MatchableBan[]): InstitutionContext[] {
-  return INSTITUTION_CONTEXTS.filter(ctx =>
-    bans.some(b =>
-      b.institution === ctx.institution &&
-      (b.region ?? '') === ctx.region &&
-      b.year_started != null &&
-      b.year_started >= ctx.years[0] &&
-      b.year_started <= ctx.years[1],
-    ),
-  )
+  return INSTITUTION_CONTEXTS.filter(ctx => bans.some(b => matchesInstitution(ctx, b)))
+}
+
+/** The bans an institution context was matched on. */
+export function bansForInstitutionContext<B extends MatchableBan>(ctx: InstitutionContext, bans: B[]): B[] {
+  return bans.filter(b => matchesInstitution(ctx, b))
 }

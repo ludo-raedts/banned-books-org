@@ -35,10 +35,10 @@ import { themeByKey } from '@/lib/themes'
 import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
-import BanContextCallout from '@/components/ban-context-callout'
-import { contextsForBook } from '@/lib/ban-contexts'
+import BanBackground, { appliesToLabel, type BanBackgroundItem } from '@/components/ban-background'
+import { bansForContext, contextsForBook } from '@/lib/ban-contexts'
 import { buildBanRowSummary } from '@/lib/ban-summary'
-import { institutionContextsForBans } from '@/lib/institution-contexts'
+import { bansForInstitutionContext, institutionContextsForBans } from '@/lib/institution-contexts'
 import { equivalentTitles } from '@/lib/native-title'
 import { explainerForReasonSlugs } from '@/lib/reason-explainers'
 import { videoForBook } from '@/lib/featured-videos'
@@ -978,6 +978,46 @@ export default async function BookPage({
   // ten ~70-word paragraphs would bury the book's own content.
   const institutionContexts = institutionContextsForBans(book.bans).slice(0, 2)
 
+  // The three kinds of sourced background, in one shape for <BanBackground>.
+  // None is about the book as a whole, so each says which bans it covers.
+  const totalBans = book.bans.length
+  const eventBackground: BanBackgroundItem[] = bookContexts.map(ctx => ({
+    key: `event-${ctx.slug}`,
+    kicker: `Part of a known censorship event · ${ctx.badge}`,
+    title: ctx.title,
+    body: ctx.short,
+    appliesTo: appliesToLabel(bansForContext(ctx, book.bans), totalBans),
+    link: ctx.hasHub ? { href: `/contexts/${ctx.slug}`, label: `About ${ctx.title}` } : undefined,
+  }))
+  const otherBackground: BanBackgroundItem[] = [
+    ...institutionContexts.map(ctx => ({
+      key: `institution-${ctx.institution}`,
+      kicker: `Context · ${ctx.institution}`,
+      body: ctx.text,
+      appliesTo: appliesToLabel(bansForInstitutionContext(ctx, book.bans), totalBans),
+      sources: ctx.sources,
+    })),
+    ...(reasonExplainer
+      ? [{
+          key: `reason-${reasonExplainer.slug}`,
+          kicker: `Context · ${reasonExplainer.heading}`,
+          body: reasonExplainer.body,
+          appliesTo: appliesToLabel(
+            book.bans.filter(b => b.ban_reason_links.some(l => l.reasons?.slug === reasonExplainer.slug)),
+            totalBans,
+          ),
+          sources: [reasonExplainer.source],
+          nofollowSources: true,
+          link: reasonExplainer.relatedContextSlug
+            ? {
+                href: `/contexts/${reasonExplainer.relatedContextSlug}`,
+                label: `More on ${reasonExplainer.relatedContextLabel}`,
+              }
+            : undefined,
+        }]
+      : []),
+  ]
+
   // Hand-curated primary-source clip for this title, if any (e.g. the author
   // discussing the ban). Privacy-safe facade embed. See lib/featured-videos.ts.
   const featuredVideo = videoForBook(slug)
@@ -1625,7 +1665,7 @@ export default async function BookPage({
           event — for sparse titles this is the substance of the page, so it
           leads; a book with its own ban story shows it after the bans table
           instead (see contextAfterBans). */}
-      {!contextAfterBans && <BanContextCallout contexts={bookContexts} />}
+      {!contextAfterBans && <BanBackground items={eventBackground} />}
 
       {/* About the book */}
       {!book.description_book ? (
@@ -1690,25 +1730,6 @@ export default async function BookPage({
               )}
             </div>
           )}
-          {institutionContexts.map((ctx) => (
-            <div key={ctx.institution} className="mt-4 border-t border-red-100 pt-3">
-              <h3 className="text-[11px] font-medium uppercase tracking-widest text-red-700/70 mb-1">
-                Context · {ctx.institution}
-              </h3>
-              <p className="text-sm leading-relaxed text-gray-800">{ctx.text}</p>
-              <p className="mt-1 text-xs text-gray-500">
-                Sources:{' '}
-                {ctx.sources.map((src, i) => (
-                  <React.Fragment key={src.url}>
-                    {i > 0 && ', '}
-                    <a href={src.url} target="_blank" rel="noopener" className="underline underline-offset-2 hover:text-gray-700">
-                      {src.name}
-                    </a>
-                  </React.Fragment>
-                ))}
-              </p>
-            </div>
-          ))}
         </section>
       )}
 
@@ -1721,40 +1742,11 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Reason context — hand-authored, cited, category-level background for the
-          book's dominant challenge reason. Reused across all books carrying the
-          reason; never asserts anything specific about this title. View-layer
-          only: not part of JSON-LD (it isn't a description of the work). */}
-      {reasonExplainer && (
-        <section className="mb-8 rounded-r-xl border-l-4 border-slate-300 bg-slate-50/70 pl-5 pr-4 py-4">
-          <h2 className="text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-1.5">
-            Context · {reasonExplainer.heading}
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-800">{reasonExplainer.body}</p>
-          <p className="mt-2 text-xs text-gray-500">
-            Source:{' '}
-            <a
-              href={reasonExplainer.source.url}
-              rel="nofollow noopener"
-              target="_blank"
-              className="underline underline-offset-2 hover:text-gray-700"
-            >
-              {reasonExplainer.source.name}
-            </a>
-            {reasonExplainer.relatedContextSlug && (
-              <>
-                {' · '}
-                <Link
-                  href={`/contexts/${reasonExplainer.relatedContextSlug}`}
-                  className="text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
-                >
-                  More on {reasonExplainer.relatedContextLabel} →
-                </Link>
-              </>
-            )}
-          </p>
-        </section>
-      )}
+      {/* Institution + reason background (sourced, written once per district /
+          per reason category; never a claim about this title). On a sparse page
+          it stays up here, ahead of the table, where it is most of the
+          substance; a book with its own ban story shows it after the table. */}
+      {!contextAfterBans && <BanBackground items={otherBackground} />}
 
       {/* In the author's words — hand-curated primary-source clip (see
           lib/featured-videos.ts). Privacy-safe facade embed: no YouTube
@@ -1944,9 +1936,14 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Censorship-event context, for books that lead with their own ban story:
-          background on a subset of the rows in the table just above. */}
-      {contextAfterBans && <BanContextCallout contexts={bookContexts} />}
+      {/* All sourced background, for books that lead with their own ban story:
+          each item covers a subset of the rows in the table just above. */}
+      {contextAfterBans && (
+        <BanBackground
+          heading="Background on these bans"
+          items={[...eventBackground, ...otherBackground]}
+        />
+      )}
 
       {/* Editorial note — context/extended tier only; placed after bans so the
           factual record comes first and editorial framing follows.
