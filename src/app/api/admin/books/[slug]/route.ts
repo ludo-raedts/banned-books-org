@@ -91,7 +91,7 @@ export async function PATCH(
   const supabase = adminClient()
   const { data: current } = await supabase
     .from('books')
-    .select('description_book, cover_url')
+    .select('description_book, cover_url, censorship_context')
     .eq('slug', slug)
     .maybeSingle()
 
@@ -108,6 +108,19 @@ export async function PATCH(
         // refill by the fill-missing pipeline, which is the desired retry path.
         updates.description_source_type = null
       }
+    }
+  }
+
+  // Same idea for the censorship history. Its automated writers are all LLMs,
+  // and the book page labels the text "AI-generated" unless the status says a
+  // human curated it — so a hand edit must flip the status, or the page would
+  // mislabel the admin's own words. 'narrative_curated' also makes
+  // enrich-censorship-context-gpt skip the row. A cleared field is left alone:
+  // the existing status keeps deciding whether enrichment may refill it.
+  if (current && 'censorship_context' in updates) {
+    const next = (updates.censorship_context ?? null) as string | null
+    if (next && next !== (current.censorship_context ?? null)) {
+      updates.censorship_context_status = 'narrative_curated'
     }
   }
 

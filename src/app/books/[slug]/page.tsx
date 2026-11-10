@@ -230,7 +230,7 @@ const isBlockedSlug = cache(async (slug: string): Promise<boolean> => {
 const BOOK_DETAIL_SELECT = `
   id, title, slug, cover_url, description_book, description_ban, description_ban_status,
   description_source_url, description_source_type,
-  censorship_context, first_published_year, genres, gutenberg_id, isbn13,
+  censorship_context, censorship_context_status, first_published_year, genres, gutenberg_id, isbn13,
   bookshop_status, bookshop_isbn13, kobo_url, archive_org_id, archive_org_status,
   warning_level, inclusion_rationale, extended_context,
   is_gated, gating_country, is_blanket_works,
@@ -666,6 +666,7 @@ type BookDetail = {
     | 'llm_grounded_multi' | 'llm_grounded_single' | 'ai_consensus' | 'manual'
     | null
   censorship_context: string | null
+  censorship_context_status: string | null
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
@@ -1710,8 +1711,21 @@ export default async function BookPage({
           read as a second answer to the same question. Next to a bare row
           summary the history is the narrative, so there it leads. */}
       {(banDescription || hasPromotedBanNote || banRowSummary || showCensorshipHistory) && (() => {
+        // Provenance: every pipeline that writes censorship_context is an LLM
+        // (enrich-censorship-context-gpt, rewrite-descriptions-grounded, the
+        // wiki-enrichment rewrite) and the column has no source URL, so say
+        // so — the lead text above it often names its source, and silence
+        // here read as the same sourcing. 'narrative_curated' marks text a
+        // human wrote or vetted (the admin portal stamps it on edit).
         const history = showCensorshipHistory ? (
-          <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
+          <div>
+            <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
+            {book.censorship_context_status !== 'narrative_curated' && (
+              <p className="mt-1.5 text-xs text-gray-500">
+                AI-generated summary of this book&rsquo;s censorship history — not from a single cited source.
+              </p>
+            )}
+          </div>
         ) : null
         const historyLeads = !banDescription && !hasPromotedBanNote
         return (
