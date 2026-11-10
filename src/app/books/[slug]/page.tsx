@@ -301,7 +301,10 @@ function TombstoneNotice() {
 // PREBUILD_LIMIT is well below the ~16k count that broke the Vercel deploy, so
 // the build is reliable. It can be raised cautiously, but each probe costs a
 // ~14-min build and risks the same finalisation crash.
-const PREBUILD_LIMIT = 2000
+// Lowered 2000 → 500 on 2026-11-10: with a busy DB the 2,247-page prerender
+// timed out on book pages and failed deploys; the next 1,500 render on first
+// visit and are ISR-cached like the rest of the long tail.
+const PREBUILD_LIMIT = 500
 export async function generateStaticParams() {
   const sb = adminClient()
 

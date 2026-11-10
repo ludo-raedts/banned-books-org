@@ -19,12 +19,13 @@ const FIRST_YEAR = 2000
 // on demand via <YearMoreBooks> → /api/banned-books/[year]. Counts, lead and FAQ
 // use the full set.
 
+// Not prerendered at build: since the Texas/Florida imports 2023–2025 each
+// aggregate thousands of books and blew the 60 s per-page build limit while the
+// DB was busy, failing the whole deploy (2026-11-10). Each year renders on first
+// request (300 s function limit) and is then served from ISR. [] still keeps
+// the route static + ISR.
 export async function generateStaticParams() {
-  const years = []
-  for (let y = 2015; y <= CURRENT_YEAR; y++) {
-    years.push({ year: String(y) })
-  }
-  return years
+  return [] as { year: string }[]
 }
 
 export async function generateMetadata({
