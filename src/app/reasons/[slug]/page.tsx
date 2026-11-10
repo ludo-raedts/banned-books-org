@@ -209,7 +209,11 @@ export default async function ReasonPage({
 
   const supabase = adminClient()
 
-  const { data: reason } = await supabase.from('reasons').select('id, slug').eq('slug', slug).single()
+  const { data: reason, error: reasonError } = await supabase.from('reasons').select('id, slug').eq('slug', slug).maybeSingle()
+  // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
+  // notFound() for the whole revalidate window, so a slow moment turned real
+  // pages into cached 404s. Throwing keeps the last good page.
+  if (reasonError) throw reasonError
   if (!reason) notFound()
 
   // Light sweep (see getReasonSweep above; shared with generateMetadata). The

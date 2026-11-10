@@ -215,7 +215,7 @@ export default async function CountryPage({
     banSweep,
     registerLists,
   ] = await Promise.all([
-    supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).single(),
+    supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).maybeSingle(),
     supabase.from('mv_ban_counts').select('distinct_books, total_bans').eq('country_code', upperCode).maybeSingle(),
     booksGridQuery,
     loadBanSweep(),
@@ -224,7 +224,11 @@ export default async function CountryPage({
     getRegisterListsForCountry(upperCode),
   ])
 
-  if (ce || !country) notFound()
+  // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
+  // notFound() for the full revalidate window, so a slow moment turned a real
+  // country (/countries/dd) into a cached 404. Throwing keeps the last good page.
+  if (ce) throw ce
+  if (!country) notFound()
   if (error) throw error
 
   const distinctBooks = (countryMv?.distinct_books as number | undefined) ?? 0

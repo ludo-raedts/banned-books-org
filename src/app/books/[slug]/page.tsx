@@ -254,7 +254,7 @@ const BOOK_DETAIL_SELECT = `
   )
 `
 const getBookBySlug = cache(async (slug: string) =>
-  adminClient().from('books').select(BOOK_DETAIL_SELECT).eq('slug', slug).single()
+  adminClient().from('books').select(BOOK_DETAIL_SELECT).eq('slug', slug).maybeSingle()
 )
 
 // Content-free tombstone (policy §5b). No title-specific detail, no ISBN, no
@@ -852,7 +852,11 @@ export default async function BookPage({
   // per request, not two.
   const { data, error } = await getBookBySlug(slug)
 
-  if (error || !data) {
+  // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
+  // notFound() for the whole revalidate window, so a slow moment turned real
+  // pages into cached 404s. Throwing keeps the last good page.
+  if (error) throw error
+  if (!data) {
     // Alias fallback: maybe this slug points to a book via book_slug_aliases.
     // If so, 308 permanent-redirect to the canonical /books/<canonical_slug>.
     // Search engines and link-juice consolidate on the canonical URL.

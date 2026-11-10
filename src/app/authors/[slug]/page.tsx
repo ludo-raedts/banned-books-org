@@ -124,7 +124,7 @@ const AUTHOR_DETAIL_SELECT =
   'id, display_name, slug, bio, bio_source_type, bio_source_url, birth_year, death_year, birth_country, photo_url, name_native, name_transliterated, name_english, original_language, created_at, updated_at, is_placeholder, data_quality_status, data_quality_evaluated_at, awards, wikidata_id, website_url, social_links'
 
 const getAuthorBySlug = cache(async (slug: string) =>
-  adminClient().from('authors').select(AUTHOR_DETAIL_SELECT).eq('slug', slug).single()
+  adminClient().from('authors').select(AUTHOR_DETAIL_SELECT).eq('slug', slug).maybeSingle()
 )
 
 const getBookIdsForAuthor = cache(async (authorId: number): Promise<number[]> => {
@@ -267,8 +267,12 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
 
   // Shared with generateMetadata via getAuthorBySlug's React cache() — one
   // query per request, not two.
-  const { data: author } = await getAuthorBySlug(slug)
+  const { data: author, error: authorError } = await getAuthorBySlug(slug)
 
+  // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
+  // notFound() for the whole revalidate window, so a slow moment turned real
+  // pages into cached 404s. Throwing keeps the last good page.
+  if (authorError) throw authorError
   if (!author) {
     // Alias fallback: maybe this slug points to an author via
     // author_slug_aliases (e.g. a slug merged away into a canonical author).
