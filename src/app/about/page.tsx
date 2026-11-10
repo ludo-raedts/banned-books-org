@@ -11,6 +11,7 @@ import ContactForm from '@/components/contact-form'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 import ZenodoCitation from '@/components/zenodo-citation'
+import { requireCount } from '@/lib/require-count'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -32,11 +33,11 @@ async function getStats() {
   ])
 
   return {
-    books: books.count ?? 0,
-    bans: bans.count ?? 0,
-    countries: countriesRes.count ?? 0,
-    activeBans: activeBans.count ?? 0,
-    sources: sources.count ?? 0,
+    books: requireCount(books, 'books'),
+    bans: requireCount(bans, 'bans'),
+    countries: requireCount(countriesRes, 'countriesRes'),
+    activeBans: requireCount(activeBans, 'activeBans'),
+    sources: requireCount(sources, 'sources'),
     updatedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
   }
 }

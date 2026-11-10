@@ -4,6 +4,7 @@ import { adminClient } from '@/lib/supabase'
 import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { SUPPORT_LINK_MONTHLY, SUPPORT_LINK_ONE_OFF } from '@/lib/support-links'
+import { requireCount } from '@/lib/require-count'
 
 // ISR: the page is editorial copy plus three grounding counts. Hourly regen
 // keeps the numbers fresh after enrichment cycles without a query per visit.
@@ -26,9 +27,9 @@ async function getStats() {
     s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
   ])
   return {
-    books: books.count ?? 0,
-    bans: bans.count ?? 0,
-    countries: countriesRes.count ?? 0,
+    books: requireCount(books, 'books'),
+    bans: requireCount(bans, 'bans'),
+    countries: requireCount(countriesRes, 'countriesRes'),
   }
 }
 

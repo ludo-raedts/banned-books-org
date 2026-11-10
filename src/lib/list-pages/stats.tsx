@@ -16,6 +16,7 @@ import StatsTimeline, { type TimelineGroup } from '@/components/stats-timeline'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
 import { getRegisterLists } from '@/lib/registers'
+import { requireCount } from '@/lib/require-count'
 
 type StatsData = {
   totalBooks: number
@@ -74,9 +75,9 @@ async function fetchStatsData(): Promise<StatsData> {
   for (const res of [booksRes, bansRes, baRes, countriesRes]) {
     if (res.error) throw res.error
   }
-  const totalBooks = booksRes.count ?? 0
-  const totalBanEvents = bansRes.count ?? 0
-  const totalBookAuthors = baRes.count ?? 0
+  const totalBooks = requireCount(booksRes, 'booksRes')
+  const totalBanEvents = requireCount(bansRes, 'bansRes')
+  const totalBookAuthors = requireCount(baRes, 'baRes')
   const countryMap = new Map((countriesRes.data ?? []).map((c) => [c.code, c.name_en]))
 
   type BanRow = { book_id: number; country_code: string; year_started: number | null; status: string; ban_reason_links: Array<{ reasons: { slug: string } | null }> }

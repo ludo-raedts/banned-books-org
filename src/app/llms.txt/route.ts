@@ -9,6 +9,7 @@
 import { publishedEssays } from '@/lib/essays-data'
 import { adminClient } from '@/lib/supabase'
 import { getBBWConfig } from '@/config/banned-books-week'
+import { requireCount } from '@/lib/require-count'
 
 export const revalidate = 3600
 
@@ -49,7 +50,7 @@ export async function GET() {
     getBBWConfig(),
   ])
 
-  const total = countRes.count ?? 0
+  const total = requireCount(countRes, 'countRes')
   const countMap = new Map(
     ((banCountsRes.data ?? []) as { country_code: string; distinct_books: number }[])
       .map((r) => [r.country_code, r.distinct_books]),

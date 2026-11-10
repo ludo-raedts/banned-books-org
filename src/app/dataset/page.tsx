@@ -6,6 +6,7 @@ import DatasetCheckoutButton from '@/components/dataset-checkout-button'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
+import { requireCount } from '@/lib/require-count'
 
 const DATASET_PRICE_USD = 19.99
 
@@ -32,10 +33,10 @@ async function getStats() {
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: false }).limit(1).maybeSingle(),
   ])
   return {
-    books: books.count ?? 0,
-    bans: bans.count ?? 0,
-    sources: sources.count ?? 0,
-    countries: countriesRes.count ?? 0,
+    books: requireCount(books, 'books'),
+    bans: requireCount(bans, 'bans'),
+    sources: requireCount(sources, 'sources'),
+    countries: requireCount(countriesRes, 'countriesRes'),
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
   }

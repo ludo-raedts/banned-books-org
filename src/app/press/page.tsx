@@ -10,6 +10,7 @@ import CopyButton from '@/components/copy-button'
 import EmailLink from '@/components/email-link'
 import SectionShell from '@/components/section/SectionShell'
 import { citedBy, formatCitedDate, type CitedBy } from '@/lib/cited-by'
+import { requireCount } from '@/lib/require-count'
 
 export const metadata: Metadata = {
   title: 'Press & Media Kit',
@@ -57,9 +58,9 @@ async function getStats(): Promise<Stats> {
     s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
   return {
-    books: booksRes.count ?? 0,
-    bans: bansRes.count ?? 0,
-    countries: countriesRes.count ?? 0,
+    books: requireCount(booksRes, 'booksRes'),
+    bans: requireCount(bansRes, 'bansRes'),
+    countries: requireCount(countriesRes, 'countriesRes'),
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
     dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,

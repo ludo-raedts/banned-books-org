@@ -1,6 +1,7 @@
 import { buildAboutDocument } from '@/lib/markdown-pages/about'
 import { markdownResponse } from '@/lib/markdown-response'
 import { adminClient } from '@/lib/supabase'
+import { requireCount } from '@/lib/require-count'
 
 export const revalidate = 3600
 
@@ -16,11 +17,11 @@ export async function GET() {
 
   return markdownResponse(
     buildAboutDocument({
-      books: books.count ?? 0,
-      bans: bans.count ?? 0,
-      countries: countriesRes.count ?? 0,
-      activeBans: activeBans.count ?? 0,
-      sources: sources.count ?? 0,
+      books: requireCount(books, 'books'),
+      bans: requireCount(bans, 'bans'),
+      countries: requireCount(countriesRes, 'countriesRes'),
+      activeBans: requireCount(activeBans, 'activeBans'),
+      sources: requireCount(sources, 'sources'),
     }),
   )
 }
