@@ -15,6 +15,7 @@ import TrendingWidget from '@/components/trending-widget'
 import StatsTimeline, { type TimelineGroup } from '@/components/stats-timeline'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
+import { getRegisterLists } from '@/lib/registers'
 
 type StatsData = {
   totalBooks: number
@@ -28,6 +29,8 @@ type StatsData = {
   timelineGroups: TimelineGroup[]
   reasonSlugs: string[] // sorted; doubles as the reason filter options
   filterCountryOptions: { code: string; name: string }[]
+  // Large official lists kept as registers — shown beside the book count, never in it.
+  registerLists: { slug: string; name: string; entryCount: number; years: string }[]
 }
 
 const PAGE = 1000
@@ -200,7 +203,17 @@ async function fetchStatsData(): Promise<StatsData> {
     .map((code) => ({ code, name: countryMap.get(code) ?? code }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
+  const registerLists = (await getRegisterLists())
+    .map((l) => ({
+      slug: l.slug,
+      name: l.title_en ?? l.title,
+      entryCount: l.entry_count,
+      years: l.year_end && l.year_end !== l.year_start ? `${l.year_start}–${l.year_end}` : `${l.year_start}`,
+    }))
+    .sort((a, b) => b.entryCount - a.entryCount)
+
   return {
+    registerLists,
     totalBooks,
     totalBanEvents,
     countryCount: countryBooks.size,
@@ -296,6 +309,31 @@ export default async function StatsPage() {
           </div>
         ))}
       </div>
+
+      {/* ── 2b. Register lists: counted beside the catalogue, not in it ── */}
+      {stats.registerLists.length > 0 && (
+        <div className="-mt-8 mb-14 rounded-xl border border-dashed border-gray-300 p-4 sm:p-5">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-3xl font-bold tabular-nums text-gray-700">
+              {stats.registerLists.reduce((a, l) => a + l.entryCount, 0).toLocaleString('en')}
+            </span>
+            <span className="text-sm text-gray-600">further titles on official ban lists, kept as registers</span>
+          </div>
+          <ul className="mt-2 space-y-1 text-sm text-gray-600">
+            {stats.registerLists.map((l) => (
+              <li key={l.slug}>
+                <Link href={`/registers/${l.slug}`} className="underline decoration-gray-300 underline-offset-2 hover:text-gray-900 hover:decoration-gray-500">
+                  {l.name}
+                </Link>{' '}
+                <span className="tabular-nums text-gray-400">· {l.entryCount.toLocaleString('en')}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-gray-400">
+            Listed entry by entry with their original source, but not included in the book, ban or country figures above.
+          </p>
+        </div>
+      )}
 
       {/* ── 3. Trending this week ── */}
       <section className="mb-16">
