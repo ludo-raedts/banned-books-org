@@ -1701,46 +1701,55 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* Why it was banned — the synthesized description_ban when we have one,
-          else (a) the promoted raw per-ban note(s). */}
-      {(banDescription || hasPromotedBanNote || banRowSummary) && (
-        <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
-          <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">
-            {banDescription || hasPromotedBanNote ? 'Why it was banned' : 'Where and when it was banned'}
-          </h2>
-          {banDescription ? (
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
-          ) : hasPromotedBanNote ? (
-            <div className="space-y-2">
-              {promotedBanNotes.map((note, i) => (
-                <p key={i} className="text-gray-700 leading-relaxed">{note}</p>
-              ))}
-            </div>
-          ) : banRowSummary && (
-            <div className="space-y-2">
-              <p className="text-gray-700 leading-relaxed">
-                {banRowSummary.sentences.join(' ')}
-                {banRowSummary.more && <> {banRowSummary.more}</>}
-              </p>
-              {/* The generic "sources don't record the reason" note would
-                  contradict an institution context that explains the removals;
-                  PEN's note stays (it describes the source, still true). */}
-              {banRowSummary.sourceNote && (banRowSummary.sourceNote.startsWith('PEN') || institutionContexts.length === 0) && (
-                <p className="text-sm text-gray-500">{banRowSummary.sourceNote}</p>
-              )}
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* Censorship history (AI-generated context) — only when factually
-          additive vs. the ban description, never a near-duplicate paragraph. */}
-      {showCensorshipHistory && (
-        <section className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Censorship history</h2>
+      {/* Why it was banned — ONE section for the book's own ban narrative. The
+          lead is the synthesized description_ban when we have one, else (a) the
+          promoted raw per-ban note(s), else (b) the where/when row summary. The
+          longer censorship history (censorship_context, shown only when it adds
+          facts — see isContextAdditive) continues under the same heading; it
+          used to be a separate grey "Censorship history" section below, which
+          read as a second answer to the same question. Next to a bare row
+          summary the history is the narrative, so there it leads. */}
+      {(banDescription || hasPromotedBanNote || banRowSummary || showCensorshipHistory) && (() => {
+        const history = showCensorshipHistory ? (
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
-        </section>
-      )}
+        ) : null
+        const historyLeads = !banDescription && !hasPromotedBanNote
+        return (
+          <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
+            <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">
+              {banDescription || hasPromotedBanNote || showCensorshipHistory
+                ? 'Why it was banned'
+                : 'Where and when it was banned'}
+            </h2>
+            <div className="space-y-3">
+              {historyLeads && history}
+              {banDescription ? (
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
+              ) : hasPromotedBanNote ? (
+                <div className="space-y-2">
+                  {promotedBanNotes.map((note, i) => (
+                    <p key={i} className="text-gray-700 leading-relaxed">{note}</p>
+                  ))}
+                </div>
+              ) : banRowSummary && (
+                <div className="space-y-2">
+                  <p className="text-gray-700 leading-relaxed">
+                    {banRowSummary.sentences.join(' ')}
+                    {banRowSummary.more && <> {banRowSummary.more}</>}
+                  </p>
+                  {/* The generic "sources don't record the reason" note would
+                      contradict an institution context that explains the removals;
+                      PEN's note stays (it describes the source, still true). */}
+                  {banRowSummary.sourceNote && (banRowSummary.sourceNote.startsWith('PEN') || institutionContexts.length === 0) && (
+                    <p className="text-sm text-gray-500">{banRowSummary.sourceNote}</p>
+                  )}
+                </div>
+              )}
+              {!historyLeads && history}
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Institution + reason background (sourced, written once per district /
           per reason category; never a claim about this title). On a sparse page
