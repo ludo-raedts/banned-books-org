@@ -27,6 +27,7 @@ import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 import { contextsForCountry } from '@/lib/ban-contexts'
 import { getRegisterTotals } from '@/lib/registers'
+import { relatedJurisdictions } from '@/lib/related-jurisdictions'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForCountry, bookshopListUrl } from '@/lib/bookshop-lists'
 
@@ -160,6 +161,8 @@ export default async function CountryPage({
   if (code !== lowerCode) permanentRedirect(`/countries/${lowerCode}`)
   const upperCode = code.toUpperCase()
   const countryContexts = contextsForCountry(upperCode)
+  const related = relatedJurisdictions(upperCode)
+  const relatedCodes = related.map((r) => r.code)
   const supabase = adminClient()
 
   // These reads are all independent (each keys only off upperCode), so run
@@ -213,7 +216,9 @@ export default async function CountryPage({
     { data: countryMv },
     { data, error },
     banSweep,
-    registerLists,
+    allRegisters,
+    relatedNames,
+    relatedMv,
   ] = await Promise.all([
     supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).maybeSingle(),
     supabase.from('mv_ban_counts').select('distinct_books, total_bans').eq('country_code', upperCode).maybeSingle(),
@@ -221,8 +226,31 @@ export default async function CountryPage({
     loadBanSweep(),
     // Large official lists kept as a register — shown NEXT TO the distinct-books
     // metric, never summed into it.
-    getRegisterTotals().then((all) => all.filter((r) => r.country_code === upperCode)),
+    getRegisterTotals(),
+    // Sister jurisdictions (DE ↔ DD, …): name + book count for the "filed
+    // separately" card. Two tiny keyed reads, skipped for every other country.
+    relatedCodes.length
+      ? supabase.from('countries').select('code, name_en').in('code', relatedCodes)
+      : Promise.resolve({ data: [] as { code: string; name_en: string }[], error: null }),
+    relatedCodes.length
+      ? supabase.from('mv_ban_counts').select('country_code, distinct_books').in('country_code', relatedCodes)
+      : Promise.resolve({ data: [] as { country_code: string; distinct_books: number }[], error: null }),
   ])
+  const registerLists = allRegisters.filter((r) => r.country_code === upperCode)
+  if (relatedNames.error) throw relatedNames.error
+  if (relatedMv.error) throw relatedMv.error
+  const relatedCards = related.flatMap((r) => {
+    const name = relatedNames.data?.find((c) => c.code === r.code)?.name_en
+    if (!name) return []
+    return [{
+      ...r,
+      name,
+      books: relatedMv.data?.find((m) => m.country_code === r.code)?.distinct_books ?? 0,
+      registerTitles: allRegisters
+        .filter((reg) => reg.country_code === r.code)
+        .reduce((n, reg) => n + reg.furtherTitles, 0),
+    }]
+  })
 
   // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
   // notFound() for the full revalidate window, so a slow moment turned a real
@@ -597,7 +625,12 @@ export default async function CountryPage({
           1938 Nazi list, the Russian extremist register, the Loi Gayssot, …),
           driven by the ban-context registry. ─────────────────────────────── */}
       {countryContexts.length > 0 && (
-        <SectionShell tone="cream" eyebrow="Censorship context">
+        <SectionShell tone="cream" eyebrow="Background">
+          <SectionHeader
+            title="Where these bans come from"
+            subtitle={`Background on the lists and laws behind books on this page. The titles they cover are already included in the figures for ${country.name_en} above.`}
+            accent="oxblood"
+          />
           <div className="grid gap-3 sm:grid-cols-2 max-w-3xl">
             {countryContexts.map((ctx) => (
               <Link
@@ -610,6 +643,40 @@ export default async function CountryPage({
                 </span>
                 <span className="text-sm text-neutral-600 leading-relaxed">
                   {ctx.countryCard!.blurb}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </SectionShell>
+      )}
+
+      {/* ── Sister jurisdictions filed separately (Germany ↔ East Germany, …).
+          Their books are NOT on this page, so it gets its own section rather
+          than a card among the context hubs above. ───────────────────────── */}
+      {relatedCards.length > 0 && (
+        <SectionShell tone="white" eyebrow="Filed separately">
+          <SectionHeader
+            title="Not on this page"
+            subtitle="A ban is filed under the state that issued it."
+            accent="black"
+          />
+          <div className="grid gap-3 sm:grid-cols-2 max-w-3xl">
+            {relatedCards.map((rc) => (
+              <Link
+                key={rc.code}
+                href={`/countries/${rc.code.toLowerCase()}`}
+                className="group flex items-start gap-4 px-5 py-4 bg-white border border-neutral-200 hover:border-oxblood transition-colors rounded-sm"
+              >
+                <span className="text-3xl leading-none" aria-hidden="true">{countryFlag(rc.code)}</span>
+                <span className="flex flex-col gap-1 min-w-0">
+                  <span className="font-serif text-lg font-medium text-gray-900 group-hover:text-oxblood transition-colors">
+                    {rc.name} →
+                  </span>
+                  <span className="text-sm text-neutral-600 leading-relaxed">{rc.note}</span>
+                  <span className="text-xs text-neutral-500 tabular-nums">
+                    {rc.books.toLocaleString('en')} {rc.books === 1 ? 'book' : 'books'} documented
+                    {rc.registerTitles > 0 && ` · ${rc.registerTitles.toLocaleString('en')} further titles in a register`}
+                  </span>
                 </span>
               </Link>
             ))}
