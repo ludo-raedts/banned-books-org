@@ -13,6 +13,7 @@ import type { Ban, Book, CountryOption } from './book-browser'
 import { coverAlt } from '@/lib/cover-alt'
 import { countryFlag } from '@/lib/country-flag'
 import type { BookSort } from '@/lib/book-search'
+import RegisterHits from '@/components/register-hits'
 
 const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
@@ -300,6 +301,8 @@ export default function SearchClient({
   }, [debouncedQ, country, reason, scope, activeOnly, sort])
 
   const hasFilters = !!(debouncedQ || country || reason || scope || activeOnly)
+  const showRegisterHits =
+    !loadingFilter && debouncedQ.trim().length >= 3 && !country && !reason && !scope && !activeOnly && total <= 5
   const hasMore = displayBooks.length < total
 
   const loadMore = useCallback(() => {
@@ -561,6 +564,10 @@ export default function SearchClient({
         </div>
       )}
 
+      {/* Titles we only hold on a register list — shown when the catalogue has
+          few or no matches for a plain text query (no filters to honour). */}
+      {showRegisterHits && displayBooks.length === 0 && <RegisterHits q={debouncedQ} />}
+
       {/* Book grid */}
       {displayBooks.length > 0 && (
         <div id="book-grid">
@@ -595,6 +602,8 @@ export default function SearchClient({
           </div>
         </div>
       )}
+
+      {showRegisterHits && displayBooks.length > 0 && <RegisterHits q={debouncedQ} />}
 
       {loadingFilter && displayBooks.length === 0 && (
         <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-5">

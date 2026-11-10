@@ -18,7 +18,10 @@ import Database from 'better-sqlite3'
 import { createWriteStream, existsSync, mkdirSync, rmSync } from 'node:fs'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import { fetchAll, writeCsv, makeAdminClient } from './lib/dataset-io'
+import {
+  fetchAll, writeCsv, makeAdminClient, fetchRegisters, registerFurtherTitles, registerReadmeSection,
+  REGISTER_LIST_COLUMNS, REGISTER_ENTRY_COLUMNS, type Row,
+} from './lib/dataset-io'
 
 const ROOT = process.cwd()
 const STAGING_DIR = join(ROOT, 'private', '_dataset_build')
@@ -36,6 +39,10 @@ const BOOK_COLUMNS = [
   'title_native', 'title_native_script', 'title_transliterated',
   'title_english_meaningful', 'archive_org_id', 'data_quality_status',
   'updated_at',
+  // Appended 2026-11-10. TRUE = not a real title but a stand-in for a ban on
+  // ALL works of an author (Index Librorum Prohibitorum, Liste Otto). Filter
+  // these out when counting titles.
+  'is_blanket_works',
 ] as const
 const AUTHOR_COLUMNS = [
   'id', 'slug', 'display_name', 'birth_year', 'death_year', 'birth_country', 'bio',
@@ -67,7 +74,7 @@ async function main() {
   console.log('  · Fetching from Supabase')
   const [
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
-    countries, reasons, scopes, sources,
+    countries, reasons, scopes, sources, registers,
   ] = await Promise.all([
     fetchAll(supabase, 'books',            BOOK_COLUMNS.join(','),         'id', 250),
     fetchAll(supabase, 'authors',          AUTHOR_COLUMNS.join(','),       'id'),
@@ -79,6 +86,7 @@ async function main() {
     fetchAll(supabase, 'reasons',          REASON_COLUMNS.join(','),       'id'),
     fetchAll(supabase, 'scopes',           SCOPE_COLUMNS.join(','),        'id'),
     fetchAll(supabase, 'ban_sources',      SOURCE_COLUMNS.join(','),       'id'),
+    fetchRegisters(supabase),
   ])
 
   console.log(`    books=${books.length} authors=${authors.length} bans=${bans.length} sources=${sources.length}`)
@@ -100,13 +108,15 @@ async function main() {
     writeCsv(STAGING_DIR, 'reasons.csv',          REASON_COLUMNS,  reasons),
     writeCsv(STAGING_DIR, 'scopes.csv',           SCOPE_COLUMNS,   scopes),
     writeCsv(STAGING_DIR, 'ban_sources.csv',      SOURCE_COLUMNS,  sources),
+    writeCsv(STAGING_DIR, 'register_lists.csv',   REGISTER_LIST_COLUMNS,  registers.lists),
+    writeCsv(STAGING_DIR, 'register_entries.csv', REGISTER_ENTRY_COLUMNS, registers.entries),
   ])
 
   // 4. Write denormalised JSON (most useful for casual analysts)
   console.log('  · Writing dataset.json')
   const json = buildDenormalisedJson({
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
-    countries, reasons, scopes, sources,
+    countries, reasons, scopes, sources, registers,
   })
   await writeFile(join(STAGING_DIR, 'dataset.json'), JSON.stringify(json, null, 2), 'utf8')
 
@@ -114,11 +124,11 @@ async function main() {
   console.log('  · Writing dataset.sqlite')
   buildSqlite(join(STAGING_DIR, 'dataset.sqlite'), {
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
-    countries, reasons, scopes, sources,
+    countries, reasons, scopes, sources, registers,
   })
 
   // 6. Write README + LICENSE
-  await writeFile(join(STAGING_DIR, 'README.md'), readme({ books, bans, countries, sources }), 'utf8')
+  await writeFile(join(STAGING_DIR, 'README.md'), readme({ books, bans, sources, registers }), 'utf8')
   await writeFile(join(STAGING_DIR, 'LICENSE.txt'), license(), 'utf8')
 
   // 7. Zip
@@ -153,6 +163,7 @@ function buildDenormalisedJson(d: {
   reasons: Record<string, unknown>[]
   scopes: Record<string, unknown>[]
   sources: Record<string, unknown>[]
+  registers: { lists: Row[]; entries: Row[] }
 }) {
   const authorById = indexBy(d.authors, 'id')
   const countryByCode = indexBy(d.countries, 'code')
@@ -239,6 +250,7 @@ function buildDenormalisedJson(d: {
       extended_context: b.extended_context,
       warning_level: b.warning_level,
       data_quality_status: b.data_quality_status ?? null,
+      is_blanket_works: b.is_blanket_works === true,
       cover_url: b.cover_url,
       bans,
     }
@@ -252,13 +264,22 @@ function buildDenormalisedJson(d: {
         books: d.books.length,
         bans: d.bans.length,
         authors: d.authors.length,
-        countries: d.countries.length,
+        // Countries with at least one documented ban — the figure the site
+        // shows. (Was the whole countries table, including countries with none.)
+        countries: new Set(d.bans.map((b) => b.country_code)).size,
         sources: d.sources.length,
+        // Titles on official ban lists kept as registers. NOT books, and not
+        // part of `books` above — see `registers` below and README.md.
+        register_titles: registerFurtherTitles(d.registers.entries),
       },
       schema_version: 1,
       license: 'See LICENSE.txt — personal/research use only.',
     },
     books,
+    registers: d.registers.lists.map((l) => ({
+      ...l,
+      entries: d.registers.entries.filter((e) => e.list_id === l.id).map(({ list_id: _listId, ...e }) => e),
+    })),
   }
 }
 
@@ -292,6 +313,7 @@ function buildSqlite(path: string, d: {
   reasons: Record<string, unknown>[]
   scopes: Record<string, unknown>[]
   sources: Record<string, unknown>[]
+  registers: { lists: Row[]; entries: Row[] }
 }) {
   if (existsSync(path)) rmSync(path)
   const db = new Database(path)
@@ -306,7 +328,7 @@ function buildSqlite(path: string, d: {
       cover_url TEXT, created_at TEXT,
       title_native TEXT, title_native_script TEXT, title_transliterated TEXT,
       title_english_meaningful TEXT, archive_org_id TEXT,
-      data_quality_status TEXT, updated_at TEXT
+      data_quality_status TEXT, updated_at TEXT, is_blanket_works INTEGER
     );
     CREATE TABLE authors (
       id TEXT PRIMARY KEY, slug TEXT, display_name TEXT,
@@ -345,6 +367,18 @@ function buildSqlite(path: string, d: {
       id TEXT PRIMARY KEY, source_name TEXT, source_url TEXT,
       source_type TEXT, accessed_at TEXT, verification_status TEXT
     );
+    CREATE TABLE register_lists (
+      id INTEGER PRIMARY KEY, slug TEXT, title TEXT, title_en TEXT, issuer TEXT,
+      country_code TEXT, year_start INTEGER, year_end INTEGER, framing TEXT,
+      source_name TEXT, source_url TEXT, licence_note TEXT
+    );
+    CREATE TABLE register_entries (
+      id INTEGER PRIMARY KEY, list_id INTEGER, edition TEXT, kind TEXT,
+      printed_author TEXT, author_display TEXT, title TEXT, imprint TEXT,
+      pub_year INTEGER, ban_year INTEGER, note TEXT, printed_page INTEGER,
+      locator TEXT, source_url TEXT, matched_book_id TEXT
+    );
+    CREATE INDEX idx_register_entries_list ON register_entries(list_id);
     CREATE INDEX idx_bans_book_id ON bans(book_id);
     CREATE INDEX idx_bans_country ON bans(country_code);
     CREATE INDEX idx_book_authors_book ON book_authors(book_id);
@@ -374,6 +408,8 @@ function buildSqlite(path: string, d: {
   insert('reasons',          REASON_COLUMNS, d.reasons)
   insert('scopes',           SCOPE_COLUMNS, d.scopes)
   insert('ban_sources',      SOURCE_COLUMNS, d.sources)
+  insert('register_lists',   REGISTER_LIST_COLUMNS, d.registers.lists)
+  insert('register_entries', REGISTER_ENTRY_COLUMNS, d.registers.entries)
 
   db.pragma('wal_checkpoint(TRUNCATE)')
   db.close()
@@ -405,18 +441,21 @@ function packZip(sourceDir: string, outputPath: string) {
 // ─── README + LICENSE text ───────────────────────────────────────────────────
 
 function readme(d: {
-  books: unknown[]; bans: unknown[]; countries: unknown[]; sources: unknown[]
+  books: Row[]; bans: Row[]; sources: unknown[]; registers: { lists: Row[]; entries: Row[] }
 }) {
+  const blanket = d.books.filter((b) => b.is_blanket_works === true).length
+  const countriesWithBan = new Set(d.bans.map((b) => b.country_code)).size
+  const registerTitles = registerFurtherTitles(d.registers.entries)
   return `# Banned Books — Dataset
 
 This archive is a structured snapshot of every documented ban, restriction,
 and challenge in the Banned Books catalogue at the time of purchase.
 
-- Books:     ${d.books.length.toLocaleString('en')}
+- Books:     ${d.books.length.toLocaleString('en')} (of which ${blanket.toLocaleString('en')} are "all works of an author" stand-ins, \`is_blanket_works\`)
 - Bans:      ${d.bans.length.toLocaleString('en')}
-- Countries: ${d.countries.length.toLocaleString('en')}
+- Countries: ${countriesWithBan.toLocaleString('en')} with at least one documented ban
 - Sources:   ${d.sources.length.toLocaleString('en')}
-
+${registerTitles > 0 ? `- Register titles: ${registerTitles.toLocaleString('en')} further titles on official ban lists — separate files, NOT counted as books (see "Register lists")\n` : ''}
 Generated: ${new Date().toISOString()}
 Source:    https://www.banned-books.org
 
@@ -425,6 +464,8 @@ Source:    https://www.banned-books.org
 - **books.csv / authors.csv / bans.csv / countries.csv / reasons.csv / scopes.csv / ban_sources.csv**
   Relational tables. Join on \`id\` / \`book_id\` / \`ban_id\` / etc.
 - **book_authors.csv / ban_reason_links.csv / ban_source_links.csv** — many-to-many join tables.
+- **register_lists.csv / register_entries.csv** — titles on very large official
+  ban lists, kept as a register instead of as books. See "Register lists" below.
 - **dataset.json** — single denormalised file. Each book has its bans nested,
   with country names, reason labels, and source URLs already resolved. The
   easiest format for one-off analyses.
@@ -464,7 +505,11 @@ Source:    https://www.banned-books.org
   rows that pre-date the verification pipeline.
 - \`books.updated_at\` and \`authors.updated_at\` bump on every edit, so you
   can detect what changed between two dataset snapshots.
+- \`books.is_blanket_works\` is TRUE for a pseudo-book that stands in for a ban
+  on ALL works of an author (the row's title reads "<Author> — All works").
+  Exclude these when counting titles.
 
+${registerReadmeSection(d.registers.lists, d.registers.entries)}
 ## Coverage caveats
 
 The catalogue is heavily biased toward English-language reporting. Bans in

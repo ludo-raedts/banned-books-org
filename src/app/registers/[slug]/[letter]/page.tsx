@@ -104,7 +104,7 @@ export default async function RegisterLetterPage({ params }: { params: Params })
           const extra = extraAuthorName(e)
           const badge = KIND_BADGE[e.kind]
           return (
-            <li key={e.id} className="py-3 text-sm leading-relaxed">
+            <li key={e.id} id={`e${e.id}`} className="scroll-mt-24 py-3 text-sm leading-relaxed target:bg-amber-50">
               <p className="text-gray-900">
                 {e.printed_author && <span className="font-semibold">{e.printed_author}: </span>}
                 {e.book ? (

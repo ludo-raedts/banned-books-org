@@ -37,7 +37,9 @@
 import { mkdirSync, rmSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { fetchAll, writeCsv, makeAdminClient, type Row } from './lib/dataset-io'
+import {
+  fetchAll, writeCsv, makeAdminClient, fetchRegisters, registerFurtherTitles, registerReadmeSection, type Row,
+} from './lib/dataset-io'
 
 const ROOT = process.cwd()
 const OUTPUT_DIR = join(ROOT, 'private', 'zenodo')
@@ -47,7 +49,7 @@ const APPLY = process.argv.includes('--apply')
 // Anything not listed here is never read: no isbn13, no cover_url, no
 // description_*, no bios, no photo_url, no enrichment. The split is enforced by
 // omission — paid-only columns simply don't appear below.
-const SRC_BOOK_COLUMNS    = ['id', 'slug', 'title', 'first_published_year', 'original_language'] as const
+const SRC_BOOK_COLUMNS    = ['id', 'slug', 'title', 'first_published_year', 'original_language', 'is_blanket_works'] as const
 const SRC_AUTHOR_COLUMNS  = ['id', 'slug', 'display_name', 'birth_country', 'is_placeholder'] as const
 const SRC_BAN_COLUMNS      = ['id', 'book_id', 'country_code', 'scope_id', 'action_type', 'status', 'year_started', 'year_ended'] as const
 const SRC_COUNTRY_COLUMNS = ['code', 'name_en'] as const
@@ -56,12 +58,17 @@ const SRC_SCOPE_COLUMNS   = ['id', 'slug'] as const
 const SRC_SOURCE_COLUMNS  = ['id', 'source_name', 'source_url', 'source_type', 'verification_status', 'accessed_at'] as const
 
 // ─── Output CSV schemas (the public, slug-keyed shape) ────────────────────────
-const OUT_BOOKS       = ['slug', 'title', 'first_published_year', 'original_language', 'author_slugs'] as const
+// is_blanket_works appended 2026-11-10 (kept last so older column positions hold).
+const OUT_BOOKS       = ['slug', 'title', 'first_published_year', 'original_language', 'author_slugs', 'is_blanket_works'] as const
 const OUT_AUTHORS     = ['slug', 'display_name', 'birth_country', 'is_placeholder'] as const
 const OUT_BANS         = ['ban_id', 'book_slug', 'country_code', 'year_started', 'year_ended', 'action_type', 'status', 'scope'] as const
 const OUT_BAN_REASONS = ['ban_id', 'reason_slug', 'reason_label'] as const
 const OUT_BAN_SOURCES = ['ban_id', 'source_name', 'source_url', 'source_type', 'verification_status', 'accessed_at', 'locator'] as const
 const OUT_COUNTRIES   = ['code', 'name_en'] as const
+// Register lists: titles on very large official ban lists, kept as lean entries
+// rather than as books (see registerReadmeSection in lib/dataset-io.ts).
+const OUT_REGISTER_LISTS   = ['slug', 'title', 'title_en', 'issuer', 'country_code', 'year_start', 'year_end', 'framing', 'source_name', 'source_url'] as const
+const OUT_REGISTER_ENTRIES = ['entry_id', 'list_slug', 'edition', 'kind', 'printed_author', 'author_display', 'title', 'imprint', 'pub_year', 'ban_year', 'note', 'printed_page', 'locator', 'source_url', 'matched_book_slug'] as const
 
 export type OpenTable = { name: string; columns: readonly string[]; rows: Row[] }
 export type OpenExportMeta = {
@@ -69,6 +76,9 @@ export type OpenExportMeta = {
   droppedNoSlug: number
   distinctBooksWithBans: number
   distinctCountriesWithBans: number
+  /** Register book entries without a record in books.csv. */
+  registerTitles: number
+  registerReadme: string
 }
 
 /**
@@ -82,7 +92,7 @@ export async function buildOpenTables(
 ): Promise<{ tables: OpenTable[]; meta: OpenExportMeta }> {
   const [
     books, authors, bookAuthors, bans, banReasonLinks, banSourceLinks,
-    countries, reasons, scopes, sources,
+    countries, reasons, scopes, sources, registers,
   ] = await Promise.all([
     fetchAll(supabase, 'books',            SRC_BOOK_COLUMNS.join(','),    'id'),
     fetchAll(supabase, 'authors',          SRC_AUTHOR_COLUMNS.join(','),  'id'),
@@ -94,6 +104,7 @@ export async function buildOpenTables(
     fetchAll(supabase, 'reasons',          SRC_REASON_COLUMNS.join(','),  'id'),
     fetchAll(supabase, 'scopes',           SRC_SCOPE_COLUMNS.join(','),   'id'),
     fetchAll(supabase, 'ban_sources',      SRC_SOURCE_COLUMNS.join(','),  'id'),
+    fetchRegisters(supabase),
   ])
 
   // ─── Lookups ────────────────────────────────────────────────────────────────
@@ -131,6 +142,8 @@ export async function buildOpenTables(
       // pipe-separated, matching the repo CSV array convention; carries the
       // book↔author link so authors.csv is joinable without a separate table.
       author_slugs: authorSlugsByBook.get(String(b.id)) ?? [],
+      // true = a stand-in for a ban on ALL works of an author, not a real title.
+      is_blanket_works: b.is_blanket_works === true,
     }))
 
   // ─── authors.csv ──────────────────────────────────────────────────────────
@@ -199,6 +212,27 @@ export async function buildOpenTables(
   // ─── countries.csv ────────────────────────────────────────────────────────
   const outCountries: Row[] = countries.map((c) => ({ code: c.code, name_en: c.name_en }))
 
+  // ─── register_lists.csv / register_entries.csv ───────────────────────────
+  const listSlugById = new Map(registers.lists.map((l) => [l.id as number, String(l.slug)]))
+  const outRegisterLists: Row[] = registers.lists.map((l) => Object.fromEntries(OUT_REGISTER_LISTS.map((c) => [c, l[c]])))
+  const outRegisterEntries: Row[] = registers.entries.map((e) => ({
+    entry_id: e.id,
+    list_slug: listSlugById.get(e.list_id as number),
+    edition: e.edition,
+    kind: e.kind,
+    printed_author: e.printed_author,
+    author_display: e.author_display,
+    title: e.title,
+    imprint: e.imprint,
+    pub_year: e.pub_year,
+    ban_year: e.ban_year,
+    note: e.note,
+    printed_page: e.printed_page,
+    locator: e.locator,
+    source_url: e.source_url,
+    matched_book_slug: e.matched_book_id != null ? bookSlugById.get(String(e.matched_book_id)) ?? null : null,
+  }))
+
   const tables: OpenTable[] = [
     { name: 'books.csv',       columns: OUT_BOOKS,       rows: outBooks },
     { name: 'authors.csv',     columns: OUT_AUTHORS,     rows: outAuthors },
@@ -206,8 +240,12 @@ export async function buildOpenTables(
     { name: 'ban_reasons.csv', columns: OUT_BAN_REASONS, rows: outBanReasons },
     { name: 'ban_sources.csv', columns: OUT_BAN_SOURCES, rows: outBanSources },
     { name: 'countries.csv',   columns: OUT_COUNTRIES,   rows: outCountries },
+    { name: 'register_lists.csv',   columns: OUT_REGISTER_LISTS,   rows: outRegisterLists },
+    { name: 'register_entries.csv', columns: OUT_REGISTER_ENTRIES, rows: outRegisterEntries },
   ]
   const meta: OpenExportMeta = {
+    registerTitles: registerFurtherTitles(registers.entries),
+    registerReadme: registerReadmeSection(registers.lists, registers.entries),
     excludedUnclear,
     droppedNoSlug: bans.length - excludedUnclear - outBans.length,
     distinctCountriesWithBans: new Set(outBans.map((b) => b.country_code)).size,
@@ -265,6 +303,8 @@ async function main() {
       sources: rowsOf('ban_sources.csv').length,
       distinctBooksWithBans: meta.distinctBooksWithBans,
       distinctCountriesWithBans: meta.distinctCountriesWithBans,
+      registerTitles: meta.registerTitles,
+      registerReadme: meta.registerReadme,
     }),
     'utf8',
   )
@@ -297,6 +337,7 @@ function buildSchema() {
           first_published_year: { type: 'integer|null', description: 'Year the work was first published. Can be negative / pre-1000 CE for ancient works.' },
           original_language: { type: 'string|null', description: 'ISO-ish language code of the original work.' },
           author_slugs: { type: 'string|null', description: "Pipe-separated ('|') list of authors.slug for this work. Empty when no author is recorded. Carries the book↔author relationship (no separate join table)." },
+          is_blanket_works: { type: 'boolean', description: 'true = a stand-in for a ban on ALL works of an author, not a real title. Exclude when counting titles.' },
         },
       },
       authors: {
@@ -356,11 +397,52 @@ function buildSchema() {
           name_en: { type: 'string', description: 'English country name.' },
         },
       },
+      register_lists: {
+        file: 'register_lists.csv',
+        primary_key: 'slug',
+        description: 'Very large official ban lists kept as a register instead of as book records. Their entries are NOT books and are not counted in books.csv.',
+        columns: {
+          slug: { type: 'string', description: 'Stable identifier; path segment in /registers/{slug}.' },
+          title: { type: 'string', description: 'Title of the list in its original language.' },
+          title_en: { type: 'string|null', description: 'English title.' },
+          issuer: { type: 'string', description: 'Authority that issued the list.' },
+          country_code: { type: 'string', description: 'countries.code of the issuing jurisdiction.' },
+          year_start: { type: 'integer', description: 'Year of the (first) edition.' },
+          year_end: { type: 'integer|null', description: 'Year of the last supplement, if any.' },
+          framing: { type: 'string', description: 'denazification | repression | religious | other — why the list existed.' },
+          source_name: { type: 'string', description: 'The source the entries were taken from.' },
+          source_url: { type: 'string', description: 'URL of that source.' },
+        },
+      },
+      register_entries: {
+        file: 'register_entries.csv',
+        primary_key: 'entry_id',
+        description: 'One row per entry of a register list, as printed.',
+        columns: {
+          entry_id: { type: 'integer', description: 'Stable entry identifier.' },
+          list_slug: { type: 'string', description: 'register_lists.slug.' },
+          edition: { type: 'string', description: 'Edition or supplement the entry appears in.' },
+          kind: { type: 'string', description: 'book | blanket (all works of an author) | group (a whole category) | periodical | rescission (ban lifted).' },
+          printed_author: { type: 'string|null', description: 'Author as printed (historical spelling / Latin form / OCR).' },
+          author_display: { type: 'string|null', description: 'Normalised author name where known.' },
+          title: { type: 'string', description: 'Title as printed.' },
+          imprint: { type: 'string|null', description: 'Place/publisher/year note as printed.' },
+          pub_year: { type: 'integer|null', description: 'Publication year, when the list gives one.' },
+          ban_year: { type: 'integer|null', description: 'Year of the decree for this entry, when given.' },
+          note: { type: 'string|null', description: 'Free-text note from the list.' },
+          printed_page: { type: 'integer|null', description: 'Printed page in the source.' },
+          locator: { type: 'string|null', description: 'Human-readable locator in the source.' },
+          source_url: { type: 'string|null', description: 'Entry-level source URL; empty = the list source_url applies.' },
+          matched_book_slug: { type: 'string|null', description: 'books.slug when the same work is also documented as a book.' },
+        },
+      },
     },
     joins: [
       'books.author_slugs (pipe-split) → authors.slug',
       'bans.book_slug → books.slug',
       'bans.country_code → countries.code',
+      'register_entries.list_slug → register_lists.slug',
+      'register_entries.matched_book_slug → books.slug',
       'ban_reasons.ban_id → bans.ban_id',
       'ban_sources.ban_id → bans.ban_id',
     ],
@@ -374,6 +456,7 @@ function buildSchema() {
 function readme(d: {
   books: number; bans: number; sources: number
   distinctBooksWithBans: number; distinctCountriesWithBans: number
+  registerTitles: number; registerReadme: string
 }) {
   return `# Banned Books — Open Censorship Core
 
@@ -391,7 +474,7 @@ formats (SQLite/JSON), and enrichment (ISBNs, covers, descriptions, author bios)
 - Distinct books with a ban:   ${d.distinctBooksWithBans.toLocaleString('en')}
 - Distinct countries with a ban:${' '}${d.distinctCountriesWithBans.toLocaleString('en')}
 - Source citations:            ${d.sources.toLocaleString('en')}
-
+${d.registerTitles > 0 ? `- Register titles:             ${d.registerTitles.toLocaleString('en')} (official-list entries, separate files, NOT counted as books)\n` : ''}
 ## Files
 
 | File | Grain | Join key |
@@ -402,6 +485,8 @@ formats (SQLite/JSON), and enrichment (ISBNs, covers, descriptions, author bios)
 | ban_reasons.csv | many per ban | ban_id → bans.ban_id |
 | ban_sources.csv | many per ban | ban_id → bans.ban_id |
 | countries.csv | one per country | code (PK) |
+| register_lists.csv | one per official list | slug (PK) |
+| register_entries.csv | one per list entry | entry_id (PK), list_slug → register_lists.slug |
 
 Arrays (\`books.author_slugs\`) are pipe-separated (\`|\`). NULLs are empty strings.
 See \`schema.json\` for the machine-readable column types and the full join map.
@@ -410,6 +495,10 @@ See \`schema.json\` for the machine-readable column types and the full join map.
 entries ("Anonymous", "Various Authors"). Filter these out before computing
 per-author statistics so a bucket isn't mistaken for a single writer.
 
+\`books.is_blanket_works\` is \`true\` for a pseudo-book that stands in for a ban on
+ALL works of an author. Exclude these when counting titles.
+
+${d.registerReadme}
 ## How to count (important)
 
 Rank on **distinct books** or **distinct countries**, never on raw ban rows.

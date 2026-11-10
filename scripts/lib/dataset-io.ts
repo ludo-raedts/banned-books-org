@@ -84,6 +84,8 @@ export async function fetchAll(
   columns: string,
   orderBy: string,
   pageSize = 1000,
+  /** Optional `column IN (values)` filter, e.g. the register lists we may redistribute. */
+  inFilter?: { column: string; values: (string | number)[] },
 ): Promise<Row[]> {
   const cols = orderBy.split(',').map((c) => c.trim()).filter(Boolean)
   if (cols.length === 0) {
@@ -92,7 +94,7 @@ export async function fetchAll(
   const PAGE = pageSize
   const rows: Row[] = []
   for (let from = 0; ; from += PAGE) {
-    const data = await fetchPageWithRetry(supabase, table, columns, cols, from, PAGE)
+    const data = await fetchPageWithRetry(supabase, table, columns, cols, from, PAGE, inFilter)
     if (!data || data.length === 0) break
     rows.push(...data)
     if (data.length < PAGE) break
@@ -118,6 +120,7 @@ async function fetchPageWithRetry(
   cols: string[],
   from: number,
   PAGE: number,
+  inFilter?: { column: string; values: (string | number)[] },
   // 7 attempts = 2+4+8+16+32+64 s ≈ 2 min of backoff. 5 attempts (~30 s) lost a
   // production deploy on 2026-10-26 when a batch script's UPDATE burst held the
   // DB past the statement timeout for longer than that.
@@ -125,6 +128,7 @@ async function fetchPageWithRetry(
 ): Promise<Row[] | null> {
   for (let attempt = 1; ; attempt++) {
     let q = supabase.from(table).select(columns)
+    if (inFilter) q = q.in(inFilter.column, inFilter.values)
     for (const col of cols) q = q.order(col, { ascending: true })
     const { data, error } = await q.range(from, from + PAGE - 1)
     // `columns` is a runtime string, so supabase-js cannot infer the row shape.
@@ -168,4 +172,78 @@ export function writeCsv(
   rows: Row[],
 ) {
   return writeFile(join(dir, filename), toCsv(columns, rows), 'utf8')
+}
+
+// ─── Register lists ──────────────────────────────────────────────────────────
+// Very large official ban lists are kept as lean "register" entries instead of
+// book records (src/lib/registers.ts). Both exports ship them as two separate
+// files — never mixed into books.csv — so a user can tell "documented book"
+// from "title on an official list".
+//
+// Only lists we may redistribute go in. A list is added here once its source
+// terms are settled:
+//  - index-1877: the 1877 Index Librorum Prohibitorum, public domain.
+//  - sbz-1946 is NOT included yet: it follows Olaf Simons' transcription on
+//    polunbi.de and waits for his answer on reuse.
+export const DATASET_REGISTER_SLUGS = ['index-1877'] as const
+
+export const REGISTER_LIST_COLUMNS = [
+  'id', 'slug', 'title', 'title_en', 'issuer', 'country_code', 'year_start', 'year_end',
+  'framing', 'source_name', 'source_url', 'licence_note',
+] as const
+export const REGISTER_ENTRY_COLUMNS = [
+  'id', 'list_id', 'edition', 'kind', 'printed_author', 'author_display', 'title', 'imprint',
+  'pub_year', 'ban_year', 'note', 'printed_page', 'locator', 'source_url', 'matched_book_id',
+] as const
+
+/** The redistributable register lists and all their entries. */
+export async function fetchRegisters(supabase: DatasetClient): Promise<{ lists: Row[]; entries: Row[] }> {
+  const lists = await fetchAll(supabase, 'register_lists', REGISTER_LIST_COLUMNS.join(','), 'id', 1000, {
+    column: 'slug',
+    values: [...DATASET_REGISTER_SLUGS],
+  })
+  if (lists.length === 0) return { lists, entries: [] }
+  const entries = await fetchAll(supabase, 'register_entries', REGISTER_ENTRY_COLUMNS.join(','), 'id', 1000, {
+    column: 'list_id',
+    values: lists.map((l) => l.id as number),
+  })
+  return { lists, entries }
+}
+
+/** Book entries with no record in books.csv — the "further titles" figure the site shows. */
+export function registerFurtherTitles(entries: Row[]): number {
+  return entries.filter((e) => e.kind === 'book' && e.matched_book_id == null).length
+}
+
+/** README section shared by both exports. */
+export function registerReadmeSection(lists: Row[], entries: Row[]): string {
+  if (lists.length === 0) return ''
+  const perList = lists
+    .map((l) => {
+      const mine = entries.filter((e) => e.list_id === l.id)
+      return `- ${l.title_en ?? l.title} (${l.country_code}, ${l.year_start}${l.year_end && l.year_end !== l.year_start ? `–${l.year_end}` : ''}): ${mine.length.toLocaleString('en')} entries, ${registerFurtherTitles(mine).toLocaleString('en')} of them book titles without a record in books.csv`
+    })
+    .join('\n')
+  return `## Register lists (register_lists.csv / register_entries.csv)
+
+Some official ban lists are too large to document book by book. Their entries
+are kept as a *register*: the title and author as printed, the edition, and a
+pointer to the original source — no description, ISBN, cover or author record.
+
+**Register entries are not books in this dataset and are not included in the
+book, ban or country counts above. Do not add the two figures together.**
+
+${perList}
+
+- \`register_entries.kind\` is \`book\`, \`blanket\` (all works of an author),
+  \`group\` (a whole category), \`periodical\` or \`rescission\` (a ban lifted).
+- \`register_entries.matched_book_id\` (\`matched_book_slug\` in the open
+  export) points at the book record when the same work is also documented as
+  a book; empty otherwise.
+- \`printed_author\` / \`title\` are as printed in the list (historical
+  spelling, Latin forms, OCR); \`author_display\` is a normalised name where
+  we have one.
+- Lists whose source terms are not yet settled are browsable on the site
+  (https://www.banned-books.org/registers) but not part of this file.
+`
 }

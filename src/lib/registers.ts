@@ -192,6 +192,74 @@ export async function getLetterEntries(listId: number, letter: string, page: num
   return (data ?? []) as unknown as RegisterEntry[]
 }
 
+export type RegisterHit = {
+  id: number
+  printed_author: string | null
+  title: string
+  imprint: string | null
+  kind: RegisterEntry['kind']
+  /** "1946", "Suppl. I · 1947", … */
+  edition: string
+  list: { slug: string; name: string }
+  /** The register page that holds the entry, with an anchor to it. */
+  href: string
+  sourceUrl: string
+}
+
+/** Strip what would break a PostgREST or()/ilike filter; collapse whitespace. */
+const cleanQuery = (q: string) => q.replace(/[%_,()*"\\]/g, ' ').replace(/\s+/g, ' ').trim()
+
+/** Title/author search across the register entries that have no book page.
+ *  Used by /search when the catalogue has few or no matches, so a title we only
+ *  hold on a list is still findable. Bounded: one trigram index lookup plus one
+ *  index-only count per hit to find its page. */
+export async function searchRegisterEntries(rawQ: string, limit = 6): Promise<RegisterHit[]> {
+  const q = cleanQuery(rawQ)
+  if (q.length < 3) return []
+  const sb = adminClient()
+  const pat = `%${q.toLowerCase()}%`
+  const { data, error } = await sb
+    .from('register_entries')
+    .select('id, list_id, edition, kind, letter, sort_key, printed_author, author_display, title, imprint, source_url, printed_page')
+    .in('kind', ['book', 'blanket'])
+    .is('matched_book_id', null)
+    // search_text = lower(author + normalised author + title), trigram-indexed
+    // (migration 20261110150000) — an index lookup instead of a 35k-row scan.
+    .ilike('search_text', pat)
+    .order('sort_key')
+    .limit(limit)
+  if (error) throw error
+  const rows = data ?? []
+  if (rows.length === 0) return []
+
+  const lists = new Map((await getRegisterLists()).map((l) => [l.id, l]))
+  return Promise.all(
+    rows.map(async (r): Promise<RegisterHit> => {
+      const list = lists.get(r.list_id as number)
+      if (!list) throw new Error(`searchRegisterEntries: unknown list ${r.list_id}`)
+      // Position within the letter → which page of it (same order as getLetterEntries).
+      const { count } = await sb
+        .from('register_entries')
+        .select('id', { count: 'exact', head: true })
+        .eq('list_id', r.list_id)
+        .eq('letter', r.letter)
+        .lt('sort_key', r.sort_key)
+      const page = Math.floor((count ?? 0) / REGISTER_PAGE_SIZE) + 1
+      return {
+        id: r.id as number,
+        printed_author: (r.printed_author as string | null) ?? null,
+        title: r.title as string,
+        imprint: (r.imprint as string | null) ?? null,
+        kind: r.kind as RegisterEntry['kind'],
+        edition: editionLabel(list.slug, r.edition as string),
+        list: { slug: list.slug, name: list.title_en ?? list.title },
+        href: `/registers/${list.slug}/${pageSegment(r.letter as string, page)}#e${r.id}`,
+        sourceUrl: entrySourceUrl(list, { printed_page: r.printed_page as number | null, source_url: r.source_url as string | null }),
+      }
+    }),
+  )
+}
+
 /** Where an entry's "source" link goes: scan page → entry deep link → list source. */
 export function entrySourceUrl(list: Pick<RegisterList, 'page_url_template' | 'source_url'>, e: Pick<RegisterEntry, 'printed_page' | 'source_url'>): string {
   if (list.page_url_template && e.printed_page != null) {
