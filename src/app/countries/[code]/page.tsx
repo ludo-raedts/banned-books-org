@@ -26,7 +26,7 @@ import { displayNativeTitle } from '@/lib/native-title'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 import { contextsForCountry } from '@/lib/ban-contexts'
-import { getRegisterListsForCountry } from '@/lib/registers'
+import { getRegisterTotals } from '@/lib/registers'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForCountry, bookshopListUrl } from '@/lib/bookshop-lists'
 
@@ -221,7 +221,7 @@ export default async function CountryPage({
     loadBanSweep(),
     // Large official lists kept as a register — shown NEXT TO the distinct-books
     // metric, never summed into it.
-    getRegisterListsForCountry(upperCode),
+    getRegisterTotals().then((all) => all.filter((r) => r.country_code === upperCode)),
   ])
 
   // A DB error (statement timeout under load) must THROW, not 404: ISR caches a
@@ -529,7 +529,7 @@ export default async function CountryPage({
                 {registerLists.map((r, i) => (
                   <span key={r.slug}>
                     {i > 0 && ' · '}
-                    <span className="tabular-nums">{r.entry_count.toLocaleString('en')}</span> further titles on{' '}
+                    <span className="tabular-nums">{r.furtherTitles.toLocaleString('en')}</span> further titles on{' '}
                     <Link
                       href={`/registers/${r.slug}`}
                       className="underline underline-offset-2 decoration-oxblood/40 hover:decoration-oxblood"

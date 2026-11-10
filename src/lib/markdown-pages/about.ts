@@ -17,6 +17,7 @@ export type AboutStats = {
   countries: number
   activeBans: number
   sources: number
+  registerTitles: number
 }
 
 export function buildAboutDocument(stats: AboutStats): string {
@@ -45,7 +46,7 @@ The catalogue currently documents **${n(stats.books)} books** and **${n(stats.ba
 - ${stats.countries} countries and territories
 - ${n(stats.activeBans)} currently active bans
 - ${n(stats.sources)} source citations
-- 1559 — earliest ban recorded (Index Librorum Prohibitorum)
+${stats.registerTitles > 0 ? `- ${n(stats.registerTitles)} further titles on official ban lists, kept as [registers](https://www.banned-books.org/registers) and not counted above\n` : ''}- 1559 — earliest ban recorded (Index Librorum Prohibitorum)
 
 ## What counts as a ban
 

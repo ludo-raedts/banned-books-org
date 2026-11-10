@@ -6,7 +6,7 @@ import DatasetCheckoutButton from '@/components/dataset-checkout-button'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
-import { requireCount } from '@/lib/require-count'
+import { getSiteTotals } from '@/lib/site-totals'
 
 const DATASET_PRICE_USD = 19.99
 
@@ -24,19 +24,18 @@ export const metadata: Metadata = {
 
 async function getStats() {
   const s = adminClient()
-  const [books, bans, sources, countriesRes, yearMinRes, yearMaxRes] = await Promise.all([
-    s.from('books').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('*', { count: 'exact', head: true }),
-    s.from('ban_sources').select('*', { count: 'exact', head: true }),
-    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
+  const [totals, yearMinRes, yearMaxRes] = await Promise.all([
+    getSiteTotals(),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: true }).limit(1).maybeSingle(),
     s.from('bans').select('year_started').not('year_started', 'is', null).order('year_started', { ascending: false }).limit(1).maybeSingle(),
   ])
   return {
-    books: requireCount(books, 'books'),
-    bans: requireCount(bans, 'bans'),
-    sources: requireCount(sources, 'sources'),
-    countries: requireCount(countriesRes, 'countriesRes'),
+    books: totals.books,
+    bans: totals.bans,
+    sources: totals.sources,
+    countries: totals.countries,
+    registerTitles: totals.registerTitles,
+    registers: totals.registers,
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
   }

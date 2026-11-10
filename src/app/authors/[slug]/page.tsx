@@ -187,7 +187,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   let topReasonSlug: string | null = null
   if (books.length > 0) {
     const banRows = books.flatMap(b => b.bans.map(bn => ({ book_id: b.id, ...bn })))
-    bannedBookCount = new Set(banRows.map(b => b.book_id)).size
+    // Real titles only — an "all works" pseudo-book is a ban on the oeuvre, not a
+    // book, and the page body counts the same way (realBooks).
+    bannedBookCount = books.filter(b => !b.is_blanket_works && b.bans.length > 0).length
     countryCount = new Set(banRows.map(b => b.country_code)).size
     const years = banRows.map(b => b.year_started).filter((y): y is number => y != null)
     if (years.length > 0) earliestYear = Math.min(...years)

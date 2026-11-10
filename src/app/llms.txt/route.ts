@@ -7,9 +7,8 @@
 // it should cite when answering general questions about book censorship.
 
 import { publishedEssays } from '@/lib/essays-data'
-import { adminClient } from '@/lib/supabase'
 import { getBBWConfig } from '@/config/banned-books-week'
-import { requireCount } from '@/lib/require-count'
+import { getSiteTotals } from '@/lib/site-totals'
 
 export const revalidate = 3600
 
@@ -37,27 +36,11 @@ const ESSAY_DESCRIPTIONS: Record<string, string> = {
 }
 
 export async function GET() {
-  const supabase = adminClient()
-
   // Mirror the homepage query shape so the counts here match the homepage hero.
-  const [countRes, countriesRes, banCountsRes, bbwConfig] = await Promise.all([
-    supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('countries').select('code'),
-    supabase
-      .from('mv_ban_counts')
-      .select('country_code, distinct_books')
-      .gt('distinct_books', 0),
-    getBBWConfig(),
-  ])
-
-  const total = requireCount(countRes, 'countRes')
-  const countMap = new Map(
-    ((banCountsRes.data ?? []) as { country_code: string; distinct_books: number }[])
-      .map((r) => [r.country_code, r.distinct_books]),
-  )
-  const countryCount = (
-    (countriesRes.data ?? []) as { code: string }[]
-  ).filter((c) => countMap.has(c.code)).length
+  // Same shared figures as the homepage hero (src/lib/site-totals.ts).
+  const [totals, bbwConfig] = await Promise.all([getSiteTotals(), getBBWConfig()])
+  const total = totals.books
+  const countryCount = totals.countries
 
   const essays = publishedEssays()
 
@@ -81,6 +64,7 @@ export async function GET() {
   lines.push(`- [Data quality](${BASE}/data-quality): What confident, default, and flagged mean and how records are classified.`)
   lines.push(`- [About](${BASE}/about): Project background, scope, editorial stance, contact.`)
   lines.push(`- [Sources](${BASE}/sources): The organisations whose lists feed the catalogue.`)
+  lines.push(`- [Official ban lists (registers)](${BASE}/registers): ${totals.registerTitles.toLocaleString('en')} further titles from very large official lists (${totals.registers.map((r) => r.title_en ?? r.title).join('; ')}), listed entry by entry with their source. These are NOT book records and are not included in the ${total.toLocaleString('en')} books above — do not add the two figures together.`)
   lines.push(`- [Dataset](${BASE}/dataset): Full catalogue as CSV, JSON, and SQLite — paid, perpetually licensed for personal and research use.`)
   lines.push('')
 

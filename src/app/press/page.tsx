@@ -10,7 +10,8 @@ import CopyButton from '@/components/copy-button'
 import EmailLink from '@/components/email-link'
 import SectionShell from '@/components/section/SectionShell'
 import { citedBy, formatCitedDate, type CitedBy } from '@/lib/cited-by'
-import { requireCount } from '@/lib/require-count'
+import { getSiteTotals } from '@/lib/site-totals'
+import { roundedThousands } from '@/lib/format-count'
 
 export const metadata: Metadata = {
   title: 'Press & Media Kit',
@@ -30,6 +31,7 @@ type Stats = {
   books: number
   bans: number
   countries: number
+  registerTitles: number
   minYear: number | null
   maxYear: number | null
   dataLastChanged: string | null
@@ -37,10 +39,8 @@ type Stats = {
 
 async function getStats(): Promise<Stats> {
   const s = adminClient()
-  const [booksRes, bansRes, countriesRes, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
-    s.from('books').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('*', { count: 'exact', head: true }),
-    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
+  const [totals, yearMinRes, yearMaxRes, refreshLogRes] = await Promise.all([
+    getSiteTotals(),
     s
       .from('bans')
       .select('year_started')
@@ -58,9 +58,10 @@ async function getStats(): Promise<Stats> {
     s.from('mv_refresh_log').select('updated_at').eq('key', 'data_last_changed').maybeSingle(),
   ])
   return {
-    books: requireCount(booksRes, 'booksRes'),
-    bans: requireCount(bansRes, 'bansRes'),
-    countries: requireCount(countriesRes, 'countriesRes'),
+    books: totals.books,
+    bans: totals.bans,
+    countries: totals.countries,
+    registerTitles: totals.registerTitles,
     minYear: yearMinRes.data?.year_started ?? null,
     maxYear: yearMaxRes.data?.year_started ?? null,
     dataLastChanged: (refreshLogRes.data?.updated_at as string | undefined) ?? null,
@@ -177,6 +178,11 @@ export default async function PressPage() {
   const minYear = stats.minYear ?? 1559
   const maxYear = stats.maxYear ?? new Date().getUTCFullYear()
   const lastUpdated = formatLastUpdated(stats.dataLastChanged)
+  // The register layer: listed titles we do not document as books. Stated
+  // beside the catalogue figures, never added to them.
+  const registerNote = stats.registerTitles > 0
+    ? ` A further ${roundedThousands(stats.registerTitles)}+ titles from official ban lists are kept as registers, listed with their source but not counted in those figures.`
+    : ''
 
   const boilerplate50 =
     `Banned Books (banned-books.org) is an independent, citation-backed database of ${bookCount} books banned, challenged, or restricted across ${countryCount} countries. The catalogue documents censorship by governments, schools, and libraries — historical and contemporary, worldwide — with verifiable sources on every record.`
@@ -184,7 +190,7 @@ export default async function PressPage() {
   const boilerplate100 =
     `Banned Books (banned-books.org) is an independent, citation-backed catalogue of book censorship covering ${bookCount} titles and ${banCount} ban records across ${countryCount} countries and territories, from ${minYear} to ${maxYear}. ` +
     `Built by Ludo Raedts in Groningen, the Netherlands, the project documents prohibitions, removals, and challenges by governments, schools, and libraries. ` +
-    `Every record cites a verifiable source. The site is free to read; a structured dataset is available for researchers. ` +
+    `Every record cites a verifiable source.${registerNote} The site is free to read; a structured dataset is available for researchers. ` +
     `The catalogue documents censorship — it does not endorse the bans or the books — and accepts no funding from publishers, governments, or advocacy organisations.`
 
   const boilerplate250 =

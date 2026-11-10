@@ -47,6 +47,7 @@ import RisingSection from '@/components/home/RisingSection'
 import WhyBooksGetBannedSection, {
   withReasonDescriptions,
 } from '@/components/home/WhyBooksGetBannedSection'
+import { getSiteTotals } from '@/lib/site-totals'
 import NonEnglishSection from '@/components/home/NonEnglishSection'
 import FaqSection from '@/components/home/FaqSection'
 import FinalCtaSection from '@/components/home/FinalCtaSection'
@@ -57,12 +58,8 @@ export async function generateMetadata(): Promise<Metadata> {
   // Exact count. The planner estimate drifted to 21,451 while the hero (and
   // every other surface) says 20,934 — a visible snippet/page mismatch. A
   // COUNT(*) over ~20k rows is milliseconds and runs once per ISR cycle.
-  const { count, error } = await timer.wrap('books-count', () =>
-    adminClient().from('books').select('*', { count: 'exact', head: true }),
-  )
+  const { books: n } = await timer.wrap('site-totals', () => getSiteTotals())
   timer.end('metadata-fn-end')
-  if (error || !count) throw error ?? new Error('homepage metadata: empty books count')
-  const n = count
   return {
     title: { absolute: `Banned Books List ${new Date().getFullYear()} — Censored Books by Country & Reason` },
     description: `The full list of ${n.toLocaleString('en')} books banned by governments and schools worldwide, by country, year and reason. Every ban cited to a source.`,
@@ -165,19 +162,18 @@ export default async function HomePage() {
   const REASON_POOL_DEPTH = 40
 
   const [
-    totalCountRes,
-    totalBansRes,
+    siteTotals,
     trendingRes,
     bannedAuthorsRes,
     topBannedRes,
     risingRes,
     countriesRes,
-    banCountsRes,
     placeholderAuthorsRes,
     reasonTopBooksRes,
-  ] = await timer.wrap('parallel-batch-10', () => Promise.all([
-    supabase.from('books').select('*', { count: 'exact', head: true }),
-    supabase.from('bans').select('*', { count: 'exact', head: true }),
+  ] = await timer.wrap('parallel-batch-8', () => Promise.all([
+    // Headline figures come from the shared, cached helper so every surface
+    // (hero, FAQ, JSON-LD, /about, llms.txt, …) states the same numbers.
+    getSiteTotals(),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
     supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').limit(30),
     // 300 instead of 100 so the Non-English rotation pool has enough
@@ -185,7 +181,6 @@ export default async function HomePage() {
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
     supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(10),
     supabase.from('countries').select('code, name_en'),
-    supabase.from('mv_ban_counts').select('country_code, distinct_books').gt('distinct_books', 0),
     supabase.from('authors').select('id').eq('is_placeholder', true),
     // Pre-aggregated top-N book_ids per reason. Replaced a paginated read of
     // 45k ban_reason_links rows (~3.4 MB) with this ~200-row slice (~3 KB).
@@ -202,14 +197,11 @@ export default async function HomePage() {
   // timeout used to fall through to `?? 0`, and ISR then served "0 books
   // documented · 0 countries" for the whole revalidate window (2026-11-10).
   // Throwing keeps the last good homepage in the cache instead.
-  for (const res of [totalCountRes, totalBansRes, topBannedRes, countriesRes, banCountsRes]) {
+  for (const res of [topBannedRes, countriesRes]) {
     if (res.error) throw res.error
   }
-  if (!totalCountRes.count || !banCountsRes.data?.length) {
-    throw new Error('homepage: empty headline figures — refusing to cache a zero homepage')
-  }
-  const total = totalCountRes.count
-  const totalBans = totalBansRes.count ?? 0
+  const total = siteTotals.books
+  const totalBans = siteTotals.bans
 
   const trendingIds = ((trendingRes.data ?? []) as { entity_id: number }[]).map(r => Number(r.entity_id))
   const risingRows = (risingRes.data ?? []) as { entity_id: number; this_week: number; prev_week: number }[]
@@ -395,8 +387,7 @@ export default async function HomePage() {
   nonEnglishPicked.forEach(b => excludeIds.add(b.id))
   const nonEnglishBooks: TopListBook[] = nonEnglishPicked.map(b => toBookCard(b, langContext(b)))
 
-  const countMap = new Map((banCountsRes.data ?? []).map(r => [r.country_code, r.distinct_books as number]))
-  const countryCount = ((countriesRes.data ?? []) as { code: string }[]).filter(c => countMap.has(c.code)).length
+  const countryCount = siteTotals.countries
   const countryNameMap = new Map(
     ((countriesRes.data ?? []) as { code: string; name_en: string }[]).map(c => [c.code, c.name_en]),
   )
@@ -441,6 +432,7 @@ export default async function HomePage() {
   const faqItems = buildHomepageFaq({
     total,
     countryCount,
+    registerTitles: siteTotals.registerTitles,
     mostBannedBook: mostBannedBookRow
       ? {
           title: mostBannedBookRow.title,
@@ -512,6 +504,7 @@ export default async function HomePage() {
         totalBooks={total}
         countryCount={countryCount}
         totalBans={totalBans}
+        registerTitles={siteTotals.registerTitles}
         callout={callout}
       />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}

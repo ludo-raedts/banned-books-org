@@ -7,6 +7,7 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import { requireCount } from '@/lib/require-count'
 import PageviewTracker from '@/components/pageview-tracker'
 import { unstable_cache } from 'next/cache'
 import Link from '@/components/link'
@@ -43,7 +44,7 @@ const loadSearchFacets = unstable_cache(
       supabase.from('countries').select('code, name_en'),
     ])
     return {
-      totalBooks: totalBooks ?? 0,
+      totalBooks: requireCount({ count: totalBooks }, 'search totalBooks'),
       banCounts: (banCounts ?? []) as { country_code: string; distinct_books: number }[],
       countriesRaw: (countriesRaw ?? []) as { code: string; name_en: string }[],
     }

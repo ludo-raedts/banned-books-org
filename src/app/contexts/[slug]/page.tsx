@@ -12,7 +12,7 @@ import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { buildCitationMeta } from '@/lib/citation-meta'
 import { getBanContext, type BanContext } from '@/lib/ban-contexts'
-import { getRegisterList } from '@/lib/registers'
+import { getRegisterTotals } from '@/lib/registers'
 import { CONTEXT_CONTENT, ContextHero } from './content'
 
 // Hubs whose event also has a register list (/registers/<slug>): titles from the
@@ -210,7 +210,9 @@ export default async function ContextPage({
   const [books, register] = await Promise.all([
     fetchContextBooks(ctx.slug),
     // optional extra: a failed lookup only drops the register link, never the hub
-    registerSlug ? getRegisterList(registerSlug).catch(() => null) : null,
+    registerSlug
+      ? getRegisterTotals().then((all) => all.find((r) => r.slug === registerSlug) ?? null).catch(() => null)
+      : null,
   ])
   // Some events (the 1938 Nazi list) cover thousands of titles. Cap the rendered
   // DOM to keep the page light; the list is ranked best-known first, the heading
@@ -308,9 +310,9 @@ export default async function ContextPage({
               {books.length.toLocaleString('en-US')} documented under this event.
             </p>
           )}
-          {register && register.entry_count > 0 && (
+          {register && register.furtherTitles > 0 && (
             <p className="mt-5 text-sm text-neutral-600">
-              Another {register.entry_count.toLocaleString('en-US')} titles from this list have
+              Another {register.furtherTitles.toLocaleString('en-US')} titles from this list have
               no page of their own here. They are listed as printed, with a link to the
               original, in the{' '}
               <Link href={`/registers/${register.slug}`} className="text-oxblood underline underline-offset-2">

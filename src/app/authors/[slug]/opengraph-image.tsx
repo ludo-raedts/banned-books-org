@@ -41,7 +41,14 @@ export default async function Image({ params }: Params) {
   // Ban + book summary via 2 small joins.
   const { data: bookLinks } = await adminClient()
     .from('book_authors').select('book_id').eq('author_id', author.id)
-  const bookIds = (bookLinks ?? []).map((b: { book_id: number }) => b.book_id)
+  const linkedIds = (bookLinks ?? []).map((b: { book_id: number }) => b.book_id)
+  // Bans are tallied over every linked row, but "N books" counts real titles
+  // only — same rule as the author page (no "all works" pseudo-books).
+  const { data: realRows } = linkedIds.length > 0
+    ? await adminClient().from('books').select('id').in('id', linkedIds).eq('is_blanket_works', false)
+    : { data: [] }
+  const bookIds = linkedIds
+  const realBookCount = (realRows ?? []).length
   let totalBans = 0
   let countryCount = 0
   if (bookIds.length > 0) {
@@ -58,8 +65,8 @@ export default async function Image({ params }: Params) {
   const summary = bookIds.length === 0
     ? null
     : isPlaceholder
-      ? `${bookIds.length} anonymously-authored ${bookIds.length === 1 ? 'book' : 'books'}`
-      : `${bookIds.length} ${bookIds.length === 1 ? 'book' : 'books'} · ${totalBans} ${totalBans === 1 ? 'ban' : 'bans'} across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
+      ? `${realBookCount} anonymously-authored ${realBookCount === 1 ? 'book' : 'books'}`
+      : `${realBookCount} ${realBookCount === 1 ? 'book' : 'books'} · ${totalBans} ${totalBans === 1 ? 'ban' : 'bans'} across ${countryCount} ${countryCount === 1 ? 'country' : 'countries'}`
 
   const nameLen = author.display_name.length
   const nameSize = nameLen > 30 ? 56 : nameLen > 20 ? 72 : 96

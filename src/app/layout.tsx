@@ -143,6 +143,7 @@ export default function RootLayout({
                   <li><Link href="/dataset" className="hover:text-gray-800 transition-colors">Download dataset</Link></li>
                   <li><Link href="/stats" className="hover:text-gray-800 transition-colors">Stats</Link></li>
                   <li><Link href="/sources" className="hover:text-gray-800 transition-colors">Sources</Link></li>
+                  <li><Link href="/registers" className="hover:text-gray-800 transition-colors">Official ban lists</Link></li>
                   <li><Link href="/methodology" className="hover:text-gray-800 transition-colors">Methodology</Link></li>
                   <li><Link href="/data-quality" className="hover:text-gray-800 transition-colors">Data quality</Link></li>
                 </ul>

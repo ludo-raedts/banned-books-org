@@ -105,6 +105,49 @@ export async function getRegisterListsForCountry(code: string): Promise<Pick<Reg
   return data ?? []
 }
 
+export type RegisterTotal = {
+  slug: string
+  title: string
+  title_en: string | null
+  country_code: string
+  year_start: number
+  year_end: number | null
+  /** Book entries on the list that have no page in our catalogue. */
+  furtherTitles: number
+}
+
+/** Per list: the book entries NOT linked to a catalogue book — the honest
+ *  "further titles" figure. `entry_count` overstates it: that also holds
+ *  periodicals, rescissions, category bans and entries we already document as
+ *  books. One HEAD count per list, in the data cache for a day (the lists only
+ *  change on an import, which busts the 'registers' tag). */
+export const getRegisterTotals = unstable_cache(
+  async (): Promise<RegisterTotal[]> => {
+    const sb = adminClient()
+    const { data, error } = await sb
+      .from('register_lists')
+      .select('id, slug, title, title_en, country_code, year_start, year_end')
+      .order('year_start')
+    if (error) throw error
+    return Promise.all(
+      (data ?? []).map(async (l) => {
+        const { count, error: e } = await sb
+          .from('register_entries')
+          .select('id', { count: 'exact', head: true })
+          .eq('list_id', l.id)
+          .eq('kind', 'book')
+          .is('matched_book_id', null)
+        if (e) throw e
+        if (count == null) throw new Error(`getRegisterTotals: no count for ${l.slug}`)
+        const { id: _id, ...rest } = l
+        return { ...rest, furtherTitles: count } as RegisterTotal
+      }),
+    )
+  },
+  ['register-totals-v1'],
+  { revalidate: 86400, tags: ['registers'] },
+)
+
 /** Entries per letter (all kinds): 27 index-only HEAD counts. Shared by every
  *  letter page of a list through the data cache (TTL = the pages' revalidate),
  *  so an uncached letter page costs one range scan instead of 28 round trips —

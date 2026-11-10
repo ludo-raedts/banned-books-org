@@ -7,12 +7,15 @@
 // renderAnswer() for the syntax.
 
 import type { FaqItem } from '@/components/faq-accordion'
+import { roundedThousands } from '@/lib/format-count'
 
 const BOOKSHOP_AFFILIATE_URL = 'https://bookshop.org/shop/banned-books-org'
 
 export type HomepageFaqInputs = {
   total: number
   countryCount: number
+  /** Titles on official ban lists kept as registers (not counted in `total`). */
+  registerTitles: number
   mostBannedBook: {
     title: string
     author: string
@@ -25,13 +28,14 @@ export type HomepageFaqInputs = {
 export function buildHomepageFaq({
   total,
   countryCount,
+  registerTitles,
   mostBannedBook,
 }: HomepageFaqInputs): FaqItem[] {
   const items: FaqItem[] = []
 
   items.push({
     q: 'How many books are banned worldwide?',
-    a: `We document ${total.toLocaleString('en')} books with at least one recorded ban, across ${countryCount} countries. The real total is higher — closed societies systematically under-report, and historical bans often go unrecorded. Every entry in our catalogue traces to a verifiable source.`,
+    a: `We document ${total.toLocaleString('en')} books with at least one recorded ban, across ${countryCount} countries.${registerTitles > 0 ? ` Beyond those, more than ${roundedThousands(registerTitles)} further titles appear on official ban lists that we keep as [registers](/registers): listed with their source, but without a page of their own.` : ''} The real total is higher — closed societies systematically under-report, and historical bans often go unrecorded. Every entry in our catalogue traces to a verifiable source.`,
   })
 
   items.push({

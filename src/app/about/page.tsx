@@ -6,12 +6,12 @@ export const revalidate = 3600
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from '@/components/link'
-import { adminClient } from '@/lib/supabase'
 import ContactForm from '@/components/contact-form'
 import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 import ZenodoCitation from '@/components/zenodo-citation'
-import { requireCount } from '@/lib/require-count'
+import { getSiteTotals } from '@/lib/site-totals'
+import { roundedThousands } from '@/lib/format-count'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -23,21 +23,16 @@ export const metadata: Metadata = {
 }
 
 async function getStats() {
-  const s = adminClient()
-  const [books, bans, activeBans, sources, countriesRes] = await Promise.all([
-    s.from('books').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    s.from('ban_sources').select('*', { count: 'exact', head: true }),
-    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
-  ])
-
+  // One shared, cached set of headline figures (src/lib/site-totals.ts).
+  const t = await getSiteTotals()
   return {
-    books: requireCount(books, 'books'),
-    bans: requireCount(bans, 'bans'),
-    countries: requireCount(countriesRes, 'countriesRes'),
-    activeBans: requireCount(activeBans, 'activeBans'),
-    sources: requireCount(sources, 'sources'),
+    books: t.books,
+    bans: t.bans,
+    countries: t.countries,
+    activeBans: t.activeBans,
+    // "Source citations" = ban↔source links, the same figure /sources reports.
+    sources: t.citations,
+    registerTitles: t.registerTitles,
     updatedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
   }
 }
@@ -131,6 +126,14 @@ export default async function AboutPage() {
             <p>
               The catalogue currently documents <strong>{stats.books.toLocaleString('en')} books</strong> and <strong>{stats.bans.toLocaleString('en')} bans</strong> across <strong>{stats.countries} countries and territories</strong>, from the Vatican&apos;s Index Librorum Prohibitorum (1559) to school board removals in 2025. The site is free, non-commercial, and built in the open.
             </p>
+            {stats.registerTitles > 0 && (
+              <p>
+                Some official ban lists are too large to document book by book. We keep those as{' '}
+                <Link href="/registers">registers</Link>: more than{' '}
+                <strong>{roundedThousands(stats.registerTitles)} further titles</strong>, each listed as printed
+                with a link to the original source, and not counted in the figures above.
+              </p>
+            )}
 
             <h2>What counts as a ban</h2>
             <p>

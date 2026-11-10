@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import Link from '@/components/link'
-import { adminClient } from '@/lib/supabase'
 import SectionShell from '@/components/section/SectionShell'
 import TrackedOutboundLink from '@/components/tracked-outbound-link'
 import { SUPPORT_LINK_MONTHLY, SUPPORT_LINK_ONE_OFF } from '@/lib/support-links'
-import { requireCount } from '@/lib/require-count'
+import { getSiteTotals } from '@/lib/site-totals'
 
 // ISR: the page is editorial copy plus three grounding counts. Hourly regen
 // keeps the numbers fresh after enrichment cycles without a query per visit.
@@ -20,17 +19,8 @@ export const metadata: Metadata = {
 }
 
 async function getStats() {
-  const s = adminClient()
-  const [books, bans, countriesRes] = await Promise.all([
-    s.from('books').select('*', { count: 'exact', head: true }),
-    s.from('bans').select('*', { count: 'exact', head: true }),
-    s.from('mv_ban_counts').select('*', { count: 'exact', head: true }),
-  ])
-  return {
-    books: requireCount(books, 'books'),
-    bans: requireCount(bans, 'bans'),
-    countries: requireCount(countriesRes, 'countriesRes'),
-  }
+  const t = await getSiteTotals()
+  return { books: t.books, bans: t.bans, countries: t.countries }
 }
 
 export default async function SupportPage() {

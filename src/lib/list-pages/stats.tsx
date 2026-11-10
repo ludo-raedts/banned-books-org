@@ -15,7 +15,7 @@ import TrendingWidget from '@/components/trending-widget'
 import StatsTimeline, { type TimelineGroup } from '@/components/stats-timeline'
 import HighlightsStripBlock from '@/components/highlights-strip-block'
 import { countryFlag } from '@/lib/country-flag'
-import { getRegisterLists } from '@/lib/registers'
+import { getRegisterTotals } from '@/lib/registers'
 import { requireCount } from '@/lib/require-count'
 
 type StatsData = {
@@ -204,11 +204,12 @@ async function fetchStatsData(): Promise<StatsData> {
     .map((code) => ({ code, name: countryMap.get(code) ?? code }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
-  const registerLists = (await getRegisterLists())
+  // furtherTitles, not entry_count: only book entries without a page of ours.
+  const registerLists = (await getRegisterTotals())
     .map((l) => ({
       slug: l.slug,
       name: l.title_en ?? l.title,
-      entryCount: l.entry_count,
+      entryCount: l.furtherTitles,
       years: l.year_end && l.year_end !== l.year_start ? `${l.year_start}–${l.year_end}` : `${l.year_start}`,
     }))
     .sort((a, b) => b.entryCount - a.entryCount)

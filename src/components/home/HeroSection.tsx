@@ -1,5 +1,6 @@
 import Link from '@/components/link'
 import Eyebrow from '@/components/section/Eyebrow'
+import { roundedThousands } from '@/lib/format-count'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import BbwCallout from './BbwCallout'
 import HeroSearch from './HeroSearch'
@@ -74,11 +75,14 @@ export default function HeroSection({
   totalBooks,
   countryCount,
   totalBans,
+  registerTitles,
   callout,
 }: {
   totalBooks: number
   countryCount: number
   totalBans: number
+  /** Titles on official ban lists kept as registers — shown beside the stats, never added to them. */
+  registerTitles: number
   callout: HeroCallout
 }) {
   const stats: Stat[] = [
@@ -115,6 +119,21 @@ export default function HeroSection({
                 </div>
               ))}
             </div>
+
+            {/* The second layer: titles we list from official registers but do not
+                document as books. A sentence, not a fifth stat — a number in
+                the row above would invite adding it to "Books documented". */}
+            {registerTitles > 0 && (
+              <p className="mt-3 text-sm text-neutral-600">
+                Plus more than{' '}
+                <span className="tabular-nums">{roundedThousands(registerTitles)}</span> further titles on
+                official ban lists, kept as{' '}
+                <Link href="/registers" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
+                  registers
+                </Link>
+                .
+              </p>
+            )}
 
             <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
               Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.

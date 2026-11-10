@@ -98,7 +98,7 @@ export default async function DiscoverPage({
     },
     {
       q: `Why are ${totalCandidates} books in the wheel and not all of them?`,
-      a: `The wheel pools the top-50 most-banned books in each of our 11 reason categories — books with the strongest documented censorship histories. After deduplication that's ${totalCandidates} unique titles. We could load all 12,000+ records, but the top-by-reason pool gives a stronger pick than a random draw from every book that's been challenged once. The pool refreshes hourly as new bans are documented.`,
+      a: `The wheel pools the top-50 most-banned books in each of our 11 reason categories — books with the strongest documented censorship histories. After deduplication that's ${totalCandidates} unique titles. We could load every book in the catalogue, but the top-by-reason pool gives a stronger pick than a random draw from every book that's been challenged once. The pool refreshes hourly as new bans are documented.`,
     },
     {
       q: 'What counts as a "banned book" here?',
