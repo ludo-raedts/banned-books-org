@@ -35,6 +35,7 @@ import { themeByKey } from '@/lib/themes'
 import AwardBadge from '@/components/award-badge'
 import { parseAwards, awardSchemaText, awardName } from '@/lib/awards'
 import ShareButtons from '@/components/share-buttons'
+import CollapsibleRows from '@/components/collapsible-rows'
 import BanBackground, { appliesToLabel, type BanBackgroundItem } from '@/components/ban-background'
 import { bansForContext, contextsForBook } from '@/lib/ban-contexts'
 import { buildBanRowSummary } from '@/lib/ban-summary'
@@ -912,6 +913,21 @@ export default async function BookPage({
     (a.year_started ?? 9999) - (b.year_started ?? 9999)
   )
   const banClusters = clusterBans(sortedBans)
+
+  // Fold a long bans table: the first rows stay open, the rest sit behind a
+  // "Show N more" button (still in the HTML). A table that ran to several
+  // screens kept readers from reaching the background below it. Folding starts
+  // at two hidden rows — hiding a single row behind a button saves nothing.
+  const BAN_ROWS_SHOWN = 5
+  const shownClusterCount = banClusters.length > BAN_ROWS_SHOWN + 1 ? BAN_ROWS_SHOWN : banClusters.length
+  const foldedClusters = banClusters.slice(shownClusterCount)
+  const foldedCountries = [...new Set(foldedClusters.map(c => c.country_name))]
+  // The hint names what is behind the fold; pointless on a one-country book.
+  const foldedHint = foldedCountries.length === 0 || new Set(banClusters.map(c => c.country_name)).size === 1
+    ? undefined
+    : foldedCountries.length <= 3
+      ? foldedCountries.join(', ')
+      : `${foldedCountries.slice(0, 3).join(', ')} and ${foldedCountries.length - 3} more`
 
   // Historical/legal context for the censorship event(s) this book belongs to.
   // Matched against already-fetched ban source URLs (and an editorial slug
@@ -1802,6 +1818,7 @@ export default async function BookPage({
             caption={`${book.title}: ${book.bans.length} bans across ${timelineRows.length} ${timelineRows.length === 1 ? 'country' : 'countries'}.`}
             undatedLabels={undatedTimelineLabels}
           />
+          <CollapsibleRows hiddenCount={foldedClusters.length} hiddenHint={foldedHint}>
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -1815,14 +1832,16 @@ export default async function BookPage({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {banClusters.map((c) => {
+                  {banClusters.map((c, clusterIndex) => {
+                    // Rows past the fold: rendered, hidden until expanded.
+                    const extra = clusterIndex >= shownClusterCount ? true : undefined
                     const districtCount = [...c.by_state.values()].reduce((n, list) => n + list.length, 0)
                     const stateCount = c.by_state.size
                     const hasLocations = c.nation_count > 0 || stateCount > 0
                     const sortedStates = [...c.by_state.entries()].sort((a, b) => a[0].localeCompare(b[0]))
                     return (
                       <React.Fragment key={c.key}>
-                        <tr className="align-top">
+                        <tr className="align-top" data-extra={extra}>
                           <td className="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap text-xs sm:text-sm">
                             <Link
                               href={`/countries/${c.country_code.toLowerCase()}`}
@@ -1856,7 +1875,7 @@ export default async function BookPage({
                                   count={c.bans.length > 1 ? c.action_counts.get(a) : undefined}
                                 />
                               ))}
-                              {c.scope_label && <span className="text-xs text-gray-500">{c.scope_label}</span>}
+                              {c.scope_label && <span className="text-xs text-gray-500 whitespace-nowrap">{c.scope_label}</span>}
                             </div>
                           </td>
                           <td className="px-3 py-2.5">
@@ -1887,7 +1906,7 @@ export default async function BookPage({
                           </td>
                         </tr>
                         {hasLocations && (
-                          <tr className="bg-gray-50/60">
+                          <tr className="bg-gray-50/60" data-extra={extra}>
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 leading-relaxed">
                               {c.nation_count > 0 && (() => {
                                 const labels = [...new Set(c.nation_institutions.map(nationInstitutionLabel))]
@@ -1918,7 +1937,7 @@ export default async function BookPage({
                           </tr>
                         )}
                         {!hasPromotedBanNote && c.description && (
-                          <tr className="bg-amber-50/50">
+                          <tr className="bg-amber-50/50" data-extra={extra}>
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 italic leading-relaxed">
                               {c.description}
                             </td>
@@ -1931,6 +1950,7 @@ export default async function BookPage({
               </table>
             </div>
           </div>
+          </CollapsibleRows>
 
           {/* Legend — the canonical meaning of each action type, shown right
               where the actions appear (and consistent with /about + /challenged-books). */}
