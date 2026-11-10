@@ -35,10 +35,14 @@ the written description paragraph that interprets a ban is commercial.
 **Coverage at the snapshot used to write this descriptor** (figures move as the
 catalogue grows — the deposited files are the authority):
 
-- ~20,900 books, ~13,300 authors
-- ~37,800 ban events across 119 countries (including defunct states: USSR, East
+- ~29,400 books, ~17,800 authors
+- ~49,500 ban events across 119 countries (including defunct states: USSR, East
   Germany, Czechoslovakia, Yugoslavia)
-- ~68,100 ban–reason links and ~40,000 ban–source citations
+- ~90,000 ban–reason links and ~59,300 ban–source citations
+- 1 official ban-list **register** (the 1877 Index of Prohibited Books: 1,118
+  entries, 1,023 of them book titles). Register entries are titles *as printed
+  on an official list*, kept in separate files and **never counted as books** —
+  see §2 and the "registers" note in §5.
 
 **Scope.** This deposit covers *books*. Records must describe a real
 removal/restriction with an institutional actor and a documented decision (see
@@ -50,15 +54,19 @@ intent is books, but the data offers no hard guarantee that every row is one.
 
 ## 2. Data model
 
-Six CSV tables. All join keys are public, human-readable slugs or codes; the
-only surrogate key is `ban_id` (a row identifier needed because a ban has no
-natural slug). `schema.json` holds the machine-readable column types.
+Eight CSV tables: a six-table relational core plus a standalone two-table
+**register layer** (new in this version). All join keys are public,
+human-readable slugs or codes; the only surrogate keys are `ban_id` and
+`entry_id` (row identifiers for rows with no natural slug). `schema.json` holds
+the machine-readable column types.
 
 ```
 authors ──< (books.author_slugs, pipe-split) >── books ──< bans >── countries
                                                             │
                                               ┌─────────────┴─────────────┐
                                          ban_reasons                 ban_sources
+
+register_lists ──< register_entries  ·········>  books   (optional matched_book_slug)
 ```
 
 | Table | Grain | Primary key | Foreign keys |
@@ -69,6 +77,18 @@ authors ──< (books.author_slugs, pipe-split) >── books ──< bans >─
 | `ban_reasons.csv` | many rows per ban | (`ban_id`,`reason_slug`) | `ban_id` → `bans.ban_id` |
 | `ban_sources.csv` | many rows per ban | — | `ban_id` → `bans.ban_id` |
 | `countries.csv` | one row per country | `code` | — |
+| `register_lists.csv` | one row per official list | `slug` | — |
+| `register_entries.csv` | one row per list entry | `entry_id` | `list_slug` → `register_lists.slug`; optional `matched_book_slug` → `books.slug` |
+
+**Register layer (read this before combining totals).** Some official ban lists
+are too large to document book-by-book; their entries are kept as a *register* —
+the title and author *as printed*, plus a pointer to the source, with no book
+page, description, ISBN, cover, or author record. **Register entries are NOT
+books and are NOT part of the `books` / `bans` / `country` counts. Never add the
+two figures together.** An entry links to a `books` row only in the rare case
+the same work is also documented as a full book (`matched_book_slug`); otherwise
+it stands alone. Only public-domain lists are included (currently the 1877 Index
+of Prohibited Books); others are browsable on the site but out of this deposit.
 
 **Join keys.**
 - `books.author_slugs` is a pipe-separated (`|`) list — split it, then join each
@@ -76,6 +96,8 @@ authors ──< (books.author_slugs, pipe-split) >── books ──< bans >─
   separate join table.
 - `bans.book_slug` → `books.slug`; `bans.country_code` → `countries.code`.
 - `ban_reasons.ban_id` and `ban_sources.ban_id` → `bans.ban_id`.
+- `register_entries.list_slug` → `register_lists.slug`;
+  `register_entries.matched_book_slug` → `books.slug` (nullable).
 
 **Conventions.** Array fields are pipe-separated (`|`). NULLs are encoded as the
 empty string. Years are integers and may be negative or pre-1000 CE for ancient
@@ -89,7 +111,10 @@ Authoritative, machine-readable types live in `schema.json`. Summary:
 
 **`books.csv`** — `slug` (PK), `title` (canonical published title),
 `first_published_year` (int, nullable), `original_language` (code, nullable),
-`author_slugs` (pipe-separated `authors.slug`, nullable).
+`author_slugs` (pipe-separated `authors.slug`, nullable), `is_blanket_works`
+(boolean: `true` = an author-level "all works" ban placeholder, not a single
+real title — e.g. the Nazi *Liste Otto* author bans; filter these out when
+counting individual works).
 
 **`authors.csv`** — `slug` (PK), `display_name` (slug-canonical, Anglo-friendly
 form), `birth_country` (code, nullable), `is_placeholder` (boolean: `true` =
@@ -122,6 +147,20 @@ rows per ban.
 **`countries.csv`** — `code` (PK; ISO 3166-1 alpha-2 where applicable, custom
 codes for defunct states), `name_en`.
 
+**`register_lists.csv`** — `slug` (PK), `title`, `title_en`, `issuer`,
+`country_code`, `year_start` / `year_end` (int, nullable), `framing` (how the
+list is framed — a prohibition index, a confiscation list, etc.), `source_name`,
+`source_url`. One row per official ban list.
+
+**`register_entries.csv`** — `entry_id` (PK, surrogate), `list_slug` (FK →
+`register_lists.slug`), `edition`, `kind` (`book`, `blanket` = all works of an
+author, `group` = a whole category, `periodical`, or `rescission` = a lift),
+`printed_author` / `title` (as printed on the list — historical spelling, Latin
+forms, OCR artefacts), `author_display` (normalised name where known), `imprint`,
+`pub_year`, `ban_year`, `note`, `printed_page`, `locator`, `source_url`,
+`matched_book_slug` (→ `books.slug` when the same work is also a full book
+record; empty otherwise). These rows are register titles, **not** books.
+
 ---
 
 ## 4. Methodology — how bans are sourced and verified
@@ -145,8 +184,8 @@ decision.
 
 **Verification.** Sources carry a `verification_status`. Archive-verification is
 an ongoing process and the field is mostly unpopulated so far. At the snapshot
-used here, of ~1,100 source rows the distribution is roughly: `unverified` ≈ 81%,
-empty/`(null)` ≈ 18%, `verified` = 10 rows, `pending` = 2 rows, and `broken` = 0.
+used here, of ~1,170 source rows the distribution is roughly: `unverified` ≈ 81%,
+empty/`(null)` ≈ 17%, `verified` = 13 rows, `pending` = 2 rows, and `broken` = 0.
 **In practical terms, filtering on `verification_status = 'verified'` currently
 returns a near-empty subset (a handful of rows) and is not yet a usable quality
 gate.** Treat it as a lever that becomes useful as verification runs progress,
@@ -177,7 +216,7 @@ the United States' raw row count roughly 2–3× relative to distinct titles.
 - **Raw `bans.csv` row counts** are supporting detail only — never a repression
   ranking.
 
-Worked example (snapshot figures): ~37,800 raw ban rows resolve to ~20,900
+Worked example (snapshot figures): ~49,500 raw ban rows resolve to ~29,400
 distinct books — the gap is overwhelmingly US school-district events for a
 smaller set of titles. A country ranking built on raw rows would massively
 overstate the US relative to a ranking built on distinct banned titles.
@@ -186,11 +225,19 @@ The export is intentionally **not pre-aggregated**: every event is preserved so
 researchers can choose their own grain. This section exists so they don't
 mistake the event grain for a title count.
 
+**Registers are a separate layer — never summed into book counts.** The
+`register_*` files hold titles *as printed on official lists* (see §2). They are
+not books and are not bans in the `books` / `bans` sense; a headline like "X
+books documented" must not add register entries on top. Count registers on their
+own terms (entries per list), and treat `register_entries.matched_book_slug` as
+the only bridge to the book catalogue.
+
 **Status semantics.** `rescinded` is a genuine category, not a synonym of
-`historical`: it marks a ban that was formally *lifted in a later year* (nearly
-all such rows — 52 of 53 at the current snapshot — carry a `year_ended`),
-whereas `historical` simply means no longer in force without asserting a
-documented reversal.
+`historical`: it marks a ban that was formally *lifted or reversed* in a later
+year. Most such rows carry a `year_ended` (the lift year) — ~999 of ~1,270 at
+the current snapshot — but a substantial minority (notably bulk reinstatement
+records) do not; `historical` simply means no longer in force without asserting
+a documented reversal.
 
 ---
 
