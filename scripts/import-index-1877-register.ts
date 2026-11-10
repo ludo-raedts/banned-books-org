@@ -25,7 +25,7 @@ const DATE = flagValue('date') ?? '2026-11-10'
 export const INDEX_1877_LIST = {
   slug: 'index-1877',
   title: 'Index librorum prohibitorum … Pii IX Pont. Max. iussu editus (Romae 1877)',
-  title_en: 'Index of Prohibited Books, 1877 edition — entries without a catalogue page',
+  title_en: 'Index of Prohibited Books (1877 edition)',
   issuer: 'Holy See — Sacred Congregation of the Index',
   country_code: 'VA',
   year_start: 1877,
