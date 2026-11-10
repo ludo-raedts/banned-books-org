@@ -54,6 +54,7 @@
  *   npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts --apply         # write, budget 900
  *   npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts --apply --budget=500
  *   npx tsx --env-file=.env.local scripts/enrich-gb-harvest.ts --reset-cursor  # start over from id 0
+ *   … --apply --no-isbn --ids-file=<ids.json>   # covers/language only (old-book cohorts)
  */
 import fs from 'node:fs'
 import { adminClient } from '../src/lib/supabase'
@@ -84,6 +85,11 @@ const APPLY = process.argv.includes('--apply')
 // --ids-file= / --ids=: only these books, cursor ignored and left untouched.
 const IDS = idsFlag()
 const RESET_CURSOR = process.argv.includes('--reset-cursor')
+// --no-isbn: fill covers/language only. For pre-1900 cohorts (Index 1877) the
+// only ISBNs GB has are print-on-demand reprints, and 3 of the 29 recovered on
+// 2026-11-10 belonged to a different work bound under the same title words.
+// Covers on the same run checked out 23/23, so the cover path stays on.
+const NO_ISBN = process.argv.includes('--no-isbn')
 const BUDGET = (() => {
   const a = process.argv.find((x) => x.startsWith('--budget='))
   return a ? parseInt(a.split('=')[1], 10) : 900
@@ -271,7 +277,7 @@ async function main() {
     // ── ISBN (only when missing, only on the title-search path; ISBN-direct
     //    means we already have it) ──
     let recoveredIsbn: string | null = null
-    if (needIsbn && !viaIsbnDirect && !placeholderUnsearchable) {
+    if (needIsbn && !NO_ISBN && !viaIsbnDirect && !placeholderUnsearchable) {
       for (const v of matched) {
         const cand = gbIsbn13(v.volumeInfo)
         if (!cand) continue
