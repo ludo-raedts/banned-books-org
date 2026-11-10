@@ -964,6 +964,18 @@ export default async function BookPage({
     ? null
     : buildBanRowSummary(book.title, book.bans)
 
+  // Where the censorship-event callout sits. A book with its own ban story (a
+  // shown description_ban, or an additive censorship history) leads with that
+  // story and the bans table; the event is then background on some of its bans
+  // and follows the table — Animal Farm opened on a 2025 Texas statute that
+  // covers 2 of its 15 bans. A sparse title has no story of its own: there the
+  // event IS the substance and keeps its slot above "About this book".
+  // Promoted per-ban notes deliberately don't count: on the bulk register
+  // imports they are templated one-liners (4,666 of 4,773 Index titles), not a
+  // story. Count 2026-11-10: ~2,860 of ~20k context-matched books move.
+  const showCensorshipHistory = isContextAdditive(book.description_ban, book.censorship_context)
+  const contextAfterBans = (!!banDescription || showCensorshipHistory) && sortedBans.length > 0
+
   // Sourced background for districts with documented mass removals (the
   // institution, not this title). Shown alongside whatever ban text we have.
   // Capped at 2 — a widely-banned title (Beloved) matches ten districts, and
@@ -1619,8 +1631,10 @@ export default async function BookPage({
 
       {/* Censorship-event context (Liste Otto, the 1938 Nazi list, the Russian
           extremist register, the Loi Gayssot, …). Grounded, written once per
-          event — for sparse titles this is the substance of the page. */}
-      <BanContextCallout contexts={bookContexts} />
+          event — for sparse titles this is the substance of the page, so it
+          leads; a book with its own ban story shows it after the bans table
+          instead (see contextAfterBans). */}
+      {!contextAfterBans && <BanContextCallout contexts={bookContexts} />}
 
       {/* About the book */}
       {!book.description_book ? (
@@ -1709,7 +1723,7 @@ export default async function BookPage({
 
       {/* Censorship history (AI-generated context) — only when factually
           additive vs. the ban description, never a near-duplicate paragraph. */}
-      {isContextAdditive(book.description_ban, book.censorship_context) && (
+      {showCensorshipHistory && (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Censorship history</h2>
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
@@ -1938,6 +1952,10 @@ export default async function BookPage({
           </dl>
         </section>
       )}
+
+      {/* Censorship-event context, for books that lead with their own ban story:
+          background on a subset of the rows in the table just above. */}
+      {contextAfterBans && <BanContextCallout contexts={bookContexts} />}
 
       {/* Editorial note — context/extended tier only; placed after bans so the
           factual record comes first and editorial framing follows.
