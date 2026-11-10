@@ -30,6 +30,8 @@ type SourceEntry = {
   // adapters we've designed but not yet shipped (Ukrainian gazette, Russian
   // extremism register, etc.).
   planned?: boolean
+  // Internal page holding the full list as a register (/registers/<slug>).
+  register?: { href: string; label: string }
 }
 
 type Category = {
@@ -350,6 +352,15 @@ const CATEGORIES: readonly Category[] = [
         description:
           'The Catholic Church\'s own printed Index of forbidden books, complete to 1876, from the public-domain scan on the Internet Archive. Each entry gives the author and title and the date of the condemning decree, which we record as the ban year; entries carried over from the Tridentine Index of 1564 have no decree date and are recorded as 1564. Authors whose entire output was forbidden ("first class") appear as one "All works" entry. Titles are kept in their original language, mostly Latin, Italian and French; author names were recovered from the scan\'s OCR and normalised where the person could be identified. Entries without a legible decree date are not imported.',
         match: ['index-librorum-prohibitorum-catholic'],
+        register: { href: '/registers/index-1877', label: 'Browse the further titles kept as a register' },
+      },
+      {
+        name: 'Liste der auszusondernden Literatur — Soviet occupation zone / GDR, 1946–1953 (transcription by Olaf Simons, polunbi.de)',
+        url: 'http://www.polunbi.de/bibliothek/1946-nslit.html',
+        description:
+          'The list of fascist and militarist literature that the German education administration in the Soviet occupation zone ordered removed from libraries and bookshops (1946), with supplements of 1947, 1948 and 1953, the last issued by the GDR Ministry of Education. We use the full transcription by the historian Olaf Simons on polunbi.de ("Datenbank Schrift und Bild 1900–1960"), with thanks; every register entry links back to his pages. The roughly 31,500 entries are kept as a separate register and are not counted in our totals. Books on the list that we already document (mostly titles the Nazis had banned too) carry a ban attributed to this list.',
+        match: ['polunbi.de'],
+        register: { href: '/registers/sbz-1946', label: 'Browse the full register' },
       },
       {
         name: 'Utah State Board of Education — Sensitive Materials Removed Statewide',
@@ -1420,6 +1431,13 @@ export default async function SourcesPage() {
                   <p className="text-sm text-gray-600 leading-relaxed">
                     {source.description}
                   </p>
+                  {source.register && (
+                    <p className="mt-2 text-sm">
+                      <Link href={source.register.href} className="font-medium text-oxblood hover:underline">
+                        {source.register.label} →
+                      </Link>
+                    </p>
+                  )}
                 </div>
               )
             })}

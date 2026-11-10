@@ -138,6 +138,9 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/about`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/press`, changefreq: 'monthly', priority: 0.6 },
     { loc: `${base}/sources`, changefreq: 'monthly', priority: 0.4 },
+    { loc: `${base}/registers`, changefreq: 'monthly', priority: 0.4 },
+    { loc: `${base}/registers/sbz-1946`, changefreq: 'monthly', priority: 0.5 },
+    { loc: `${base}/registers/index-1877`, changefreq: 'monthly', priority: 0.5 },
     { loc: `${base}/methodology`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/dataset`, changefreq: 'monthly', priority: 0.8 },
     // Documentary landing — YouTube embed + VideoObject JSON-LD, routes viewers

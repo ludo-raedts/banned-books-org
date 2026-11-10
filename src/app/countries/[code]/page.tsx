@@ -26,6 +26,7 @@ import { displayNativeTitle } from '@/lib/native-title'
 import { reasonPhrase } from '@/lib/reason-phrases'
 import { buildCountryFaq, articulateCountryName } from '@/lib/country-faq'
 import { contextsForCountry } from '@/lib/ban-contexts'
+import { getRegisterListsForCountry } from '@/lib/registers'
 import { BookshopListEmbed } from '@/components/bookshop-list-embed'
 import { getBookshopListForCountry, bookshopListUrl } from '@/lib/bookshop-lists'
 
@@ -212,11 +213,15 @@ export default async function CountryPage({
     { data: countryMv },
     { data, error },
     banSweep,
+    registerLists,
   ] = await Promise.all([
     supabase.from('countries').select('code, name_en, slug, description').eq('code', upperCode).single(),
     supabase.from('mv_ban_counts').select('distinct_books, total_bans').eq('country_code', upperCode).maybeSingle(),
     booksGridQuery,
     loadBanSweep(),
+    // Large official lists kept as a register — shown NEXT TO the distinct-books
+    // metric, never summed into it.
+    getRegisterListsForCountry(upperCode),
   ])
 
   if (ce || !country) notFound()
@@ -514,6 +519,24 @@ export default async function CountryPage({
                 </div>
               ))}
             </div>
+
+            {registerLists.length > 0 && (
+              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+                {registerLists.map((r, i) => (
+                  <span key={r.slug}>
+                    {i > 0 && ' · '}
+                    <span className="tabular-nums">{r.entry_count.toLocaleString('en')}</span> further titles on{' '}
+                    <Link
+                      href={`/registers/${r.slug}`}
+                      className="underline underline-offset-2 decoration-oxblood/40 hover:decoration-oxblood"
+                    >
+                      {r.title_en ?? r.title}
+                    </Link>
+                  </span>
+                ))}
+                {' '}— kept as a separate register, not counted above.
+              </p>
+            )}
 
             {countryLead && totalBanCount > 0 && (
               <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">
