@@ -41,6 +41,69 @@ async function post(base: string, token: string, body: unknown): Promise<Respons
   }
 }
 
+// ── Cloudflare edge cache ───────────────────────────────────────────────────
+// The `cache-catalogue-html` Cache Rule keeps catalogue HTML at Cloudflare's
+// edge for 24 h, overriding origin headers. Busting only Vercel's ISR cache
+// therefore never reached visitors (2026-11-10: a stale hub stayed up 19 h).
+// Every bust below is followed by a purge of the same URLs at Cloudflare.
+// Needs CLOUDFLARE_ZONE_ID + CLOUDFLARE_API_TOKEN (Cache Purge permission);
+// fail-soft like the rest of this file.
+const CF_URLS_PER_CALL = 30
+// Past this many URLs one purge-everything is kinder to the API rate limit
+// than ~70 calls; Vercel's ISR cache still shields the database.
+const CF_PURGE_ALL_THRESHOLD = 2000
+
+async function cfPurge(body: unknown): Promise<boolean> {
+  const zone = process.env.CLOUDFLARE_ZONE_ID
+  const token = process.env.CLOUDFLARE_API_TOKEN
+  if (!zone || !token) return false
+  try {
+    const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${zone}/purge_cache`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    const json = (await res.json().catch(() => null)) as { success?: boolean; errors?: { message?: string }[] } | null
+    if (!res.ok || !json?.success) {
+      console.warn(`  ⚠ Cloudflare purge: HTTP ${res.status} ${json?.errors?.map(e => e.message).join('; ') ?? ''}`)
+      return false
+    }
+    return true
+  } catch (e) {
+    console.warn(`  ⚠ Cloudflare purge: ${e instanceof Error ? e.message : e}`)
+    return false
+  }
+}
+
+/** Purge literal paths (or everything, when `paths` is null) from Cloudflare's edge. */
+export async function purgeCloudflare(paths: string[] | null, base: string = DEFAULT_BASE): Promise<boolean> {
+  // Only the production hostname sits behind Cloudflare.
+  if (base !== DEFAULT_BASE) return true
+  if (!process.env.CLOUDFLARE_ZONE_ID || !process.env.CLOUDFLARE_API_TOKEN) {
+    console.warn('  ⚠ CLOUDFLARE_ZONE_ID/API_TOKEN niet gezet — Cloudflare-cache niet geleegd (tot 24u oude pagina\'s).')
+    return false
+  }
+  if (paths === null || paths.length > CF_PURGE_ALL_THRESHOLD) {
+    const ok = await cfPurge({ purge_everything: true })
+    if (ok) console.log('  ✓ Cloudflare purge: alles')
+    return ok
+  }
+  const host = new URL(base).host
+  let ok = true
+  let done = 0
+  for (let i = 0; i < paths.length; i += CF_URLS_PER_CALL) {
+    const chunk = paths.slice(i, i + CF_URLS_PER_CALL)
+    // Prefix purge, not `files`: a single-file purge reports success but leaves
+    // the page cached (the rule's Vary passthrough stores variants a URL purge
+    // does not match — verified 2026-11-10). A prefix is host + path, no scheme;
+    // it also clears longer paths that share it, which is harmless.
+    if (await cfPurge({ prefixes: chunk.map(p => `${host}${p}`) })) done += chunk.length
+    else ok = false
+  }
+  console.log(`  ✓ Cloudflare purge: ${done}/${paths.length} pagina's`)
+  return ok
+}
+
 function requireSecret(): string | null {
   const secret = process.env.ADMIN_SECRET
   if (!secret) {
@@ -73,6 +136,8 @@ export async function bustDetailPages(
       console.log(`  ✓ cache bust (route-wide): ${path}`)
     }
   }
+  // Free plan has no prefix purge, so a route-wide bust clears the whole edge.
+  if (ok) await purgeCloudflare(null, base)
   return ok
 }
 
@@ -107,6 +172,8 @@ export async function bustPaths(
     }
   }
   console.log(`  ✓ cache bust (gericht): ${done}/${unique.length} pagina's`)
+  // After the ISR bust, so the edge refetches the fresh render, not the old one.
+  await purgeCloudflare(unique, base)
   return ok
 }
 
