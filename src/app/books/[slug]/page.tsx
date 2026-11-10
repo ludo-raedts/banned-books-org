@@ -919,6 +919,10 @@ export default async function BookPage({
   // screens kept readers from reaching the background below it. Folding starts
   // at two hidden rows — hiding a single row behind a button saves nothing.
   const BAN_ROWS_SHOWN = 5
+  // How much of a district list one table row shows in full before it folds.
+  // The list prints one line per state, so states count as much as districts.
+  const DISTRICTS_INLINE_MAX = 6
+  const STATES_INLINE_MAX = 3
   const shownClusterCount = banClusters.length > BAN_ROWS_SHOWN + 1 ? BAN_ROWS_SHOWN : banClusters.length
   const foldedClusters = banClusters.slice(shownClusterCount)
   const foldedCountries = [...new Set(foldedClusters.map(c => c.country_name))]
@@ -1920,19 +1924,53 @@ export default async function BookPage({
                                   </div>
                                 )
                               })()}
-                              {sortedStates.map(([state, districts]) => (
-                                <div key={state}>
-                                  <span className="font-medium text-gray-700">{state}</span>
-                                  {districts.length > 0 && (
-                                    <span> — {districts.join(', ')}</span>
-                                  )}
-                                </div>
-                              ))}
-                              {!c.nation_count && stateCount > 0 && districtCount > 0 && (
-                                <div className="mt-1 text-[11px] text-gray-500">
-                                  {districtCount} district{districtCount === 1 ? '' : 's'} across {stateCount} state{stateCount === 1 ? '' : 's'}
-                                </div>
-                              )}
+                              {(() => {
+                                const stateLines = sortedStates.map(([state, districts]) => (
+                                  <div key={state}>
+                                    <span className="font-medium text-gray-700">{state}</span>
+                                    {districts.length > 0 && (
+                                      <span> — {districts.join(', ')}</span>
+                                    )}
+                                  </div>
+                                ))
+                                const tally = `${districtCount} district${districtCount === 1 ? '' : 's'} across ${stateCount} state${stateCount === 1 ? '' : 's'}`
+                                // A long district list folds to one line — the
+                                // tally plus a per-state count — and opens on
+                                // demand. Native <details>: no JS, and the
+                                // names stay in the HTML. One year of a widely
+                                // removed title listed 20+ districts, which
+                                // made a "short" table several screens tall.
+                                if (districtCount > DISTRICTS_INLINE_MAX || stateCount > STATES_INLINE_MAX) {
+                                  return (
+                                    <details className="group">
+                                      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                                        <span className="font-medium text-gray-700">{tally}</span>
+                                        <span className="text-gray-500">
+                                          {' — '}
+                                          {sortedStates.map(([state, districts]) =>
+                                            districts.length > 0 ? `${state} (${districts.length})` : state,
+                                          ).join(', ')}
+                                        </span>{' '}
+                                        <span className="whitespace-nowrap font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:hidden">
+                                          Show districts
+                                        </span>
+                                        <span className="hidden whitespace-nowrap font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:inline">
+                                          Hide districts
+                                        </span>
+                                      </summary>
+                                      <div className="mt-1">{stateLines}</div>
+                                    </details>
+                                  )
+                                }
+                                return (
+                                  <>
+                                    {stateLines}
+                                    {!c.nation_count && stateCount > 0 && districtCount > 0 && (
+                                      <div className="mt-1 text-[11px] text-gray-500">{tally}</div>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </td>
                           </tr>
                         )}
