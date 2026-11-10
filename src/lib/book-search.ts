@@ -26,16 +26,36 @@ export type BookSearchParams = {
 // books. Page through with a stable .order() until the rows run out. The caller
 // supplies a factory that applies .order().range(from, to).
 async function paginateAll<T>(
-  make: (from: number, to: number) => PromiseLike<{ data: T[] | null }>,
+  make: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
 ): Promise<T[]> {
+  // Pages are fetched WAVE at a time in parallel: same rows and DB work as a
+  // sequential walk (at most WAVE-1 empty tail pages extra), but US (~40 pages)
+  // no longer pays 40 round trips back to back. Errors throw — a swallowed
+  // page error used to yield a silently partial result that /api/books then
+  // cached at the CDN for hours.
+  const WAVE = 4
   const out: T[] = []
-  let from = 0
-  for (;;) {
-    const { data } = await make(from, from + 999)
-    if (!data || data.length === 0) break
-    out.push(...data)
-    if (data.length < 1000) break
-    from += 1000
+  for (let from = 0; ; from += WAVE * 1000) {
+    const pages = await Promise.all(
+      Array.from({ length: WAVE }, (_, i) => make(from + i * 1000, from + i * 1000 + 999)),
+    )
+    for (const { data, error } of pages) {
+      if (error) throw new Error(error.message)
+      out.push(...(data ?? []))
+      if (!data || data.length < 1000) return out
+    }
+  }
+}
+
+// Run chunked lookups WAVE at a time; throw on the first error (see paginateAll).
+async function inWaves<T>(tasks: (() => PromiseLike<{ data: T[] | null; error: { message: string } | null }>)[]): Promise<T[]> {
+  const WAVE = 4
+  const out: T[] = []
+  for (let i = 0; i < tasks.length; i += WAVE) {
+    for (const { data, error } of await Promise.all(tasks.slice(i, i + WAVE).map(t => t()))) {
+      if (error) throw new Error(error.message)
+      out.push(...(data ?? []))
+    }
   }
   return out
 }
@@ -123,7 +143,12 @@ function compactBans(books: unknown[]): unknown[] {
 }
 
 export async function searchBooks(params: BookSearchParams): Promise<BookSearchResult> {
-  const res = await searchBooksRaw(params)
+  let res: BookSearchResult
+  try {
+    res = await searchBooksRaw(params)
+  } catch (e) {
+    return { books: [], total: 0, error: e instanceof Error ? e.message : String(e) }
+  }
   return { ...res, books: compactBans(res.books) }
 }
 
@@ -257,13 +282,12 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
       supabase.from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id).order('ban_id').range(f, t))
     if (!links.length) return { books: [], total: 0 }
     const banIds = links.map(l => l.ban_id)
-    const bookIds = new Set<number>()
     const CHUNK = 500
-    for (let i = 0; i < banIds.length; i += CHUNK) {
-      const { data } = await supabase.from('bans').select('book_id').in('id', banIds.slice(i, i + CHUNK))
-      for (const b of (data ?? []) as { book_id: number }[]) bookIds.add(b.book_id)
-    }
-    idSets.push(bookIds)
+    const chunks: number[][] = []
+    for (let i = 0; i < banIds.length; i += CHUNK) chunks.push(banIds.slice(i, i + CHUNK))
+    const bans = await inWaves<{ book_id: number }>(chunks.map(c => () =>
+      supabase.from('bans').select('book_id').in('id', c)))
+    idSets.push(new Set(bans.map(b => b.book_id)))
   }
 
   if (idSets.length === 0) return { books: [], total: 0 }
@@ -277,14 +301,10 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
   // actually renders below, then sort in JS.
   const SORT_CHUNK = 500
   type SortRow = { id: number; title: string; created_at: string | null }
-  const sortRows: SortRow[] = []
-  for (let i = 0; i < allIds.length; i += SORT_CHUNK) {
-    const { data } = await supabase
-      .from('books').select('id, title, created_at')
-      .eq('is_gated', false)
-      .in('id', allIds.slice(i, i + SORT_CHUNK))
-    if (data) sortRows.push(...(data as SortRow[]))
-  }
+  const sortChunks: number[][] = []
+  for (let i = 0; i < allIds.length; i += SORT_CHUNK) sortChunks.push(allIds.slice(i, i + SORT_CHUNK))
+  const sortRows = await inWaves<SortRow>(sortChunks.map(c => () =>
+    supabase.from('books').select('id, title, created_at').eq('is_gated', false).in('id', c)))
 
   let sortedIds: number[]
   if (sort === 'alpha') {
