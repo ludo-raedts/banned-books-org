@@ -969,11 +969,18 @@ export default async function BookPage({
   // explainer instead serves the large middle of the catalogue that has no hub.
   // (Audit 2026-06-22: 99.4% of truly-barren books already match an event hub,
   // so the hub lever is exhausted; the reason lens is the non-overlapping one.)
+  // Only reasons a source STATES count. An inferred reason is our reading of
+  // the book; a box headed "About political challenges" under it read as if
+  // the source had given that reason (Algemene Staatsleer, whose source gives
+  // none — reviewer, 2026-11-11).
   const reasonExplainer = bookContexts.length > 0
     ? null
     : explainerForReasonSlugs(
         book.bans.flatMap(b =>
-          b.ban_reason_links.map(l => l.reasons?.slug).filter((s): s is string => !!s),
+          b.ban_reason_links
+            .filter(l => l.basis !== 'inferred')
+            .map(l => l.reasons?.slug)
+            .filter((s): s is string => !!s),
         ),
       )
 
