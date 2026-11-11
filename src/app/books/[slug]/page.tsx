@@ -211,6 +211,18 @@ function buildBanSummary(
   return { topic, facts, faqItems: items }
 }
 
+// A generated ban text ("Why it was banned") is published only once a person
+// has written or checked it. Everything else in that column is machine-written
+// — an LLM, or an importer's template — and the external review (2026-11-11)
+// found such texts stating years and reasons their linked source does not
+// give, in the most prominent slot on the page. Until a text is vetted the
+// page shows what is recorded: the per-ban notes, or the where/when summary
+// built from the ban rows, each with its sources. One rule for the page body,
+// the meta description and anything else that quotes the text.
+function isBanTextVetted(status: string | null | undefined): boolean {
+  return status === 'human_curated'
+}
+
 // How many books in the archive carry this author — the count in the
 // "See all N books by X" next step. A head-only count over the author_id
 // index; cache() dedupes it within a render.
@@ -563,9 +575,9 @@ export async function generateMetadata({
   let description = buildDescription(withNative(baseTitle))
   // Question-intent override: Bing shows us on page 1 for "why was <title>
   // banned" with a 4–6% CTR behind a generic snippet. When the book carries a
-  // usable ban-context sentence (not auto-rejected), lead with the answer.
+  // vetted ban text (see isBanTextVetted), lead with the answer.
   const banCtx = (data.description_ban ?? '').trim()
-  const banCtxOk = banCtx.length >= 60 && data.description_ban_status !== 'auto_rejected_low_quality' && bans.length > 0
+  const banCtxOk = banCtx.length >= 60 && isBanTextVetted(data.description_ban_status) && bans.length > 0
   if (banCtxOk) {
     // Sentence boundary = terminator followed by whitespace + capital, so
     // "U.S. schools" does not end the sentence.
@@ -991,16 +1003,33 @@ export default async function BookPage({
   // small italic sub-row that's easy to miss. For an otherwise-sparse page this
   // is the most specific, per-book content we hold. Deduped, no query. When we
   // promote, the in-table sub-row is suppressed to avoid showing it twice.
-  // description_ban flagged as a mere restatement of the ban rows (or otherwise
-  // auto-rejected) is not shown — see scripts/flag-restatement-ban-descriptions.ts.
-  const banDescription = book.description_ban_status === 'auto_rejected_low_quality'
-    ? null
-    : book.description_ban
-  const promotedBanNotes = banDescription
-    ? []
-    : [...new Set(
-        sortedBans.map(b => b.description?.trim()).filter((d): d is string => !!d),
-      )]
+  // Only a vetted description_ban is shown (see isBanTextVetted); unvetted or
+  // auto-rejected text stays in the database and off the page.
+  const banDescription = isBanTextVetted(book.description_ban_status) ? book.description_ban : null
+  // Each note keeps the record it belongs to. Without a vetted ban text these
+  // notes are the lead of the page, and a bare run of sentences ("Banned by
+  // military junta…", "Banned November 1988.") did not say which country or
+  // year each one was about.
+  const promotedBanNotes: { where: string; note: string }[] = []
+  if (!banDescription) {
+    const byNote = new Map<string, { countries: Set<string>; years: Set<number> }>()
+    for (const b of sortedBans) {
+      const note = b.description?.trim()
+      if (!note) continue
+      const entry = byNote.get(note) ?? { countries: new Set<string>(), years: new Set<number>() }
+      entry.countries.add(b.countries?.name_en ?? b.country_code)
+      if (b.year_started != null) entry.years.add(b.year_started)
+      byNote.set(note, entry)
+    }
+    for (const [note, { countries, years }] of byNote) {
+      const names = [...countries]
+      const place = names.length <= 2 ? names.join(' and ') : `${names.slice(0, 2).join(', ')} and ${names.length - 2} more`
+      promotedBanNotes.push({ where: years.size === 1 ? `${place}, ${[...years][0]}` : place, note })
+    }
+  }
+  // The lead shows a handful; a longer set stays complete in the table rows.
+  const PROMOTED_NOTES_SHOWN = 5
+  const promotedNotesCapped = promotedBanNotes.length > PROMOTED_NOTES_SHOWN
   const hasPromotedBanNote = promotedBanNotes.length > 0
 
   // (b) Neither → a deterministic, source-attributed summary of the ban rows
@@ -1019,38 +1048,37 @@ export default async function BookPage({
   // imports they are templated one-liners (4,666 of 4,773 Index titles), not a
   // story. Count 2026-11-10: ~2,860 of ~20k context-matched books move.
   //
-  // The censorship history (censorship_context) is LLM-written. How much of
-  // it a reader gets (UX review 2026-11-11):
-  //   'open'   — a human wrote or vetted it ('narrative_curated'), or the
-  //              verification pass rewrote it from cited pages
-  //              ('source_verified': every sentence matched to a passage that
-  //              occurs literally on a page in censorship_context_sources, and
-  //              checked against this book's ban rows and ban text). It reads
-  //              on as part of the answer — also next to a ban text, which the
-  //              unvetted text may not — and a sourced text names its sources.
-  //   'folded' — unvetted, and the page has no ban text of its own beside it:
-  //              kept, but behind a labelled disclosure AFTER the recorded
-  //              facts, never as the lead.
-  //   null     — hidden. Either the pipeline itself flagged it as unsupported,
-  //              or it would stand next to a shown ban text, where it read as
-  //              a second answer and could contradict the first: 1984 said the
-  //              Soviet ban ended in 1988 in one paragraph and 1990 in the next.
-  //              The text stays in the database; only the page stops showing it.
+  // The censorship history (censorship_context) is LLM-written. It is shown
+  // only when vetted (UX review 2026-11-11):
+  //   - a human wrote or checked it ('narrative_curated'), or
+  //   - the verification pass rewrote it from cited pages ('source_verified':
+  //     every sentence matched to a passage that occurs literally on a page in
+  //     censorship_context_sources, and checked against this book's ban rows
+  //     and ban text). A sourced text names its sources.
+  // Everything else is hidden. Unvetted text contradicted the ban text beside
+  // it (1984: the Soviet ban ended in 1988 in one paragraph, 1990 in the next)
+  // and stated unsourced specifics as fact (Julie of the Wolves). A labelled
+  // fold was tried and dropped on the reviewer's advice: text known to be
+  // unreliable should not stay one click away. Nothing is deleted.
   const historyIsCurated = book.censorship_context_status === 'narrative_curated'
-  const historyIsRejected = book.censorship_context_status === 'insufficient_evidence'
-    || book.censorship_context_status === 'auto_rejected_low_groundedness'
   // One link per cited page, in the order the text uses them.
   const historySources = book.censorship_context_status === 'source_verified'
     ? (book.censorship_context_sources ?? []).filter(src => /^https?:\/\//.test(src.url))
     : []
   const historySourcePages = [...new Map(historySources.map(src => [src.url, src])).values()]
   const historyIsSourced = historySourcePages.length > 0
-  const historyMode: 'open' | 'folded' | null =
-    !isContextAdditive(book.description_ban, book.censorship_context) ? null
-      : historyIsCurated || historyIsSourced ? 'open'
-        : historyIsRejected || banDescription ? null
-          : 'folded'
-  const contextAfterBans = (!!banDescription || historyMode !== null) && sortedBans.length > 0
+  // Compared with the ban text that is actually shown, not a hidden one.
+  const historyMode: 'open' | null =
+    (historyIsCurated || historyIsSourced) && isContextAdditive(banDescription, book.censorship_context)
+      ? 'open'
+      : null
+  // Background always follows the bans table now. It used to lead on pages
+  // without a ban story of their own; with the answer section first on every
+  // page and most generated ban texts hidden, that rule would have pushed two
+  // or three background boxes between the answer and "About this book" on the
+  // most-read titles (1984: 1,260px of them). One order for every book: answer,
+  // description, records, background, onward.
+  const contextAfterBans = sortedBans.length > 0
 
   // Sourced background for districts with documented mass removals (the
   // institution, not this title). Shown alongside whatever ban text we have.
@@ -1772,11 +1800,8 @@ export default async function BookPage({
       {(banDescription || hasPromotedBanNote || banRowSummary || historyMode) && (() => {
         // Provenance: every pipeline that writes censorship_context is an LLM
         // (enrich-censorship-context-gpt, rewrite-descriptions-grounded, the
-        // wiki-enrichment rewrite) and the column has no source URL. Vetted
-        // text ('narrative_curated', stamped by the admin portal on edit) reads
-        // on in the open; unvetted text sits behind a disclosure that says what
-        // it is before the reader opens it. It always follows the recorded
-        // facts — it used to lead when the page had only a row summary.
+        // wiki-enrichment rewrite). Only vetted text reaches this point (see
+        // historyMode); it follows the recorded facts.
         const history = historyMode === 'open' && historyIsSourced ? (
           <div>
             <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
@@ -1820,22 +1845,6 @@ export default async function BookPage({
           </div>
         ) : historyMode === 'open' ? (
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
-        ) : historyMode === 'folded' ? (
-          <details className="group">
-            <summary className="cursor-pointer list-none text-sm [&::-webkit-details-marker]:hidden">
-              <span className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:hidden">
-                Read an AI-generated summary of this book&rsquo;s censorship history
-              </span>
-              <span className="hidden font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:inline">
-                Hide the AI-generated summary
-              </span>
-              <span className="text-gray-500"> · not checked against a source</span>
-            </summary>
-            <p className="mt-2 text-gray-700 leading-relaxed">{book.censorship_context}</p>
-            <p className="mt-1.5 text-xs text-gray-500">
-              AI-generated summary — not from a single cited source. The recorded bans and their sources are in the table below.
-            </p>
-          </details>
         ) : null
         return (
           <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
@@ -1846,25 +1855,19 @@ export default async function BookPage({
             </h2>
             <div className="space-y-3">
               {banDescription ? (
-                <div>
-                  {/* description_ban is written by software — an LLM, or an
-                      importer's template over the source rows — unless the
-                      status says a person wrote or checked it. The notice sits
-                      ABOVE the text: under it, the paragraph had already been
-                      read as the archive's checked answer (reviewer,
-                      2026-11-11). */}
-                  {book.description_ban_status !== 'human_curated' && (
-                    <p className="mb-1.5 text-xs text-gray-600">
-                      Automatically generated summary of the recorded bans and their sources — not individually reviewed. The records and sources below are the evidence.
-                    </p>
-                  )}
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
-                </div>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
               ) : hasPromotedBanNote ? (
                 <div className="space-y-2">
-                  {promotedBanNotes.map((note, i) => (
-                    <p key={i} className="text-gray-700 leading-relaxed">{note}</p>
+                  {promotedBanNotes.slice(0, PROMOTED_NOTES_SHOWN).map(({ where, note }) => (
+                    <p key={note} className="text-gray-700 leading-relaxed">
+                      <span className="font-medium text-gray-900">{where}:</span> {note}
+                    </p>
                   ))}
+                  {promotedNotesCapped && (
+                    <p className="text-sm text-gray-600">
+                      {promotedBanNotes.length - PROMOTED_NOTES_SHOWN} more recorded notes are in the table below.
+                    </p>
+                  )}
                 </div>
               ) : banRowSummary && (
                 <div className="space-y-2">
@@ -2188,7 +2191,7 @@ export default async function BookPage({
                             </td>
                           </tr>
                         )}
-                        {!hasPromotedBanNote && c.description && (
+                        {(!hasPromotedBanNote || promotedNotesCapped) && c.description && (
                           <tr className="bg-amber-50/50" data-extra={extra}>
                             <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 italic leading-relaxed">
                               {c.description}
