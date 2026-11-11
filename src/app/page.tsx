@@ -39,7 +39,7 @@ import {
 import { getPublishedBlockHtml, stripOuterParagraph } from '@/lib/content-blocks'
 import StartHereSection from '@/components/home/StartHereSection'
 import BookOfDaySection, { type BookOfDay } from '@/components/home/BookOfDaySection'
-import { getBookOfTheDay } from '@/lib/book-of-the-day'
+import { getBookOfTheDay, withArticle } from '@/lib/book-of-the-day'
 import HappeningNowSection from '@/components/home/HappeningNowSection'
 import TrendingSection from '@/components/home/TrendingSection'
 import MostBannedAuthorsSection from '@/components/home/MostBannedAuthorsSection'
@@ -85,17 +85,35 @@ type RichBookOfDayRow = {
         country_code: string
         year_started: number | null
         status: string | null
+        scopes: { label_en: string } | null
         ban_reason_links: { reasons: { slug: string } | null }[] | null
       }[]
     | null
 }
 
+// Cut at the last full sentence that fits. The old rule only accepted a
+// sentence end past half the limit, so a long second sentence was cut in the
+// middle ("…the trauma of his…", reviewer, 2026-11-11); now any sentence end
+// past 60 characters will do, and only a very long first sentence is cut by word.
 function truncateAtSentence(text: string, maxLen: number): string {
   if (text.length <= maxLen) return text
   const slice = text.slice(0, maxLen)
   const lastPeriod = slice.lastIndexOf('. ')
-  if (lastPeriod > maxLen * 0.5) return slice.slice(0, lastPeriod + 1) + '…'
+  if (lastPeriod >= 60) return slice.slice(0, lastPeriod + 1)
   return slice.replace(/\s\S*$/, '') + '…'
+}
+
+// What kind of institution a ban record is for. The homepage line used to say
+// "Banned in United States (1973)", which reads as a national ban when the
+// record is a school removal. Unknown kinds are left out rather than guessed.
+const SCOPE_NOUN: Record<string, string> = {
+  School: 'school',
+  'Public library': 'public-library',
+  Prison: 'prison',
+  'Government / national': 'government',
+  Retail: 'retail',
+  'Customs / border': 'customs',
+  Church: 'church',
 }
 
 function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>): BookOfDay {
@@ -110,6 +128,8 @@ function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>
   const firstBan = datedBans[0] ?? bans[0] ?? null
   const firstCountry = firstBan ? countryNames.get(firstBan.country_code) ?? firstBan.country_code : null
   const firstYear = firstBan?.year_started ?? null
+  const firstScope = firstBan?.scopes?.label_en ? SCOPE_NOUN[firstBan.scopes.label_en] ?? null : null
+  const firstBanPhrase = firstScope ? `${firstScope} ban` : 'ban'
 
   const reasonSet = new Set<string>()
   for (const ban of bans) {
@@ -126,11 +146,11 @@ function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>
     const others = countries.size - 1
     const banWord = `${total === 1 ? 'ban remains' : 'bans remain'}`
     if (firstCountry && firstYear && others > 0) {
-      summary = `Banned in ${firstCountry} (${firstYear}) and ${others} other ${others === 1 ? 'country' : 'countries'}. ${active} of ${total} ${banWord} active.`
+      summary = `First recorded ${firstBanPhrase} in ${withArticle(firstCountry)}: ${firstYear}. Also recorded in ${others} other ${others === 1 ? 'country' : 'countries'}. ${active} of ${total} ${banWord} active.`
     } else if (firstCountry && firstYear) {
-      summary = `Banned in ${firstCountry} (${firstYear}). ${active} of ${total} ${banWord} active.`
+      summary = `First recorded ${firstBanPhrase} in ${withArticle(firstCountry)}: ${firstYear}. ${active} of ${total} ${banWord} active.`
     } else if (firstCountry) {
-      summary = `Banned in ${firstCountry}. ${active} of ${total} ${banWord} active.`
+      summary = `Recorded ${firstBanPhrase} in ${withArticle(firstCountry)}. ${active} of ${total} ${banWord} active.`
     } else {
       summary = `${total} ${total === 1 ? 'recorded ban' : 'recorded bans'}.`
     }
@@ -437,7 +457,7 @@ export default async function HomePage() {
       supabase.from('books').select(
         'id, title, slug, cover_url, first_published_year, description_book, description_ban, description_ban_status, genres, ' +
         'book_authors(authors(display_name)), ' +
-        'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))',
+        'bans(country_code, year_started, status, scopes(label_en), ban_reason_links(reasons(slug)))',
       ).eq('id', pickId).maybeSingle(),
     )
     if (richRaw) bookOfDay = buildBookOfDay(richRaw as unknown as RichBookOfDayRow, countryNameMap)

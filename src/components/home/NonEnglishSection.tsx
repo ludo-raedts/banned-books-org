@@ -3,7 +3,7 @@ import SectionHeader from '@/components/section/SectionHeader'
 import BookCardCompact from './BookCardCompact'
 import type { TopListBook } from '@/components/top-list-card'
 
-// The selection is by the language a work was FIRST written in. The old title,
+// The selection is by the language a work was ORIGINALLY written in. The old title,
 // "Banned books not written in English", read as being about the edition on
 // the cover, and an English translation on a cover looked like a mistake
 // (UX review 2026-11-11). Same compact row as Trending.
@@ -13,7 +13,7 @@ export default function NonEnglishSection({ books }: { books: TopListBook[] }) {
     <SectionShell tone="cream" eyebrow="Beyond English">
       <SectionHeader
         title="Banned books originally written in other languages"
-        subtitle="First published in a language other than English. Covers and titles may show translations."
+        subtitle="Originally written in a language other than English. Covers and titles may show translations."
         viewAllHref="/non-english-banned-books"
         viewAllLabel="View top 50"
         accent="oxblood"
