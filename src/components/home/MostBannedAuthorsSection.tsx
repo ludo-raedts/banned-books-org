@@ -10,17 +10,18 @@ export default function MostBannedAuthorsSection({ authors }: { authors: TopList
     <SectionShell tone="white" eyebrow="Catalogue-wide">
       <SectionHeader
         title="Most banned authors"
-        subtitle="Ranked by the number of distinct books banned."
+        subtitle="Ranked by the number of distinct banned books in our archive."
         viewAllHref="/most-banned-authors"
         viewAllLabel="View top 50"
         accent="black"
       />
+      {/* One row: five on desktop, six (two rows of three) on a phone. Was ten. */}
       <div className="grid grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-6">
-        {authors.slice(0, 10).map((author, i) => (
+        {authors.slice(0, 6).map((author, i) => (
           <Link
             key={author.id}
             href={`/authors/${author.slug}`}
-            className={`group flex flex-col items-center text-center ${i >= 6 ? 'hidden md:flex' : ''}`}
+            className={`group flex flex-col items-center text-center ${i === 5 ? 'md:hidden' : ''}`}
           >
             <div className="hover-avatar rounded-full bg-white" style={{ boxShadow: '0 0 0 1px rgba(92,16,16,0.25)' }}>
               <AuthorAvatar

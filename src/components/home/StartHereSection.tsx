@@ -6,7 +6,9 @@ import Eyebrow from '@/components/section/Eyebrow'
 // Intent-based entry points ("use this catalogue") — signposts the four main
 // audiences. Cards 3 and 4 are content CLUSTERS, so each card is a mini-hub:
 // a primary CTA plus a few secondary links that surface the real breadth.
-// Pure navigation to existing pages; no new content.
+// Pure navigation to existing pages; no new content. The hero already links
+// countries, the top 100, essays and the reading club directly under the search
+// field, so those are not repeated here (UX review 2026-11-11).
 type Lnk = { label: string; href: string }
 const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; subs: Lnk[] }[] = [
   {
@@ -14,10 +16,7 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
     title: 'Research a book or author',
     blurb: 'Search the catalogue — every entry carries country-by-country bans and source citations.',
     primary: { label: 'Search', href: '/search' },
-    subs: [
-      { label: 'by country', href: '/countries' },
-      { label: 'by reason', href: '/reasons' },
-    ],
+    subs: [{ label: 'by reason', href: '/reasons' }],
   },
   {
     icon: Database,
@@ -35,7 +34,6 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
     blurb: 'How we define a ban, what the data covers, and the context.',
     primary: { label: 'Methodology', href: '/methodology' },
     subs: [
-      { label: 'essays', href: '/essays' },
       { label: 'podcasts', href: '/podcasts' },
       { label: 'history', href: '/history' },
       { label: 'timeline', href: '/timeline' },
@@ -48,8 +46,6 @@ const CARDS: { icon: typeof Search; title: string; blurb: string; primary: Lnk; 
     blurb: 'Discover a banned book at random, or follow a curated path.',
     primary: { label: 'Pick a banned book', href: '/discover' },
     subs: [
-      { label: 'reading club', href: '/reading-club' },
-      { label: 'top 100', href: '/top-100-banned-books' },
       { label: 'classics', href: '/banned-classics' },
     ],
   },
@@ -68,9 +64,9 @@ export default function StartHereSection() {
           {CARDS.map(({ icon: Icon, title, blurb, primary, subs }) => (
             <div
               key={primary.href}
-              className="flex flex-col rounded-xl border border-gray-200 bg-white p-5"
+              className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 md:p-5"
             >
-              <Icon className="w-6 h-6 text-oxblood mb-3" aria-hidden="true" />
+              <Icon className="w-5 h-5 text-oxblood mb-2" aria-hidden="true" />
               <h3 className="font-semibold text-gray-900 leading-snug mb-1.5">{title}</h3>
               <p className="text-sm text-neutral-600 leading-relaxed flex-1">{blurb}</p>
               <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">

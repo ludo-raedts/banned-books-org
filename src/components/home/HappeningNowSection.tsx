@@ -50,7 +50,7 @@ export default async function HappeningNowSection() {
     <SectionShell tone="white" eyebrow="Happening now">
       <SectionHeader
         title="Book bans are not history."
-        subtitle="The latest from the wires, plus our editorial work."
+        subtitle="Latest news, with source and date, and a story from our own archive."
         viewAllHref="/news"
         viewAllLabel="All news"
         accent="black"
@@ -62,6 +62,30 @@ export default async function HappeningNowSection() {
         </Link>
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Our own story first: it gives the block an editorial face instead of
+            only passing external reports on. */}
+        {latestEssay && (
+          <Link
+            key={latestEssay.slug}
+            href={latestEssay.href}
+            className="hover-lift-card group block bg-brand-light/30 border-t border-r border-b border-neutral-200 rounded-r-sm p-4"
+            style={{ borderLeft: '2px solid var(--color-brand)' }}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-brand mb-1.5">
+              Featured story · {latestEssay.readingTimeMin} min read
+            </p>
+            <h3 className="font-serif text-[13px] font-semibold leading-snug text-gray-900 line-clamp-2 mb-1.5 group-hover:text-brand transition-colors">
+              {latestEssay.title}
+            </h3>
+            <p className="text-xs text-gray-700 leading-snug line-clamp-2">
+              {latestEssay.dek}
+            </p>
+            <p className="mt-2 text-[11px] text-gray-500">
+              banned-books.org · {formatNewsDate(latestEssay.publishedAt)}
+            </p>
+          </Link>
+        )}
+
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
           return (
@@ -76,6 +100,7 @@ export default async function HappeningNowSection() {
                   {item.headline}
                 </h3>
               )}
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500 mb-1.5">News</p>
               <p className="text-xs text-gray-700 leading-snug line-clamp-2">
                 {item.summary}
               </p>
@@ -90,27 +115,6 @@ export default async function HappeningNowSection() {
           )
         })}
 
-        {latestEssay && (
-          <Link
-            key={latestEssay.slug}
-            href={latestEssay.href}
-            className="hover-lift-card group block bg-brand-light/30 border-t border-r border-b border-neutral-200 rounded-r-sm p-4"
-            style={{ borderLeft: '2px solid var(--color-brand)' }}
-          >
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-brand mb-1.5">
-              Essay · {latestEssay.readingTimeMin} min read
-            </p>
-            <h3 className="font-serif text-[13px] font-semibold leading-snug text-gray-900 line-clamp-2 mb-1.5 group-hover:text-brand transition-colors">
-              {latestEssay.title}
-            </h3>
-            <p className="text-xs text-gray-700 leading-snug line-clamp-2">
-              {latestEssay.dek}
-            </p>
-            <p className="mt-2 text-[11px] text-gray-500">
-              banned-books.org · {formatNewsDate(latestEssay.publishedAt)}
-            </p>
-          </Link>
-        )}
       </div>
     </SectionShell>
   )

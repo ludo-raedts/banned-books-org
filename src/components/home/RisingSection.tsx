@@ -8,7 +8,7 @@ export default function RisingSection({ books }: { books: RisingBook[] }) {
     <SectionShell tone="cream" eyebrow="Surfacing now">
       <SectionHeader
         title="Rising this week"
-        subtitle="Biggest week-over-week jump in readership."
+        subtitle="Book pages whose visits grew most compared with the week before. Books with fewer than 5 visits are left out."
         viewAllHref="/rising-banned-books"
         viewAllLabel="View top 50"
         accent="oxblood"

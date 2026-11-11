@@ -9,7 +9,9 @@ export type RisingBook = {
   slug: string
   author: string
   cover_url: string | null
-  pct: number | null
+  /** Distinct visitor-days this week and the week before. */
+  thisWeek: number
+  prevWeek: number
 }
 
 export default function RisingCard({ book }: { book: RisingBook }) {
@@ -38,17 +40,15 @@ export default function RisingCard({ book }: { book: RisingBook }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        {book.pct !== null ? (
-          <div className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-oxblood leading-none">
-            ↑{book.pct}%
-          </div>
-        ) : (
-          <span className="inline-block bg-oxblood text-cream text-[10px] font-semibold tracking-wider px-2 py-1 rounded-sm">
-            NEW
-          </span>
-        )}
-        <div className="mt-1 text-[10px] uppercase tracking-wider text-neutral-600">
-          This week
+        {/* Counts, not a percentage: "+300%" from 1 visit to 4 reads as a trend.
+            Visits are visitor-days (the visitor hash changes daily; no cookies),
+            so they are called visits. */}
+        <div className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-oxblood leading-none">
+          {book.thisWeek}{' '}
+          <span className="font-sans text-xs font-medium tracking-normal text-neutral-700">visits this week</span>
+        </div>
+        <div className="mt-1 text-[11px] text-neutral-700">
+          {book.prevWeek > 0 ? `up from ${book.prevWeek} the week before` : 'none the week before'}
         </div>
         <h3 className="book-title mt-1 font-serif text-sm font-semibold leading-snug text-gray-900 line-clamp-2">
           {book.title}

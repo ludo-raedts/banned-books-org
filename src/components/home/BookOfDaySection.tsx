@@ -47,10 +47,10 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
           aria-label={`Read the full entry for ${book.title}`}
           className="absolute inset-0 rounded-sm"
         />
-        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-7 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-4 md:gap-7 items-start">
           <div className="mx-auto md:mx-0">
             <div
-              className="relative w-[180px] h-[270px] overflow-hidden rounded-sm"
+              className="relative w-[132px] h-[198px] md:w-[180px] md:h-[270px] overflow-hidden rounded-sm"
               style={{ boxShadow: '6px 6px 0 rgba(92, 16, 16, 0.12)' }}
             >
               {book.cover_url ? (
@@ -59,7 +59,7 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
                   alt={coverAlt(book.title, book.author, book.year)}
                   fill
                   className="object-cover"
-                  sizes="180px"
+                  sizes="(min-width: 768px) 180px, 132px"
                   priority
                 />
               ) : (
@@ -105,7 +105,7 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
             {book.summary && (
               <div className="mt-4 bg-white border-l-[3px] border-oxblood p-3.5 mb-1">
                 <p className="text-[10px] uppercase tracking-[0.12em] text-oxblood font-semibold mb-1.5">
-                  Censorship summary
+                  What the records show
                 </p>
                 <p className="text-xs text-neutral-800 leading-relaxed mb-2.5">
                   {book.summary}

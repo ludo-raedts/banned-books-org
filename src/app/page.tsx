@@ -77,6 +77,7 @@ type RichBookOfDayRow = {
   first_published_year: number | null
   description_book: string | null
   description_ban: string | null
+  description_ban_status: string | null
   genres: string[] | null
   book_authors: { authors: { display_name: string } | null }[] | null
   bans:
@@ -117,7 +118,10 @@ function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>
     }
   }
 
-  let summary = row.description_ban
+  // The generated ban text is not used here unless a person vetted it (same
+  // rule as the book page, UX review 2026-11-11); the card falls back to the
+  // line built from the ban rows.
+  let summary = row.description_ban_status === 'human_curated' ? row.description_ban : null
   if (!summary) {
     const others = countries.size - 1
     const banWord = `${total === 1 ? 'ban remains' : 'bans remain'}`
@@ -137,7 +141,7 @@ function buildBookOfDay(row: RichBookOfDayRow, countryNames: Map<string, string>
     .filter((s): s is string => !!s)
     .join(', ')
 
-  const description = row.description_book ? truncateAtSentence(row.description_book, 500) : null
+  const description = row.description_book ? truncateAtSentence(row.description_book, 300) : null
 
   return {
     title: row.title,
@@ -181,7 +185,10 @@ export default async function HomePage() {
     // 300 instead of 100 so the Non-English rotation pool has enough
     // language-diverse candidates after the cover-valid + dedup filters.
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
-    supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').limit(10),
+    // Materialised view: no guaranteed row order, so rank explicitly. And a
+    // floor of 5 visits: the view itself admits books with 2, where "up from 1
+    // to 3" looks like a trend (UX review 2026-11-11). 24 of the 50 rows clear it.
+    supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').gte('this_week', 5).order('growth', { ascending: false }).limit(10),
     supabase.from('countries').select('code, name_en'),
     supabase.from('authors').select('id').eq('is_placeholder', true),
     // Pre-aggregated top-N book_ids per reason. Replaced a paginated read of
@@ -304,16 +311,14 @@ export default async function HomePage() {
     .map((r): RisingBook | null => {
       const b = bookById.get(Number(r.entity_id))
       if (!b) return null
-      const pct = r.prev_week > 0
-        ? Math.round(((r.this_week - r.prev_week) / r.prev_week) * 100)
-        : null
       return {
         id: b.id,
         title: b.title,
         slug: b.slug,
         cover_url: b.cover_url,
         author: authorNameOf(b),
-        pct: pct !== null && pct > 0 ? pct : null,
+        thisWeek: r.this_week,
+        prevWeek: r.prev_week,
       }
     })
     .filter((x): x is RisingBook => x !== null)
@@ -430,7 +435,7 @@ export default async function HomePage() {
   if (pickId) {
     const { data: richRaw } = await timer.wrap('book-of-day-rich', () =>
       supabase.from('books').select(
-        'id, title, slug, cover_url, first_published_year, description_book, description_ban, genres, ' +
+        'id, title, slug, cover_url, first_published_year, description_book, description_ban, description_ban_status, genres, ' +
         'book_authors(authors(display_name)), ' +
         'bans(country_code, year_started, status, ban_reason_links(reasons(slug)))',
       ).eq('id', pickId).maybeSingle(),
