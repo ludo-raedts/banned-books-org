@@ -59,6 +59,8 @@
  *          --out=<tag> · --no-resume · --report-only (rebuild the .md from the JSONL)
  *          --with-ban-text (also check the claims of the hidden generated ban text, and take books that
  *          have such a ban text but no history; the sourced result is stored as the history)
+ *          --from-sources (when the book's own text has no checkable claim: search for sources on its
+ *          censorship and write from their passages; without it such a book ends as no_checkable_claims)
  *          --recheck (also take texts that already carry a verdict in censorship_context_checked_at;
  *          by default those are skipped, as are source_verified and narrative_curated texts)
  *          --firecrawl (re-fetch bot-walled pages via Firecrawl, 1 credit each) · --firecrawl-max=N (default 400)
@@ -97,6 +99,11 @@ const RECHECK = hasFlag('recheck')
 // hypotheses, and take books that have a hidden ban text but no history yet.
 // The sourced result is still ONE text per book, stored as the history.
 const WITH_BAN_TEXT = hasFlag('with-ban-text')
+// For a book whose own text states nothing checkable ("challenged in U.S.
+// schools for LGBTQ+ themes"): do not validate, but look for sources on the
+// book's censorship and write from what they literally say. Same gates, same
+// status. Our own years and reason labels are never handed to the search.
+const FROM_SOURCES = hasFlag('from-sources')
 const OUT_TAG = flagValue('out') ?? new Date().toISOString().slice(0, 10)
 // Bot-walled pages (403 on ncac.org, pen.org, …) are re-fetched through
 // Firecrawl only when asked: every call costs a credit.
@@ -165,6 +172,8 @@ type RunRow = {
   oldText: string
   /** The hidden ban text whose claims were checked along with the history (--with-ban-text). */
   banText?: string | null
+  /** 'from_sources' when the text was written from found passages, not by checking our own claims. */
+  mode?: 'claims' | 'from_sources'
   newText: string | null
   sentences: Sentence[]
   quotes: Quote[]
@@ -344,10 +353,30 @@ Return ONLY JSON:
 If nothing reliable exists, return {"sources":[]}.`
 }
 
+/** Search without hypotheses: only the countries our rows name are given, as leads — no years, no reasons. */
+function openSearchPrompt(b: Book): string {
+  const places = [...new Set(b.bans.map(r => r.countries?.name_en ?? r.country_code.trim()))].slice(0, 12)
+  return `Find web pages that document the censorship of ONE book: specific bans, removals from schools or libraries, challenges, seizures, prosecutions or un-bannings, with who acted, where and when.
+
+BOOK: "${b.title}" by ${authorOf(b) || 'unknown author'}${b.first_published_year ? ` (first published ${b.first_published_year})` : ''}
+${places.length ? `Our archive records censorship of this book in: ${places.join(', ')}. Use these only as leads for where to look.` : ''}
+
+Search the web (several queries where needed) and open the most promising pages. Return up to ${MAX_SOURCES} pages that state concrete events about THIS book — a named body or place, an action, and preferably a date. A page that only says the book is "often challenged" is of no use.
+
+Source rules:
+- Prefer: library associations (ALA), PEN America, NCAC, Index on Censorship, news organisations, court records and legal databases, government publications, university and library pages, encyclopedias (Britannica, Wikipedia), the publisher's or author's own pages.
+- Never return: banned-books.org, social media, forums, Q&A sites, book retailers, Goodreads, study-guide or essay sites (SparkNotes, GradeSaver, SuperSummary, LitCharts, Course Hero, StudyMoose and the like), slide decks, personal blogs, or listicles that give no sources of their own.
+- Only return URLs you actually retrieved in this session. Never guess or construct a URL.
+
+Return ONLY JSON:
+{"sources":[{"url":"https://…","note":"what the page says, one short sentence"}]}
+If nothing reliable exists, return {"sources":[]}.`
+}
+
 async function searchSources(b: Book, claims: Claim[], cost: Cost): Promise<{ urls: string[]; returned: number; dropped: string[] }> {
   const response = await withRetry(() => openai.responses.create({
     model: OPENAI_FAST,
-    input: searchPrompt(b, claims),
+    input: claims.length ? searchPrompt(b, claims) : openSearchPrompt(b),
     tools: [{ type: 'web_search' }],
     include: ['web_search_call.action.sources'],
     reasoning: { effort: 'low' },
@@ -485,6 +514,37 @@ async function quotesFromPage(b: Book, claims: Claim[], page: Page, cost: Cost):
   return { found, rejected, relevant: true }
 }
 
+const EVENTS_SYSTEM = `You extract verbatim evidence from ONE web page for a factual archive of banned books.
+
+You get a BOOK and the TEXT of one page (possibly excerpts separated by "[…]"). Find the passages that state a concrete censorship event about THIS book: a ban, a removal from a school or library, a formal challenge, a seizure, a prosecution, a court ruling, or the lifting of a ban — with at least a named body or place.
+
+For each event copy ONE contiguous passage, character for character as it appears in the text, between ${MIN_QUOTE_CHARS} and 400 characters, long enough to name the book or make clear which book is meant and to carry the place, body and date the page gives. No ellipses, no paraphrase, no corrections.
+Skip: plot summary, praise, general remarks ("frequently challenged", "controversial"), events about another book, a film adaptation or the author's other works.
+At most 8 passages. If the page states no such event about this book, return an empty list.
+
+Return ONLY JSON: {"events":[{"quote":"…"}]}`
+
+/** Evidence-first: the page's own statements of censorship events, verbatim. */
+async function eventsFromPage(b: Book, page: Page, cost: Cost): Promise<{ found: string[]; rejected: number; relevant: boolean }> {
+  const author = authorOf(b)
+  const needles = [b.title.replace(/\s*[:(].*$/, ''), surnameOf(author)].filter(n => n && n.length >= 3)
+  const focus = focusText(page.text, needles)
+  if (!focus) return { found: [], rejected: 0, relevant: false }
+  const out = await chatJson(OPENAI_FAST, EVENTS_SYSTEM,
+    `BOOK: "${b.title}" by ${author || 'unknown author'}\n\nPAGE TITLE: ${page.title ?? '(none)'}\nPAGE TEXT:\n${focus}`,
+    1400, cost, 'events')
+  const ev = Array.isArray(out.events) ? out.events as Array<{ quote?: unknown }> : []
+  const found: string[] = []
+  let rejected = 0
+  for (const e of ev) {
+    if (typeof e.quote !== 'string') continue
+    const quote = e.quote.trim()
+    if (!quoteOnPage(quote, page.text)) { rejected++; continue }
+    if (!found.includes(quote)) found.push(quote)
+  }
+  return { found, rejected, relevant: true }
+}
+
 // ── Step 5: compose ─────────────────────────────────────────────────────
 
 const COMPOSE_SYSTEM = `You write the "censorship history" paragraph for one book page on a factual archive of banned books. You may use ONLY the numbered QUOTES you are given; each was copied verbatim from a cited web page. You have no other knowledge of this book.
@@ -497,6 +557,8 @@ Rules:
 - If a quote reports what someone said or claimed (an author about their own book, a campaigner, an official), say who said it, as far as the quote or its page title shows; never turn a claim into a plain fact. If you cannot tell who is speaking, leave it out.
 - The date of a report, article or court filing is not the date of the event it describes; give a year only when the quote dates the event itself.
 - Every sentence must be understandable on its own. Say what a person or institution is (a teacher, a school board, a court) as far as the quote says so; if a quote only gives a bare surname or a name the reader cannot place, leave that event out.
+- A page title or site name in the quote header may show whose list or decision a quote is (a school district's own page, a court's ruling); you may name that body from it. If neither the quote nor its header names the body or place, leave the event out.
+- A month or day without a year is not a date: give the full date the quote gives, or none.
 - Do not merge two events into one. Do not infer motives. Do not generalise ("widely", "often", "many") unless a quote says exactly that. Do not add context, significance or a conclusion.
 - Quotes marked "contradicts" disagree with the claim they were found for; they are still evidence of what the page says.
 - If the quotes give conflicting facts about the same event (for example two different years), do not choose between them: return status "conflict" and say what conflicts.
@@ -640,7 +702,9 @@ async function verifyBook(b: Book): Promise<RunRow> {
   try {
     const claims = await extractClaims(b, cost)
     row.claims = claims.map(c => ({ ...c, stance: 'none' }))
-    if (claims.length === 0) return finish('no_checkable_claims', 'the old text states nothing specific enough to check')
+    const fromSources = claims.length === 0 && FROM_SOURCES
+    row.mode = fromSources ? 'from_sources' : 'claims'
+    if (claims.length === 0 && !fromSources) return finish('no_checkable_claims', 'the old text states nothing specific enough to check')
 
     const search = await searchSources(b, claims, cost)
     row.sourcesReturned = search.returned
@@ -653,24 +717,35 @@ async function verifyBook(b: Book): Promise<RunRow> {
     row.pagesFetched = pages.length
     if (pages.length === 0) return finish('no_sources', 'no returned page could be fetched as text')
 
-    const perPage = await Promise.all(pages.map(p => quotesFromPage(b, claims, p, cost)))
     const quotes: Quote[] = []
-    perPage.forEach((r, i) => {
-      row.quotesRejected += r.rejected
-      if (!r.relevant) row.sourcesDropped.push(`${hostOf(pages[i].url)}: page never mentions the title or author`)
-      for (const f of r.found) {
-        const same = quotes.find(q => q.url === pages[i].url && q.quote === f.quote)
-        if (same) { if (!same.claimIds.includes(f.claimId)) same.claimIds.push(f.claimId); continue }
-        quotes.push({ id: `q${quotes.length + 1}`, url: pages[i].url, pageTitle: pages[i].title, tier: pages[i].tier, quote: f.quote, claimIds: [f.claimId], stance: f.stance })
-      }
-    })
+    if (fromSources) {
+      const perPage = await Promise.all(pages.map(p => eventsFromPage(b, p, cost)))
+      perPage.forEach((r, i) => {
+        row.quotesRejected += r.rejected
+        if (!r.relevant) row.sourcesDropped.push(`${hostOf(pages[i].url)}: page never mentions the title or author`)
+        for (const quote of r.found) {
+          quotes.push({ id: `q${quotes.length + 1}`, url: pages[i].url, pageTitle: pages[i].title, tier: pages[i].tier, quote, claimIds: [], stance: 'supports' })
+        }
+      })
+    } else {
+      const perPage = await Promise.all(pages.map(p => quotesFromPage(b, claims, p, cost)))
+      perPage.forEach((r, i) => {
+        row.quotesRejected += r.rejected
+        if (!r.relevant) row.sourcesDropped.push(`${hostOf(pages[i].url)}: page never mentions the title or author`)
+        for (const f of r.found) {
+          const same = quotes.find(q => q.url === pages[i].url && q.quote === f.quote)
+          if (same) { if (!same.claimIds.includes(f.claimId)) same.claimIds.push(f.claimId); continue }
+          quotes.push({ id: `q${quotes.length + 1}`, url: pages[i].url, pageTitle: pages[i].title, tier: pages[i].tier, quote: f.quote, claimIds: [f.claimId], stance: f.stance })
+        }
+      })
+    }
     row.quotes = quotes
     const rank = { supports: 3, partial: 2, contradicts: 1, none: 0 } as const
     for (const c of row.claims) {
       for (const q of quotes) if (q.claimIds.includes(c.id) && rank[q.stance] > rank[c.stance as keyof typeof rank]) c.stance = q.stance
     }
     row.claimsSupported = row.claims.filter(c => c.stance === 'supports').length
-    if (quotes.length === 0) return finish('no_quotes', `${pages.length} page(s) read, none states a claim verbatim (${row.quotesRejected} quote(s) not found on the page)`)
+    if (quotes.length === 0) return finish('no_quotes', `${pages.length} page(s) read, none states ${fromSources ? 'a concrete event about this book' : 'a claim'} verbatim (${row.quotesRejected} quote(s) not found on the page)`)
 
     const byId = new Map(quotes.map(q => [q.id, q]))
     const pageByUrl = new Map(pages.map(p => [p.url, p]))
@@ -842,7 +917,7 @@ function writeReport(rows: RunRow[], reportPath: string) {
       L.push(`### ${r.title} — ${r.author || 'unknown'} · \`${r.slug}\` · ${r.outcome}`, '')
       if (r.oldText) L.push(`**Old (unsourced):** ${r.oldText}`, '')
       if (r.banText) L.push(`**Hidden ban text (claims also checked):** ${r.banText}`, '')
-      if (r.newText) L.push(`**New (sourced):** ${r.newText}`, '')
+      if (r.newText) L.push(`**New (sourced${r.mode === 'from_sources' ? ', written from sources — the old text had nothing checkable' : ''}):** ${r.newText}`, '')
       L.push(`**Why:** ${r.reason}`, '')
       L.push(`Old claims: ${r.claims.length} · supported verbatim: ${r.claimsSupported} · partial: ${r.claims.filter(c => c.stance === 'partial').length} · contradicted: ${r.claims.filter(c => c.stance === 'contradicts').length} · pages read: ${r.pagesFetched} · quotes not on page: ${r.quotesRejected}`, '')
       for (const s of r.sentences) {
