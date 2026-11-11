@@ -20,6 +20,7 @@ type SearchParams = {
   country?: string | string[]
   reason?: string | string[]
   scope?: string | string[]
+  year?: string | string[]
   active?: string | string[]
   sort?: string | string[]
 }
@@ -89,6 +90,9 @@ export default async function SearchPage({
   const reason  = pickFirst(sp.reason) ?? ''
   const scope   = pickFirst(sp.scope) ?? ''
   const activeOnly = pickFirst(sp.active) === '1'
+  // A four-digit year only; anything else is ignored rather than shown as a filter.
+  const yearRaw = pickFirst(sp.year) ?? ''
+  const year = /^\d{4}$/.test(yearRaw) ? yearRaw : ''
   const sort       = parseBookSort(pickFirst(sp.sort))
 
   const [
@@ -96,9 +100,9 @@ export default async function SearchPage({
     initialResult,
   ] = await Promise.all([
     loadSearchFacets(),
-    !q && !country && !reason && !scope && !activeOnly
+    !q && !country && !reason && !scope && !activeOnly && !year
       ? loadDefaultResults(sort).catch(() => searchBooks({ ...DEFAULT_QUERY, sort }))
-      : searchBooks({ q, country, reason, scope, activeOnly, sort, offset: 0, limit: 48 }),
+      : searchBooks({ q, country, reason, scope, year: year ? Number(year) : undefined, activeOnly, sort, offset: 0, limit: 48 }),
   ])
 
   const countMap = new Map(banCounts.map(r => [r.country_code, r.distinct_books as number]))
@@ -133,7 +137,7 @@ export default async function SearchPage({
         initialTotal={initialTotal}
         totalCount={totalCount}
         countries={countries}
-        initialFilters={{ q, country, reason, scope, activeOnly, sort }}
+        initialFilters={{ q, country, reason, scope, year, activeOnly, sort }}
         defaultSort={DEFAULT_BOOK_SORT}
       />
     </main>

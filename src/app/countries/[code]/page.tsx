@@ -610,7 +610,7 @@ export default async function CountryPage({
               </p>
             )}
 
-            <YearStrip yearCounts={yearCounts} className="mt-6" />
+            <YearStrip yearCounts={yearCounts} filter={{ country: country.code }} className="mt-6" />
 
             {country.description && (
               <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-700">

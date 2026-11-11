@@ -28,6 +28,7 @@ type Filters = {
   country: string
   reason: string
   scope: string
+  year: string // '' or a four-digit year
   activeOnly: boolean
   sort: BookSort
 }
@@ -57,6 +58,7 @@ function apiParams(opts: Filters & { offset: number; defaultSort: BookSort }) {
   if (opts.country)    p.set('country', opts.country)
   if (opts.activeOnly) p.set('activeOnly', '1')
   if (opts.reason)     p.set('reason', opts.reason)
+  if (opts.year)       p.set('year', opts.year)
   if (opts.sort !== opts.defaultSort) p.set('sort', opts.sort)
   p.set('offset', String(opts.offset))
   return p.toString()
@@ -68,6 +70,7 @@ function urlParams(opts: Filters & { defaultSort: BookSort }) {
   if (opts.country)    p.set('country', opts.country)
   if (opts.reason)     p.set('reason', opts.reason)
   if (opts.scope)      p.set('scope', opts.scope)
+  if (opts.year)       p.set('year', opts.year)
   if (opts.activeOnly) p.set('active', '1')
   if (opts.sort !== opts.defaultSort) p.set('sort', opts.sort)
   return p.toString()
@@ -129,6 +132,9 @@ export default function SearchClient({
   const [country, setCountry] = useState(initialFilters.country)
   const [reason, setReason] = useState<string | null>(initialFilters.reason || null)
   const [scope, setScope] = useState<string | null>(initialFilters.scope || null)
+  const [year, setYear] = useState(initialFilters.year)
+  // What the visitor is typing; `year` only changes once it is a full year.
+  const [yearDraft, setYearDraft] = useState(initialFilters.year)
   const [activeOnly, setActiveOnly] = useState(initialFilters.activeOnly)
   const [sort, setSort] = useState<BookSort>(initialFilters.sort)
 
@@ -278,7 +284,7 @@ export default function SearchClient({
       return
     }
 
-    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly, sort }
+    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', year, activeOnly, sort }
 
     if (debouncedQ.trim() && !hasTrackedSearchUsage.current) {
       hasTrackedSearchUsage.current = true
@@ -304,16 +310,16 @@ export default function SearchClient({
       .catch(() => { if (!cancelled) setLoadingFilter(false) })
     return () => { cancelled = true }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQ, country, reason, scope, activeOnly, sort])
+  }, [debouncedQ, country, reason, scope, year, activeOnly, sort])
 
-  const hasFilters = !!(debouncedQ || country || reason || scope || activeOnly)
+  const hasFilters = !!(debouncedQ || country || reason || scope || year || activeOnly)
   const showRegisterHits =
-    !loadingFilter && debouncedQ.trim().length >= 3 && !country && !reason && !scope && !activeOnly && total <= 5
+    !loadingFilter && debouncedQ.trim().length >= 3 && !country && !reason && !scope && !year && !activeOnly && total <= 5
   const hasMore = displayBooks.length < total
 
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore) return
-    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', activeOnly, sort }
+    const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', year, activeOnly, sort }
     setLoadingMore(true)
     fetch(`/api/books?${apiParams({ ...filters, offset: nextOffset, defaultSort })}`)
       .then(r => r.json())
@@ -328,7 +334,7 @@ export default function SearchClient({
         setLoadingMore(false)
       })
       .catch(() => setLoadingMore(false))
-  }, [loadingMore, hasMore, debouncedQ, country, reason, scope, activeOnly, sort, defaultSort, nextOffset])
+  }, [loadingMore, hasMore, debouncedQ, country, reason, scope, year, activeOnly, sort, defaultSort, nextOffset])
 
   const sentinelRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -342,13 +348,22 @@ export default function SearchClient({
     return () => observer.disconnect()
   }, [loadMore])
 
+  // The year field accepts digits; the filter applies at four digits and is
+  // dropped when the field is emptied, so half-typed years never search.
+  function changeYear(v: string) {
+    const digits = v.replace(/\D/g, '').slice(0, 4)
+    setYearDraft(digits)
+    if (digits.length === 4) setYear(digits)
+    else if (digits === '') setYear('')
+  }
+
   function clearAll() {
-    setQ(''); setCountry(''); setReason(null); setScope(null); setActiveOnly(false); setSort(defaultSort)
+    setQ(''); setCountry(''); setReason(null); setScope(null); changeYear(''); setActiveOnly(false); setSort(defaultSort)
   }
   // Search text and filters are cleared separately: with zero results the
   // reader usually wants to drop one and keep the other.
   function clearFilters() {
-    setCountry(''); setReason(null); setScope(null); setActiveOnly(false)
+    setCountry(''); setReason(null); setScope(null); changeYear(''); setActiveOnly(false)
   }
 
   // Filters in use, as removable chips. Until now the only sign of an active
@@ -358,6 +373,7 @@ export default function SearchClient({
     ...(scope ? [{ key: 'scope', label: SCOPE_LABELS[scope] ?? scope, clear: () => setScope(null) }] : []),
     ...(activeOnly ? [{ key: 'active', label: 'Currently banned', clear: () => setActiveOnly(false) }] : []),
     ...(country ? [{ key: 'country', label: countries.find(c => c.code === country)?.name ?? country, clear: () => setCountry('') }] : []),
+    ...(year ? [{ key: 'year', label: `Banned in ${year}`, clear: () => changeYear('') }] : []),
     ...(reason ? [{ key: 'reason', label: reasonLabel(reason), clear: () => setReason(null) }] : []),
   ]
 
@@ -566,6 +582,23 @@ export default function SearchClient({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
+          <label className={`flex shrink-0 items-center gap-1.5 rounded-full border bg-white pl-3 pr-2 py-1 text-sm font-medium transition-colors focus-within:border-gray-900 ${
+            year ? 'border-gray-900 text-gray-900' : 'border-gray-200 text-gray-600 hover:border-gray-400'
+          }`}>
+            <span aria-hidden>📅</span>
+            <span>Year</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={4}
+              placeholder="e.g. 2026"
+              value={yearDraft}
+              onChange={e => changeYear(e.target.value)}
+              aria-label="Filter by year the ban started (four digits)"
+              className="w-[4.5rem] bg-transparent text-sm focus:outline-none placeholder:text-gray-400"
+            />
+          </label>
           <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           {FILTER_REASONS.map(slug => (
             <FilterPill key={slug} active={reason === slug} onClick={() => setReason(reason === slug ? null : slug)}>

@@ -479,7 +479,7 @@ export default async function ReasonPage({
               </p>
             )}
 
-            <YearStrip yearCounts={yearCounts} className="mt-6" />
+            <YearStrip yearCounts={yearCounts} filter={{ reason: reason.slug }} className="mt-6" />
           </div>
         </div>
       </section>

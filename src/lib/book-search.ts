@@ -247,47 +247,51 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
     idSets.push(ids)
   }
 
-  if (country) {
-    const rows = await paginateAll<{ book_id: number }>((f, t) =>
-      supabase.from('bans').select('book_id').eq('country_code', country).order('id').range(f, t))
-    idSets.push(new Set(rows.map(b => b.book_id)))
-  }
+  // Country, year, active status, institution scope and reason are all facts
+  // about ONE ban. They are applied to the same ban rows, not intersected as
+  // separate book sets: otherwise "United States + 2026" returned a book banned
+  // in the US in 2019 and in France in 2026 (UX review 2026-11-11, step 9).
+  if (country || activeOnly || year || scope || reason) {
+    let scopeId: number | null = null
+    if (scope) {
+      const { data: scopeRow } = await supabase.from('scopes').select('id').eq('slug', scope).single()
+      if (!scopeRow) return { books: [], total: 0 }
+      scopeId = scopeRow.id as number
+    }
 
-  if (activeOnly) {
-    const rows = await paginateAll<{ book_id: number }>((f, t) =>
-      supabase.from('bans').select('book_id').eq('status', 'active').order('id').range(f, t))
-    idSets.push(new Set(rows.map(b => b.book_id)))
-  }
+    let reasonBanIds: Set<number> | null = null
+    if (reason) {
+      const { data: reasonRow } = await supabase.from('reasons').select('id').eq('slug', reason).single()
+      if (!reasonRow) return { books: [], total: 0 }
+      // Paginate the links (popular reasons have >>1000).
+      const links = await paginateAll<{ ban_id: number }>((f, t) =>
+        supabase.from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id).order('ban_id').range(f, t))
+      if (!links.length) return { books: [], total: 0 }
+      reasonBanIds = new Set(links.map(l => l.ban_id))
+    }
 
-  if (year) {
-    const rows = await paginateAll<{ book_id: number }>((f, t) =>
-      supabase.from('bans').select('book_id').eq('year_started', year).order('id').range(f, t))
-    idSets.push(new Set(rows.map(b => b.book_id)))
-  }
-
-  if (scope) {
-    const { data: scopeRow } = await supabase.from('scopes').select('id').eq('slug', scope).single()
-    if (!scopeRow) return { books: [], total: 0 }
-    const rows = await paginateAll<{ book_id: number }>((f, t) =>
-      supabase.from('bans').select('book_id').eq('scope_id', scopeRow.id).order('id').range(f, t))
-    idSets.push(new Set(rows.map(b => b.book_id)))
-  }
-
-  if (reason) {
-    const { data: reasonRow } = await supabase.from('reasons').select('id').eq('slug', reason).single()
-    if (!reasonRow) return { books: [], total: 0 }
-    // Paginate the links (popular reasons have >>1000), then chunk the ban→book
-    // lookup so thousands of ban_ids don't blow the PostgREST URL-length cap.
-    const links = await paginateAll<{ ban_id: number }>((f, t) =>
-      supabase.from('ban_reason_links').select('ban_id').eq('reason_id', reasonRow.id).order('ban_id').range(f, t))
-    if (!links.length) return { books: [], total: 0 }
-    const banIds = links.map(l => l.ban_id)
-    const CHUNK = 500
-    const chunks: number[][] = []
-    for (let i = 0; i < banIds.length; i += CHUNK) chunks.push(banIds.slice(i, i + CHUNK))
-    const bans = await inWaves<{ book_id: number }>(chunks.map(c => () =>
-      supabase.from('bans').select('book_id').in('id', c)))
-    idSets.push(new Set(bans.map(b => b.book_id)))
+    if (country || activeOnly || year || scopeId !== null) {
+      const rows = await paginateAll<{ id: number; book_id: number }>((f, t) => {
+        let qb = supabase.from('bans').select('id, book_id')
+        if (country) qb = qb.eq('country_code', country)
+        if (activeOnly) qb = qb.eq('status', 'active')
+        if (year) qb = qb.eq('year_started', year)
+        if (scopeId !== null) qb = qb.eq('scope_id', scopeId)
+        return qb.order('id').range(f, t)
+      })
+      const kept = reasonBanIds ? rows.filter(r => reasonBanIds.has(r.id)) : rows
+      idSets.push(new Set(kept.map(r => r.book_id)))
+    } else if (reasonBanIds) {
+      // Reason only: chunk the ban→book lookup so thousands of ban_ids don't
+      // blow the PostgREST URL-length cap.
+      const banIds = [...reasonBanIds]
+      const CHUNK = 500
+      const chunks: number[][] = []
+      for (let i = 0; i < banIds.length; i += CHUNK) chunks.push(banIds.slice(i, i + CHUNK))
+      const bans = await inWaves<{ book_id: number }>(chunks.map(c => () =>
+        supabase.from('bans').select('book_id').in('id', c)))
+      idSets.push(new Set(bans.map(b => b.book_id)))
+    }
   }
 
   if (idSets.length === 0) return { books: [], total: 0 }
