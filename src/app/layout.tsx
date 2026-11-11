@@ -1,3 +1,4 @@
+import SupportCornerCard from "@/components/support-corner-card";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import Image from "next/image";
@@ -250,6 +251,7 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        <SupportCornerCard />
         <AnalyticsWrapper />
         <SpeedInsights />
       </body>
