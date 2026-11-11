@@ -1,0 +1,374 @@
+{
+  "fsem": [],
+  "wikipedia_list": [
+    {
+      "id": "634",
+      "year_started": 1968
+    },
+    {
+      "id": "637",
+      "year_started": 1981
+    },
+    {
+      "id": "641",
+      "year_started": 1993
+    },
+    {
+      "id": "643",
+      "year_started": 1942
+    },
+    {
+      "id": "645",
+      "year_started": 1927
+    },
+    {
+      "id": "925",
+      "year_started": 1976
+    },
+    {
+      "id": "927",
+      "year_started": 1988
+    },
+    {
+      "id": "956",
+      "year_started": 1988
+    },
+    {
+      "id": "957",
+      "year_started": 1988
+    },
+    {
+      "id": "1040",
+      "year_started": 1955
+    },
+    {
+      "id": "1287",
+      "year_started": 2012
+    },
+    {
+      "id": "1288",
+      "year_started": 2000
+    },
+    {
+      "id": "4859",
+      "year_started": 1931
+    },
+    {
+      "id": "4860",
+      "year_started": 1984
+    },
+    {
+      "id": "4861",
+      "year_started": 1999
+    },
+    {
+      "id": "4864",
+      "year_started": 1973
+    },
+    {
+      "id": "4865",
+      "year_started": 2022
+    },
+    {
+      "id": "4866",
+      "year_started": 1993
+    },
+    {
+      "id": "4867",
+      "year_started": 2014
+    },
+    {
+      "id": "4869",
+      "year_started": 1956
+    },
+    {
+      "id": "4870",
+      "year_started": 1972
+    },
+    {
+      "id": "4871",
+      "year_started": 1818
+    },
+    {
+      "id": "4875",
+      "year_started": 1976
+    },
+    {
+      "id": "4876",
+      "year_started": 2005
+    },
+    {
+      "id": "4878",
+      "year_started": 1696
+    },
+    {
+      "id": "4880",
+      "year_started": 1941
+    },
+    {
+      "id": "4883",
+      "year_started": 1964
+    },
+    {
+      "id": "4884",
+      "year_started": 1969
+    },
+    {
+      "id": "4887",
+      "year_started": 1941
+    },
+    {
+      "id": "4888",
+      "year_started": 1943
+    },
+    {
+      "id": "4889",
+      "year_started": 1961
+    },
+    {
+      "id": "4890",
+      "year_started": 2020
+    },
+    {
+      "id": "4894",
+      "year_started": 2019
+    },
+    {
+      "id": "4895",
+      "year_started": 2020
+    },
+    {
+      "id": "4896",
+      "year_started": 2008
+    },
+    {
+      "id": "4897",
+      "year_started": 2014
+    },
+    {
+      "id": "4898",
+      "year_started": 2016
+    },
+    {
+      "id": "4899",
+      "year_started": 2020
+    },
+    {
+      "id": "4900",
+      "year_started": 2020
+    },
+    {
+      "id": "4901",
+      "year_started": 1865
+    },
+    {
+      "id": "4909",
+      "year_started": 1879
+    },
+    {
+      "id": "4910",
+      "year_started": 2017
+    },
+    {
+      "id": "4911",
+      "year_started": 1944
+    },
+    {
+      "id": "4914",
+      "year_started": 2012
+    },
+    {
+      "id": "4915",
+      "year_started": 1982
+    },
+    {
+      "id": "4916",
+      "year_started": 1980
+    },
+    {
+      "id": "4917",
+      "year_started": 1937
+    },
+    {
+      "id": "5041",
+      "year_started": 1988
+    },
+    {
+      "id": "5046",
+      "year_started": 1988
+    },
+    {
+      "id": "5048",
+      "year_started": 1988
+    },
+    {
+      "id": "5063",
+      "year_started": 1948
+    },
+    {
+      "id": "5065",
+      "year_started": 1964
+    },
+    {
+      "id": "5076",
+      "year_started": 1935
+    },
+    {
+      "id": "5112",
+      "year_started": 1993
+    },
+    {
+      "id": "5244",
+      "year_started": 1902
+    },
+    {
+      "id": "5480",
+      "year_started": 2020
+    },
+    {
+      "id": "5860",
+      "year_started": 1916
+    },
+    {
+      "id": "5861",
+      "year_started": 1944
+    },
+    {
+      "id": "5862",
+      "year_started": 2012
+    },
+    {
+      "id": "5866",
+      "year_started": 1983
+    },
+    {
+      "id": "5869",
+      "year_started": 2003
+    },
+    {
+      "id": "5879",
+      "year_started": 1791
+    },
+    {
+      "id": "5880",
+      "year_started": 1888
+    },
+    {
+      "id": "5881",
+      "year_started": 1978
+    },
+    {
+      "id": "5882",
+      "year_started": 1922
+    },
+    {
+      "id": "5885",
+      "year_started": 1969
+    },
+    {
+      "id": "5886",
+      "year_started": 1999
+    },
+    {
+      "id": "5887",
+      "year_started": 1975
+    },
+    {
+      "id": "5888",
+      "year_started": 1899
+    },
+    {
+      "id": "5889",
+      "year_started": 1971
+    },
+    {
+      "id": "5949",
+      "year_started": 1965
+    },
+    {
+      "id": "5950",
+      "year_started": 1992
+    },
+    {
+      "id": "5951",
+      "year_started": 1992
+    },
+    {
+      "id": "5952",
+      "year_started": 1971
+    },
+    {
+      "id": "5953",
+      "year_started": 1997
+    },
+    {
+      "id": "5979",
+      "year_started": 1932
+    },
+    {
+      "id": "5981",
+      "year_started": 1933
+    },
+    {
+      "id": "5984",
+      "year_started": 1936
+    },
+    {
+      "id": "5985",
+      "year_started": 1939
+    },
+    {
+      "id": "5986",
+      "year_started": 1940
+    },
+    {
+      "id": "5988",
+      "year_started": 1987
+    },
+    {
+      "id": "5991",
+      "year_started": 1973
+    },
+    {
+      "id": "5993",
+      "year_started": 1995
+    },
+    {
+      "id": "5994",
+      "year_started": 1847
+    },
+    {
+      "id": "6001",
+      "year_started": 1932
+    },
+    {
+      "id": "6002",
+      "year_started": 1966
+    },
+    {
+      "id": "6004",
+      "year_started": 1932
+    },
+    {
+      "id": "12950",
+      "year_started": 2017
+    },
+    {
+      "id": "12951",
+      "year_started": 2019
+    },
+    {
+      "id": "13067",
+      "year_started": 2020
+    },
+    {
+      "id": "29314",
+      "year_started": 2012
+    },
+    {
+      "id": "29391",
+      "year_started": 1968
+    }
+  ],
+  "merge": []
+}

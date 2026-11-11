@@ -36,6 +36,7 @@
  *   npx tsx --env-file=.env.local scripts/fix-ban-row-patterns-2026-11.ts            # dry-run + report
  *   npx tsx --env-file=.env.local scripts/fix-ban-row-patterns-2026-11.ts --apply [--only=A,C]
  * Report: data/ban-row-patterns-2026-11-11.md · backup on --apply: data/ban-row-patterns-backup-2026-11-11.json
+ * (with --only=X each of these gets the suffix -X; the first run, --only=A,C, wrote the unsuffixed files)
  * After --apply: scripts/refresh-mv.ts, bust the pages in data/ban-row-patterns-busted-paths.txt.
  */
 
@@ -48,6 +49,8 @@ const APPLY = isApply()
 // --only=A,C writes just those sections; the others are still measured and reported.
 const ONLY = flagValue('only')?.split(',').map(s => s.trim().toUpperCase())
 const writes = (section: 'A' | 'B' | 'C') => APPLY && (!ONLY || ONLY.includes(section))
+// A partial run keeps its own report, backup and path list, so it never overwrites an earlier run's record.
+const SUFFIX = ONLY ? `-${ONLY.join('')}` : ''
 const FSEM_CSV = 'data/source-research/russia-fsem-export-2026-11-09.csv'
 const WIKI_RAW = 'https://en.wikipedia.org/w/index.php?title=List_of_books_banned_by_governments&action=raw'
 const UA = { 'User-Agent': 'banned-books.org/1.0 (source verification; contact@banned-books.org)' }
@@ -276,12 +279,12 @@ async function main() {
     }
 
     if (APPLY) {
-      fs.writeFileSync(path.resolve('data', 'ban-row-patterns-backup-2026-11-11.json'), JSON.stringify(backup, null, 2) + '\n')
+      fs.writeFileSync(path.resolve('data', `ban-row-patterns-backup-2026-11-11${SUFFIX}.json`), JSON.stringify(backup, null, 2) + '\n')
       await pg.query('commit')
-      fs.writeFileSync(path.resolve('data', 'ban-row-patterns-busted-paths.txt'), [...bust].join('\n') + '\n')
+      fs.writeFileSync(path.resolve('data', `ban-row-patterns-busted-paths${SUFFIX}.txt`), [...bust].join('\n') + '\n')
     }
     // A finished run finds nothing left to do; keep the report of the run that did the work.
-    if (APPLY || aFixed + bFixed > 0 || (dup && keep)) fs.writeFileSync(path.resolve('data', 'ban-row-patterns-2026-11-11.md'), L.join('\n') + '\n')
+    if (APPLY || aFixed + bFixed > 0 || (dup && keep)) fs.writeFileSync(path.resolve('data', `ban-row-patterns-2026-11-11${SUFFIX}.md`), L.join('\n') + '\n')
     console.log(`\n${APPLY ? 'Applied' : 'DRY-RUN'}: A ${aFixed} · B ${bFixed} · C ${dup && keep ? 1 : 0} · pages to bust ${bust.size}`)
     if (!APPLY) console.log('Report: data/ban-row-patterns-2026-11-11.md — add --apply to write.')
   } catch (e) {
