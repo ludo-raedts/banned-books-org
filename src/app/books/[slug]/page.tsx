@@ -13,6 +13,7 @@
 // ad-hoc script forgets to bust.
 export const revalidate = 604800
 
+import SupportCard from '@/components/support-card'
 import React, { cache } from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -2419,6 +2420,10 @@ export default async function BookPage({
       </section>
         )
       })()}
+
+      {/* After the answer, the next steps and the book links: one quiet ask,
+          in the page, never floating (UX review step 10). */}
+      <SupportCard placement="book" />
 
       <CitationBlock
         entityType="book"
