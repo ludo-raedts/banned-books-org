@@ -547,9 +547,11 @@ export default async function HomePage() {
         callout={callout}
       />
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}
-      <StartHereSection />
+      {/* Something concrete first (a book, then news), the signpost after it
+          (reviewer, 2026-11-11). */}
       <HappeningNowSection />
-      <TrendingSection books={trendingBooks} />
+      <StartHereSection />
+      <TrendingSection books={trendingBooks} seamless />
       {/* Order follows the external review (2026-11-11): the reasons and the
           non-English selection no longer wait behind three long book lists. */}
       <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} featuredSlug={featuredReason} />
