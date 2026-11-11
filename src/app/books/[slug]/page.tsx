@@ -990,8 +990,28 @@ export default async function BookPage({
   // Promoted per-ban notes deliberately don't count: on the bulk register
   // imports they are templated one-liners (4,666 of 4,773 Index titles), not a
   // story. Count 2026-11-10: ~2,860 of ~20k context-matched books move.
-  const showCensorshipHistory = isContextAdditive(book.description_ban, book.censorship_context)
-  const contextAfterBans = (!!banDescription || showCensorshipHistory) && sortedBans.length > 0
+  //
+  // The censorship history (censorship_context) is LLM-written and carries no
+  // source. How much of it a reader gets (UX review 2026-11-11):
+  //   'open'   — a human wrote or vetted it ('narrative_curated'): it reads on
+  //              as part of the answer.
+  //   'folded' — unvetted, and the page has no ban text of its own beside it:
+  //              kept, but behind a labelled disclosure AFTER the recorded
+  //              facts, never as the lead.
+  //   null     — hidden. Either the pipeline itself flagged it as unsupported,
+  //              or it would stand next to a shown ban text, where it read as
+  //              a second answer and could contradict the first: 1984 said the
+  //              Soviet ban ended in 1988 in one paragraph and 1990 in the next.
+  //              The text stays in the database; only the page stops showing it.
+  const historyIsCurated = book.censorship_context_status === 'narrative_curated'
+  const historyIsRejected = book.censorship_context_status === 'insufficient_evidence'
+    || book.censorship_context_status === 'auto_rejected_low_groundedness'
+  const historyMode: 'open' | 'folded' | null =
+    !isContextAdditive(book.description_ban, book.censorship_context) ? null
+      : historyIsCurated ? 'open'
+        : historyIsRejected || banDescription ? null
+          : 'folded'
+  const contextAfterBans = (!!banDescription || historyMode !== null) && sortedBans.length > 0
 
   // Sourced background for districts with documented mass removals (the
   // institution, not this title). Shown alongside whatever ban text we have.
@@ -1730,35 +1750,54 @@ export default async function BookPage({
           used to be a separate grey "Censorship history" section below, which
           read as a second answer to the same question. Next to a bare row
           summary the history is the narrative, so there it leads. */}
-      {(banDescription || hasPromotedBanNote || banRowSummary || showCensorshipHistory) && (() => {
+      {(banDescription || hasPromotedBanNote || banRowSummary || historyMode) && (() => {
         // Provenance: every pipeline that writes censorship_context is an LLM
         // (enrich-censorship-context-gpt, rewrite-descriptions-grounded, the
-        // wiki-enrichment rewrite) and the column has no source URL, so say
-        // so — the lead text above it often names its source, and silence
-        // here read as the same sourcing. 'narrative_curated' marks text a
-        // human wrote or vetted (the admin portal stamps it on edit).
-        const history = showCensorshipHistory ? (
-          <div>
-            <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
-            {book.censorship_context_status !== 'narrative_curated' && (
-              <p className="mt-1.5 text-xs text-gray-500">
-                AI-generated summary of this book&rsquo;s censorship history — not from a single cited source.
-              </p>
-            )}
-          </div>
+        // wiki-enrichment rewrite) and the column has no source URL. Vetted
+        // text ('narrative_curated', stamped by the admin portal on edit) reads
+        // on in the open; unvetted text sits behind a disclosure that says what
+        // it is before the reader opens it. It always follows the recorded
+        // facts — it used to lead when the page had only a row summary.
+        const history = historyMode === 'open' ? (
+          <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
+        ) : historyMode === 'folded' ? (
+          <details className="group">
+            <summary className="cursor-pointer list-none text-sm [&::-webkit-details-marker]:hidden">
+              <span className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:hidden">
+                Read an AI-generated summary of this book&rsquo;s censorship history
+              </span>
+              <span className="hidden font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:inline">
+                Hide the AI-generated summary
+              </span>
+              <span className="text-gray-500"> · not checked against a source</span>
+            </summary>
+            <p className="mt-2 text-gray-700 leading-relaxed">{book.censorship_context}</p>
+            <p className="mt-1.5 text-xs text-gray-500">
+              AI-generated summary — not from a single cited source. The recorded bans and their sources are in the table below.
+            </p>
+          </details>
         ) : null
-        const historyLeads = !banDescription && !hasPromotedBanNote
         return (
           <section className="mb-8 rounded-xl bg-red-50 border border-red-100 px-5 py-4">
             <h2 className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2">
-              {banDescription || hasPromotedBanNote || showCensorshipHistory
+              {banDescription || hasPromotedBanNote || historyMode === 'open'
                 ? 'Why it was banned'
                 : 'Where and when it was banned'}
             </h2>
             <div className="space-y-3">
-              {historyLeads && history}
               {banDescription ? (
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
+                <div>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
+                  {/* description_ban is written by software — an LLM, or an
+                      importer's template over the source rows — unless the
+                      status says a person wrote or checked it. Say so, as
+                      "About this book" already does for its AI summaries. */}
+                  {book.description_ban_status !== 'human_curated' && (
+                    <p className="mt-1.5 text-xs text-gray-500">
+                      Automatically generated summary of the recorded bans and their sources — not individually reviewed.
+                    </p>
+                  )}
+                </div>
               ) : hasPromotedBanNote ? (
                 <div className="space-y-2">
                   {promotedBanNotes.map((note, i) => (
@@ -1779,7 +1818,7 @@ export default async function BookPage({
                   )}
                 </div>
               )}
-              {!historyLeads && history}
+              {history}
             </div>
           </section>
         )
