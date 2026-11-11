@@ -60,6 +60,7 @@ import {
   type DataQualityStatus,
 } from '@/components/data-quality'
 import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
+import { withArticle } from '@/lib/book-of-the-day'
 import { getReadingClubLinkForBook } from '@/lib/reading-club-data'
 import GateOverlay from '@/components/gate-overlay'
 
@@ -209,6 +210,17 @@ function buildBanSummary(
 
   return { topic, facts, faqItems: items }
 }
+
+// How many books in the archive carry this author — the count in the
+// "See all N books by X" next step. A head-only count over the author_id
+// index; cache() dedupes it within a render.
+const countBooksByAuthorSlug = cache(async (slug: string): Promise<number> => {
+  const { count } = await adminClient()
+    .from('book_authors')
+    .select('book_id, authors!inner(slug)', { count: 'exact', head: true })
+    .eq('authors.slug', slug)
+  return count ?? 0
+})
 
 // Bucket A blocklist (CSAM-adjacent policy §5b / §6). Read server-side via
 // adminClient() because blocked_works has RLS with no public policy — the
@@ -1301,6 +1313,40 @@ export default async function BookPage({
 
   const primaryAuthor = book.book_authors[0]?.authors
 
+  // ── Next steps (after the bans table) ────────────────────────────────────────
+  // At most two links, chosen for what this record is — not the same pair on
+  // every page (UX review 2026-11-11):
+  //   1. the author, when the archive holds more than one of their books, with
+  //      the real count;
+  //   2. the place, when every ban is in one country — the school list for a
+  //      US title removed only from schools, the country page otherwise;
+  //   3. a reason, only when a source STATES it. An inferred reason is our
+  //      classification of the book, not something to send a reader after.
+  // One relevant link beats two arbitrary ones, so an empty list is fine.
+  const authorBookCount = primaryAuthor?.slug ? await countBooksByAuthorSlug(primaryAuthor.slug) : 0
+  const statedReasonTally = new Map<string, number>()
+  for (const c of banClusters) {
+    for (const slug of c.stated_reason_slugs) {
+      if (slug !== 'other') statedReasonTally.set(slug, (statedReasonTally.get(slug) ?? 0) + c.bans.length)
+    }
+  }
+  const topStatedReason = [...statedReasonTally.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+  const onlyCountry = uniqueCountries.length === 1 ? uniqueCountries[0] : null
+  const schoolOnly = sortedBans.length > 0 && sortedBans.every(b => b.scopes?.label_en === 'School')
+  const nextSteps: { href: string; label: string }[] = [
+    ...(primaryAuthor?.slug && authorBookCount > 1
+      ? [{ href: `/authors/${primaryAuthor.slug}`, label: `See all ${authorBookCount.toLocaleString('en')} books by ${primaryAuthor.display_name} in the archive` }]
+      : []),
+    ...(onlyCountry
+      ? [onlyCountry.code === 'US' && schoolOnly
+          ? { href: '/search?country=US&scope=school', label: 'Explore school book restrictions in the United States' }
+          : { href: `/countries/${onlyCountry.code.toLowerCase()}`, label: `More documented books in ${withArticle(onlyCountry.name)}` }]
+      : []),
+    ...(topStatedReason
+      ? [{ href: `/reasons/${topStatedReason}`, label: `More books banned for ${BOOK_REASON_PHRASE[topStatedReason] ?? topStatedReason}` }]
+      : []),
+  ].slice(0, 2)
+
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
   // Quiet buy-link in the hero (under the ISBN), for readers who don't scroll
   // to the "Find this book" panel far below. Only shown when we have a real
@@ -1693,26 +1739,6 @@ export default async function BookPage({
               })}
             </div>
           )}
-          {readingClubLink && (
-            <Link
-              href={readingClubLink.href}
-              className="group mt-0.5 inline-flex items-center gap-2 self-start rounded-full border border-oxblood/40 bg-oxblood/5 pl-3 pr-3.5 py-1 text-xs font-medium text-oxblood hover:bg-oxblood hover:text-white transition-colors"
-              aria-label={`Open the Reading Club guide for ${book.title}`}
-            >
-              <span aria-hidden="true">★</span>
-              <span>
-                <span className="font-semibold">Reading Club</span>
-                <span className="text-oxblood/70 group-hover:text-white/80"> · {readingClubLink.trackLabel}</span>
-              </span>
-              <span aria-hidden="true" className="opacity-70 group-hover:opacity-100">→</span>
-            </Link>
-          )}
-          <ShareButtons
-            url={`https://www.banned-books.org/books/${book.slug}`}
-            title={book.title}
-            banCount={book.bans.length}
-            countryCount={distinctCountries}
-          />
         </div>
       </div>
 
@@ -1721,47 +1747,11 @@ export default async function BookPage({
         entityLabel="book"
       />
 
-      {/* Censorship-event context (Liste Otto, the 1938 Nazi list, the Russian
-          extremist register, the Loi Gayssot, …). Grounded, written once per
-          event — for sparse titles this is the substance of the page, so it
-          leads; a book with its own ban story shows it after the bans table
-          instead (see contextAfterBans). */}
-      {!contextAfterBans && <BanBackground items={eventBackground} />}
-
-      {/* About the book */}
-      {!book.description_book ? (
-        <section className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
-          {/* We only publish descriptions backed by a citable source. This book
-              has none yet — better an honest note than an unverifiable AI synopsis.
-              description_book stays NULL so JSON-LD omits it. */}
-          <p className="text-sm text-gray-400 italic leading-relaxed">
-            We only publish book descriptions backed by a citable source, and we
-            haven&rsquo;t found one for this title yet.
-          </p>
-        </section>
-      ) : (
-        <section className="mb-8">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
-          <p className="text-gray-700 leading-relaxed">
-            {book.description_book}
-          </p>
-          {/* Source attribution — only when v2 enrichment recorded a source. */}
-          {book.description_book && book.description_source_url && book.description_source_type && (
-            <DescriptionSourceAttribution
-              url={book.description_source_url}
-              type={book.description_source_type}
-            />
-          )}
-          {/* Consensus tier has no single source URL — label it plainly as AI-generated. */}
-          {book.description_book && !book.description_source_url && book.description_source_type === 'ai_consensus' && (
-            <p className="mt-2 text-xs text-gray-500">
-              AI-generated summary — independently cross-checked by two models; not from a single cited source.
-            </p>
-          )}
-        </section>
-      )}
-
+      {/* The answer comes first. A reader who lands here from a search asked
+          why (or where) this book was banned; the answer used to sit under the
+          hero extras and "About this book", just below the first phone screen
+          (853px on 1984, UX review 2026-11-11). It now follows the hero, ahead
+          of the description, and ends with a jump to the evidence. */}
       {/* Why it was banned — ONE section for the book's own ban narrative. The
           lead is the synthesized description_ban when we have one, else (a) the
           promoted raw per-ban note(s), else (b) the where/when row summary. The
@@ -1881,9 +1871,60 @@ export default async function BookPage({
               )}
               {history}
             </div>
+            {sortedBans.length > 0 && (
+              <p className="mt-3 text-sm">
+                <a href="#bans" className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood">
+                  {sortedBans.length === 1
+                    ? 'See the documented ban and its source'
+                    : `See all ${sortedBans.length.toLocaleString('en')} documented bans and their sources`}
+                  <span aria-hidden="true"> ↓</span>
+                </a>
+              </p>
+            )}
           </section>
         )
       })()}
+
+      {/* Censorship-event context (Liste Otto, the 1938 Nazi list, the Russian
+          extremist register, the Loi Gayssot, …). Grounded, written once per
+          event — for sparse titles this is the substance of the page, so it
+          leads; a book with its own ban story shows it after the bans table
+          instead (see contextAfterBans). */}
+      {!contextAfterBans && <BanBackground items={eventBackground} />}
+
+      {/* About the book */}
+      {!book.description_book ? (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
+          {/* We only publish descriptions backed by a citable source. This book
+              has none yet — better an honest note than an unverifiable AI synopsis.
+              description_book stays NULL so JSON-LD omits it. */}
+          <p className="text-sm text-gray-400 italic leading-relaxed">
+            We only publish book descriptions backed by a citable source, and we
+            haven&rsquo;t found one for this title yet.
+          </p>
+        </section>
+      ) : (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">About this book</h2>
+          <p className="text-gray-700 leading-relaxed">
+            {book.description_book}
+          </p>
+          {/* Source attribution — only when v2 enrichment recorded a source. */}
+          {book.description_book && book.description_source_url && book.description_source_type && (
+            <DescriptionSourceAttribution
+              url={book.description_source_url}
+              type={book.description_source_type}
+            />
+          )}
+          {/* Consensus tier has no single source URL — label it plainly as AI-generated. */}
+          {book.description_book && !book.description_source_url && book.description_source_type === 'ai_consensus' && (
+            <p className="mt-2 text-xs text-gray-500">
+              AI-generated summary — independently cross-checked by two models; not from a single cited source.
+            </p>
+          )}
+        </section>
+      )}
 
       {/* Institution + reason background (sourced, written once per district /
           per reason category; never a claim about this title). On a sparse page
@@ -1909,7 +1950,7 @@ export default async function BookPage({
 
       {/* Bans table */}
       {sortedBans.length > 0 && (
-        <section className="mb-10">
+        <section id="bans" className="mb-10 scroll-mt-20">
           <h2 className="text-lg font-semibold mb-3">
             {distinctCountries === 1
               ? `Ban history in ${sortedBans[0].countries?.name_en ?? sortedBans[0].country_code}`
@@ -2175,6 +2216,54 @@ export default async function BookPage({
           </dl>
         </section>
       )}
+
+      {/* What next. The links onward used to start ~4,700px down a phone page
+          (the "Related" section), and the reading-club pill and share buttons
+          sat in the hero, ahead of the answer. After the table: at most two
+          links chosen for this record (see nextSteps), then the reading club
+          and sharing. */}
+      <section className="mb-10 rounded-xl border border-gray-200 px-5 py-4" aria-label="Keep exploring">
+        {nextSteps.length > 0 && (
+          <>
+            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Keep exploring</h2>
+            <ul className="mb-4 space-y-1.5">
+              {nextSteps.map(step => (
+                <li key={step.href}>
+                  <Link
+                    href={step.href}
+                    className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
+                  >
+                    {step.label}<span aria-hidden="true">{'\u00a0'}→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <div className="flex flex-col items-start gap-2">
+          {readingClubLink && (
+          <Link
+            href={readingClubLink.href}
+            className="group mt-0.5 inline-flex items-center gap-2 self-start rounded-full border border-oxblood/40 bg-oxblood/5 pl-3 pr-3.5 py-1 text-xs font-medium text-oxblood hover:bg-oxblood hover:text-white transition-colors"
+            aria-label={`Open the Reading Club guide for ${book.title}`}
+          >
+            <span aria-hidden="true">★</span>
+            <span>
+              <span className="font-semibold">Reading Club</span>
+              <span className="text-oxblood/70 group-hover:text-white/80"> · {readingClubLink.trackLabel}</span>
+            </span>
+            <span aria-hidden="true" className="opacity-70 group-hover:opacity-100">→</span>
+          </Link>
+        )}
+        <ShareButtons
+          url={`https://www.banned-books.org/books/${book.slug}`}
+          title={book.title}
+          banCount={book.bans.length}
+          countryCount={distinctCountries}
+        />
+
+        </div>
+      </section>
 
       {/* All sourced background, for books that lead with their own ban story:
           each item covers a subset of the rows in the table just above. */}
