@@ -1,27 +1,23 @@
 import Link from '@/components/link'
 import { BookOpen, Database, Newspaper, Users } from 'lucide-react'
-import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 
-// A compact signpost to the four kinds of content the site offers. It used to
-// be called "Use this catalogue", sat directly under Book of the day as four
-// large cards, and described the site as a research instrument (search, data,
-// methodology). The external reviewer (2026-11-11) asked for a smaller
-// signpost below the news with a broader title and one clear entry per card.
-// The hero already links countries, the top 100, essays and the reading club
-// under the search field; repeating them here is deliberate — up there they are
-// a quick route, here they show what the site offers.
-//
-// Secondary links stay small: several of these pages (podcasts, challenged
-// books, classics, sources) are linked from nowhere else on the homepage.
-// Statistics is not repeated: it is in the main navigation.
+// A compact signpost to the four kinds of content the site offers, in the left
+// column of the homepage's top band under the book of the day (UX review
+// 2026-11-11: a two-column band — book and signpost left, news right — instead
+// of one wide band per block). Four tiles, two by two; one clear entry per
+// tile, with a small line of secondary links. Those stay because podcasts,
+// challenged books, classics and sources are linked from nowhere else on the
+// homepage; "statistics" is not repeated, it is in the main navigation. The
+// hero offers several of these entries directly under the search field too:
+// up there they are a quick route, here they show what the site offers.
 type Lnk = { label: string; href: string }
 const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: Lnk; subs: Lnk[] }[] = [
   {
     icon: BookOpen,
     title: 'Explore books',
-    blurb: 'Search and browse the archive by title, author, country or reason.',
-    primary: { label: 'Search the archive', href: '/search' },
+    blurb: 'Search and browse by title, author, country or reason.',
+    primary: { label: 'Explore books', href: '/search' },
     subs: [
       { label: 'by reason', href: '/reasons' },
       { label: 'classics', href: '/banned-classics' },
@@ -31,7 +27,7 @@ const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: L
     icon: Newspaper,
     title: 'Stories and history',
     blurb: 'Essays, podcasts and the long history of book censorship.',
-    primary: { label: 'Read stories and essays', href: '/essays' },
+    primary: { label: 'Stories and history', href: '/essays' },
     subs: [
       { label: 'history', href: '/history' },
       { label: 'timeline', href: '/timeline' },
@@ -41,8 +37,8 @@ const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: L
   {
     icon: Database,
     title: 'Data and sources',
-    blurb: 'The open dataset, where our records come from and how we verify them.',
-    primary: { label: 'Open the dataset', href: '/dataset' },
+    blurb: 'The open dataset, our sources and how we verify them.',
+    primary: { label: 'Data and sources', href: '/dataset' },
     subs: [
       { label: 'sources', href: '/sources' },
       { label: 'methodology', href: '/methodology' },
@@ -62,35 +58,33 @@ const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: L
 
 export default function StartHereSection() {
   return (
-    <SectionShell tone="sage">
-      <div className="max-w-6xl mx-auto">
-        <Eyebrow>Where to go next</Eyebrow>
-        <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-5">
-          Explore Banned Books
-        </h2>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {ENTRIES.map(({ icon: Icon, title, blurb, primary, subs }) => (
-            <div key={primary.href} className="flex flex-col rounded-xl border border-gray-200 bg-white p-3.5 md:p-4">
-              <Icon className="w-5 h-5 text-oxblood mb-2" aria-hidden="true" />
-              <h3 className="font-semibold text-gray-900 leading-snug">{title}</h3>
-              <p className="mt-1 text-xs md:text-sm text-neutral-600 leading-snug flex-1">{blurb}</p>
-              <Link href={primary.href} className="mt-2.5 text-sm font-medium text-oxblood hover:underline">
+    <div>
+      <Eyebrow>Where to go next</Eyebrow>
+      <h2 className="font-serif text-xl md:text-2xl font-semibold tracking-tight text-gray-900 mb-4">
+        Explore Banned Books
+      </h2>
+      <div className="grid grid-cols-2 gap-3">
+        {ENTRIES.map(({ icon: Icon, title, blurb, primary, subs }) => (
+          <div key={primary.href} className="flex flex-col rounded-lg border border-sage-border bg-sage p-3.5">
+            <Icon className="w-5 h-5 text-oxblood mb-1.5" aria-hidden="true" />
+            <h3 className="font-semibold leading-snug">
+              <Link href={primary.href} className="text-oxblood hover:underline">
                 {primary.label} →
               </Link>
-              {/* Secondary links: larger and with room to tap on a phone, but
-                  still quieter than the main link. */}
-              <p className="mt-1 flex flex-wrap gap-x-3.5 text-sm">
-                {subs.map(s => (
-                  <Link key={s.href} href={s.href} className="inline-block py-1 text-neutral-700 hover:text-oxblood hover:underline">
-                    {s.label}
-                  </Link>
-                ))}
-              </p>
-            </div>
-          ))}
-        </div>
+            </h3>
+            {/* The one-line description is for desktop; a phone shows the title
+                and the secondary links only. */}
+            <p className="mt-1 hidden text-xs text-neutral-700 leading-snug md:block">{blurb}</p>
+            <p className="mt-1 flex flex-wrap gap-x-3 text-sm">
+              {subs.map(s => (
+                <Link key={s.href} href={s.href} className="inline-block py-1 text-neutral-700 hover:text-oxblood hover:underline">
+                  {s.label}
+                </Link>
+              ))}
+            </p>
+          </div>
+        ))}
       </div>
-    </SectionShell>
+    </div>
   )
 }

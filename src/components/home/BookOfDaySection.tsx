@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from '@/components/link'
 import BookCoverPlaceholder from '@/components/book-cover-placeholder'
 import SectionShell from '@/components/section/SectionShell'
+import Eyebrow from '@/components/section/Eyebrow'
 import { coverAlt } from '@/lib/cover-alt'
 import { reasonLabel } from '@/components/reason-badge'
 import { reasonColor } from '@/lib/reasons-display'
@@ -33,15 +34,32 @@ function orderedReasons(slugs: string[]): string[] {
   return [...slugs].sort((a, b) => idx(a) - idx(b))
 }
 
-export default function BookOfDaySection({ book }: { book: BookOfDay }) {
+// `bare`: no band of its own — the homepage's two-column top band supplies it.
+function Frame({ bare, children }: { bare: boolean; children: React.ReactNode }) {
+  if (bare) {
+    return (
+      <div>
+        <Eyebrow>Book of the day</Eyebrow>
+        {children}
+      </div>
+    )
+  }
+  return (
+    <SectionShell tone="cream" eyebrow="Book of the day">
+      {children}
+    </SectionShell>
+  )
+}
+
+export default function BookOfDaySection({ book, bare = false }: { book: BookOfDay; bare?: boolean }) {
   const displayedReasons = orderedReasons(book.reasons)
   const displayedGenres = book.genres.slice(0, 3)
   return (
-    <SectionShell tone="cream" eyebrow="Book of the day">
+    <Frame bare={bare}>
       {/* Stretched-link card: the whole card opens the book entry, but the
           footer "Share" link sits above the overlay (relative z-10) so it
           navigates to /share — the daily-book share hub — instead. */}
-      <div className="hover-lift-book group relative bg-white border border-cream-border rounded-sm p-5 md:p-7">
+      <div className={`hover-lift-book group relative border border-cream-border rounded-sm p-5 md:p-6 ${bare ? 'bg-cream' : 'bg-white'}`}>
         <Link
           href={`/books/${book.slug}`}
           aria-label={`Read the full entry for ${book.title}`}
@@ -178,6 +196,6 @@ export default function BookOfDaySection({ book }: { book: BookOfDay }) {
           </div>
         </div>
       </div>
-    </SectionShell>
+    </Frame>
   )
 }
