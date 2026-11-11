@@ -43,6 +43,11 @@
   --color-oxblood: #5C1010;
   --color-cream: #F4E8E2;
   --color-cream-border: #e8d5cc;
+  /* A quiet grey-green band for signposts, so a navigation block does not run
+     into the cream book rows beside it (reviewer, 2026-11-11). Text on it
+     (gray-900, neutral-600, oxblood) stays above 6:1. */
+  --color-sage: #EDF1EE;
+  --color-sage-border: #D5DED7;
   --animate-fade-in: fade-in 0.15s ease-out;
 }
 

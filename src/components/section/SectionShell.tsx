@@ -1,7 +1,7 @@
 import Eyebrow from './Eyebrow'
 
 type Props = {
-  tone?: 'white' | 'cream'
+  tone?: 'white' | 'cream' | 'sage'
   eyebrow?: string
   id?: string
   // Joins this section to a same-tone section directly above it: drops the top
@@ -21,7 +21,9 @@ export default function SectionShell({
   const toneClasses =
     tone === 'cream'
       ? `bg-cream ${seamless ? 'border-b' : 'border-y'} border-cream-border`
-      : 'bg-white'
+      : tone === 'sage'
+        ? 'bg-sage border-y border-sage-border'
+        : 'bg-white'
   // Seamless sections lose their top padding so the band above flows straight
   // into them (the section above keeps its bottom padding as the breathing room).
   const padClasses = seamless ? 'pt-0 pb-10 md:pb-12' : 'py-10 md:py-12'

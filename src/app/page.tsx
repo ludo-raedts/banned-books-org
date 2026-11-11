@@ -551,7 +551,7 @@ export default async function HomePage() {
           (reviewer, 2026-11-11). */}
       <HappeningNowSection />
       <StartHereSection />
-      <TrendingSection books={trendingBooks} seamless />
+      <TrendingSection books={trendingBooks} />
       {/* Order follows the external review (2026-11-11): the reasons and the
           non-English selection no longer wait behind three long book lists. */}
       <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} featuredSlug={featuredReason} />

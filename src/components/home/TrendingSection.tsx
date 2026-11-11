@@ -13,10 +13,10 @@ import type { TopListBook } from '@/components/top-list-card'
 //
 // The subtitle names the criterion: the count under each cover describes the
 // record, it is not what ranks the book here.
-export default function TrendingSection({ books, seamless = false }: { books: TopListBook[]; seamless?: boolean }) {
+export default function TrendingSection({ books }: { books: TopListBook[] }) {
   if (books.length === 0) return null
   return (
-    <SectionShell tone="cream" eyebrow="Top-lists · Updated daily" seamless={seamless}>
+    <SectionShell tone="cream" eyebrow="Top-lists · Updated daily">
       <SectionHeader
         title="Trending this week"
         subtitle="Most-read book pages in the last 7 days."

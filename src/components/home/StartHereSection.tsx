@@ -14,6 +14,7 @@ import Eyebrow from '@/components/section/Eyebrow'
 //
 // Secondary links stay small: several of these pages (podcasts, challenged
 // books, classics, sources) are linked from nowhere else on the homepage.
+// Statistics is not repeated: it is in the main navigation.
 type Lnk = { label: string; href: string }
 const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: Lnk; subs: Lnk[] }[] = [
   {
@@ -45,14 +46,13 @@ const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: L
     subs: [
       { label: 'sources', href: '/sources' },
       { label: 'methodology', href: '/methodology' },
-      { label: 'statistics', href: '/stats' },
     ],
   },
   {
     icon: Users,
     title: 'Reading club',
     blurb: 'Banned books to read together, with discussion questions.',
-    primary: { label: 'Join the reading club', href: '/reading-club' },
+    primary: { label: 'Explore the reading club', href: '/reading-club' },
     subs: [
       { label: 'pick a banned book', href: '/discover' },
       { label: 'challenged books', href: '/challenged-books' },
@@ -62,7 +62,7 @@ const ENTRIES: { icon: typeof BookOpen; title: string; blurb: string; primary: L
 
 export default function StartHereSection() {
   return (
-    <SectionShell tone="cream">
+    <SectionShell tone="sage">
       <div className="max-w-6xl mx-auto">
         <Eyebrow>Where to go next</Eyebrow>
         <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-5">
@@ -78,9 +78,11 @@ export default function StartHereSection() {
               <Link href={primary.href} className="mt-2.5 text-sm font-medium text-oxblood hover:underline">
                 {primary.label} →
               </Link>
-              <p className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-0.5 text-xs">
+              {/* Secondary links: larger and with room to tap on a phone, but
+                  still quieter than the main link. */}
+              <p className="mt-1 flex flex-wrap gap-x-3.5 text-sm">
                 {subs.map(s => (
-                  <Link key={s.href} href={s.href} className="text-neutral-600 hover:text-oxblood hover:underline">
+                  <Link key={s.href} href={s.href} className="inline-block py-1 text-neutral-700 hover:text-oxblood hover:underline">
                     {s.label}
                   </Link>
                 ))}
