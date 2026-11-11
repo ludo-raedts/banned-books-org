@@ -1333,9 +1333,9 @@ export default async function BookPage({
   const topStatedReason = [...statedReasonTally.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
   const onlyCountry = uniqueCountries.length === 1 ? uniqueCountries[0] : null
   const schoolOnly = sortedBans.length > 0 && sortedBans.every(b => b.scopes?.label_en === 'School')
-  const nextSteps: { href: string; label: string }[] = [
+  const nextSteps: { href: string; label: string; note?: string }[] = [
     ...(primaryAuthor?.slug && authorBookCount > 1
-      ? [{ href: `/authors/${primaryAuthor.slug}`, label: `See all ${authorBookCount.toLocaleString('en')} books by ${primaryAuthor.display_name} in the archive` }]
+      ? [{ href: `/authors/${primaryAuthor.slug}`, label: `More books by ${primaryAuthor.display_name}`, note: `${authorBookCount.toLocaleString('en')} books in the archive` }]
       : []),
     ...(onlyCountry
       ? [onlyCountry.code === 'US' && schoolOnly
@@ -1346,6 +1346,8 @@ export default async function BookPage({
       ? [{ href: `/reasons/${topStatedReason}`, label: `More books banned for ${BOOK_REASON_PHRASE[topStatedReason] ?? topStatedReason}` }]
       : []),
   ].slice(0, 2)
+  // "Related" at the foot of the page repeats neither of them.
+  const nextStepHrefs = new Set(nextSteps.map(st => st.href))
 
   const bookshopHref = getBookshopUrl({ isbn13: book.isbn13, bookshopIsbn13: book.bookshop_isbn13, bookshopStatus: book.bookshop_status })
   // Quiet buy-link in the hero (under the ISBN), for readers who don't scroll
@@ -1838,16 +1840,18 @@ export default async function BookPage({
             <div className="space-y-3">
               {banDescription ? (
                 <div>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
                   {/* description_ban is written by software — an LLM, or an
                       importer's template over the source rows — unless the
-                      status says a person wrote or checked it. Say so, as
-                      "About this book" already does for its AI summaries. */}
+                      status says a person wrote or checked it. The notice sits
+                      ABOVE the text: under it, the paragraph had already been
+                      read as the archive's checked answer (reviewer,
+                      2026-11-11). */}
                   {book.description_ban_status !== 'human_curated' && (
-                    <p className="mt-1.5 text-xs text-gray-500">
-                      Automatically generated summary of the recorded bans and their sources — not individually reviewed.
+                    <p className="mb-1.5 text-xs text-gray-600">
+                      Automatically generated summary of the recorded bans and their sources — not individually reviewed. The records and sources below are the evidence.
                     </p>
                   )}
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{banDescription}</p>
                 </div>
               ) : hasPromotedBanNote ? (
                 <div className="space-y-2">
@@ -1873,10 +1877,12 @@ export default async function BookPage({
             </div>
             {sortedBans.length > 0 && (
               <p className="mt-3 text-sm">
-                <a href="#bans" className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood">
+                {/* To the table, not the timeline above it; and not "See all N":
+                    part of a long table is folded behind "Show more entries". */}
+                <a href="#ban-records" className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood">
                   {sortedBans.length === 1
-                    ? 'See the documented ban and its source'
-                    : `See all ${sortedBans.length.toLocaleString('en')} documented bans and their sources`}
+                    ? 'Explore the documented ban and its source'
+                    : 'Explore the documented bans and their sources'}
                   <span aria-hidden="true"> ↓</span>
                 </a>
               </p>
@@ -1950,7 +1956,7 @@ export default async function BookPage({
 
       {/* Bans table */}
       {sortedBans.length > 0 && (
-        <section id="bans" className="mb-10 scroll-mt-20">
+        <section className="mb-10">
           <h2 className="text-lg font-semibold mb-3">
             {distinctCountries === 1
               ? `Ban history in ${sortedBans[0].countries?.name_en ?? sortedBans[0].country_code}`
@@ -1968,6 +1974,7 @@ export default async function BookPage({
               so "27 documented bans" sat above 15 rows with no explanation
               (UX review 2026-11-11). Say what a row is; the fold button below
               counts in the same unit. */}
+          <div id="ban-records" className="scroll-mt-20" />
           {sortedBans.length > banClusters.length && (
             <p className="mb-2 text-sm text-gray-600">
               {sortedBans.length.toLocaleString('en')} documented bans in {banClusters.length.toLocaleString('en')} {banClusters.length === 1 ? 'entry' : 'entries'}.
@@ -2217,54 +2224,6 @@ export default async function BookPage({
         </section>
       )}
 
-      {/* What next. The links onward used to start ~4,700px down a phone page
-          (the "Related" section), and the reading-club pill and share buttons
-          sat in the hero, ahead of the answer. After the table: at most two
-          links chosen for this record (see nextSteps), then the reading club
-          and sharing. */}
-      <section className="mb-10 rounded-xl border border-gray-200 px-5 py-4" aria-label="Keep exploring">
-        {nextSteps.length > 0 && (
-          <>
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Keep exploring</h2>
-            <ul className="mb-4 space-y-1.5">
-              {nextSteps.map(step => (
-                <li key={step.href}>
-                  <Link
-                    href={step.href}
-                    className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
-                  >
-                    {step.label}<span aria-hidden="true">{'\u00a0'}→</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-        <div className="flex flex-col items-start gap-2">
-          {readingClubLink && (
-          <Link
-            href={readingClubLink.href}
-            className="group mt-0.5 inline-flex items-center gap-2 self-start rounded-full border border-oxblood/40 bg-oxblood/5 pl-3 pr-3.5 py-1 text-xs font-medium text-oxblood hover:bg-oxblood hover:text-white transition-colors"
-            aria-label={`Open the Reading Club guide for ${book.title}`}
-          >
-            <span aria-hidden="true">★</span>
-            <span>
-              <span className="font-semibold">Reading Club</span>
-              <span className="text-oxblood/70 group-hover:text-white/80"> · {readingClubLink.trackLabel}</span>
-            </span>
-            <span aria-hidden="true" className="opacity-70 group-hover:opacity-100">→</span>
-          </Link>
-        )}
-        <ShareButtons
-          url={`https://www.banned-books.org/books/${book.slug}`}
-          title={book.title}
-          banCount={book.bans.length}
-          countryCount={distinctCountries}
-        />
-
-        </div>
-      </section>
-
       {/* All sourced background, for books that lead with their own ban story:
           each item covers a subset of the rows in the table just above. */}
       {contextAfterBans && (
@@ -2273,6 +2232,60 @@ export default async function BookPage({
           items={[...eventBackground, ...otherBackground]}
         />
       )}
+
+      {/* What next — after everything that belongs to THIS book: the answer, the
+          records, and the background on those records. It first sat between the
+          table and the background, where it invited the reader to leave while
+          the history of these bans was still to come (reviewer, 2026-11-11).
+
+          Three kinds of action, kept apart: onward links in the archive (at
+          most two, see nextSteps), the reading-club guide, and sharing. One
+          quiet neutral panel: red stays with the censorship facts and amber
+          with the historical background, so this reads as navigation. */}
+      <section className="mb-10 rounded-xl border border-gray-200 bg-gray-50 px-5 py-5" aria-labelledby="keep-exploring">
+        <h2 id="keep-exploring" className="font-serif text-xl font-semibold text-gray-900">Keep exploring</h2>
+        {nextSteps.length > 0 && (
+          <ul className="mt-3 space-y-2.5">
+            {nextSteps.map(step => (
+              <li key={step.href} className="leading-snug">
+                <Link
+                  href={step.href}
+                  className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
+                >
+                  {step.label}
+                  {step.note && <span className="font-normal"> — {step.note}</span>}
+                  <span aria-hidden="true">{'\u00a0'}→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+        {readingClubLink && (
+          <div className="mt-5 border-t border-gray-200 pt-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-600">Reading club · {readingClubLink.trackLabel}</h3>
+            <p className="mt-1.5 leading-snug">
+              <Link
+                href={readingClubLink.href}
+                className="font-medium text-oxblood underline underline-offset-2 decoration-oxblood/30 hover:decoration-oxblood"
+              >
+                Open the reading-club guide for {book.title}<span aria-hidden="true">{'\u00a0'}→</span>
+              </Link>
+            </p>
+          </div>
+        )}
+        <div className="mt-5 border-t border-gray-200 pt-4">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-600">Share this page</h3>
+          <div className="mt-2">
+            <ShareButtons
+              url={`https://www.banned-books.org/books/${book.slug}`}
+              title={book.title}
+              banCount={book.bans.length}
+              countryCount={distinctCountries}
+              tone="strong"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Editorial note — context/extended tier only; placed after bans so the
           factual record comes first and editorial framing follows.
@@ -2434,7 +2447,7 @@ export default async function BookPage({
 
             {/* Author + countries + reasons chips */}
             <div className="flex flex-wrap gap-2">
-              {primaryAuthor?.slug && (
+              {primaryAuthor?.slug && !nextStepHrefs.has(`/authors/${primaryAuthor.slug}`) && (
                 <Link
                   href={`/authors/${primaryAuthor.slug}`}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
@@ -2442,7 +2455,7 @@ export default async function BookPage({
                   ✍️ More books by {primaryAuthor.display_name}
                 </Link>
               )}
-              {uniqueCountries.map(c => (
+              {uniqueCountries.filter(c => !nextStepHrefs.has(`/countries/${c.code.toLowerCase()}`)).map(c => (
                 <Link
                   key={c.code}
                   href={`/countries/${c.code.toLowerCase()}`}
@@ -2451,7 +2464,7 @@ export default async function BookPage({
                   🌍 Books banned in {c.name}
                 </Link>
               ))}
-              {uniqueReasonSlugs.map(rSlug => (
+              {uniqueReasonSlugs.filter(rSlug => !nextStepHrefs.has(`/reasons/${rSlug}`)).map(rSlug => (
                 <Link
                   key={rSlug}
                   href={`/reasons/${rSlug}`}

@@ -14,9 +14,13 @@ interface ShareButtonsProps {
   /** Pre-composed share text. When given, it overrides the book-count sentence —
    *  used by pages that aren't books, like essays. */
   text?: string
+  /** 'strong' for a place where sharing is a labelled action of its own (the
+   *  book page's "Share this page"): larger and dark enough to read as usable.
+   *  The default stays quiet — light grey read as disabled there. */
+  tone?: 'quiet' | 'strong'
 }
 
-export default function ShareButtons({ url, title, banCount, countryCount, text: textOverride }: ShareButtonsProps) {
+export default function ShareButtons({ url, title, banCount, countryCount, text: textOverride, tone = 'quiet' }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
   // Native share is only offered when the platform supports it (mostly mobile).
   // Detected after mount to avoid a hydration mismatch with the server render.
@@ -55,10 +59,12 @@ export default function ShareButtons({ url, title, banCount, countryCount, text:
     }
   }
 
-  const linkClass = 'inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors'
+  const linkClass = tone === 'strong'
+    ? 'inline-flex items-center gap-1.5 text-sm font-medium text-gray-800 underline underline-offset-2 decoration-gray-300 hover:text-oxblood hover:decoration-oxblood transition-colors'
+    : 'inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors'
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className={`flex items-center flex-wrap ${tone === 'strong' ? 'gap-x-5 gap-y-2' : 'gap-3'}`}>
       <a href={bskyHref} target="_blank" rel="noopener noreferrer" aria-label="Share on Bluesky" className={linkClass}>
         <svg width="13" height="13" viewBox="0 0 600 530" fill="currentColor" aria-hidden="true">
           <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.449-163.25-81.433C20.15 217.613 9.997 86.535 9.997 68.825c0-88.687 77.742-60.816 125.72-24.795z"/>
