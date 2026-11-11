@@ -99,7 +99,7 @@ export default function HeroSection({
   ]
 
   return (
-    <section className="pt-10 md:pt-12 px-6 md:px-9 pb-8 md:pb-10 bg-white">
+    <section className="pt-10 md:pt-12 px-6 md:px-9 pb-8 bg-white">
       <div className="max-w-5xl mx-auto">
         <Eyebrow>An international archive of censored literature</Eyebrow>
 
@@ -125,16 +125,28 @@ export default function HeroSection({
             <div className="mt-5 flex flex-wrap items-baseline gap-x-7 gap-y-2 border-t border-neutral-200 pt-3">
               {stats.map(s => (
                 <div key={s.label} className="flex items-baseline gap-2">
-                  <span className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-oxblood tabular-nums">
+                  <span className="font-serif text-2xl md:text-4xl lg:text-[44px] font-semibold tracking-tight text-oxblood tabular-nums">
                     {s.value}
                   </span>
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-600">{s.label}</span>
+                  <span className="text-[11px] md:text-xs uppercase tracking-wider text-neutral-600">{s.label}</span>
                 </div>
               ))}
+              {/* Desktop only: the third figure the reviewer's first-screen
+                  trial had turned into a sentence. On a phone it stays in the
+                  sentence below, so the first screen keeps its compact shape. */}
+              <div className="hidden md:flex items-baseline gap-2">
+                <span className="font-serif md:text-4xl lg:text-[44px] font-semibold tracking-tight text-oxblood tabular-nums">
+                  {totalBans.toLocaleString('en')}
+                </span>
+                <span className="text-xs uppercase tracking-wider text-neutral-600">Ban records</span>
+              </div>
             </div>
 
             <p className="mt-2 text-sm text-neutral-700">
-              <span className="tabular-nums">{totalBans.toLocaleString('en')}</span> ban records, each linked to its source.{' '}
+              <span className="md:hidden">
+                <span className="tabular-nums">{totalBans.toLocaleString('en')}</span> ban records, each linked to its source.
+              </span>
+              <span className="hidden md:inline">Each ban record is linked to its source.</span>{' '}
               <Link href="/methodology" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
                 How we verify
               </Link>

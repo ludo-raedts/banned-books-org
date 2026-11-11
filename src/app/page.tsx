@@ -552,7 +552,7 @@ export default async function HomePage() {
           day and the signpost on the left, the news on the right. The DOM order
           is book, news, signpost — what a phone shows, top to bottom; from lg
           the grid puts the news in the right column across both rows. */}
-      <section className="bg-white px-6 pb-10 pt-8 md:px-9 md:pb-12 md:pt-10">
+      <section className="bg-white px-6 pb-10 pt-8 md:px-9 md:pb-12 md:pt-4">
         <div className="mx-auto grid max-w-5xl gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           {bookOfDay && (
             <div className="lg:col-start-1 lg:row-start-1">
