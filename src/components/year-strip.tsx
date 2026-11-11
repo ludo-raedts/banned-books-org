@@ -7,6 +7,13 @@ import Link from '@/components/link'
 //
 // Picks the top `max` years by event count, then shows them in reverse
 // chronological order so the strip reads as a timeline.
+//
+// The count on a chip is local (this country's or this reason's events) but
+// the link is global: /banned-books/[year] lists every country. A reader who
+// tapped "2026 · 2,034" on the United States page landed on 2,184 events in
+// nine countries with no sign the country had dropped away (UX review
+// 2026-11-11). Until a country-plus-year view exists, the strip says where it
+// leads, in the visible note, the tooltip and the accessible name.
 
 export default function YearStrip({
   yearCounts,
@@ -27,19 +34,22 @@ export default function YearStrip({
   if (years.length < 2) return null
 
   return (
-    <nav aria-label={`${label}: banned books by year`} className={`flex flex-wrap items-baseline gap-x-2 gap-y-1.5 text-sm ${className}`}>
+    <nav aria-label={`${label}: each year opens the worldwide list for that year`} className={`flex flex-wrap items-baseline gap-x-2 gap-y-1.5 text-sm ${className}`}>
       <span className="text-xs font-medium uppercase tracking-wide text-gray-500 mr-1">{label}</span>
       {years.map(([year, count]) => (
         <Link
           key={year}
           href={`/banned-books/${year}`}
           className="inline-flex items-baseline gap-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800 hover:border-oxblood hover:text-oxblood"
-          title={`${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'} in ${year}`}
+          title={`${count.toLocaleString('en')} documented ${count === 1 ? 'event' : 'events'} here in ${year} — opens the worldwide list for ${year}`}
         >
           {year}
           <span className="text-[11px] text-gray-400">{count.toLocaleString('en')}</span>
         </Link>
       ))}
+      <span className="basis-full text-xs text-gray-500">
+        The numbers count events on this page. Each year opens the worldwide list for that year.
+      </span>
     </nav>
   )
 }
