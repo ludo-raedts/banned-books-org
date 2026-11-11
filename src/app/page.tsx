@@ -512,7 +512,10 @@ export default async function HomePage() {
       {bookOfDay && <BookOfDaySection book={bookOfDay} />}
       <StartHereSection />
       <HappeningNowSection />
-      <TrendingSection books={trendingBooks} />
+      {/* PREVIEW BRANCH ONLY — both cover-size variants, one under the other,
+          so the reviewer can compare them at real size. Main keeps one. */}
+      <TrendingSection books={trendingBooks} perRow={5} previewLabel="Preview · variant A: five covers per row on desktop" />
+      <TrendingSection books={trendingBooks} perRow={6} previewLabel="Preview · variant B: six covers per row on desktop" />
       <MostBannedAuthorsSection authors={bannedAuthors} />
       <RisingSection books={risingBooks} />
       <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} />
