@@ -168,6 +168,7 @@ export default function SearchClient({
   // (UX review 2026-11-11). From sm up the controls are always visible and wrap.
   const [filtersOpen, setFiltersOpen] = useState(false)
   const filterPanelId = useId()
+  const yearHintId = useId()
   const optionId = (i: number) => `${listboxId}-opt-${i}`
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -373,7 +374,7 @@ export default function SearchClient({
     ...(scope ? [{ key: 'scope', label: SCOPE_LABELS[scope] ?? scope, clear: () => setScope(null) }] : []),
     ...(activeOnly ? [{ key: 'active', label: 'Currently banned', clear: () => setActiveOnly(false) }] : []),
     ...(country ? [{ key: 'country', label: countries.find(c => c.code === country)?.name ?? country, clear: () => setCountry('') }] : []),
-    ...(year ? [{ key: 'year', label: `Banned in ${year}`, clear: () => changeYear('') }] : []),
+    ...(year ? [{ key: 'year', label: `Ban year: ${year}`, clear: () => changeYear('') }] : []),
     ...(reason ? [{ key: 'reason', label: reasonLabel(reason), clear: () => setReason(null) }] : []),
   ]
 
@@ -582,23 +583,31 @@ export default function SearchClient({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
-          <label className={`flex shrink-0 items-center gap-1.5 rounded-full border bg-white pl-3 pr-2 py-1 text-sm font-medium transition-colors focus-within:border-gray-900 ${
-            year ? 'border-gray-900 text-gray-900' : 'border-gray-200 text-gray-600 hover:border-gray-400'
-          }`}>
-            <span aria-hidden>📅</span>
-            <span>Year</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              maxLength={4}
-              placeholder="e.g. 2026"
-              value={yearDraft}
-              onChange={e => changeYear(e.target.value)}
-              aria-label="Filter by year the ban started (four digits)"
-              className="w-[4.5rem] bg-transparent text-sm focus:outline-none placeholder:text-gray-400"
-            />
-          </label>
+          {/* Its own line on a phone, with a visible label and a boxed field, so it
+              reads as something to type into and not as one more button (UX
+              review 2026-11-11). From sm up it joins the row as a small field. */}
+          <div className="basis-full sm:basis-auto sm:shrink-0">
+            <label className="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+              <span className="whitespace-nowrap">Ban year</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={4}
+                placeholder="2026"
+                value={yearDraft}
+                onChange={e => changeYear(e.target.value)}
+                aria-describedby={yearHintId}
+                title="The year the ban or challenge was first recorded"
+                className={`w-24 rounded-md border bg-white px-3 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 ${
+                  year ? 'border-gray-900' : 'border-gray-300 hover:border-gray-400'
+                }`}
+              />
+            </label>
+            <p id={yearHintId} className="mt-1 text-xs text-gray-500 sm:sr-only">
+              The year a ban, restriction or challenge was first recorded.
+            </p>
+          </div>
           <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           {FILTER_REASONS.map(slug => (
             <FilterPill key={slug} active={reason === slug} onClick={() => setReason(reason === slug ? null : slug)}>

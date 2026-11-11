@@ -38,22 +38,22 @@ export default function YearStrip({
   if (years.length < 2) return null
 
   return (
-    <nav aria-label={`${label}: each year opens the books banned that year on this page's search`} className={`flex flex-wrap items-baseline gap-x-2 gap-y-1.5 text-sm ${className}`}>
+    <nav aria-label={`${label}: each year opens the books banned that year on this page's search`} className={`flex flex-wrap items-baseline gap-x-2 gap-y-2 text-sm ${className}`}>
       <span className="text-xs font-medium uppercase tracking-wide text-gray-500 mr-1">{label}</span>
       {years.map(([year, count]) => (
         <Link
           key={year}
           href={`/search?${new URLSearchParams({ ...filter, year: String(year) }).toString()}`}
           rel="nofollow"
-          className="inline-flex items-baseline gap-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800 hover:border-oxblood hover:text-oxblood"
+          className="inline-flex items-baseline gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-gray-800 hover:border-oxblood hover:text-oxblood"
           title={`${count.toLocaleString('en')} ${count === 1 ? 'ban' : 'bans'} recorded here in ${year} — opens these books`}
         >
           {year}
-          <span className="text-[11px] text-gray-400">{count.toLocaleString('en')}</span>
+          <span className="text-xs font-medium text-gray-600">{count.toLocaleString('en')}</span>
         </Link>
       ))}
       <span className="basis-full text-xs text-gray-500">
-        The numbers count recorded bans here. Each year opens these books for that year (a book can have several bans).{' '}
+        Numbers show recorded bans. One book may have more than one ban.{' '}
         <Link href="/banned-books" className="underline underline-offset-2 hover:text-oxblood">
           All years, worldwide →
         </Link>
