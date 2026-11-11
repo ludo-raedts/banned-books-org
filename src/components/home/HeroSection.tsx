@@ -85,15 +85,21 @@ export default function HeroSection({
   registerTitles: number
   callout: HeroCallout
 }) {
+  // First-screen trial (UX review 2026-11-11). On a 375px phone the hero was
+  // the headline, four large figures, the register line, an intro and the DOI
+  // before the search field, and no book in sight. New order: one sentence,
+  // search, a few routes into the rest of the site, then compact figures.
+  // Two figures stay large; "bans recorded" becomes a sentence and the "100%
+  // citation-backed" tile is gone — every ban record links to a source, which
+  // is not the same as every statement having been checked, so it is said in
+  // words with a link to how we verify.
   const stats: Stat[] = [
-    { value: totalBooks.toLocaleString('en'), label: 'Books documented' },
+    { value: totalBooks.toLocaleString('en'), label: 'Books' },
     { value: countryCount.toLocaleString('en'), label: 'Countries' },
-    { value: totalBans.toLocaleString('en'), label: 'Bans recorded' },
-    { value: '100%', label: 'Citation-backed' },
   ]
 
   return (
-    <section className="pt-12 px-9 pb-10 bg-white">
+    <section className="pt-10 md:pt-12 px-6 md:px-9 pb-8 md:pb-10 bg-white">
       <div className="max-w-5xl mx-auto">
         <Eyebrow>An international archive of censored literature</Eyebrow>
 
@@ -107,56 +113,60 @@ export default function HeroSection({
             lg up to ~1200px — ran it straight through the headline. */}
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-8 lg:items-start">
           <div className="max-w-[720px]">
-            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-black border-b border-neutral-200 py-4">
+            <p className="mt-4 text-base md:text-lg leading-relaxed text-gray-700">
+              Banned, restricted and challenged books, historical and contemporary, from {countryCount.toLocaleString('en')} countries —
+              with the source behind every record and the stories around them.
+            </p>
+
+            <div className="mt-5">
+              <HeroSearch />
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-baseline gap-x-7 gap-y-2 border-t border-neutral-200 pt-3">
               {stats.map(s => (
-                <div key={s.label}>
-                  <div className="not-italic font-serif text-3xl md:text-4xl font-semibold tracking-tight text-oxblood">
+                <div key={s.label} className="flex items-baseline gap-2">
+                  <span className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-oxblood tabular-nums">
                     {s.value}
-                  </div>
-                  <div className="mt-1 text-[11px] uppercase tracking-wider text-neutral-600">
-                    {s.label}
-                  </div>
+                  </span>
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-600">{s.label}</span>
                 </div>
               ))}
             </div>
 
-            {/* The second layer: titles we list from official registers but do not
-                document as books. A sentence, not a fifth stat — a number in
-                the row above would invite adding it to "Books documented". */}
-            {registerTitles > 0 && (
-              <p className="mt-3 text-sm text-neutral-600">
-                Plus more than{' '}
-                <span className="tabular-nums">{roundedThousands(registerTitles)}</span> further titles on
-                official ban lists, kept as{' '}
-                <Link href="/registers" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
-                  registers
-                </Link>
-                .
-              </p>
-            )}
-
-            <p className="mt-6 text-sm md:text-base leading-relaxed text-gray-700">
-              Banned, restricted, and challenged books — historical and contemporary, worldwide. Every entry traces back to a verifiable source.
+            <p className="mt-2 text-sm text-neutral-700">
+              <span className="tabular-nums">{totalBans.toLocaleString('en')}</span> ban records, each linked to its source.{' '}
+              <Link href="/methodology" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
+                How we verify
+              </Link>
+              {' · '}
+              <Link href="/stats" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
+                More figures
+              </Link>
             </p>
 
-            {ZENODO_DOI_URL && (
-              <p className="mt-2 text-xs text-neutral-500">
-                Citable dataset ·{' '}
-                <a
-                  href={ZENODO_DOI_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-oxblood hover:underline"
-                >
-                  Zenodo DOI {ZENODO_CONCEPT_DOI}
-                </a>{' '}
-                (CC-BY-4.0)
-              </p>
-            )}
-
-            <div className="mt-6">
-              <HeroSearch bookCount={totalBooks} />
-            </div>
+            {/* The second layer and the citable dataset: for the reader who
+                wants to understand the scale, so after the search, not before. */}
+            <p className="mt-2 text-xs leading-relaxed text-neutral-600">
+              {registerTitles > 0 && (
+                <>
+                  Plus more than <span className="tabular-nums">{roundedThousands(registerTitles)}</span> further titles on
+                  official ban lists, kept as{' '}
+                  <Link href="/registers" className="text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood">
+                    registers
+                  </Link>
+                  .{' '}
+                </>
+              )}
+              {ZENODO_DOI_URL && (
+                <>
+                  Citable dataset:{' '}
+                  <a href={ZENODO_DOI_URL} target="_blank" rel="noopener noreferrer" className="text-oxblood hover:underline">
+                    Zenodo DOI {ZENODO_CONCEPT_DOI}
+                  </a>{' '}
+                  (CC-BY-4.0).
+                </>
+              )}
+            </p>
           </div>
 
           {/* The rail. Its top edge lines up with the rule above the stats.

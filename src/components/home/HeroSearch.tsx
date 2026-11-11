@@ -6,7 +6,7 @@ import Link from '@/components/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function HeroSearch({ bookCount }: { bookCount: number }) {
+export default function HeroSearch() {
   const router = useRouter()
   const [q, setQ] = useState('')
 
@@ -29,25 +29,33 @@ export default function HeroSearch({ bookCount }: { bookCount: number }) {
           type="search"
           value={q}
           onChange={e => setQ(e.target.value)}
-          placeholder={`Search ${bookCount.toLocaleString('en')} banned books, authors, or countries…`}
+          placeholder="Search books or authors"
           aria-label="Search banned books"
           className="w-full h-12 pl-11 pr-4 rounded-md bg-white border border-[#1a1a1a] text-base text-neutral-900 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-oxblood/40 focus:border-oxblood"
         />
       </form>
 
-      <div className="mt-3 text-sm">
-        <Link href="/top-100-banned-books" className="text-neutral-600 hover:text-oxblood transition-colors">
-          Top 100 banned books →
-        </Link>
-        <span className="text-neutral-400 mx-2" aria-hidden="true">·</span>
-        <Link href="/countries" className="text-neutral-600 hover:text-oxblood transition-colors">
-          By country →
-        </Link>
-        <span className="text-neutral-400 mx-2" aria-hidden="true">·</span>
-        <Link href="/reasons" className="text-neutral-600 hover:text-oxblood transition-colors">
-          By reason →
-        </Link>
-      </div>
+      {/* The field searches books and authors; a country typed here finds no
+          books (the reviewer tried "Netherlands" and got zero results), so the
+          placeholder promises no more than that and "Explore by country" sits
+          directly under it. Routes into the rest of the site: a new visitor should see at once
+          that this is more than a catalogue. Wraps to two lines on a phone. */}
+      <nav aria-label="Explore the archive" className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm">
+        {[
+          { href: '/countries', label: 'Explore by country' },
+          { href: '/top-100-banned-books', label: 'Top 100 banned books' },
+          { href: '/essays', label: 'Stories and essays' },
+          { href: '/reading-club', label: 'Reading club' },
+        ].map(l => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className="font-medium text-oxblood underline decoration-oxblood/30 underline-offset-2 hover:decoration-oxblood"
+          >
+            {l.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }
