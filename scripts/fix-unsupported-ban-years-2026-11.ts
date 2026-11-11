@@ -36,6 +36,17 @@
  *      - books.description_ban (generated, asserts 1942 and "due to its
  *        political content") → NULL, so the page shows the recorded note
  *
+ * 3. Generated texts that restate a removed year. On 14 of the corrected books
+ *    a generated text opens with the publication year as the year of a
+ *    challenge ("In 1972, Julie of the Wolves was challenged in various school
+ *    districts…"). They were read one by one. The text stays in the database;
+ *    its status takes it off the page:
+ *      - 3 ban texts → description_ban_status 'auto_rejected_low_quality'
+ *      - 11 censorship histories → censorship_context_status 'insufficient_evidence'
+ *
+ * After --apply the touched book pages are busted (7-day ISR + Cloudflare edge),
+ * or the page keeps showing the old year.
+ *
  * Idempotent. Writes a backup of every touched value to data/ on --apply.
  *
  *   pnpm tsx --env-file=.env.local scripts/fix-unsupported-ban-years-2026-11.ts          # dry-run
@@ -44,6 +55,7 @@
 import { writeFileSync } from 'node:fs'
 import { newPgClient } from '../src/lib/wikipedia/importer'
 import { isApply } from './lib/cli'
+import { bustChangedPages } from './lib/revalidate'
 
 const APPLY = isApply()
 const WIKI_SOURCE_ID = 825
@@ -55,6 +67,10 @@ const REVIEWED_PUBLICATION_YEARS: Record<number, string> = {
   4997: '1958', 4998: '2015', 4999: '1994', 5004: '2001–present', 5946: '1997–2000',
   4931: '1991', 4951: '1993', 4964: '1974–1989', 4969: '1972', 5893: '2005–2021', 5908: '2004–2019',
 }
+// Book ids whose generated text states the removed publication year as the
+// year of a challenge (reviewed 2026-11-11).
+const BAN_TEXT_RESTATES_YEAR = [6399, 6464, 6481] // Annie on My Mind, Deenie, A Prayer for Owen Meany
+const HISTORY_RESTATES_YEAR = [6481, 6406, 6468, 6470, 6472, 6479, 6435, 6438, 6415, 6488, 6487]
 // ban id → why the year cannot stand, for rows that are not the publication-year mistake.
 const REVIEWED_IMPOSSIBLE_YEARS: Record<number, string> = {
   402: 'ban year 1988 predates publication (1995, per the list and our record)',
@@ -142,6 +158,23 @@ async function main() {
     console.log(`Algemene Staatsleer (ban ${k.id}): year ${k.year_started ?? 'NULL'}${krNeedsYear ? ' → NULL' : ' (already NULL)'}`)
     console.log(`  note ${krNeedsNote ? 'replaced' : 'already replaced'}; generated ban text ${krNeedsText ? '→ NULL' : 'already NULL'}; reasons → inferred: ${krReasonsToInfer.map(r => r.slug).join(', ') || 'none'}`)
 
+    // ── 3. Generated texts that restate a removed year ───────────────────────
+    const { rows: texts } = await pg.query<{ id: number; slug: string; description_ban_status: string | null; censorship_context_status: string | null }>(
+      `select id, slug, description_ban_status, censorship_context_status from books where id = any($1::bigint[])`,
+      [[...new Set([...BAN_TEXT_RESTATES_YEAR, ...HISTORY_RESTATES_YEAR])]],
+    )
+    const banTextsToReject = texts.filter(t => BAN_TEXT_RESTATES_YEAR.includes(Number(t.id)) && t.description_ban_status !== 'auto_rejected_low_quality')
+    const historiesToReject = texts.filter(t => HISTORY_RESTATES_YEAR.includes(Number(t.id)) && t.censorship_context_status !== 'insufficient_evidence')
+    console.log(`Generated texts restating a removed year: ban texts → rejected: ${banTextsToReject.length}; censorship histories → insufficient_evidence: ${historiesToReject.length}`)
+
+    // Every book page this fix has touched, in this run or an earlier one.
+    const { rows: touched } = await pg.query<{ slug: string }>(
+      `select distinct b.slug from books b join bans bn on bn.book_id = b.id
+        where bn.id = $2 or b.id = any($3::bigint[])
+           or exists (select 1 from ban_source_links l where l.ban_id = bn.id and l.source_id = $1 and bn.year_started is null)`,
+      [WIKI_SOURCE_ID, KRANENBURG_BAN_ID, [...new Set([...BAN_TEXT_RESTATES_YEAR, ...HISTORY_RESTATES_YEAR])]],
+    )
+
     if (!APPLY) {
       await pg.query('ROLLBACK')
       console.log('\nDry-run: nothing written. Re-run with --apply.')
@@ -152,6 +185,7 @@ async function main() {
       at: new Date().toISOString(),
       wikipediaYears: toClear.map(r => ({ ban_id: r.id, year_started: r.year_started })),
       kranenburg: { ban: k, reasons: krReasons },
+      textStatuses: texts,
     }
     const backupPath = `data/fix-unsupported-ban-years-backup-${backup.at.slice(0, 19).replace(/[:T]/g, '-')}.json`
     writeFileSync(backupPath, JSON.stringify(backup, null, 2))
@@ -163,9 +197,20 @@ async function main() {
     )
     const krBasis = await pg.query(`update ban_reason_links set basis = 'inferred' where ban_id = $1 and basis is distinct from 'inferred'`, [KRANENBURG_BAN_ID])
     const krText = await pg.query(`update books set description_ban = null, description_ban_status = null where id = $1 and description_ban is not null`, [k.book_id])
+    const banTexts = await pg.query(
+      `update books set description_ban_status = 'auto_rejected_low_quality' where id = any($1::bigint[]) and description_ban_status is distinct from 'auto_rejected_low_quality'`,
+      [BAN_TEXT_RESTATES_YEAR],
+    )
+    const histories = await pg.query(
+      `update books set censorship_context_status = 'insufficient_evidence' where id = any($1::bigint[]) and censorship_context_status is distinct from 'insufficient_evidence'`,
+      [HISTORY_RESTATES_YEAR],
+    )
     await pg.query('COMMIT')
     console.log(`\nApplied: ${cleared.rowCount} Wikipedia years cleared; Algemene Staatsleer: ${krBan.rowCount} ban row, ${krBasis.rowCount} reason link, ${krText.rowCount} book text.`)
+    console.log(`Generated texts taken off the page: ${banTexts.rowCount} ban texts, ${histories.rowCount} censorship histories.`)
     console.log(`Backup: ${backupPath}`)
+    console.log(`Busting ${touched.length} book pages…`)
+    await bustChangedPages({ bookSlugs: touched.map(t => t.slug), authorSlugs: [] })
   } catch (err) {
     await pg.query('ROLLBACK').catch(() => {})
     throw err
