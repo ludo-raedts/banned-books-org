@@ -57,6 +57,8 @@
  *   npx tsx --env-file=.env.local scripts/verify-censorship-context.ts --ids-file=data/censorship-context-worklist.json --limit=30 --out=sample
  *   Flags: --ids-file= / --ids= (order is kept) · --slugs=a,b · --limit=N · --concurrency=N (default 3)
  *          --out=<tag> · --no-resume · --report-only (rebuild the .md from the JSONL)
+ *          --with-ban-text (also check the claims of the hidden generated ban text, and take books that
+ *          have such a ban text but no history; the sourced result is stored as the history)
  *          --recheck (also take texts that already carry a verdict in censorship_context_checked_at;
  *          by default those are skipped, as are source_verified and narrative_curated texts)
  *          --firecrawl (re-fetch bot-walled pages via Firecrawl, 1 credit each) · --firecrawl-max=N (default 400)
@@ -91,6 +93,10 @@ const NO_RESUME = hasFlag('no-resume')
 const REPORT_ONLY = hasFlag('report-only')
 // A text that already carries a verdict is not checked again unless asked.
 const RECHECK = hasFlag('recheck')
+// Also take the claims of the generated ban text (books.description_ban) as
+// hypotheses, and take books that have a hidden ban text but no history yet.
+// The sourced result is still ONE text per book, stored as the history.
+const WITH_BAN_TEXT = hasFlag('with-ban-text')
 const OUT_TAG = flagValue('out') ?? new Date().toISOString().slice(0, 10)
 // Bot-walled pages (403 on ncac.org, pen.org, …) are re-fetched through
 // Firecrawl only when asked: every call costs a credit.
@@ -129,7 +135,8 @@ type Book = {
   title: string
   first_published_year: number | null
   description_ban: string | null
-  censorship_context: string
+  description_ban_status: string | null
+  censorship_context: string | null
   censorship_context_status: string | null
   censorship_context_checked_at: string | null
   book_authors: Array<{ authors: { display_name: string } | null }>
@@ -156,6 +163,8 @@ type RunRow = {
   outcome: Outcome
   reason: string
   oldText: string
+  /** The hidden ban text whose claims were checked along with the history (--with-ban-text). */
+  banText?: string | null
   newText: string | null
   sentences: Sentence[]
   quotes: Quote[]
@@ -269,6 +278,23 @@ function banNotes(b: Book): string {
   return out.join('\n')
 }
 
+// The generated ban texts that are off the page (1b3a641): shown only once
+// 'human_curated'; 'auto_rejected_low_quality' never was.
+function hiddenBanText(b: Book): string | null {
+  const t = b.description_ban?.trim()
+  if (!t) return null
+  return b.description_ban_status == null || b.description_ban_status === 'auto_accepted' ? t : null
+}
+
+/** The paragraphs whose claims are put to the sources. */
+function hypotheses(b: Book): string {
+  const parts: string[] = []
+  if (b.censorship_context?.trim()) parts.push(b.censorship_context.trim())
+  const ban = WITH_BAN_TEXT ? hiddenBanText(b) : null
+  if (ban) parts.push(ban)
+  return parts.join('\n\n')
+}
+
 // ── Step 1: claims ──────────────────────────────────────────────────────
 
 const CLAIMS_SYSTEM = `You split a paragraph about the censorship of one book into atomic factual claims that can be checked against a source.
@@ -281,7 +307,7 @@ Return ONLY JSON: {"claims":[{"id":"c1","claim":"…"}]}`
 
 async function extractClaims(b: Book, cost: Cost): Promise<Claim[]> {
   const out = await chatJson(OPENAI_FAST, CLAIMS_SYSTEM,
-    `BOOK: "${b.title}" by ${authorOf(b) || 'unknown author'}\n\nPARAGRAPH:\n${b.censorship_context}`,
+    `BOOK: "${b.title}" by ${authorOf(b) || 'unknown author'}\n\nPARAGRAPH:\n${hypotheses(b)}`,
     700, cost, 'claims')
   const raw = Array.isArray(out.claims) ? out.claims as Array<{ id?: unknown; claim?: unknown }> : []
   return raw
@@ -475,7 +501,7 @@ Rules:
 - Quotes marked "contradicts" disagree with the claim they were found for; they are still evidence of what the page says.
 - If the quotes give conflicting facts about the same event (for example two different years), do not choose between them: return status "conflict" and say what conflicts.
 - If the quotes do not establish at least one concrete censorship event for this book (who or where, and when), return status "insufficient".
-- Refer to the book by its title. Do not mention sources, quotes or pages in the text.
+- Refer to the book by its title. Do not mention sources, quotes or pages in the text, and never say what they leave out ("the account gave no date"): if something is not stated, write nothing about it.
 
 For each sentence also list the censorship events it asserts: country (the two-letter code from COUNTRIES IN OUR RECORDS when it is one of them, otherwise the English country name, or null), year (number or null), type ("ban", "challenge", "lift" or "other").
 
@@ -534,7 +560,7 @@ ${sentences.map((s, i) => `${i + 1}. ${s.text}\n${s.quoteIds.map(id => { const q
 OUR RECORDS
 Ban rows:
 ${banSummary(b) || '(none)'}
-Ban text: ${b.description_ban?.trim() || '(none)'}
+Ban text: ${b.description_ban_status === 'human_curated' ? b.description_ban?.trim() || '(none)' : '(none)'}
 Row notes:
 ${banNotes(b) || '(none)'}`
   const out = await chatJson(OPENAI_STRONG, CHECK_SYSTEM, user, 900, cost, 'check')
@@ -599,7 +625,8 @@ async function verifyBook(b: Book): Promise<RunRow> {
   const author = authorOf(b)
   const row: RunRow = {
     id: b.id, slug: b.slug, title: b.title, author, prevStatus: b.censorship_context_status,
-    outcome: 'error', reason: '', oldText: b.censorship_context, newText: null,
+    outcome: 'error', reason: '', oldText: b.censorship_context ?? '',
+    banText: WITH_BAN_TEXT ? hiddenBanText(b) : undefined, newText: null,
     sentences: [], quotes: [], claims: [], claimsSupported: 0,
     sourcesReturned: 0, sourcesDropped: [], pagesFetched: 0, quotesRejected: 0,
     droppedSentences: [], recordConflicts: [], notInRecords: [],
@@ -704,7 +731,7 @@ async function verifyBook(b: Book): Promise<RunRow> {
 
 // ── Load ────────────────────────────────────────────────────────────────
 
-const SELECT = `id, slug, title, first_published_year, description_ban, censorship_context, censorship_context_status, censorship_context_checked_at,
+const SELECT = `id, slug, title, first_published_year, description_ban, description_ban_status, censorship_context, censorship_context_status, censorship_context_checked_at,
   book_authors(authors(display_name)),
   bans(id, country_code, scope_id, action_type, status, region, institution, year_started, year_ended, description,
     countries(name_en), scopes(label_en))`
@@ -716,12 +743,12 @@ async function loadBooks(): Promise<Book[]> {
   const sb = adminClient()
   const out: Book[] = []
   if (SLUGS?.length) {
-    const { data, error } = await sb.from('books').select(SELECT).in('slug', SLUGS).not('censorship_context', 'is', null)
+    const { data, error } = await sb.from('books').select(SELECT).in('slug', SLUGS)
     if (error) throw new Error(`DB read: ${error.message}`)
     out.push(...(data as unknown as Book[]))
   } else if (IDS) {
     for (const chunk of idChunks(IDS, 100)) {
-      const { data, error } = await sb.from('books').select(SELECT).in('id', chunk!).not('censorship_context', 'is', null)
+      const { data, error } = await sb.from('books').select(SELECT).in('id', chunk!)
       if (error) throw new Error(`DB read: ${error.message}`)
       out.push(...(data as unknown as Book[]))
     }
@@ -736,7 +763,8 @@ async function loadBooks(): Promise<Book[]> {
       if (!data || data.length < 500) break
     }
   }
-  return out.filter(b => !DONE_STATUSES.has(b.censorship_context_status ?? '')
+  return out.filter(b => hypotheses(b).length > 0
+    && !DONE_STATUSES.has(b.censorship_context_status ?? '')
     && (RECHECK || SLUGS?.length || !b.censorship_context_checked_at))
 }
 
@@ -777,7 +805,7 @@ async function applyRow(r: RunRow): Promise<{ result: ApplyResult; why: string }
     if (!r.newText || sources.length === 0) return { result: 'skipped', why: 'approved row has no text or no sources' }
     const { error: ue } = await sb.from('books').update({
       censorship_context: r.newText,
-      censorship_context_unsourced: r.oldText,
+      censorship_context_unsourced: r.oldText || null,
       censorship_context_sources: sources,
       censorship_context_status: 'source_verified',
       censorship_context_checked_at: r.ts,
@@ -812,7 +840,8 @@ function writeReport(rows: RunRow[], reportPath: string) {
     L.push(`## ${title} (${rs.length})`, '')
     for (const r of rs) {
       L.push(`### ${r.title} — ${r.author || 'unknown'} · \`${r.slug}\` · ${r.outcome}`, '')
-      L.push(`**Old (unsourced):** ${r.oldText}`, '')
+      if (r.oldText) L.push(`**Old (unsourced):** ${r.oldText}`, '')
+      if (r.banText) L.push(`**Hidden ban text (claims also checked):** ${r.banText}`, '')
       if (r.newText) L.push(`**New (sourced):** ${r.newText}`, '')
       L.push(`**Why:** ${r.reason}`, '')
       L.push(`Old claims: ${r.claims.length} · supported verbatim: ${r.claimsSupported} · partial: ${r.claims.filter(c => c.stance === 'partial').length} · contradicted: ${r.claims.filter(c => c.stance === 'contradicts').length} · pages read: ${r.pagesFetched} · quotes not on page: ${r.quotesRejected}`, '')

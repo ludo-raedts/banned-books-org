@@ -37,6 +37,12 @@ const DENY_HOST_SUFFIXES = [
   'scribd.com', 'prezi.com', 'slideshare.net', 'quizlet.com', 'answers.com',
   'fandom.com', 'wikiwand.com', 'alchetron.com', 'everybodywiki.com', 'kiddle.co',
   'dbpedia.org', 'wikimili.com', 'grokipedia.com',
+  // Asset CDNs and site builders: the link label would be a host with no
+  // identifiable publisher ("bloximages.newyork1.vip.townnews.com"). Found in
+  // the 2026-11-11 review of the top-300 batch.
+  'townnews.com', 'arcpublishing.com', 'contentstack.io', 'cloudfront.net', 'amazonaws.com',
+  'googleusercontent.com', 'storage.googleapis.com', 'sites.google.com', 'github.io',
+  'squarespace.com', 'wixsite.com', 'weebly.com', 'webflow.io', 'netlify.app', 'vercel.app',
 ]
 
 export type SourceTier = 'institutional' | 'reference' | 'other'
@@ -251,12 +257,18 @@ export interface GroundingInput {
   allowWords: string[]
   /** The book's title, removed before the number scan ("1984", "Fahrenheit 451"). */
   title?: string
+  /** Run the name check even when the evidence is not English prose (a records blob). */
+  forceNameCheck?: boolean
 }
 
 // A sentence that dates an event relative to "now" cannot be published: the
 // quote's "last year" is relative to the day the source was written, and
 // "remains banned" was true on that day only.
 const RELATIVE_TIME_RE = /\b(?:(?:last|this|next|past) (?:year|month|week|decade|century|spring|summer|fall|autumn|winter)|recently|currently|nowadays|today|yesterday|to date|so far|at present|years? ago|months? ago|remains?|(?:is|are|has been|have been) still|as of (?:now|today|this writing))\b/i
+
+// A sentence about the evidence instead of the event ("the quoted account did
+// not state its grounds") is the composer talking to us, not history.
+const META_RE = /\b(?:the (?:quoted |cited )?(?:account|quotes?|sources?|passages?) (?:did|does|do|gave|gives|give|said|says|say)\b|(?:did|does) not (?:state|identify|specify|say|mention|date|give) )/i
 
 /** Share of very common English words — enough to tell an English page from a French or German one. */
 export function looksEnglish(text: string): boolean {
@@ -271,6 +283,7 @@ export function looksEnglish(text: string): boolean {
  * Problems that make a rewritten sentence unpublishable regardless of what a
  * model says about it:
  *   relative:<p> a time expression relative to "now" ("last year", "remains")
+ *   meta:<p>    a remark about the evidence rather than the event
  *   number:<n>  a year or other number that is not in the cited quotes
  *   name:<w>    a capitalised word (not sentence-initial, not the book's own
  *               title/author) that occurs nowhere on the cited pages
@@ -283,6 +296,8 @@ export function sentenceGroundingProblems(input: GroundingInput): string[] {
   const problems: string[] = []
   const rel = input.sentence.match(RELATIVE_TIME_RE)
   if (rel) problems.push(`relative:${rel[0]}`)
+  const meta = input.sentence.match(META_RE)
+  if (meta) problems.push(`meta:${meta[0].trim()}`)
 
   const quoteText = normForMatch(input.quotes.join(' \n '))
   const quoteDigits = quoteText.replace(/(\d)[,.](?=\d{3}\b)/g, '$1')
@@ -295,7 +310,7 @@ export function sentenceGroundingProblems(input: GroundingInput): string[] {
     if (!re.test(quoteDigits)) problems.push(`number:${n}`)
   }
 
-  if (!input.pageTexts.every(looksEnglish)) return problems
+  if (!input.forceNameCheck && !input.pageTexts.every(looksEnglish)) return problems
 
   const allow = new Set(input.allowWords.flatMap(wordTokens))
   const pageWords = new Set(input.pageTexts.flatMap(wordTokens))

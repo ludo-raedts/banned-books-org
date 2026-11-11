@@ -28,6 +28,8 @@ describe('source policy', () => {
     expect(isDeniedSource('https://old.reddit.com/r/books/x')).toBe(true)
     expect(isDeniedSource('https://www.gradesaver.com/1984')).toBe(true)
     expect(isDeniedSource('https://www.ala.org/bbooks')).toBe(false)
+    expect(isDeniedSource('https://bloximages.newyork1.vip.townnews.com/x/list.html')).toBe(true)
+    expect(isDeniedSource('https://decagon-blackbird-pwm2.squarespace.com/news')).toBe(true)
   })
   it('tiers hosts', () => {
     expect(sourceTier('https://www.marshall.edu/library/bannedbooks/')).toBe('institutional')
@@ -53,6 +55,18 @@ describe('sentenceGroundingProblems', () => {
     expect(sentenceGroundingProblems({ ...base, sentence: '1984 was challenged last year.' })).toContain('relative:last year')
     expect(sentenceGroundingProblems({ ...base, sentence: '1984 remains banned in the Soviet Union.' })).toContain('relative:remains')
     expect(sentenceGroundingProblems({ ...base, sentence: '1984 remained banned in the Soviet Union until 1988.' })).toEqual([])
+  })
+})
+
+describe('sentenceGroundingProblems — remarks about the evidence', () => {
+  const quotes = ['The Challenge Oversight Committee also banned Ready Player One, the wildly popular science fiction novel.']
+  const base = { quotes, pageTexts: quotes, allowWords: ['Ready Player One'], title: 'Ready Player One' }
+  it('flags a sentence that talks about what the quotes leave out', () => {
+    expect(sentenceGroundingProblems({ ...base, sentence: 'The Challenge Oversight Committee banned Ready Player One; the quoted account did not state its grounds.' })
+      .some(p => p.startsWith('meta:'))).toBe(true)
+  })
+  it('leaves a plain statement alone', () => {
+    expect(sentenceGroundingProblems({ ...base, sentence: 'The Challenge Oversight Committee banned Ready Player One.' })).toEqual([])
   })
 })
 

@@ -230,3 +230,4 @@ data/index-1877/
 # Source-verification checkpoints for censorship_context (verify-censorship-context.ts):
 # per-book verdicts incl. page quotes; the .md report beside each is the reviewable form.
 /data/censorship-context-verify-*.jsonl
+/data/ban-text-records-*.jsonl
