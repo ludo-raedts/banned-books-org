@@ -226,3 +226,7 @@ data/index-1877/
 
 # SBZ register raw source + stage-0 (polunbi.de transcription)
 /data/sbz/
+
+# Source-verification checkpoints for censorship_context (verify-censorship-context.ts):
+# per-book verdicts incl. page quotes; the .md report beside each is the reviewable form.
+/data/censorship-context-verify-*.jsonl

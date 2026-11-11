@@ -231,7 +231,8 @@ const isBlockedSlug = cache(async (slug: string): Promise<boolean> => {
 const BOOK_DETAIL_SELECT = `
   id, title, slug, cover_url, description_book, description_ban, description_ban_status,
   description_source_url, description_source_type,
-  censorship_context, censorship_context_status, first_published_year, genres, gutenberg_id, isbn13,
+  censorship_context, censorship_context_status, censorship_context_sources,
+  first_published_year, genres, gutenberg_id, isbn13,
   bookshop_status, bookshop_isbn13, kobo_url, archive_org_id, archive_org_status,
   warning_level, inclusion_rationale, extended_context,
   is_gated, gating_country, is_blanket_works,
@@ -668,6 +669,9 @@ type BookDetail = {
     | null
   censorship_context: string | null
   censorship_context_status: string | null
+  // Set with status 'source_verified': the pages and verbatim passages the
+  // text rests on (scripts/verify-censorship-context.ts).
+  censorship_context_sources: Array<{ url: string; title: string | null; quote: string }> | null
   first_published_year: number | null
   genres: string[]
   gutenberg_id: number | null
@@ -695,6 +699,11 @@ type BookDetail = {
   book_themes?: { theme: string }[]
   book_authors: { authors: { display_name: string; slug: string | null; awards: unknown } | null }[]
   bans: Ban[]
+}
+
+/** Host of a source URL as a link label: "www.ala.org" → "ala.org". */
+function sourceHost(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url }
 }
 
 function authorName(book: BookDetail): string {
@@ -991,10 +1000,15 @@ export default async function BookPage({
   // imports they are templated one-liners (4,666 of 4,773 Index titles), not a
   // story. Count 2026-11-10: ~2,860 of ~20k context-matched books move.
   //
-  // The censorship history (censorship_context) is LLM-written and carries no
-  // source. How much of it a reader gets (UX review 2026-11-11):
-  //   'open'   — a human wrote or vetted it ('narrative_curated'): it reads on
-  //              as part of the answer.
+  // The censorship history (censorship_context) is LLM-written. How much of
+  // it a reader gets (UX review 2026-11-11):
+  //   'open'   — a human wrote or vetted it ('narrative_curated'), or the
+  //              verification pass rewrote it from cited pages
+  //              ('source_verified': every sentence matched to a passage that
+  //              occurs literally on a page in censorship_context_sources, and
+  //              checked against this book's ban rows and ban text). It reads
+  //              on as part of the answer — also next to a ban text, which the
+  //              unvetted text may not — and a sourced text names its sources.
   //   'folded' — unvetted, and the page has no ban text of its own beside it:
   //              kept, but behind a labelled disclosure AFTER the recorded
   //              facts, never as the lead.
@@ -1006,9 +1020,15 @@ export default async function BookPage({
   const historyIsCurated = book.censorship_context_status === 'narrative_curated'
   const historyIsRejected = book.censorship_context_status === 'insufficient_evidence'
     || book.censorship_context_status === 'auto_rejected_low_groundedness'
+  // One link per cited page, in the order the text uses them.
+  const historySources = book.censorship_context_status === 'source_verified'
+    ? (book.censorship_context_sources ?? []).filter(src => /^https?:\/\//.test(src.url))
+    : []
+  const historySourcePages = [...new Map(historySources.map(src => [src.url, src])).values()]
+  const historyIsSourced = historySourcePages.length > 0
   const historyMode: 'open' | 'folded' | null =
     !isContextAdditive(book.description_ban, book.censorship_context) ? null
-      : historyIsCurated ? 'open'
+      : historyIsCurated || historyIsSourced ? 'open'
         : historyIsRejected || banDescription ? null
           : 'folded'
   const contextAfterBans = (!!banDescription || historyMode !== null) && sortedBans.length > 0
@@ -1758,7 +1778,48 @@ export default async function BookPage({
         // on in the open; unvetted text sits behind a disclosure that says what
         // it is before the reader opens it. It always follows the recorded
         // facts — it used to lead when the page had only a row summary.
-        const history = historyMode === 'open' ? (
+        const history = historyMode === 'open' && historyIsSourced ? (
+          <div>
+            <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
+            <p className="mt-1.5 text-xs text-gray-500">
+              Sources:{' '}
+              {historySourcePages.map((src, i) => (
+                <React.Fragment key={src.url}>
+                  {i > 0 && ' · '}
+                  <a
+                    href={src.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline underline-offset-2 decoration-blue-600/30"
+                  >
+                    {sourceHost(src.url)}<span aria-hidden="true">{'\u00a0'}↗</span>
+                  </a>
+                </React.Fragment>
+              ))}
+              . Summary written by AI from these sources; every sentence was matched to a passage on the cited page.
+            </p>
+            {/* The passages themselves, so a reader can check a sentence
+                without hunting through the source. */}
+            <details className="group mt-1.5">
+              <summary className="cursor-pointer list-none text-xs [&::-webkit-details-marker]:hidden">
+                <span className="text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:hidden">
+                  Show the cited passages
+                </span>
+                <span className="hidden text-oxblood underline underline-offset-2 decoration-oxblood/30 group-open:inline">
+                  Hide the cited passages
+                </span>
+              </summary>
+              <ul className="mt-2 space-y-2">
+                {historySources.map((src, i) => (
+                  <li key={i} className="border-l-2 border-red-200 pl-3 text-xs text-gray-600">
+                    <q className="whitespace-pre-line">{src.quote}</q>
+                    <span className="text-gray-500"> — {sourceHost(src.url)}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </div>
+        ) : historyMode === 'open' ? (
           <p className="text-gray-700 leading-relaxed">{book.censorship_context}</p>
         ) : historyMode === 'folded' ? (
           <details className="group">
