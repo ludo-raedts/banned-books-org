@@ -1,4 +1,5 @@
 import Link from '@/components/link'
+import SupportCardView from '@/components/support-card-view'
 import SupportCheckoutLink from '@/components/support-checkout-link'
 
 // A quiet, in-page ask for the one-off $5 contribution, shown at the END of a
@@ -13,6 +14,7 @@ export default function SupportCard({ placement }: { placement: string }) {
       aria-labelledby="support-card-title"
       className="mb-10 rounded-xl border border-gray-200 bg-white px-5 py-5"
     >
+      <SupportCardView placement={placement} />
       <h2 id="support-card-title" className="font-serif text-xl font-semibold text-gray-900">
         Help keep this archive open
       </h2>
