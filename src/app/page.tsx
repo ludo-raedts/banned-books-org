@@ -18,7 +18,7 @@ import {
   authorNameOf,
   banContext,
   isNonEnglish,
-  langContext,
+  langName,
   toBookCard,
 } from '@/lib/top-list-data'
 import type { TopListBook, TopListAuthor } from '@/components/top-list-card'
@@ -343,7 +343,13 @@ export default async function HomePage() {
   // own cover-valid top-N pool with a stable per-day seed and per-reason
   // salt; later reasons in the loop see books already chosen by earlier
   // reasons in `excludeIds` and skip them.
+  // One reason is featured with a row of covers, the other four are links only.
+  // Weekly rotation: the covers within the featured row still rotate daily.
+  const featuredReason = REASON_SLUGS[Math.floor(seed / 7) % REASON_SLUGS.length]
   const reasonBlocks = REASON_SLUGS.map(slug => {
+    if (slug !== featuredReason) {
+      return { reasonSlug: slug, reasonLabel: reasonLabel(slug) ?? slug, books: [] as TopListBook[] }
+    }
     const rankedIds = reasonRankedBookIds.get(slug) ?? []
     const pool = rankedIds
       .map(id => bookById.get(id))
@@ -351,7 +357,7 @@ export default async function HomePage() {
       .filter(b => b.cover_status === 'valid')
     const picked = selectRotatingBooks({
       pool,
-      count: 3,
+      count: 6,
       seed,
       reasonOffset: hashReasonSlug(slug),
       excludeIds,
@@ -380,14 +386,20 @@ export default async function HomePage() {
     .slice(0, 30)
   const nonEnglishRotated = selectRotatingBooks({
     pool: nonEnglishPool,
-    count: 10,
+    count: 14,
     seed,
     reasonOffset: hashReasonSlug('non-english'),
     excludeIds,
   })
-  const nonEnglishPicked = selectWithLanguageDiversity(nonEnglishRotated, 3)
+  const nonEnglishPicked = selectWithLanguageDiversity(nonEnglishRotated, 6)
   nonEnglishPicked.forEach(b => excludeIds.add(b.id))
-  const nonEnglishBooks: TopListBook[] = nonEnglishPicked.map(b => toBookCard(b, langContext(b)))
+  // "Originally in French · 8 countries": the language is the work's original
+  // one, not the edition on the cover.
+  const nonEnglishBooks: TopListBook[] = nonEnglishPicked.map(b => {
+    const lang = langName(b.original_language)
+    const ban = banContext(b)
+    return toBookCard(b, lang ? (ban ? `Originally in ${lang} · ${ban}` : `Originally in ${lang}`) : ban)
+  })
 
   const countryCount = siteTotals.countries
   const countryNameMap = new Map(
@@ -513,10 +525,12 @@ export default async function HomePage() {
       <StartHereSection />
       <HappeningNowSection />
       <TrendingSection books={trendingBooks} />
+      {/* Order follows the external review (2026-11-11): the reasons and the
+          non-English selection no longer wait behind three long book lists. */}
+      <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} featuredSlug={featuredReason} />
+      <NonEnglishSection books={nonEnglishBooks} />
       <MostBannedAuthorsSection authors={bannedAuthors} />
       <RisingSection books={risingBooks} />
-      <WhyBooksGetBannedSection blocks={reasonBlocksWithDesc} />
-      <NonEnglishSection books={nonEnglishBooks} />
       <FaqSection items={faqItems} />
       <FinalCtaSection totalBooks={total} />
     </main>
