@@ -43,7 +43,11 @@ export default function BookCardCompact({
         )}
       </div>
       <div className={`flex-1 min-w-0 ${dense ? 'mt-2' : 'mt-3'}`}>
-        <h3 className="book-title font-serif text-sm font-semibold leading-snug text-gray-900 line-clamp-2">
+        {/* Dense rows: reserve two lines for the title, so a long title in one
+            card does not push its author and counts below those of its
+            neighbours (the row read as ragged). A one-line title leaves a
+            short gap instead. */}
+        <h3 className={`book-title font-serif text-sm font-semibold leading-snug text-gray-900 line-clamp-2 ${dense ? 'min-h-[2.75em]' : ''}`}>
           {book.title}
         </h3>
         {nativeTitle && (
