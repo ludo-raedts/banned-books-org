@@ -766,6 +766,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
               ) : (
                 <>{countryCount} countries</>
               )}
+              {/* A jump to the list itself: the page opens with biography and
+                  timeline, and the books were far down (UX review step 12). */}
+              <a
+                href="#author-books"
+                className="ml-3 whitespace-nowrap text-sm font-normal text-oxblood underline underline-offset-4 decoration-oxblood/30 hover:decoration-oxblood"
+              >
+                See the {realBooks.length === 1 ? 'documented book' : `${realBooks.length} documented books`}<span aria-hidden="true">{'\u00a0'}↓</span>
+              </a>
             </p>
           ) : blanketWorks.length > 0 && countryCount > 0 ? (
             <p className="text-base sm:text-lg font-medium text-oxblood/90 leading-snug">
@@ -1020,7 +1028,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
         )
       ) : (
         <>
-        <h2 className="text-lg font-semibold mb-4">
+        <h2 id="author-books" className="scroll-mt-20 text-lg font-semibold mb-4">
           Banned books by {a.display_name}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">

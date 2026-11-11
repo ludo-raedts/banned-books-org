@@ -41,6 +41,8 @@ const LANG_FIXES: Array<{ id: number; slug: string; from: string; to: string; wh
     why: 'Inti Chavez Perez is Swedish; original "Respekt" published in Sweden (2010), English is a translation.' },
   { id: 0 /* id resolved by slug */, slug: 'buttons-and-lace-her-debt-his-desire', from: 'ro', to: 'en',
     why: 'Penelope Sky writes in English (Barsetti Crime Family series); English original.' },
+  { id: 7662, slug: 'the-pearl', from: 'es', to: 'en',
+    why: 'John Steinbeck is American; The Pearl (1947) was written in English. The Spanish "La perla" is a translation (found on the homepage non-English block, 2026-11-11).' },
 ]
 
 // title_native garbage: original_language is CORRECT but title_native holds a
@@ -51,6 +53,8 @@ const NATIVE_NULLS: Array<{ slug: string; badNative: string; why: string }> = [
     why: 'original_language he is correct (Harari wrote Sapiens in Hebrew, 2011); title_native was vandalism/garbage, not the Hebrew title.' },
   { slug: 'my-gun-is-quick', badNative: 'Мой револьвер быстр',
     why: 'English original (lang fixed ru→en above); the Russian value was a translated title misplaced in the native-title field.' },
+  { slug: 'the-pearl', badNative: 'La perla',
+    why: 'English original (lang fixed es→en above); "La perla" is the Spanish translation title, not the native title.' },
 ]
 
 async function main() {

@@ -424,6 +424,10 @@ export default async function ReasonPage({
                 </div>
               ))}
             </div>
+            {/* The two big numbers count different things; say so (UX review step 12). */}
+            <p className="mt-2 text-xs text-neutral-600">
+              The book figures count distinct titles. Events count every recorded ban, so one book can have several.
+            </p>
 
             {reasonLead && bookCount > 0 && (
               <p className="mt-6 font-serif text-lg md:text-xl leading-relaxed text-gray-900">

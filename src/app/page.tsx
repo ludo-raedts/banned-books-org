@@ -359,7 +359,7 @@ export default async function HomePage() {
         display_name: a.display_name,
         slug: a.slug,
         photo_url: a.photo_url,
-        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned${eventsTail}`,
+        context: `${banBooks} ${banBooks === 1 ? 'book' : 'books'} banned or challenged${eventsTail}`,
       }
     })
     .filter((a): a is TopListAuthor => a !== null)
