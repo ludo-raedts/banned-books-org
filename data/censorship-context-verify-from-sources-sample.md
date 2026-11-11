@@ -1,6 +1,6 @@
 # Censorship-context source verification — from-sources-sample
 
-15 books · dry-run (no database writes) · cost $0.86 ($0.057/book, 65 web searches)
+15 books · **APPLIED** · cost $0.86 ($0.057/book, 65 web searches)
 
 insufficient: **5** · record_conflict: **4** · no_quotes: **2** · verified_additions: **2** · no_sources: **1** · verified: **1**
 
