@@ -50,7 +50,7 @@ ${stats.registerTitles > 0 ? `- ${n(stats.registerTitles)} further titles on off
 
 ## What counts as a ban
 
-We use "ban" as a broad umbrella for three related phenomena. A **formal ban** is a legal prohibition: a government law or court order that makes possessing or distributing a book a criminal act. A **restriction** is an institutional removal — a school district pulling a title from its library, a prison service blocking access, a public library system withdrawing a book under political pressure. A **challenge** is a documented formal complaint that resulted in removal or restriction, typically reported through PEN America or the American Library Association.
+We use "ban" as a broad umbrella for three related phenomena. A **ban** removes a book from access: a government law or court order that makes possessing or distributing it a criminal act, or an institution such as a school district pulling it from its library (this is how PEN America records most U.S. school removals, and we keep its wording). A **restriction** limits access without removing the book outright, or removes it pending a review — for example a prison service blocking access, a public library system withdrawing a book under political pressure. A **challenge** is a documented formal complaint that resulted in removal or restriction, typically reported through PEN America or the American Library Association.
 
 We do not record unsuccessful challenges (complaints that were rejected), informal social pressure, or self-censorship by publishers. Every entry requires a verifiable source: a court judgment, a government decree, a news report, a PEN America data export, or an ALA challenged books report. Entries without sources are not published.
 

@@ -981,6 +981,15 @@ export default async function BookPage({
   }
   const foldedClusters = banClusters.slice(shownClusterCount)
   const foldedCountries = [...new Set(foldedClusters.map(c => c.country_name))]
+  // Say which years sit behind the button: entries run oldest first, so a
+  // reader who does not expand would otherwise miss the most recent ones
+  // (reviewer, 2026-11-11).
+  const foldedYears = foldedClusters.map(c => c.year_started).filter((y): y is number => y != null)
+  const foldedYearRange = foldedYears.length === 0
+    ? ''
+    : Math.min(...foldedYears) === Math.max(...foldedYears)
+      ? ` · ${Math.min(...foldedYears)}`
+      : ` · ${Math.min(...foldedYears)}–${Math.max(...foldedYears)}`
   // The hint names what is behind the fold; pointless on a one-country book.
   const foldedHint = foldedCountries.length === 0 || new Set(banClusters.map(c => c.country_name)).size === 1
     ? undefined
@@ -2016,7 +2025,7 @@ export default async function BookPage({
           <CollapsibleRows
             hiddenCount={foldedClusters.length}
             hiddenHint={foldedHint}
-            showLabel={`Show ${foldedClusters.length} more ${foldedClusters.length === 1 ? 'entry' : 'entries'}`}
+            showLabel={`Show ${foldedClusters.length} more ${foldedClusters.length === 1 ? 'entry' : 'entries'}${foldedYearRange}`}
           >
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
@@ -2233,10 +2242,10 @@ export default async function BookPage({
               where the actions appear (and consistent with /about + /challenged-books). */}
           <dl className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-500">
             <div className="flex items-center gap-1.5">
-              <BanActionBadge action="banned" /> <span>legal prohibition</span>
+              <BanActionBadge action="banned" /> <span>removed from access (by law, or by a school or library)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <BanActionBadge action="restricted" /> <span>institutional removal (school, library, prison)</span>
+              <BanActionBadge action="restricted" /> <span>access limited, or removal pending review</span>
             </div>
             <div className="flex items-center gap-1.5">
               <BanActionBadge action="challenged" /> <span>formal complaint that led to removal</span>

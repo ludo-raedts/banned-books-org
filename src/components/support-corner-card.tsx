@@ -24,7 +24,10 @@ const VISIBLE_DELAY_MS = 30_000
 const SCROLL_SHARE = 0.5
 const SNOOZE_MS = 30 * 24 * 60 * 60 * 1000
 const STORAGE_KEY = `bb_support_corner_${CAMPAIGN_ID}`
-const DESKTOP_QUERY = '(min-width: 1024px) and (hover: hover)'
+// 1280 and up: below that the card would sit over the reading column (reviewer,
+// 2026-11-11, saw it cover background text at 1280 wide, so it is also smaller
+// and lower than first built).
+const DESKTOP_QUERY = '(min-width: 1280px) and (hover: hover)'
 
 const CHECKOUT_URL = `${SUPPORT_LINK_ONE_OFF}?client_reference_id=card-corner`
 
@@ -122,9 +125,9 @@ export default function SupportCornerCard() {
   return (
     <aside
       aria-label="Support this project"
-      className="fixed bottom-5 right-5 z-30 hidden w-[300px] motion-safe:animate-fade-in lg:block"
+      className="fixed bottom-3 right-3 z-30 hidden w-[256px] motion-safe:animate-fade-in xl:block"
     >
-      <div className="relative rounded-xl border border-gray-200 bg-white px-5 pb-4 pt-4 shadow-lg">
+      <div className="relative rounded-xl border border-gray-200 bg-white px-4 pb-3.5 pt-3.5 shadow-lg">
         <button
           type="button"
           onClick={dismiss}
@@ -135,9 +138,9 @@ export default function SupportCornerCard() {
             <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
           </svg>
         </button>
-        <p className="pr-6 font-serif text-lg font-semibold leading-snug text-gray-900">Help keep this archive open</p>
-        <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
-          Maintained by one person, with no ads or paywall. A one-time contribution helps cover hosting and data costs.
+        <p className="pr-6 font-serif text-base font-semibold leading-snug text-gray-900">Help keep this archive open</p>
+        <p className="mt-1 text-[13px] leading-snug text-gray-600">
+          Maintained by one person, no ads or paywall. A one-time contribution helps cover hosting and data costs.
         </p>
         <div className="mt-3 flex items-center gap-4">
           <a

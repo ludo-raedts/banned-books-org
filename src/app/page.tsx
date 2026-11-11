@@ -206,9 +206,11 @@ export default async function HomePage() {
     // language-diverse candidates after the cover-valid + dedup filters.
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
     // Materialised view: no guaranteed row order, so rank explicitly. And a
-    // floor of 5 visits: the view itself admits books with 2, where "up from 1
-    // to 3" looks like a trend (UX review 2026-11-11). 24 of the 50 rows clear it.
-    supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').gte('this_week', 5).order('growth', { ascending: false }).limit(10),
+    // floor of 10 visits in the past seven days: the view itself admits books
+    // with 2, where "up from 1 to 3" looks like a trend. The reviewer first took
+    // 5, then asked for 10 as a practical line (2026-11-11); if fewer than six
+    // books clear it the row simply shows fewer, or nothing.
+    supabase.from('mv_top_books_rising').select('entity_id, this_week, prev_week').gte('this_week', 10).order('growth', { ascending: false }).limit(10),
     supabase.from('countries').select('code, name_en'),
     supabase.from('authors').select('id').eq('is_placeholder', true),
     // Pre-aggregated top-N book_ids per reason. Replaced a paginated read of

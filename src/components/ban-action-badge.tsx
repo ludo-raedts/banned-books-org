@@ -5,8 +5,11 @@
 // colours never drift between pages.
 //
 // Definitions mirror the umbrella explained on /about and /challenged-books:
-//   banned     — a legal prohibition (government law or court order)
-//   restricted — an institutional removal (school / library / prison)
+//   banned     — removed from access: by law or court order, or pulled from a
+//                school or library (PEN America's own 'Banned' category covers
+//                the school removals: ~16,900 school rows are 'banned')
+//   restricted — access limited, or removal pending a review (PEN's 'Banned by
+//                Restriction' / 'Pending Investigation'; library and prison cases)
 //   challenged — a formal complaint that resulted in removal or restriction
 //
 // Colour intensity tracks severity and matches the timeline's fill weight
@@ -17,12 +20,12 @@ type ActionMeta = { label: string; definition: string; classes: string }
 const ACTIONS: Record<string, ActionMeta> = {
   banned: {
     label: 'Banned',
-    definition: 'A legal prohibition — a government law or court order.',
+    definition: 'Removed from access — by law or court order, or pulled from a school or library.',
     classes: 'bg-red-100 text-red-700',
   },
   restricted: {
     label: 'Restricted',
-    definition: 'An institutional removal — a school, library, or prison withdrawing access.',
+    definition: 'Access limited, or removal pending a review — by a school, library, or prison.',
     classes: 'bg-amber-100 text-amber-800',
   },
   challenged: {
@@ -33,12 +36,12 @@ const ACTIONS: Record<string, ActionMeta> = {
   // Legacy values that may still appear in old rows — folded onto the canonical three.
   removed: {
     label: 'Restricted',
-    definition: 'An institutional removal — a school, library, or prison withdrawing access.',
+    definition: 'Access limited, or removal pending a review — by a school, library, or prison.',
     classes: 'bg-amber-100 text-amber-800',
   },
   blocked: {
     label: 'Banned',
-    definition: 'A legal prohibition — a government law or court order.',
+    definition: 'Removed from access — by law or court order, or pulled from a school or library.',
     classes: 'bg-red-100 text-red-700',
   },
 }
