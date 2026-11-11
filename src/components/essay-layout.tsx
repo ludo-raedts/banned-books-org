@@ -3,6 +3,7 @@ import PageviewTracker from '@/components/pageview-tracker'
 import type { ReactNode } from 'react'
 import EssayRelatedBooks from './essay-related-books'
 import MoreEssays from './more-essays'
+import SupportCard from './support-card'
 import CitationBlock from './citation-block'
 import ShareButtons from './share-buttons'
 import SectionShell from './section/SectionShell'
@@ -100,6 +101,10 @@ export default function EssayLayout({ essay, hero, children }: Props) {
       {/* ── Footer: citation, related books, more essays ──────────── */}
       <SectionShell tone="white">
         <div className="max-w-3xl mx-auto">
+          {/* Right after the article, before the related pieces: the reader has
+              just been given something (UX review, step 10). */}
+          <SupportCard placement="essay" />
+
           <CitationBlock
             entityType="essay"
             entity={{ title: essay.title, slug: essay.slug }}

@@ -14,11 +14,11 @@ export default function SupportCard({ placement }: { placement: string }) {
       className="mb-10 rounded-xl border border-gray-200 bg-white px-5 py-5"
     >
       <h2 id="support-card-title" className="font-serif text-xl font-semibold text-gray-900">
-        Keep this record going
+        Help keep this archive open
       </h2>
       <p className="mt-2 max-w-prose text-sm leading-relaxed text-gray-700">
-        banned-books.org is kept by one person, with no ads and no paywall. If it helped you
-        today, a one-time $5 covers about a day of hosting and data.
+        Banned Books is maintained by one person, with no ads or paywall. If you find it useful,
+        a one-time contribution helps cover hosting and data costs.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
         <SupportCheckoutLink placement={placement}>Give $5 once</SupportCheckoutLink>
