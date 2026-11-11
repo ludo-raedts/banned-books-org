@@ -1,0 +1,455 @@
+[
+  {
+    "kind": "in_register",
+    "id": 1220,
+    "before": {
+      "year_started": 1886,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1241,
+    "before": {
+      "year_started": 1975,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1240,
+    "before": {
+      "year_started": 1975,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1236,
+    "before": {
+      "year_started": 1978,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1242,
+    "before": {
+      "year_started": 1987,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1243,
+    "before": {
+      "year_started": 1991,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1244,
+    "before": {
+      "year_started": 1991,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1245,
+    "before": {
+      "year_started": 1991,
+      "status": "historical",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 595,
+    "before": {
+      "year_started": 1994,
+      "status": "active",
+      "description": "Officially banned in New Zealand in 1994 by the Indecent Publications Tribunal as objectionable matter under New Zealand classification law."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1246,
+    "before": {
+      "year_started": 1995,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1248,
+    "before": {
+      "year_started": 1996,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1249,
+    "before": {
+      "year_started": 1996,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1250,
+    "before": {
+      "year_started": 2000,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1251,
+    "before": {
+      "year_started": 2002,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1252,
+    "before": {
+      "year_started": 2002,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1253,
+    "before": {
+      "year_started": 2002,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "in_register",
+    "id": 1254,
+    "before": {
+      "year_started": 2003,
+      "status": "active",
+      "description": "Classified as objectionable by the New Zealand Office of Film and Literature Classification under the Films, Videos, and Publications Classification Act 1993."
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1207,
+    "before": {
+      "year_started": 1890,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1219,
+    "before": {
+      "year_started": 1899,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1218,
+    "before": {
+      "year_started": 1908,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1216,
+    "before": {
+      "year_started": 1908,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1217,
+    "before": {
+      "year_started": 1908,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1221,
+    "before": {
+      "year_started": 1918,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1208,
+    "before": {
+      "year_started": 1918,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1213,
+    "before": {
+      "year_started": 1920,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1223,
+    "before": {
+      "year_started": 1921,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1224,
+    "before": {
+      "year_started": 1921,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1222,
+    "before": {
+      "year_started": 1921,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1225,
+    "before": {
+      "year_started": 1921,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1227,
+    "before": {
+      "year_started": 1923,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1228,
+    "before": {
+      "year_started": 1926,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1211,
+    "before": {
+      "year_started": 1928,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1230,
+    "before": {
+      "year_started": 1929,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1209,
+    "before": {
+      "year_started": 1929,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1229,
+    "before": {
+      "year_started": 1935,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1210,
+    "before": {
+      "year_started": 1939,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1226,
+    "before": {
+      "year_started": null,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1231,
+    "before": {
+      "year_started": 1918,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1235,
+    "before": {
+      "year_started": 1940,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1232,
+    "before": {
+      "year_started": 1940,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1212,
+    "before": {
+      "year_started": 1942,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1234,
+    "before": {
+      "year_started": null,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1233,
+    "before": {
+      "year_started": null,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1237,
+    "before": {
+      "year_started": 1975,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1239,
+    "before": {
+      "year_started": 1975,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1238,
+    "before": {
+      "year_started": 1976,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  },
+  {
+    "kind": "from_wikipedia",
+    "id": 1214,
+    "before": {
+      "year_started": 1991,
+      "action_type": "banned",
+      "description": "Classified as objectionable under the New Zealand Indecent Publications Act 1963. The Act was superseded by the Films, Videos, and Publications Classification Act 1993; classification status treated as historical.",
+      "source_id": 617
+    }
+  }
+]
