@@ -4,6 +4,7 @@ import { newTimer } from '@/lib/timing'
 import { normalizeNewsDisplay, TranslatedBadge } from '@/lib/news-display'
 import Eyebrow from '@/components/section/Eyebrow'
 import { publishedEssays } from '@/lib/essays-data'
+import { newsLead } from '@/lib/news-lead'
 
 type NewsRow = {
   id: number
@@ -14,17 +15,6 @@ type NewsRow = {
   source_language: string | null
   summary: string
   source_url: string
-}
-
-// One short factual sentence under the headline (the reviewer's request,
-// 2026-11-11): the first sentence of the stored summary, which the 2026-11-11
-// clean-up freed of remarks about the source description. Two visible lines at
-// most; the full summary stays on /news.
-function firstSentence(summary: string): string {
-  const flat = summary.replace(/\*/g, '').replace(/\s+/g, ' ').trim()
-  const m = flat.match(/^.{20,}?[.!?](?=\s+[A-Z“"']|$)/)
-  const sentence = (m ? m[0] : flat).trim()
-  return sentence.length > 220 ? `${sentence.slice(0, 217).replace(/\s\S*$/, '')}…` : sentence
 }
 
 function formatNewsDate(iso: string) {
@@ -70,7 +60,8 @@ export default async function HappeningNowSection() {
       <ul className="mt-4 divide-y divide-neutral-200 border-y border-neutral-200">
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
-          const lead = firstSentence(item.summary ?? '')
+          // One short, complete sentence, shown in full (see src/lib/news-lead.ts).
+          const lead = newsLead(item.summary ?? '')
           return (
             <li key={item.id} className="py-3">
               {/* The headline opens the original article, as on /news; "All news"
@@ -85,7 +76,7 @@ export default async function HappeningNowSection() {
                   {item.headline ?? item.title}
                 </a>
               </h3>
-              {lead && <p className="mt-1 text-[13px] leading-snug text-neutral-700 line-clamp-2">{lead}</p>}
+              {lead && <p className="mt-1 text-[13px] leading-snug text-neutral-700">{lead}</p>}
               <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-xs text-neutral-600">
                 <span>
                   {sourceName}
