@@ -156,6 +156,12 @@ export default function SearchClient({
   // ARIA combobox wiring: the listbox + each option need stable ids so the
   // input can point aria-activedescendant at the keyboard-highlighted row.
   const listboxId = useId()
+  // Phones: the filter controls sit behind one "Filters" button. They used to
+  // be a single row that scrolled sideways with the scrollbar hidden, so the
+  // country and reason filters were off-screen with nothing to say they existed
+  // (UX review 2026-11-11). From sm up the controls are always visible and wrap.
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const filterPanelId = useId()
   const optionId = (i: number) => `${listboxId}-opt-${i}`
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -339,6 +345,21 @@ export default function SearchClient({
   function clearAll() {
     setQ(''); setCountry(''); setReason(null); setScope(null); setActiveOnly(false); setSort(defaultSort)
   }
+  // Search text and filters are cleared separately: with zero results the
+  // reader usually wants to drop one and keep the other.
+  function clearFilters() {
+    setCountry(''); setReason(null); setScope(null); setActiveOnly(false)
+  }
+
+  // Filters in use, as removable chips. Until now the only sign of an active
+  // filter was a darker pill somewhere in a row that scrolled out of view.
+  const SCOPE_LABELS: Record<string, string> = { school: 'Schools', government: 'Governments', public_library: 'Libraries' }
+  const activeFilters: { key: string; label: string; clear: () => void }[] = [
+    ...(scope ? [{ key: 'scope', label: SCOPE_LABELS[scope] ?? scope, clear: () => setScope(null) }] : []),
+    ...(activeOnly ? [{ key: 'active', label: 'Currently banned', clear: () => setActiveOnly(false) }] : []),
+    ...(country ? [{ key: 'country', label: countries.find(c => c.code === country)?.name ?? country, clear: () => setCountry('') }] : []),
+    ...(reason ? [{ key: 'reason', label: reasonLabel(reason), clear: () => setReason(null) }] : []),
+  ]
 
   return (
     <div className="flex flex-col gap-5">
@@ -483,7 +504,22 @@ export default function SearchClient({
 
       {/* Filters */}
       <div>
-        <div className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            aria-expanded={filtersOpen}
+            aria-controls={filterPanelId}
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className={`sm:hidden shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              activeFilters.length > 0 || filtersOpen
+                ? 'bg-gray-900 text-white border-gray-900'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-gray-500'
+            }`}
+          >
+            <span>Filters</span>
+            {activeFilters.length > 0 && <span aria-label={`${activeFilters.length} active`}>· {activeFilters.length}</span>}
+            <span aria-hidden="true" className="text-xs">{filtersOpen ? '▴' : '▾'}</span>
+          </button>
           <div className="relative shrink-0">
             <select
               value={sort}
@@ -501,6 +537,12 @@ export default function SearchClient({
             </select>
             <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">▾</span>
           </div>
+          {/* The panel: a full-width wrapping block on a phone when opened; from
+              sm up `contents` drops the wrapper so its controls join this row. */}
+          <div
+            id={filterPanelId}
+            className={`${filtersOpen ? 'flex' : 'hidden'} basis-full flex-wrap items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:contents`}
+          >
           <span className="self-center text-gray-200 select-none hidden sm:block">|</span>
           <FilterPill active={scope === null} onClick={() => setScope(null)}>All</FilterPill>
           <FilterPill active={scope === 'school'} onClick={() => setScope(scope === 'school' ? null : 'school')}>🏫 Schools</FilterPill>
@@ -530,23 +572,46 @@ export default function SearchClient({
               <span aria-hidden>{reasonIcon(slug)}</span>{' '}{reasonLabel(slug)}
             </FilterPill>
           ))}
-          {hasFilters && (
-            <button
-              onClick={clearAll}
-              className="shrink-0 px-3 py-1.5 rounded-full text-sm border border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors"
-            >
-              ✕ Clear
-            </button>
-          )}
+          </div>
         </div>
-        <p className="text-sm text-gray-500 mt-3">
-          {loadingFilter
-            ? <span className="text-gray-400">Searching…</span>
-            : hasFilters
-              ? <><span className="font-medium text-gray-700">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books match</>
-              : <><span className="font-medium text-gray-700">{totalCount.toLocaleString('en')}</span> books</>
-          }
-        </p>
+        {activeFilters.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium uppercase tracking-wide text-gray-500">Filtering by</span>
+            {activeFilters.map(f => (
+              <button
+                key={f.key}
+                type="button"
+                onClick={f.clear}
+                aria-label={`Remove filter: ${f.label}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-gray-900 bg-white px-2.5 py-1 text-sm text-gray-900 hover:bg-gray-100"
+              >
+                {f.label}
+                <span aria-hidden="true" className="text-gray-500">✕</span>
+              </button>
+            ))}
+            {activeFilters.length > 1 && (
+              <button type="button" onClick={clearFilters} className="text-sm font-medium text-brand hover:underline">
+                Clear filters
+              </button>
+            )}
+          </div>
+        )}
+        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <p className="text-sm text-gray-500">
+            {loadingFilter
+              ? <span className="text-gray-400">Searching…</span>
+              : hasFilters
+                ? <><span className="font-medium text-gray-700">{total.toLocaleString('en')}</span> of {totalCount.toLocaleString('en')} books match</>
+                : <><span className="font-medium text-gray-700">{totalCount.toLocaleString('en')}</span> books</>
+            }
+          </p>
+          {/* Was a promo card above the search field; the results list loads
+              on scroll, so a line under it would never be reached. */}
+          <p className="text-sm text-gray-500">
+            Need every book in one file?{' '}
+            <Link href="/dataset" className="font-medium text-brand hover:underline">See the dataset →</Link>
+          </p>
+        </div>
       </div>
 
       {/* Empty state */}
@@ -554,13 +619,22 @@ export default function SearchClient({
         <div className="rounded-xl border border-gray-200 bg-gray-50 py-10 px-6 text-center">
           <p className="text-gray-700 font-medium mb-1">No books match your search.</p>
           <p className="text-sm text-gray-500 mb-4">
-            Try a different keyword or remove some filters.
+            {debouncedQ && activeFilters.length > 0
+              ? 'Your search text and your filters are combined. Dropping one of them may bring results back.'
+              : 'Try a different keyword or remove some filters.'}
           </p>
-          {hasFilters && (
-            <button onClick={clearAll} className="text-sm text-brand hover:underline font-medium">
-              Clear all filters
-            </button>
-          )}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            {debouncedQ && (
+              <button type="button" onClick={() => setQ('')} className="text-sm text-brand hover:underline font-medium">
+                Clear search text
+              </button>
+            )}
+            {activeFilters.length > 0 && (
+              <button type="button" onClick={clearFilters} className="text-sm text-brand hover:underline font-medium">
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
       )}
 

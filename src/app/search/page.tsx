@@ -10,7 +10,6 @@ import type { Metadata } from 'next'
 import { requireCount } from '@/lib/require-count'
 import PageviewTracker from '@/components/pageview-tracker'
 import { unstable_cache } from 'next/cache'
-import Link from '@/components/link'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks, parseBookSort, DEFAULT_BOOK_SORT } from '@/lib/book-search'
 import SearchClient from '@/components/search-client'
@@ -115,29 +114,19 @@ export default async function SearchPage({
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <PageviewTracker entityType="page" path="/search" />
-      <header className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-3">
+      {/* Search first. On a phone the search field used to start halfway down
+          the first screen, under a five-line intro and a dataset promo card
+          (UX review 2026-11-11). The H1 is unchanged; the intro is one sentence
+          and the dataset pointer is a text link beside the result count. */}
+      <header className="mb-5">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-2">
           Search the database of {totalCount.toLocaleString('en')} banned books
         </h1>
         <p className="text-base text-gray-600 max-w-3xl leading-relaxed">
-          Find books banned, restricted, or removed by governments, schools, and libraries worldwide.
-          Search by title or author, then narrow by country, reason, or institution. Every entry is
-          sourced from public records.
+          Books banned, restricted or removed by governments, schools and libraries worldwide —
+          search by title or author, then narrow by country, reason or institution.
         </p>
       </header>
-
-      <aside className="mb-6 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-        <p className="text-sm text-gray-700 flex-1 leading-snug">
-          <span className="font-semibold text-gray-900">Need every book in one file?</span>
-          {' '}Download the complete catalogue as CSV, JSON, or SQLite.
-        </p>
-        <Link
-          href="/dataset"
-          className="shrink-0 text-sm font-semibold text-brand hover:underline self-start sm:self-auto"
-        >
-          See the dataset →
-        </Link>
-      </aside>
 
       <SearchClient
         initialBooks={initialBooks}
