@@ -47,7 +47,7 @@ const loadHighlights = unstable_cache(async (): Promise<{ items: HighlightItem[]
         supabase.from('v_top_banned_books').select('entity_id, total_bans, granular_events').limit(1),
         supabase.from('v_top_books_this_week').select('entity_id, views').limit(1),
         supabase.from('v_top_books_all_time').select('entity_id, views').limit(1),
-        supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').limit(10),
+        supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').order('banned_books', { ascending: false }).order('total_bans', { ascending: false }).limit(10),
         supabase.from('v_top_authors_this_week').select('entity_id, views').limit(10),
         supabase.from('v_top_authors_all_time').select('entity_id, views').limit(10),
         supabase.from('authors').select('id').eq('is_placeholder', true),

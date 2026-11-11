@@ -35,6 +35,9 @@ export default async function MostBannedAuthorsPage() {
       supabase
         .from('v_top_banned_authors')
         .select('entity_id, total_bans, banned_books, granular_events, aggregate_events')
+        // Materialised view: no guaranteed row order — rank explicitly.
+        .order('banned_books', { ascending: false })
+        .order('total_bans', { ascending: false })
         .limit(100),
       supabase.from('authors').select('id').eq('is_placeholder', true),
     ]),

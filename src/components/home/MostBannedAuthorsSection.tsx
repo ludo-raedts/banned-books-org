@@ -10,7 +10,7 @@ export default function MostBannedAuthorsSection({ authors }: { authors: TopList
     <SectionShell tone="white" eyebrow="Catalogue-wide">
       <SectionHeader
         title="Most banned authors"
-        subtitle="Writers censored across the most jurisdictions."
+        subtitle="Ranked by the number of distinct books banned."
         viewAllHref="/most-banned-authors"
         viewAllLabel="View top 50"
         accent="black"

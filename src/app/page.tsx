@@ -175,7 +175,9 @@ export default async function HomePage() {
     // (hero, FAQ, JSON-LD, /about, llms.txt, …) states the same numbers.
     getSiteTotals(),
     supabase.from('v_top_books_this_week').select('entity_id, views').limit(10),
-    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').limit(30),
+    // Materialised view: its inner ORDER BY does not survive a concurrent refresh,
+    // so sort here — unsorted, the row showed 12-book authors ahead of 41-book ones.
+    supabase.from('v_top_banned_authors').select('entity_id, total_bans, banned_books, granular_events, aggregate_events').order('banned_books', { ascending: false }).order('total_bans', { ascending: false }).limit(30),
     // 300 instead of 100 so the Non-English rotation pool has enough
     // language-diverse candidates after the cover-valid + dedup filters.
     supabase.from('v_top_banned_books').select('entity_id, total_bans').limit(300),
