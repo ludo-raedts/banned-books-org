@@ -12,6 +12,19 @@ type NewsRow = {
   source_name: string
   published_at: string | null
   source_language: string | null
+  summary: string
+  source_url: string
+}
+
+// One short factual sentence under the headline (the reviewer's request,
+// 2026-11-11): the first sentence of the stored summary, which the 2026-11-11
+// clean-up freed of remarks about the source description. Two visible lines at
+// most; the full summary stays on /news.
+function firstSentence(summary: string): string {
+  const flat = summary.replace(/\*/g, '').replace(/\s+/g, ' ').trim()
+  const m = flat.match(/^.{20,}?[.!?](?=\s+[A-Z“"']|$)/)
+  const sentence = (m ? m[0] : flat).trim()
+  return sentence.length > 220 ? `${sentence.slice(0, 217).replace(/\s\S*$/, '')}…` : sentence
 }
 
 function formatNewsDate(iso: string) {
@@ -23,10 +36,11 @@ function formatNewsDate(iso: string) {
 }
 
 // The news column of the homepage's two-column top band (UX review
-// 2026-11-11): three headlines with source and date, a link to all news and one
-// clearly marked featured story. The longer summaries stay on /news, so current
-// events are visible without this column asking for as much attention as the
-// book beside it. On a phone it sits under the book of the day, as text lines.
+// 2026-11-11): three headlines, each with one short sentence, its source and
+// date, a link to all news and one clearly marked featured story. The longer
+// summaries stay on /news, so current events are visible without this column
+// asking for as much attention as the book beside it. On a phone it sits under
+// the book of the day.
 export default async function HappeningNowSection() {
   const timer = newTimer('home:happening-now')
   const supabase = adminClient()
@@ -34,7 +48,7 @@ export default async function HappeningNowSection() {
   const { data } = await timer.wrap('news_items', () =>
     supabase
       .from('news_items')
-      .select('id, title, headline, source_name, published_at, source_language')
+      .select('id, title, headline, source_name, published_at, source_language, summary, source_url')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
       .limit(3),
@@ -56,20 +70,29 @@ export default async function HappeningNowSection() {
       <ul className="mt-4 divide-y divide-neutral-200 border-y border-neutral-200">
         {items.map(item => {
           const { sourceName } = normalizeNewsDisplay(item.title, item.source_name)
+          const lead = firstSentence(item.summary ?? '')
           return (
-            <li key={item.id}>
-              <Link href="/news" className="group block py-3">
-                <h3 className="font-serif text-[15px] font-semibold leading-snug text-gray-900 group-hover:text-oxblood transition-colors line-clamp-3">
+            <li key={item.id} className="py-3">
+              {/* The headline opens the original article, as on /news; "All news"
+                  below opens the overview (reviewer, 2026-11-11). */}
+              <h3 className="font-serif text-[15px] font-semibold leading-snug text-gray-900">
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  className="hover:text-oxblood hover:underline underline-offset-2 transition-colors"
+                >
                   {item.headline ?? item.title}
-                </h3>
-                <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-xs text-neutral-600">
-                  <span>
-                    {sourceName}
-                    {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
-                  </span>
-                  <TranslatedBadge code={item.source_language} size="compact" />
-                </p>
-              </Link>
+                </a>
+              </h3>
+              {lead && <p className="mt-1 text-[13px] leading-snug text-neutral-700 line-clamp-2">{lead}</p>}
+              <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-xs text-neutral-600">
+                <span>
+                  {sourceName}
+                  {item.published_at && <span> · {formatNewsDate(item.published_at)}</span>}
+                </span>
+                <TranslatedBadge code={item.source_language} size="compact" />
+              </p>
             </li>
           )
         })}
