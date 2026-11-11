@@ -10,6 +10,11 @@ export async function POST(req: NextRequest) {
   // absolute URLs in metadata/sitemaps, not for runtime checkout redirects.
   const baseUrl = new URL(req.url).origin
 
+  // Two callers. The buy button (JS on) fetches with Accept: application/json
+  // and navigates itself, so it can show "Opening secure checkout…" and a
+  // readable error. The bare <form> POST (JS off) keeps the 303 redirect.
+  const wantsJson = (req.headers.get('accept') ?? '').includes('application/json')
+
   const params: Stripe.Checkout.SessionCreateParams & {
     managed_payments?: { enabled: boolean }
   } = {
@@ -28,6 +33,7 @@ export async function POST(req: NextRequest) {
     if (!session.url) {
       return Response.json({ error: 'No checkout URL returned' }, { status: 500 })
     }
+    if (wantsJson) return Response.json({ url: session.url })
     return Response.redirect(session.url, 303)
   } catch (err) {
     console.error('[api/dataset/checkout]', err)
