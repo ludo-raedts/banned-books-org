@@ -57,6 +57,8 @@
  *   npx tsx --env-file=.env.local scripts/verify-censorship-context.ts --ids-file=data/censorship-context-worklist.json --limit=30 --out=sample
  *   Flags: --ids-file= / --ids= (order is kept) · --slugs=a,b · --limit=N · --concurrency=N (default 3)
  *          --out=<tag> · --no-resume · --report-only (rebuild the .md from the JSONL)
+ *          --recheck (also take texts that already carry a verdict in censorship_context_checked_at;
+ *          by default those are skipped, as are source_verified and narrative_curated texts)
  *          --firecrawl (re-fetch bot-walled pages via Firecrawl, 1 credit each) · --firecrawl-max=N (default 400)
  * PDFs are read when `pdftotext` (poppler) is on the PATH; otherwise they are skipped.
  */
@@ -87,6 +89,8 @@ const LIMIT = intFlag('limit', 30)
 const CONCURRENCY = Math.max(1, Math.min(6, intFlag('concurrency', 3)))
 const NO_RESUME = hasFlag('no-resume')
 const REPORT_ONLY = hasFlag('report-only')
+// A text that already carries a verdict is not checked again unless asked.
+const RECHECK = hasFlag('recheck')
 const OUT_TAG = flagValue('out') ?? new Date().toISOString().slice(0, 10)
 // Bot-walled pages (403 on ncac.org, pen.org, …) are re-fetched through
 // Firecrawl only when asked: every call costs a credit.
@@ -127,6 +131,7 @@ type Book = {
   description_ban: string | null
   censorship_context: string
   censorship_context_status: string | null
+  censorship_context_checked_at: string | null
   book_authors: Array<{ authors: { display_name: string } | null }>
   bans: BanRow[]
 }
@@ -699,7 +704,7 @@ async function verifyBook(b: Book): Promise<RunRow> {
 
 // ── Load ────────────────────────────────────────────────────────────────
 
-const SELECT = `id, slug, title, first_published_year, description_ban, censorship_context, censorship_context_status,
+const SELECT = `id, slug, title, first_published_year, description_ban, censorship_context, censorship_context_status, censorship_context_checked_at,
   book_authors(authors(display_name)),
   bans(id, country_code, scope_id, action_type, status, region, institution, year_started, year_ended, description,
     countries(name_en), scopes(label_en))`
@@ -731,7 +736,8 @@ async function loadBooks(): Promise<Book[]> {
       if (!data || data.length < 500) break
     }
   }
-  return out.filter(b => !DONE_STATUSES.has(b.censorship_context_status ?? ''))
+  return out.filter(b => !DONE_STATUSES.has(b.censorship_context_status ?? '')
+    && (RECHECK || SLUGS?.length || !b.censorship_context_checked_at))
 }
 
 // ── Apply ───────────────────────────────────────────────────────────────
