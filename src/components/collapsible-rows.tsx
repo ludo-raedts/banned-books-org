@@ -11,12 +11,17 @@ import { useEffect, useRef, useState } from 'react'
 export default function CollapsibleRows({
   hiddenCount,
   hiddenHint,
+  showLabel,
   children,
 }: {
   /** How many rows are folded away. 0 → renders the children untouched. */
   hiddenCount: number
   /** What is behind the fold, e.g. "China, Cuba, Malaysia and 2 more". */
   hiddenHint?: string
+  /** Button text while folded. Name the unit ("Show 10 more entries") when the
+   *  page counts something else nearby — a bare "Show 10 more" under a
+   *  "27 bans" headline read as ten of the 27. */
+  showLabel?: string
   children: React.ReactNode
 }) {
   const [expanded, setExpanded] = useState(false)
@@ -56,7 +61,7 @@ export default function CollapsibleRows({
           'Show fewer'
         ) : (
           <>
-            <span>Show {hiddenCount} more</span>
+            <span>{showLabel ?? `Show ${hiddenCount} more`}</span>
             {hiddenHint && <span className="font-normal text-gray-500">{hiddenHint}</span>}
           </>
         )}

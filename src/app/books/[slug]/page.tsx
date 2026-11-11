@@ -1861,7 +1861,22 @@ export default async function BookPage({
             caption={`${book.title}: ${book.bans.length} bans across ${timelineRows.length} ${timelineRows.length === 1 ? 'country' : 'countries'}.`}
             undatedLabels={undatedTimelineLabels}
           />
-          <CollapsibleRows hiddenCount={foldedClusters.length} hiddenHint={foldedHint}>
+          {/* The hero counts bans, the table counts rows, and one row holds every
+              ban recorded for the same country, year and kind of institution —
+              so "27 documented bans" sat above 15 rows with no explanation
+              (UX review 2026-11-11). Say what a row is; the fold button below
+              counts in the same unit. */}
+          {sortedBans.length > banClusters.length && (
+            <p className="mb-2 text-sm text-gray-600">
+              {sortedBans.length.toLocaleString('en')} documented bans in {banClusters.length.toLocaleString('en')} {banClusters.length === 1 ? 'entry' : 'entries'}.
+              {' '}One entry groups the bans recorded for the same country, year and kind of institution.
+            </p>
+          )}
+          <CollapsibleRows
+            hiddenCount={foldedClusters.length}
+            hiddenHint={foldedHint}
+            showLabel={`Show ${foldedClusters.length} more ${foldedClusters.length === 1 ? 'entry' : 'entries'}`}
+          >
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -1946,6 +1961,50 @@ export default async function BookPage({
                             ) : (
                               <span className="text-gray-400">—</span>
                             )}
+                          </td>
+                        </tr>
+                        {/* Below sm the Where and Source columns are hidden, which
+                            left a phone reader with no source at all for a row
+                            and no action type either, although the legend under
+                            the table explains those badges. Same content as the
+                            two hidden cells, as a line under the row. The sources
+                            are the ones cited across the row's member bans, so
+                            for a grouped row the label says exactly that rather
+                            than implying each source covers every record. */}
+                        <tr className="sm:hidden" data-extra={extra}>
+                          <td colSpan={5} className="px-3 pb-2.5 pt-0 text-xs text-gray-600 leading-relaxed">
+                            <div className="flex flex-wrap items-center gap-1">
+                              {ACTION_ORDER.filter((a) => c.action_counts.has(a)).map((a) => (
+                                <BanActionBadge
+                                  key={a}
+                                  action={a}
+                                  count={c.bans.length > 1 ? c.action_counts.get(a) : undefined}
+                                />
+                              ))}
+                              {c.scope_label && <span className="text-gray-500">{c.scope_label}</span>}
+                            </div>
+                            <div className="mt-1">
+                              <span className="text-gray-500">
+                                {c.sources.length === 0
+                                  ? 'No source link on record for this entry.'
+                                  : c.bans.length > 1
+                                    ? `${c.sources.length === 1 ? 'Source' : 'Sources'} cited for the ${c.bans.length} records in this entry: `
+                                    : `${c.sources.length === 1 ? 'Source' : 'Sources'}: `}
+                              </span>
+                              {c.sources.map((s, i) => (
+                                <React.Fragment key={s.source_url}>
+                                  {i > 0 && <span className="text-gray-400"> · </span>}
+                                  <a
+                                    href={s.source_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline underline-offset-2 decoration-blue-600/30"
+                                  >
+                                    {s.source_name}<span aria-hidden="true"> ↗</span>
+                                  </a>
+                                </React.Fragment>
+                              ))}
+                            </div>
                           </td>
                         </tr>
                         {hasLocations && (
