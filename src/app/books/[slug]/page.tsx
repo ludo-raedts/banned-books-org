@@ -957,7 +957,28 @@ export default async function BookPage({
   // The list prints one line per state, so states count as much as districts.
   const DISTRICTS_INLINE_MAX = 6
   const STATES_INLINE_MAX = 3
-  const shownClusterCount = banClusters.length > BAN_ROWS_SHOWN + 1 ? BAN_ROWS_SHOWN : banClusters.length
+  // Rows are not equally tall: an entry that cites four sources and lists its
+  // districts runs to several lines. /books/the-you-ive-never-known has only six
+  // entries but they filled three screens, so counting rows was not enough
+  // (Ludo, 2026-11-11). A rough height per entry — two lines for its reasons
+  // plus two per cited source, one for a district line — is added up until a
+  // screen-sized budget is used; at least three entries always stay open.
+  const BAN_ROWS_MIN_SHOWN = 3
+  const BAN_ROWS_HEIGHT_BUDGET = 14
+  const rowHeight = (c: BanCluster) => Math.max(2, c.sources.length * 2) + (c.bans.length > 1 ? 1 : 0)
+  let shownClusterCount = banClusters.length
+  {
+    let used = 0
+    let fit = 0
+    for (const c of banClusters) {
+      used += rowHeight(c)
+      if (used > BAN_ROWS_HEIGHT_BUDGET) break
+      fit += 1
+    }
+    const wanted = Math.min(BAN_ROWS_SHOWN, Math.max(BAN_ROWS_MIN_SHOWN, fit))
+    // Hiding a single entry behind a button saves nothing.
+    if (banClusters.length - wanted >= 2) shownClusterCount = wanted
+  }
   const foldedClusters = banClusters.slice(shownClusterCount)
   const foldedCountries = [...new Set(foldedClusters.map(c => c.country_name))]
   // The hint names what is behind the fold; pointless on a one-country book.
