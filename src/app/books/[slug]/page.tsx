@@ -2000,7 +2000,7 @@ export default async function BookPage({
                                     rel="noopener noreferrer"
                                     className="text-blue-600 underline underline-offset-2 decoration-blue-600/30"
                                   >
-                                    {s.source_name}<span aria-hidden="true"> ↗</span>
+                                    {s.source_name}<span aria-hidden="true">{'\u00a0'}↗</span>
                                   </a>
                                 </React.Fragment>
                               ))}
