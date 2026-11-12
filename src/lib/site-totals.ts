@@ -40,12 +40,14 @@ export type SiteTotals = {
   /** Sum of furtherTitles over all register lists. */
   registerTitles: number
   registers: RegisterTotal[]
+  /** Earliest dated ban in the catalogue, with the book it belongs to. */
+  earliest: { year: number; title: string }
 }
 
 async function loadSiteTotals(): Promise<SiteTotals> {
   const sb = adminClient()
   const head = { count: 'exact' as const, head: true }
-  const [books, bans, activeBans, sources, citations, countriesRes, mvRes, registers] = await Promise.all([
+  const [books, bans, activeBans, sources, citations, countriesRes, mvRes, registers, earliestRes] = await Promise.all([
     sb.from('books').select('*', head),
     sb.from('bans').select('*', head),
     sb.from('bans').select('*', head).eq('status', 'active'),
@@ -54,8 +56,9 @@ async function loadSiteTotals(): Promise<SiteTotals> {
     sb.from('countries').select('code'),
     sb.from('mv_ban_counts').select('country_code').gt('distinct_books', 0),
     getRegisterTotals(),
+    sb.from('bans').select('year_started, books(title)').not('year_started', 'is', null).order('year_started', { ascending: true }).limit(1),
   ])
-  for (const res of [countriesRes, mvRes]) {
+  for (const res of [countriesRes, mvRes, earliestRes]) {
     if (res.error) throw res.error
   }
   if (!mvRes.data?.length) throw new Error('site-totals: mv_ban_counts returned no countries')
@@ -63,6 +66,9 @@ async function loadSiteTotals(): Promise<SiteTotals> {
   // A country counts when it has a row in `countries` AND a documented book.
   const known = new Set((countriesRes.data ?? []).map((c) => c.code as string))
   const countries = (mvRes.data ?? []).filter((r) => known.has(r.country_code as string)).length
+
+  const first = earliestRes.data?.[0] as unknown as { year_started: number; books: { title: string } | null } | undefined
+  if (!first?.books?.title) throw new Error('site-totals: no dated ban found')
 
   const totals: SiteTotals = {
     books: requireCount(books, 'books'),
@@ -73,6 +79,7 @@ async function loadSiteTotals(): Promise<SiteTotals> {
     citations: requireCount(citations, 'citations'),
     registerTitles: registers.reduce((n, r) => n + r.furtherTitles, 0),
     registers,
+    earliest: { year: first.year_started, title: first.books.title },
   }
   if (!totals.books || !totals.countries) {
     throw new Error('site-totals: empty headline figures — refusing to cache zeros')
@@ -80,7 +87,7 @@ async function loadSiteTotals(): Promise<SiteTotals> {
   return totals
 }
 
-export const getSiteTotals = unstable_cache(loadSiteTotals, ['site-totals-v1'], {
+export const getSiteTotals = unstable_cache(loadSiteTotals, ['site-totals-v2'], {
   revalidate: 3600,
   tags: [SITE_TOTALS_TAG],
 })

@@ -11,6 +11,7 @@ import SectionShell from '@/components/section/SectionShell'
 import Eyebrow from '@/components/section/Eyebrow'
 import ZenodoCitation from '@/components/zenodo-citation'
 import { getSiteTotals } from '@/lib/site-totals'
+import { formatYear } from '@/lib/format-year'
 import { roundedThousands } from '@/lib/format-count'
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ async function getStats() {
     // "Source citations" = ban↔source links, the same figure /sources reports.
     sources: t.citations,
     registerTitles: t.registerTitles,
+    earliest: t.earliest,
     updatedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
   }
 }
@@ -60,7 +62,7 @@ export default async function AboutPage() {
     { value: stats.countries.toString(), label: 'Countries & territories' },
     { value: stats.activeBans.toLocaleString('en'), label: 'Active bans' },
     { value: stats.sources.toLocaleString('en'), label: 'Source citations' },
-    { value: '1559', label: 'Earliest record' },
+    { value: formatYear(stats.earliest.year), label: 'Earliest record' },
   ]
 
   const differentiators = [
@@ -124,7 +126,7 @@ export default async function AboutPage() {
               The mission is simple: make censorship visible. A ban that is not recorded is a ban that can be denied. Every entry in this catalogue represents a documented act of suppression — a government, school board, or institution that decided a book was too dangerous for its citizens or students to read.
             </p>
             <p>
-              The catalogue currently documents <strong>{stats.books.toLocaleString('en')} books</strong> and <strong>{stats.bans.toLocaleString('en')} bans</strong> across <strong>{stats.countries} countries and territories</strong>, from the Vatican&apos;s Index Librorum Prohibitorum (1559) to school board removals in 2025. The site is free, non-commercial, and built in the open.
+              The catalogue currently documents <strong>{stats.books.toLocaleString('en')} books</strong> and <strong>{stats.bans.toLocaleString('en')} bans</strong> across <strong>{stats.countries} countries and territories</strong>, from ancient Rome ({formatYear(stats.earliest.year)}) and the Vatican&apos;s Index Librorum Prohibitorum to school board removals in 2025. The site is free, non-commercial, and built in the open.
             </p>
             {stats.registerTitles > 0 && (
               <p>

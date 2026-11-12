@@ -29,12 +29,6 @@ export default function ErrorPage({
         A temporary error occurred while loading this page. You can try again, or
         head back to the homepage.
       </p>
-      {/* TEMPORARY (Nov 2026 historical-lists import) — remove once the DB load has settled. */}
-      <p className="mt-3 text-gray-600">
-        We&rsquo;re in the middle of our biggest update yet, adding tens of thousands of
-        historical titles, so the database is slower than usual. Please try again in a
-        moment, or come back a little later.
-      </p>
       <div className="mt-8 flex gap-3 justify-center">
         <button
           onClick={reset}

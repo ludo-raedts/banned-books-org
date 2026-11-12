@@ -2,6 +2,7 @@
 // Hourly regen mirrors /about and /dataset.
 export const revalidate = 3600
 
+import { formatYear } from '@/lib/format-year'
 import type { Metadata } from 'next'
 import Link from '@/components/link'
 import Image from 'next/image'
@@ -175,7 +176,7 @@ export default async function PressPage() {
   const bookCount = stats.books.toLocaleString('en')
   const banCount = stats.bans.toLocaleString('en')
   const countryCount = stats.countries.toString()
-  const minYear = stats.minYear ?? 1559
+  const minYear = formatYear(stats.minYear ?? 1559)
   const maxYear = stats.maxYear ?? new Date().getUTCFullYear()
   const lastUpdated = formatLastUpdated(stats.dataLastChanged)
   // The register layer: listed titles we do not document as books. Stated

@@ -11,6 +11,8 @@ export const frontmatter: MarkdownFrontmatter = {
   published_at: '2026-04-01',
 }
 
+import { formatYear } from '@/lib/format-year'
+
 export type AboutStats = {
   books: number
   bans: number
@@ -18,6 +20,7 @@ export type AboutStats = {
   activeBans: number
   sources: number
   registerTitles: number
+  earliest: { year: number; title: string }
 }
 
 export function buildAboutDocument(stats: AboutStats): string {
@@ -37,7 +40,7 @@ Banned Books started in April 2026 as a personal project by Ludo Raedts, a Dutch
 
 The mission is simple: make censorship visible. A ban that is not recorded is a ban that can be denied. Every entry in this catalogue represents a documented act of suppression — a government, school board, or institution that decided a book was too dangerous for its citizens or students to read.
 
-The catalogue currently documents **${n(stats.books)} books** and **${n(stats.bans)} bans** across **${stats.countries} countries and territories**, from the Vatican's Index Librorum Prohibitorum (1559) to school board removals in 2025. The site is free, non-commercial, and built in the open.
+The catalogue currently documents **${n(stats.books)} books** and **${n(stats.bans)} bans** across **${stats.countries} countries and territories**, from ancient Rome (${formatYear(stats.earliest.year)}) and the Vatican's Index Librorum Prohibitorum to school board removals in 2025. The site is free, non-commercial, and built in the open.
 
 ## By the numbers
 
@@ -46,7 +49,7 @@ The catalogue currently documents **${n(stats.books)} books** and **${n(stats.ba
 - ${stats.countries} countries and territories
 - ${n(stats.activeBans)} currently active bans
 - ${n(stats.sources)} source citations
-${stats.registerTitles > 0 ? `- ${n(stats.registerTitles)} further titles on official ban lists, kept as [registers](https://www.banned-books.org/registers) and not counted above\n` : ''}- 1559 — earliest ban recorded (Index Librorum Prohibitorum)
+${stats.registerTitles > 0 ? `- ${n(stats.registerTitles)} further titles on official ban lists, kept as [registers](https://www.banned-books.org/registers) and not counted above\n` : ''}- ${formatYear(stats.earliest.year)} — earliest ban recorded (${stats.earliest.title})
 
 ## What counts as a ban
 

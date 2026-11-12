@@ -14,6 +14,7 @@ export async function GET() {
       activeBans: t.activeBans,
       sources: t.citations,
       registerTitles: t.registerTitles,
+      earliest: t.earliest,
     }),
   )
 }
