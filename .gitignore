@@ -223,6 +223,7 @@ data/foreign-isbn-fix.jsonl
 
 # Index Librorum Prohibitorum 1877 OCR + stage-0 output (archive.org source)
 data/index-1877/
+data/index-1938/
 
 # SBZ register raw source + stage-0 (polunbi.de transcription)
 /data/sbz/
