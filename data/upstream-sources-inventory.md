@@ -23,7 +23,7 @@ independently of Kasseler.
 |---|---|---|---|
 | Opus Dei (2003): Index der verbotenen Bücher (Italian Vatican Index) | 31,874 | not used | ⛔ Restricted — copyrighted modern book |
 | Österreichische Listen verbotener Bücher 1750–1848 (Bachleitner/Vienna) | 30,712 | not used | ⛔ Restricted — the reason Kasseler can't redistribute |
-| DDR Volksbildung lijsten (Eastern bloc, two related projects) | ~29,500 | not used | ❓ Possibly public-domain (DDR govt docs); needs research |
+| DDR Volksbildung lijsten (Eastern bloc, two related projects) | ~29,500 | ✓ in the register layer since 2026-11-10 (`sbz-1946`: Liste der auszusondernden Literatur 1946 + Nachträge 1947, 1948, 1953; 31,507 entries via polunbi.de) — this is the same list, not a further source | ✓ Official lists (amtliche Werke); transcription by Olaf Simons |
 | TDCJ Texas prisons spreadsheet (FOIA) | 10,223 | not used | ✓ Likely accessible — US Public Information Act |
 | Texas Civil Rights Project archive | 11,811 | not used | ✓ Likely accessible — published report, US public records |
 | bookstoprisoners.net Kansas | 7,431 | not used | ✓ Likely accessible — publicly hosted spreadsheet |
@@ -134,4 +134,4 @@ if archived data were recoverable. **Do not re-investigate.**
 
 ## Known but unprocessed (candidates for a future title-level pass)
 
-- **GDR / East Germany (DD)** — the German Democratic Republic ran extensive literary censorship via the Hauptverwaltung Verlage und Buchhandel (HV; print-permit / "Druckgenehmigung" system). Scholarship (e.g. the "Zensur in der DDR" literature, the Stasi/HV archives at the Bundesarchiv) documents many specific denied or suppressed titles. We currently hold 8 DD records; a dedicated pass against the academic literature could yield a substantial title-level batch. Not yet attempted.
+- **GDR / East Germany (DD)** — the German Democratic Republic ran extensive literary censorship via the Hauptverwaltung Verlage und Buchhandel (HV; print-permit / "Druckgenehmigung" system). Scholarship (e.g. the "Zensur in der DDR" literature, the Stasi/HV archives at the Bundesarchiv) documents many specific denied or suppressed titles. (2026-11-12: 9 DD records for 1956–1981, next to 156 from the 1946–1953 removal lists. Checked: no title-level list or database of refused/banned GDR titles is online. Bundesarchiv DR 1 print-permit files are per-title files, mostly of APPROVED books, partly digitised on archivportal-d.de; the Archiv unterdrückter Literatur in der DDR (Geipel/Walther, ~100 authors) is unpublished manuscripts, not bans. Route = hand-curated batch from Barck/Langermann/Lokatis, "Jedes Buch ein Abenteuer" (1997, open access at zeitgeschichte-digital.de) and bpb essays.) We held 8 DD records when this was written; a dedicated pass against the academic literature could yield a substantial title-level batch. Not yet attempted.
