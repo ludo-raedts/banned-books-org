@@ -107,7 +107,7 @@ export default function StatsTimeline({
       <section className="mb-16">
         <h2 className="text-xl font-semibold text-gray-900 mb-1">Bans Through History</h2>
         <p className="text-sm text-gray-500 mb-4">
-          From the Catholic Index Librorum Prohibitorum (1559) to today&apos;s school board removals.
+          From ancient Rome to today&apos;s school board removals.
           Bars use a <span className="font-medium">logarithmic scale</span> — each gridline is a 10× increase, so earlier eras stay visible alongside the 2020s peak.
           {timelineWithoutYear > 0 && (
             <> {timelineWithoutYear.toLocaleString('en')} bans with no recorded year are excluded.</>
