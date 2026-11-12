@@ -1,0 +1,873 @@
+{
+ "source": "DILA JORF open data dump 2026-11-08 (echanges.dila.gouv.fr/OPENDATA/JORF)",
+ "rows": [
+  {
+   "key": "maîtresse-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Maîtresse",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 20 mars 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000532321",
+     "name": "Arrêté du 20 mars 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 20 mars 1990, considérant le danger présenté pour la jeunesse par l'aspect et le contenu licencieux ou pornographique de l'ouvrage ci-dessous mentionné ainsi que l'intérêt s'attachant, pour ce motif, à soustraire ce même ouvrage de la vue des mineurs, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Maîtresse, Les Editions rares, Paris. Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches.",
+     "jorf_date": "1990-03-30"
+    }
+   ]
+  },
+  {
+   "key": "politique-raciale-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Politique raciale",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 23 mai 1990, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160614",
+     "name": "Arrêté du 23 mai 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 23 mai 1990: Considérant que les ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reischfuhrer SS Heinrich Himmler - L'Echelon de protection - Organisation de combat anti-bolchevique, ce dernier également intitulé La SS, organisation de combat anti-bolchevique, sont d'origine étrangère dès lors qu'ils sont traduits d'une langue étrangère; Considérant que la mise en circulation en France de ces ouvrages est de nature à causer des dangers pour l'ordre public en raison de l'apologie du nazisme, du racisme et de l'antisémitisme à laquelle ils se livrent; Considérant l'impossibilité d'appliquer les dispositions de l'article 8 du décret no 83-1025 du 28 novembre 1983, La circulation, la distribution et la mise en vente des ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reichsfuhrer SS Heinrich Himmle",
+     "jorf_date": "1990-05-24"
+    }
+   ]
+  },
+  {
+   "key": "l-honneur-s-appelle-fidélité-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "L'honneur s'appelle fidélité",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 23 mai 1990, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160614",
+     "name": "Arrêté du 23 mai 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 23 mai 1990: Considérant que les ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reischfuhrer SS Heinrich Himmler - L'Echelon de protection - Organisation de combat anti-bolchevique, ce dernier également intitulé La SS, organisation de combat anti-bolchevique, sont d'origine étrangère dès lors qu'ils sont traduits d'une langue étrangère; Considérant que la mise en circulation en France de ces ouvrages est de nature à causer des dangers pour l'ordre public en raison de l'apologie du nazisme, du racisme et de l'antisémitisme à laquelle ils se livrent; Considérant l'impossibilité d'appliquer les dispositions de l'article 8 du décret no 83-1025 du 28 novembre 1983, La circulation, la distribution et la mise en vente des ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reichsfuhrer SS Heinrich Himmle",
+     "jorf_date": "1990-05-24"
+    }
+   ]
+  },
+  {
+   "key": "le-reichsführer-ss-heinrich-himmler-l-éc-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Le Reichsführer SS Heinrich Himmler – L'Échelon de protection – Organisation de combat anti-bolchevique",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 23 mai 1990, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160614",
+     "name": "Arrêté du 23 mai 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 23 mai 1990: Considérant que les ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reischfuhrer SS Heinrich Himmler - L'Echelon de protection - Organisation de combat anti-bolchevique, ce dernier également intitulé La SS, organisation de combat anti-bolchevique, sont d'origine étrangère dès lors qu'ils sont traduits d'une langue étrangère; Considérant que la mise en circulation en France de ces ouvrages est de nature à causer des dangers pour l'ordre public en raison de l'apologie du nazisme, du racisme et de l'antisémitisme à laquelle ils se livrent; Considérant l'impossibilité d'appliquer les dispositions de l'article 8 du décret no 83-1025 du 28 novembre 1983, La circulation, la distribution et la mise en vente des ouvrages intitulés Politique raciale, L'honneur s'appelle fidélité, Le Reichsfuhrer SS Heinrich Himmle",
+     "jorf_date": "1990-05-24"
+    }
+   ]
+  },
+  {
+   "key": "les-juifs-et-la-guerre-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Les Juifs et la Guerre",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 29 mai 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000342765",
+     "name": "Arrêté du 29 mai 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 29 mai 1990: Considérant le caractère antisémite des deux ouvrages ci-dessous mentionnés et la place faite par eux à la discrimination ou à la haine raciale, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Les Juifs et la Guerre, éditions C.E.A.; Notre combat, fac-similé du numéro 4, septembre 1941 (sans mention d'éditeur). Sont interdites sous les mêmes peines, d'une part, l'exposition de ces ouvrages et, d'autre part, la publicité faite pour eux par voie d'affiches ou sous l'une des autres formes prévues par l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée précitée.",
+     "jorf_date": "1990-05-30"
+    }
+   ]
+  },
+  {
+   "key": "l-heure-décisive-de-la-lutte-entre-l-eur-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "L'Heure décisive de la lutte entre l'Europe et le bolchévisme",
+   "authors": [
+    {
+     "display_name": "Alfred Rosenberg"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 18 juin 1990, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000708313",
+     "name": "Arrêté du 18 juin 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 18 juin 1990, considérant que l'ouvrage intitulé L'Heure décisive de la lutte entre l'Europe et le bolchévisme, par A. Rosenberg, est d'origine étrangère dès lors qu'il est traduit d'une langue étrangère, considérant que la mise en circulation en France de cet ouvrage est de nature à causer des dangers pour l'ordre public en raison de son contenu raciste et antisémite, considérant l'absence d'observation écrite de l'éditeur, la circulation, la distribution et la mise en vente de l'ouvrage intitulé L'Heure décisive de la lutte entre l'Europe et le bolchévisme, par A. Rosenberg, éditions Avalon, sont interdites sur l'ensemble du territoire.",
+     "jorf_date": "1990-06-19"
+    }
+   ]
+  },
+  {
+   "key": "parties-de-campagne-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Parties de campagne",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 24 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000166877",
+     "name": "Arrêté du 24 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 24 juillet 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique de la publication ci-dessous mentionnée, il est interdit sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Parties de campagne (Editions Presses de la Cité, Paris).",
+     "jorf_date": "1990-08-10"
+    }
+   ]
+  },
+  {
+   "key": "les-français-sont-ils-racistes-je-dis-no-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Les Français sont-ils racistes ?... Je dis non !",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 24 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000716609",
+     "name": "Arrêté du 24 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 24 juillet 1990, considérant le danger présenté pour la jeunese par la place faite à la discrimination et la haine raciale, en particulier à l'encontre des Maghrébins, par la publication ci-dessous mentionnée, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Les Français sont-ils racistes?... Je dis non! Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches ou sous l'une des autres formes prévues par l'article 14 de la loi du 16 juillet 1949 modifiée susvisée.",
+     "jorf_date": "1990-08-10"
+    }
+   ]
+  },
+  {
+   "key": "exhibitions-champêtres-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Exhibitions champêtres",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 24 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000716610",
+     "name": "Arrêté du 24 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 24 juillet 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Exhibitions champêtres (Editions Troisjean). Vives Chaleurs (Editions Troisjean). Filles de ferme (Editions Troisjean). Sont interdites sous les mêmes peines, d'une part, l'exposition de ces ouvrages et, d'autre part, la publicité faite pour eux par voie d'affiches.",
+     "jorf_date": "1990-08-10"
+    }
+   ]
+  },
+  {
+   "key": "vives-chaleurs-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Vives Chaleurs",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 24 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000716610",
+     "name": "Arrêté du 24 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 24 juillet 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Exhibitions champêtres (Editions Troisjean). Vives Chaleurs (Editions Troisjean). Filles de ferme (Editions Troisjean). Sont interdites sous les mêmes peines, d'une part, l'exposition de ces ouvrages et, d'autre part, la publicité faite pour eux par voie d'affiches.",
+     "jorf_date": "1990-08-10"
+    }
+   ]
+  },
+  {
+   "key": "filles-de-ferme-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Filles de ferme",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 24 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000716610",
+     "name": "Arrêté du 24 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 24 juillet 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Exhibitions champêtres (Editions Troisjean). Vives Chaleurs (Editions Troisjean). Filles de ferme (Editions Troisjean). Sont interdites sous les mêmes peines, d'une part, l'exposition de ces ouvrages et, d'autre part, la publicité faite pour eux par voie d'affiches.",
+     "jorf_date": "1990-08-10"
+    }
+   ]
+  },
+  {
+   "key": "un-garçon-bandant-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Un garçon bandant",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 30 juillet 1990, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000715794",
+     "name": "Arrêté du 30 juillet 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 30 juillet 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique et pédophile de la publication ci-dessous mentionnée, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Un garçon bandant (éditions de la Mouette).",
+     "jorf_date": "1990-08-21"
+    }
+   ]
+  },
+  {
+   "key": "les-120-journées-de-sodome-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Les 120 Journées de Sodome",
+   "authors": [
+    {
+     "display_name": "Marquis de Sade"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 6 novembre 1990, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160248",
+     "name": "Arrêté du 6 novembre 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 6 novembre 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique des ouvrages ci-dessous mentionnés, il est interdit sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Les 120 Journées de Sodome; Aude n'est plus vierge, édités par Magic Strip Distribution.",
+     "jorf_date": "1990-11-11"
+    }
+   ]
+  },
+  {
+   "key": "aude-n-est-plus-vierge-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Aude n'est plus vierge",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 6 novembre 1990, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160248",
+     "name": "Arrêté du 6 novembre 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 6 novembre 1990, considérant le danger présenté pour la jeunesse par le contenu pornographique des ouvrages ci-dessous mentionnés, il est interdit sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: Les 120 Journées de Sodome; Aude n'est plus vierge, édités par Magic Strip Distribution.",
+     "jorf_date": "1990-11-11"
+    }
+   ]
+  },
+  {
+   "key": "ma-fille-mon-amour-1990",
+   "country_code": "FR",
+   "year": 1990,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Ma fille, mon amour",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 12 décembre 1990, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000535686",
+     "name": "Arrêté du 12 décembre 1990 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 12 décembre 1990, considérant le danger présenté pour la jeunesse par l'aspect licencieux de la publication ci-dessous mentionnée, ainsi que l'intérêt s'attachant, pour ce motif, à soustraire cette même publication de la vue des mineurs, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs la publication intitulée: Ma fille, mon amour, Editions La Mouette. Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches.",
+     "jorf_date": "1990-12-15"
+    }
+   ]
+  },
+  {
+   "key": "tulle-et-oradour-tragédie-franco-alleman-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "political",
+   "title": "Tulle et Oradour, tragédie franco-allemande",
+   "authors": [
+    {
+     "display_name": "Otto Weidinger"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 10 janvier 1991, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000160103",
+     "name": "Arrêté du 10 janvier 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 10 janvier 1991, considérant que l'ouvrage intitulé Tulle et Oradour, tragédie franco-allemande est d'origine étrangère dès lors que son auteur est étranger, considérant que la mise en circulation en France de cet ouvrage qui constitue une provocation à l'égard des résistants et des familles des victimes des crimes de guerre nazis est de nature à causer des dangers pour l'ordre public, considérant l'absence d'observation écrite de l'éditeur, la circulation, la distribution et la mise en vente de l'ouvrage intitulé Tulle et Oradour, tragédie franco-allemande, par Otto Weidinger, sont interdites sur l'ensemble du territoire.",
+     "jorf_date": "1991-01-16"
+    }
+   ]
+  },
+  {
+   "key": "entre-chien-et-lou-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Entre chien et lou",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 12 mars 1991, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000352865",
+     "name": "Arrêté du 12 mars 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 12 mars 1991, considérant le caractère pornographique et d'incitation pédophile de l'ouvrage ci-dessous mentionné, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Entre chien et lou, Editions Rares. Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches ou sous l'une des autres formes prévues par l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée.",
+     "jorf_date": "1991-03-17"
+    }
+   ]
+  },
+  {
+   "key": "leçons-de-plaisir-le-sexe-expliqué-aux-a-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Leçons de plaisir. Le sexe expliqué aux adolescents",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 21 mars 1991, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000343310",
+     "name": "Arrêté du 21 mars 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 21 mars 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique des ouvrages ci-dessous mentionnés, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs et d'exposer les ouvrages intitulés: Leçons de plaisir. - Le sexe expliqué aux adolescents; Le sexe en vacances, édités par Les Editions rares.",
+     "jorf_date": "1991-04-13"
+    }
+   ]
+  },
+  {
+   "key": "le-sexe-en-vacances-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Le sexe en vacances",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 21 mars 1991, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000343310",
+     "name": "Arrêté du 21 mars 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 21 mars 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique des ouvrages ci-dessous mentionnés, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs et d'exposer les ouvrages intitulés: Leçons de plaisir. - Le sexe expliqué aux adolescents; Le sexe en vacances, édités par Les Editions rares.",
+     "jorf_date": "1991-04-13"
+    }
+   ]
+  },
+  {
+   "key": "stupre-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Stupre",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 9 avril 1991, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000343309",
+     "name": "Arrêté du 9 avril 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 9 avril 1991, considérant le danger présenté pour la jeunesse par l'aspect et le contenu licencieux et violent de la publication ci-dessous mentionnée ainsi que l'intérêt s'attachant, pour ce motif, à soustraire ce même ouvrage de la vue des mineurs, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs la publication intitulée: Stupre.",
+     "jorf_date": "1991-04-13"
+    }
+   ]
+  },
+  {
+   "key": "l-île-nue-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "L'Île nue",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 6 juin 1991, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000173232",
+     "name": "Arrêté du 6 juin 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 6 juin 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique et pédophile des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: L'Ile nue; Inde sensuelle; Le Slip, édités par les Editions Rares.",
+     "jorf_date": "1991-06-15"
+    }
+   ]
+  },
+  {
+   "key": "inde-sensuelle-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Inde sensuelle",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 6 juin 1991, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000173232",
+     "name": "Arrêté du 6 juin 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 6 juin 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique et pédophile des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: L'Ile nue; Inde sensuelle; Le Slip, édités par les Editions Rares.",
+     "jorf_date": "1991-06-15"
+    }
+   ]
+  },
+  {
+   "key": "le-slip-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Le Slip",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 6 juin 1991, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000173232",
+     "name": "Arrêté du 6 juin 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 6 juin 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique et pédophile des publications ci-dessous mentionnées, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949, de proposer, de donner ou de vendre à des mineurs les ouvrages intitulés: L'Ile nue; Inde sensuelle; Le Slip, édités par les Editions Rares.",
+     "jorf_date": "1991-06-15"
+    }
+   ]
+  },
+  {
+   "key": "détruis-moi-dans-ton-étreinte-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Détruis-moi dans ton étreinte",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 29 août 1991, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000354763",
+     "name": "Arrêté du 29 août 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 29 août 1991, considérant le danger présenté pour la jeunesse par le contenu pornographique et sadomasochiste de la publication ci-dessous mentionnée, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Détruis-moi dans ton étreinte, Editions Rares. Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches.",
+     "jorf_date": "1991-09-04"
+    }
+   ]
+  },
+  {
+   "key": "amours-romaines-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Amours romaines",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 29 août 1991, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000354761",
+     "name": "Arrêté du 29 août 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 29 août 1991, considérant le caractère pornographique et d'incitation pédophile de la publication ci-dessous mentionnée, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Amours romaines, Editions Rares. Sont interdites sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite pour lui par voie d'affiches ou sous l'une des autres formes prévues par l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée.",
+     "jorf_date": "1991-09-04"
+    }
+   ]
+  },
+  {
+   "key": "les-amants-lumineux-1991",
+   "country_code": "FR",
+   "year": 1991,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Les Amants lumineux",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 21 novembre 1991, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000526862",
+     "name": "Arrêté du 21 novembre 1991 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 21 novembre 1991, considérant le danger présenté pour la jeunesse par l'aspect et le contenu incitatifs à la pédophilie de l'ouvrage ci-dessous mentionné, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée, de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Les Amants lumineux (édition de la Mouette).",
+     "jorf_date": "1991-11-29"
+    }
+   ]
+  },
+  {
+   "key": "le-manifeste-antijuif-1992",
+   "country_code": "FR",
+   "year": 1992,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Le Manifeste antijuif",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 2 mars 1992, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000174532",
+     "name": "Arrêté du 2 mars 1992 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur en date du 2 mars 1992, considérant le caractère antisémite de l'ouvrage ci-dessous mentionné et la place faite par lui à la discrimination et à la haine raciale, il est interdit, sous les peines prévues au sixième alinéa de l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée de proposer, de donner ou de vendre à des mineurs l'ouvrage intitulé: Le Manifeste antijuif, éditions de la Libre Parole. Sont interdites, sous les mêmes peines, d'une part, l'exposition de cet ouvrage et, d'autre part, la publicité faite par lui par voie d'affiches ou sous l'une des autres formes prévues par l'article 14 de la loi no 49-956 du 16 juillet 1949 modifiée précitée.",
+     "jorf_date": "1992-03-06"
+    }
+   ]
+  },
+  {
+   "key": "l-ordre-ss-éthique-et-idéologie-1992",
+   "country_code": "FR",
+   "year": 1992,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "banned",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "L'Ordre SS – Éthique et idéologie",
+   "authors": [
+    {
+     "display_name": "Edwige Thibaut"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 2 décembre 1992, the Minister of the Interior prohibited the circulation, distribution and sale of this foreign-origin work throughout France on public-order grounds (decree 83-1025 of 28 November 1983 procedure).",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000347162",
+     "name": "Arrêté du 2 décembre 1992 (Journal officiel)",
+     "type": "government",
+     "quote": "Par arrêté du ministre de l'intérieur et de la sécurité publique en date du 2 décembre 1992, considérant que l'ouvrage intitulé L'Ordre SS - Ethique et idéologie est d'origine étrangère dès lors que les cahiers qui le composent sont traduits d'une langue étrangère, considérant que la mise en circulation en France de cet ouvrage est de nature à causer des dangers pour l'ordre public en raison de l'apologie du nazisme, du racisme et de l'antisémitisme à laquelle il se livre et considérant les observations présentées par l'éditeur en application de l'article 8 du décret no 83-1025 du 28 novembre 1983: La circulation, la distribution et la mise en vente de l'ouvrage intitulé L'Ordre SS - Ethique et idéologie par Edwige Thibaut (Editions Avalon) sont interdites sur l'ensemble du territoire.",
+     "jorf_date": "1992-12-04"
+    }
+   ]
+  },
+  {
+   "key": "bien-trop-petit-2023",
+   "country_code": "FR",
+   "year": 2023,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "obscenity",
+   "title": "Bien trop petit",
+   "authors": [
+    {
+     "display_name": "Manu Causse"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 17 juillet 2023, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000047852814",
+     "name": "Arrêté du 17 juillet 2023 (Journal officiel)",
+     "type": "government",
+     "quote": "Considérant que la loi du 16 juillet 1949 relative aux publications destinées à la jeunesse dispose notamment en son article 2 que les publications destinées à la jeunesse ne doivent comporter aucun contenu à caractère pornographique ; que son article 14 habilite le ministre de l'intérieur à prononcer une ou plusieurs mesures d'interdiction envers un ouvrage qui contiendrait un tel danger ; Considérant que l'ouvrage « Bien trop petit » de Manu Causse, manifestement destiné à la jeunesse, contient, à travers le récit d'une fiction imaginée par le personnage principal - notamment en pages 61 et 62, 85 et 86, 90 à 94, 105 à 108, et 158 à 160 - la description complaisante de nombreuses scènes de sexe très explicites ; Considérant dès lors que ce récit constitue un contenu à caractère pornographique, présentant de ce fait un danger pour les mineurs qui pourraient l'acquérir ou le consulter, A",
+     "jorf_date": "2023-07-18"
+    }
+   ]
+  },
+  {
+   "key": "moi-la-jeune-musulmane-2026",
+   "country_code": "FR",
+   "year": 2026,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "other",
+   "title": "Moi, la jeune Musulmane",
+   "authors": [
+    {
+     "display_name": "Ahmad Ibn Moubarak ibn Qadhlan Al Mazru'i"
+    }
+   ],
+   "author_known": true,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 23 février 2026, the Minister of the Interior prohibited the sale of this work to minors, its display and poster advertising under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053555226",
+     "name": "Arrêté du 23 février 2026 (Journal officiel)",
+     "type": "government",
+     "quote": "Considérant que la loi du 16 juillet 1949 relative aux publications destinées à la jeunesse dispose notamment en son article 2 que les publications destinées à la jeunesse ne doivent comporter aucun contenu présentant un danger pour la jeunesse lorsqu'il est susceptible d'inciter à la discrimination ou à la haine contre une personne déterminée ou un groupe de personnes ou de nature à nuire à l'épanouissement physique, mental ou moral de l'enfance ou la jeunesse ; que son article 3 institue une commission chargée de la surveillance et du contrôle des publications destinées à l'enfance et à l'adolescence, chargée de proposer toutes mesures susceptibles d'améliorer les publications destinées à l'enfance et à l'adolescence, et qui doit signaler aux autorités compétentes les infractions à la loi susmentionnée, ainsi que tous agissements ou infractions de nature à nuire, par la voie de la pres",
+     "jorf_date": "2026-02-24"
+    }
+   ]
+  },
+  {
+   "key": "encyclopédie-de-l-holocauste-non-censuré-2026",
+   "country_code": "FR",
+   "year": 2026,
+   "year_ended": null,
+   "scope_slug": "government",
+   "action_type": "restricted",
+   "ban_status": "active",
+   "reason_slug": "racial",
+   "title": "Encyclopédie de l'Holocauste : non censurée et non contrainte",
+   "authors": [
+    {
+     "display_name": "Unknown"
+    }
+   ],
+   "author_known": false,
+   "first_published_year": null,
+   "description_ban": "By ministerial order of 30 juin 2026, the Minister of the Interior prohibited the sale of this work to minors under Article 14 of the French law of 16 July 1949 on publications for young people.",
+   "sources": [
+    {
+     "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054371425",
+     "name": "Arrêté du 30 juin 2026 (Journal officiel)",
+     "type": "government",
+     "quote": "Considérant que l'article 14 de loi du 16 juillet 1949 relative aux publications destinées à la jeunesse habilite le ministre de l'intérieur à prononcer une ou plusieurs mesures d'interdiction envers un ouvrage qui contiendrait un danger pour la jeunesse en raison de contenus susceptibles d'inciter au crime ou à la violence, à la discrimination ou à la haine contre une personne déterminée ou un groupe de personnes, aux atteintes à la dignité humaine ; Considérant que l'ouvrage « Encyclopédie de l'Holocauste : non censurée et non contrainte » publiée en novembre 2025, remet en cause l'existence de l'Holocauste en employant le conditionnel pour évoquer de nombreux faits historiques ou en contestant ces derniers, les qualifiant parfois de fictionnels ou de faux ; qu'il en est ainsi de « la solution finale présentée comme une fiction non-documentée » et remettant en cause les « débuts des ga",
+     "jorf_date": "2026-07-02"
+    }
+   ]
+  }
+ ]
+}
