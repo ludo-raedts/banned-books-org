@@ -108,7 +108,7 @@ export default function MobileNav() {
   }, [open])
 
   return (
-    <div className="ml-auto md:hidden flex items-center gap-0.5">
+    <div className="ml-auto lg:hidden flex items-center gap-0.5">
       <Link
         href="/search"
         aria-label="Search"

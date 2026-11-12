@@ -89,7 +89,7 @@ export default function RootLayout({
               <Image src="/brand/compact-bb.svg" alt="" width={24} height={24} priority className="rounded-[5px]" />
               <span>Banned Books</span>
             </Link>
-            <nav className="hidden md:flex items-center gap-1 flex-1">
+            <nav className="hidden lg:flex items-center gap-1 flex-1">
               <NavLink href="/search">Search</NavLink>
               <NavLink href="/dataset">Dataset</NavLink>
               <NavLink href="/countries">Countries</NavLink>
