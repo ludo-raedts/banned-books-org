@@ -72,8 +72,18 @@ export type BookSearchResult = {
 // but never read by any consumer (book-browser, search-client, ReasonCatalogue
 // doesn't even read bans) — dropping them removes a scopes LATERAL join per ban
 // row and ~halves the payload on heavily-banned titles.
+// Gated (CSAM-adjacent policy, Bucket B) works ARE findable in search — the
+// interstitial on the record page is the warning — but result cards must never
+// carry their cover or blurb. Strip both here so no consumer can render them.
+function hideGatedMedia<T>(rows: T[]): T[] {
+  return rows.map(r => {
+    const b = r as { is_gated?: boolean }
+    return b.is_gated ? ({ ...r, cover_url: null, description_book: null } as T) : r
+  })
+}
+
 const SELECT = `
-  id, title, slug, cover_url, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
+  id, title, slug, is_gated, cover_url, description_book, openlibrary_work_id, isbn13, first_published_year, genres,
   book_authors(authors(display_name)),
   bans(
     country_code,
@@ -173,11 +183,10 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
     if (sort === 'alpha') {
       const { data, count, error } = await supabase
         .from('books').select(SELECT, { count: 'exact' })
-        .eq('is_gated', false)
         .order('title')
         .range(offset, offset + limit - 1)
       if (error) return { books: [], total: 0, error: error.message }
-      return { books: data ?? [], total: count ?? 0 }
+      return { books: hideGatedMedia(data ?? []), total: count ?? 0 }
     }
 
     // popular / bans: head = topIds from the view (≤100), tail = rest of
@@ -211,11 +220,11 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
     if (pageIds.length === 0) return { books: [], total: totalCount ?? 0 }
 
     const { data: hydrated, error } = await supabase
-      .from('books').select(SELECT).eq('is_gated', false).in('id', pageIds)
+      .from('books').select(SELECT).in('id', pageIds)
     if (error) return { books: [], total: 0, error: error.message }
     const byId = new Map(((hydrated ?? []) as Array<{ id: number }>).map(b => [b.id, b]))
     const ordered = pageIds.map(id => byId.get(id)).filter(Boolean) as unknown[]
-    return { books: ordered, total: totalCount ?? 0 }
+    return { books: hideGatedMedia(ordered), total: totalCount ?? 0 }
   }
 
   // ── Filters: collect sets of matching book IDs per condition, then intersect ──
@@ -301,14 +310,13 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
   // Fetch sort keys for the matched ids in chunks — `.in('id', allIds)` with
   // thousands of ids would exceed the PostgREST URL-length cap (this is what
   // silently zeroed out large reason/country filters once they stopped being
-  // truncated to 1000). Exclude gated here so `total` and paging match what
-  // actually renders below, then sort in JS.
+  // truncated to 1000). Then sort in JS.
   const SORT_CHUNK = 500
   type SortRow = { id: number; title: string; created_at: string | null }
   const sortChunks: number[][] = []
   for (let i = 0; i < allIds.length; i += SORT_CHUNK) sortChunks.push(allIds.slice(i, i + SORT_CHUNK))
   const sortRows = await inWaves<SortRow>(sortChunks.map(c => () =>
-    supabase.from('books').select('id, title, created_at').eq('is_gated', false).in('id', c)))
+    supabase.from('books').select('id, title, created_at').in('id', c)))
 
   let sortedIds: number[]
   if (sort === 'alpha') {
@@ -334,9 +342,9 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
   const pageIds = sortedIds.slice(offset, offset + limit)
   if (pageIds.length === 0) return { books: [], total }
 
-  const { data, error } = await supabase.from('books').select(SELECT).eq('is_gated', false).in('id', pageIds)
+  const { data, error } = await supabase.from('books').select(SELECT).in('id', pageIds)
   if (error) return { books: [], total: 0, error: error.message }
   const byId = new Map(((data ?? []) as Array<{ id: number }>).map(b => [b.id, b]))
   const ordered = pageIds.map(id => byId.get(id)).filter(Boolean) as unknown[]
-  return { books: ordered, total }
+  return { books: hideGatedMedia(ordered), total }
 }
