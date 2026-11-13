@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase'
+import { countryCodeForQuery } from '@/lib/country-aliases'
 
 export type BookSort = 'popular' | 'bans' | 'alpha'
 
@@ -242,16 +243,27 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
       `title_native.ilike.${lq},` +
       `title_transliterated.ilike.${lq},` +
       `title_english_meaningful.ilike.${lq}`
-    const [{ data: titleHits }, { data: authorHits }] = await Promise.all([
-      supabase.from('books').select('id').or(titleOr),
-      supabase.from('authors').select('id').ilike('display_name', lq),
-    ])
+    // "DDR" / "GDR" / "East Germany": the query names a jurisdiction, so it
+    // matches books banned there (ban rows, see country-aliases.ts) INSTEAD of
+    // a substring scan: "ddr" would otherwise hit "…unddreissig…" in unrelated titles.
+    const aliasCode = countryCodeForQuery(q)
+    const [{ data: titleHits }, { data: authorHits }] = aliasCode
+      ? [{ data: null }, { data: null }]
+      : await Promise.all([
+          supabase.from('books').select('id').or(titleOr),
+          supabase.from('authors').select('id').ilike('display_name', lq),
+        ])
     const ids = new Set((titleHits ?? []).map(b => b.id as number))
     if (authorHits?.length) {
       const { data: byAuthor } = await supabase
         .from('book_authors').select('book_id')
         .in('author_id', authorHits.map(a => a.id))
       ;(byAuthor ?? []).forEach(b => ids.add(b.book_id as number))
+    }
+    if (aliasCode) {
+      const rows = await paginateAll<{ id: number; book_id: number }>((f, t) =>
+        supabase.from('bans').select('id, book_id').eq('country_code', aliasCode).order('id').range(f, t))
+      rows.forEach(r => ids.add(r.book_id))
     }
     idSets.push(ids)
   }

@@ -80,5 +80,6 @@ export const config = {
     '/essays/the-line-we-pretend-not-to-draw',
     '/essays/what-we-document',
     '/essays/who-hates-beetles',
+    '/essays/censorship-without-a-list',
   ],
 }

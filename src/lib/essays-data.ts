@@ -16,6 +16,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'censorship-without-a-list',
+    href: '/essays/censorship-without-a-list',
+    title: 'Censorship without a list',
+    dek: 'We found no public, comprehensive list of books banned in East Germany (the GDR, the DDR) after 1953. The evidence sits in print-permit decisions, publishing files and books stopped on the way to the shop. How we built a sourced catalogue of 61 books by hand, where we looked, what we left out, and the patterns in what we found.',
+    publishedAt: '2026-11-13',
+    readingTimeMin: 9,
+    relatedBookSlugs: ['rummelplatz', 'collin', '5-tage-im-juni', 'nachdenken-uber-christa-t', 'horns-ende', '1984'],
+  },
+  {
     slug: 'forbidden-library',
     href: '/essays/forbidden-library',
     title: 'The forbidden library',

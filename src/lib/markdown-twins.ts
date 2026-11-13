@@ -29,6 +29,7 @@ export const MARKDOWN_TWINS: Record<string, string> = {
   '/essays/the-line-we-pretend-not-to-draw': '/essays/the-line-we-pretend-not-to-draw.md',
   '/essays/what-we-document': '/essays/what-we-document.md',
   '/essays/who-hates-beetles': '/essays/who-hates-beetles.md',
+  '/essays/censorship-without-a-list': '/essays/censorship-without-a-list.md',
 }
 
 // True when the client's Accept header expresses a preference for markdown that

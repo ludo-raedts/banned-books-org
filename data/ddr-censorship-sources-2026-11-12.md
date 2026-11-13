@@ -511,7 +511,7 @@ The anthology of unofficial young GDR writers was offered both to the Aufbau-Ver
 
 ### Volker Braun — Hinze-Kunze-Roman (1985, restricted)
 
-After years of wrangling the novel received a print permit and went on sale in 1985. On 10 September 1985 further delivery was stopped, remaining stocks were counted and the book was removed from libraries (later returned to the shelves); deputy culture minister Klaus Höpcke faced disciplinary proceedings for having granted the permit.
+After years of wrangling the novel received a print permit and went on sale in 1985. On 10 September 1985 further delivery was stopped; deputy culture minister Klaus Höpcke faced disciplinary proceedings for having granted the permit.
 
 - [der Freitag — Karsten Laske: Muss warten (11.05.2019)](https://www.freitag.de/autoren/der-freitag/muss-warten) — „Wenig später, das Buch ist im Verkauf, wird am 10. September um 7.30 Uhr (es geht zu wie bei der Reichsbahn) die weitere Auslieferung eingestellt.“
 - [de.wikipedia — Volker Braun](https://de.wikipedia.org/wiki/Volker_Braun) — „Klaus Höpcke, damals stellvertretender Minister für Kultur, erhielt ein Disziplinarverfahren, weil er die Druckerlaubnis erteilt hatte.“
