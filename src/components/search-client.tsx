@@ -15,7 +15,10 @@ import { countryFlag } from '@/lib/country-flag'
 import type { BookSort } from '@/lib/book-search'
 import RegisterHits from '@/components/register-hits'
 
-const FILTER_REASONS = ['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
+// Pages (48 books each) the grid appends on its own while scrolling; after
+// that the visitor presses "Show more".
+const AUTO_LOAD_PAGES = 4
+const FILTER_REASONS =['lgbtq', 'sexual', 'political', 'religious', 'racial', 'violence', 'language', 'drugs']
 
 const SORT_OPTIONS: { value: BookSort; label: string }[] = [
   { value: 'popular', label: 'Most popular' },
@@ -299,6 +302,7 @@ export default function SearchClient({
     // Re-fetch
     let cancelled = false
     setLoadingFilter(true)
+    setAutoLoads(0)
     fetch(`/api/books?${apiParams({ ...filters, offset: 0, defaultSort })}`)
       .then(r => r.json())
       .then(({ books, total: t }) => {
@@ -318,8 +322,19 @@ export default function SearchClient({
     !loadingFilter && debouncedQ.trim().length >= 3 && !country && !reason && !scope && !year && !activeOnly && total <= 5
   const hasMore = displayBooks.length < total
 
-  const loadMore = useCallback(() => {
+  // Scrolling loads the next page by itself only AUTO_LOAD_PAGES times; after
+  // that a "Show more" click is needed. An unbounded auto-scroll let one client
+  // page through the whole catalogue (~285 /api/books calls, ~9.5k cover
+  // optimizations in two hours, 2026-11-13).
+  const [autoLoads, setAutoLoads] = useState(0)
+  const autoCapReached = autoLoads >= AUTO_LOAD_PAGES
+
+  const loadMore = useCallback((manual = false) => {
     if (loadingMore || !hasMore) return
+    if (!manual) {
+      if (autoLoads >= AUTO_LOAD_PAGES) return
+      setAutoLoads(n => n + 1)
+    }
     const filters: Filters = { q: debouncedQ, country, reason: reason ?? '', scope: scope ?? '', year, activeOnly, sort }
     setLoadingMore(true)
     fetch(`/api/books?${apiParams({ ...filters, offset: nextOffset, defaultSort })}`)
@@ -335,14 +350,14 @@ export default function SearchClient({
         setLoadingMore(false)
       })
       .catch(() => setLoadingMore(false))
-  }, [loadingMore, hasMore, debouncedQ, country, reason, scope, year, activeOnly, sort, defaultSort, nextOffset])
+  }, [loadingMore, hasMore, autoLoads, debouncedQ, country, reason, scope, year, activeOnly, sort, defaultSort, nextOffset])
 
   const sentinelRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
     const observer = new IntersectionObserver(
-      entries => { if (entries[0].isIntersecting) loadMore() },
+      entries => { if (entries[0].isIntersecting) loadMore(false) },
       { rootMargin: '300px' }
     )
     observer.observe(el)
@@ -739,6 +754,18 @@ export default function SearchClient({
 
       {loadingMore && (
         <p className="text-sm text-gray-400 text-center py-4">Loading more…</p>
+      )}
+
+      {autoCapReached && hasMore && !loadingMore && (
+        <div className="text-center py-6">
+          <button
+            type="button"
+            onClick={() => loadMore(true)}
+            className="rounded border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          >
+            Show more
+          </button>
+        </div>
       )}
     </div>
   )
