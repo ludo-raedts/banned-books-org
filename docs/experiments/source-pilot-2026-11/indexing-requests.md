@@ -1,4 +1,4 @@
-# Manual indexing requests — PROPOSAL ONLY (nothing requested as of 2026-11-15)
+# Manual indexing requests — shortlist approved 2026-11-15; requests made by the site owner (reported)
 
 Rules: never on the 108 baseline URLs or the panel URLs (it would change what is measured). If the owner
 wants a request on a 108 URL anyway, log it below the same day; that URL's next crawl timestamp is then excluded
@@ -22,7 +22,14 @@ judged "currently not indexed", so the request tests recrawl only.
 ## Log (requests actually made)
 | Date | URL | In 108? | Who | Note |
 |---|---|---|---|---|
-| (none) | | | | |
+| 2026-11-15 | /books/brave-new-world | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/american-psycho | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/sophies-choice | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/madame-bovary | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/for-whom-the-bell-tolls | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/the-metamorphosis | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/the-origin-of-species | no | site owner (reported; not independently verified) | requested via Search Console |
+| 2026-11-15 | /books/the-anarchist-cookbook | no | site owner (reported; not independently verified) | requested via Search Console |
 
 ## Changes since baseline to pages that are in the 108
 | Date | URL | Change |
