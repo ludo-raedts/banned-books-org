@@ -62,6 +62,7 @@ import {
 } from '@/components/data-quality'
 import { BOOK_REASON_PHRASE } from '@/lib/reason-phrases'
 import { withArticle } from '@/lib/book-of-the-day'
+import { buildFactLine } from '@/lib/book-fact-line'
 import { getReadingClubLinkForBook } from '@/lib/reading-club-data'
 import GateOverlay from '@/components/gate-overlay'
 
@@ -139,7 +140,6 @@ function buildBanSummary(
 
   const datedBans = sortedBans.filter(b => b.year_started != null)
   const earliestYear = datedBans.length > 0 ? Math.min(...datedBans.map(b => b.year_started!)) : null
-  const activeBanCount = sortedBans.filter(b => b.status === 'active').length
 
   // `topic` = structured data for the H1-zone subtitle. Rendered by the page
   // as JSX with inline Links (country → /countries/[code], reason →
@@ -160,18 +160,7 @@ function buildBanSummary(
       : null,
   }
 
-  const n = sortedBans.length
-  const facts: string[] = [
-    n === 1
-      ? `1 documented ban${earliestYear ? ` in ${earliestYear}` : ''}`
-      : `${n} documented bans`,
-  ]
-  if (n > 1 && earliestYear) facts.push(`earliest in ${earliestYear}`)
-  if (activeBanCount > 0 && n > activeBanCount) facts.push(`${activeBanCount} still active`)
-  if (countryList.length >= 3) {
-    const [a, b, c] = countryList.map(x => x.name)
-    facts.push(`including ${a}, ${b} and ${c}`)
-  }
+  const facts = buildFactLine(sortedBans)
 
   // FAQ items: prioritise unique-country Q&As (Google ignores duplicate
   // questions across the same FAQPage). Capped at 5 to stay under the
