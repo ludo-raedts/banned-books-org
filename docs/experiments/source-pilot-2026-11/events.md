@@ -1,0 +1,13 @@
+# Events log (site-wide changes and manual Google interactions)
+
+| Date (UTC) | Event | Touches 108 / panel? |
+|---|---|---|
+| 2026-10-25 | Google-only noindex pilot (`c258b99`) | all |
+| 2026-10-26 | Thin ban-text overhaul (`8894784`…`dda9398`) | all |
+| 2026-11-11 | AI ban texts shown only when vetted (`1b3a641`) | all |
+| 2026-11-15 ~14:34 | Live test of /books/1984 in Search Console (reported by the site owner); API lastCrawlTime for that URL became 2026-11-15T14:34Z | 108 (1984) |
+| 2026-11-15 ~15:50 | Cache bust of the 644 mixed-status book pages: Vercel ISR bust first, then Cloudflare purge (`bustPaths`); plain URLs verified serving dpl_DiFRgw… with the new line (a Cloudflare purge alone did NOT help: the stale copy was Vercel's ISR entry) | 644 books incl. 1984 |
+| 2026-11-15 15:03 | Fact-line fix pushed (`9c7e274`), deployment dpl_DiFRgwtJFYGr9kKT7Us7N9cRHDA8. Origin serves it; Cloudflare edge still served the previous deployment (age ~23 h) for plain URLs | 644 books incl. 1984; panel books only if mixed active/historical (none: panel books have 1 ban) |
+| 2026-11-15 ~16:00 | Data corrections (`scripts/fix-data-errors-2026-11-15.ts`, evidence in `data/corrections/2026-11-15-data-errors.md`): lenin-charasch (wrong-work ISBN/blurb/cover removed → left the core, 12,954 → 12,953), gaibeus (duplicate ban merged, unsupported reason text removed), the-da-vinci-code (Iran year 2004→2006, 5 rows marked "Source needed", rationale narrowed). Pages busted (ISR + Cloudflare) and sitemaps busted | **the-da-vinci-code is one of the 108** (fact line and notes changed); lenin-charasch and gaibeus are in neither the 108 nor the panel |
+| 2026-11-15 | Control-page scan: 144 books (panel + the 108's books), 117 with ISBN, 56 checkable against Open Library by ISBN, 61 not on Open Library (unchecked); 1 author mismatch (novas-cartas-portuguesas: incomplete author list, not a wrong work); no wrong-work contamination found, so no edits on panel or control pages | none |
+| 2026-11-15 | CNI-pool probe (read-only URL Inspection API, 700 core books); no live tests or requests | none (108/panel excluded) |
