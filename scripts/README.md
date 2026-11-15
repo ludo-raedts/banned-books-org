@@ -554,6 +554,14 @@ De dagkeuze is **bevroren** in tabel `bluesky_daily_picks` (datum→boek, `sourc
 | `enrich-author-birthdays.ts` | Vul `authors.birth_month/day` uit Wikidata P569 (namesake-gated op `birth_year`); `--feature` markeert de mix van 30 (`birthday_featured`) |
 | `apply-birthday-picks.ts` | Pin verjaardagen van featured auteurs (`source='birthday'`, overschrijft auto, respecteert manual); cron draait `planBirthdayPicks()` ook dagelijks |
 
+### Google-index meting en proef (2026-11)
+| Script | Doel | Schrijft? |
+|---|---|---|
+| `gsc-index-recheck.ts` | Her-inspecteert EXACT de 108 URL's van de baseline (`data/gsc/index-check.jsonl`) en vergelijkt per URL status/reden/laatste crawl. `gsc-index-check.ts` zelf is hier ongeschikt: het trekt een nieuw sample uit de nu core-only sitemap | alleen `data/gsc/` |
+| `trial-panel.ts` | Bronproef-paneel (`docs/experiments/source-pilot-2026-11/`): `select` bevriest panel.json (weigert te overschrijven), `inspect <label>` / `report <label>` meten het paneel. Nooit live tests of indexeringsaanvragen | alleen docs/experiments |
+| `gsc-cni-pool.ts` | Meet hoeveel core-boekpagina's Google kent ("Crawled – currently not indexed"): 350 meest-verboden + 350 willekeurige, checkpoint | alleen `data/gsc/` |
+| `fix-data-errors-2026-11-15.ts` | One-off: Lenin (verkeerd werk), Gaibéus (duplicaat), Da Vinci Code ("Source needed"); backup + evidence in `data/corrections/` | `--apply` |
+
 ---
 
 ## Flag-conventie

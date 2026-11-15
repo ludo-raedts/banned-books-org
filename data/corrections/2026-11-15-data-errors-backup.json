@@ -1,0 +1,471 @@
+{
+ "takenAt": "2026-11-15T15:40:28.691Z",
+ "books": [
+  {
+   "id": 11,
+   "slug": "the-da-vinci-code",
+   "title": "The Da Vinci Code",
+   "original_language": "en",
+   "first_published_year": 2003,
+   "isbn13": "9780307277671",
+   "openlibrary_work_id": "OL76837W",
+   "cover_url": "https://covers.openlibrary.org/b/id/9255229-L.jpg",
+   "ai_drafted": true,
+   "created_at": "2026-04-24T13:58:17.597228+00:00",
+   "genres": [
+    "thriller"
+   ],
+   "gutenberg_id": null,
+   "description_book": "The Da Vinci Code is a 2003 mystery thriller novel by Dan Brown, featuring symbologist Robert Langdon and cryptologist Sophie Neveu. The story begins with a murder in the Louvre Museum in Paris, leading them into a conflict between the Priory of Sion and Opus Dei regarding the controversial idea that Jesus Christ and Mary Magdalene had a child together. The novel explores alternative religious history and has sparked significant debate and interest in the Holy Grail legend.",
+   "description_ban": "Thus in 2006, seven Indian states (Nagaland, Punjab, Goa, Tamil Nadu, Andhra Pradesh) banned the release or exhibition of the Hollywood movie The Da Vinci Code (as well as the book). Source: Wikipedia",
+   "censorship_context": "The Nagaland government banned the novel The Da Vinci Code and prohibited screenings of the film based on it.",
+   "cover_status": "valid",
+   "cover_checked_at": null,
+   "warning_level": "none",
+   "inclusion_rationale": "Banned in multiple countries for content considered offensive to religious doctrine, including Lebanon, Jordan, Iran, Saudi Arabia, and Pakistan since 2004.",
+   "extended_context": null,
+   "bookshop_status": "valid",
+   "bookshop_checked_at": "2026-07-02T12:14:51.558511+00:00",
+   "bookshop_isbn13": "9780307277671",
+   "title_native": "The Da Vinci Code",
+   "title_native_script": "latin",
+   "title_transliterated": null,
+   "title_english_meaningful": null,
+   "updated_at": "2026-11-11T11:04:04.523771+00:00",
+   "data_quality_status": "confident",
+   "data_quality_evaluated_at": "2026-09-01T13:06:22.221+00:00",
+   "archive_org_id": "TheDaVinciCode_201308",
+   "archive_org_status": "valid",
+   "archive_org_checked_at": "2026-05-19T20:14:12.41+00:00",
+   "gutenberg_status": "not_found",
+   "gutenberg_checked_at": "2026-05-19T20:55:33.458+00:00",
+   "isbn_status": "valid",
+   "isbn_checked_at": "2026-05-20T08:07:57.617771+00:00",
+   "description_source_url": "https://en.wikipedia.org/wiki/The_Da_Vinci_Code",
+   "description_source_type": "llm_grounded_multi",
+   "censorship_context_status": "source_verified",
+   "description_ban_status": null,
+   "is_gated": false,
+   "gating_country": null,
+   "is_blanket_works": false,
+   "awards": [],
+   "kobo_url": null,
+   "kobo_checked_at": "2026-07-03T06:29:56.147+00:00",
+   "native_title_checked_at": null,
+   "censorship_context_sources": [
+    {
+     "url": "https://www.rediff.com/movies/report/davinci/20060602.htm",
+     "quote": "Notwithstanding the decision of the Central Board of Film Certification (CBFC) of India to clear the film with an 'A' certificate, the Nagaland government had earlier decided to prohibit its screening as well as ban the novel on which it is based.",
+     "title": "Andhra Pradesh bans Da Vinci - Rediff.com movies"
+    }
+   ],
+   "censorship_context_checked_at": "2026-11-11T10:36:43.137+00:00",
+   "censorship_context_check_note": "events not in our ban rows: The Nagaland government banned the novel The Da Vinci Code.",
+   "censorship_context_unsourced": null
+  },
+  {
+   "id": 717,
+   "slug": "gaibeus",
+   "title": "Gaibéus",
+   "original_language": "pt",
+   "first_published_year": 1939,
+   "isbn13": "9789722104593",
+   "openlibrary_work_id": "OL10544190W",
+   "cover_url": "https://covers.openlibrary.org/b/id/14966746-L.jpg",
+   "ai_drafted": true,
+   "created_at": "2026-04-24T19:55:44.633961+00:00",
+   "genres": [
+    "literary-fiction"
+   ],
+   "gutenberg_id": null,
+   "description_book": "Gaibéus is the debut novel of Alves Redol, published in 1939, marking the beginning of neo-realism in Portugal. The story focuses on the lives of peasants from the northern provinces of Ribatejo and Beira Baixa, who work in harsh conditions during the rice harvest, highlighting their struggles with poverty, disease, and exploitation, as well as their fleeting moments of joy and dreams for a better life. Redol's work aims to expose social inequalities and the exploitation of man by man.",
+   "description_ban": "Banned in Portugal under Estado Novo because of its socialist themes and critique of rural exploitation.",
+   "censorship_context": null,
+   "cover_status": "valid",
+   "cover_checked_at": null,
+   "warning_level": "none",
+   "inclusion_rationale": "Banned in Portugal under the Estado Novo regime for its political content and critique of rural exploitation, reflecting the suppression of socialist themes during the dictatorship.",
+   "extended_context": null,
+   "bookshop_status": "not_found",
+   "bookshop_checked_at": "2026-06-22T10:14:31.962+00:00",
+   "bookshop_isbn13": null,
+   "title_native": "Gaibéus",
+   "title_native_script": "latin",
+   "title_transliterated": null,
+   "title_english_meaningful": null,
+   "updated_at": "2026-09-01T13:06:23.360912+00:00",
+   "data_quality_status": "confident",
+   "data_quality_evaluated_at": "2026-09-01T13:06:22.221+00:00",
+   "archive_org_id": null,
+   "archive_org_status": "not_found",
+   "archive_org_checked_at": "2026-05-19T19:14:47.659+00:00",
+   "gutenberg_status": "not_found",
+   "gutenberg_checked_at": "2026-05-19T19:35:51.965+00:00",
+   "isbn_status": "valid",
+   "isbn_checked_at": "2026-05-20T08:07:57.617771+00:00",
+   "description_source_url": "https://pt.wikipedia.org/wiki/Gaib%C3%A9us",
+   "description_source_type": "llm_grounded_single",
+   "censorship_context_status": "insufficient_evidence",
+   "description_ban_status": null,
+   "is_gated": false,
+   "gating_country": null,
+   "is_blanket_works": false,
+   "awards": [],
+   "kobo_url": null,
+   "kobo_checked_at": "2026-07-03T06:47:34.589+00:00",
+   "native_title_checked_at": null,
+   "censorship_context_sources": null,
+   "censorship_context_checked_at": null,
+   "censorship_context_check_note": null,
+   "censorship_context_unsourced": null
+  },
+  {
+   "id": 22511,
+   "slug": "lenin-charasch",
+   "title": "Lenin",
+   "original_language": null,
+   "first_published_year": 1920,
+   "isbn13": "9780516032603",
+   "openlibrary_work_id": null,
+   "cover_url": "https://books.google.com/books/content?id=kwQ6bMxmXXIC&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+   "ai_drafted": false,
+   "created_at": "2026-06-17T14:29:24.226129+00:00",
+   "genres": [
+    "political-non-fiction"
+   ],
+   "gutenberg_id": null,
+   "description_book": "A biography of the leader of the 1917 Bolshevik Revolution who formulated the official Communist ideology and became the first head of the Soviet state.",
+   "description_ban": null,
+   "censorship_context": null,
+   "cover_status": "valid",
+   "cover_checked_at": "2026-11-04T21:17:56.685+00:00",
+   "warning_level": "none",
+   "inclusion_rationale": "Listed in the Nazi German \"Liste des schädlichen und unerwünschten Schrifttums\" (Stand 31 December 1938); suppressed under National Socialism.",
+   "extended_context": null,
+   "bookshop_status": "not_found",
+   "bookshop_checked_at": "2026-11-04T22:10:15.89+00:00",
+   "bookshop_isbn13": null,
+   "title_native": null,
+   "title_native_script": null,
+   "title_transliterated": null,
+   "title_english_meaningful": null,
+   "updated_at": "2026-11-06T20:21:34.493989+00:00",
+   "data_quality_status": "default",
+   "data_quality_evaluated_at": "2026-11-06T20:21:34.169+00:00",
+   "archive_org_id": null,
+   "archive_org_status": "not_found",
+   "archive_org_checked_at": "2026-06-18T12:27:52.801+00:00",
+   "gutenberg_status": "not_found",
+   "gutenberg_checked_at": "2026-06-18T10:56:02.304+00:00",
+   "isbn_status": "valid",
+   "isbn_checked_at": "2026-11-04T21:17:56.685+00:00",
+   "description_source_url": "https://openlibrary.org/works/OL3473223W",
+   "description_source_type": "openlibrary",
+   "censorship_context_status": null,
+   "description_ban_status": null,
+   "is_gated": false,
+   "gating_country": null,
+   "is_blanket_works": false,
+   "awards": [],
+   "kobo_url": null,
+   "kobo_checked_at": "2026-07-03T08:36:52.807+00:00",
+   "native_title_checked_at": null,
+   "censorship_context_sources": null,
+   "censorship_context_checked_at": null,
+   "censorship_context_check_note": null,
+   "censorship_context_unsourced": null
+  }
+ ],
+ "bans": [
+  {
+   "id": 17,
+   "book_id": 11,
+   "country_code": "LB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T13:58:17.660323+00:00"
+  },
+  {
+   "id": 783,
+   "book_id": 717,
+   "country_code": "PT",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T19:55:44.731303+00:00"
+  },
+  {
+   "id": 959,
+   "book_id": 11,
+   "country_code": "JO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:31:56.264594+00:00"
+  },
+  {
+   "id": 987,
+   "book_id": 11,
+   "country_code": "IR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:44:33.498278+00:00"
+  },
+  {
+   "id": 1018,
+   "book_id": 11,
+   "country_code": "RU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T06:47:41.454017+00:00"
+  },
+  {
+   "id": 1019,
+   "book_id": 11,
+   "country_code": "SA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T06:47:41.644065+00:00"
+  },
+  {
+   "id": 1134,
+   "book_id": 11,
+   "country_code": "QA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:33.309072+00:00"
+  },
+  {
+   "id": 1135,
+   "book_id": 11,
+   "country_code": "PK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:33.554754+00:00"
+  },
+  {
+   "id": 6012,
+   "book_id": 11,
+   "country_code": "IR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-05-19T09:35:58.183053+00:00"
+  },
+  {
+   "id": 13127,
+   "book_id": 11,
+   "country_code": "IN",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": "Nagaland",
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 2006, seven Indian states (Nagaland, Punjab, Goa, Tamil Nadu, Andhra Pradesh) banned the release or exhibition of The Da Vinci Code due to protests.",
+   "confidence": "verified",
+   "created_at": "2026-05-22T05:23:47.47214+00:00"
+  },
+  {
+   "id": 40011,
+   "book_id": 717,
+   "country_code": "PT",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1940,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). Marked with a special prohibition that varied between the Metrópole and the Colónias, or whose censorship status changed over time. The year (1940) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP.",
+   "confidence": "reported",
+   "created_at": "2026-06-28T14:05:36.320714+00:00"
+  }
+ ],
+ "ban_source_links": [
+  {
+   "ban_id": 17,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 783,
+   "source_id": 564,
+   "locator": null
+  },
+  {
+   "ban_id": 959,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 987,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 1018,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 1019,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 1134,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1135,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 6012,
+   "source_id": 1969,
+   "locator": null
+  },
+  {
+   "ban_id": 13127,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 40011,
+   "source_id": 7667,
+   "locator": null
+  }
+ ],
+ "ban_reason_links": [
+  {
+   "ban_id": 17,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 783,
+   "reason_id": 2,
+   "basis": null
+  },
+  {
+   "ban_id": 959,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 987,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 1018,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 1019,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 1134,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 1135,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 6012,
+   "reason_id": 11,
+   "basis": null
+  },
+  {
+   "ban_id": 13127,
+   "reason_id": 3,
+   "basis": null
+  },
+  {
+   "ban_id": 40011,
+   "reason_id": 2,
+   "basis": null
+  }
+ ]
+}
