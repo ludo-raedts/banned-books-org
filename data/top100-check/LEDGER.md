@@ -1,0 +1,106 @@
+# Top-100 source check ledger 2026-11-16 (applied)
+
+- ban 956 the-satanic-verses / Kenya [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Muslim response and book bannings]
+- ban 1055 the-satanic-verses / Pakistan [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Reception timeline]
+- ban 1056 the-satanic-verses / Bangladesh [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Muslim response and book bannings]
+- ban 1136 the-satanic-verses / Qatar [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Reception timeline]
+- ban 5041 the-satanic-verses / Kuwait [PARTIAL]: no field change
+- ban 5046 the-satanic-verses / Sri Lanka [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Muslim response and book bannings]
+- ban 5048 the-satanic-verses / Thailand [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy [Muslim response and book bannings]
+- ban 1095 lady-chatterleys-lover / Norway [UNSUPPORTED]: no field change
+- ban 1211 lady-chatterleys-lover / New Zealand [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Lady Chatterley's Lover entry]
+- ban 1100 tropic-of-cancer / Norway [UNSUPPORTED]: no field change
+- ban 1101 tropic-of-cancer / Denmark [UNSUPPORTED]: no field change
+- ban 4764 tropic-of-cancer / New Zealand [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Tropic of Cancer entry]
+- ban 1106 brave-new-world / Canada [UNSUPPORTED]: no field change
+- ban 611 les-miserables / Spain [UNSUPPORTED]: no field change
+- ban 1139 the-color-purple / South Africa [UNSUPPORTED]: no field change
+- ban 114 the-god-of-small-things / India [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/The_God_of_Small_Things [Reception/controversy]
+- ban 1110 the-god-of-small-things / Lebanon [UNSUPPORTED]: no field change
+- ban 673 i-am-malala / Pakistan [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/I_Am_Malala [Reception]
+- ban 887 the-red-and-the-black / France [UNSUPPORTED]: no field change
+- ban 1094 the-kite-runner / Afghanistan [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/The_Kite_Runner [Film adaptation section]
+- ban 565 1984 / China [CONTRADICTED]: no field change
+- ban 585 1984 / Soviet Union [SUPPORTED]: no field change + source https://en.wikipedia.org/wiki/Nineteen_Eighty-Four [Censorship section (Soviet Union); list entry]
+- ban 1107 1984 / Romania [UNSUPPORTED]: no field change
+- ban 1108 1984 / Hungary [UNSUPPORTED]: no field change
+- ban 1143 1984 / Bulgaria [UNSUPPORTED]: no field change
+- ban 1144 1984 / Albania [UNSUPPORTED]: no field change
+- ban 1134 the-da-vinci-code / Qatar [CONTRADICTED]: no field change
+- ban 1135 the-da-vinci-code / Pakistan [PARTIAL]: no field change + source https://www.dawn.com/news/amp/195568 [article text]
+- ban 13127 the-da-vinci-code / India [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/The_Da_Vinci_Code [India/controversy section]
+- ban 4767 fanny-hill / New Zealand [PARTIAL]: no field change + source https://gazette.howison.co.nz/nzg/1965/issue/26/page/809 [page 809]
+- ban 29238 fanny-hill / Singapore [SUPPORTED]: no field change + source https://globalvoices.org/2015/11/26/singaporeans-can-now-legally-own-and-read-fanny-hill-but-playboy-is-still-banned/ [article text]
+- ban 1210 the-decameron / New Zealand [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Decameron entry]
+- ban 4765 naked-lunch / New Zealand [SUPPORTED]: no field change + source https://gazette.howison.co.nz/nzg/1974/issue/97/page/2084 [page 2084]
+- ban 652 aristotle-and-dante-discover-the-secrets-of-the-universe / Russia [UNSUPPORTED]: no field change
+- ban 1104 the-diary-of-a-young-girl / Lebanon [UNSUPPORTED]: no field change
+- ban 1142 the-diary-of-a-young-girl / Malaysia [UNSUPPORTED]: no field change
+- ban 575 the-turner-diaries / Germany [PARTIAL]: no field change + source https://de.wikipedia.org/wiki/Die_Turner-Tagebücher [Rezeption/Indizierung]
+- ban 628 the-protocols-of-the-elders-of-zion / Germany [UNSUPPORTED]: no field change
+- ban 1141 the-handmaids-tale / Iran [UNSUPPORTED]: no field change
+- ban 58 lolita / France [PARTIAL]: no field change + source https://nabokovsociety.org/node/33881 [France entry]
+- ban 1040 lolita / New Zealand [SUPPORTED]: no field change + source https://gazette.howison.co.nz/nzg/1965/issue/1/page/23 [p.22-23]
+- ban 1098 lolita / Norway [UNSUPPORTED]: no field change
+- ban 1099 lolita / Denmark [UNSUPPORTED]: no field change
+- ban 1809 lolita / South Africa [UNSUPPORTED]: no field change
+- ban 1212 the-communist-manifesto / New Zealand [UNSUPPORTED]: no field change
+- ban 1127 the-jewel-of-medina / Saudi Arabia [UNSUPPORTED]: no field change
+- ban 1128 the-jewel-of-medina / Qatar [UNSUPPORTED]: no field change
+- ban 1129 the-jewel-of-medina / Malaysia [UNSUPPORTED]: no field change
+- ban 5019 candy / New Zealand [PARTIAL]: no field change + source https://gazette.howison.co.nz/nzg/1969/issue/6/page/178 [p.178]
+- ban 857 justine-de-sade / France [UNSUPPORTED]: no field change
+- ban 4769 justine-de-sade / New Zealand [PARTIAL]: no field change + source https://gazette.howison.co.nz/nzg/1969/issue/72/page/2217 [p.2217]
+- ban 655 what-if-its-us / Malaysia [PARTIAL]: no field change + source https://www.thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals [article]
+- ban 935 a-banquet-for-seaweed / Egypt [SUPPORTED]: no field change + source https://newleftreview.org/issues/ii5/articles/sabry-hafez-the-novel-politics-and-islam [Banquet for Seaweed section]
+- ban 840 fontamara / Italy [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/Fontamara [publication history]
+- ban 1161 fontamara / Germany [PARTIAL]: no field change
+- ban 642 lajja / Iran [UNSUPPORTED]: no field change
+- ban 1138 beloved / South Africa [UNSUPPORTED]: no field change
+- ban 619 the-story-of-o / France [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/Story_of_O [Reception/censorship section]
+- ban 620 the-story-of-o / Australia [UNSUPPORTED]: no field change
+- ban 1163 the-story-of-o / Denmark [UNSUPPORTED]: no field change
+- ban 1164 the-story-of-o / Norway [UNSUPPORTED]: no field change
+- ban 4768 the-story-of-o / New Zealand [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Table row Story of O (cites notes 137, 155)]
+- ban 827 the-origin-of-species / Yugoslavia [UNSUPPORTED]: no field change
+- ban 5016 my-secret-life / New Zealand [PARTIAL]: no field change + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Table row My Secret Life (note 128)]
+- ban 1102 the-painted-bird / Czechoslovakia [UNSUPPORTED]: no field change
+- ban 1103 the-painted-bird / Soviet Union [UNSUPPORTED]: no field change
+- ban 654: merged into duplicate 25495 (Fifty Shades / Malaysia, KDN P.U.(A) 37, 2015) and deleted; old row in backup-ban-654-merge.json
+- ban 1209 the-well-of-loneliness / New Zealand [SUPPORTED]: description: null → "Banned by the NZ Customs Department in 1929; now unrestricted (per Wikipedia list, no citation there)." + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Table row Well of Loneliness]
+- ban 613 sons-and-lovers / Australia [UNSUPPORTED]: no field change
+- ban 614 sons-and-lovers / United States [UNSUPPORTED]: no field change
+- ban 647 married-love / Ireland [PARTIAL]: description: null → "Banned by the Irish Censorship Board for discussing birth control (per Wikipedia list citing Sova, Banned Books); ban year not stated." + source https://en.wikipedia.org/wiki/List_of_books_banned_by_governments [Ireland section, Married Love entry (cites Sova)]
+- ban 648 married-love / United States [PARTIAL]: description: null → "US Customs banned the book as obscene until April 6, 1931, when Judge Woolsey overturned the decision (per Wikipedia, uncited there)." + source https://en.wikipedia.org/wiki/Married_Love [Reception section]
+- ban 1208 married-love / New Zealand [UNSUPPORTED]: no field change
+- ban 1024 philosophical-dictionary-voltaire / France [SUPPORTED]: description: null → "The Parlement of Paris condemned the Dictionnaire philosophique portatif by an arret of 19 March 1765; in 1766 a copy was burned with the chevalier de La Barre." + source https://en.wikipedia.org/wiki/Philosophical_Dictionary [France section]
+- ban 1137 and-tango-makes-three / China [UNSUPPORTED]: no field change
+- ban 659 the-social-contract / Vatican City (Holy See) [PARTIAL]: description: "The work was also forbidden by the Church being listed on the Index Librorum Prohibitorum." → "Wikipedia says the work was listed on the Index Librorum Prohibitorum; no date given in the article." + source https://en.wikipedia.org/wiki/The_Social_Contract [Banning/censorship section]
+- ban 660 the-social-contract / France [SUPPORTED]: description: "Upon publication, the distribution of The Social Contract in France was prohibited, leading to Rousseau fleeing the country to avoid imprisonment." → "Wikipedia, citing Wokler (2001), says distribution in France was prohibited upon publication and Rousseau fled to avoid imprisonment." + source https://en.wikipedia.org/wiki/The_Social_Contract [Banning section]
+- ban 964 open-veins-of-latin-america / Chile [PARTIAL]: description: null → "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given." + source https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America [Reception/ban statement]
+- ban 965 open-veins-of-latin-america / Argentina [PARTIAL]: description: "Banned by military junta for its Marxist analysis of Latin American history. Became a symbol of resistance." → "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given." + source https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America [Reception/ban statement]
+- ban 966 open-veins-of-latin-america / Uruguay [PARTIAL]: description: null → "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given." + source https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America [Reception/ban statement]
+- ban 967 open-veins-of-latin-america / Brazil [PARTIAL]: description: null → "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given." + source https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America [Reception/ban statement]
+- ban 908 quran / Albania [UNSUPPORTED]: no field change
+- ban 1093 persepolis / Lebanon [PARTIAL]: description: null → "Wikipedia: the film Persepolis was initially banned in Lebanon after clerics objected; ban lifted March 2008 (LA Times). Book not mentioned."; confidence: "reported" → "unverified" + source https://en.wikipedia.org/wiki/Persepolis_(film) [Reception/censorship section]
+- ban 29817 state-and-revolution / Singapore [UNSUPPORTED]: no field change
+- ban 884 did-six-million-really-die / Germany [PARTIAL]: description: null → "Wikipedia, citing Wyman & Rosenzveig (1996), says the pamphlet was banned in Germany; no date given." + source https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F [Lead/reception]
+- ban 885 did-six-million-really-die / Canada [PARTIAL]: description: null → "Wikipedia: publisher Ernst Zundel was prosecuted under Canada's false-news provision (convicted 1985, retried 1988); the Supreme Court struck the law down in 1992. No book ban stated."; confidence: "reported" → "unverified" + source https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F [Zundel prosecution section]
+- ban 1079 the-story-of-zahra / Lebanon [UNSUPPORTED]: no field change
+- ban 1080 the-story-of-zahra / Saudi Arabia [UNSUPPORTED]: no field change
+- ban 1081 the-story-of-zahra / Egypt [UNSUPPORTED]: no field change
+- ban 662 the-sorrows-of-young-werther / Italy [PARTIAL]: description: null → "Wikipedia, citing Furedi (History Today, 2015), says the novel was banned in Italy and Denmark; Leipzig 1775. No Italian date given." + source https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther [Reception section]
+- ban 1105 animal-farm / Libya [UNSUPPORTED]: confidence: "reported" → "unverified"; description: null → "Source needed: the cited list does not record this ban."
+- ban 1145 animal-farm / Romania [UNSUPPORTED]: no field change
+- ban 1146 animal-farm / Bulgaria [UNSUPPORTED]: no field change
+- ban 5061 mein-kampf / Guatemala [SUPPORTED]: no field change
+- ban 1214 american-psycho / New Zealand [SUPPORTED]: description: "In 1991 the Indecent Publications Tribunal gave the novel an R18 classification, with the condition that it be labelled with the age restriction. It is not on the Classification Office's list of books banned by the Tribunal." → "The Indecent Publications Tribunal classified the novel R18 (Decision 42/91, 12 Dec 1991); it was restricted, not banned." + source https://gazette.howison.co.nz/nzg/1992/issue/10/page/206 [Decision 42/91, 12/12/91, Picador, applicant Comptroller of Customs, R18]
+- ban 1167 last-exit-to-brooklyn / United Kingdom [PARTIAL]: description: null → "Publishers were convicted under the Obscene Publications Act at the Old Bailey; the verdict was quashed on appeal in 1968 (per Wikipedia, citing 2004 obituaries)." + source https://en.wikipedia.org/wiki/Hubert_Selby_Jr. [Obscenity trial section]
+- ban 4766 last-exit-to-brooklyn / New Zealand [SUPPORTED]: description: "Hubert Selby Jr.'s 1964 novel — the subject of a celebrated UK obscenity trial — was prohibited in New Zealand by the Indecent Publications Tribunal in 1967 for its depictions of rape, drug abuse and prostitution in post-war Brooklyn." → "On 1 Nov 1967 the Indecent Publications Tribunal ruled the hardcover indecent except in the hands of adults engaged in work or research in sociological and related fields." + source https://gazette.howison.co.nz/nzg/1967/issue/70/page/1938 [Tribunal decision dated 1 Nov 1967, K. M. Gresson chairman]
+- ban 862 tintin-in-the-congo / United Kingdom [PARTIAL]: description: "In July 2007, following a complaint by human rights lawyer David Enright to the Commission for Racial Equality, Borders, Waterstone's and WHSmith moved the book from children's sections to adult graphic-novel sections; WHSmith added a \"16+\" warning label. UK publisher Egmont reissued the album with a protective band and an introduction explaining the colonial-era context." → "In July 2007, after lawyer David Enright complained to the Commission for Racial Equality, Borders and Waterstone's moved it to adult graphic novels and WHSmith labelled it 16+."; confidence: "verified" → "unverified" + source https://en.wikipedia.org/wiki/Tintin_in_the_Congo [2007 CRE complaint section]
+- ban 12929 the-pearl / New Zealand [PARTIAL]: description: "In 1969 and 1976 it was ruled indecent except in the hands of persons over the age of 18 years engaged in research relevant to the material of the book." → "Per Wikipedia's NZ list, The Pearl was ruled indecent in 1969 and 1976 except for persons over 18 engaged in research."; confidence: "reported" → "unverified" + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [The Pearl entry]
+- ban 4770 droll-stories / New Zealand [PARTIAL]: year_started: 1929 → 1935; description: "Balzac's bawdy tales were among the imports prohibited by New Zealand Customs as indecent under the pre-Tribunal regime that applied the strict Hicklin Rule. The collection was a long-standing target of Anglophone obscenity policing throughout the early twentieth century." → "Per Wikipedia's NZ list, Droll Stories was on the Customs prohibited list and a magistrate's court banned it in 1935; it is now unrestricted." + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Droll Stories entry]
+- ban 645 elmer-gantry / Ireland [SUPPORTED]: description: null → "Elmer Gantry appears on lists of books prohibited in the Irish Free State under the 1929 Censorship of Publications Act (1931 per Notre Dame list)." + source https://en.wikipedia.org/wiki/List_of_books_banned_in_Ireland [Elmer Gantry entry; ND list year 1931]
+- ban 624 one-thousand-and-one-nights / Egypt [PARTIAL]: description: null → "Attempts to ban the Nights in Egypt in 1985 and 1998 met little success (The National)."; confidence: "reported" → "unverified" + source https://www.thenationalnews.com/arts/night-moves-1.526543 [passage on 1985 and 1998 attempts]
+- ban 625 one-thousand-and-one-nights / Saudi Arabia [UNSUPPORTED]: no field change
+- ban 1213 one-thousand-and-one-nights / New Zealand [PARTIAL]: description: null → "Per Wikipedia's NZ list, Customs restricted the Casanova Society translation to students of anthropology and ethnology; now unrestricted." + source https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand [Casanova Society translation entry]

@@ -1,0 +1,335 @@
+[
+ {
+  "ban_id": 619,
+  "slug": "the-story-of-o",
+  "country": "France",
+  "our_year": 1955,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Story_of_O",
+  "source_name": "Wikipedia: Story of O",
+  "locator": "Reception/censorship section",
+  "year_found": 1955,
+  "date_type": "prosecution",
+  "status_now": null,
+  "correction": "Not a ban of the book: obscenity charges were brought against the publisher in 1955 and rejected by the courts; a publicity ban (restriction on advertising) remained for several years.",
+  "suggested_note": "Obscenity charges were brought against the publisher in 1955 and rejected by the courts, but a publicity ban stayed in force for several years (per Wikipedia, uncited there).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Story_of_O"
+  ],
+  "uncertainty": "Wikipedia section has no citation; primary French source not found."
+ },
+ {
+  "ban_id": 620,
+  "slug": "the-story-of-o",
+  "country": "Australia",
+  "our_year": 1960,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened pages do not mention Australia. A search snippet (not opened; AustLit page returned 403) reportedly says the 1965 translated edition was banned 2 Sept 1965 by the Literature Censorship Board, so 1960 may be wrong.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Story_of_O",
+   "https://cirrus.austlit.edu.au/austlit/page/C637276 (403)"
+  ],
+  "uncertainty": "Possible 1965 date from unopened AustLit snippet; verify via AustLit/NAA."
+ },
+ {
+  "ban_id": 1163,
+  "slug": "the-story-of-o",
+  "country": "Denmark",
+  "our_year": 1967,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Story_of_O"
+  ],
+  "uncertainty": "Only Wikipedia article opened; no Danish source found."
+ },
+ {
+  "ban_id": 1164,
+  "slug": "the-story-of-o",
+  "country": "Norway",
+  "our_year": 1954,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "1954 is the French publication year; Norwegian ban not found.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Story_of_O"
+  ],
+  "uncertainty": "Only Wikipedia article opened; no Norwegian source found."
+ },
+ {
+  "ban_id": 4768,
+  "slug": "the-story-of-o",
+  "country": "New Zealand",
+  "our_year": 1967,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand",
+  "locator": "Table row Story of O (cites notes 137, 155)",
+  "year_found": 1967,
+  "date_type": "classification",
+  "status_now": "restricted/R16 since 2014",
+  "correction": "Classification was 'restricted to professional psychiatrists' in 1967 (expanded 1976), not 'indecent'; OFLC gave R16 in 2014 so no longer a ban.",
+  "suggested_note": "The NZ Indecent Publications Tribunal restricted the book in 1967 to professional psychiatrists (expanded 1976); the Classification Office rated it R16 in 2014 (per Wikipedia list).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://paperspast.natlib.govt.nz/newspapers/CHP19671118.2.233 (empty)"
+  ],
+  "uncertainty": "Secondary source; a search summary of a Nov 1967 Press article (not opened successfully) agrees with restricted-to-psychiatrists."
+ },
+ {
+  "ban_id": 827,
+  "slug": "the-origin-of-species",
+  "country": "Yugoslavia",
+  "our_year": 1935,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/On_the_Origin_of_Species",
+   "https://wiki.ncac.org/Origin_of_Species (403)"
+  ],
+  "uncertainty": "Opened Wikipedia page (first 100k chars) mentions Serbian translation 1878, no ban."
+ },
+ {
+  "ban_id": 5016,
+  "slug": "my-secret-life",
+  "country": "New Zealand",
+  "our_year": 1888,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand",
+  "locator": "Table row My Secret Life (note 128)",
+  "year_found": 1968,
+  "date_type": "classification",
+  "status_now": "restricted",
+  "correction": "Year 1888 is the publication date; NZ tribunal ruling was 1968 (repeated 1976): indecent except for over-18s with professional/academic need.",
+  "suggested_note": "The NZ Indecent Publications Tribunal ruled it indecent except for persons over 18 with professional or academic interest, in 1968 and again in 1976 (per Wikipedia list).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand"
+  ],
+  "uncertainty": "Secondary source; gazette entries not opened."
+ },
+ {
+  "ban_id": 1102,
+  "slug": "the-painted-bird",
+  "country": "Czechoslovakia",
+  "our_year": 1965,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No Czechoslovak ban found; documented ban is Poland 1965-1989 (NYT 22 Apr 1989 via Wikipedia).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Painted_Bird",
+   "https://en.wikipedia.org/wiki/Jerzy_Kosi%C5%84ski"
+  ],
+  "uncertainty": "Absence of evidence only."
+ },
+ {
+  "ban_id": 1103,
+  "slug": "the-painted-bird",
+  "country": "Soviet Union",
+  "our_year": 1965,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No Soviet ban found; documented ban is Poland 1965-1989.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Painted_Bird",
+   "https://en.wikipedia.org/wiki/Jerzy_Kosi%C5%84ski"
+  ],
+  "uncertainty": "Absence of evidence only."
+ },
+ {
+  "ban_id": 654,
+  "slug": "fifty-shades-of-grey",
+  "country": "Malaysia",
+  "our_year": 2011,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.malaymail.com/news/malaysia/2015/02/27/after-movie-malaysia-also-bans-fifty-shades-books/849119",
+  "source_name": "Malay Mail, 27 Feb 2015",
+  "locator": "Article body",
+  "year_found": 2015,
+  "date_type": "order",
+  "status_now": "unknown (no sign of repeal; not verified)",
+  "correction": "Year should be 2015 (2011 is the publication year). Home Ministry order dated 24 Feb 2015 under Printing Presses and Publications Act 1984, covering all three novels.",
+  "suggested_note": "Malaysia's Home Ministry banned the trilogy by order dated 24 February 2015 under the Printing Presses and Publications Act 1984, as prejudicial to morality, after the film was barred.",
+  "opened_urls": [
+   "https://www.malaymail.com/news/malaysia/2015/02/27/after-movie-malaysia-also-bans-fifty-shades-books/849119",
+   "https://en.wikipedia.org/wiki/Fifty_Shades_of_Grey"
+  ],
+  "uncertainty": "Current status not checked."
+ },
+ {
+  "ban_id": 1209,
+  "slug": "the-well-of-loneliness",
+  "country": "New Zealand",
+  "our_year": 1929,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand",
+  "locator": "Table row Well of Loneliness",
+  "year_found": 1929,
+  "date_type": "customs",
+  "status_now": "unrestricted now",
+  "correction": "",
+  "suggested_note": "Banned by the NZ Customs Department in 1929; now unrestricted (per Wikipedia list, no citation there).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://www.pridenz.com/paperspast_ep19290511_2_189_9.html"
+  ],
+  "uncertainty": "Low: uncited Wikipedia list only; opened Papers Past summary did not confirm NZ action."
+ },
+ {
+  "ban_id": 613,
+  "slug": "sons-and-lovers",
+  "country": "Australia",
+  "our_year": 1930,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+  ],
+  "uncertainty": "Only a search snippet of an aggregator (not opened) claims this."
+ },
+ {
+  "ban_id": 614,
+  "slug": "sons-and-lovers",
+  "country": "United States",
+  "our_year": 1930,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+  ],
+  "uncertainty": "Nothing found."
+ },
+ {
+  "ban_id": 647,
+  "slug": "married-love",
+  "country": "Ireland",
+  "our_year": 1931,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+  "source_name": "Wikipedia: List of books banned by governments",
+  "locator": "Ireland section, Married Love entry (cites Sova)",
+  "year_found": null,
+  "date_type": "Irish Censorship Board",
+  "status_now": null,
+  "correction": "Ban by Irish Censorship Board confirmed; ban year not stated (list shows 1918 = publication year). 1931 unverified.",
+  "suggested_note": "Banned by the Irish Censorship Board for discussing birth control (per Wikipedia list citing Sova, Banned Books); ban year not stated.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/Married_Love"
+  ],
+  "uncertainty": "Year unverified."
+ },
+ {
+  "ban_id": 648,
+  "slug": "married-love",
+  "country": "United States",
+  "our_year": 1918,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Married_Love",
+  "source_name": "Wikipedia: Married Love",
+  "locator": "Reception section",
+  "year_found": 1931,
+  "date_type": "customs ban lifted",
+  "status_now": "historical (ended 1931)",
+  "correction": "US Customs banned it as obscene until 6 April 1931 (Judge Woolsey overturned); start year not given.",
+  "suggested_note": "US Customs banned the book as obscene until April 6, 1931, when Judge Woolsey overturned the decision (per Wikipedia, uncited there).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Married_Love"
+  ],
+  "uncertainty": "Start year of the Customs ban not established."
+ },
+ {
+  "ban_id": 1208,
+  "slug": "married-love",
+  "country": "New Zealand",
+  "our_year": null,
+  "verdict": "UNSUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand",
+  "locator": "Table row Married Love",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "listed as unrestricted",
+  "correction": "List records it as Unrestricted (Customs Department), no ban year or citation.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://teara.govt.nz/en/document/30874/sex-advice-for-married-couples (403)"
+  ],
+  "uncertainty": "A search snippet says Te Ara reports it was hard to obtain in NZ (not opened)."
+ },
+ {
+  "ban_id": 1024,
+  "slug": "philosophical-dictionary-voltaire",
+  "country": "France",
+  "our_year": 1765,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/Philosophical_Dictionary",
+  "source_name": "Wikipedia: Philosophical Dictionary (cites Gallica arret of 19 March 1765); Voltaire Foundation blog",
+  "locator": "France section",
+  "year_found": 1765,
+  "date_type": "decree",
+  "status_now": "historical",
+  "correction": "",
+  "suggested_note": "The Parlement of Paris condemned the Dictionnaire philosophique portatif by an arret of 19 March 1765; in 1766 a copy was burned with the chevalier de La Barre.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Philosophical_Dictionary",
+   "https://voltairefoundation.wordpress.com/2016/09/30/attention-livre-dangereux/"
+  ],
+  "uncertainty": "Wikipedia does not name the court; the Voltaire Foundation blog names the Parlement of Paris."
+ }
+]

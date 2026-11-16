@@ -1,0 +1,396 @@
+[
+ {
+  "ban_id": 565,
+  "slug": "1984",
+  "country": "China",
+  "our_year": 1985,
+  "verdict": "CONTRADICTED",
+  "source_url": "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+  "source_name": "Wikipedia: Nineteen Eighty-Four (citing Rank 2013; Hawkins & Wasserstrom, The Atlantic 2019)",
+  "locator": "Censorship section (China)",
+  "year_found": 1985,
+  "date_type": "restricted-circulation edition (not a ban)",
+  "status_now": "not banned; widely available",
+  "correction": "Not a ban. 1985 is the year Huacheng Publishing House issued a restricted-circulation Chinese edition; general public access from 1988; book legally sold today (only terms '1984'/'Animal Farm' filtered on social media, 2018). Reclassify or remove.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "Wikipedia is secondary but cites scholarly/press sources; I did not open those."
+ },
+ {
+  "ban_id": 585,
+  "slug": "1984",
+  "country": "Soviet Union",
+  "our_year": 1950,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+  "source_name": "Wikipedia: Nineteen Eighty-Four (cites Bershidsky 2019) + List of books banned by governments (cites Telegraph)",
+  "locator": "Censorship section (Soviet Union); list entry",
+  "year_found": 1949,
+  "date_type": "ban in force from publication until late 1980s",
+  "status_now": "historical",
+  "correction": "Ban lasted until 1988 (first public Russian edition in Kodry) or 1990 per the list; Stalin-era ban reportedly immediate after 1949. 1950 is within +/-1 of publication.",
+  "suggested_note": "Banned in the Soviet Union after its 1949 publication; the first openly available Russian edition appeared in 1988 and it was legalised by 1990.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "No exact ban-order date; only 'banned until 1988/1990'."
+ },
+ {
+  "ban_id": 1107,
+  "slug": "1984",
+  "country": "Romania",
+  "our_year": 1949,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No opened source records a ban/censorship order for this country. Only generic 'Eastern Bloc' claims seen, not opened or country-specific.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.darcymoore.net/orwell-collection/in-translation/",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "Absence from the opened pages is not evidence the ban did not exist; a Waseda paper and Southampton thesis that may cover this were not readable. Year 1949 likely a publication-year placeholder."
+ },
+ {
+  "ban_id": 1108,
+  "slug": "1984",
+  "country": "Hungary",
+  "our_year": 1949,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No opened source records a formal ban. Indirect: 1989 Europa Konyvkiadó edition described as 'first legal' Hungarian publication.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.darcymoore.net/orwell-collection/in-translation/",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "Absence from the opened pages is not evidence the ban did not exist; a Waseda paper and Southampton thesis that may cover this were not readable. Year 1949 likely a publication-year placeholder."
+ },
+ {
+  "ban_id": 1143,
+  "slug": "1984",
+  "country": "Bulgaria",
+  "our_year": 1949,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No opened source records a ban/censorship order for this country. Only generic 'Eastern Bloc' claims seen, not opened or country-specific.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.darcymoore.net/orwell-collection/in-translation/",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "Absence from the opened pages is not evidence the ban did not exist; a Waseda paper and Southampton thesis that may cover this were not readable. Year 1949 likely a publication-year placeholder."
+ },
+ {
+  "ban_id": 1144,
+  "slug": "1984",
+  "country": "Albania",
+  "our_year": 1949,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No opened source records a ban/censorship order for this country. Only generic 'Eastern Bloc' claims seen, not opened or country-specific.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.darcymoore.net/orwell-collection/in-translation/",
+   "https://historynet.com/history-of-1984-george-orwell/"
+  ],
+  "uncertainty": "Absence from the opened pages is not evidence the ban did not exist; a Waseda paper and Southampton thesis that may cover this were not readable. Year 1949 likely a publication-year placeholder."
+ },
+ {
+  "ban_id": 1134,
+  "slug": "the-da-vinci-code",
+  "country": "Qatar",
+  "our_year": 2004,
+  "verdict": "CONTRADICTED",
+  "source_url": "https://www.resetdoc.org/story/egypt-lebanon-and-jordan-where-the-da-vinci-code-scares/",
+  "source_name": "ResetDoc (Sept 2006)",
+  "locator": "article text",
+  "year_found": 2004,
+  "date_type": "n/a",
+  "status_now": "no ban found",
+  "correction": "ResetDoc says Lebanon banned the book in 2004; Egypt, Jordan, Syria banned the film; Qatar did not ban it (film watchable there). Row appears to be a mistaken country (Lebanon).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/The_Da_Vinci_Code",
+   "https://www.resetdoc.org/story/egypt-lebanon-and-jordan-where-the-da-vinci-code-scares/"
+  ],
+  "uncertainty": "Article is about 2006 and mainly the film; a later Qatari book ban is not excluded."
+ },
+ {
+  "ban_id": 1135,
+  "slug": "the-da-vinci-code",
+  "country": "Pakistan",
+  "our_year": 2004,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.dawn.com/news/amp/195568",
+  "source_name": "Dawn (5 June 2006)",
+  "locator": "article text",
+  "year_found": 2006,
+  "date_type": "ban announced 4 June 2006",
+  "status_now": "film ban (screening and video possession); book not covered",
+  "correction": "Pakistan banned the FILM in June 2006 (announced by Culture Ministry secretary Jalil Abbas), not the book, and not in 2004.",
+  "suggested_note": "Pakistan's government banned the film adaptation of The Da Vinci Code in June 2006 after Christian and Muslim groups called for it; the report concerns the film, not the book.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.dawn.com/news/amp/195568"
+  ],
+  "uncertainty": "Dawn covers the film only; a separate book restriction not ruled out."
+ },
+ {
+  "ban_id": 13127,
+  "slug": "the-da-vinci-code",
+  "country": "India",
+  "our_year": 2006,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_Da_Vinci_Code",
+  "source_name": "Wikipedia: The Da Vinci Code (citing BBC News 3 June 2006; Times of India 22 June 2006)",
+  "locator": "India/controversy section",
+  "year_found": 2006,
+  "date_type": "state film bans, 2006",
+  "status_now": "film bans; Tamil Nadu and Andhra Pradesh lifted by high court",
+  "correction": "Bans were mainly on the film's release/screening (the article says it also covered the book); Tamil Nadu and Andhra Pradesh bans were quashed by the High Court, June 2006. 'Active' status is wrong; list of states in note names only five of 'seven'.",
+  "suggested_note": "In 2006 several Indian states barred the film's release; Tamil Nadu and Andhra Pradesh later lifted theirs under high court orders (BBC; Times of India, as cited by Wikipedia).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Da_Vinci_Code",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Did not open BBC/Times of India originals."
+ },
+ {
+  "ban_id": 4767,
+  "slug": "fanny-hill",
+  "country": "New Zealand",
+  "our_year": 1965,
+  "verdict": "PARTIAL",
+  "source_url": "https://gazette.howison.co.nz/nzg/1965/issue/26/page/809",
+  "source_name": "New Zealand Gazette 1965 (Indecent Publications Tribunal decision)",
+  "locator": "page 809",
+  "year_found": 1965,
+  "date_type": "classification decision 1965",
+  "status_now": "R18 restriction; not an outright ban",
+  "correction": "Tribunal classified an expurgated Mayflower paperback as indecent only in hands of persons under 18 (sale restricted to 18+), expressly not injurious to public good. The Classification Office list also records a 1981 'Fanny Hill' decision as indecent (IPT 81-986).",
+  "suggested_note": "In 1965 the NZ Indecent Publications Tribunal classified an expurgated paperback edition as indecent for persons under 18, restricting sale to adults 18 and over.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1965/issue/26/page/809",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://www.classificationoffice.govt.nz/documents/218/20230127_Banned_books_chron.pdf"
+  ],
+  "uncertainty": "1981 decision outcome (full ban vs age restriction) not examined; Wikipedia says R18 in 1991."
+ },
+ {
+  "ban_id": 29238,
+  "slug": "fanny-hill",
+  "country": "Singapore",
+  "our_year": 1966,
+  "verdict": "SUPPORTED",
+  "source_url": "https://globalvoices.org/2015/11/26/singaporeans-can-now-legally-own-and-read-fanny-hill-but-playboy-is-still-banned/",
+  "source_name": "Global Voices, 26 Nov 2015",
+  "locator": "article text",
+  "year_found": 1966,
+  "date_type": "added to prohibited list 1966; de-gazetted 25 Nov 2015",
+  "status_now": "rescinded",
+  "correction": "None. 240 publications de-gazetted on 25 Nov 2015; 17 kept banned.",
+  "suggested_note": "Added to Singapore's prohibited list in 1966; the ban was lifted with 240 other titles in an order released 25 November 2015 (Global Voices).",
+  "opened_urls": [
+   "https://globalvoices.org/2015/11/26/singaporeans-can-now-legally-own-and-read-fanny-hill-but-playboy-is-still-banned/",
+   "https://www.ibtimes.co.uk/singapore-lifts-ban-240-books-publications-1530793"
+  ],
+  "uncertainty": "Opened pages are news, not the gazette notice."
+ },
+ {
+  "ban_id": 1210,
+  "slug": "the-decameron",
+  "country": "New Zealand",
+  "our_year": 1939,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand (cites Burns 1968; Christoffel 1989)",
+  "locator": "Decameron entry",
+  "year_found": 1939,
+  "date_type": "1939 prosecution",
+  "status_now": "overturned on appeal same year; unrestricted",
+  "correction": "Not a lasting ban: a Magistrate's Court found it indecent in 1939 (prosecution of a lending-library owner), reversed on appeal the same year. Row should be marked as overturned/historical case, not a ban.",
+  "suggested_note": "In 1939 a NZ magistrate found the Decameron indecent in a prosecution of a lending-library owner; the finding was overturned on appeal later that year.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://paperspast.natlib.govt.nz/newspapers/NZH19390301.2.149"
+  ],
+  "uncertainty": "Papers Past contemporary reports could not be opened (empty); relies on Wikipedia list."
+ },
+ {
+  "ban_id": 4765,
+  "slug": "naked-lunch",
+  "country": "New Zealand",
+  "our_year": 1967,
+  "verdict": "SUPPORTED",
+  "source_url": "https://gazette.howison.co.nz/nzg/1974/issue/97/page/2084",
+  "source_name": "New Zealand Gazette 1974 (Tribunal decision 20 Sept 1974)",
+  "locator": "page 2084",
+  "year_found": 1967,
+  "date_type": "declared indecent Nov 1967; reclassified 20 Sept 1974",
+  "status_now": "restricted (indecent for under 18 only since 1974)",
+  "correction": "Confirmed: found indecent in 1967, relaxed to under-18 restriction on 20 Sept 1974. Note: row note says 'drug use and sexual violence' reasons - not verified.",
+  "suggested_note": "Declared indecent by the NZ Indecent Publications Tribunal in 1967; reclassified in September 1974 as indecent only in the hands of persons under 18.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1974/issue/97/page/2084",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand"
+  ],
+  "uncertainty": "1967 decision itself confirmed only via the 1974 Gazette reference and Wikipedia list."
+ },
+ {
+  "ban_id": 652,
+  "slug": "aristotle-and-dante-discover-the-secrets-of-the-universe",
+  "country": "Russia",
+  "our_year": 2023,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Wikipedia article's only listed ban is Belarus (April 2025). Moscow Times article on 2023 book removals under the LGBT propaganda law does not name this title.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Aristotle_and_Dante_Discover_the_Secrets_of_the_Universe",
+   "https://www.themoscowtimes.com/2026/08/05/books-removed-and-movies-banned-under-russias-lgbt-propaganda-law"
+  ],
+  "uncertainty": "Russia may have removed it informally; not found. Possible country mix-up with Belarus."
+ },
+ {
+  "ban_id": 1104,
+  "slug": "the-diary-of-a-young-girl",
+  "country": "Lebanon",
+  "our_year": 1986,
+  "verdict": "UNSUPPORTED",
+  "source_url": "https://www.thejc.com/news/world/lebanon-school-bans-zionist-anne-frank-1.12431",
+  "source_name": "The Jewish Chronicle, 13 Nov 2009",
+  "locator": "article text",
+  "year_found": 2009,
+  "date_type": "school-level removal 2009",
+  "status_now": "not a national ban",
+  "correction": "No 1986 ban found. Only a 2009 episode: a private Beirut school dropped a textbook with diary excerpts after Hezbollah criticism (also Wikipedia: Hezbollah call for school ban, 2009). School-level, not a national ban.",
+  "suggested_note": "In 2009 a private Beirut school removed a textbook excerpt of the diary after Hezbollah criticism (JC, 13 Nov 2009); a national ban was not found.",
+  "opened_urls": [
+   "https://www.thejc.com/news/world/lebanon-school-bans-zionist-anne-frank-1.12431",
+   "https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl"
+  ],
+  "uncertainty": "Secondary lists claim a Lebanon ban; unopened/unverified."
+ },
+ {
+  "ban_id": 1142,
+  "slug": "the-diary-of-a-young-girl",
+  "country": "Malaysia",
+  "our_year": 2014,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Nothing found. Wikipedia article does not mention Malaysia; 2014 event in the article is vandalism in Tokyo libraries.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "A Malay edition exists per a catalogue (search snippet only); no gazette check possible."
+ },
+ {
+  "ban_id": 575,
+  "slug": "the-turner-diaries",
+  "country": "Germany",
+  "our_year": 1979,
+  "verdict": "PARTIAL",
+  "source_url": "https://de.wikipedia.org/wiki/Die_Turner-Tagebücher",
+  "source_name": "German Wikipedia: Die Turner-Tagebücher (cites federal government reply 16 Feb 2007; Boersenblatt 18 May 2006)",
+  "locator": "Rezeption/Indizierung",
+  "year_found": 2006,
+  "date_type": "indexed April 2006 by BPjM",
+  "status_now": "active (BPjM index)",
+  "correction": "Year should be 2006 (BPjM indexing, April 2006), not 1979. English article says 'banned since April 2006' citing Der Spiegel 2014. Indexing is not a full ban.",
+  "suggested_note": "Placed on the BPjM index in Germany in April 2006 (German Wikipedia, citing a 2007 federal government answer and Boersenblatt 2006).",
+  "opened_urls": [
+   "https://de.wikipedia.org/wiki/Die_Turner-Tagebücher",
+   "https://en.wikipedia.org/wiki/The_Turner_Diaries"
+  ],
+  "uncertainty": "Did not open the cited government PDF; BPjM index entries lapse after 25 years."
+ },
+ {
+  "ban_id": 628,
+  "slug": "the-protocols-of-the-elders-of-zion",
+  "country": "Germany",
+  "our_year": 1945,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No opened page records a German ban in 1945 or later. Only Nazi-era use as school reading and a Swiss (Bern) 1935 case. Legal status today (e.g. under section 130 StGB) not established.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Protocols_of_the_Elders_of_Zion",
+   "https://de.wikipedia.org/wiki/Protokolle_der_Weisen_von_Zion",
+   "https://www.bpb.de/politik/extremismus/rechtsextremismus/210333/die-protokolle-der-weisen-von-zion",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Wikipedia pages truncated; post-war sections unread. Allied post-1945 lists may well have included it."
+ },
+ {
+  "ban_id": 1141,
+  "slug": "the-handmaids-tale",
+  "country": "Iran",
+  "our_year": 1985,
+  "verdict": "UNSUPPORTED",
+  "source_url": "https://www.freedomtoread.ca/challenged-works/the-handmaids-tale/",
+  "source_name": "Freedom to Read (citing Globe and Mail, Sima Sharifi)",
+  "locator": "Handmaid's Tale page",
+  "year_found": null,
+  "date_type": "n/a",
+  "status_now": "published in Iran in censored form",
+  "correction": "No ban found. A Persian translation was published in Iran with feminist-activism content omitted and text altered (censorship of the edition, not a ban). Wikipedia article has no Iran ban.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://www.freedomtoread.ca/challenged-works/the-handmaids-tale/",
+   "https://en.wikipedia.org/wiki/The_Handmaid%27s_Tale",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Search snippets (not opened) say translated 2003; some blogs claim a ban without evidence."
+ }
+]

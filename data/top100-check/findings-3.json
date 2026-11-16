@@ -1,0 +1,359 @@
+[
+ {
+  "ban_id": 58,
+  "slug": "lolita",
+  "country": "France",
+  "our_year": 1955,
+  "verdict": "PARTIAL",
+  "source_url": "https://nabokovsociety.org/node/33881",
+  "source_name": "Nabokov Society page",
+  "locator": "France entry",
+  "year_found": 1956,
+  "date_type": "ban start",
+  "status_now": "historical",
+  "correction": "Opened sources date the French ban to 1956 (Wikipedia Lolita: Dec 1956, Minister of the Interior, lasted ~2 years, citing Boyd 1991 p.301); Nabokov Society says lifted 1959. Not 1955.",
+  "suggested_note": "Banned in France as obscene in December 1956 by the Interior Ministry; lifted after roughly two years (end date varies by source: 1958/1959).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita",
+   "https://nabokovsociety.org/node/33881",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Lift year 1958 vs 1959 conflicting; Wikipedia list itself says 1955-1958."
+ },
+ {
+  "ban_id": 1040,
+  "slug": "lolita",
+  "country": "New Zealand",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://gazette.howison.co.nz/nzg/1965/issue/1/page/23",
+  "source_name": "NZ Gazette 1965 no.1, Indecent Publications Tribunal decision",
+  "locator": "p.22-23",
+  "year_found": 1960,
+  "date_type": "court finding of indecency (Supreme Court 1960, Court of Appeal upheld March 1961); Tribunal reversed 11 Aug 1964",
+  "status_now": "historical (lifted 1964)",
+  "correction": "Year 1960 (Supreme Court found indecent; CoA upheld 1961); lifted by Tribunal 11 Aug 1964 (not indecent).",
+  "suggested_note": "Found indecent by the NZ Supreme Court in 1960 (upheld by Court of Appeal in 1961); the Indecent Publications Tribunal classified it not indecent on 11 August 1964.",
+  "opened_urls": [
+   "https://paperspast.natlib.govt.nz/newspapers/CHP19640630.2.19",
+   "https://gazette.howison.co.nz/nzg/1965/issue/1/page/22",
+   "https://gazette.howison.co.nz/nzg/1965/issue/1/page/23",
+   "https://en.wikipedia.org/wiki/Censorship_in_New_Zealand",
+   "https://nabokovsociety.org/node/33881"
+  ],
+  "uncertainty": "Customs ban late 1959 mentioned only in a search snippet; not opened (the Papers Past 1959 page returned empty)."
+ },
+ {
+  "ban_id": 1098,
+  "slug": "lolita",
+  "country": "Norway",
+  "our_year": 1956,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita"
+  ],
+  "uncertainty": "Nothing found in opened pages; only a compiled database snippet (not opened) claims 1956. Not evidence of falsity; Norwegian sources (Nabokov-Norway, Nasjonalbiblioteket) not reached."
+ },
+ {
+  "ban_id": 1099,
+  "slug": "lolita",
+  "country": "Denmark",
+  "our_year": 1956,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita"
+  ],
+  "uncertainty": "Wikipedia says only that Danish translation appeared; no ban found. Not evidence of falsity."
+ },
+ {
+  "ban_id": 1809,
+  "slug": "lolita",
+  "country": "South Africa",
+  "our_year": 1955,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita",
+   "https://nabokovsociety.org/node/33881"
+  ],
+  "uncertainty": "Opened pages do not mention South Africa; Wikipedia list (opened part) lists only Argentina, Canada, France. Search snippets (not opened) mention SA ban without date. Our 1955 date and 1982 lifting unverified (the row's cited ALA source not opened)."
+ },
+ {
+  "ban_id": 1212,
+  "slug": "the-communist-manifesto",
+  "country": "New Zealand",
+  "our_year": 1942,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Communist_Manifesto",
+   "https://en.wikipedia.org/wiki/Censorship_in_New_Zealand"
+  ],
+  "uncertainty": "Wikipedia list has Nazi Germany row only for this book. No NZ 1942 evidence found; a search suggested NZ wartime restrictions on communist publications but no Manifesto-specific source opened."
+ },
+ {
+  "ban_id": 1127,
+  "slug": "the-jewel-of-medina",
+  "country": "Saudi Arabia",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina"
+  ],
+  "uncertainty": "Wikipedia records only US (Random House cancellation), Serbia (withdrawal), UK (postponement after firebombing). Nothing on Saudi Arabia."
+ },
+ {
+  "ban_id": 1128,
+  "slug": "the-jewel-of-medina",
+  "country": "Qatar",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina"
+  ],
+  "uncertainty": "Nothing found on Qatar."
+ },
+ {
+  "ban_id": 1129,
+  "slug": "the-jewel-of-medina",
+  "country": "Malaysia",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina"
+  ],
+  "uncertainty": "Nothing found on Malaysia."
+ },
+ {
+  "ban_id": 5019,
+  "slug": "candy",
+  "country": "New Zealand",
+  "our_year": 1958,
+  "verdict": "PARTIAL",
+  "source_url": "https://gazette.howison.co.nz/nzg/1969/issue/6/page/178",
+  "source_name": "NZ Gazette 1969 no.6, Indecent Publications Tribunal decisions 133/134",
+  "locator": "p.178",
+  "year_found": 1969,
+  "date_type": "Tribunal ruling 30 Jan 1969",
+  "status_now": "unknown",
+  "correction": "Ban year should be 1969 (30 January), not 1958 (publication year). Tribunal ruled the Bernard Geis edition indecent.",
+  "suggested_note": "The NZ Indecent Publications Tribunal ruled Candy indecent on 30 January 1969.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1969/issue/6/page/178",
+   "https://en.wikipedia.org/wiki/Candy_(Southern_and_Hoffenberg_novel)"
+  ],
+  "uncertainty": "Gazette heading combines Candy and The Exhibitionist (Nos 133-134); Candy ruling's text says book is indecent. Current status not checked."
+ },
+ {
+  "ban_id": 857,
+  "slug": "justine-de-sade",
+  "country": "France",
+  "our_year": 1791,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Marquis_de_Sade"
+  ],
+  "uncertainty": "Wikipedia (Marquis de Sade, first 100k chars) records no ban of 1791 Justine; Sade's later works were seized in 1801. 1791 is the publication year, not a ban year."
+ },
+ {
+  "ban_id": 4769,
+  "slug": "justine-de-sade",
+  "country": "New Zealand",
+  "our_year": 1965,
+  "verdict": "PARTIAL",
+  "source_url": "https://gazette.howison.co.nz/nzg/1969/issue/72/page/2217",
+  "source_name": "NZ Gazette 1969 no.72, Juliette decision No.167",
+  "locator": "p.2217",
+  "year_found": 1965,
+  "date_type": "Tribunal consideration (NZ Gazette 4 Mar 1965 p.290)",
+  "status_now": "unknown",
+  "correction": "A Justine translation was considered by the Tribunal in 1965, but the opened page does not state the classification (the 1969 Juliette ruling treated it as available to bona fide students), so 'classified indecent' is unconfirmed.",
+  "suggested_note": "A translation of Justine was considered by the NZ Indecent Publications Tribunal in 1965; Juliette (1969) was held indecent except for bona fide students over 20.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1969/issue/72/page/2217",
+   "https://gazette.howison.co.nz/nzg/1968/issue/75/page/2120"
+  ],
+  "uncertainty": "Gazette 1965 p.290 page not retrievable by guessed URL; classification of Justine unconfirmed."
+ },
+ {
+  "ban_id": 655,
+  "slug": "what-if-its-us",
+  "country": "Malaysia",
+  "our_year": 2019,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals",
+  "source_name": "The Star, 7 Jan 2025",
+  "locator": "article",
+  "year_found": 2025,
+  "date_type": "Home Ministry announcement (gazetted Dec 2024 per search snippet)",
+  "status_now": "active",
+  "correction": "Year is 2024/2025, not 2019: Home Ministry prohibition order under PPPA 1984 s.7(1), announced 7 Jan 2025.",
+  "suggested_note": "Banned in Malaysia by the Home Ministry under the Printing Presses and Publications Act 1984, announced 7 January 2025, as likely to harm morals.",
+  "opened_urls": [
+   "https://www.thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals",
+   "https://en.wikipedia.org/wiki/What_If_It%27s_Us"
+  ],
+  "uncertainty": "Gazette date Dec 19, 2024 only from a search snippet, not opened."
+ },
+ {
+  "ban_id": 935,
+  "slug": "a-banquet-for-seaweed",
+  "country": "Egypt",
+  "our_year": 2000,
+  "verdict": "SUPPORTED",
+  "source_url": "https://newleftreview.org/issues/ii5/articles/sabry-hafez-the-novel-politics-and-islam",
+  "source_name": "New Left Review, Sabry Hafez, The Novel, Politics and Islam",
+  "locator": "Banquet for Seaweed section",
+  "year_found": 2000,
+  "date_type": "withdrawal after April 2000 campaign",
+  "status_now": "unknown",
+  "correction": "Source says the novel was withdrawn in 2000 amid the uproar; who ordered it not stated. Wikipedia (A Feast for the Seaweeds) says 'subsequently banned' with no citation.",
+  "suggested_note": "The novel was withdrawn in Egypt in 2000 after an Islamist press campaign against it (Al-Azhar called it offensive to Islam); the issuing authority is not stated.",
+  "opened_urls": [
+   "https://newleftreview.org/issues/ii5/articles/sabry-hafez-the-novel-politics-and-islam",
+   "https://en.wikipedia.org/wiki/A_Feast_for_the_Seaweeds",
+   "https://www.irishtimes.com/news/support-for-controversial-book-1.273695"
+  ],
+  "uncertainty": "Irish Times (22 May 2000) reports prosecution of two writers for proposing a reprint, not a formal ban. Current status unverified."
+ },
+ {
+  "ban_id": 840,
+  "slug": "fontamara",
+  "country": "Italy",
+  "our_year": 1933,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Fontamara",
+  "source_name": "Wikipedia Fontamara",
+  "locator": "publication history",
+  "year_found": 1933,
+  "date_type": "publication abroad",
+  "status_now": "historical",
+  "correction": "No formal ban found in opened pages; only that the book first appeared abroad in 1933 and was not published in Italy until 1945 (Wikipedia, uncited as ban).",
+  "suggested_note": "First published abroad in 1933 (German, Zurich); not published in Italy until 1945.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Fontamara",
+   "https://en.wikipedia.org/wiki/Ignazio_Silone"
+  ],
+  "uncertainty": "Inference of Fascist suppression is not stated in opened sources."
+ },
+ {
+  "ban_id": 1161,
+  "slug": "fontamara",
+  "country": "Germany",
+  "our_year": 1933,
+  "verdict": "PARTIAL",
+  "source_url": "https://verbrannte-und-verbannte.de/publication/15362",
+  "source_name": "Verbrannte und Verbannte (Nazi-era banned works database)",
+  "locator": "publication entry",
+  "year_found": null,
+  "date_type": "listed as banned work; no date on page",
+  "status_now": "historical",
+  "correction": "Fontamara appears in the database of works banned under National Socialism; the page gives no ban date (1933 is the Zurich publication year).",
+  "suggested_note": "Listed among works banned under National Socialism (Verbrannte und Verbannte database); no ban date given there.",
+  "opened_urls": [
+   "https://verbrannte-und-verbannte.de/publication/15362",
+   "https://en.wikipedia.org/wiki/Fontamara"
+  ],
+  "uncertainty": "Ban year unknown."
+ },
+ {
+  "ban_id": 642,
+  "slug": "lajja",
+  "country": "Iran",
+  "our_year": 1994,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lajja_(novel)"
+  ],
+  "uncertainty": "Wikipedia mentions Bangladesh ban (NYT 8 Jun 1994) only; nothing on Iran. A database claiming Iran 1994 was not opened."
+ },
+ {
+  "ban_id": 1138,
+  "slug": "beloved",
+  "country": "South Africa",
+  "our_year": 1987,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Beloved_(novel)"
+  ],
+  "uncertainty": "Wikipedia's banning section covers US only (first 100k chars read)."
+ }
+]

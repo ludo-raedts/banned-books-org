@@ -574,3 +574,4 @@ De dagkeuze is **bevroren** in tabel `bluesky_daily_picks` (datum→boek, `sourc
 - Alles data-schrijvend default **dry-run**. Bij twijfel: lees de header-comment.
 
 - `build-index-homepage-queue.ts` (read-only) → `data/source-queue/index-homepage-queue.json`; `apply-source-queue-2026-11-15.ts` applied the per-case result (see `data/source-queue/README.md`, LEDGER.md, backup).
+- `build-top100-dossier.ts` (read-only) → `data/top100-check/dossier.json`; `apply-top100-check-2026-11-16.ts` applied the opened-source check of Wikipedia-sourced top-100 rows (see `data/top100-check/README.md`).

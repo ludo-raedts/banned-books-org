@@ -1,0 +1,322 @@
+[
+ {
+  "ban_id": 1137,
+  "slug": "and-tango-makes-three",
+  "country": "China",
+  "our_year": 2016,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened Wikipedia article lists Singapore 2014 and Hong Kong 2018 (library removal), nothing for mainland China 2016.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/And_Tango_Makes_Three"
+  ],
+  "uncertainty": "Possible confusion with Hong Kong 2018 (SCMP 2018-06-20, cited by Wikipedia). Not verified at primary source."
+ },
+ {
+  "ban_id": 659,
+  "slug": "the-social-contract",
+  "country": "Vatican City (Holy See)",
+  "our_year": 1762,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_Social_Contract",
+  "source_name": "Wikipedia: The Social Contract",
+  "locator": "Banning/censorship section",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "historical",
+  "correction": "Placed on the Index per article, but no year given; 1762 is the publication year, not a listing date.",
+  "suggested_note": "Wikipedia says the work was listed on the Index Librorum Prohibitorum; no date given in the article.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Social_Contract",
+   "https://en.wikipedia.org/wiki/Index_Librorum_Prohibitorum"
+  ],
+  "uncertainty": "Index year not verified from opened pages."
+ },
+ {
+  "ban_id": 660,
+  "slug": "the-social-contract",
+  "country": "France",
+  "our_year": 1762,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Social_Contract",
+  "source_name": "Wikipedia: The Social Contract (cites Wokler, Rousseau: A Very Short Introduction, 2001, p.99)",
+  "locator": "Banning section",
+  "year_found": 1762,
+  "date_type": "approx (on publication)",
+  "status_now": "historical",
+  "correction": null,
+  "suggested_note": "Wikipedia, citing Wokler (2001), says distribution in France was prohibited upon publication and Rousseau fled to avoid imprisonment.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Social_Contract"
+  ],
+  "uncertainty": "Year implied by 'upon publication'; secondary source."
+ },
+ {
+  "ban_id": 964,
+  "slug": "open-veins-of-latin-america",
+  "country": "Chile",
+  "our_year": 1973,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+  "source_name": "Wikipedia: Open Veins of Latin America (cites Democracy Now 2009)",
+  "locator": "Reception/ban statement",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "unknown",
+  "correction": "Ban by military government is stated, but no year found; our year 1973 unverified. Wikipedia list places the title under Chile without note; list's Chile entry year context (1986 Garcia Marquez row) is a different book.",
+  "suggested_note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+   "https://en.wikipedia.org/wiki/Eduardo_Galeano",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Year and issuing authority not sourced; secondary source only."
+ },
+ {
+  "ban_id": 965,
+  "slug": "open-veins-of-latin-america",
+  "country": "Argentina",
+  "our_year": 1973,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+  "source_name": "Wikipedia: Open Veins of Latin America (cites Democracy Now 2009)",
+  "locator": "Reception/ban statement",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "unknown",
+  "correction": "Ban by military government is stated, but no year found; our year 1973 unverified.",
+  "suggested_note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+   "https://en.wikipedia.org/wiki/Eduardo_Galeano",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Year and issuing authority not sourced; secondary source only."
+ },
+ {
+  "ban_id": 966,
+  "slug": "open-veins-of-latin-america",
+  "country": "Uruguay",
+  "our_year": 1973,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+  "source_name": "Wikipedia: Open Veins of Latin America (cites Democracy Now 2009)",
+  "locator": "Reception/ban statement",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "unknown",
+  "correction": "Ban by military government is stated, but no year found; our year 1973 unverified.",
+  "suggested_note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+   "https://en.wikipedia.org/wiki/Eduardo_Galeano",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Year and issuing authority not sourced; secondary source only."
+ },
+ {
+  "ban_id": 967,
+  "slug": "open-veins-of-latin-america",
+  "country": "Brazil",
+  "our_year": 1974,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+  "source_name": "Wikipedia: Open Veins of Latin America (cites Democracy Now 2009)",
+  "locator": "Reception/ban statement",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "unknown",
+  "correction": "Ban by military government is stated, but no year found; our year 1974 unverified. Brazil appears in the Open Veins article but not in the Eduardo Galeano article.",
+  "suggested_note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Open_Veins_of_Latin_America",
+   "https://en.wikipedia.org/wiki/Eduardo_Galeano",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Year and issuing authority not sourced; secondary source only."
+ },
+ {
+  "ban_id": 908,
+  "slug": "quran",
+  "country": "Albania",
+  "our_year": 1967,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened Religion in Albania page (first 100k chars) records 1967 anti-religion campaign and a 1977 penal code penalizing religious literature, but does not name the Quran or a 1967 book ban.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Religion_in_Albania",
+   "https://en.wikipedia.org/wiki/Censorship_of_the_Quran"
+  ],
+  "uncertainty": "Context is real (1967 campaign; 1977 law on religious literature) but a Quran-specific 1967 ban was not found; Censorship_of_the_Quran URL gave 404."
+ },
+ {
+  "ban_id": 1093,
+  "slug": "persepolis",
+  "country": "Lebanon",
+  "our_year": 2011,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Persepolis_(film)",
+  "source_name": "Wikipedia: Persepolis (film) (cites LA Times, Raed Rafei, 2008-03-28)",
+  "locator": "Reception/censorship section",
+  "year_found": 2008,
+  "date_type": "lifting reported",
+  "status_now": "historical",
+  "correction": "The Lebanon ban concerned the film, not the book, and was lifted in March 2008; no 2011 ban found.",
+  "suggested_note": "Wikipedia: the film Persepolis was initially banned in Lebanon after clerics objected; ban lifted March 2008 (LA Times). Book not mentioned.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Persepolis_(comics)",
+   "https://en.wikipedia.org/wiki/Persepolis_(film)"
+  ],
+  "uncertainty": "Book ban in Lebanon (2011) not found; may be film/other event."
+ },
+ {
+  "ban_id": 29817,
+  "slug": "state-and-revolution",
+  "country": "Singapore",
+  "our_year": null,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Wikipedia article on the book does not mention Singapore or any ban; the list-based note remains unverified.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/State_and_Revolution",
+   "https://en.wikipedia.org/wiki/The_State_and_the_Revolution",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Underlying Singapore prohibition order not opened."
+ },
+ {
+  "ban_id": 884,
+  "slug": "did-six-million-really-die",
+  "country": "Germany",
+  "our_year": 1979,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F",
+  "source_name": "Wikipedia: Did Six Million Really Die? (cites Wyman & Rosenzveig 1996, p.682)",
+  "locator": "Lead/reception",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "unknown",
+  "correction": "Banned in Germany per article, but no year or legal basis given; 1979 and 'active' not verified.",
+  "suggested_note": "Wikipedia, citing Wyman & Rosenzveig (1996), says the pamphlet was banned in Germany; no date given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F"
+  ],
+  "uncertainty": "Year/status unverified."
+ },
+ {
+  "ban_id": 885,
+  "slug": "did-six-million-really-die",
+  "country": "Canada",
+  "our_year": 1980,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F",
+  "source_name": "Wikipedia: Did Six Million Really Die?; R v Zundel (1992, SCC) as cited",
+  "locator": "Zundel prosecution section",
+  "year_found": 1985,
+  "date_type": "conviction",
+  "status_now": "historical",
+  "correction": "Article describes prosecution of publisher Zundel under the false-news law (convicted 1985, retrial 1988, law struck down 1992), not a ban of the book; 'active' status looks wrong.",
+  "suggested_note": "Wikipedia: publisher Ernst Zundel was prosecuted under Canada's false-news provision (convicted 1985, retried 1988); the Supreme Court struck the law down in 1992. No book ban stated.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F"
+  ],
+  "uncertainty": "Customs/other prohibitions not examined."
+ },
+ {
+  "ban_id": 1079,
+  "slug": "the-story-of-zahra",
+  "country": "Lebanon",
+  "our_year": 1980,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened Wikipedia pages on the novel and author name no ban in Lebanon; a web search only reported unnamed 'several Arab countries' and that Lebanese publishers refused it (self-published 1980).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Story_of_Zahra",
+   "https://en.wikipedia.org/wiki/Hanan_al-Shaykh"
+  ],
+  "uncertainty": "Search snippets only for the wider claim (not counted); encyclopedia.com returned 403."
+ },
+ {
+  "ban_id": 1080,
+  "slug": "the-story-of-zahra",
+  "country": "Saudi Arabia",
+  "our_year": 1980,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened Wikipedia pages on the novel and author name no ban in Saudi Arabia; a web search only reported unnamed 'several Arab countries' and that Lebanese publishers refused it (self-published 1980).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Story_of_Zahra",
+   "https://en.wikipedia.org/wiki/Hanan_al-Shaykh"
+  ],
+  "uncertainty": "Search snippets only for the wider claim (not counted); encyclopedia.com returned 403."
+ },
+ {
+  "ban_id": 1081,
+  "slug": "the-story-of-zahra",
+  "country": "Egypt",
+  "our_year": 1982,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Opened Wikipedia pages on the novel and author name no ban in Egypt; a web search only reported unnamed 'several Arab countries' and that Lebanese publishers refused it (self-published 1980).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Story_of_Zahra",
+   "https://en.wikipedia.org/wiki/Hanan_al-Shaykh"
+  ],
+  "uncertainty": "Search snippets only for the wider claim (not counted); encyclopedia.com returned 403."
+ },
+ {
+  "ban_id": 662,
+  "slug": "the-sorrows-of-young-werther",
+  "country": "Italy",
+  "our_year": 1775,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther",
+  "source_name": "Wikipedia: The Sorrows of Young Werther (cites Furedi, History Today 2015)",
+  "locator": "Reception section",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "historical",
+  "correction": "Banned in Italy per article but no year; 1775 is the Leipzig ban date in the article, not Italy.",
+  "suggested_note": "Wikipedia, citing Furedi (History Today, 2015), says the novel was banned in Italy and Denmark; Leipzig 1775. No Italian date given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther"
+  ],
+  "uncertainty": "Italian ban year not sourced."
+ }
+]

@@ -1,0 +1,402 @@
+[
+ {
+  "ban_id": 956,
+  "slug": "the-satanic-verses",
+  "country": "Kenya",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy (cites Netton)",
+  "locator": "Muslim response and book bannings",
+  "year_found": 1989,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": "Year: March 1989",
+  "suggested_note": "Banned in Kenya in March 1989 (Wikipedia, citing Netton).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Wikipedia secondary; no primary Kenyan order; current status not stated."
+ },
+ {
+  "ban_id": 1055,
+  "slug": "the-satanic-verses",
+  "country": "Pakistan",
+  "our_year": 1988,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy",
+  "locator": "Reception timeline",
+  "year_found": 1988,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": null,
+  "suggested_note": "Banned in Pakistan on 24 November 1988 (Wikipedia timeline; that entry is uncited).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Timeline entry has no footnote; current status not stated."
+ },
+ {
+  "ban_id": 1056,
+  "slug": "the-satanic-verses",
+  "country": "Bangladesh",
+  "our_year": 1988,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy (cites Netton)",
+  "locator": "Muslim response and book bannings",
+  "year_found": 1988,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": "Banned November 1988",
+  "suggested_note": "Banned in Bangladesh in November 1988 (Wikipedia, citing Netton).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Secondary source only."
+ },
+ {
+  "ban_id": 1136,
+  "slug": "the-satanic-verses",
+  "country": "Qatar",
+  "our_year": 1988,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy",
+  "locator": "Reception timeline",
+  "year_found": 1988,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": "Our note \"Banned 24 November 1988\" is the Pakistan date. Wikipedia says Qatar banned it within weeks of that date, no exact day. Qatar is not on the Wikipedia government-ban list.",
+  "suggested_note": "Banned in Qatar in 1988, within weeks of Pakistan's 24 Nov ban (Wikipedia); exact date not given.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Year fine; day-level date unsupported."
+ },
+ {
+  "ban_id": 5041,
+  "slug": "the-satanic-verses",
+  "country": "Kuwait",
+  "our_year": null,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+  "source_name": "Wikipedia, List of books banned by governments",
+  "locator": "The Satanic Verses entry",
+  "year_found": null,
+  "date_type": "unknown",
+  "status_now": null,
+  "correction": "Only the Wikipedia list names Kuwait; no year, no source; the controversy article does not mention Kuwait.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy"
+  ],
+  "uncertainty": "No independent source or year found; status \"historical\" unverified."
+ },
+ {
+  "ban_id": 5046,
+  "slug": "the-satanic-verses",
+  "country": "Sri Lanka",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy (cites Netton)",
+  "locator": "Muslim response and book bannings",
+  "year_found": 1988,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": "Year: by December 1988",
+  "suggested_note": "Banned in Sri Lanka by December 1988 (Wikipedia, citing Netton).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Whether/when lifted not found."
+ },
+ {
+  "ban_id": 5048,
+  "slug": "the-satanic-verses",
+  "country": "Thailand",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+  "source_name": "Wikipedia, The Satanic Verses controversy (cites Netton)",
+  "locator": "Muslim response and book bannings",
+  "year_found": 1989,
+  "date_type": "ban_enacted",
+  "status_now": null,
+  "correction": "Year: March 1989",
+  "suggested_note": "Banned in Thailand in March 1989 (Wikipedia, citing Netton).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Whether/when lifted not found."
+ },
+ {
+  "ban_id": 1095,
+  "slug": "lady-chatterleys-lover",
+  "country": "Norway",
+  "our_year": 1928,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lady_Chatterley%27s_Lover",
+   "https://no.wikipedia.org/wiki/Lady_Chatterleys_elsker",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand"
+  ],
+  "uncertainty": "English and Norwegian Wikipedia say nothing of a Norwegian ban (Norwegian translation 1952); absence is not disproof."
+ },
+ {
+  "ban_id": 1211,
+  "slug": "lady-chatterleys-lover",
+  "country": "New Zealand",
+  "our_year": null,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia, List of books banned in New Zealand (cites McLachlan & Scott 1973, Perry 1980, Customs 1991)",
+  "locator": "Lady Chatterley's Lover entry",
+  "year_found": 1965,
+  "date_type": "ban_lifted",
+  "status_now": "unrestricted",
+  "correction": "Was on the Customs banned list (year not given); Indecent Publications Tribunal found it not indecent in 1965.",
+  "suggested_note": "On the NZ Customs banned list; the Indecent Publications Tribunal found it not indecent in 1965 (Wikipedia list).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://en.wikipedia.org/wiki/Censorship_in_New_Zealand"
+  ],
+  "uncertainty": "Ban start year unknown."
+ },
+ {
+  "ban_id": 1100,
+  "slug": "tropic-of-cancer",
+  "country": "Norway",
+  "our_year": 1934,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tropic_of_Cancer_(novel)",
+   "https://no.wikipedia.org/wiki/Krepsens_vendekrets"
+  ],
+  "uncertainty": "Norwegian URL was the latitude article, not the book; nothing on Norway found."
+ },
+ {
+  "ban_id": 1101,
+  "slug": "tropic-of-cancer",
+  "country": "Denmark",
+  "our_year": 1934,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tropic_of_Cancer_(novel)"
+  ],
+  "uncertainty": "Only the English article checked; absence not disproof."
+ },
+ {
+  "ban_id": 4764,
+  "slug": "tropic-of-cancer",
+  "country": "New Zealand",
+  "our_year": 1962,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia, List of books banned in New Zealand (cites McLachlan & Scott 1973, Perry 1980)",
+  "locator": "Tropic of Cancer entry",
+  "year_found": 1967,
+  "date_type": "ban_lifted",
+  "status_now": "unrestricted",
+  "correction": "Customs banned Miller's novels at times between 1934 and 1964; the Indecent Publications Tribunal found Tropic of Cancer NOT indecent in 1967 (Gazette shows application filed 1967). Our note that the Tribunal prohibited it and year 1962 are unsupported.",
+  "suggested_note": "Customs banned Miller's novels between 1934 and 1964; the Indecent Publications Tribunal found the book not indecent in 1967 (Wikipedia list).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://gazette.howison.co.nz/nzg/1967/issue/29/page/837"
+  ],
+  "uncertainty": "Gazette page confirms only the 1967 application, not the outcome; 1962 not found."
+ },
+ {
+  "ban_id": 1106,
+  "slug": "brave-new-world",
+  "country": "Canada",
+  "our_year": 1980,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Brave_New_World",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "The only 1980 entry in Wikipedia is Miller, Missouri (US), possibly the source of a mix-up; only first 100k chars of article read."
+ },
+ {
+  "ban_id": 611,
+  "slug": "les-miserables",
+  "country": "Spain",
+  "our_year": 1939,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables",
+   "https://es.wikipedia.org/wiki/Los_miserables",
+   "https://en.wikipedia.org/wiki/Index_Librorum_Prohibitorum"
+  ],
+  "uncertainty": "Spanish article says only that the Church put it on the Index (undated, not Spain-specific); no Franco-era ban found."
+ },
+ {
+  "ban_id": 1139,
+  "slug": "the-color-purple",
+  "country": "South Africa",
+  "our_year": 1984,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Color_Purple",
+   "https://en.wikipedia.org/wiki/Censorship_in_South_Africa",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "A search snippet (not opened) suggested the Publications Control Board banned the 1985 FILM; the book ban is unverified."
+ },
+ {
+  "ban_id": 114,
+  "slug": "the-god-of-small-things",
+  "country": "India",
+  "our_year": 1997,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_God_of_Small_Things",
+  "source_name": "Wikipedia, The God of Small Things (cites NYT 29 Jul 1997; Indian Express 9 Nov 1997)",
+  "locator": "Reception/controversy",
+  "year_found": 1997,
+  "date_type": "challenge",
+  "status_now": "not banned",
+  "correction": "Wikipedia records obscenity charges and criticism by Kerala CM Nayanar, no ban; outcome of case not stated in opened page.",
+  "suggested_note": "Roy faced obscenity charges in Kerala in 1997 (Wikipedia, citing NYT and Indian Express); no ban recorded.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_God_of_Small_Things"
+  ],
+  "uncertainty": "Dismissal claim in our note not verified."
+ },
+ {
+  "ban_id": 1110,
+  "slug": "the-god-of-small-things",
+  "country": "Lebanon",
+  "our_year": 1997,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_God_of_Small_Things",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Nothing on Lebanon found."
+ },
+ {
+  "ban_id": 673,
+  "slug": "i-am-malala",
+  "country": "Pakistan",
+  "our_year": 2013,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/I_Am_Malala",
+  "source_name": "Wikipedia, I Am Malala (cites The Independent, 10 Nov 2013)",
+  "locator": "Reception",
+  "year_found": 2013,
+  "date_type": "ban_enacted",
+  "status_now": "unclear",
+  "correction": "Ban was by the All Pakistan Private Schools Federation (about 152,000 schools), not the government.",
+  "suggested_note": "In Nov 2013 the All Pakistan Private Schools Federation banned the book in its member schools (The Independent, 10 Nov 2013, via Wikipedia).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/I_Am_Malala"
+  ],
+  "uncertainty": "Private-sector ban; current status not stated; book sold in bookstores."
+ },
+ {
+  "ban_id": 887,
+  "slug": "the-red-and-the-black",
+  "country": "France",
+  "our_year": 1830,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Red_and_the_Black",
+   "https://en.wikipedia.org/wiki/Index_Librorum_Prohibitorum"
+  ],
+  "uncertainty": "No censorship in France recorded on Wikipedia; only a Brazil 1964 episode."
+ },
+ {
+  "ban_id": 1094,
+  "slug": "the-kite-runner",
+  "country": "Afghanistan",
+  "our_year": 2008,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/The_Kite_Runner",
+  "source_name": "Wikipedia, The Kite Runner (cites NYT 16 Jan 2008)",
+  "locator": "Film adaptation section",
+  "year_found": 2008,
+  "date_type": "ban_enacted",
+  "status_now": "unclear",
+  "correction": "The Ministry of Culture banned the FILM adaptation, not the novel; no book ban found.",
+  "suggested_note": "Afghanistan's Ministry of Culture banned the 2007 film from cinemas and DVD shops (NYT, 16 Jan 2008, via Wikipedia); the novel ban is not recorded.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Kite_Runner"
+  ],
+  "uncertainty": "Opened only Wikipedia, citing NYT unopened."
+ }
+]

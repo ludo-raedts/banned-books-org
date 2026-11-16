@@ -1,0 +1,2380 @@
+{
+ "takenAt": "2026-11-16T07:57:00.301Z",
+ "bans": [
+  {
+   "id": 58,
+   "book_id": 51,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1956,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in France as obscene in December 1956 by the Interior Ministry; lifted after roughly two years (end date varies by source: 1958/1959).",
+   "confidence": "reported",
+   "created_at": "2026-04-24T14:46:52.093787+00:00"
+  },
+  {
+   "id": 114,
+   "book_id": 106,
+   "country_code": "IN",
+   "scope_id": 4,
+   "action_type": "challenged",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1997,
+   "year_ended": null,
+   "actor": null,
+   "description": "Roy faced obscenity charges in Kerala in 1997 (Wikipedia, citing NYT and Indian Express); no ban recorded.",
+   "confidence": "unverified",
+   "created_at": "2026-04-24T16:06:17.89478+00:00"
+  },
+  {
+   "id": 565,
+   "book_id": 4,
+   "country_code": "CN",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "unclear",
+   "region": null,
+   "institution": null,
+   "year_started": 1985,
+   "year_ended": null,
+   "actor": null,
+   "description": "Reported: a restricted-circulation Chinese edition appeared in 1985 and the book was made publicly available in 1988 (Wikipedia, Nineteen Eighty-Four). A current ban is not documented.",
+   "confidence": "unverified",
+   "created_at": "2026-04-24T18:15:04.629641+00:00"
+  },
+  {
+   "id": 575,
+   "book_id": 559,
+   "country_code": "DE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": "Placed on the BPjM index in Germany in April 2006 (German Wikipedia, citing a 2007 federal government answer and Boersenblatt 2006).",
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:15:09.057848+00:00"
+  },
+  {
+   "id": 585,
+   "book_id": 4,
+   "country_code": "SU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1950,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in the Soviet Union after its 1949 publication; the first openly available Russian edition appeared in 1988 and it was legalised by 1990.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:15:56.852591+00:00"
+  },
+  {
+   "id": 611,
+   "book_id": 569,
+   "country_code": "ES",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1939,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:19.014515+00:00"
+  },
+  {
+   "id": 613,
+   "book_id": 571,
+   "country_code": "AU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1930,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:21.352123+00:00"
+  },
+  {
+   "id": 614,
+   "book_id": 571,
+   "country_code": "US",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1930,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:21.527254+00:00"
+  },
+  {
+   "id": 619,
+   "book_id": 576,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1955,
+   "year_ended": null,
+   "actor": null,
+   "description": "Obscenity charges were brought against the publisher in 1955 and rejected by the courts, but a publicity ban stayed in force for several years (per Wikipedia, uncited there).",
+   "confidence": "unverified",
+   "created_at": "2026-04-24T18:31:27.549953+00:00"
+  },
+  {
+   "id": 620,
+   "book_id": 576,
+   "country_code": "AU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1960,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:27.73041+00:00"
+  },
+  {
+   "id": 624,
+   "book_id": 579,
+   "country_code": "EG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1985,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:30.948762+00:00"
+  },
+  {
+   "id": 625,
+   "book_id": 579,
+   "country_code": "SA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1985,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:31.124212+00:00"
+  },
+  {
+   "id": 628,
+   "book_id": 581,
+   "country_code": "DE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1945,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:31:32.971944+00:00"
+  },
+  {
+   "id": 642,
+   "book_id": 593,
+   "country_code": "IR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1994,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:40.203549+00:00"
+  },
+  {
+   "id": 645,
+   "book_id": 596,
+   "country_code": "IE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:43.977859+00:00"
+  },
+  {
+   "id": 647,
+   "book_id": 597,
+   "country_code": "IE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1931,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:45.076449+00:00"
+  },
+  {
+   "id": 648,
+   "book_id": 597,
+   "country_code": "US",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1918,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:45.209197+00:00"
+  },
+  {
+   "id": 652,
+   "book_id": 537,
+   "country_code": "RU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2023,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:49.379609+00:00"
+  },
+  {
+   "id": 655,
+   "book_id": 601,
+   "country_code": "MY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2025,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Malaysia by the Home Ministry under the Printing Presses and Publications Act 1984, announced 7 January 2025, as likely to harm morals.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:51.707132+00:00"
+  },
+  {
+   "id": 659,
+   "book_id": 604,
+   "country_code": "VA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1762,
+   "year_ended": null,
+   "actor": null,
+   "description": "The work was also forbidden by the Church being listed on the Index Librorum Prohibitorum.",
+   "confidence": "verified",
+   "created_at": "2026-04-24T18:38:54.779668+00:00"
+  },
+  {
+   "id": 660,
+   "book_id": 604,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1762,
+   "year_ended": null,
+   "actor": null,
+   "description": "Upon publication, the distribution of The Social Contract in France was prohibited, leading to Rousseau fleeing the country to avoid imprisonment.",
+   "confidence": "verified",
+   "created_at": "2026-04-24T18:38:54.953977+00:00"
+  },
+  {
+   "id": 662,
+   "book_id": 605,
+   "country_code": "IT",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1775,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:56.176747+00:00"
+  },
+  {
+   "id": 673,
+   "book_id": 615,
+   "country_code": "PK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2013,
+   "year_ended": null,
+   "actor": null,
+   "description": "In Nov 2013 the All Pakistan Private Schools Federation banned the book in its member schools (The Independent, 10 Nov 2013, via Wikipedia).",
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:56:37.02538+00:00"
+  },
+  {
+   "id": 827,
+   "book_id": 760,
+   "country_code": "YU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1935,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:21:15.202879+00:00"
+  },
+  {
+   "id": 840,
+   "book_id": 771,
+   "country_code": "IT",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1933,
+   "year_ended": null,
+   "actor": null,
+   "description": "First published abroad in 1933 (German, Zurich); not published in Italy until 1945.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:21:26.587616+00:00"
+  },
+  {
+   "id": 857,
+   "book_id": 788,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1791,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:21:43.919242+00:00"
+  },
+  {
+   "id": 862,
+   "book_id": 793,
+   "country_code": "GB",
+   "scope_id": 5,
+   "action_type": "restricted",
+   "status": "active",
+   "region": null,
+   "institution": "Borders, Waterstone's, WHSmith",
+   "year_started": 2007,
+   "year_ended": null,
+   "actor": "Commission for Racial Equality (complaint by David Enright)",
+   "description": "In July 2007, following a complaint by human rights lawyer David Enright to the Commission for Racial Equality, Borders, Waterstone's and WHSmith moved the book from children's sections to adult graphic-novel sections; WHSmith added a \"16+\" warning label. UK publisher Egmont reissued the album with a protective band and an introduction explaining the colonial-era context.",
+   "confidence": "verified",
+   "created_at": "2026-04-24T21:21:47.998339+00:00"
+  },
+  {
+   "id": 884,
+   "book_id": 814,
+   "country_code": "DE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1979,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:27:24.930608+00:00"
+  },
+  {
+   "id": 885,
+   "book_id": 814,
+   "country_code": "CA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1980,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:27:25.11629+00:00"
+  },
+  {
+   "id": 887,
+   "book_id": 816,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1830,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:27:27.741356+00:00"
+  },
+  {
+   "id": 908,
+   "book_id": 7327,
+   "country_code": "AL",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1967,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned or restricted in Albania in 1967 when Hoxha declared the country atheist and banned all religious texts and practices.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:28:04.758889+00:00"
+  },
+  {
+   "id": 935,
+   "book_id": 861,
+   "country_code": "EG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2000,
+   "year_ended": null,
+   "actor": null,
+   "description": "The novel was withdrawn in Egypt in 2000 after an Islamist press campaign against it (Al-Azhar called it offensive to Islam); the issuing authority is not stated.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:31:42.20529+00:00"
+  },
+  {
+   "id": 956,
+   "book_id": 6,
+   "country_code": "KE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1989,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Kenya in March 1989 (Wikipedia, citing Netton).",
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:31:55.885911+00:00"
+  },
+  {
+   "id": 964,
+   "book_id": 880,
+   "country_code": "CL",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1973,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:41:53.312451+00:00"
+  },
+  {
+   "id": 965,
+   "book_id": 880,
+   "country_code": "AR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1973,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned by military junta for its Marxist analysis of Latin American history. Became a symbol of resistance.",
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:41:53.485073+00:00"
+  },
+  {
+   "id": 966,
+   "book_id": 880,
+   "country_code": "UY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1973,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:41:53.788919+00:00"
+  },
+  {
+   "id": 967,
+   "book_id": 880,
+   "country_code": "BR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1974,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-24T21:41:54.10476+00:00"
+  },
+  {
+   "id": 1024,
+   "book_id": 921,
+   "country_code": "FR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1765,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T06:50:20.792579+00:00"
+  },
+  {
+   "id": 1040,
+   "book_id": 51,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": "Found indecent by the NZ Supreme Court in 1960 (upheld by Court of Appeal in 1961); the Indecent Publications Tribunal classified it not indecent on 11 August 1964.",
+   "confidence": "reported",
+   "created_at": "2026-04-25T06:50:29.547867+00:00"
+  },
+  {
+   "id": 1055,
+   "book_id": 6,
+   "country_code": "PK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1988,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Pakistan on 24 November 1988 (Wikipedia timeline; that entry is uncited).",
+   "confidence": "verified",
+   "created_at": "2026-04-25T06:53:45.402114+00:00"
+  },
+  {
+   "id": 1056,
+   "book_id": 6,
+   "country_code": "BD",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1988,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Bangladesh in November 1988 (Wikipedia, citing Netton).",
+   "confidence": "verified",
+   "created_at": "2026-04-25T06:53:45.573992+00:00"
+  },
+  {
+   "id": 1079,
+   "book_id": 951,
+   "country_code": "LB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1980,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:32.21183+00:00"
+  },
+  {
+   "id": 1080,
+   "book_id": 951,
+   "country_code": "SA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1980,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:32.403719+00:00"
+  },
+  {
+   "id": 1081,
+   "book_id": 951,
+   "country_code": "EG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1982,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:32.596478+00:00"
+  },
+  {
+   "id": 1093,
+   "book_id": 125,
+   "country_code": "LB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 2011,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:39.789859+00:00"
+  },
+  {
+   "id": 1094,
+   "book_id": 31,
+   "country_code": "AF",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2008,
+   "year_ended": null,
+   "actor": null,
+   "description": "Afghanistan's Ministry of Culture banned the 2007 film from cinemas and DVD shops (NYT, 16 Jan 2008, via Wikipedia); the novel ban is not recorded.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T07:12:40.038665+00:00"
+  },
+  {
+   "id": 1095,
+   "book_id": 10,
+   "country_code": "NO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1928,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:40.335442+00:00"
+  },
+  {
+   "id": 1098,
+   "book_id": 51,
+   "country_code": "NO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1956,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:41.225093+00:00"
+  },
+  {
+   "id": 1099,
+   "book_id": 51,
+   "country_code": "DK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1956,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:41.458262+00:00"
+  },
+  {
+   "id": 1100,
+   "book_id": 53,
+   "country_code": "NO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1934,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:41.698151+00:00"
+  },
+  {
+   "id": 1101,
+   "book_id": 53,
+   "country_code": "DK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1934,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:41.952846+00:00"
+  },
+  {
+   "id": 1102,
+   "book_id": 191,
+   "country_code": "CS",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1965,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:42.180373+00:00"
+  },
+  {
+   "id": 1103,
+   "book_id": 191,
+   "country_code": "SU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1965,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:42.447646+00:00"
+  },
+  {
+   "id": 1104,
+   "book_id": 27,
+   "country_code": "LB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1986,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:42.739489+00:00"
+  },
+  {
+   "id": 1105,
+   "book_id": 8,
+   "country_code": "LY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1945,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:42.983649+00:00"
+  },
+  {
+   "id": 1106,
+   "book_id": 12,
+   "country_code": "CA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1980,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:43.225352+00:00"
+  },
+  {
+   "id": 1107,
+   "book_id": 4,
+   "country_code": "RO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1949,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:43.496643+00:00"
+  },
+  {
+   "id": 1108,
+   "book_id": 4,
+   "country_code": "HU",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1949,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:43.737371+00:00"
+  },
+  {
+   "id": 1110,
+   "book_id": 106,
+   "country_code": "LB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1997,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T07:12:44.750436+00:00"
+  },
+  {
+   "id": 1127,
+   "book_id": 973,
+   "country_code": "SA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2008,
+   "year_ended": null,
+   "actor": null,
+   "description": "Source needed: the cited list does not record this ban.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T10:36:29.199745+00:00"
+  },
+  {
+   "id": 1128,
+   "book_id": 973,
+   "country_code": "QA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2008,
+   "year_ended": null,
+   "actor": null,
+   "description": "Source needed: the cited list does not record this ban.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T10:36:29.379576+00:00"
+  },
+  {
+   "id": 1129,
+   "book_id": 973,
+   "country_code": "MY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2008,
+   "year_ended": null,
+   "actor": null,
+   "description": "Source needed: the cited list does not record this ban.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T10:36:29.571022+00:00"
+  },
+  {
+   "id": 1134,
+   "book_id": 11,
+   "country_code": "QA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2004,
+   "year_ended": null,
+   "actor": null,
+   "description": "Source needed: the page cited for this ban does not record it.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T10:36:33.309072+00:00"
+  },
+  {
+   "id": 1135,
+   "book_id": 11,
+   "country_code": "PK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": "Pakistan's government banned the film adaptation of The Da Vinci Code in June 2006 after Christian and Muslim groups called for it; the report concerns the film, not the book.",
+   "confidence": "unverified",
+   "created_at": "2026-04-25T10:36:33.554754+00:00"
+  },
+  {
+   "id": 1136,
+   "book_id": 6,
+   "country_code": "QA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1988,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Qatar in 1988, within weeks of Pakistan's 24 Nov ban (Wikipedia); exact date not given.",
+   "confidence": "verified",
+   "created_at": "2026-04-25T10:36:33.799058+00:00"
+  },
+  {
+   "id": 1137,
+   "book_id": 7,
+   "country_code": "CN",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2016,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:34.074712+00:00"
+  },
+  {
+   "id": 1138,
+   "book_id": 19,
+   "country_code": "ZA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1987,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:34.311348+00:00"
+  },
+  {
+   "id": 1139,
+   "book_id": 18,
+   "country_code": "ZA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1984,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:34.599895+00:00"
+  },
+  {
+   "id": 1141,
+   "book_id": 9,
+   "country_code": "IR",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 1985,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:35.080544+00:00"
+  },
+  {
+   "id": 1142,
+   "book_id": 27,
+   "country_code": "MY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2014,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:35.377042+00:00"
+  },
+  {
+   "id": 1143,
+   "book_id": 4,
+   "country_code": "BG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1949,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:35.754091+00:00"
+  },
+  {
+   "id": 1144,
+   "book_id": 4,
+   "country_code": "AL",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1949,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:36.010062+00:00"
+  },
+  {
+   "id": 1145,
+   "book_id": 8,
+   "country_code": "RO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1947,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:36.253853+00:00"
+  },
+  {
+   "id": 1146,
+   "book_id": 8,
+   "country_code": "BG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1947,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T10:36:36.478405+00:00"
+  },
+  {
+   "id": 1161,
+   "book_id": 771,
+   "country_code": "DE",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1933,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T11:06:00.949233+00:00"
+  },
+  {
+   "id": 1163,
+   "book_id": 576,
+   "country_code": "DK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1967,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T11:06:06.182496+00:00"
+  },
+  {
+   "id": 1164,
+   "book_id": 576,
+   "country_code": "NO",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1954,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T11:06:06.349531+00:00"
+  },
+  {
+   "id": 1167,
+   "book_id": 752,
+   "country_code": "GB",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1966,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-04-25T11:06:11.695701+00:00"
+  },
+  {
+   "id": 1208,
+   "book_id": 597,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:03.235967+00:00"
+  },
+  {
+   "id": 1209,
+   "book_id": 55,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1929,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:03.455+00:00"
+  },
+  {
+   "id": 1210,
+   "book_id": 93,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1939,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 1939 a NZ magistrate found the Decameron indecent in a prosecution of a lending-library owner; the finding was overturned on appeal later that year.",
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:03.669904+00:00"
+  },
+  {
+   "id": 1211,
+   "book_id": 10,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": "On the NZ Customs banned list; the Indecent Publications Tribunal found it not indecent in 1965 (Wikipedia list).",
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:03.882967+00:00"
+  },
+  {
+   "id": 1212,
+   "book_id": 63,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1942,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:04.184947+00:00"
+  },
+  {
+   "id": 1213,
+   "book_id": 579,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1920,
+   "year_ended": null,
+   "actor": null,
+   "description": null,
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:04.39937+00:00"
+  },
+  {
+   "id": 1214,
+   "book_id": 60,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "restricted",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1991,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 1991 the Indecent Publications Tribunal gave the novel an R18 classification, with the condition that it be labelled with the age restriction. It is not on the Classification Office's list of books banned by the Tribunal.",
+   "confidence": "reported",
+   "created_at": "2026-05-01T05:58:04.629519+00:00"
+  },
+  {
+   "id": 1809,
+   "book_id": 51,
+   "country_code": "ZA",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1955,
+   "year_ended": null,
+   "actor": null,
+   "description": "\"Lolita\" was banned in South Africa in 1955 under the apartheid Publications Act for being \"obscene\" due to its sexual content; this ban was lifted in 1982.",
+   "confidence": "reported",
+   "created_at": "2026-05-03T07:53:13.39119+00:00"
+  },
+  {
+   "id": 4764,
+   "book_id": 53,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1962,
+   "year_ended": null,
+   "actor": null,
+   "description": "Customs banned Miller's novels between 1934 and 1964; the Indecent Publications Tribunal found the book not indecent in 1967 (Wikipedia list).",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:33.874919+00:00"
+  },
+  {
+   "id": 4765,
+   "book_id": 54,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1967,
+   "year_ended": null,
+   "actor": null,
+   "description": "Declared indecent by the NZ Indecent Publications Tribunal in 1967; reclassified in September 1974 as indecent only in the hands of persons under 18.",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:34.357382+00:00"
+  },
+  {
+   "id": 4766,
+   "book_id": 752,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1967,
+   "year_ended": null,
+   "actor": null,
+   "description": "Hubert Selby Jr.'s 1964 novel — the subject of a celebrated UK obscenity trial — was prohibited in New Zealand by the Indecent Publications Tribunal in 1967 for its depictions of rape, drug abuse and prostitution in post-war Brooklyn.",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:34.808355+00:00"
+  },
+  {
+   "id": 4767,
+   "book_id": 577,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1965,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 1965 the NZ Indecent Publications Tribunal classified an expurgated paperback edition as indecent for persons under 18, restricting sale to adults 18 and over.",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:35.23268+00:00"
+  },
+  {
+   "id": 4768,
+   "book_id": 576,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1967,
+   "year_ended": null,
+   "actor": null,
+   "description": "The NZ Indecent Publications Tribunal restricted the book in 1967 to professional psychiatrists (expanded 1976); the Classification Office rated it R16 in 2014 (per Wikipedia list).",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:35.616981+00:00"
+  },
+  {
+   "id": 4769,
+   "book_id": 788,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1965,
+   "year_ended": null,
+   "actor": null,
+   "description": "A translation of Justine was considered by the NZ Indecent Publications Tribunal in 1965; Juliette (1969) was held indecent except for bona fide students over 20.",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:35.991347+00:00"
+  },
+  {
+   "id": 4770,
+   "book_id": 179,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1929,
+   "year_ended": null,
+   "actor": null,
+   "description": "Balzac's bawdy tales were among the imports prohibited by New Zealand Customs as indecent under the pre-Tribunal regime that applied the strict Hicklin Rule. The collection was a long-standing target of Anglophone obscenity policing throughout the early twentieth century.",
+   "confidence": "reported",
+   "created_at": "2026-05-06T17:45:36.437684+00:00"
+  },
+  {
+   "id": 5016,
+   "book_id": 6496,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1968,
+   "year_ended": null,
+   "actor": null,
+   "description": "The NZ Indecent Publications Tribunal ruled it indecent except for persons over 18 with professional or academic interest, in 1968 and again in 1976 (per Wikipedia list).",
+   "confidence": "reported",
+   "created_at": "2026-05-14T14:56:05.1493+00:00"
+  },
+  {
+   "id": 5019,
+   "book_id": 6499,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1969,
+   "year_ended": null,
+   "actor": null,
+   "description": "The NZ Indecent Publications Tribunal ruled Candy indecent on 30 January 1969.",
+   "confidence": "reported",
+   "created_at": "2026-05-14T14:56:06.933113+00:00"
+  },
+  {
+   "id": 5041,
+   "book_id": 6,
+   "country_code": "KW",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned for blasphemy against Islam.",
+   "confidence": "reported",
+   "created_at": "2026-05-14T16:02:48.020839+00:00"
+  },
+  {
+   "id": 5046,
+   "book_id": 6,
+   "country_code": "LK",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1988,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Sri Lanka by December 1988 (Wikipedia, citing Netton).",
+   "confidence": "reported",
+   "created_at": "2026-05-14T16:02:51.632783+00:00"
+  },
+  {
+   "id": 5048,
+   "book_id": 6,
+   "country_code": "TH",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1989,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Thailand in March 1989 (Wikipedia, citing Netton).",
+   "confidence": "reported",
+   "created_at": "2026-05-14T16:02:52.330961+00:00"
+  },
+  {
+   "id": 5061,
+   "book_id": 557,
+   "country_code": "GT",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": "Banned in Guatemala during the regime of Jorge Ubico (1931-1944), alongside anti-Hitler writings (e.g. by Hermann Rauschning), to encourage political neutrality during the Second World War. The exact ban year is not fixed by the available sources (publication year 1925 was a placeholder import artifact and has been removed pending human review).",
+   "confidence": "unverified",
+   "created_at": "2026-05-14T21:34:23.487172+00:00"
+  },
+  {
+   "id": 12929,
+   "book_id": 7662,
+   "country_code": "NZ",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "historical",
+   "region": null,
+   "institution": null,
+   "year_started": 1969,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 1969 and 1976 it was ruled indecent except in the hands of persons over the age of 18 years engaged in research relevant to the material of the book.",
+   "confidence": "reported",
+   "created_at": "2026-05-20T11:15:18.064816+00:00"
+  },
+  {
+   "id": 13127,
+   "book_id": 11,
+   "country_code": "IN",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": "Nagaland",
+   "institution": null,
+   "year_started": 2006,
+   "year_ended": null,
+   "actor": null,
+   "description": "In 2006 several Indian states barred the film's release; Tamil Nadu and Andhra Pradesh later lifted theirs under high court orders (BBC; Times of India, as cited by Wikipedia).",
+   "confidence": "unverified",
+   "created_at": "2026-05-22T05:23:47.47214+00:00"
+  },
+  {
+   "id": 29238,
+   "book_id": 577,
+   "country_code": "SG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "rescinded",
+   "region": null,
+   "institution": null,
+   "year_started": 1966,
+   "year_ended": 2015,
+   "actor": null,
+   "description": "Added to Singapore's prohibited list in 1966; the ban was lifted with 240 other titles in an order released 25 November 2015 (Global Voices).",
+   "confidence": "reported",
+   "created_at": "2026-05-29T13:29:49.006904+00:00"
+  },
+  {
+   "id": 29817,
+   "book_id": 11017,
+   "country_code": "SG",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "unclear",
+   "region": null,
+   "institution": null,
+   "year_started": null,
+   "year_ended": null,
+   "actor": null,
+   "description": "Wikipedia's list records this title as prohibited under Singapore's Internal Security (Prohibition of Publications) (Consolidation) Order (G.N. S 413/1950, extended to Singapore in 1963). The date the title was prohibited and any lifting could not be verified.",
+   "confidence": "reported",
+   "created_at": "2026-06-01T20:52:43.554075+00:00"
+  }
+ ],
+ "ban_source_links": [
+  {
+   "ban_id": 58,
+   "source_id": 48,
+   "locator": null
+  },
+  {
+   "ban_id": 58,
+   "source_id": 946,
+   "locator": null
+  },
+  {
+   "ban_id": 58,
+   "source_id": 21224,
+   "locator": "France entry"
+  },
+  {
+   "ban_id": 114,
+   "source_id": 104,
+   "locator": null
+  },
+  {
+   "ban_id": 114,
+   "source_id": 641,
+   "locator": null
+  },
+  {
+   "ban_id": 565,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 575,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 575,
+   "source_id": 21223,
+   "locator": "Rezeption/Indizierung"
+  },
+  {
+   "ban_id": 585,
+   "source_id": 1,
+   "locator": "Censorship section (Soviet Union); list entry"
+  },
+  {
+   "ban_id": 585,
+   "source_id": 789,
+   "locator": null
+  },
+  {
+   "ban_id": 611,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 613,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 614,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 619,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 619,
+   "source_id": 1965,
+   "locator": "Reception/censorship section"
+  },
+  {
+   "ban_id": 620,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 624,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 625,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 628,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 642,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 645,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 647,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 648,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 652,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 655,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 655,
+   "source_id": 21228,
+   "locator": "article"
+  },
+  {
+   "ban_id": 659,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 659,
+   "source_id": 1964,
+   "locator": null
+  },
+  {
+   "ban_id": 660,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 660,
+   "source_id": 1964,
+   "locator": null
+  },
+  {
+   "ban_id": 662,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 673,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 673,
+   "source_id": 21218,
+   "locator": "Reception"
+  },
+  {
+   "ban_id": 827,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 840,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 840,
+   "source_id": 21230,
+   "locator": "publication history"
+  },
+  {
+   "ban_id": 857,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 862,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 862,
+   "source_id": 2075,
+   "locator": null
+  },
+  {
+   "ban_id": 884,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 885,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 887,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 908,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 935,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 935,
+   "source_id": 21229,
+   "locator": "Banquet for Seaweed section"
+  },
+  {
+   "ban_id": 956,
+   "source_id": 948,
+   "locator": null
+  },
+  {
+   "ban_id": 956,
+   "source_id": 2076,
+   "locator": "Muslim response and book bannings"
+  },
+  {
+   "ban_id": 964,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 965,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 965,
+   "source_id": 643,
+   "locator": null
+  },
+  {
+   "ban_id": 966,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 966,
+   "source_id": 3435,
+   "locator": "https://www.centreforglobaleducation.com/open-veins-latin-america-re-appraisal-50-years"
+  },
+  {
+   "ban_id": 967,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1024,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1040,
+   "source_id": 951,
+   "locator": null
+  },
+  {
+   "ban_id": 1040,
+   "source_id": 21225,
+   "locator": "p.22-23"
+  },
+  {
+   "ban_id": 1055,
+   "source_id": 822,
+   "locator": null
+  },
+  {
+   "ban_id": 1055,
+   "source_id": 2076,
+   "locator": null
+  },
+  {
+   "ban_id": 1056,
+   "source_id": 944,
+   "locator": null
+  },
+  {
+   "ban_id": 1056,
+   "source_id": 2076,
+   "locator": null
+  },
+  {
+   "ban_id": 1079,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1080,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1081,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1093,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1094,
+   "source_id": 28,
+   "locator": "Film adaptation section"
+  },
+  {
+   "ban_id": 1094,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1095,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1098,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1099,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1100,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1101,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1102,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1103,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1104,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1105,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1106,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1107,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1108,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1110,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1127,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1128,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1129,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1134,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1135,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1135,
+   "source_id": 21219,
+   "locator": "article text"
+  },
+  {
+   "ban_id": 1136,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1136,
+   "source_id": 2076,
+   "locator": null
+  },
+  {
+   "ban_id": 1137,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1138,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1139,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1141,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1142,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1143,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1144,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1145,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1146,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1161,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1163,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1164,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1167,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 1167,
+   "source_id": 2172,
+   "locator": null
+  },
+  {
+   "ban_id": 1208,
+   "source_id": 917,
+   "locator": null
+  },
+  {
+   "ban_id": 1209,
+   "source_id": 917,
+   "locator": null
+  },
+  {
+   "ban_id": 1210,
+   "source_id": 685,
+   "locator": "Decameron entry"
+  },
+  {
+   "ban_id": 1210,
+   "source_id": 917,
+   "locator": null
+  },
+  {
+   "ban_id": 1211,
+   "source_id": 685,
+   "locator": "Lady Chatterley's Lover entry"
+  },
+  {
+   "ban_id": 1211,
+   "source_id": 917,
+   "locator": null
+  },
+  {
+   "ban_id": 1212,
+   "source_id": 1071,
+   "locator": null
+  },
+  {
+   "ban_id": 1213,
+   "source_id": 917,
+   "locator": null
+  },
+  {
+   "ban_id": 1214,
+   "source_id": 923,
+   "locator": null
+  },
+  {
+   "ban_id": 1214,
+   "source_id": 20690,
+   "locator": "correction 2026-11-11"
+  },
+  {
+   "ban_id": 1809,
+   "source_id": 642,
+   "locator": null
+  },
+  {
+   "ban_id": 1809,
+   "source_id": 778,
+   "locator": null
+  },
+  {
+   "ban_id": 4764,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4764,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4765,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4765,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4765,
+   "source_id": 21222,
+   "locator": "page 2084"
+  },
+  {
+   "ban_id": 4766,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4766,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4767,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4767,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4767,
+   "source_id": 21220,
+   "locator": "page 809"
+  },
+  {
+   "ban_id": 4768,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4768,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4769,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 4769,
+   "source_id": 686,
+   "locator": null
+  },
+  {
+   "ban_id": 4769,
+   "source_id": 21227,
+   "locator": "p.2217"
+  },
+  {
+   "ban_id": 4770,
+   "source_id": 685,
+   "locator": null
+  },
+  {
+   "ban_id": 5016,
+   "source_id": 685,
+   "locator": "Table row My Secret Life (note 128)"
+  },
+  {
+   "ban_id": 5016,
+   "source_id": 923,
+   "locator": null
+  },
+  {
+   "ban_id": 5019,
+   "source_id": 923,
+   "locator": null
+  },
+  {
+   "ban_id": 5019,
+   "source_id": 21226,
+   "locator": "p.178"
+  },
+  {
+   "ban_id": 5041,
+   "source_id": 949,
+   "locator": null
+  },
+  {
+   "ban_id": 5046,
+   "source_id": 955,
+   "locator": null
+  },
+  {
+   "ban_id": 5046,
+   "source_id": 2076,
+   "locator": "Muslim response and book bannings"
+  },
+  {
+   "ban_id": 5048,
+   "source_id": 957,
+   "locator": null
+  },
+  {
+   "ban_id": 5048,
+   "source_id": 2076,
+   "locator": "Muslim response and book bannings"
+  },
+  {
+   "ban_id": 5061,
+   "source_id": 982,
+   "locator": null
+  },
+  {
+   "ban_id": 12929,
+   "source_id": 923,
+   "locator": null
+  },
+  {
+   "ban_id": 13127,
+   "source_id": 7,
+   "locator": null
+  },
+  {
+   "ban_id": 13127,
+   "source_id": 710,
+   "locator": "Nagaland, 2006 (list entry cites Telegraph India, 24 May 2006)"
+  },
+  {
+   "ban_id": 29238,
+   "source_id": 808,
+   "locator": "Wikipedia: John Cleland / Fanny Hill"
+  },
+  {
+   "ban_id": 29238,
+   "source_id": 21221,
+   "locator": "article text"
+  },
+  {
+   "ban_id": 29817,
+   "source_id": 808,
+   "locator": null
+  }
+ ]
+}

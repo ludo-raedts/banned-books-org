@@ -1,0 +1,49 @@
+{
+ "bans": [
+  {
+   "id": 654,
+   "book_id": 600,
+   "country_code": "MY",
+   "scope_id": 4,
+   "action_type": "banned",
+   "status": "active",
+   "region": null,
+   "institution": null,
+   "year_started": 2011,
+   "year_ended": null,
+   "actor": null,
+   "description": "The entire trilogy was banned in Malaysia from 2015 for containing \"sadistic\" material and \"threat to morality\".",
+   "confidence": "reported",
+   "created_at": "2026-04-24T18:38:50.587434+00:00"
+  }
+ ],
+ "ban_source_links": [
+  {
+   "ban_id": 654,
+   "source_id": 554,
+   "locator": null
+  },
+  {
+   "ban_id": 654,
+   "source_id": 772,
+   "locator": null
+  },
+  {
+   "ban_id": 654,
+   "source_id": 21231,
+   "locator": "Article body"
+  }
+ ],
+ "ban_reason_links": [
+  {
+   "ban_id": 654,
+   "reason_id": 11,
+   "basis": null
+  },
+  {
+   "ban_id": 654,
+   "reason_id": 4,
+   "basis": null
+  }
+ ]
+}

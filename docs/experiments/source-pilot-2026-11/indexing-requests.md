@@ -38,3 +38,5 @@ judged "currently not indexed", so the request tests recrawl only.
 | 2026-11-15 | /books/1984 | fact-line fix; Search Console live test by the owner (API lastCrawlTime moved) |
 | 2026-11-15 | /books/fanny-hill | Singapore ban start 1948→1966, note rewritten |
 | 2026-11-15 | the 108's other mixed-status books (lady-chatterleys-lover, the-satanic-verses, lolita, animal-farm, tropic-of-cancer, mein-kampf, all-quiet-on-the-western-front, tropic-of-capricorn) | fact-line fix only |
+
+| 2026-11-16 | the 12 books above (in the 108) | ban notes, sources and some years corrected after the top-100 check; no indexing request made |

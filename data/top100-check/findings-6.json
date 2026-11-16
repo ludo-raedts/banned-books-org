@@ -1,0 +1,302 @@
+[
+ {
+  "ban_id": 1105,
+  "slug": "animal-farm",
+  "country": "Libya",
+  "our_year": 1945,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Year 1945 is implausible (book published Aug 1945). Only trace: Voidly aggregator, which cites the Wikipedia list, which has no Libya entry.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Animal_Farm",
+   "https://en.wikipedia.org/wiki/Censorship_in_Libya",
+   "https://en.wikipedia.org/wiki/Censorship_in_Bulgaria",
+   "https://en.wikipedia.org/wiki/Censorship_in_Romania",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://morvs.ai/voidly/verboten/country/LY/"
+  ],
+  "uncertainty": "Absence in opened pages is not proof of falsity; no Libyan primary source found."
+ },
+ {
+  "ban_id": 1145,
+  "slug": "animal-farm",
+  "country": "Romania",
+  "our_year": 1947,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No source found. The Wikipedia govt list has Czechoslovakia 1948-68 for Animal Farm, not Romania.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Animal_Farm",
+   "https://en.wikipedia.org/wiki/Censorship_in_Libya",
+   "https://en.wikipedia.org/wiki/Censorship_in_Bulgaria",
+   "https://en.wikipedia.org/wiki/Censorship_in_Romania",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Communist-era Romanian suppression is plausible but nothing opened records it."
+ },
+ {
+  "ban_id": 1146,
+  "slug": "animal-farm",
+  "country": "Bulgaria",
+  "our_year": 1947,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No source found. Wikipedia govt list has Czechoslovakia 1948-68 for Animal Farm, not Bulgaria.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Animal_Farm",
+   "https://en.wikipedia.org/wiki/Censorship_in_Libya",
+   "https://en.wikipedia.org/wiki/Censorship_in_Bulgaria",
+   "https://en.wikipedia.org/wiki/Censorship_in_Romania",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "uncertainty": "Same as Romania."
+ },
+ {
+  "ban_id": 5061,
+  "slug": "mein-kampf",
+  "country": "Guatemala",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+  "source_name": "Wikipedia: List of books banned by governments",
+  "locator": "Guatemala section, Mein Kampf entry (ref [166], text not visible to me)",
+  "year_found": null,
+  "date_type": "unknown",
+  "status_now": "historical",
+  "correction": null,
+  "suggested_note": "Banned in Guatemala during the Ubico regime (1931-44), together with anti-Hitler writings such as Rauschning's, to promote wartime neutrality (per Wikipedia list; primary source not seen).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/Mein_Kampf",
+   "https://en.wikipedia.org/wiki/Jorge_Ubico",
+   "https://en.wikipedia.org/wiki/Censorship_in_Guatemala"
+  ],
+  "uncertainty": "The Wikipedia list does record this (our automatic match missed it). Ubico, Mein Kampf and Censorship in Guatemala articles say nothing on it; no primary source opened; exact year unknown."
+ },
+ {
+  "ban_id": 1214,
+  "slug": "american-psycho",
+  "country": "New Zealand",
+  "our_year": 1991,
+  "verdict": "SUPPORTED",
+  "source_url": "https://gazette.howison.co.nz/nzg/1992/issue/10/page/206",
+  "source_name": "New Zealand Gazette 1992 no. 10 p. 206 (Indecent Publications Tribunal decisions table)",
+  "locator": "Decision 42/91, 12/12/91, Picador, applicant Comptroller of Customs, R18",
+  "year_found": 1991,
+  "date_type": "decision",
+  "status_now": "restricted (R18 today)",
+  "correction": null,
+  "suggested_note": "The Indecent Publications Tribunal classified the novel R18 (Decision 42/91, 12 Dec 1991); it was restricted, not banned.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1992/issue/10/page/206",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://en.wikipedia.org/wiki/American_Psycho_(novel)"
+  ],
+  "uncertainty": "Wikipedia NZ list adds 2014 re-review (not verified by me)."
+ },
+ {
+  "ban_id": 1167,
+  "slug": "last-exit-to-brooklyn",
+  "country": "United Kingdom",
+  "our_year": 1966,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Hubert_Selby_Jr.",
+  "source_name": "Wikipedia: Hubert Selby Jr. (cites Guardian and Telegraph obituaries, 28 Apr 2004)",
+  "locator": "Obscenity trial section",
+  "year_found": 1967,
+  "date_type": "trial",
+  "status_now": "historical (overturned on appeal 1968)",
+  "correction": "Prosecution of publishers Calder and Boyars under Obscene Publications Act; guilty verdict at Old Bailey, quashed on appeal 1968. Wikipedia Selby gives trial year 1967; Last Exit article gives 23 November without year. Not a formal ban list entry.",
+  "suggested_note": "Publishers were convicted under the Obscene Publications Act at the Old Bailey; the verdict was quashed on appeal in 1968 (per Wikipedia, citing 2004 obituaries).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Hubert_Selby_Jr.",
+   "https://en.wikipedia.org/wiki/Last_Exit_to_Brooklyn",
+   "https://en.wikipedia.org/wiki/Book_censorship_in_the_United_Kingdom"
+  ],
+  "uncertainty": "Trial year 1966 vs 1967 unresolved from opened pages (commonly 1966 verdict, appeal 1968 - not verified)."
+ },
+ {
+  "ban_id": 4766,
+  "slug": "last-exit-to-brooklyn",
+  "country": "New Zealand",
+  "our_year": 1967,
+  "verdict": "SUPPORTED",
+  "source_url": "https://gazette.howison.co.nz/nzg/1967/issue/70/page/1938",
+  "source_name": "New Zealand Gazette 1967 no. 70 p. 1938",
+  "locator": "Tribunal decision dated 1 Nov 1967, K. M. Gresson chairman",
+  "year_found": 1967,
+  "date_type": "decision",
+  "status_now": "historical (R16 per Wikipedia NZ list)",
+  "correction": "Classification was restricted, not an outright ban: indecent except in the hands of adults doing sociological work or research. Our note's 'rape, drug abuse...' reasons are not in the opened source.",
+  "suggested_note": "On 1 Nov 1967 the Indecent Publications Tribunal ruled the hardcover indecent except in the hands of adults engaged in work or research in sociological and related fields.",
+  "opened_urls": [
+   "https://gazette.howison.co.nz/nzg/1967/issue/70/page/1938",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://gazette.howison.co.nz/nzg/1967/issue/82/page/2289"
+  ],
+  "uncertainty": "Reasons in our note are unsourced by what I opened."
+ },
+ {
+  "ban_id": 862,
+  "slug": "tintin-in-the-congo",
+  "country": "United Kingdom",
+  "our_year": 2007,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Tintin_in_the_Congo",
+  "source_name": "Wikipedia: Tintin in the Congo",
+  "locator": "2007 CRE complaint section",
+  "year_found": 2007,
+  "date_type": "event",
+  "status_now": "not a ban; retail relocation/labelling",
+  "correction": "Not a government ban. Matches our note, but 'active' status is not supported; article doesn't say if measures persist.",
+  "suggested_note": "In July 2007, after lawyer David Enright complained to the Commission for Racial Equality, Borders and Waterstone's moved it to adult graphic novels and WHSmith labelled it 16+.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tintin_in_the_Congo"
+  ],
+  "uncertainty": "Status 'active' unverified; I read only the Wikipedia article."
+ },
+ {
+  "ban_id": 12929,
+  "slug": "the-pearl",
+  "country": "New Zealand",
+  "our_year": 1969,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand (entry ref [157])",
+  "locator": "The Pearl entry",
+  "year_found": 1969,
+  "date_type": "decision",
+  "status_now": "historical",
+  "correction": "Listed as restricted (not banned), ruled indecent 1969 and 1976 except for over-18 researchers. Author given as 'Anonymous' (Grove Press erotic 'The Pearl', a Victorian periodical), not Steinbeck's novella.",
+  "suggested_note": "Per Wikipedia's NZ list, The Pearl was ruled indecent in 1969 and 1976 except for persons over 18 engaged in research.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://en.wikipedia.org/wiki/The_Pearl_(novella)",
+   "https://gazette.howison.co.nz/nzg/1969/issue/53/page/1673",
+   "https://gazette.howison.co.nz/nzg/1969/issue/53/page/1674",
+   "https://gazette.howison.co.nz/nzg/1969/issue/72/page/2218",
+   "https://gazette.howison.co.nz/nzg/1969/issue/72/page/2219"
+  ],
+  "uncertainty": "IMPORTANT: the NZ list entry is attributed to 'Anonymous', i.e. likely a different book than Steinbeck's The Pearl (Steinbeck article mentions no NZ ban). Possible wrong-work match; Gazette pages I opened did not contain it."
+ },
+ {
+  "ban_id": 4770,
+  "slug": "droll-stories",
+  "country": "New Zealand",
+  "our_year": 1929,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand (refs [22],[46],[47])",
+  "locator": "Droll Stories entry",
+  "year_found": 1935,
+  "date_type": "decision",
+  "status_now": "historical, unrestricted now",
+  "correction": "Wikipedia list: on Customs prohibited list; Magistrate's Court found it indecent in 1935; later removed. 1929 not found.",
+  "suggested_note": "Per Wikipedia's NZ list, Droll Stories was on the Customs prohibited list and a magistrate's court banned it in 1935; it is now unrestricted.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://paperspast.natlib.govt.nz/newspapers/NZH19350126.2.158",
+   "https://paperspast.natlib.govt.nz/newspapers/HAWST19350118.2.71"
+  ],
+  "uncertainty": "Papers Past pages returned empty; the 1935 prosecution seen only via search snippet and Wikipedia list."
+ },
+ {
+  "ban_id": 645,
+  "slug": "elmer-gantry",
+  "country": "Ireland",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_Ireland",
+  "source_name": "Wikipedia: List of books banned in Ireland (ref [176]); Notre Dame Irish censorship list",
+  "locator": "Elmer Gantry entry; ND list year 1931",
+  "year_found": 1931,
+  "date_type": "prohibition",
+  "status_now": "historical",
+  "correction": "Year can be set to 1931 (ND list; compiled from unnamed sources). Censorship Board only began 1930.",
+  "suggested_note": "Elmer Gantry appears on lists of books prohibited in the Irish Free State under the 1929 Censorship of Publications Act (1931 per Notre Dame list).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_Ireland",
+   "https://sites.nd.edu/irish-hesburgh/censorship/",
+   "https://en.wikipedia.org/wiki/Elmer_Gantry"
+  ],
+  "uncertainty": "Both lists are secondary with no primary Iris Oifigiuil notice opened."
+ },
+ {
+  "ban_id": 624,
+  "slug": "one-thousand-and-one-nights",
+  "country": "Egypt",
+  "our_year": 1985,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.thenationalnews.com/arts/night-moves-1.526543",
+  "source_name": "The National: Night moves",
+  "locator": "passage on 1985 and 1998 attempts",
+  "year_found": 1985,
+  "date_type": "attempt",
+  "status_now": "not banned",
+  "correction": "An attempt to ban in 1985 'met with little success' per the article; no ban/confiscation confirmed.",
+  "suggested_note": "Attempts to ban the Nights in Egypt in 1985 and 1998 met little success (The National).",
+  "opened_urls": [
+   "https://themedialine.org/news/egyptians-call-on-government-to-ban-new-edition-of-arabian-nights/print/",
+   "https://www.thenationalnews.com/arts/night-moves-1.526543",
+   "https://en.wikipedia.org/wiki/One_Thousand_and_One_Nights"
+  ],
+  "uncertainty": "Details of the 1985 episode not found; media line page 403."
+ },
+ {
+  "ban_id": 625,
+  "slug": "one-thousand-and-one-nights",
+  "country": "Saudi Arabia",
+  "our_year": 1985,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Nothing found for Saudi Arabia; 1985 appears copied from Egypt.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://www.thenationalnews.com/arts/night-moves-1.526543",
+   "https://en.wikipedia.org/wiki/One_Thousand_and_One_Nights"
+  ],
+  "uncertainty": "Wikipedia article only read to first 100k chars."
+ },
+ {
+  "ban_id": 1213,
+  "slug": "one-thousand-and-one-nights",
+  "country": "New Zealand",
+  "our_year": 1920,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+  "source_name": "Wikipedia: List of books banned in New Zealand (ref [34])",
+  "locator": "Casanova Society translation entry",
+  "year_found": null,
+  "date_type": "restriction",
+  "status_now": "historical, unrestricted",
+  "correction": "Customs restricted the Casanova Society edition to anthropology/ethnology students; no year in list; 1920 unverified. It's a restriction of one translation.",
+  "suggested_note": "Per Wikipedia's NZ list, Customs restricted the Casanova Society translation to students of anthropology and ethnology; now unrestricted.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand"
+  ],
+  "uncertainty": "No year given in list."
+ }
+]
