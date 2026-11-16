@@ -1,0 +1,138 @@
+[
+ [
+  "did-six-million-really-die",
+  {
+   "country": "Canada",
+   "issue": "Row is a prosecution of the publisher (1985 charge, 1988 retrial, conviction overturned by SCC 1992), not a ban of the book; Wikipedia's R v Zundel article also gives a different first-trial sentence than the pamphlet article (nine vs 15 months).",
+   "source_url": "https://en.wikipedia.org/wiki/R_v_Zundel"
+  }
+ ],
+ [
+  "state-and-revolution",
+  {
+   "country": "United States",
+   "issue": "No source found for 'seized as obscene in Boston in 1927' (search returned nothing naming this title); the burning of copies with the Declaration of Independence/Constitution in 1940 is unconfirmed (only a Substack post claims it); the 1940 Oklahoma City event is a raid on Progressive Bookstore (July sting purchase, 17 Aug raid), after which four defendants were convicted of criminal syndicalism and convictions overturned on appeal.",
+   "source_url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/"
+  }
+ ],
+ [
+  "and-tango-makes-three",
+  {
+   "country": "China",
+   "issue": "Row says 'Source needed'; no source found for a China ban; no source was located in the sources read.",
+   "source_url": "https://en.wikipedia.org/wiki/And_Tango_Makes_Three"
+  }
+ ],
+ [
+  "the-color-purple",
+  {
+   "country": "Israel",
+   "issue": "Author's own decision to decline an Israeli edition (BDS), not a ban; Wikipedia says 'declined publication of the book in Israel in 2012'.",
+   "source_url": "https://en.wikipedia.org/wiki/The_Color_Purple"
+  }
+ ],
+ [
+  "the-color-purple",
+  {
+   "country": "South Africa",
+   "issue": "Row concerns the film, not the book; no book ban sourced.",
+   "source_url": "https://en.wikipedia.org/wiki/The_Color_Purple"
+  }
+ ],
+ [
+  "the-sorrows-of-young-werther",
+  {
+   "country": "Austria",
+   "issue": "1775 ban not supported by anything fetched; Wikipedia names only Leipzig, Denmark, Italy",
+   "source_url": "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther"
+  }
+ ],
+ [
+  "beartown",
+  {
+   "country": "Russia",
+   "issue": "Row says 'Publisher fined ~$670'; The Insider says the fine (50,000 rubles, $670, early March 2026) was on Artem Faustov, co-founder of the bookstore Vse Svobodny, for selling the book, i.e. a bookseller, not a publisher. Chitai-Gorod chain was separately fined 800,000 rubles on 16 March (Makhachkala) and in late December 2025 (Chita).",
+   "source_url": "https://theins.press/en/dispatch/291910"
+  }
+ ],
+ [
+  "the-god-of-small-things",
+  {
+   "country": "Lebanon",
+   "issue": "No source found for a Lebanon ban in any fetched source; row remains unsourced.",
+   "source_url": ""
+  }
+ ],
+ [
+  "the-tin-drum",
+  {
+   "country": "Germany",
+   "issue": "Row says restricted by BPjM in 1959; no fetched source (de.wikipedia, Focke-Museum) shows any BPjM listing. de.wikipedia only has a Bremen senator saying chapters 'belong on the Index' (an opinion, not a listing). Unverified.",
+   "source_url": "https://de.wikipedia.org/wiki/Die_Blechtrommel"
+  }
+ ],
+ [
+  "the-tin-drum",
+  {
+   "country": "United States",
+   "issue": "1997 US row unverified; searches found no 1997 case for the novel (the known 1997 Oklahoma episode concerns the film).",
+   "source_url": ""
+  }
+ ],
+ [
+  "the-tin-drum",
+  {
+   "country": "Poland",
+   "issue": "1959 Poland row: no source found in fetched pages.",
+   "source_url": ""
+  }
+ ],
+ [
+  "the-hunchback-of-notre-dame",
+  {
+   "country": "Vatican City (Holy See)",
+   "issue": "End year 1966 vs en.wikipedia Index list 'Until 1959' for Notre Dame de Paris; start 1834 confirmed by fr.wikipedia. Needs a primary check if end year is shown.",
+   "source_url": "https://en.wikipedia.org/wiki/List_of_authors_and_works_on_the_Index_Librorum_Prohibitorum"
+  }
+ ],
+ [
+  "tokyo-ghoul",
+  {
+   "country": "China",
+   "issue": "2015 listing names the anime 'Tokyo Ghoul √A', not the manga; row year 2011 looks wrong and the measure concerns an adaptation.",
+   "source_url": "https://en.wikipedia.org/wiki/Tokyo_Ghoul"
+  }
+ ],
+ [
+  "das-kapital",
+  {
+   "country": "South Korea",
+   "issue": "Row dated 1948; sourced event is 1989 (Wikipedia list also gives 1989). Spain 1939 and Portugal 1933 rows: no source naming the book found.",
+   "source_url": "https://www.snunews.com/news/articleView.html?idxno=1755"
+  }
+ ],
+ [
+  "sons-and-lovers",
+  {
+   "country": "United States",
+   "issue": "No source found for 1930 ban",
+   "source_url": "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+  }
+ ],
+ [
+  "sons-and-lovers",
+  {
+   "country": "Australia",
+   "issue": "No source found for 1930 ban; possibly confused with Lady Chatterley's Lover (Customs decision 1929)",
+   "source_url": "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+  }
+ ],
+ [
+  "the-pearl",
+  {
+   "country": "New Zealand",
+   "issue": "Source still needed; 'Anonymous' entry may be a different work",
+   "source_url": "https://en.wikipedia.org/wiki/The_Pearl_(novella)"
+  }
+ ]
+]

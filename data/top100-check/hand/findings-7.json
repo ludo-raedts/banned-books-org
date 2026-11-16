@@ -1,0 +1,106 @@
+[
+ {
+  "slug": "das-kapital",
+  "entry": {
+   "slug": "das-kapital",
+   "text": "A 1989 edition of Das Kapital was designated a banned book (금서).",
+   "sources": [
+    {
+     "url": "https://www.snunews.com/news/articleView.html?idxno=1755",
+     "title": "한국 금서의 역사 ⑥ 6공화국 이후∼현재의 금서 (SNU News, 2004-11-06)",
+     "quote": "사회주의 사상 서적인 칼 마르크스의 『자본론』(1989, 백의)과 『공산당 선언』(1989, 백산서당) 역시 금서로 지정됐다."
+    }
+   ],
+   "note": "Korean-language source; the 1989 Baekui edition was designated a banned book in South Korea after socialist texts were classified under the National Security Act. Our South Korea row says 1948; this source supports 1989 for the book."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "South Korea",
+    "issue": "Row dated 1948; sourced event is 1989 (Wikipedia list also gives 1989). Spain 1939 and Portugal 1933 rows: no source naming the book found.",
+    "source_url": "https://www.snunews.com/news/articleView.html?idxno=1755"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Das_Kapital",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.snunews.com/news/articleView.html?idxno=1755",
+   "https://www.lecturalia.com/blog/2014/08/04/censura-y-libros-en-el-franquismo"
+  ]
+ },
+ {
+  "slug": "sons-and-lovers",
+  "entry": null,
+  "no_entry_reason": "No dated censorship event found: Wikipedia only records obscenity allegations and Edward Garnett's editorial cuts at the publisher (not a ban); no source for US 1930 or Australia 1930 rows (rows already marked 'Source needed'); only aggregator (Voidly) claims them.",
+  "row_issues": [
+   {
+    "country": "United States",
+    "issue": "No source found for 1930 ban",
+    "source_url": "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+   },
+   {
+    "country": "Australia",
+    "issue": "No source found for 1930 ban; possibly confused with Lady Chatterley's Lover (Customs decision 1929)",
+    "source_url": "https://en.wikipedia.org/wiki/Sons_and_Lovers"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Sons_and_Lovers",
+   "https://en.wikipedia.org/wiki/D._H._Lawrence",
+   "https://www.nottingham.ac.uk/manuscriptsandspecialcollections/documents/exhibitions/editing-dh-lawrence/censorship.pdf",
+   "https://whisperinggums.com/2019/06/24/monday-musings-on-australian-literature-books-banned-in-australia/"
+  ]
+ },
+ {
+  "slug": "the-pearl",
+  "entry": null,
+  "no_entry_reason": "Wikipedia article has no censorship content; no accessible source for the KDN 1969/1990 gazettes or the NZ listing; searches found no ban report.",
+  "row_issues": [
+   {
+    "country": "New Zealand",
+    "issue": "Source still needed; 'Anonymous' entry may be a different work",
+    "source_url": "https://en.wikipedia.org/wiki/The_Pearl_(novella)"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Pearl_(novella)"
+  ]
+ },
+ {
+  "slug": "what-if-its-us",
+  "entry": {
+   "slug": "what-if-its-us",
+   "text": "In Malaysia the Home Ministry banned six publications, including What If It's Us, under the Printing Presses and Publications Act 1984. The ban came into effect on December 19 and was reported on Jan 7.",
+   "sources": [
+    {
+     "url": "https://thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals",
+     "title": "The Star, 7 Jan 2025",
+     "quote": "According to Malay language daily Sinar Harian, the ministry said the six publications involved are A Million Kisses In Your Lifetime by Monica Murphy, Lose You To Find Me (Erik J. Brown), Scattered Showers (Rainbow Rowell), Punai (Asyraf Bakti), When Everything Feels Like The Movie (Raziel Reid) and What If It’s Us (Becky Albertalli and Adam Silverra)."
+    },
+    {
+     "url": "https://thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals",
+     "title": "The Star, 7 Jan 2025 (Malaysia mention)",
+     "quote": "The Home Ministry said the action taken was also in line with the Rukun Negara principle of Courtesy and Morality to prevent the spread of ideologies or movements that contradict the culture and pure values of Malaysia's diverse society."
+    },
+    {
+     "url": "https://www.malaymail.com/news/malaysia/2025/01/07/government-bans-six-books-including-asyraf-baktis-punai-citing-moral-and-socio-cultural-risks/162305",
+     "title": "Malay Mail, 7 Jan 2025",
+     "quote": "The Home Ministry confirmed in a statement that the ban, which came into effect on December 19, was gazetted under the Printing Presses and Publications Act 1984 (Act 301)."
+    },
+    {
+     "url": "https://www.malaymail.com/news/malaysia/2025/01/07/government-bans-six-books-including-asyraf-baktis-punai-citing-moral-and-socio-cultural-risks/162305",
+     "title": "Malay Mail, 7 Jan 2025 (dateline)",
+     "quote": "KUALA LUMPUR, Jan 7 — The government has imposed a ban on six book titles, citing concerns over their potential harm to the nation’s moral values."
+    }
+   ],
+   "note": "Articles dated 2025-01-07; ban effective 19 Dec (2024) per Malay Mail, matching our 2024 row (P.U.(A) 414) and 2025 announcement row."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://thestar.com.my/news/nation/2025/01/07/home-ministry-bans-six-publications-that-pose-potential-threat-to-morals",
+   "https://www.malaymail.com/news/malaysia/2025/01/07/government-bans-six-books-including-asyraf-baktis-punai-citing-moral-and-socio-cultural-risks/162305",
+   "https://ilgaasia.org/news/MalaysiaBriefingNoteMar2025"
+  ]
+ }
+]

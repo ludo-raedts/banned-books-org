@@ -1,0 +1,997 @@
+[
+ {
+  "slug": "a-little-life",
+  "title": "A Little Life",
+  "year": 2008,
+  "author": "Hanya Yanagihara",
+  "total_bans": 5,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 2022,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "Russia",
+    "year": 2023,
+    "end": null,
+    "status": "active",
+    "scope": 5,
+    "note": "Distribution restricted in Russia following the November 2023 Russian Supreme Court ruling that designated the \"international LGBT movement\" as extremist. Yanag"
+   },
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Country of ori"
+   }
+  ]
+ },
+ {
+  "slug": "and-tango-makes-three",
+  "title": "And Tango Makes Three",
+  "year": 2005,
+  "author": "Justin Richardson",
+  "total_bans": 24,
+  "rows_without_institution": [
+   {
+    "country": "Singapore",
+    "year": 2014,
+    "end": null,
+    "status": "historical",
+    "scope": 2,
+    "note": "Removed from the children's section of Singapore's National Library Board (NLB) in July 2014 as \"promoting family values contrary to those held by the majority "
+   },
+   {
+    "country": "China",
+    "year": 2016,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   },
+   {
+    "country": "Italy",
+    "year": 2015,
+    "end": null,
+    "status": "historical",
+    "scope": 5,
+    "note": "One of 49 titles withdrawn from Venice municipal nursery/pre-schools by Mayor Brugnaro in June 2015 (a same-sex-parenting penguin story)."
+   }
+  ]
+ },
+ {
+  "slug": "aristotle-and-dante-discover-the-secrets-of-the-universe",
+  "title": "Aristotle and Dante Discover the Secrets of the Universe",
+  "year": 2012,
+  "author": "Benjamin Alire Sáenz",
+  "total_bans": 27,
+  "rows_without_institution": [
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "In April 2025, the Lukashenko regime added the book to the List of printed publications containing information messages and materials, the distribution of which"
+   },
+   {
+    "country": "Russia",
+    "year": 2023,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Named in a May 2025 Russian criminal case against publishers over alleged LGBT-extremism distribution; not formally banned or listed as extremist (BEARR, 15 May"
+   }
+  ]
+ },
+ {
+  "slug": "beartown",
+  "title": "Beartown",
+  "year": 2016,
+  "author": "Fredrik Backman",
+  "total_bans": 5,
+  "rows_without_institution": [
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-04-01. Country of ori"
+   },
+   {
+    "country": "Russia",
+    "year": 2026,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Publisher fined approximately $670 in March 2026 for distributing the novel under Russia's 'LGBT propaganda' law, despite an expert review finding no violations"
+   }
+  ]
+ },
+ {
+  "slug": "black-skin-white-masks",
+  "title": "Black Skin, White Masks",
+  "year": 1952,
+  "author": "Frantz Fanon",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Zimbabwe",
+    "year": 1968,
+    "end": null,
+    "status": "historical",
+    "scope": 6,
+    "note": "Listed on Rhodesia's 1959–79 prohibited-publications register (Frederikse, 'None but Ourselves'). Ban year is an approximation within the UDI period."
+   },
+   {
+    "country": "Portugal",
+    "year": 1972,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of "
+   }
+  ]
+ },
+ {
+  "slug": "call-me-by-your-name",
+  "title": "Call Me By Your Name",
+  "year": 2007,
+  "author": "André Aciman",
+  "total_bans": 19,
+  "rows_without_institution": [
+   {
+    "country": "Russia",
+    "year": 2022,
+    "end": null,
+    "status": "active",
+    "scope": 5,
+    "note": "Russian online retailer Labirint hid the book from sale in December 2022 amid removals of books that mention LGBT topics (The Bell); distribution was restricted"
+   },
+   {
+    "country": "Malaysia",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2025-08-04 (P.U. (A) 247). Publisher: ATLANTI"
+   },
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Country of ori"
+   }
+  ]
+ },
+ {
+  "slug": "das-kapital",
+  "title": "Das Kapital",
+  "year": 1867,
+  "author": "Karl Marx",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Spain",
+    "year": 1939,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Portugal",
+    "year": 1933,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "South Korea",
+    "year": 1948,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Marxist political economy was prohibited in South Korea from the founding of the First Republic. The National Security Law, enacted in December 1948, criminalis"
+   }
+  ]
+ },
+ {
+  "slug": "did-six-million-really-die",
+  "title": "Did Six Million Really Die?",
+  "year": 1974,
+  "author": "Richard Verrall",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Germany",
+    "year": 1979,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Wikipedia, citing Wyman & Rosenzveig (1996), says the pamphlet was banned in Germany; no date given."
+   },
+   {
+    "country": "South Africa",
+    "year": null,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "The book Did Six Million Really Die? was banned in South Africa."
+   },
+   {
+    "country": "Canada",
+    "year": 1985,
+    "end": null,
+    "status": "unclear",
+    "scope": 4,
+    "note": "Wikipedia: publisher Ernst Zundel was prosecuted under Canada's false-news provision (convicted 1985, retried 1988); the Supreme Court struck the law down in 19"
+   }
+  ]
+ },
+ {
+  "slug": "elmer-gantry",
+  "title": "Elmer Gantry",
+  "year": 1927,
+  "author": "Sinclair Lewis",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 1927,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Ireland",
+    "year": null,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Elmer Gantry appears on lists of books prohibited in the Irish Free State under the 1929 Censorship of Publications Act (1931 per Notre Dame list)."
+   },
+   {
+    "country": "United Kingdom",
+    "year": 1927,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Glasgow, Scotland."
+   }
+  ]
+ },
+ {
+  "slug": "i-am-malala",
+  "title": "I Am Malala",
+  "year": 2013,
+  "author": "Malala Yousafzai",
+  "total_bans": 4,
+  "rows_without_institution": [
+   {
+    "country": "Afghanistan",
+    "year": 2024,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Named among the ~400 titles distributed to Afghan booksellers as banned for being against 'Islamic principles and national interest'."
+   },
+   {
+    "country": "Pakistan",
+    "year": 2013,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "In Nov 2013 the All Pakistan Private Schools Federation banned the book in its member schools (The Independent, 10 Nov 2013, via Wikipedia)."
+   }
+  ]
+ },
+ {
+  "slug": "lolita",
+  "title": "Lolita",
+  "year": 1955,
+  "author": "Vladimir Nabokov",
+  "total_bans": 22,
+  "rows_without_institution": [
+   {
+    "country": "United Kingdom",
+    "year": 1955,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Australia",
+    "year": 1955,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Argentina",
+    "year": 1960,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Denmark",
+    "year": 1956,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   },
+   {
+    "country": "France",
+    "year": 1956,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in France as obscene in December 1956 by the Interior Ministry; lifted after roughly two years (end date varies by source: 1958/1959)."
+   },
+   {
+    "country": "South Africa",
+    "year": 1955,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in South Africa under apartheid censorship; Vreme reports the ban ran 1974-1982. Start year 1955 unconfirmed."
+   },
+   {
+    "country": "Canada",
+    "year": 1956,
+    "end": 1958,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Canada in 1956; not enforced on imports of the U.S. Putnam edition, and lifted in late 1958."
+   },
+   {
+    "country": "Norway",
+    "year": 1956,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   },
+   {
+    "country": "Portugal",
+    "year": 1955,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of "
+   },
+   {
+    "country": "Portugal",
+    "year": 1960,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Listed among translated works banned in Portugal under the Estado Novo. Exact ban year not specified in the register."
+   },
+   {
+    "country": "New Zealand",
+    "year": null,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Found indecent by the NZ Supreme Court in 1960 (upheld by Court of Appeal in 1961); the Indecent Publications Tribunal classified it not indecent on 11 August 1"
+   }
+  ]
+ },
+ {
+  "slug": "more-happy-than-not",
+  "title": "More Happy Than Not",
+  "year": 2015,
+  "author": "Adam Silvera",
+  "total_bans": 42,
+  "rows_without_institution": [
+   {
+    "country": "Belarus",
+    "year": 2024,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2024-11-21. Country of ori"
+   }
+  ]
+ },
+ {
+  "slug": "one-thousand-and-one-nights",
+  "title": "One Thousand and One Nights",
+  "year": 1706,
+  "author": "Anonymous",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Saudi Arabia",
+    "year": 1985,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Qantara (Samir Grees, 14 May 2010) states the book is banned in Saudi Arabia; no date or legal basis given."
+   },
+   {
+    "country": "New Zealand",
+    "year": 1920,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Per Wikipedia's NZ list, Customs restricted the Casanova Society translation to students of anthropology and ethnology; now unrestricted."
+   },
+   {
+    "country": "Egypt",
+    "year": 1985,
+    "end": 1986,
+    "status": "rescinded",
+    "scope": 4,
+    "note": "In 1985 a group of Islamists won an injunction removing the book from the market; a higher court reversed the decision a year later (Qantara)."
+   }
+  ]
+ },
+ {
+  "slug": "sons-and-lovers",
+  "title": "Sons and Lovers",
+  "year": 1913,
+  "author": "D.H. Lawrence",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 1930,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   },
+   {
+    "country": "United Kingdom",
+    "year": 1913,
+    "end": null,
+    "status": "historical",
+    "scope": 2,
+    "note": "Historical UK/Ireland bans of RLF-supported authors documented by the Royal Literary Fund's 2025 Banned Books Week article (October 2025). Removed from UK publi"
+   },
+   {
+    "country": "Australia",
+    "year": 1930,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   }
+  ]
+ },
+ {
+  "slug": "state-and-revolution",
+  "title": "The State and Revolution",
+  "year": 1917,
+  "author": "Vladimir Lenin",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Malaysia",
+    "year": 1952,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1952-06-12 (L.N. 329). Publisher: LITTLE LENI"
+   },
+   {
+    "country": "United States",
+    "year": 1927,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Seized as obscene in Boston in 1927; in a 1940 Oklahoma City raid copies were seized and burned along with the Declaration of Independence and the U.S. Constitu"
+   },
+   {
+    "country": "Singapore",
+    "year": null,
+    "end": null,
+    "status": "unclear",
+    "scope": 4,
+    "note": "Wikipedia's list records this title as prohibited under Singapore's Internal Security (Prohibition of Publications) (Consolidation) Order (G.N. S 413/1950, exte"
+   }
+  ]
+ },
+ {
+  "slug": "the-color-purple",
+  "title": "The Color Purple",
+  "year": 1982,
+  "author": "Alice Walker",
+  "total_bans": 72,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 1984,
+    "end": null,
+    "status": "rescinded",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "Israel",
+    "year": 2012,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Alice Walker declined publication of The Color Purple in Israel as part of the Boycott, Divestment and Sanctions movement, stating she would not allow her book "
+   },
+   {
+    "country": "South Africa",
+    "year": 1984,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Reported: Alice Walker refused to let the film be shown in apartheid South Africa (Wikipedia, citing the New York Times, 2012). A state ban on the book is not d"
+   }
+  ]
+ },
+ {
+  "slug": "the-communist-manifesto",
+  "title": "The Communist Manifesto",
+  "year": 1848,
+  "author": "Karl Marx",
+  "total_bans": 5,
+  "rows_without_institution": [
+   {
+    "country": "Germany",
+    "year": 1933,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Argentina",
+    "year": 1976,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned by military junta as communist literature."
+   },
+   {
+    "country": "South Africa",
+    "year": 1950,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned under apartheid as communist literature threatening state security."
+   },
+   {
+    "country": "Portugal",
+    "year": 1974,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of "
+   },
+   {
+    "country": "New Zealand",
+    "year": 1940,
+    "end": 1942,
+    "status": "historical",
+    "scope": 4,
+    "note": "Withheld from circulation in New Zealand under wartime censorship (Controller of Censorship) from about 1939-40; still held June 1942; released November 1942. A"
+   }
+  ]
+ },
+ {
+  "slug": "the-god-of-small-things",
+  "title": "The God of Small Things",
+  "year": 1997,
+  "author": "Arundhati Roy",
+  "total_bans": 14,
+  "rows_without_institution": [
+   {
+    "country": "Lebanon",
+    "year": 1997,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: no source found that records this ban in this country."
+   },
+   {
+    "country": "United States",
+    "year": null,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "India",
+    "year": 1997,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Roy faced obscenity charges in Kerala in 1997 (Wikipedia, citing NYT and Indian Express); no ban recorded."
+   }
+  ]
+ },
+ {
+  "slug": "the-handmaids-tale-the-graphic-novel",
+  "title": "The Handmaid's Tale: The Graphic Novel",
+  "year": 2019,
+  "author": "Margaret Atwood",
+  "total_bans": 55,
+  "rows_without_institution": []
+ },
+ {
+  "slug": "the-hunchback-of-notre-dame",
+  "title": "The Hunchback of Notre-Dame",
+  "year": 1831,
+  "author": "Victor Hugo",
+  "total_bans": 4,
+  "rows_without_institution": [
+   {
+    "country": "Vatican City (Holy See)",
+    "year": 1834,
+    "end": 1966,
+    "status": "historical",
+    "scope": 7,
+    "note": "Added to the Index in 1834 for its portrayal of corrupt clergy and anti-clerical subtext. On the Index until 1966."
+   },
+   {
+    "country": "Kuwait",
+    "year": 2016,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "The 19th-century French classic was among the ~4,390 titles barred by Kuwait's Ministry of Information censorship committee (2014–2018)."
+   }
+  ]
+ },
+ {
+  "slug": "the-pearl",
+  "title": "The Pearl",
+  "year": 1947,
+  "author": "John Steinbeck",
+  "total_bans": 4,
+  "rows_without_institution": [
+   {
+    "country": "Malaysia",
+    "year": 1990,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1990-11-01 (P.U. (A) 354). Publisher: Grove P"
+   },
+   {
+    "country": "Malaysia",
+    "year": 1969,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1969-02-27 (P.U.(A) 60). Publisher: GROVE PRE"
+   },
+   {
+    "country": "New Zealand",
+    "year": 1969,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Source needed: the New Zealand list entry named \"The Pearl\" is attributed to \"Anonymous\" and may be a different work from Steinbeck's novel."
+   }
+  ]
+ },
+ {
+  "slug": "the-perks-of-being-a-wallflower",
+  "title": "The Perks of Being a Wallflower",
+  "year": 1999,
+  "author": "Stephen Chbosky",
+  "total_bans": 157,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 2009,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "United States",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "United States",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "In 2025, Utah banned the book from all public schools in the state."
+   },
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "In April 2025, the Lukashenko regime added the book to its list of printed publications containing information messages and materials, the distribution of which"
+   }
+  ]
+ },
+ {
+  "slug": "the-satanic-verses",
+  "title": "The Satanic Verses",
+  "year": 1988,
+  "author": "Salman Rushdie",
+  "total_bans": 22,
+  "rows_without_institution": [
+   {
+    "country": "Sudan",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned November 1988 for blasphemy against Islam."
+   },
+   {
+    "country": "South Africa",
+    "year": 1988,
+    "end": 2002,
+    "status": "rescinded",
+    "scope": 4,
+    "note": "Banned November 1988 under apartheid-era publications law; the ban was formally lifted in January 2002."
+   },
+   {
+    "country": "Jordan",
+    "year": 1989,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Barred in Jordan as blasphemous against Islam following Khomeini's fatwa; named in 2010 as the most-requested banned book in the country."
+   },
+   {
+    "country": "Egypt",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned 24 November 1988."
+   },
+   {
+    "country": "Kuwait",
+    "year": null,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned for blasphemy against Islam."
+   },
+   {
+    "country": "Sri Lanka",
+    "year": 1988,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Sri Lanka by December 1988 (Wikipedia, citing Netton)."
+   },
+   {
+    "country": "Thailand",
+    "year": 1989,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Banned in Thailand in March 1989 (Wikipedia, citing Netton)."
+   },
+   {
+    "country": "Pakistan",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Pakistan on 24 November 1988 (Wikipedia timeline; that entry is uncited)."
+   },
+   {
+    "country": "Venezuela",
+    "year": 1989,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in June 1989 — described by contemporary accounts as the last nation to impose a restriction during the initial wave of bans."
+   },
+   {
+    "country": "Saudi Arabia",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned 24 November 1988."
+   },
+   {
+    "country": "Qatar",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Qatar in 1988, within weeks of Pakistan's 24 Nov ban (Wikipedia); exact date not given."
+   },
+   {
+    "country": "Somalia",
+    "year": 1988,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned 24 November 1988 for blasphemy against Islam."
+   }
+  ]
+ },
+ {
+  "slug": "the-sorrows-of-young-werther",
+  "title": "The Sorrows of Young Werther",
+  "year": 1774,
+  "author": "Johann Wolfgang von Goethe",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "Austria",
+    "year": 1775,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   },
+   {
+    "country": "Italy",
+    "year": 1775,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Wikipedia, citing Furedi (History Today, 2015), says the novel was banned in Italy and Denmark; Leipzig 1775. No Italian date given."
+   },
+   {
+    "country": "Germany",
+    "year": 1775,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "In 1775, both the novel and the Werther clothing style were banned in Leipzig due to concerns over the 'Werther effect'."
+   }
+  ]
+ },
+ {
+  "slug": "the-tin-drum",
+  "title": "The Tin Drum",
+  "year": 1959,
+  "author": "Günter Grass",
+  "total_bans": 3,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 1997,
+    "end": null,
+    "status": "historical",
+    "scope": 2,
+    "note": ""
+   },
+   {
+    "country": "Germany",
+    "year": 1959,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "Restricted by German authorities (BPjM) for sexual content. Later unbanned."
+   },
+   {
+    "country": "Poland",
+    "year": 1959,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": ""
+   }
+  ]
+ },
+ {
+  "slug": "this-book-is-gay",
+  "title": "This Book Is Gay",
+  "year": 2014,
+  "author": "Juno Dawson",
+  "total_bans": 54,
+  "rows_without_institution": [
+   {
+    "country": "United States",
+    "year": 2015,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": ""
+   },
+   {
+    "country": "United Kingdom",
+    "year": 2024,
+    "end": null,
+    "status": "active",
+    "scope": 1,
+    "note": "Removed or formally challenged in UK secondary-school libraries during the 2023-2024 Index on Censorship survey of UK school librarians, in which 53% of respond"
+   }
+  ]
+ },
+ {
+  "slug": "tokyo-ghoul",
+  "title": "Tokyo Ghoul",
+  "year": 2011,
+  "author": "Sui Ishida",
+  "total_bans": 8,
+  "rows_without_institution": [
+   {
+    "country": "Russia",
+    "year": 2021,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "In February 2021, it was reported that Tokyo Ghoul was banned from distribution on two unspecified websites in Russia."
+   },
+   {
+    "country": "China",
+    "year": 2011,
+    "end": null,
+    "status": "historical",
+    "scope": 4,
+    "note": "In 2015, the Chinese Ministry of Culture listed Tokyo Ghoul √A among 38 anime and manga titles banned in China."
+   },
+   {
+    "country": "Belarus",
+    "year": 2024,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2024-11-21. Country of ori"
+   }
+  ]
+ },
+ {
+  "slug": "what-if-its-us",
+  "title": "What If It's Us",
+  "year": 2018,
+  "author": "Becky Albertalli",
+  "total_bans": 11,
+  "rows_without_institution": [
+   {
+    "country": "Malaysia",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Home Ministry under the Printing Presses and Publications Act 1984, announced 7 January 2025, as likely to harm morals."
+   },
+   {
+    "country": "Malaysia",
+    "year": 2024,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2024-12-19 (P.U. (A) 414). Publisher: BALZER "
+   },
+   {
+    "country": "Belarus",
+    "year": 2025,
+    "end": null,
+    "status": "active",
+    "scope": 4,
+    "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Country of ori"
+   }
+  ]
+ }
+]

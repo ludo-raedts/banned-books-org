@@ -1,0 +1,8 @@
+# Hand row fixes 2026-11-16 (applied)
+
+- ban 27979 beartown/Russia: description: "Publisher fined approximately $670 in March 2026 for distributing the novel under Russia's 'LGBT propaganda' law, despite an expert review finding no violations. Distribution restricted. Authority: Russian court (publisher fined)." → "Russian booksellers were fined for selling the book: the co-founder of the bookstore Vse Svobodny, Artem Faustov, was fined 50,000 rubles in early March 2026, and a Makhachkala court fined the Chitai-Gorod chain (The Insider; OC Media)."
+- ban 1788 the-tin-drum/Germany: confidence: "reported" → "unverified"; description: "Restricted by German authorities (BPjM) for sexual content. Later unbanned." → "Source needed: no source found that records this ban in this country."
+- ban 80 the-tin-drum/United States: confidence: "reported" → "unverified"; description: null → "Source needed: the 1997 US case found concerned the film adaptation, not the novel."
+- ban 989 the-tin-drum/Poland: confidence: "reported" → "unverified"; description: null → "Source needed: no source found that records this ban in this country."
+- ban 13126 the-color-purple/Israel: confidence: "verified" → "unverified"; description: "Alice Walker declined publication of The Color Purple in Israel as part of the Boycott, Divestment and Sanctions movement, stating she would not allow her book to be published while Israel maintained its system of apartheid." → "Alice Walker declined publication of the book in Israel in 2012 as a boycott (Wikipedia); this was the author's decision, not a ban."
+- ban 661 the-sorrows-of-young-werther/Austria: confidence: "reported" → "unverified"; description: null → "Source needed: no source found that records this ban in this country."

@@ -1,0 +1,150 @@
+[
+ {
+  "slug": "beartown",
+  "entry": {
+   "slug": "beartown",
+   "text": "The Leninsky District Court in Makhachkala fined the bookstore chain Chitai-Gorod on 16 March, with Beartown among the books named as grounds for the protocol. In early March 2026, bookstore co-founder Artem Faustov was fined 50,000 rubles for selling Beartown.",
+   "sources": [
+    {
+     "url": "https://oc-media.org/makhachkala-bookshop-fined-for-lgbt-propaganda-in-books-by-le-guin-and-backman/",
+     "title": "OC Media: Makhachkala bookshop fined for LGBT propaganda in books by Le Guin and Backman",
+     "quote": "The Leninsky District Court in Makhachkala fined the bookstore chain, Chitai-Gorod, on 16 March, according to Russian independent media outlet Mediazona"
+    },
+    {
+     "url": "https://oc-media.org/makhachkala-bookshop-fined-for-lgbt-propaganda-in-books-by-le-guin-and-backman/",
+     "title": "OC Media (same article)",
+     "quote": "According to the case materials, the grounds for the protocol were the books Beartown and Us Against You by Swedish author Fredrik Backman"
+    },
+    {
+     "url": "https://theins.press/en/dispatch/291910",
+     "title": "The Insider: In Putin's bad book",
+     "quote": "in early March 2026, Artem Faustov, co-founder of the bookstore Vse Svobodny, was fined 50,000 rubles ($670) for selling Fredrik Backman’s Beartown even though an expert review by the Russian Book Union had concluded that the book contained nothing prohibited."
+    }
+   ],
+   "note": "Makhachkala ruling is 16 March (2026 per context; year not in quote). Penalties fell on booksellers, not the publisher."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Russia",
+    "issue": "Row says 'Publisher fined ~$670'; The Insider says the fine (50,000 rubles, $670, early March 2026) was on Artem Faustov, co-founder of the bookstore Vse Svobodny, for selling the book, i.e. a bookseller, not a publisher. Chitai-Gorod chain was separately fined 800,000 rubles on 16 March (Makhachkala) and in late December 2025 (Chita).",
+    "source_url": "https://theins.press/en/dispatch/291910"
+   }
+  ],
+  "opened_urls": [
+   "https://oc-media.org/makhachkala-bookshop-fined-for-lgbt-propaganda-in-books-by-le-guin-and-backman/",
+   "https://theins.press/en/dispatch/291910",
+   "https://www.washingtonblade.com/2026/02/12/russias-anti-lgbtq-crackdown-takes-absurd-turn/",
+   "https://en.wikipedia.org/wiki/Fredrik_Backman",
+   "https://en.wikipedia.org/wiki/Beartown_(novel)"
+  ]
+ },
+ {
+  "slug": "lolita",
+  "entry": {
+   "slug": "lolita",
+   "text": "In France, Lolita was banned as a \"dangerous book\" until 1958. On September 17, 1958, the Cincinnati Public Library banned Lolita.",
+   "sources": [
+    {
+     "url": "https://exhibits.library.cornell.edu/lolita/feature/publishing-lolita",
+     "title": "Nabokov at Cornell: Publishing Lolita",
+     "quote": "The book's appearance sparked a flurry of publicity in France, where it was banned as a \"dangerous book\" until 1958."
+    },
+    {
+     "url": "https://exhibits.library.cornell.edu/lolita/feature/publishing-lolita",
+     "title": "Nabokov at Cornell: Publishing Lolita (same page)",
+     "quote": "On September 17, 1958, the Cincinnati Public Library banned Lolita."
+    }
+   ],
+   "note": "Cornell page says France ban lasted until 1958; our row has France 1956-onward (lifted 1958/59), consistent."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://exhibits.library.cornell.edu/lolita/feature/publishing-lolita",
+   "https://en.wikipedia.org/wiki/Lolita"
+  ]
+ },
+ {
+  "slug": "the-god-of-small-things",
+  "entry": {
+   "slug": "the-god-of-small-things",
+   "text": "In an interview published on September 30, 1997, Arundhati Roy was reported to face obscenity charges in Kerala brought by an individual lawyer, Sabu Thomas. She said she had appealed to the high court, and they decided to give the case to a lower court.",
+   "sources": [
+    {
+     "url": "https://www.salon.com/1997/09/30/00roy/",
+     "title": "Salon: The Salon Interview: Arundhati Roy",
+     "quote": "The Salon Interview: Arundhati Roy. The author of 'The God of Small Things' talks about India, the obscenity charge she faces and how writing is like architecture. By Reena Jana. By Reena Jana Published September 30, 1997 7:00PM (EDT)"
+    },
+    {
+     "url": "https://www.salon.com/1997/09/30/00roy/",
+     "title": "Salon interview (same page)",
+     "quote": "The obscenity charges brought forth by an individual lawyer, Sabu Thomas, that you face are in Kerala, the same Indian region you depict in your book."
+    },
+    {
+     "url": "https://www.salon.com/1997/09/30/00roy/",
+     "title": "Salon interview (same page)",
+     "quote": "In fact, last week, I made an appeal to the high court, and they decided to give the case to a lower court."
+    }
+   ],
+   "note": "Prosecution (criminal obscenity charge) against the book/author, not a ban; no ban recorded. Outcome not sourced."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Lebanon",
+    "issue": "No source found for a Lebanon ban in any fetched source; row remains unsourced.",
+    "source_url": ""
+   }
+  ],
+  "opened_urls": [
+   "https://www.salon.com/1997/09/30/00roy/",
+   "https://en.wikipedia.org/wiki/The_God_of_Small_Things",
+   "https://en.wikipedia.org/wiki/Arundhati_Roy",
+   "https://www.npr.org/1997/06/16/1039096/god-of-small-things"
+  ]
+ },
+ {
+  "slug": "the-tin-drum",
+  "entry": {
+   "slug": "the-tin-drum",
+   "text": "In 1959 the jury of the Bremer Literaturpreis awarded the prize to the author, but the Senat refused it on moral grounds.",
+   "sources": [
+    {
+     "url": "https://www.focke-museum.de/digital/polnische-spur/karrieren-der-stunde-null/",
+     "title": "Focke-Museum Bremen: Karrieren der Stunde null",
+     "quote": "Die Jury des Bremer Literaturpreises sprach ihm 1959 die Auszeichnung zu, der Senat verweigerte sie aus moralisch-sittlichen Gründen."
+    },
+    {
+     "url": "https://de.wikipedia.org/wiki/Die_Blechtrommel",
+     "title": "de.wikipedia: Die Blechtrommel",
+     "quote": "verweigerte Bremens Senat dem Autor den von einer unabhängigen Jury zugesprochenen Bremer Literaturpreis"
+    }
+   ],
+   "note": "This is an official refusal of a literary prize on moral grounds (Wikipedia also quotes a Bremen senator saying chapters belong on the Index of youth-endangering writings), not a ban of the book. Weak as a 'ban' event; publish only if prize-refusal counts."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Germany",
+    "issue": "Row says restricted by BPjM in 1959; no fetched source (de.wikipedia, Focke-Museum) shows any BPjM listing. de.wikipedia only has a Bremen senator saying chapters 'belong on the Index' (an opinion, not a listing). Unverified.",
+    "source_url": "https://de.wikipedia.org/wiki/Die_Blechtrommel"
+   },
+   {
+    "country": "United States",
+    "issue": "1997 US row unverified; searches found no 1997 case for the novel (the known 1997 Oklahoma episode concerns the film).",
+    "source_url": ""
+   },
+   {
+    "country": "Poland",
+    "issue": "1959 Poland row: no source found in fetched pages.",
+    "source_url": ""
+   }
+  ],
+  "opened_urls": [
+   "https://de.wikipedia.org/wiki/Die_Blechtrommel",
+   "https://www.focke-museum.de/digital/polnische-spur/karrieren-der-stunde-null/",
+   "https://en.wikipedia.org/wiki/The_Tin_Drum"
+  ]
+ }
+]

@@ -1,0 +1,101 @@
+[
+ {
+  "slug": "aristotle-and-dante-discover-the-secrets-of-the-universe",
+  "entry": {
+   "slug": "aristotle-and-dante-discover-the-secrets-of-the-universe",
+   "text": "In April 2025 the Lukashenko regime added the book to a list of printed publications whose distribution could harm the national interests of Belarus.",
+   "sources": [
+    {
+     "url": "https://en.wikipedia.org/wiki/Aristotle_and_Dante_Discover_the_Secrets_of_the_Universe",
+     "title": "Wikipedia: Aristotle and Dante Discover the Secrets of the Universe",
+     "quote": "In April 2025, the Lukashenko regime added the book to the list of printed publications containing information messages and materials, the distribution of which could harm the national interests of Belarus"
+    }
+   ],
+   "note": "Wikipedia cites a euroradio.fm report of 1 April 2025."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Aristotle_and_Dante_Discover_the_Secrets_of_the_Universe"
+  ]
+ },
+ {
+  "slug": "i-am-malala",
+  "entry": {
+   "slug": "i-am-malala",
+   "text": "In a report dated 10 November 2013, the All Pakistan Private Schools Federation, which says it represents more than 152,000 institutions, decided against letting pupils read I Am Malala. The book was not to be included in the schools' curriculum or stocked in school libraries.",
+   "sources": [
+    {
+     "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+     "title": "The Independent: Private schools in Pakistan ban Malala Yousafzai's book",
+     "quote": "The All Pakistan Private Schools Federation, which says it represents more than 152,000 institutions across the country, has decided that allowing pupils to read the book, I am Malala , would have a \"negative\" effect on them."
+    },
+    {
+     "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+     "title": "The Independent (date line)",
+     "quote": "Umair Aziz & Andrew Buncombe Sunday 10 November 2013 00:00 GMT"
+    },
+    {
+     "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+     "title": "The Independent",
+     "quote": "The book will not be included in the schools' curriculum, nor will it be stocked in school libraries."
+    }
+   ],
+   "note": "Private-school federation measure, not a state ban."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+   "https://en.wikipedia.org/wiki/I_Am_Malala"
+  ]
+ },
+ {
+  "slug": "the-sorrows-of-young-werther",
+  "entry": {
+   "slug": "the-sorrows-of-young-werther",
+   "text": "In 1775 both the novel and the Werther clothing style were banned in Leipzig, and the novel was also banned in Denmark and Italy (no date given for those two).",
+   "sources": [
+    {
+     "url": "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther",
+     "title": "Wikipedia: The Sorrows of Young Werther",
+     "quote": "both the novel and the Werther clothing style were banned in Leipzig in 1775; the novel was also banned in Denmark and Italy."
+    }
+   ],
+   "note": "Wikipedia footnote 12; Italy and Denmark undated. No source found for the Austria 1775 row."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Austria",
+    "issue": "1775 ban not supported by anything fetched; Wikipedia names only Leipzig, Denmark, Italy",
+    "source_url": "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther"
+  ]
+ },
+ {
+  "slug": "the-communist-manifesto",
+  "entry": {
+   "slug": "the-communist-manifesto",
+   "text": "The Australian Minister of Customs drew up a list of 128 publications in December 1927 and submitted it to the Federal Parliament as prohibited, seized and forfeited; the list includes The Communist Manifesto.",
+   "sources": [
+    {
+     "url": "https://www.worldsocialism.org/spgb/?p=24029",
+     "title": "The Censor in Australia (Socialist Standard, February 1929)",
+     "quote": "The Australian Minister of Customs drew up, in December, 1927, and submitted to the Federal Parliament a list of 128 publications which are “prohibited, seized and forfeited.” During 1928 some 40 publications were added to the list. It includes such works as “ The Communist Manifesto, ”"
+    }
+   ],
+   "note": "1929 secondary account (citing Labour Monthly, January 1929); Australian import prohibition, not among our rows. Could not source NZ/ZA/AR/PT/DE rows in fetched pages."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Communist_Manifesto",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://www.worldsocialism.org/spgb/?p=24029"
+  ]
+ }
+]

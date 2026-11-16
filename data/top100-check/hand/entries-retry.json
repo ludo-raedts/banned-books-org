@@ -1,0 +1,92 @@
+[
+ {
+  "slug": "a-little-life",
+  "text": "In 2025 A Little Life by Hanya Yanagihara, together with To Paradise, was banned from distribution in Belarus, citing potential harm to national interests.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/A_Little_Life",
+    "title": "Wikipedia: A Little Life (cites Reform.news and PEN Belarus Banned Books list)",
+    "quote": "In 2025, A Little Life along with Yanagihara's subsequent novel, To Paradise , were banned from distribution in Belarus citing potential harm to national interests."
+   },
+   {
+    "url": "https://reform.news/v-belarusi-zapretili-knigi-palanika-janagihary-i-zheny-polskogo-glavy-mid",
+    "title": "Reform.news: В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД",
+    "quote": "В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД Reform.news 24 января 2025"
+   }
+  ],
+  "note": "PEN Belarus list page lists it (batch 24.01.2025) but its HTML entities defeat the verifier; Wikipedia cites PEN Belarus and Reform.news."
+ },
+ {
+  "slug": "the-perks-of-being-a-wallflower",
+  "text": "In 2025 Utah banned The Perks of Being a Wallflower by Stephen Chbosky from all public schools in the state. In April 2025 the Lukashenko regime added the book to its list of printed publications that could harm the national interests of Belarus.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+    "title": "Wikipedia: The Perks of Being a Wallflower (cites Salt Lake Tribune)",
+    "quote": "In 2025, Utah banned the book from all public schools in the state."
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+    "title": "Wikipedia: The Perks of Being a Wallflower (cites euroradio.fm, 1 Apr 2025)",
+    "quote": "In April 2025, the Lukashenko regime added the book to its list of printed publications containing information messages and materials, the distribution of which could harm the national interests of Belarus"
+   }
+  ],
+  "note": "PEN Belarus lists the title in the 01.04.2025 batch (not used as quote: HTML entities)."
+ },
+ {
+  "slug": "and-tango-makes-three",
+  "text": "In 2014 the National Library Board in Singapore removed the book, which was later moved to the adult section instead of being removed. In 2006 the book was moved from the children's section of two branches of the Rolling Hills Consolidated Library, in Savannah and St. Joseph in northwest Missouri, after parents complained.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/And_Tango_Makes_Three",
+    "title": "Wikipedia: And Tango Makes Three (cites TheJournal.ie/AFP 11 Jul 2014 and Straits Times 18 Jul 2014)",
+    "quote": "2014 Singapore Moved Action by the National Library Board removed the book, later moved to the adult section instead of being removed."
+   },
+   {
+    "url": "https://www.nbcnews.com/id/wbna11676978",
+    "title": "Penguin book moved from children's section (AP via NBC News, 4 Mar 2006)",
+    "quote": "March 4, 2006, 10:50 PM EST / Source : The Associated Press A children’s book about two male penguins that raise a baby penguin has been moved to the nonfiction section of two public library branches after parents complained it had homosexual undertones."
+   },
+   {
+    "url": "https://www.nbcnews.com/id/wbna11676978",
+    "title": "AP via NBC News, same article",
+    "quote": "The book, written by Peter Parnell and Justin Richardson, was moved from the children’s section at two Rolling Hills’ Consolidated Library’s branches in Savannah and St. Joseph in northwest Missouri."
+   }
+  ],
+  "note": "Singapore: AFP (11 Jul 2014) said pulp/destroy; Straits Times (18 Jul 2014, cited by Wikipedia) says moved to adult section; Wikipedia table states both outcomes."
+ },
+ {
+  "slug": "more-happy-than-not",
+  "text": "In May 2022 a panel of 18 people recommended that More Happy Than Not by Adam Silvera remain in the school district's libraries, after a conservative group complained to the PCPS superintendent that it was among 16 books that contained pornography or were harmful to children. The panel was split on the grade level at which it should be available.",
+  "sources": [
+   {
+    "url": "https://news.yahoo.com/polk-county-book-review-panel-090149294.html",
+    "title": "Polk County book review panel votes to return 'More Happy Than Not' to school library shelves (The Ledger)",
+    "quote": "Fri, May 13, 2022 at 9:01 AM UTC 12 min read Add Yahoo as a preferred source to see more of our stories on Google. LAKELAND — A panel of 18 people recommended that Adam Silvera"
+   },
+   {
+    "url": "https://news.yahoo.com/polk-county-book-review-panel-090149294.html",
+    "title": "same article",
+    "quote": "It was the final book among 16 that a conservative group complained to PCPS Superintendent Frederick Heid \"contained pornography\" or was \"harmful to children\" and possibly violated Florida law."
+   }
+  ],
+  "note": "Challenge outcome: book retained (panel split on grade level)."
+ },
+ {
+  "slug": "the-handmaids-tale-the-graphic-novel",
+  "text": "In a report dated June 29, 2022, the superintendent of the Medford School District, Bret Champion, and his deputy made the decision to remove the graphic novel version from the library collection. The district said it removed it because it found numerous images of nudity, sexual assault and violence.",
+  "sources": [
+   {
+    "url": "https://www.yahoo.com/now/medford-superintendent-deputy-approved-ban-122100745.html",
+    "title": "Medford superintendent, deputy approved ban of graphic novel (Mail Tribune)",
+    "quote": "Wed, June 29, 2022 at 12:21 PM UTC 5 min read Add Yahoo as a preferred source to see more of our stories on Google. Jun. 29—Medford School District Superintendent Bret Champion and his deputy made the decision to remove the graphic novel version of"
+   },
+   {
+    "url": "https://www.yahoo.com/now/medford-superintendent-deputy-approved-ban-122100745.html",
+    "title": "same article",
+    "quote": "We removed the graphic novel because as stated earlier, we found numerous images of nudity, sexual assault and violence throughout the graphic novel."
+   }
+  ],
+  "note": "Same article says removal was in April 2022 (district statement). West Ada (Idaho) Dec 2023 removal reported by Yahoo but its quote contains an HTML-entity apostrophe, not used."
+ }
+]

@@ -1,0 +1,93 @@
+[
+ {
+  "slug": "call-me-by-your-name",
+  "entry": {
+   "slug": "call-me-by-your-name",
+   "text": "In January 2023 the book was permanently banned from libraries and classrooms in St. Johns County School District, and in September 2023 it was banned from libraries and classrooms in Matanuska-Susitna Borough School District.",
+   "sources": [
+    {
+     "url": "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(novel)",
+     "title": "Call Me by Your Name (novel) - Wikipedia",
+     "quote": "In January 2023, the book was permanently banned from libraries and classrooms in St. Johns County School District"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(novel)",
+     "title": "Call Me by Your Name (novel) - Wikipedia",
+     "quote": "In September 2023, the book was banned from libraries and classrooms in Matanuska-Susitna Borough School District"
+    }
+   ],
+   "note": "Wikipedia cites PEN America's school book ban indexes 2022-23 and 2023-24. Also read: The Bell (en.thebell.io/russia-bans-books-mentioning-lgbt-issues/, dated 6 Dec 2022) says online store Labirint hid books by Andre Aciman including Call Me by Your Name amid LGBT-related removals; supports our Russia 2022 row but not used as quote because the year is not in the passage."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(novel)",
+   "https://en.thebell.io/russia-bans-books-mentioning-lgbt-issues/"
+  ]
+ },
+ {
+  "slug": "one-thousand-and-one-nights",
+  "entry": {
+   "slug": "one-thousand-and-one-nights",
+   "text": "In 1985 a group of Islamists won an injunction removing the book from the market in Egypt, and a year later a higher court reversed the decision.",
+   "sources": [
+    {
+     "url": "https://qantara.de/en/article/arabian-nights-obscene-pornography-or-great-work-culture",
+     "title": "The Arabian Nights: Obscene Pornography or a Great Work of Culture? (Qantara, Samir Grees)",
+     "quote": "It's not the first time that The Arabian Nights have led to angry debate in Egypt. In 1985, a group of Islamists managed to win an injunction removing the book from the market. A year later, a higher court reversed the decision."
+    }
+   ],
+   "note": "Matches our Egypt 1985-86 rescinded row. Casanova Society NZ restriction on Wikipedia's NZ list has no year in the table text, so not used."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://qantara.de/en/article/arabian-nights-obscene-pornography-or-great-work-culture",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "https://www.upi.com/Archives/1985/05/20/Arabian-Nights-banned-in-Egypt/5024485409600/ (Cloudflare-blocked)"
+  ]
+ },
+ {
+  "slug": "the-hunchback-of-notre-dame",
+  "entry": {
+   "slug": "the-hunchback-of-notre-dame",
+   "text": "The novel was placed on the Index in 1834.",
+   "sources": [
+    {
+     "url": "https://fr.wikipedia.org/wiki/Notre-Dame_de_Paris_(roman)",
+     "title": "Notre-Dame de Paris (roman) - Wikipédia",
+     "quote": "Considéré comme une lecture pernicieuse par l'Église catholique, Notre-Dame de Paris fait partie des romans mis à l' Index en 1834"
+    }
+   ],
+   "note": "French Wikipedia states the 1834 Index listing; footnote text not recovered. Quote contains 'l' Index' with a space from the wikilink rendering. English Wikipedia's Index list says 'Until 1959' for Hugo's Notre Dame de Paris, which conflicts with our row end year 1966 (Index discontinued 1966; 1959 unsourced there)."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Vatican City (Holy See)",
+    "issue": "End year 1966 vs en.wikipedia Index list 'Until 1959' for Notre Dame de Paris; start 1834 confirmed by fr.wikipedia. Needs a primary check if end year is shown.",
+    "source_url": "https://en.wikipedia.org/wiki/List_of_authors_and_works_on_the_Index_Librorum_Prohibitorum"
+   }
+  ],
+  "opened_urls": [
+   "https://fr.wikipedia.org/wiki/Notre-Dame_de_Paris_(roman)",
+   "https://en.wikipedia.org/wiki/List_of_authors_and_works_on_the_Index_Librorum_Prohibitorum",
+   "https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame"
+  ]
+ },
+ {
+  "slug": "tokyo-ghoul",
+  "entry": null,
+  "no_entry_reason": "Only dated event found (en.wikipedia) is China's Ministry of Culture 12 June 2015 listing of Tokyo Ghoul √A, which is the anime adaptation, not the manga. Russia 2021 (two unspecified websites) and Belarus 2024 list have no fetchable dated source about the book itself.",
+  "row_issues": [
+   {
+    "country": "China",
+    "issue": "2015 listing names the anime 'Tokyo Ghoul √A', not the manga; row year 2011 looks wrong and the measure concerns an adaptation.",
+    "source_url": "https://en.wikipedia.org/wiki/Tokyo_Ghoul"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tokyo_Ghoul"
+  ]
+ }
+]

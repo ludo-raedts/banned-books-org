@@ -1,0 +1,133 @@
+[
+ {
+  "slug": "a-little-life",
+  "entry": {
+   "slug": "a-little-life",
+   "text": "In 2025 A Little Life by Hanya Yanagihara was among the titles listed by the Ministry of Information on its list of printed publications that may harm the national interests of the Republic of Belarus.",
+   "sources": [
+    {
+     "url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+     "title": "Belarus. Banned Books (PEN Belarus): II. Official list: Harmful to National Interests",
+     "quote": "List of printed publications that, according to the authorities, “may harm the national interests of the Republic of Belarus” The list is published on the website of the Ministry of Information"
+    },
+    {
+     "url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+     "title": "Belarus. Banned Books (PEN Belarus): II. Official list: Harmful to National Interests",
+     "quote": "61. “To Paradise” – Hanya Yanagihara (USA) 62. “A Little Life” – Hanya Yanagihara (USA) 63. “Heartstopper”"
+    },
+    {
+     "url": "https://reform.news/v-belarusi-zapretili-knigi-palanika-janagihary-i-zheny-polskogo-glavy-mid",
+     "title": "Reform.news: В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД",
+     "quote": "В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД Reform.news 24 января 2025"
+    }
+   ],
+   "note": "PEN Belarus lists the item in the 24.01.2025 batch; Reform.news dated 24 January 2025 reports the ban (Russian-language)."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "https://reform.news/v-belarusi-zapretili-knigi-palanika-janagihary-i-zheny-polskogo-glavy-mid",
+   "https://en.wikipedia.org/w/index.php?title=A_Little_Life&action=raw"
+  ]
+ },
+ {
+  "slug": "did-six-million-really-die",
+  "entry": {
+   "slug": "did-six-million-really-die",
+   "text": "In 1985 the Crown charged Zündel, the publisher of Did Six Million Really Die?, with spreading false news. His conviction was overturned when the case reached the Supreme Court of Canada.",
+   "sources": [
+    {
+     "url": "https://en.wikipedia.org/wiki/R_v_Zundel",
+     "title": "Wikipedia: R v Zundel",
+     "quote": "In 1985 the Crown took over the case and Zündel was charged with \"spreading false news\" by publishing the pamphlet"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/R_v_Zundel",
+     "title": "Wikipedia: R v Zundel",
+     "quote": "When Zündel's case reached the Supreme Court of Canada, his conviction was overturned."
+    }
+   ],
+   "note": "Prosecution of the publisher under Criminal Code s.181 (false news), not a ban of the pamphlet itself. Wikipedia article; SCC judgment page (scc-csc.lexum.com) returned 403. Germany/South Africa bans: only Wikipedia's one-line claim citing Wyman & Rosenzveig 1996 p.682; no dated primary source reachable."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "Canada",
+    "issue": "Row is a prosecution of the publisher (1985 charge, 1988 retrial, conviction overturned by SCC 1992), not a ban of the book; Wikipedia's R v Zundel article also gives a different first-trial sentence than the pamphlet article (nine vs 15 months).",
+    "source_url": "https://en.wikipedia.org/wiki/R_v_Zundel"
+   }
+  ],
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F",
+   "https://en.wikipedia.org/wiki/R_v_Zundel",
+   "https://de.wikipedia.org/wiki/Did_Six_Million_Really_Die%3F",
+   "https://scc-csc.lexum.com/scc-csc/scc-csc/en/item/904/index.do"
+  ]
+ },
+ {
+  "slug": "state-and-revolution",
+  "entry": {
+   "slug": "state-and-revolution",
+   "text": "In 1940 an Oklahoma City police detective bought copies of Lenin's The State and Revolution at a bookstore. Police then raided the store and seized more than 10,000 books.",
+   "sources": [
+    {
+     "url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/",
+     "title": "Oklahoma Gazette: Bookstore arrests of the forties presaged communist scare",
+     "quote": "On July 24, 1940, an Oklahoma City police detective dressed as an oil field worker walked into the bookstore, and purchased copies of: ” Vladimir Lenin’s “The State and Revolution,”"
+    },
+    {
+     "url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/",
+     "title": "Oklahoma Gazette: Bookstore arrests of the forties presaged communist scare",
+     "quote": "On Aug. 17, police raided the store, arresting about 20 people ” including customers ” and seized more than 10,000 books."
+    }
+   ],
+   "note": "Oklahoma Gazette 2007 article on the Progressive Bookstore case (Wiegand, Books on Trial). Seizure of stock including this title; the source does not say the book itself was burned."
+  },
+  "no_entry_reason": null,
+  "row_issues": [
+   {
+    "country": "United States",
+    "issue": "No source found for 'seized as obscene in Boston in 1927' (search returned nothing naming this title); the burning of copies with the Declaration of Independence/Constitution in 1940 is unconfirmed (only a Substack post claims it); the 1940 Oklahoma City event is a raid on Progressive Bookstore (July sting purchase, 17 Aug raid), after which four defendants were convicted of criminal syndicalism and convictions overturned on appeal.",
+    "source_url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/"
+   }
+  ],
+  "opened_urls": [
+   "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/",
+   "https://en.wikipedia.org/wiki/The_State_and_Revolution",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ]
+ },
+ {
+  "slug": "the-perks-of-being-a-wallflower",
+  "entry": {
+   "slug": "the-perks-of-being-a-wallflower",
+   "text": "In 2025 Utah banned The Perks of Being a Wallflower by Stephen Chbosky from all public schools in the state. In April 2025 the Lukashenko regime added the book to its list of printed publications that could harm the national interests of Belarus.",
+   "sources": [
+    {
+     "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+     "title": "Wikipedia: The Perks of Being a Wallflower (cites Salt Lake Tribune)",
+     "quote": "In 2025, Utah banned the book from all public schools in the state."
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+     "title": "Wikipedia: The Perks of Being a Wallflower (cites euroradio.fm, 1 Apr 2025)",
+     "quote": "In April 2025, the Lukashenko regime added the book to its list of printed publications containing information messages and materials, the distribution of which could harm the national interests of Belarus"
+    },
+    {
+     "url": "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+     "title": "Belarus. Banned Books (PEN Belarus): II. Official list: Harmful to National Interests",
+     "quote": "79. “ The Great Believers” – Rebecca Makkai (USA) 80. “ The Perks of Being a Wallflower” – Stephen Chbosky (USA) 81."
+    }
+   ],
+   "note": "PEN Belarus lists the title in the 01.04.2025 batch."
+  },
+  "no_entry_reason": null,
+  "row_issues": [],
+  "opened_urls": [
+   "https://bannedbooks.penbelarus.org/en/harmful_list_en/",
+   "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+   "https://www.ala.org/advocacy/bbooks/frequentlychallengedbooks/top10/archive"
+  ]
+ }
+]

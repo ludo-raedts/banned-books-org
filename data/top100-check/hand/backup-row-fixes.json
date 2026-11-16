@@ -1,0 +1,116 @@
+[
+ {
+  "id": 27979,
+  "book_id": 4464,
+  "country_code": "RU",
+  "scope_id": 4,
+  "action_type": "restricted",
+  "status": "active",
+  "region": null,
+  "institution": null,
+  "year_started": 2026,
+  "year_ended": null,
+  "actor": null,
+  "description": "Publisher fined approximately $670 in March 2026 for distributing the novel under Russia's 'LGBT propaganda' law, despite an expert review finding no violations. Distribution restricted. Authority: Russian court (publisher fined).",
+  "confidence": "reported",
+  "created_at": "2026-05-28T08:51:29.184439+00:00",
+  "countries": {
+   "name_en": "Russia"
+  }
+ },
+ {
+  "id": 1788,
+  "book_id": 72,
+  "country_code": "DE",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 1959,
+  "year_ended": null,
+  "actor": null,
+  "description": "Restricted by German authorities (BPjM) for sexual content. Later unbanned.",
+  "confidence": "reported",
+  "created_at": "2026-05-03T07:51:50.215082+00:00",
+  "countries": {
+   "name_en": "Germany"
+  }
+ },
+ {
+  "id": 80,
+  "book_id": 72,
+  "country_code": "US",
+  "scope_id": 2,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 1997,
+  "year_ended": null,
+  "actor": null,
+  "description": null,
+  "confidence": "reported",
+  "created_at": "2026-04-24T15:12:31.174378+00:00",
+  "countries": {
+   "name_en": "United States"
+  }
+ },
+ {
+  "id": 989,
+  "book_id": 72,
+  "country_code": "PL",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 1959,
+  "year_ended": null,
+  "actor": null,
+  "description": null,
+  "confidence": "reported",
+  "created_at": "2026-04-24T21:44:33.977063+00:00",
+  "countries": {
+   "name_en": "Poland"
+  }
+ },
+ {
+  "id": 13126,
+  "book_id": 18,
+  "country_code": "IL",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "active",
+  "region": null,
+  "institution": null,
+  "year_started": 2012,
+  "year_ended": null,
+  "actor": "Alice Walker",
+  "description": "Alice Walker declined publication of The Color Purple in Israel as part of the Boycott, Divestment and Sanctions movement, stating she would not allow her book to be published while Israel maintained its system of apartheid.",
+  "confidence": "verified",
+  "created_at": "2026-05-22T05:23:47.225696+00:00",
+  "countries": {
+   "name_en": "Israel"
+  }
+ },
+ {
+  "id": 661,
+  "book_id": 605,
+  "country_code": "AT",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 1775,
+  "year_ended": null,
+  "actor": null,
+  "description": null,
+  "confidence": "reported",
+  "created_at": "2026-04-24T18:38:56.051358+00:00",
+  "countries": {
+   "name_en": "Austria"
+  }
+ }
+]
