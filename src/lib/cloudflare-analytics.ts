@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache'
-import { identifyBot } from './known-bots'
+import { identifyBot, identifyBotByUA } from './known-bots'
 
 const ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql'
 
@@ -43,6 +43,10 @@ export type CloudflareSnapshot = {
     tag: 'home' | 'work' | null
     bot: string | null
   }>
+  /** Bots by name, busiest first (UA + Cloudflare verified-bot category). */
+  topBots: Array<{ name: string; requests: number; category: string | null }>
+  /** Bot requests / all requests among the top-300 user agents (a floor). */
+  botTraffic: { bot: number; sampled: number }
   statusBuckets: StatusBuckets
   prevStatusBuckets: StatusBuckets
 }
@@ -84,6 +88,17 @@ const QUERY = `
           dimensions {
             clientIP
             clientCountryName
+          }
+        }
+        agents: httpRequestsAdaptiveGroups(
+          limit: 300
+          filter: { datetime_geq: $since }
+          orderBy: [count_DESC]
+        ) {
+          count
+          dimensions {
+            userAgent
+            verifiedBotCategory
           }
         }
         statusCodes: httpRequestsAdaptiveGroups(
@@ -187,6 +202,10 @@ type CFResponse = {
             clientCountryName: string | null
           }
         }>
+        agents: Array<{
+          count: number
+          dimensions: { userAgent: string | null; verifiedBotCategory: string | null }
+        }>
         statusCodes: AdaptiveStatusRow[]
         prevStatusCodes: AdaptiveStatusRow[]
       }>
@@ -247,6 +266,83 @@ function bucketStatusRows(rows: AdaptiveStatusRow[]): StatusBuckets {
   return buckets
 }
 
+
+// Cloudflare's verified-bot categories → short labels for the admin card.
+const CATEGORY_LABEL: Record<string, string> = {
+  'Search Engine Crawler': 'search',
+  'Page Preview': 'link preview',
+  'AI Search': 'AI search',
+  'AI Assistant': 'AI assistant',
+  'AI Crawler': 'AI training',
+  'Search Engine Optimization': 'SEO',
+  'Security': 'security',
+  'Monitoring & Analytics': 'monitoring',
+  'Webhooks': 'webhook',
+}
+const categoryLabel = (c: string | null | undefined) => (c ? (CATEGORY_LABEL[c] ?? c.toLowerCase()) : null)
+
+type AgentRow = { count: number; dimensions: { userAgent: string | null; verifiedBotCategory: string | null } }
+
+function summariseAgents(rows: AgentRow[]): Pick<CloudflareSnapshot, 'topBots' | 'botTraffic'> {
+  const byName = new Map<string, { requests: number; category: string | null }>()
+  let bot = 0
+  let sampled = 0
+  for (const r of rows) {
+    sampled += r.count
+    const cat = r.dimensions.verifiedBotCategory || null
+    const name = identifyBotByUA(r.dimensions.userAgent) ?? (cat ? `Other ${categoryLabel(cat)} bot` : null)
+    if (!name) continue
+    bot += r.count
+    const cur = byName.get(name) ?? { requests: 0, category: null }
+    cur.requests += r.count
+    cur.category = cur.category ?? categoryLabel(cat)
+    byName.set(name, cur)
+  }
+  const topBots = [...byName.entries()]
+    .map(([name, v]) => ({ name, ...v }))
+    .sort((a, b) => b.requests - a.requests)
+    .slice(0, 8)
+  return { topBots, botTraffic: { bot, sampled } }
+}
+
+async function fetchIpAgents(token: string, zone: string, since: string, ips: string[]): Promise<Map<string, string>> {
+  const out = new Map<string, string>()
+  if (ips.length === 0) return out
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query($zone: String!, $since: Time!, $ips: [String!]) {
+          viewer { zones(filter: { zoneTag: $zone }) {
+            g: httpRequestsAdaptiveGroups(limit: 50, filter: { datetime_geq: $since, clientIP_in: $ips }, orderBy: [count_DESC]) {
+              count dimensions { clientIP userAgent verifiedBotCategory }
+            }
+          } }
+        }`,
+        variables: { zone, since, ips },
+      }),
+      cache: 'no-store',
+    })
+    if (!res.ok) return out
+    const json = (await res.json()) as {
+      data?: { viewer?: { zones?: Array<{ g: AgentRow[] & Array<{ dimensions: { clientIP: string } }> }> } }
+    }
+    // Rows are busiest-first, so the first row per IP is its dominant agent.
+    for (const r of json.data?.viewer?.zones?.[0]?.g ?? []) {
+      const ip = (r.dimensions as { clientIP: string }).clientIP
+      if (out.has(ip)) continue
+      const name = identifyBotByUA(r.dimensions.userAgent) ?? (r.dimensions.verifiedBotCategory
+        ? `Verified ${categoryLabel(r.dimensions.verifiedBotCategory)} bot`
+        : null)
+      if (name) out.set(ip, name)
+    }
+  } catch (e) {
+    console.error('[cloudflare] ip agents lookup failed', e)
+  }
+  return out
+}
+
 async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
   const token = process.env.CLOUDFLARE_API_TOKEN
   const zone = process.env.CLOUDFLARE_ZONE_ID
@@ -293,22 +389,28 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
   // if this fails it stays all-zero and the card falls back to the bare count.
   const threatBreakdown = await fetchThreatBreakdown(token, zone, since)
 
+  // What each top IP calls itself: UA name first, then Cloudflare's verified-bot
+  // category, then the static IP-range list. Best-effort — if the lookup fails
+  // the IP-range list alone still applies.
+  const ipAgents = await fetchIpAgents(token, zone, since, zoneData.topIPs.map(r => r.dimensions.clientIP))
   const topIPs = zoneData.topIPs.map(r => ({
     clientIP: r.dimensions.clientIP,
     country: r.dimensions.clientCountryName,
     requests: r.count,
     tag: tagIP(r.dimensions.clientIP, homeIPs, workIPs),
-    bot: identifyBot(r.dimensions.clientIP),
+    bot: ipAgents.get(r.dimensions.clientIP) ?? identifyBot(r.dimensions.clientIP),
   }))
+
+  const { topBots, botTraffic } = summariseAgents(zoneData.agents ?? [])
 
   const statusBuckets = bucketStatusRows(zoneData.statusCodes)
   const prevStatusBuckets = bucketStatusRows(zoneData.prevStatusCodes ?? [])
 
-  return { totals, prevTotals, threatBreakdown, topIPs, statusBuckets, prevStatusBuckets }
+  return { totals, prevTotals, threatBreakdown, topIPs, topBots, botTraffic, statusBuckets, prevStatusBuckets }
 }
 
 export const getCloudflareSnapshot = unstable_cache(
   fetchSnapshot,
-  ['cloudflare-snapshot-v9'],
+  ['cloudflare-snapshot-v10'],
   { revalidate: 300 },
 )

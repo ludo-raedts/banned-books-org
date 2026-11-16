@@ -1,5 +1,5 @@
 import { cardCls, flagEmoji, formatBytes } from './kit'
-import { Cloud, Network, BarChart3 } from 'lucide-react'
+import { Cloud, Network, BarChart3, Bot } from 'lucide-react'
 import { getCloudflareSnapshot, type ThreatBreakdown } from '@/lib/cloudflare-analytics'
 
 
@@ -123,7 +123,9 @@ export default async function CloudflareCards() {
     )
   }
 
-  const { totals, prevTotals, threatBreakdown, topIPs, statusBuckets, prevStatusBuckets } = snapshot
+  const { totals, prevTotals, threatBreakdown, topIPs, topBots, botTraffic, statusBuckets, prevStatusBuckets } = snapshot
+  const botPct = botTraffic.sampled > 0 ? Math.round((botTraffic.bot / botTraffic.sampled) * 100) : 0
+  const maxBot = topBots[0]?.requests ?? 1
   const suspicious = suspiciousThreats(threatBreakdown)
   const cacheHitPct = totals.requests > 0 ? Math.round((totals.cachedRequests / totals.requests) * 100) : 0
   const prevCacheHitPct = prevTotals.requests > 0 ? Math.round((prevTotals.cachedRequests / prevTotals.requests) * 100) : 0
@@ -214,7 +216,7 @@ export default async function CloudflareCards() {
         <Network className="w-5 h-5 text-gray-400" />
         <div>
           <h2 className="font-semibold text-gray-900">Top IPs — 24h</h2>
-          <p className="text-sm text-gray-500 mt-0.5">High‑volume sources. 🤖 = known bot · 🏠 = home · 🏢 = work.</p>
+          <p className="text-sm text-gray-500 mt-0.5">High‑volume sources. 🤖 = bot (by user agent / Cloudflare verified-bot list) · 🏠 = home · 🏢 = work.</p>
         </div>
         {topIPs.length === 0 ? (
           <p className="text-sm text-gray-400 italic mt-1">No traffic in the last 24h.</p>
@@ -245,6 +247,36 @@ export default async function CloudflareCards() {
                 <span className="text-xs text-gray-700 tabular-nums shrink-0">
                   {compactNumber(row.requests)}
                 </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Card 2b — Bots by name (user agent + Cloudflare verified-bot category) */}
+      <div className={cardCls}>
+        <Bot className="w-5 h-5 text-gray-400" />
+        <div>
+          <h2 className="font-semibold text-gray-900">Bots — 24h</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {botPct}% of requests identify as a bot
+            <span className="text-gray-400"> (a floor: bots with a browser user agent aren't counted)</span>.
+          </p>
+        </div>
+        {topBots.length === 0 ? (
+          <p className="text-sm text-gray-400 italic mt-1">No self-identified bots in the last 24h.</p>
+        ) : (
+          <ul className="flex flex-col gap-2 text-sm mt-1">
+            {topBots.map(b => (
+              <li key={b.name} className="flex flex-col gap-1">
+                <div className="flex items-baseline gap-2 min-w-0">
+                  <span className="text-xs text-gray-700 truncate flex-1 min-w-0">{b.name}</span>
+                  {b.category && <span className="text-[10px] text-gray-400 shrink-0">{b.category}</span>}
+                  <span className="text-xs text-gray-700 tabular-nums shrink-0">{compactNumber(b.requests)}</span>
+                </div>
+                <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="h-full rounded-full bg-[#2a78d6]" style={{ width: `${Math.max(2, Math.round((b.requests / maxBot) * 100))}%` }} />
+                </div>
               </li>
             ))}
           </ul>

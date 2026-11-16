@@ -1,5 +1,14 @@
 /**
- * Curated CIDR ranges for well-known crawlers and AI bots.
+ * Bot identification for the admin Cloudflare cards.
+ *
+ *   1. By User-Agent (`identifyBotByUA`) — the primary signal. Most of our bot
+ *      traffic (SemrushBot, ShapBot, LinkupBot, meta-webindexer, bingbot, …)
+ *      comes from cloud IPs no static list can cover, but names itself.
+ *   2. By Cloudflare's `verifiedBotCategory` (done in cloudflare-analytics.ts).
+ *   3. By IP range (`identifyBot`, below) — a small curated list, kept only as a
+ *      fallback for crawlers that send a browser UA.
+ *
+ * Curated CIDR ranges for well-known crawlers and AI bots (fallback).
  *
  * Sourced from each vendor's official JSON, last refreshed: 2026-05-09.
  *
@@ -264,4 +273,67 @@ export function identifyBot(ip: string): string | null {
     }
   }
   return null
+}
+
+
+// ── User-Agent identification ────────────────────────────────────────────────
+// Ordered: the first match wins, so specific names come before generic ones
+// (e.g. "Googlebot-Image" before "Googlebot", "bingbot" inside a Chrome-like UA).
+// A UA is spoofable; that's fine here — this labels traffic on an admin card,
+// it never gates anything.
+const UA_BOTS: Array<[RegExp, string]> = [
+  [/googlebot-image/i, 'Googlebot Image'],
+  [/google-extended|googleother|google-inspectiontool|storebot-google/i, 'Google (other)'],
+  [/adsbot-google|mediapartners-google/i, 'Google Ads'],
+  [/googlebot/i, 'Googlebot'],
+  [/bingbot|bingpreview|msnbot/i, 'Bingbot'],
+  [/meta-webindexer|meta-externalagent|meta-externalfetcher/i, 'Meta crawler'],
+  [/facebookexternalhit|facebot/i, 'Facebook preview'],
+  [/shapbot/i, 'ShapBot'],
+  [/semrushbot/i, 'SemrushBot'],
+  [/ahrefsbot|ahrefssiteaudit/i, 'AhrefsBot'],
+  [/linkupbot/i, 'LinkupBot'],
+  [/exabot|exasearch/i, 'Exa'],
+  [/perplexity/i, 'Perplexity'],
+  [/oai-searchbot/i, 'OAI-SearchBot'],
+  [/chatgpt-user/i, 'ChatGPT-User'],
+  [/gptbot/i, 'GPTBot'],
+  [/claudebot|claude-web|claude-user|claude-searchbot|anthropic-ai/i, 'Anthropic (Claude)'],
+  [/applebot/i, 'Applebot'],
+  [/duckassistbot/i, 'DuckAssistBot'],
+  [/duckduckbot/i, 'DuckDuckBot'],
+  [/amazonbot/i, 'Amazonbot'],
+  [/bytespider/i, 'Bytespider'],
+  [/yandex/i, 'Yandex'],
+  [/baiduspider/i, 'Baiduspider'],
+  [/petalbot/i, 'PetalBot'],
+  [/mj12bot/i, 'MJ12bot'],
+  [/dotbot/i, 'DotBot'],
+  [/dataforseobot/i, 'DataForSeoBot'],
+  [/blexbot/i, 'BLEXBot'],
+  [/serpstatbot/i, 'Serpstatbot'],
+  [/ccbot/i, 'CCBot'],
+  [/twitterbot/i, 'Twitterbot'],
+  [/linkedinbot/i, 'LinkedInBot'],
+  [/slackbot|slack-imgproxy/i, 'Slackbot'],
+  [/discordbot/i, 'Discordbot'],
+  [/whatsapp/i, 'WhatsApp'],
+  [/telegrambot/i, 'Telegrambot'],
+  [/pinterestbot|pinterest\//i, 'Pinterest'],
+  [/redditbot/i, 'Redditbot'],
+  [/bluesky|cardyb/i, 'Bluesky'],
+  [/uptimerobot|pingdom|statuscake|betterstack|better-uptime|site24x7/i, 'Uptime monitor'],
+  [/vercel-screenshot|vercel-favicon|vercel-og/i, 'Vercel'],
+  [/curl\/|wget\/|python-requests|python-urllib|aiohttp|go-http-client|node-fetch|undici|okhttp|axios\/|libwww-perl|scrapy|httpx/i, 'HTTP script'],
+  [/headlesschrome|phantomjs|puppeteer|playwright|selenium/i, 'Headless browser'],
+]
+
+// Anything else that calls itself a bot: pull out "<name>bot", "…crawler", etc.
+const GENERIC_BOT = /([A-Za-z0-9][A-Za-z0-9._-]*(?:bot|crawler|spider|fetcher|indexer|scraper))/i
+
+export function identifyBotByUA(ua: string | null | undefined): string | null {
+  if (!ua) return null
+  for (const [re, name] of UA_BOTS) if (re.test(ua)) return name
+  const m = GENERIC_BOT.exec(ua)
+  return m ? m[1] : null
 }
