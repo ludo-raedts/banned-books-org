@@ -1,0 +1,54 @@
+{
+ "slug": "married-love",
+ "title": "Married Love",
+ "author": "Marie Stopes",
+ "first_published_year": 1918,
+ "current_text": "US customs barred the import of Married Love for more than two decades. In 1931, a judge in the Southern District of New York dismissed a case brought under the Tariff Act against Married Love.",
+ "sources": [
+  {
+   "url": "https://www.theguardian.com/books/booksblog/2018/feb/14/what-can-we-learn-from-marie-stopess-1918-book-married-love",
+   "quote": "The Americans were less keen on better sex for the sake of the state; they immediately banned the book, with US customs barring its import for more than two decades.",
+   "title": "What can we learn from Marie Stopes's 1918 book Married Love? | Books | The Guardian"
+  },
+  {
+   "url": "https://openjurist.org/48/f2d/821/united-states-v-one-obscene-book-entitled-married-love",
+   "quote": "¶3 WOOLSEY, District Judge.\n¶4 I dismiss the libel in this case.\n¶5 I. The first point with which I shall deal is as to the contention that the section of the Tariff Act under which this libel was brought, title 19, U. S. C., § 1305 (19 USCA § 1305), is unconstitutional as impinging on the right of the freedom of the press.",
+   "title": "48 F.2d 821 - United States v. One Obscene Book Entitled \"Married Love\" — 48 F.2d 821 | OpenJurist"
+  },
+  {
+   "url": "https://www.cambridge.org/core/journals/law-and-history-review/article/abs/sex-side-of-civil-liberties-united-states-v-dennett-and-the-changing-face-of-free-speech/CD9A3200BD92B60E7972B8B6FEA9C16E",
+   "quote": "206. United States v. One Obscene Book, entitled “Married Love,” 48 F.2d 821 (Southern District of New York 1931).",
+   "title": "The Sex Side of Civil Liberties: United States v. Dennett and the Changing Face of Free Speech | Law and History Review | Cambridge Core"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1918,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "US Customs banned the book as obscene until April 6, 1931, when Judge Woolsey overturned the decision (per Wikipedia, uncited there)."
+  },
+  {
+   "country": "New Zealand",
+   "year": 1918,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Listed in Wikipedia's list of books banned in New Zealand as restricted by the Customs Department in 1918; now unrestricted. (Exact nature of the 1918 measure not detailed.)"
+  },
+  {
+   "country": "Ireland",
+   "year": 1931,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the Irish Censorship Board for discussing birth control (per Wikipedia list citing Sova, Banned Books); ban year not stated."
+  }
+ ],
+ "institution_rows": 0
+}

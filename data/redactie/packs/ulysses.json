@@ -1,0 +1,86 @@
+{
+ "slug": "ulysses",
+ "title": "Ulysses",
+ "author": "James Joyce",
+ "first_published_year": 1922,
+ "current_text": "A U.S. court declared Ulysses obscene while it was being published serially in The Little Review from 1918 until 1920. In October 1922, the New York Post Office Authorities seized and burned 500 copies of Ulysses during an attempt to import the novel into the United States, where its certification as obscene made importation illegal. On May 8, 1933, United States Customs seized a copy of Ulysses imported by Random House in New York as pornographic; on December 6, 1933, Judge John M. Woolsey denied the government's motion for forfeiture and destruction.",
+ "sources": [
+  {
+   "url": "https://firstamendment.mtsu.edu/article/ulysses/",
+   "quote": "James Joyce’s Ulysses, one of the most important novels of the twentieth century, was declared obscene by a U.S. court while it was being published serially in the American literary magazine The Little Review from 1918 until 1920.",
+   "title": "Ulysses | The First Amendment Encyclopedia"
+  },
+  {
+   "url": "https://libguides.law.cua.edu/archives/ulysses",
+   "quote": "Certifying as Ulysses obscene made it illegal to import, publish, or distribute the novel in the United States. In October 1922, 500 copies were seized and burned by the New York Post Office Authorities when attempting to import the novel.",
+   "title": "United States v. One Book Called Ulysses: The Changing of American Censorship Laws (2026) - Law School Special Collections, Archives & Law Library Exhibits - Library Guides at Catholic University of A"
+  },
+  {
+   "url": "https://online-exhibitions.library.columbia.edu/exhibits/show/jewels/themes/literature/213",
+   "quote": "213. James Joyce (1882-1941). Ulysses. Paris: Shakespeare and Co., 1930. RBML, Book Arts Collection\n\nThis copy of the eleventh printing of James Joyce's Ulysses was imported by Random House and seized as pornographic by United States Customs in New York on May 8, 1933.",
+   "title": "Columbia University Libraries Online Exhibitions | Jewels in Her Crown: Treasures of Columbia University Libraries Special Collections"
+  },
+  {
+   "url": "https://is.muni.cz/el/fss/jaro2011/ZUR328/um/6328442/united_states_v_one_book.pdf",
+   "quote": "UNITED STATES v. ONE BOOK CALLED \"ULYSSES\"\nDistrict Court, S.D. New York\n5 F. Supp. 182\nDecember 6, 1933\nOpinion By: WOOLSEY\nOpinion: [*182] WOOLSEY, District Judge.\nThe motion for a decree dismissing the libel herein is granted, and, consequently, of course, the\ngovernment's motion for a decree of forfeiture and destruction is denied.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1918,
+   "end": 1936,
+   "status": "rescinded",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "UK national-level prosecution or injunction under obscenity, blasphemy, or state-secrets law. Banned in the UK after the magazine serialisation (The Egoist, 1918-1920) and book publication (Paris, 1922) were deemed obscene for the 'Nausicaa' chapter. Ban lifted in 1936 after the US ruling of 1933. Source: Wikipedia — Obscene Publications Act 1959 / Censorship in the United Kingdom / Whitehouse v Lemon / Spycatcher."
+  },
+  {
+   "country": "United States",
+   "year": 1921,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 1920, Ulysses was banned in the United States following a prosecution for obscenity instigated by John S. Sumner, leading to the suppression of the 'Nausicaa' edition of The Little Review."
+  },
+  {
+   "country": "United States",
+   "year": 1922,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 6,
+   "note": "Copies were seized and destroyed at the U.S. Post Office; the ban ended with Judge Woolsey's 1933 decision and the 1934 Random House edition."
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1923,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1923,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 6,
+   "note": "Of a 1923 print run of 500 copies sent to replace those destroyed in transit to the U.S.A., 499 are said to have been seized by the English authorities."
+  },
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by Nazi regime as degenerate foreign literature."
+  }
+ ],
+ "institution_rows": 8
+}

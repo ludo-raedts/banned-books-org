@@ -1,0 +1,64 @@
+{
+ "slug": "philosophical-dictionary-voltaire",
+ "title": "Philosophical Dictionary",
+ "author": "Voltaire",
+ "first_published_year": 1764,
+ "current_text": "In 1764, Geneva’s city council was prompted by its procurer general to seize and burn copies of Philosophical Dictionary as an outrage to religion and contrary to Church dogma; only a handful of copies could be found. In 1764, Philosophical Dictionary was burned in Holland. In 1764, Philosophical Dictionary was burned in Berne. On 19 March 1765, the Parlement de Paris condemned Philosophical Dictionary to be burned, denouncing its impieties and blasphemies and its attacks on Scripture and theology. Rome placed Philosophical Dictionary on the Index.",
+ "sources": [
+  {
+   "url": "https://www.ebsco.com/research-starters/history/voltaire-publishes-philosophical-dictionary-pocket",
+   "quote": "On September 10, 1764, the procurer general of Geneva prompted the city council to seize and burn all extant copies of the book, describing its content as an outrage to religion and contrary to Church dogma.",
+   "title": "Voltaire Publishes A Philosophical Dictionary for the Pocket | History | Research Starters | EBSCOhost"
+  },
+  {
+   "url": "https://www.ebsco.com/research-starters/history/voltaire-publishes-philosophical-dictionary-pocket",
+   "quote": "On September 10, 1764, the procurer general of Geneva prompted the city council to seize and burn all extant copies of the book, describing its content as an outrage to religion and contrary to Church dogma. By then, however, only a handful of copies could be found, the others having been quickly sold and spread throughout Europe.",
+   "title": "Voltaire Publishes A Philosophical Dictionary for the Pocket | History | Research Starters | EBSCOhost"
+  },
+  {
+   "url": "https://droit.cairn.info/article/RHJ_023_0081/pdf?lang=fr",
+   "quote": "Après une maturation d’une dizaine d’années, l’ouvrage a fait scandale dès sa parution en 1764. C’est d’abord à Genève que l’ouvrage a été condamné à être « lacéré et brûlé » comme « téméraire et scandaleux, impie et destructif de la Révélation ». La même année, le Dictionnaire est brûlé en Hollande et à Berne. Le Parlement de Paris le condamne à son tour le 19 mars 1765 et Rome le met à l’Index.",
+   "title": null
+  },
+  {
+   "url": "https://www.persee.fr/doc/litts_0563-9751_1994_num_31_1_1669",
+   "quote": "Le rapport de Jean Robert Tronchin-Boissier au Magnifique Conseil de Genève du 20 septembre 1764 l, comme « l'Arrêt du Parlement de Paris » du 19 mars 1765 2 condamnent le Dictionnaire philosophique à être et brûlé.",
+   "title": "Quelques aperçus sur la théologie et les théologiens dans le Dictionnaire philosophique - Persée"
+  },
+  {
+   "url": "https://www.persee.fr/doc/litts_0563-9751_1994_num_31_1_1669",
+   "quote": "Ces deux réquisitoires dénoncent les impiétés, les blasphèmes d'un ouvrage contraire à la Révélation, destructeur des dogmes, des mystères, du culte et qui, scandaleusement, attaque les Écritures et la théologie.",
+   "title": "Quelques aperçus sur la théologie et les théologiens dans le Dictionnaire philosophique - Persée"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Switzerland",
+   "year": 1764,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "On 10 September 1764 the procurer general of Geneva prompted the city council to seize and burn all extant copies of the Philosophical Dictionary, as an outrage to religion and contrary to Church dogma."
+  },
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1765,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "France",
+   "year": 1765,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The Parlement of Paris condemned the Dictionnaire philosophique portatif by an arret of 19 March 1765; in 1766 a copy was burned with the chevalier de La Barre."
+  }
+ ],
+ "institution_rows": 0
+}

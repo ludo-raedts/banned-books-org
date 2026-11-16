@@ -1,0 +1,69 @@
+{
+ "slug": "the-jungle",
+ "title": "The Jungle",
+ "author": "Upton Sinclair",
+ "first_published_year": 1906,
+ "current_text": "The Jungle was banned from public libraries in Yugoslavia in 1929 for its socialist views. Nazi students burned The Jungle in Germany in 1933 because of Sinclair’s socialist views. The Jungle was banned in East Germany in 1956 as inimical to communism. The Jungle was banned in South Korea in 1985 for Sinclair’s socialist views. Senator Joe McCarthy scrutinized The Jungle for its Communist sympathies in 1953.",
+ "sources": [
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10",
+   "quote": "The Jungle, by Upton Sinclair\nBanned from public libraries in Yugoslavia (1929). Burned in the Nazi bonfires because of Sinclair's socialist views (1933).",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://library.georgetown.edu/banned-books-week/2013",
+   "quote": "While several of Sinclair's other novels were banned due to their explicit language, The Jungle came under scrutiny by Senator Joe McCarthy for its Communist sympathies in 1953. Ironically, at various times the novel has been banned both for its socialist views (Yugoslavia, 1929; Nazi Germany, 1933; South Korea, 1985) and for its opposition to Communist ideology (East Germany, 1956).",
+   "title": "Banned Book Week 2013 | Georgetown University Library"
+  },
+  {
+   "url": "https://encyclopedia.ushmm.org/content/en/article/upton-sinclair",
+   "quote": "In 1933, Nazi students at more than 30 German universities pillaged libraries in search of books they considered to be \"un-German.\" Among the literary and political writings they threw into the flames were the works of Upton Sinclair.",
+   "title": "Upton Sinclair | Holocaust Encyclopedia"
+  },
+  {
+   "url": "https://www.csmonitor.com/Books/2010/0928/Banned-Books-Week-Why-these-10-classics-got-kicked-out-of-class/The-Jungle",
+   "quote": "Upton Sinclair couldn't please either side of the political spectrum with his brutal tale of labor conditions in the United States. \"The Jungle\" was burned by the Nazis in 1933 because its \"socialist views\" – and then banned in East Germany in 1956 as \"inimical to communism.\"",
+   "title": "The Jungle - CSMonitor.com"
+  },
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10",
+   "quote": "The Jungle, by Upton Sinclair\nBanned from public libraries in Yugoslavia (1929). Burned in the Nazi bonfires because of Sinclair's socialist views (1933).\nBanned in East Germany (1956) as inimical to communism.",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://library.syracuse.edu/blog/september-wrap-up/?blog=&p=34",
+   "quote": "The book was first banned in Yugoslavia in 1929, was burned by Nazis in 1933 (while ultimately being well received by Roosevelt and Churchill), and banned again in South Korea in 1985 all due to Sinclair’s socialist views.",
+   "title": "September 2020 Wrap Up: Banned Books Week - Syracuse University Libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Nazi Germany in 1933 due to its socialist themes."
+  },
+  {
+   "country": "East Germany (DDR)",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in East Germany in 1956 as inimical to communism."
+  },
+  {
+   "country": "United States",
+   "year": 1985,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

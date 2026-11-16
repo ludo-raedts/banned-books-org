@@ -1,0 +1,59 @@
+{
+ "slug": "droll-stories",
+ "title": "Droll Stories",
+ "author": "Honoré de Balzac",
+ "first_published_year": 1832,
+ "current_text": "Canada Customs banned Droll Stories beginning in 1914, and the book was subject to confiscation as late as 1970. Droll Stories was banned for obscenity from 1901 to 1923 and again from 1928 to approximately 1973. In New Zealand, a Magistrate's Court banned Droll Stories in 1935. In 1935, a bookseller was convicted under the 1910 Act for displaying Droll Stories; the magistrate said the work was indecent because its tales glorified immorality and licentiousness and ridiculed purity and virtue.",
+ "sources": [
+  {
+   "url": "https://fisherdigitus.library.utoronto.ca/exhibits/show/nihil-obstat/canadacanadians",
+   "quote": "It was also banned by Canada Customs beginning in 1914 and was subject to confiscation as late as 1970.",
+   "title": "Cases 7 & 8 : Canada & Canadians · Nihil Obstat: an Exhibition of Banned, Censored & Challenged Books in the West, 1491-2005 · Digitus - Online Exhibitions from the Thomas Fisher Rare Book Library"
+  },
+  {
+   "url": "https://www.slsa.sa.gov.au/open-books-hidden-lives",
+   "quote": "Droll Stories by Honore de Balzac also ran afoul of the Censor. The State Library holds several 19th century editions of this work. It was banned for obscenity from 1901 to 1923 and again, from 1928 to approximately 1973.",
+   "title": "Open books, hidden lives | State Library of South Australia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "quote": "1832–1837 |\nDroll Stories |\nHonoré de Balzac |\nCollection of short stories |\nCustoms Department\nMagistrate's Court\n|\n|\nUnrestricted |\nOn the Customs Department's list of prohibited books. Eventually removed. Banned by a Magistrate's Court in 1935.",
+   "title": "List of books banned in New Zealand - Wikipedia"
+  },
+  {
+   "url": "https://caslon.com.au/auscensorregimesnote5",
+   "quote": "In 1935 a bookseller was convicted under the 1910 Act\nfor displaying Balzac's Droll Stories, with the\nmagistrate claiming that the work was indecent because\n\"the tendency of the tales told is to glorify immorality\nand licentiousness and to hold purity and virtue up to\nridicule\".",
+   "title": "Australian Censorship Regimes: New Zealand"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Canada",
+   "year": 1914,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1935,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Per Wikipedia's NZ list, Droll Stories was on the Customs prohibited list and a magistrate's court banned it in 1935; it is now unrestricted."
+  },
+  {
+   "country": "Ireland",
+   "year": 1953,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Balzac's bawdy 1832–37 collection of medieval-style tales — long a target of obscenity prosecutions across the Anglosphere — was added to the Irish Register of Prohibited Publications in 1953 under the 1929 Censorship of Publications Act for \"obscene material of a sexual nature.\""
+  }
+ ],
+ "institution_rows": 0
+}

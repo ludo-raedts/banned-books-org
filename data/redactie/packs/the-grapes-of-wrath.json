@@ -1,0 +1,49 @@
+{
+ "slug": "the-grapes-of-wrath",
+ "title": "The Grapes of Wrath",
+ "author": "John Steinbeck",
+ "first_published_year": 1939,
+ "current_text": "In August 1939, the Kern County Board of Supervisors banned The Grapes of Wrath from schools and libraries, citing profanity, obscene language and its portrayal of local people. A December 1939 ALA Bulletin item reported that a number of libraries had banned The Grapes of Wrath and that the Executive Board had appointed Forrest Spaulding of Des Moines to chair a censorship committee that would report on censorship and formulate a policy statement.",
+ "sources": [
+  {
+   "url": "https://steinbeck.stanford.edu/grapeshistorical",
+   "quote": "By the Kern County Board of Supervisors from schools and libraries (August 1939) for being “filled with profanity, lewd, foul and obscene language unfit for use in American homes... It has offended our citizenry by falsely implying that many of our fine people are a low, ignorant, profane and blasphemous type living in a vicious and filthy manner.”",
+   "title": "The Grapes of Wrath: Historical Background | The Steinbeck Institute"
+  },
+  {
+   "url": "https://www.ala.org/tools/first-library-bill-rights",
+   "quote": "A news item in the ALA Bulletin (precursor to American Libraries) in the December 1939 issue states, “Forrest Spaulding of Des Moines has been appointed by the Executive Board as chairman of a special committee on censorship, following the recent banning by a number of libraries of John Steinbeck’s Grapes of Wrath. The committee is to report on existing censorship and to formulate a statement of policy for the board’s consideration.”",
+   "title": "First Library Bill of Rights? | ALA"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1939,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Kern County, California, due to its portrayal of migrant workers and criticism of economic conditions."
+  },
+  {
+   "country": "Turkey",
+   "year": 1973,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Eleven publishers and eight booksellers were tried before an Istanbul martial-law tribunal in February 1973 for 'spreading propaganda unfavourable to the state'; copies subject to confiscation."
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta for its depiction of class struggle and socialist themes."
+  }
+ ],
+ "institution_rows": 4
+}

@@ -1,0 +1,74 @@
+{
+ "slug": "portnoys-complaint",
+ "title": "Portnoy's Complaint",
+ "author": "Philip Roth",
+ "first_published_year": 1969,
+ "current_text": "The Australian government banned Portnoy’s Complaint in 1969, preventing its importation; the novel was deemed obscene. In September 1970, Dalton’s voluntarily withdrew Portnoy’s Complaint from sale at its Garema Place bookstore after a police visit. Penguin Books was prosecuted after printing a local edition of Portnoy’s Complaint; it was convicted of breaching censorship laws in Victoria and fined $104.50, and Victoria Police seized 300 copies. The ban on Portnoy’s Complaint was lifted in June 1971.",
+ "sources": [
+  {
+   "url": "https://www.abc.net.au/news/2020-07-01/penguin-portnoys-complaint-helped-topple-censorship-system/12379058",
+   "quote": "In 1969 the Australian government had announced it would ban the critically acclaimed Portnoy's Complaint, which had sold 400,000 copies in the UK and the US its first year, eclipsing The Godfather.",
+   "title": "How Penguin and Portnoy's Complaint helped topple Australia's book censorship system - ABC News"
+  },
+  {
+   "url": "https://www.theguardian.com/books/2022/feb/02/the-extraordinary-life-of-an-copy-of-portnoys-complaint-its-a-terrific-australian-story",
+   "quote": "Portnoy’s story in Australia is well told: the novel was published in 1969 to great fanfare overseas, but it was deemed obscene and imports were banned at the border by John Gorton’s government.",
+   "title": "The extraordinary life of an illegal copy of Portnoy’s Complaint: ‘It’s a terrific Australian story’ | Books | The Guardian"
+  },
+  {
+   "url": "https://www.slv.vic.gov.au/sites/default/files/SLV%20-%20WoTB%20-%20Web%20Text%202022.pdf",
+   "quote": "Philip Roth’s novel was officially banned in Australia soon after its American publication in 1969, preventing importation of the book.",
+   "title": null
+  },
+  {
+   "url": "https://www.archives.act.gov.au/find_of_the_month/2015/september/previous-find-of-the-month-92015-page-1",
+   "quote": "In September 1970, after police visited Dalton's Garema Place bookstore, Dalton's voluntarily withdrew the novel 'Portnoy's Complaint' from sale. The book was a banned import but Penguin Books in Melbourne had published an Australian edition as a challenge to State censorship laws.",
+   "title": "Previous find of the month - 9/2015 - Page 1 - ArchivesACT"
+  },
+  {
+   "url": "https://www.abc.net.au/news/2020-07-01/penguin-portnoys-complaint-helped-topple-censorship-system/12379058",
+   "quote": "Ultimately, Penguin was only convicted of breaching censorship laws in Victoria and fined $104.50, with 300 copies of the book seized by Victoria Police.",
+   "title": "How Penguin and Portnoy's Complaint helped topple Australia's book censorship system - ABC News"
+  },
+  {
+   "url": "https://www.slv.vic.gov.au/sites/default/files/SLV%20-%20WoTB%20-%20Web%20Text%202022.pdf",
+   "quote": "Philip Roth’s novel was officially banned in Australia soon after its American publication in 1969, preventing importation of the book. To circumvent this, Penguin Books printed a local edition, but subsequently found itself prosecuted.",
+   "title": null
+  },
+  {
+   "url": "https://www.slv.vic.gov.au/sites/default/files/SLV%20-%20WoTB%20-%20Web%20Text%202022.pdf",
+   "quote": "Philip Roth’s novel was officially banned in Australia soon after its American publication in 1969, preventing importation of the book. To circumvent this, Penguin Books printed a local edition, but subsequently found itself prosecuted. During the trial, a number of literary authors, including Patrick White, spoke in the book’s defence, and the ban was eventually lifted in June 1971.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": 1969,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Malaysia",
+   "year": 1970,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1970-09-24 (P.U (A) 342). Publisher: BANTAN BOOKS INCORPORATION. Language: INGGERIS."
+  },
+  {
+   "country": "Hungary",
+   "year": 1970,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Rejected by Kádár-era publishing authorities as 'too strong for the regime's taste' and not allowed into print."
+  }
+ ],
+ "institution_rows": 4
+}

@@ -1,0 +1,225 @@
+{
+ "slug": "the-satanic-verses",
+ "title": "The Satanic Verses",
+ "author": "Salman Rushdie",
+ "first_published_year": 1988,
+ "current_text": "On 5 October 1988 India banned the novel's importation, after Syed Shahabuddin petitioned the government of Rajiv Gandhi. In November 1988 it was also banned in Bangladesh, Sudan and South Africa, and by December 1988 in Sri Lanka. In March 1989 it was banned in Kenya, Thailand, Tanzania, Indonesia and Singapore, and the last nation to ban it was Venezuela, in June 1989.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "quote": "5 October 1988: India bans the novel's importation, after Indian parliamentarian and editor of the monthly magazine Muslim India Syed Shahabuddin petitioned the government of Rajiv Gandhi to ban the book.",
+   "title": "Satanic Verses controversy, timeline (Wikipedia)"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "quote": "In November 1988, it was also banned in Bangladesh , Sudan , and South Africa. By December 1988, it was also banned in Sri Lanka .",
+   "title": "Satanic Verses controversy, Wikipedia (cites Netton, Pipes)"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Satanic_Verses_controversy",
+   "quote": "March 1989 saw it banned in Kenya, Thailand, Tanzania, Indonesia, and Singapore. [ 11 ] The last nation to ban the book was Venezuela, in June 1989.",
+   "title": "Satanic Verses controversy, Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Sudan",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned November 1988 for blasphemy against Islam."
+  },
+  {
+   "country": "South Africa",
+   "year": 1988,
+   "end": 2002,
+   "status": "rescinded",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned November 1988 under apartheid-era publications law; the ban was formally lifted in January 2002."
+  },
+  {
+   "country": "Egypt",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned 24 November 1988."
+  },
+  {
+   "country": "Sri Lanka",
+   "year": 1988,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Sri Lanka by December 1988 (Wikipedia, citing Netton)."
+  },
+  {
+   "country": "Pakistan",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Pakistan on 24 November 1988 (Wikipedia timeline; that entry is uncited)."
+  },
+  {
+   "country": "Saudi Arabia",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned 24 November 1988."
+  },
+  {
+   "country": "Qatar",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Qatar in 1988, within weeks of Pakistan's 24 Nov ban (Wikipedia); exact date not given."
+  },
+  {
+   "country": "Somalia",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned 24 November 1988 for blasphemy against Islam."
+  },
+  {
+   "country": "Bangladesh",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Bangladesh in November 1988 (Wikipedia, citing Netton)."
+  },
+  {
+   "country": "Iran",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned by the Iranian government in 1988. On 14 February 1989 Supreme Leader Ayatollah Ruhollah Khomeini issued a fatwa calling for the death of Rushdie and his publishers. The fatwa was declared permanent in 2006; the bounty on Rushdie's head was raised to $3.4 million in March 2016."
+  },
+  {
+   "country": "India",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Import ban issued 5 October 1988 by the Rajiv Gandhi government following a petition from MP Syed Shahabuddin. Possession of the book was not criminalised."
+  },
+  {
+   "country": "Malaysia",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1989-03-30 (P.U. (A) 94). Publisher: The Penguin Group. Printer: Richard Clay Ltd,. Language: INGGERIS. Possession of the book carries up to three years' imprisonment or a fine of approximately $7,400."
+  },
+  {
+   "country": "Kenya",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Kenya in March 1989 (Wikipedia, citing Netton)."
+  },
+  {
+   "country": "Turkey",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Turkey prohibited importing the book and any Turkish translation; it remains unpublished in Turkish. Aziz Nesin's serialized excerpts triggered the 1993 Sivas massacre."
+  },
+  {
+   "country": "Jordan",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Barred in Jordan as blasphemous against Islam following Khomeini's fatwa; named in 2010 as the most-requested banned book in the country."
+  },
+  {
+   "country": "Indonesia",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned March 1989. Possession of the book carries up to one month's imprisonment or a fine."
+  },
+  {
+   "country": "Brunei",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in 1989 for blasphemy against Islam."
+  },
+  {
+   "country": "Thailand",
+   "year": 1989,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Thailand in March 1989 (Wikipedia, citing Netton)."
+  },
+  {
+   "country": "Singapore",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned March 1989 under the Undesirable Publications Act."
+  },
+  {
+   "country": "Venezuela",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in June 1989 — described by contemporary accounts as the last nation to impose a restriction during the initial wave of bans."
+  },
+  {
+   "country": "Tanzania",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned for blasphemy against Islam."
+  },
+  {
+   "country": "Kuwait",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned for blasphemy against Islam."
+  }
+ ],
+ "institution_rows": 0
+}

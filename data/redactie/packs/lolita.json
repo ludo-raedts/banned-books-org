@@ -1,0 +1,121 @@
+{
+ "slug": "lolita",
+ "title": "Lolita",
+ "author": "Vladimir Nabokov",
+ "first_published_year": 1955,
+ "current_text": "In France, Lolita was banned as a \"dangerous book\" until 1958. On September 17, 1958, the Cincinnati Public Library banned Lolita.",
+ "sources": [
+  {
+   "url": "https://exhibits.library.cornell.edu/lolita/feature/publishing-lolita",
+   "quote": "The book's appearance sparked a flurry of publicity in France, where it was banned as a \"dangerous book\" until 1958.",
+   "title": "Nabokov at Cornell: Publishing Lolita"
+  },
+  {
+   "url": "https://exhibits.library.cornell.edu/lolita/feature/publishing-lolita",
+   "quote": "On September 17, 1958, the Cincinnati Public Library banned Lolita.",
+   "title": "Nabokov at Cornell: Publishing Lolita (same page)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Portugal",
+   "year": 1955,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). The year (1955) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP."
+  },
+  {
+   "country": "South Africa",
+   "year": 1955,
+   "end": null,
+   "status": "historical",
+   "confidence": "unverified",
+   "scope": 4,
+   "note": "Banned in South Africa under apartheid censorship; Vreme reports the ban ran 1974-1982. Start year 1955 unconfirmed."
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1955,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Australia",
+   "year": 1955,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Canada",
+   "year": 1956,
+   "end": 1958,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Canada in 1956; not enforced on imports of the U.S. Putnam edition, and lifted in late 1958."
+  },
+  {
+   "country": "Denmark",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "unverified",
+   "scope": 4,
+   "note": "Source needed: no source found that records this ban in this country."
+  },
+  {
+   "country": "France",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in France as obscene in December 1956 by the Interior Ministry; lifted after roughly two years (end date varies by source: 1958/1959)."
+  },
+  {
+   "country": "Norway",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "unverified",
+   "scope": 4,
+   "note": "Source needed: no source found that records this ban in this country."
+  },
+  {
+   "country": "Argentina",
+   "year": 1960,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Portugal",
+   "year": 1960,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Listed among translated works banned in Portugal under the Estado Novo. Exact ban year not specified in the register."
+  },
+  {
+   "country": "New Zealand",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Found indecent by the NZ Supreme Court in 1960 (upheld by Court of Appeal in 1961); the Indecent Publications Tribunal classified it not indecent on 11 August 1964."
+  }
+ ],
+ "institution_rows": 11
+}

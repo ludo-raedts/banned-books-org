@@ -1,0 +1,36 @@
+{
+ "slug": "fun-home",
+ "title": "Fun Home",
+ "author": "Alison Bechdel",
+ "first_published_year": 2006,
+ "current_text": "In January 2019, district administrators challenged Alison Bechdel’s Fun Home and ordered it removed from library shelves, bypassing board-approved selection and reconsideration policies. Administrators at both high schools in North Hunterdon-Voorhees School District in New Jersey restricted student access to Fun Home. Some students challenged Fun Home as recommended reading for incoming freshmen at Duke University in Durham, North Carolina, objecting to its depictions of lesbian sexuality as borderline pornographic.",
+ "sources": [
+  {
+   "url": "https://www.ala.org/news/2020/04/martha-hickson-receives-aasl-intellectual-freedom-award",
+   "quote": "In January 2019, Hickson received challenges from district administrators to the graphic novel “Fun Home” by Alison Bechdel. Bypassing board-approved selection and reconsideration policies, administrators ordered the book removed from library shelves.",
+   "title": "Martha Hickson receives AASL Intellectual Freedom Award | ALA"
+  },
+  {
+   "url": "https://ncac.org/news/new-jersey-high-schools-restrict-access-to-fun-home",
+   "quote": "Administrators at both high schools in North Hunterdon-Voorhees School District in New Jersey have restricted student access to the graphic novel Fun Home: A Family Tragicomic, by Alison Bechdel.",
+   "title": "New Jersey High Schools Restrict Access to Fun Home | UPDATE - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://www.ala.org/news/2016/05/libraries-stand-firm-support-glbt-books",
+   "quote": "“Fun Home: A Family Tragicomic,” by Alison Bechdel, which received the 2007 Israel Fishman Non-Fiction Stonewall Book Award, was challenged as recommended reading for incoming freshmen at Duke University in Durham, North Carolina, because some students objected to the novel’s “depictions of lesbian sexuality, arguing that the book is borderline pornographic and they shouldn’t have been asked to read it.”",
+   "title": "Libraries stand firm in support of GLBT books | ALA"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2014,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 31
+}

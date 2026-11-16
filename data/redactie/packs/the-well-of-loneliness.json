@@ -1,0 +1,64 @@
+{
+ "slug": "the-well-of-loneliness",
+ "title": "The Well of Loneliness",
+ "author": "Radclyffe Hall",
+ "first_published_year": 1928,
+ "current_text": "In 1928, a court found The Well of Loneliness criminally obscene in the UK because it depicted ‘female sexual inversion’ and pleaded for its toleration; the judgment kept it out of print there until 1949. In August 1928, James Douglas, editor of The Sunday Express, attacked The Well of Loneliness in an editorial titled ‘A Book That Must Be Suppressed’, calling it ‘an intolerable outrage’.",
+ "sources": [
+  {
+   "url": "https://law-school.open.ac.uk/open-justice/research/research-clusters/feminism-law-and-gender/iwd-2022-womens-legal-landmarks/dpp-v-jonathan",
+   "quote": "In 1928 Radclyffe Hall, a successful middle-brow novelist, published The Well of Loneliness. In November that year, the novel was found criminally obscene.",
+   "title": "DPP v Jonathan Cape and Leopold Hill (the Well of Loneliness trial), 1928 | The Open University Law School"
+  },
+  {
+   "url": "https://law-school.open.ac.uk/open-justice/research/research-clusters/feminism-law-and-gender/iwd-2022-womens-legal-landmarks/dpp-v-jonathan",
+   "quote": "In 1928 Radclyffe Hall, a successful middle-brow novelist, published The Well of Loneliness. In November that year, the novel was found criminally obscene. The reason the book was condemned was its subject-matter: The Well not only depicted ‘female sexual inversion’ (roughly equivalent to lesbianism) but also made a plea for its toleration.",
+   "title": "DPP v Jonathan Cape and Leopold Hill (the Well of Loneliness trial), 1928 | The Open University Law School"
+  },
+  {
+   "url": "https://www.york.ac.uk/news-and-events/news/2025/research/hidden-history-well-of-loneliness-novel/",
+   "quote": "Written by British author Radclyffe Hall, and often referred to as “the Lesbian Bible”, the novel was banned as obscene in the UK following its publication in 1928.",
+   "title": "Study to recover hidden history of once-banned LGBTQ+ novel - News and events, University of York"
+  },
+  {
+   "url": "https://www.york.ac.uk/news-and-events/news/2025/research/hidden-history-well-of-loneliness-novel/",
+   "quote": "A campaign against the book was launched soon after its release in 1928, and this culminated in a court ruling that it was obscene. The judgment removed it from print in the UK until 1949, but did little to stop it from being translated into multiple languages and read around the globe.",
+   "title": "Study to recover hidden history of once-banned LGBTQ+ novel - News and events, University of York"
+  },
+  {
+   "url": "https://www.nationalarchives.gov.uk/explore-the-collection/stories/radclyffe-hall/",
+   "quote": "The book received a great deal of praise, however her sympathetic portrayal of lesbians attracted controversy.\nIn August 1928, James Douglas, editor of The Sunday Express and dedicated moralist, launched a scathing attack on Hall and her novel. In an editorial piece titled ‘A Book That Must Be Suppressed’, Douglas regarded the novel to be ‘an intolerable outrage’ and argued that,",
+   "title": "Radclyffe Hall - The National Archives"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1928,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1929,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the NZ Customs Department in 1929; now unrestricted (per Wikipedia list, no citation there)."
+  },
+  {
+   "country": "Ireland",
+   "year": 1930,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

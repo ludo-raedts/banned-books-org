@@ -1,0 +1,54 @@
+{
+ "slug": "a-banquet-for-seaweed",
+ "title": "A Banquet for Seaweed",
+ "author": "Haidar Haidar",
+ "first_published_year": 1983,
+ "current_text": "In April 2000, the Islamist newspaper al-Sh`ab campaigned against Egypt’s Ministry of Culture’s reprinting of A Banquet for Seaweed; its article and al-Azhar’s Islamic Research Council claimed the book was blasphemous, lacked the council’s legally required approval, and should be banned. Egypt’s culture minister announced that A Banquet for Seaweed had been withdrawn from sale pending an investigation of its contents, and the Egyptian parliament’s Religious Affairs Committee demanded that it be burned in public. Egypt’s government-appointed Grand Sheikh of al-Azhar said that A Banquet for Seaweed deserved to be banned.",
+ "sources": [
+  {
+   "url": "https://www.hrw.org/reports/2005/egypt0605/7.htm",
+   "quote": "In April 2000, for example, the Islamist newspaper al-Sh`ab initiated a campaign against the Ministry of Cultures reprinting of Haidar Haidars A Banquet for Seaweed in a series of renowned Arab novels. The article, and later al-Azhars Islamic Research Council (IRC), claimed the book was blasphemous, had been published without the IRCs approval as required by law, and should be banned.",
+   "title": "Egypt: Reading between the \"Red Lines\": VI. Non-State Attacks on Academic Freedom: The Islamist Factor"
+  },
+  {
+   "url": "https://www.nybooks.com/articles/2000/11/16/witch-hunt-in-egypt/",
+   "quote": "The culture minister tried to calm tempers by announcing that the book had been withdrawn from sale, pending an “investigation” of its contents by a committee of experts. This failed to satisfy the Egyptian parliament’s Religious Affairs Committee, which demanded that the offending text be burned in public.",
+   "title": "Witch Hunt in Egypt | Max Rodenbeck | The New York Review of Books"
+  },
+  {
+   "url": "https://www.nybooks.com/articles/2000/11/16/witch-hunt-in-egypt/",
+   "quote": "Egypt’s prime minister, Atef Ebeid, then decided to ask the Grand Sheikh of al-Azhar, the country’s foremost religious authority, to pass judgment. Given an excellent opportunity to expand the clergy’s worldly influence, the government-appointed Grand Sheikh announced that Haidar’s “filthy” novel did indeed deserve to be banned.",
+   "title": "Witch Hunt in Egypt | Max Rodenbeck | The New York Review of Books"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Syria",
+   "year": 1983,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Syria (and several Arab states) on publication; later condemned as blasphemous."
+  },
+  {
+   "country": "Egypt",
+   "year": 2000,
+   "end": null,
+   "status": "unclear",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The novel was withdrawn in Egypt in 2000 after an Islamist press campaign against it (Al-Azhar called it offensive to Islam); the issuing authority is not stated."
+  },
+  {
+   "country": "Palestine",
+   "year": 2011,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Hamas police confiscated copies from Gaza City bookstores in January 2011 as 'against Sharia'. Authority: Hamas."
+  }
+ ],
+ "institution_rows": 0
+}

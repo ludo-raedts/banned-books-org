@@ -1,0 +1,59 @@
+{
+ "slug": "emile-or-on-education",
+ "title": "Emile, or On Education",
+ "author": "Jean-Jacques Rousseau",
+ "first_published_year": 1762,
+ "current_text": "On 9 June 1762, the Parlement de Paris condemned Emile, or On Education to be torn and burned and ordered the arrest of its author; the author narrowly escaped arrest when the judgment was executed on 11 June. The government of Geneva also condemned Emile, or On Education. Emile, or On Education was banned in Paris and Geneva because of its section titled “Profession of Faith of the Savoyard Vicar.” Emile, or On Education was forbidden by the Church and listed on the Index Librorum Prohibitorum.",
+ "sources": [
+  {
+   "url": "https://archives-etat-ge.ch/page_de_base/15-condamnation-de-lemile-et-du-contrat-social-1761-1762/",
+   "quote": "Le Parlement de Paris condamne le 9 juin 1762 l’ Emile à être lacéré et brûlé. Le gouvernement genevois fera de même, incluant dans sa condamnation Du contrat social.",
+   "title": "15. Condamnation de l'\"Emile\" et du \"Contrat social\" (1761-1762) - Les Archives d'Etat de Genève"
+  },
+  {
+   "url": "https://www.ameliesourget.net/histoire-des-idees/rousseau-censure-de-la-faculte-de-theologie-de-paris-contre-le-livre-qui-a-pour-titre-emile-ou-de-l-education-1762",
+   "quote": "le 9 juin 1762, le Parlement de Paris condamne l’« imprimé » en question « à être lacéré et brûlé » et décrète la prise de corps de son auteur; le 11 juin, date de l'exécution de ce jugement, l'auteur lui-même échappe de peu à l'arrestation.",
+   "title": "Censure de la Faculté de Théologie de Paris contre le livre qui a pour titre Émile ou de l'éducation"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Emile%2C_or_On_Education",
+   "quote": "Emile, or On Education (French: Émile, ou De l'éducation), first published in 1762, is a treatise on the nature of education and on the nature of man written by Jean-Jacques Rousseau, who considered it to be the \"best and most important\" of all his writings.\nDue to a section of the book titled \"Profession of Faith of the Savoyard Vicar\", Emile was banned in Paris and Geneva and was publicly burned in the first year of its publication.",
+   "title": "Emile, or On Education - Wikipedia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Emile%2C_or_On_Education",
+   "quote": "Due to a section of the book titled \"Profession of Faith of the Savoyard Vicar\", Emile was banned in Paris and Geneva and was publicly burned in the first year of its publication. It was forbidden by the Church, being listed on the Index Librorum Prohibitorum.",
+   "title": "Emile, or On Education - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 7,
+   "note": null
+  },
+  {
+   "country": "Switzerland",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Geneva in 1762 due to its controversial content."
+  },
+  {
+   "country": "France",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned in Paris and publicly burned in 1762 due to its controversial content."
+  }
+ ],
+ "institution_rows": 0
+}
