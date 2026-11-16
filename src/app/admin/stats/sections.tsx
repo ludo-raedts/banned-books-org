@@ -1,5 +1,6 @@
 import Link from '@/components/link'
 import { flagEmoji } from '../kit'
+import TopPagesList from './top-pages-list'
 import {
   RANGES, RANGE_LABEL, statsHref,
   type BreakdownRow, type StatsFilters, type TopPageRow, type TrafficData,
@@ -132,12 +133,10 @@ export function KpiRow({ data, scope }: { data: TrafficData; scope: string | nul
       <div className={tile}>
         <span className="text-xs font-medium text-gray-500">Average per {unit}</span>
         <span className="text-4xl font-bold text-gray-900 tabular-nums leading-tight">
-          {nf(Math.round((hourly ? pageviews : visitors) / Math.max(1, days)))}
+          {nf(Math.round(data.series.reduce((a, r) => a + r.visitors, 0) / Math.max(1, days)))}
         </span>
         <span className="text-xs text-gray-500 tabular-nums">
-          {hourly
-            ? `pageviews · ${visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} per visitor`
-            : `visitors · ${visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} pageviews each`}
+          visitors · {visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} pageviews each
         </span>
         <span className="text-[11px] text-gray-400">{days} {unit}{days === 1 ? '' : 's'}</span>
       </div>
@@ -267,7 +266,6 @@ export function TopPagesCard({
   const parts: string[] = []
   if (filters.ref !== null) parts.push(`from ${referrerLabel(filters.ref)}`)
   if (filters.country !== null) parts.push(`in ${countryLabel(filters.country)}`)
-  const max = pages[0]?.pageviews ?? 1
   const capped = filters.range === 'all'
 
   return (
@@ -284,26 +282,7 @@ export function TopPagesCard({
       {pages.length === 0 ? (
         <p className="text-sm text-gray-400 italic py-4">No pageviews for this selection.</p>
       ) : (
-        <ol className="flex flex-col gap-0.5 mt-1">
-          {pages.map((p, i) => (
-            <li key={p.path}>
-              <Link
-                href={p.href}
-                className="group grid grid-cols-[1.5rem_minmax(0,1fr)_8rem_3.5rem] items-center gap-3 rounded-md px-2 py-1 -mx-2 text-xs hover:bg-gray-50"
-              >
-                <span className="text-gray-400 tabular-nums text-center">{i + 1}</span>
-                <span className="truncate text-gray-700 group-hover:text-brand">
-                  {p.label}
-                  {p.label !== p.href && <span className="ml-2 text-gray-400">{p.href}</span>}
-                </span>
-                <span className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                  <span className="block h-full rounded-full bg-[#2a78d6]" style={{ width: `${Math.max(2, Math.round((p.pageviews / max) * 100))}%` }} />
-                </span>
-                <span className="text-gray-900 font-medium tabular-nums text-right">{nf(p.pageviews)}</span>
-              </Link>
-            </li>
-          ))}
-        </ol>
+        <TopPagesList pages={pages} />
       )}
     </div>
   )

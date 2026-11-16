@@ -73,7 +73,10 @@ export default function TrafficChart({
   // Callback ref: the chart <div> is re-created when switching back from the
   // table view, and state (unlike useRef) re-runs the observer effect for it.
   const [wrapEl, setWrapEl] = useState<HTMLDivElement | null>(null)
-  const [width, setWidth] = useState(640)
+  // null until the wrapper is measured: drawing at a guessed width and then
+  // snapping to the real one made the chart flash on load.
+  const [measured, setMeasured] = useState<number | null>(null)
+  const width = measured ?? 640
   const [hover, setHover] = useState<number | null>(null)
   const [view, setView] = useState<'chart' | 'table'>('chart')
   const [smooth, setSmooth] = useState(false)
@@ -81,7 +84,7 @@ export default function TrafficChart({
 
   useEffect(() => {
     if (!wrapEl) return
-    const ro = new ResizeObserver(entries => setWidth(Math.max(280, Math.round(entries[0].contentRect.width))))
+    const ro = new ResizeObserver(entries => setMeasured(Math.max(280, Math.round(entries[0].contentRect.width))))
     ro.observe(wrapEl)
     return () => ro.disconnect()
   }, [wrapEl])
@@ -113,6 +116,11 @@ export default function TrafficChart({
   const y = (v: number) => M.top + (1 - Math.min(v, max) / max) * innerH
 
   const path = (vals: number[]) => vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')
+  // The newest bucket (today / the current hour) is still filling up, so its
+  // segment is dashed and its marker hollow: the drop at the right edge reads
+  // as "not finished yet" rather than as a real fall in traffic.
+  const lastSegment = (vals: number[]) =>
+    n > 1 ? `M${x(n - 2).toFixed(1)},${y(vals[n - 2]).toFixed(1)} L${x(n - 1).toFixed(1)},${y(vals[n - 1]).toFixed(1)}` : ''
   const area = (vals: number[]) => `${path(vals)} L${x(n - 1).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z`
 
   const yTicks: number[] = []
@@ -165,6 +173,7 @@ export default function TrafficChart({
     <div className="min-w-0">
       <ChartToolbar view={view} setView={setView} smooth={smooth} setSmooth={setSmooth} canSmooth={canSmooth} clip={clip} setClip={setClip} canClip={canClip} />
       <div ref={setWrapEl} className="relative w-full min-w-0 overflow-hidden" style={{ height: H }}>
+        {measured !== null && (
         <svg
           width={width}
           height={H}
@@ -207,9 +216,11 @@ export default function TrafficChart({
 
           {/* pageviews behind, visitors in front; area = wash, line = 2px */}
           <path d={area(pageviewsLine)} fill={PAGEVIEWS} fillOpacity={0.1} />
-          <path d={path(pageviewsLine)} fill="none" stroke={PAGEVIEWS} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={path(pageviewsLine.slice(0, n - 1))} fill="none" stroke={PAGEVIEWS} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={lastSegment(pageviewsLine)} fill="none" stroke={PAGEVIEWS} strokeWidth={2} strokeDasharray="4 4" strokeLinecap="round" />
           <path d={area(visitorsLine)} fill={VISITORS} fillOpacity={0.1} />
-          <path d={path(visitorsLine)} fill="none" stroke={VISITORS} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={path(visitorsLine.slice(0, n - 1))} fill="none" stroke={VISITORS} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={lastSegment(visitorsLine)} fill="none" stroke={VISITORS} strokeWidth={2} strokeDasharray="4 4" strokeLinecap="round" />
 
           {useClip && pageviewsLine.map((v, i) => v > max && (
             <path key={series[i].day} d={`M${x(i) - 4},${M.top + 7} L${x(i) + 4},${M.top + 7} L${x(i)},${M.top}Z`} fill={PAGEVIEWS}>
@@ -225,9 +236,18 @@ export default function TrafficChart({
             { v: pageviewsLine[shown], c: PAGEVIEWS },
             { v: visitorsLine[shown], c: VISITORS },
           ].map(p => (
-            <circle key={p.c} cx={x(shown)} cy={y(p.v)} r={4} fill={p.c} stroke={SURFACE} strokeWidth={2} />
+            <circle
+              key={p.c}
+              cx={x(shown)}
+              cy={y(p.v)}
+              r={4}
+              fill={shown === n - 1 ? SURFACE : p.c}
+              stroke={shown === n - 1 ? p.c : SURFACE}
+              strokeWidth={2}
+            />
           ))}
         </svg>
+        )}
 
         {/* tooltip: values lead, labels follow; line keys, not boxes */}
         {hover !== null && (

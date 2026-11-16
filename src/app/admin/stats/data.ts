@@ -73,6 +73,8 @@ export function statsHref(f: StatsFilters, patch: Partial<StatsFilters> = {}): s
 export type DailyTrafficRow = { day: string; visitors: number; pageviews: number }
 export type BreakdownRow = { key: string; visitors: number; pageviews: number }
 export type TopPageRow = {
+  /** 'content' = a book or author page; 'hub' = country / reason / site pages */
+  kind: 'content' | 'hub'
   path: string
   pageviews: number
   label: string
@@ -298,7 +300,7 @@ async function fetchTopPages(f: StatsFilters, today: string): Promise<TopPageRow
       p_to: pTo,
       p_referrer: f.ref,
       p_country: f.country,
-      p_limit: 25,
+      p_limit: 100,
     }),
     'admin_top_pages',
   )
@@ -326,13 +328,13 @@ async function fetchTopPages(f: StatsFilters, today: string): Promise<TopPageRow
     const id = Number(r.entity_id)
     if (r.entity_type === 'book') {
       const b = bookMap.get(id)
-      if (b?.slug) return { path: r.path, pageviews: Number(r.pageviews), label: b.title, href: `/books/${b.slug}` }
+      if (b?.slug) return { kind: 'content', path: r.path, pageviews: Number(r.pageviews), label: b.title, href: `/books/${b.slug}` }
     }
     if (r.entity_type === 'author') {
       const a = authorMap.get(id)
-      if (a?.slug) return { path: r.path, pageviews: Number(r.pageviews), label: a.display_name, href: `/authors/${a.slug}` }
+      if (a?.slug) return { kind: 'content', path: r.path, pageviews: Number(r.pageviews), label: a.display_name, href: `/authors/${a.slug}` }
     }
-    return { path: r.path, pageviews: Number(r.pageviews), label: pageLabel(r, countryMap, reasonMap), href: r.path }
+    return { kind: 'hub', path: r.path, pageviews: Number(r.pageviews), label: pageLabel(r, countryMap, reasonMap), href: r.path }
   })
 }
 
@@ -370,7 +372,7 @@ export const getTopPages = (f: StatsFilters) => {
   const frame = f.range === '24h' ? new Date().toISOString().slice(0, 13) : today
   return unstable_cache(
     () => fetchTopPages(f, today),
-    ['admin-top-pages-v2', f.range, f.ref ?? '∅', f.country ?? '∅', frame],
+    ['admin-top-pages-v3', f.range, f.ref ?? '∅', f.country ?? '∅', frame],
     { revalidate: 300 },
   )()
 }
