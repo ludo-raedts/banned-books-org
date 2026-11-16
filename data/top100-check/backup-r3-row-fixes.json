@@ -1,0 +1,50 @@
+[
+ {
+  "id": 25,
+  "book_id": 18,
+  "country_code": "US",
+  "scope_id": 1,
+  "action_type": "banned",
+  "status": "active",
+  "region": null,
+  "institution": null,
+  "year_started": 1984,
+  "year_ended": null,
+  "actor": null,
+  "description": null,
+  "confidence": "reported",
+  "created_at": "2026-04-24T14:46:24.242151+00:00"
+ },
+ {
+  "id": 885,
+  "book_id": 814,
+  "country_code": "CA",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "active",
+  "region": null,
+  "institution": null,
+  "year_started": 1980,
+  "year_ended": null,
+  "actor": null,
+  "description": "Wikipedia: publisher Ernst Zundel was prosecuted under Canada's false-news provision (convicted 1985, retried 1988); the Supreme Court struck the law down in 1992. No book ban stated.",
+  "confidence": "unverified",
+  "created_at": "2026-04-24T21:27:25.11629+00:00"
+ },
+ {
+  "id": 12929,
+  "book_id": 7662,
+  "country_code": "NZ",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 1969,
+  "year_ended": null,
+  "actor": null,
+  "description": "Per Wikipedia's NZ list, The Pearl was ruled indecent in 1969 and 1976 except for persons over 18 engaged in research.",
+  "confidence": "unverified",
+  "created_at": "2026-05-20T11:15:18.064816+00:00"
+ }
+]

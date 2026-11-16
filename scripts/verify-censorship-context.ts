@@ -59,6 +59,7 @@
  *          --out=<tag> · --no-resume · --report-only (rebuild the .md from the JSONL)
  *          --with-ban-text (also check the claims of the hidden generated ban text, and take books that
  *          have such a ban text but no history; the sourced result is stored as the history)
+ *          --seed-from-rows (books with no text at all: check the claims implied by their own ban rows)
  *          --from-sources (when the book's own text has no checkable claim: search for sources on its
  *          censorship and write from their passages; without it such a book ends as no_checkable_claims)
  *          --recheck (also take texts that already carry a verdict in censorship_context_checked_at;
@@ -104,6 +105,9 @@ const WITH_BAN_TEXT = hasFlag('with-ban-text')
 // book's censorship and write from what they literally say. Same gates, same
 // status. Our own years and reason labels are never handed to the search.
 const FROM_SOURCES = hasFlag('from-sources')
+// --seed-from-rows: a book with no text at all (no history, no usable ban text) is checked against its own
+// recorded events ("<title> was banned or restricted in <country> in <year>."), so --from-sources can search for them.
+const SEED_FROM_ROWS = hasFlag('seed-from-rows')
 const OUT_TAG = flagValue('out') ?? new Date().toISOString().slice(0, 10)
 // Bot-walled pages (403 on ncac.org, pen.org, …) are re-fetched through
 // Firecrawl only when asked: every call costs a credit.
@@ -301,6 +305,16 @@ function hypotheses(b: Book): string {
   if (b.censorship_context?.trim()) parts.push(b.censorship_context.trim())
   const ban = WITH_BAN_TEXT ? hiddenBanText(b) : null
   if (ban) parts.push(ban)
+  if (!parts.length && SEED_FROM_ROWS) {
+    const seen = new Set<string>()
+    for (const r of b.bans ?? []) {
+      const c = r.countries?.name_en
+      if (!c || !r.year_started || r.institution) continue
+      const line = `${b.title} was banned or restricted in ${c} in ${r.year_started}.`
+      if (!seen.has(line)) { seen.add(line); parts.push(line) }
+      if (parts.length >= 5) break
+    }
+  }
   return parts.join('\n\n')
 }
 
