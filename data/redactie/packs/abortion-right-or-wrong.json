@@ -1,0 +1,31 @@
+{
+ "slug": "abortion-right-or-wrong",
+ "title": "Abortion: Right or Wrong?",
+ "author": "Dorothy Thurtle",
+ "first_published_year": 1942,
+ "current_text": "Abortion: Right or Wrong? was banned in Ireland in 1942.",
+ "sources": [
+  {
+   "url": "https://www.indexoncensorship.org/wp-content/uploads/2013/05/Register-of-Prohibited-Publications-2010.pdf",
+   "quote": "Abortion: Right or Wrong? | All | Dorothy Thurtle | T. Werner Laurie Limited, London | 13th February, 1942 |",
+   "title": null
+  },
+  {
+   "url": "https://www.thejournal.ie/censored-the-274-books-and-magazines-still-banned-in-ireland-today-455034-May2012/",
+   "quote": "Three of the books are explicitly about abortion: Abortion Internationally (banned since 1983), Abortion: Our Struggle for Control (also banned in 1983) and Abortion: Right or Wrong (banned seventy years ago in 1942).",
+   "title": "Censored: The 274 books and magazines still banned in Ireland today"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1942,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Register of Prohibited Publications, Part II. Explicitly cited by name in a 2025 parliamentary answer as still listed; legal basis abolished 2018."
+  }
+ ],
+ "institution_rows": 0
+}

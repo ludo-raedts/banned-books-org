@@ -1,0 +1,36 @@
+{
+ "slug": "perbindeshi",
+ "title": "Përbindëshi",
+ "author": "Ismail Kadare",
+ "first_published_year": 1965,
+ "current_text": "Përbindëshi was banned under communist rule in Albanien in 1965; the regime said it was too decadent for the country’s population, but the book circulated illegally despite the ban. Përbindëshi became available to the public again after the fall of communism in Albanien.",
+ "sources": [
+  {
+   "url": "https://didoc.dh.gu.se/item/1879",
+   "quote": "Monstret förbjöds 1965 under det kommunistiska styret i Albanien och Ismail Kadare hamnade i konflikt med regimen.",
+   "title": "Förbud - Monstret / Përbindëshi - Albanien · Dawit Isaak Database of Censorship · DIDOC"
+  },
+  {
+   "url": "https://didoc.dh.gu.se/item/1879",
+   "quote": "Regimen påstod att boken var för dekadent för landets befolkning, men trots förbudet spreds boken illegalt och fick fortsatt inflytande i landet.",
+   "title": "Förbud - Monstret / Përbindëshi - Albanien · Dawit Isaak Database of Censorship · DIDOC"
+  },
+  {
+   "url": "https://didoc.dh.gu.se/item/1879",
+   "quote": "Efter kommunismens fall i Albanien blev boken återigen tillgänglig för allmänheten.",
+   "title": "Förbud - Monstret / Përbindëshi - Albanien · Dawit Isaak Database of Censorship · DIDOC"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Albania",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Because of its subtle yet sharp allegories regarding state surveillance, paranoia, and the oppressive nature of the regime, the book was banned by the communist government in Albania shortly after its publication and remained banned for 25 years."
+  }
+ ],
+ "institution_rows": 0
+}

@@ -1,0 +1,55 @@
+{
+ "slug": "sex",
+ "title": "Sex",
+ "author": "Madonna",
+ "first_published_year": 1992,
+ "current_text": "The Tokyo Customs Office ruled that portions of Madonna’s Sex were obscene and seized copies brought in by travelers at airports. In Houston, TX, Citizens Against Pornography sought to have Sex removed; the public library kept it but stopped circulation and restricted in-library access to adults. In Mesa, AZ, the mayor ordered the library not to shelve Sex. The Pikes Peak (CO) Library in Colorado Springs cancelled its order for Sex after citizen protest. The St. Louis (MO) Public Library cancelled its order for Sex after citizen protest.",
+ "sources": [
+  {
+   "url": "https://www.latimes.com/archives/la-xpm-1993-02-28-mn-228-story.html",
+   "quote": "The Tokyo Customs Office has ruled that portions of Madonna’s book are obscene and has seized copies brought in by travelers at airports.",
+   "title": "Customs Fines Printer of Madonna's 'Sex' - Los Angeles Times"
+  },
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1992-sex/",
+   "quote": "In Houston, TX, a group called Citizens Against Pornography mobilized efforts to have the book removed. The public library agreed to keep the book, but not allow it to circulate and to restrict in-library access to adults only.",
+   "title": "Timeline entry for 1992: Sex - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1992-sex/",
+   "quote": "In Mesa, AZ, the mayor ordered the library not to shelve the book.",
+   "title": "Timeline entry for 1992: Sex - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1992-sex/",
+   "quote": "The Pikes Peak (CO) Library in Colorado Springs cancelled the library’s order after citizen protest.",
+   "title": "Timeline entry for 1992: Sex - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1992-sex/",
+   "quote": "The St. Louis (MO) Public Library cancelled the library’s order after citizen protest, while the Ingham County (MI) library board declined to ban the controversial book.",
+   "title": "Timeline entry for 1992: Sex - Intellectual Freedom Blog"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 1972,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1972-11-23 (P.U (A) 368). Language: CINA."
+  },
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Sexual content"
+  }
+ ],
+ "institution_rows": 1
+}

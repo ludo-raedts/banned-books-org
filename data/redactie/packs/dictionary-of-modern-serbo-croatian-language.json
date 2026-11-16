@@ -1,0 +1,36 @@
+{
+ "slug": "dictionary-of-modern-serbo-croatian-language",
+ "title": "Dictionary of Modern Serbo-Croatian Language",
+ "author": "Miloš Moskovljević",
+ "first_published_year": null,
+ "current_text": "In 1966, a court banned Dictionary of Modern Serbo-Croatian Language, compiled by Miloš Moskovljević. The Belgrade District Court ordered the entire edition of Dictionary of Modern Serbo-Croatian Language destroyed over three or four words described as disturbing to the Central Committee of Serbia. UDBA searched across Serbia for copies of Dictionary of Modern Serbo-Croatian Language sent to subscribers.",
+ "sources": [
+  {
+   "url": "https://vreme.com/mozaik/vrhunac-i-pad/",
+   "quote": "God. 1966. Nolit je doživeo svoj prvi (i jedini) posleratni slučaj sudske zabrane jednog svog izdanja. Predmet zabrane bio je Rečnik srpskohrvatskog književnog jezika s jezičkim savetnikom, koji je sastavio poznati lingvista Miloš Moskovljević",
+   "title": "Vrhunac i pad - Vreme"
+  },
+  {
+   "url": "https://lexikos.journals.ac.za/pub/article/download/1838/1057",
+   "quote": "After the publication of the text by Mirko Tepavac, the then editor of the daily newspaper Politika, the Belgrade District Court decided to destroy the entire edition of the Dictionary because of only three or four words \"that were disturbing for the Central Committee of Serbia\" (ibid.).",
+   "title": null
+  },
+  {
+   "url": "https://www.danas.rs/kultura/intervju-veljko-zizic-recnik-najbolja-nova-srpska-rec/",
+   "quote": "Objavljen u velikom tiražu 1966. godine, zabranjen je prekom sudskom odlukom bez sudskog postupka nakon napada glavnog urednika Politike, Mirka Tepavca. Celo izdanje je uništeno dok je UDBA širom Srbije tražila primerke poslate pretplatnicima.",
+   "title": "INTERVJU Veljko Žižić, urednik takmičenja \"Najbolja nova srpska reč\": Mi smo društvo u dugotrajnom nemiru i previranju, bez čvrstih oslonaca - Kultura - Dnevni list Danas"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Yugoslavia",
+   "year": 1966,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Yugoslavia by court order in 1966, at request of Mirko Tepavac, because \"some definitions can cause disturbance among citizens\"."
+  }
+ ],
+ "institution_rows": 0
+}

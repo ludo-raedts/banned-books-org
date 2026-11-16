@@ -1,0 +1,40 @@
+{
+ "slug": "a-fundamental-fear",
+ "title": "A Fundamental Fear: Eurocentrism and the Emergence of Islamism",
+ "author": "Bobby S. Sayyid",
+ "first_published_year": 1997,
+ "current_text": "The Malaysian government banned A Fundamental Fear: Eurocentrism and the Emergence of Islamism in 2006; its author, Bobby S. Sayyid, said the ban was based on British colonial legislation allowing the proscription of publications deemed prejudicial to public morality.",
+ "sources": [
+  {
+   "url": "https://www.islam.gov.my/images/garis-panduan/Senarai_Judul_Buku_Berunsur_Islam_Yang_Diwartakan_Perintah_Larangan_Hingga_2013.pdf",
+   "quote": "14.\nA FUNDAMENTAL FEAR EUROCENTRISM AND THE\nEMERGENCE OF ISLAMISM (2003)\nPengarang: Bobby S. Sayyid\nPenerbit/ Pencetak: Zed Books Ltd. London & New York\nTarikh Pengharaman: 08.06.2006\nRuj.: P.U.(A) 214",
+   "title": null
+  },
+  {
+   "url": "https://essl.leeds.ac.uk/staff/48/professor-s-sayyid",
+   "quote": "My previous monograph A Fundamental Fear has had a rather curious reception. It has helped to transform the way in which Islamism is analyzed; it has been translated into several languages, and it is in its third edition, but since 2006, it has been banned by the Malaysian government. The ban is based on British colonial legislation, which allows for the proscription of publications deemed to be, among other things, prejudicial to public morality",
+   "title": "Professor S. Sayyid | School of Sociology and Social Policy | University of Leeds"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2006,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2006-06-08 (P.U. (A) 214). Publisher: ZED BOOKS LTD. Printer: BIDDLES LTD.GUILDFORD AND KING'S LYNN. Language: INGGERIS."
+  },
+  {
+   "country": "Malaysia",
+   "year": 2007,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the Malaysian Home Ministry under the Printing Presses and Publications Act 1984. One of 18 books on Islam and interfaith topics banned simultaneously in 2007."
+  }
+ ],
+ "institution_rows": 0
+}

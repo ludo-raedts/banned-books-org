@@ -1,0 +1,26 @@
+{
+ "slug": "dei-delitti-e-delle-pene",
+ "title": "Dei Delitti e delle pene",
+ "author": "Cesare Beccaria",
+ "first_published_year": 1764,
+ "current_text": "In 1766, Dei Delitti e delle pene was added to the Index Librorum Prohibitorum.",
+ "sources": [
+  {
+   "url": "https://tarlton.law.utexas.edu/Index-Librorum-Prohibitorum-Censorship-Law-Books/Dei-Delitti-Delle-Pene",
+   "quote": "Beccaria at first published his work anonymously, only adding his name once it was accepted by government censors, but two years after publication in 1766 De delitti e delle pene was added to the Index Librorum Prohibitorum.",
+   "title": "Dei Delitti e Delle Pene - The Index Librorum Prohibitorum and the Censorship of Law Books - Tarlton Law Library at Tarlton Law Library"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1766,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

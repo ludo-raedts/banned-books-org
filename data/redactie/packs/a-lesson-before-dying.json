@@ -1,0 +1,36 @@
+{
+ "slug": "a-lesson-before-dying",
+ "title": "A Lesson Before Dying",
+ "author": "Ernest J. Gaines",
+ "first_published_year": 1993,
+ "current_text": "A Lesson Before Dying was banned in Savannah (GA) in 2001 after protests about its sexual content, violence, and profanity, and was later reinstated. In July 2008, two parents challenged A Lesson Before Dying in the Huntsville City Schools in Huntsville, Alabama, objecting to sexual references and profanity and asking that it be removed from the ninth grade required summer reading lists.",
+ "sources": [
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/a-lesson-before-dying/",
+   "quote": "2001\nBanned (later reinstated) in Savannah (GA) after protests about the book’s sexual content, violence, and profanity.",
+   "title": "Banned Books 2018 – A Lesson Before Dying – Marshall University Libraries"
+  },
+  {
+   "url": "https://ncac.org/update/book-challenges-report-december-2006-december-2008",
+   "quote": "A Lesson Before Dying was challenged in the Huntsville City Schools by two parents who objected to sexual references and profanity in the book. The parents asked that it be removed from the ninth grade required summer reading lists.",
+   "title": "Book Challenges Report: December 2006 - December 2008 - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/update/book-challenges-report-december-2006-december-2008",
+   "quote": "A Lesson Before Dying by Ernest Gaines (Random House)\nChallenged in Huntsville, Alabama, July 2008\nA Lesson Before Dying was challenged in the Huntsville City Schools by two parents who objected to sexual references and profanity in the book.",
+   "title": "Book Challenges Report: December 2006 - December 2008 - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 2
+}

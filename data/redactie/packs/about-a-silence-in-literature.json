@@ -1,0 +1,26 @@
+{
+ "slug": "about-a-silence-in-literature",
+ "title": "About a Silence in Literature",
+ "author": "Živorad Stojković",
+ "first_published_year": null,
+ "current_text": "About a Silence in Literature was banned in Yugoslavia by court order in 1951.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "About a Silence in Literature |\nŽivorad Stojković |\n|\nEssay |\nBanned in Yugoslavia by court order in 1951.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Yugoslavia",
+   "year": 1951,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

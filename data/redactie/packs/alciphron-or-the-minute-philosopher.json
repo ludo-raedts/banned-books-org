@@ -1,0 +1,31 @@
+{
+ "slug": "alciphron-or-the-minute-philosopher",
+ "title": "Alciphron, or The Minute Philosopher",
+ "author": "George Berkeley",
+ "first_published_year": 1732,
+ "current_text": "Alciphron, or The Minute Philosopher was placed on the Index librorum prohibitorum by decree on 20 November 1742; it was still included in the final 1948 edition, probably because of what the Newcastle University Special Collections blog described as Berkeley’s anti-Catholic views.",
+ "sources": [
+  {
+   "url": "https://repositorio.uca.edu.ar/bitstream/123456789/5396/1/aadc2.pdf",
+   "quote": "G. BERKELEY, Alciphron. El libro fue publicado en 1732 y colocado en el Index librorurn prohibitorurn por decreto del 20 de noviembre de 1742.",
+   "title": null
+  },
+  {
+   "url": "https://blogs.ncl.ac.uk/speccoll/author/nspeccoll/page/15/",
+   "quote": "Alciphron is a dialogue by Irish philosopher George Berkeley. This defence of Christianity found its way into the Index in 1742 and was still included in the final 1948 edition, probably due to Berkeley’s anti-Catholic views.",
+   "title": "nspeccoll | Special Collections | Page 15"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1742,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

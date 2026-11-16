@@ -1,0 +1,31 @@
+{
+ "slug": "ahasver-stefan-heym",
+ "title": "Ahasver",
+ "author": "Stefan Heym",
+ "first_published_year": 1981,
+ "current_text": "A publication ban prevented Ahasver from being printed in the GDR until the DDR-Verlag Der Morgen published it in 1988.",
+ "sources": [
+  {
+   "url": "https://tcdh.uni-trier.de/en/projekt/stefan-heym-edition",
+   "quote": "Due to a publication ban, the text was only printed in the GDR a year before the fall of the Wall at the publishing house “Der Morgen” and a year after the fall as a licensed edition by the publishing house “Volk und Welt”.",
+   "title": "Stefan-Heym-Edition | KOMPETENZZENTRUM - TRIER CENTER FOR DIGITAL HUMANITIES"
+  },
+  {
+   "url": "https://www.stadtbibliothek-chemnitz.de/heym/pmwiki.php?n=Stefan-Heym-Sammlung.VomKritikerZumDissidenten19641988",
+   "quote": "1988 Wenige Monate nach seinem 75. Geburtstag erscheinen Stefan Heyms Memoiren �Nachruf� im Bertelsmannverlag. Sie begr�nden Heyms Ruf als Jahrhundertzeuge und verst�rken seine Wahrnahme als kritischer sozialistischer Autor. Der DDR-Verlag Der Morgen bringt den Roman �Ahasver� heraus.",
+   "title": "Stefan-Heym-Sammlung Chemnitz"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "East Germany (DDR)",
+   "year": 1981,
+   "end": 1988,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Druckgenehmigung refused in 1981; the West German edition appeared the same year. The Hauptverwaltung Verlage und Buchhandel flagged \"Problemstellen\" relating to DDR foreign-policy allusions (Iran, Beirut) and to the regime's treatment of dissenters. The East German edition was finally cleared in 1987 and published in 1988 after Honecker personally overruled the censors — a delay of seven years."
+  }
+ ],
+ "institution_rows": 0
+}

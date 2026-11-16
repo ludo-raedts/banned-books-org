@@ -1,0 +1,26 @@
+{
+ "slug": "on-fierce-wound-fierce-herb",
+ "title": "On Fierce Wound Fierce Herb",
+ "author": "Ratko Zakić",
+ "first_published_year": null,
+ "current_text": "On Fierce Wound Fierce Herb was withdrawn from sales and destroyed after a 1967 decision by the Municipal Committee of the League of Communists of Kraljevo in Kraljevo, Yugoslavia.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "On Fierce Wound – Fierce Herb |\nRatko Zakić |\n|\n|\nWithdrawn from sales and destroyed after the decision of the Municipal Committee of the League of Communists of Kraljevo in Kraljevo, Yugoslavia in 1967.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Yugoslavia",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Withdrawn from sales and destroyed after the decision of the Municipal Committee of the League of Communists of Kraljevo in Kraljevo, Yugoslavia in 1967."
+  }
+ ],
+ "institution_rows": 0
+}

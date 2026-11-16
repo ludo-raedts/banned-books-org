@@ -1,0 +1,26 @@
+{
+ "slug": "every-heart-a-doorway",
+ "title": "Every Heart a Doorway",
+ "author": "Seanan McGuire",
+ "first_published_year": 2016,
+ "current_text": "In 2023, Clay County District Schools, Florida, banned Every Heart a Doorway. In 2023, Duval County Public Schools removed Every Heart a Doorway from school libraries, pending review for upcoming school years.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Every_Heart_a_Doorway",
+   "quote": "In 2023, Every Heart a Doorway was banned in Clay County District Schools, Florida and removed from school libraries in Duval County Public Schools, with pending review for upcoming school years.",
+   "title": "Every Heart a Doorway - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-08-04. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 5
+}

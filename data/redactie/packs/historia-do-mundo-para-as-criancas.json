@@ -1,0 +1,26 @@
+{
+ "slug": "historia-do-mundo-para-as-criancas",
+ "title": "História do Mundo para as Crianças",
+ "author": "Monteiro Lobato",
+ "first_published_year": 1933,
+ "current_text": "The Portuguese government banned História do Mundo para as Crianças in 1933 without a clear reason; its author, Monteiro Lobato, suggested two possible reasons related to its account of the discovery of Brazil and Vasco da Gama.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "História do Mundo para as Crianças [pt] |\nMonteiro Lobato |\n1933 |\nNovel |\nThe book was banned by the Portuguese government without any clear reason. According to the author, one possible reason was because he was from the \"current of thought what claims that the discovery of Brazil happened 'by random ' \" or by the fact he \"have registered the history of the 1600 years cut to the Arabian navy by Vasco da Gama\".",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Portugal",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The book was banned by the Portuguese government without any clear reason. According to the author, one possible reason was because he was from the \"current of thought what claims that the discovery of Brazil happened 'by random or by the fact he \"have registered the history of the 1600 years cut to the Arabian navy by Vasco da Gama\"."
+  }
+ ],
+ "institution_rows": 0
+}

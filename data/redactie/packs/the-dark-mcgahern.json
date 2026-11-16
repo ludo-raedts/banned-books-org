@@ -1,0 +1,41 @@
+{
+ "slug": "the-dark-mcgahern",
+ "title": "The Dark",
+ "author": "John McGahern",
+ "first_published_year": 1965,
+ "current_text": "On May 5, 1965, Customs seized 260 advance copies of The Dark in Dublin before its official publication. The Dark was banned in Ireland for obscenity during John McGahern’s leave from his Clontarf school, which began in autumn 1964; the ban lapsed in 1972.",
+ "sources": [
+  {
+   "url": "https://www.jstor.org/stable/jj.20307732",
+   "quote": "The Irish government did not want you to read this book. So much so that on May 5, 1965, 260 advance copies of the novel were seized by Customs in Dublin, before its official publication date.",
+   "title": "The Dark: A Critical Edition | JSTOR"
+  },
+  {
+   "url": "https://www.jstor.org/stable/jj.20307732",
+   "quote": "While the text was initially banned in Ireland for obscenity, this edition demonstrates that McGahern’s novel of adolescence is not obscene, but revelatory, exposing the corruption underlying authority structures in mid-century Ireland—from the family to the church, to the government’s willingness to ignore national and communal trauma.",
+   "title": "The Dark: A Critical Edition | JSTOR"
+  },
+  {
+   "url": "https://www.irishtimes.com/news/education/when-a-teacher-was-engulfed-by-the-dark-and-his-union-failed-1.1093339",
+   "quote": "John McGahern had taught for seven years at his Clontarf school when he was granted a year's leave of absence from autumn 1964, to avail of a Macauley Fellowship that had followed publication of his first novel, The Barracks. During McGahern's period of leave his second novel, The Dark, was banned.",
+   "title": "When a teacher was engulfed by 'The Dark', and his union failed – The Irish Times"
+  },
+  {
+   "url": "https://www.theguardian.com/books/2002/jan/05/fiction.books",
+   "quote": "McGahern had published his first novel, The Barracks, in 1963, two years before The Dark. But in the wake of the banning he didn't publish again until his 1970 collection of stories, Nightlines. The ban on The Dark lapsed in 1972 and since then he has produced four more novels, including the 1990 Booker-shortlisted Amongst Women and, this month, That They May Face The Rising Sun.",
+   "title": "Ireland's rural elegist | Fiction | The Guardian"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1965,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

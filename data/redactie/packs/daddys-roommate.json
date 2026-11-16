@@ -1,0 +1,26 @@
+{
+ "slug": "daddys-roommate",
+ "title": "Daddy's Roommate",
+ "author": "Michael Willhoite",
+ "first_published_year": 1990,
+ "current_text": "In Queens, N.Y., a school board voted unanimously to reject the first-grade curriculum “Children of the Rainbow” because its bibliography listed Daddy’s Roommate and two other titles.",
+ "sources": [
+  {
+   "url": "https://www.ala.org/sites/default/files/rt/content/newsletter/newsletters/1992fall.pdf",
+   "quote": "Queens, N.Y.: Only in the culturally diverse city of New York did authorities back down, and it was a school board, not a library, that did so. The school board voted unanimously to reject a first-grade curriculum entitled \"Children of the Rainbow,\" because its bibliography listed three Alyson Wonderland titles: Daddy's Roommate, Heather Has Two Mommies, and Gloria Goes to Gay Pride.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "LGBT themes"
+  }
+ ],
+ "institution_rows": 2
+}

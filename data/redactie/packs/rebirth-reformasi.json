@@ -1,0 +1,36 @@
+{
+ "slug": "rebirth-reformasi",
+ "title": "Rebirth: Reformasi, Resistance and Hope in New Malaysia",
+ "author": "Kean Wong",
+ "first_published_year": 2020,
+ "current_text": "The Malaysian government banned Rebirth: Reformasi, Resistance and Hope in New Malaysia on 1 July 2020 under the Printing Presses and Publications (Control of Undesirable Publications) Order 2020; its cover was alleged to resemble the national coat of arms. At the time of the ban, Rebirth: Reformasi, Resistance and Hope in New Malaysia was also investigated over whether its cover had allegedly insulted the Malaysian federal coat of arms.",
+ "sources": [
+  {
+   "url": "https://www.ifj.org/media-centre/news/detail/category/press-releases/article/malaysia-police-bring-a-new-case-against-reporter-tashny-sukumaran",
+   "quote": "Home Minister Datuk Seri Hamzah Zainuddin issued an order of banning the book on July 1 under the Printing Presses and Publications (Control of Undesirable Publications) Order 2020. The sudden banning, the first book banning under the Order, relates to the book’s cover that is alleged to resemble the national coat of arms.",
+   "title": "Malaysia: Police bring a new case against reporter Tashny Sukumaran - IFJ"
+  },
+  {
+   "url": "https://www.newmandala.org/new-mandala-expresses-serious-concern-for-academic-freedom-in-malaysia/",
+   "quote": "The Malaysian government officially banned the book on 1 July 2020. Malaysia’s Lawyers for Liberty described this situation on July 1 as a “manufactured controversy” and stated that “No offence was committed by creators or book publishers of ‘Jata Negara art-work”.",
+   "title": "New Mandala expresses serious concern for academic freedom in Malaysia - New Mandala"
+  },
+  {
+   "url": "https://www.malaymail.com/news/malaysia/2023/10/17/bukit-aman-confirms-editor-of-banned-book-released-after-remand-ended-probe-still-ongoing/96811",
+   "quote": "The book, titled Rebirth: Reformasi, Resistance, And Hope in New Malaysia, was banned on July 1, 2020, under the Printing Presses and Publications (Control of Undesirable Publications) Order 2020. At the time, the book was also the subject of an investigation into whether its cover had allegedly insulted the Malaysian federal coat of arms.",
+   "title": "Bukit Aman confirms editor of banned book released after remand ended, probe still ongoing | Malay Mail"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2020,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the Malaysian Home Ministry in July 2020 for a cover design that modified the national coat of arms, deemed an insult to the national symbol."
+  }
+ ],
+ "institution_rows": 0
+}

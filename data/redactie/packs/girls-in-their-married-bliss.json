@@ -1,0 +1,31 @@
+{
+ "slug": "girls-in-their-married-bliss",
+ "title": "Girls in Their Married Bliss",
+ "author": "Edna O'Brien",
+ "first_published_year": 1964,
+ "current_text": "Girls in Their Married Bliss was banned in the Republic of Ireland on publication in 1964. Girls in Their Married Bliss was also denounced and burnt in the mid-1960s for its frank descriptions of sex and sin.",
+ "sources": [
+  {
+   "url": "https://research.manchester.ac.uk/files/110302998/FULL_TEXT.PDF",
+   "quote": "O’Brien’s first three novels The Country Girls (1960), Girl with Green Eyes (1962) and Girls in their Married Bliss (1964) – which came to form her Country Girls trilogy – were all banned in the Republic of Ireland on publication.",
+   "title": null
+  },
+  {
+   "url": "https://www.irishcentral.com/culture/edna-obrien-dublin-book",
+   "quote": "Later additions to the trilogy, \"The Lonely Girl\" and \"Girls in Their Married Bliss,\" would also cause an uproar in the mid-1960s as they were denounced, censored, and burnt for their frank descriptions of sex and sin.",
+   "title": "Edna O'Brien's \"The Country Girls\" trilogy, Dublin One Book | IrishCentral.com"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1964,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

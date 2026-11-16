@@ -1,0 +1,26 @@
+{
+ "slug": "suicide-mode-demploi",
+ "title": "Suicide, mode d'emploi",
+ "author": "Claude Guillon, Yves Le Bonniec",
+ "first_published_year": 1982,
+ "current_text": "An investigation in Paris into the distribution of Suicide, mode d'emploi ended on 9 March 1994 when an investigating magistrate dismissed the case, ruling that the non-retroactivity of the 31 December 1987 law against incitement to suicide prevented prosecution of a book first published before the law took effect.",
+ "sources": [
+  {
+   "url": "https://www.assemblee-nationale.fr/dyn/10/questions/QANR5L10QE10136",
+   "quote": "L'instruction preparatoire suivie a Paris a raison de la diffusion de l'ouvrage intitule Suicide, mode d'emploi a ete close le 9 mars 1994 par une ordonnance de non-lieu rendue par le magistrat instructeur, precisant notamment que la regle de non-retroactivite de la loi penale ne permettait pas de poursuivre, sous l'empire de la loi no 87-1133 du 31 decembre 1987, un ouvrage edite pour la premiere fois avant l'entree en vigueur de cette loi.",
+   "title": "Question n°10136 : Suicide - Assemblée nationale"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "France",
+   "year": 1982,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The book's existence led to Law n° 87-1133 of 31 December 1987 ('loi Mazeaud'), which criminalised provocation to suicide. Subsequent court rulings confirmed that commercial distribution of the work constitutes a criminal offence under French law."
+  }
+ ],
+ "institution_rows": 0
+}

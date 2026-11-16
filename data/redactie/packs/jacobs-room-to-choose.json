@@ -1,0 +1,26 @@
+{
+ "slug": "jacobs-room-to-choose",
+ "title": "Jacob's Room To Choose",
+ "author": "Sarah Hoffman, Ian Hoffman",
+ "first_published_year": 2019,
+ "current_text": "Malaysia’s Home Ministry banned Jacob's Room To Choose under a prohibition order dated January 20, 2023, saying the three publications covered by the order were harmful to Malaysian morals and that two contained LGBT elements.",
+ "sources": [
+  {
+   "url": "https://www.thestar.com.my/news/nation/2023/02/14/home-ministry-bans-three-publications-for-immorality-lgbt",
+   "quote": "KUALA LUMPUR: The Home Ministry has banned three publications entitled The Tale of Steven, Jacob's Room To Choose and Aku, deemed to be harmful to Malaysian morals with two books containing elements of LGBT. The ministry said in a statement that the prohibition order was issued in accordance with provisions under Section 7(1) of the Printing Presses and Publications Act 1984 (Amended 2012) through Government Gazette P.U.(A) 24, 25 and 26 dated Jan 20, 2023.",
+   "title": "Home Ministry bans three publications for immorality, LGBT | The Star"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2023,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the Malaysian Home Ministry in 2023 as one of the first three books banned by the Unity Government. Grounds: content promoting LGBTQ+ identity."
+  }
+ ],
+ "institution_rows": 4
+}

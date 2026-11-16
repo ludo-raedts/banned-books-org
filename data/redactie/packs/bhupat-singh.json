@@ -1,0 +1,31 @@
+{
+ "slug": "bhupat-singh",
+ "title": "Bhupat Singh",
+ "author": "Kaluwank Ravatwank",
+ "first_published_year": null,
+ "current_text": "In 1954, Bhupat Singh was banned nationwide in India; it could not be imported into India.",
+ "sources": [
+  {
+   "url": "https://sflc.in/read-me-not-list-banned-books-india/",
+   "quote": "| Bhupat Singh\n| Kaluwank Ravatwank\n| 1954\n| Nationwide\n| Not much info. is available",
+   "title": "Read me not: List of banned books in India"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_India",
+   "quote": "1954 |\nBhupat Singh |\nKaluwank Ravatwank |\nThis book, originally in Gujarati, cannot be imported into India.",
+   "title": "List of books banned in India - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1954,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

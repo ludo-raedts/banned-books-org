@@ -1,0 +1,31 @@
+{
+ "slug": "tom-jones",
+ "title": "Tom Jones",
+ "author": "Henry Fielding",
+ "first_published_year": 1749,
+ "current_text": "The Council of State issued an order suppressing the French translation of Tom Jones in France; The Monthly Review reported in March 1750 that newspapers described the suppression as being on grounds of immorality.",
+ "sources": [
+  {
+   "url": "https://classiques-garnier.com/index.php/histoire-de-tom-jones-ou-l-enfant-trouve-bibliographie-selective.html?displaymode=full",
+   "quote": "D ’ après Richardson: Tom Jones is a dissolute book. Its run is over even with us. It is true that France had virtue enough to refuse to licence such a profligate performance.\nLe journal Old England (16 mars 1750) renchérit:\nAn arrêt of the Council of State is issued for suppressing a certain immoral work, entitled The History of Tom Jones, translated from the English.",
+   "title": "Histoire de Tom Jones, ou l’Enfant trouvé - Bibliographie sélective"
+  },
+  {
+   "url": "https://classiques-garnier.com/index.php/histoire-de-tom-jones-ou-l-enfant-trouve-bibliographie-selective.html?displaymode=full",
+   "quote": "Les ennemis de Fielding en Angleterre ne manquent pas de profiter de la suppression du roman en France pour répandre le bruit que c ’ est pour cause d ’ immoralité que Conseil d ’ État condamne la traduction française de L ’ Enfant trouvé: (The Monthly Review, mars 1750)\nThe newspapers inform us that the celebrated Tom Jones has been suppressed in France as an immoral work.",
+   "title": "Histoire de Tom Jones, ou l’Enfant trouvé - Bibliographie sélective"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1749,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

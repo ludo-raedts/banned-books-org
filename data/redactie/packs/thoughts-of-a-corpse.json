@@ -1,0 +1,26 @@
+{
+ "slug": "thoughts-of-a-corpse",
+ "title": "Thoughts of a Corpse",
+ "author": "Prvoslav Vujčić",
+ "first_published_year": null,
+ "current_text": "Thoughts of a Corpse was banned in Yugoslavia by court order in 1983; it was republished in 2004.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "Thoughts of a Corpse |\nPrvoslav Vujčić |\n|\nPoems |\nBanned in Yugoslavia by court order in 1983; republished in 2004.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Yugoslavia",
+   "year": 1983,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Yugoslavia by court order in 1983; republished in 2004."
+  }
+ ],
+ "institution_rows": 0
+}

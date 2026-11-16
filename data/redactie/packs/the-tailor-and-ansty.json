@@ -1,0 +1,36 @@
+{
+ "slug": "the-tailor-and-ansty",
+ "title": "The Tailor and Ansty",
+ "author": "Eric Cross",
+ "first_published_year": 1942,
+ "current_text": "The Irish censor banned The Tailor and Ansty soon after its publication in 1942 for its alleged earthy content; a Seanad debate opposing the ban ran for four days. Three priests forced Timothy Buckley to burn his copy of The Tailor and Ansty. In 1963, the Censorship Appeals Board reviewed The Tailor and Ansty and decided it was not obscene; a new edition followed.",
+ "sources": [
+  {
+   "url": "https://www.rte.ie/archives/2021/1124/1262857-the-tailor-and-ansty/",
+   "quote": "The couple were immortalised in the book 'The Tailor And Ansty' by Eric Cross. Banned by the Irish censor soon after its publication in 1942 due to its alleged earthy content, 'The Tailor And Ansty' made headlines in Ireland when a Seanad debate opposing the prohibition ran for four days.",
+   "title": "RTé Archives | Arts and Culture | The Tailor And Ansty"
+  },
+  {
+   "url": "https://theriverside.ucc.ie/banned-books-from-the-river-side-the-tailor-and-ansty/",
+   "quote": "The sections of the text quoted in the Senate were struck from the official record. Three priests forced Timothy Buckley to burn his own copy of the book. Timothy remained positive about the censorship but Ansty was quite distressed.",
+   "title": "Banned Books from The River-side: The Tailor and Ansty - The River-side"
+  },
+  {
+   "url": "https://theriverside.ucc.ie/banned-books-from-the-river-side-the-tailor-and-ansty/",
+   "quote": "In 1963 the Censorship Appeals Board reviewed The Tailor & Ansty and decided that it was not obscene. Following this a new edition was published with a dust-jacket designed by Lacey Everett.",
+   "title": "Banned Books from The River-side: The Tailor and Ansty - The River-side"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

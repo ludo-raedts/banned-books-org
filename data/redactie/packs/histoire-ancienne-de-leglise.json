@@ -1,0 +1,31 @@
+{
+ "slug": "histoire-ancienne-de-leglise",
+ "title": "Histoire ancienne de l'Eglise",
+ "author": "Louis Duchesne",
+ "first_published_year": null,
+ "current_text": "Pope Pius X placed Histoire ancienne de l'Eglise on the Index in January 1912 because he considered it too modernist; Louis Duchesne accepted the decision and remained a priest in good standing.",
+ "sources": [
+  {
+   "url": "https://fr.wikipedia.org/wiki/Louis_Duchesne",
+   "quote": "Mais ses travaux inquiètent la hiérarchie catholique à tel point que le pape Pie X, principal adversaire du modernisme qu'il condamne en 1907 dans l'encyclique Pascendi, juge son Histoire ancienne de l'Église trop moderniste et la met à l' Index en janvier 1912.",
+   "title": "Louis Duchesne — Wikipédia"
+  },
+  {
+   "url": "https://www.biblicaltraining.org/library/louis-marie-olivier-duchesne",
+   "quote": "In 1912 his Histoire ancienne de l'Église was placed on the Index of Forbidden Books. Duchesne submitted to the decision and remained a priest in good standing, but he published little further history during his lifetime.",
+   "title": "Louis Marie Olivier Duchesne | BiblicalTraining Library"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1912,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

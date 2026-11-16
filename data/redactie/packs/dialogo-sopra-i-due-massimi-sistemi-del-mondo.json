@@ -1,0 +1,31 @@
+{
+ "slug": "dialogo-sopra-i-due-massimi-sistemi-del-mondo",
+ "title": "Dialogo sopra i due massimi sistemi del mondo",
+ "author": "Galileo Galilei",
+ "first_published_year": 1632,
+ "current_text": "In 1633, the Inquisition officially suppressed Dialogo sopra i due massimi sistemi del mondo. The Pope also banned Dialogo sopra i due massimi sistemi del mondo. In 1633, Galileo was convicted of grave suspicion of heresy, and Dialogo sopra i due massimi sistemi del mondo was placed on the Index of Forbidden Books, from which it was not removed until 1835.",
+ "sources": [
+  {
+   "url": "https://lib.utah.edu/collections/rarebooks/exhibits/past/SHHHHHH.php",
+   "quote": "Dialogo was placed on the Index of Prohibited Books where it remained until 1835. Publication took place between June 1631 and February 1632. The first printing numbered one thousand copies. This printing sold out before the end of September when it was banned by the Pope and officially suppressed by the Inquisition in 1633.",
+   "title": "SHHHHHH! Digital Exhibition | Marriott Library"
+  },
+  {
+   "url": "https://www.loc.gov/item/12018406/",
+   "quote": "The ruse was unsuccessful, and in 1633 Galileo was convicted of grave suspicion of heresy. Galileo was imprisoned, and the Dialogo was placed on the Index of Forbidden Books, from which it was not removed until 1835.",
+   "title": "Dialogo di Galileo Galilei Linceo, matematico sopraordinario dello studio di Pisa. E filosofo e matematico primario del serenissimo gr. duca di Toscana, doue ne i congressi di quattro giornate si disc"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1633,
+   "end": 1835,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 7,
+   "note": "Condemned by the Roman Inquisition in 1633; Galileo tried, forced to recant, and placed under house arrest. On the Index until 1835. One of the most iconic cases of conflict between science and religious authority."
+  }
+ ],
+ "institution_rows": 0
+}

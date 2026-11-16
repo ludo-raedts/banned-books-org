@@ -1,0 +1,45 @@
+{
+ "slug": "kaffir-boy",
+ "title": "Kaffir Boy",
+ "author": "Mark Mathabane",
+ "first_published_year": 1986,
+ "current_text": "Burlingame schools Superintendent Sonny da Marto stopped a teacher from using Kaffir Boy in her English classes, saying its paragraphs depicting child prostitution were inappropriate for 13- and 14-year-olds; he said he would allow an abridged version to be taught. In November 2008, some parents challenged Kaffir Boy for use in ninth grade English classes at Lincoln High School in Thief River Falls, MN, objecting to sexual violence and graphic language.",
+ "sources": [
+  {
+   "url": "https://mg.co.za/news/south-africa/2007-04-12-award-winning-sa-memoir-banned-from-us-school/",
+   "quote": "Burlingame schools Superintendent Sonny da Marto ordered a teacher to stop using Kaffir Boy in her English classes even though a literature review committee composed of parents, teachers, a librarian, a student and a school board member had approved the book, the San Francisco Chronicle reported.",
+   "title": "Award-winning SA memoir banned from US school | Mail & Guardian"
+  },
+  {
+   "url": "https://mg.co.za/news/south-africa/2007-04-12-award-winning-sa-memoir-banned-from-us-school/",
+   "quote": "Da Marto told the Burlingame school board he would allow an abridged version of Kaffir Boy to be taught, but that the paragraphs depicting child prostitution were inappropriate for 13- and 14-year-olds.",
+   "title": "Award-winning SA memoir banned from US school | Mail & Guardian"
+  },
+  {
+   "url": "https://ncac.org/update/book-challenges-report-december-2006-december-2008",
+   "quote": "Kaffir Boy was challenged for use in ninth grade English classes at Lincoln High School in Thief River Falls, MN, in November 2008. Some parents objected to sexual violence and graphic language in the book.",
+   "title": "Book Challenges Report: December 2006 - December 2008 - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "South Africa",
+   "year": 1986,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned under apartheid for its depiction of life under the system and use of language."
+  },
+  {
+   "country": "United States",
+   "year": 1995,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 7
+}

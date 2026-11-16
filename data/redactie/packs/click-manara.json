@@ -1,0 +1,26 @@
+{
+ "slug": "click-manara",
+ "title": "Click",
+ "author": "Milo Manara",
+ "first_published_year": 1983,
+ "current_text": "The Indecent Publications Tribunal banned Click in New Zealand in 1991.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "quote": "|\n|\nClick |\nMilo Manara |\n|\nIndecent Publications Tribunal |\n1991 |\nBanned |\n|",
+   "title": "List of books banned in New Zealand - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "New Zealand",
+   "year": 1991,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by the Indecent Publications Tribunal; the decision was registered on 1991-04-30 (IPT 91-6). The Classification Office's list of books banned by the Tribunal, released in November 2020, records no later classification: the ban is in force."
+  }
+ ],
+ "institution_rows": 0
+}

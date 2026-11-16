@@ -1,0 +1,26 @@
+{
+ "slug": "levolution-creatrice",
+ "title": "L'évolution créatrice",
+ "author": "Henri Bergson",
+ "first_published_year": 1907,
+ "current_text": "In 1914, L'évolution créatrice was placed on the Roman Catholic Church’s Index of prohibited books.",
+ "sources": [
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10494488/",
+   "quote": "In 1914, Creative Evolution (1907) was placed on the Roman Catholic Church’s Index of prohibited books, alongside Bergson’s earlier works, Time and Free Will (1889) and Matter and Memory (1896).",
+   "title": "Bergson, Pan(en)theism, and ‘Being-in-Life’ - PMC"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1914,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

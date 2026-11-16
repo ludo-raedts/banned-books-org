@@ -1,0 +1,41 @@
+{
+ "slug": "feliz-ano-novo",
+ "title": "Feliz Ano Novo",
+ "author": "Rubem Fonseca",
+ "first_published_year": 1975,
+ "current_text": "Feliz Ano Novo was censored in Brazil under the military regime; a letter to the minister of Justice said it contained material offensive to morality and good customs. After Rubem Fonseca won a court case in 1989, Feliz Ano Novo was republished that year.",
+ "sources": [
+  {
+   "url": "https://www.trf3.jus.br/documentos/dage-memoria/LIVRO_COMPLETO_35_ANOS_TRFS.pdf",
+   "quote": "Instalação do Tribunal Regional Federal da 2ª Região (TRF2), no Rio de Janeiro, em concorrida solenidade. Com quase todo o prédio em obras, somente a sala do Plenário, no 3º andar, estava pronta. Mesmo assim, já no final do seu primeiro ano de funcionamento, contava com mais de 12 mil processos em seu acervo, incluindo ações emblemáticas, como o pedido de indenização ao escritor Rubem Fonseca, por censura ao livro “Feliz Ano Novo”, no regime militar.",
+   "title": null
+  },
+  {
+   "url": "https://piaui.uol.com.br/revista/166/feliz-ano-velho-rubem-fonseca/",
+   "quote": "Em 6 de dezembro, escreveu o ofício nº 850/76 ao ministro da Justiça: “Submeto à elevada consideração de Vossa Excelência um exemplar do livro intitulado Feliz Ano Novo, que, por conter matéria ofensiva à moral e aos bons costumes, conforme ressalta o parecer anexo, está sujeito à medida prevista no artigo 3º do decreto-lei nº 1077, de 1970.”",
+   "title": "Feliz ano velho - revista piauí"
+  },
+  {
+   "url": "https://piaui.uol.com.br/revista/166/feliz-ano-velho-rubem-fonseca/",
+   "quote": "O livro de Rubem Fonseca permaneceria censurado até 1985. Enquanto a obra era publicada na França e na Espanha, os leitores no Brasil sem acesso ao livro tornaram-se reféns de amigos que possuíam exemplares comprados antes da censura.",
+   "title": "Feliz ano velho - revista piauí"
+  },
+  {
+   "url": "https://piaui.uol.com.br/revista/166/feliz-ano-velho-rubem-fonseca/",
+   "quote": "Quando a ditadura acabou em 1985, o escritor teve que esperar ainda quatro anos de batalha judicial para ver Feliz Ano Novo outra vez nas livrarias. Depois da vitória do autor na Justiça em 1989, a obra foi republicada no mesmo ano.",
+   "title": "Feliz ano velho - revista piauí"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Brazil",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

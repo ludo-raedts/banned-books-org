@@ -1,0 +1,26 @@
+{
+ "slug": "anatole-france-all-works",
+ "title": "Anatole France — All works",
+ "author": "Anatole France",
+ "first_published_year": null,
+ "current_text": "On 31 May 1922, the Catholic Church put Anatole France — All works on its Index Librorum Prohibitorum; the Index was abolished in 1966.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Anatole_France",
+   "quote": "On 31 May 1922, France's entire works were put on the Index Librorum Prohibitorum (\"List of Prohibited Books\") of the Catholic Church. He regarded this as a \"distinction\". This Index was abolished in 1966.",
+   "title": "Anatole France - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1922,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

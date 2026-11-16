@@ -1,0 +1,31 @@
+{
+ "slug": "the-elephant",
+ "title": "The Elephant",
+ "author": "Sasha Filipenko",
+ "first_published_year": null,
+ "current_text": "On September 30, 2025, the Ministry of Information added The Elephant by Sasha Filipenko to a list of publications deemed to pose a threat to the national interests of the Republic of Belarus.",
+ "sources": [
+  {
+   "url": "https://bannedbooks.penbelarus.org/en/32-new-books-added-to-the-official-list-of-those-harmful-to-national-interests/",
+   "quote": "On September 30, 2025, 32 new books were added to the list of printed publications that, according to the authorities, “may harm the national interests of the Republic of Belarus,” including two books by PEN Belarus member Sasha Filipenko:\nDay of the Dead. A Book with Fascinating Tasks – comp. S.A. Stankevich\nThe Elephant – Sasha Filipenko",
+   "title": "30.09.25. 32 new books added to the official list of those “harmful to national interests” – Belarus. Banned Books"
+  },
+  {
+   "url": "https://penbelarus.org/en/2025/10/01/hronika-parushennyau-pravou-chalaveka-u-sfery-kultury-15-30-verasnya-2025-goda.html",
+   "quote": "On 30 September, the Ministry of Information added a further 32 titles to the list of publications deemed to “pose a threat to the national interests of the Republic of Belarus”. The list now comprises a total of 173 books. Among the newly banned works is the anti-war novel The Elephant by Saša Filipienka (Sasha Filipenko).",
+   "title": "Chronicle of human rights violations in the sphere of culture (15-30 September 2025) – PEN Belarus"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-09-30. Country of origin: Belarus. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 0
+}

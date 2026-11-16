@@ -1,0 +1,26 @@
+{
+ "slug": "a-tale-for-2000",
+ "title": "A Tale for 2000",
+ "author": "Bùi Ngọc Tấn",
+ "first_published_year": 2000,
+ "current_text": "In 2000, the Ministry of Culture and Information ordered A Tale for 2000 withdrawn and destroyed after its February publication by Thanh Niên Publishing House.",
+ "sources": [
+  {
+   "url": "https://www.rfa.org/vietnamese/vietnam/Banned_novel_A_tale_of_Year2000_LDan-20060201.html",
+   "quote": "Cuốn \"Chuyện kể năm 2000\" vừa in tháng Hai năm 2000 thì ngày 16 tháng Ba bộ Văn hóa-Thông tin ký quyết định số 395 đình chỉ, thu hồi và tiêu hủy cuốn này do nhà xuất bản Thanh Niên ấn hành.",
+   "title": "Liệu \"Truyện Kể Năm 2000\" có được tái xuất bản? – Tiếng Việt"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vietnam",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Vietnam after publication. The author was a survivor of the re-education camp system; the novel drew on his own imprisonment."
+  }
+ ],
+ "institution_rows": 0
+}

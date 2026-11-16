@@ -1,0 +1,41 @@
+{
+ "slug": "jean-paul-sartre-all-works",
+ "title": "Jean-Paul Sartre — All works",
+ "author": "Jean-Paul Sartre",
+ "first_published_year": null,
+ "current_text": "The Vatican offices that published the Index Librorum Prohibitorum banned Jean-Paul Sartre’s complete works as early as 1948; the Index listed books that Catholics should neither own nor read under pain of excommunication. Pope Paul VI abolished the Index Librorum Prohibitorum on 14 June 1966.",
+ "sources": [
+  {
+   "url": "https://www.americamagazine.org/from-our-archives/2005/02/07/secrets-behind-forbidden-books/",
+   "quote": "One of their last targets was Sartre, whose complete works were banned as early as 1948.",
+   "title": "Secrets Behind The Forbidden Books - America Magazine"
+  },
+  {
+   "url": "https://www.americamagazine.org/from-our-archives/2005/02/07/secrets-behind-forbidden-books/",
+   "quote": "The Vatican offices that published the Index Librorum Prohibitorum, which were active from 1559 until 1966, listed books that Catholics should neither own nor read under pain of excommunication.",
+   "title": "Secrets Behind The Forbidden Books - America Magazine"
+  },
+  {
+   "url": "https://research-repository.st-andrews.ac.uk/bitstream/handle/10023/23424/O_Leary_2019_Perspectives_litt_ratureengag_e_AAM.pdf%3Bjsessionid%3DB47D8EC441224A60F78ADC7C6691B46C?sequence=1",
+   "quote": "The fact that all of his works (both past and any future ones) were placed on the Vatican’s Index Librorum Prohibitorum in 1948 (Cox, 2016, pp. 159-60), was proof, if the censors needed it, of the Frenchman’s degeneracy and bad influence, a justification",
+   "title": null
+  },
+  {
+   "url": "https://www.otago.ac.nz/library/exhibitions/bannedbooks/index.php",
+   "quote": "'The loss of relevance of the Index in the 21st century' saw it abolished on 14 June 1966, by Pope Paul VI.",
+   "title": "Heresy, Sedition, Obscenity: The Book Challenged, Special Collections Exhibition, University of Otago Library, Dunedin, New Zealand"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1948,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

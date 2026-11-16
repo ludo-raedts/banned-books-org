@@ -1,0 +1,36 @@
+{
+ "slug": "amar-meyebela",
+ "title": "Amar Meyebela",
+ "author": "Taslima Nasrin",
+ "first_published_year": 1999,
+ "current_text": "The government of Bangladesh banned Amar Meyebela after its publication in 1999; the book was described as anti-Islamic, and protests by Islamic fundamentalists were cited as a reason for the ban.",
+ "sources": [
+  {
+   "url": "https://www.refworld.org/reference/annualreport/usdos/2003/37975",
+   "quote": "Utal Hawa is a sequel to her earlier novel, Amar Meyebela (My Girlhood), published in 1999, which was also banned in the country for being anti-Islamic.",
+   "title": "U.S. Department of State Country Report on Human Rights Practices 2002 - Bangladesh | Refworld"
+  },
+  {
+   "url": "https://thegreatwave.thedailystar.net/news/we-wish-to-inform-you-censorship-in-bangladesh-1972-2024",
+   "quote": "The next year, Nasreen released volume one of her autobiography, Amar Meyebela / My Girlhood in India. The government promptly banned the book.",
+   "title": "We Wish to Inform You: Censorship in Bangladesh (1972-2024)"
+  },
+  {
+   "url": "https://www.theguardian.com/world/2003/nov/25/books.india",
+   "quote": "The first two parts of Nasrin's autobiography, Amar Meyebela (My Girlhood) and Uttal Hawa (The Untamed Wind), are already banned in Bangladesh because of protests by Islamic fundamentalists, as is her novel Lajja (Shame), an exploration of religious intolerance.",
+   "title": "Calcutta ban adds spice to tales of sex in the literary set | World news | The Guardian"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Bangladesh",
+   "year": 1999,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

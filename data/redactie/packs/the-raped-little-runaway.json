@@ -1,0 +1,41 @@
+{
+ "slug": "the-raped-little-runaway",
+ "title": "The Raped Little Runaway",
+ "author": "Jean Martin",
+ "first_published_year": null,
+ "current_text": "The Censorship of Publications Board banned The Raped Little Runaway in March 2016; the board found it “indecent” and “obscene” because it contained multiple descriptions of child rape. A 42-year-old man was convicted at Ennis Circuit Criminal Court of possessing The Raped Little Runaway in 2014, before it was banned; he was convicted under child pornography legislation rather than for possessing a banned book and was fined €500.",
+ "sources": [
+  {
+   "url": "https://www.irishtimes.com/news/crime-and-law/courts/district-court/man-charged-with-child-abuse-possession-of-banned-book-1.2985289",
+   "quote": "Last year, The Raped Little Runaway by Jean Martin and published by Star Distributors Ltd became the first book to be banned by the Irish Censorship of Publications Board since 1998.",
+   "title": "Man charged with child abuse, possession of banned book – The Irish Times"
+  },
+  {
+   "url": "https://www.irishtimes.com/news/crime-and-law/courts/district-court/man-charged-with-child-abuse-possession-of-banned-book-1.2985289",
+   "quote": "The board found the book – which contains multiple descriptions of child rape – to be “indecent” and “obscene”.",
+   "title": "Man charged with child abuse, possession of banned book – The Irish Times"
+  },
+  {
+   "url": "https://www.irishexaminer.com/news/arid-30936558.html",
+   "quote": "The book was the first book to be banned here in nearly two decades by the Censorship of Publications Board (CBB) in March 2016.",
+   "title": "Clare man avoids jail over possession of first book to be banned here in nearly 20 years"
+  },
+  {
+   "url": "https://www.irishtimes.com/news/health/publications-on-abortion-coming-off-banned-books-list-1.3960794",
+   "quote": "Last week, a 42-year-old man was convicted at Ennis Circuit Criminal Court of possessing the book in 2014, two years before it was banned. He was convicted under child pornography legislation rather than for possession of a banned book and was fined €500.",
+   "title": "Publications on abortion coming off banned books list – The Irish Times"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 2016,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Register of Prohibited Publications, Part I. The 2025 minister confirmed possession and distribution remain criminal due to child sexual abuse content."
+  }
+ ],
+ "institution_rows": 0
+}

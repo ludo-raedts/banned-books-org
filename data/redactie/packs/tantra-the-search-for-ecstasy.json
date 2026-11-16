@@ -1,0 +1,36 @@
+{
+ "slug": "tantra-the-search-for-ecstasy",
+ "title": "Tantra: the Search for Ecstasy",
+ "author": "Indra Sinha",
+ "first_published_year": 1997,
+ "current_text": "Malaysia’s Home Ministry banned Tantra: the Search for Ecstasy; its secretary-general, Alwi Ibrahim, said the book contained explicit drawings and images of sexual positions that offended virtuous values and social mores in Malaysia.",
+ "sources": [
+  {
+   "url": "https://www.malaymail.com/news/malaysia/2017/10/03/putrajaya-bans-books-by-progressive-muslim-scholars-farouk-musa-wan-ji/1479007",
+   "quote": "The ministry also banned 10 translated versions of the Quran in Bahasa Malaysia, English, Mandarin and Korean by several local publishers, as well as an English-language book called “Tantra: The Search for Ecstasy” by Indra Sinha.",
+   "title": "Putrajaya bans books by progressive Muslim scholars Farouk Musa, Wan Ji | Malay Mail"
+  },
+  {
+   "url": "https://www.freemalaysiatoday.com/category/nation/2017/10/09/home-ministry-gives-reasons-for-ban-on-22-books",
+   "quote": "He also explained that the ban on the sexual intercourse techniques publication “Tantra: The Search For Ecstacy” was because it contained explicit drawings and images of sexual positions which offended virtuous values and social mores in Malaysia.",
+   "title": "Home ministry gives reasons for ban on 22 books | FMT"
+  },
+  {
+   "url": "https://www.freemalaysiatoday.com/category/nation/2017/10/09/home-ministry-gives-reasons-for-ban-on-22-books",
+   "quote": "Its secretary-general, Alwi Ibrahim, said in a statement that the 22 publications were banned totally in Malaysia because their contents could be detrimental to public order, alarm the public, breach existing laws, damage public morals and harm public interest.",
+   "title": "Home ministry gives reasons for ban on 22 books | FMT"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2017,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2017-09-28 (P.U. (A) 278). Publisher: HAMLYN, AND IMPRINT OF REED CONSUMER BOOKS LIMITED,. Printer: -. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 0
+}

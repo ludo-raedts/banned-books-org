@@ -1,0 +1,26 @@
+{
+ "slug": "storytellers-ii",
+ "title": "Storytellers II",
+ "author": "Boško Novaković",
+ "first_published_year": null,
+ "current_text": "Storytellers II was withdrawn from print in Yugoslavia in 1964.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "Storytellers II |\nBoško Novaković |\n|\nShort stories |\nWithdrawn from print in Yugoslavia in 1964 because it contained stories by Dragiša Vasić.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Yugoslavia",
+   "year": 1964,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Withdrawn from print in Yugoslavia in 1964 because it contained stories by Dragiša Vasić."
+  }
+ ],
+ "institution_rows": 0
+}

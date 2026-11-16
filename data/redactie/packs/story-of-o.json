@@ -1,0 +1,31 @@
+{
+ "slug": "story-of-o",
+ "title": "Story Of O",
+ "author": "Pauline Reagt",
+ "first_published_year": null,
+ "current_text": "In 1955, French authorities brought obscenity charges against the publisher and anonymous author of Story Of O. The courts rejected obscenity charges against the publisher of Story Of O, but a publicity ban was imposed for a number of years.",
+ "sources": [
+  {
+   "url": "https://www.theparisreview.org/blog/2018/08/09/feminize-your-canon-violette-leduc/",
+   "quote": "In 1955, the French authorities brought obscenity charges against the publisher and anonymous author of Story of O, a paean to BDSM and winner of a major literary prize.",
+   "title": "Feminize Your Canon: Violette Leduc by Emma Garman"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Story_of_O",
+   "quote": "In February 1955, Story of O won the French literature prize Prix des Deux Magots, but the French authorities still brought obscenity charges against the publisher. The charges were rejected by the courts, but a publicity ban was imposed for a number of years.",
+   "title": "Story of O - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 1994,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1994-09-15 (P.U. (A) 350). Publisher: Book-of-the-month club by arrangement with Blue Moon Book, Inc. Printer: -. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 0
+}

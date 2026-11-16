@@ -1,0 +1,26 @@
+{
+ "slug": "africa-my-beginning",
+ "title": "Africa My Beginning",
+ "author": "Ingoapele Madingoane",
+ "first_published_year": 1979,
+ "current_text": "Africa My Beginning was banned in May 1979.",
+ "sources": [
+  {
+   "url": "https://sahistory.org.za/article/staffrider-magazine-1978-1993?page=1",
+   "quote": "The first publication in the series was Ingoapele Madingoane ’s Africa My Beginning, which was banned in May 1979. The second was Call Me Not A Man by Mtutuzeli Matshoba, which was banned in November 1979.",
+   "title": "Staffrider magazine (1978-1993) | South African History Online"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "South Africa",
+   "year": 1979,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned 9 May 1979 under section 47(2)(e) of the Publications Act 1974 as prejudicial to State security and good order: the 22-poem collection invoked Sharpeville and Soweto, called on ancestors for liberation, and praised declared communists (Neto, Mugabe)."
+  }
+ ],
+ "institution_rows": 0
+}
