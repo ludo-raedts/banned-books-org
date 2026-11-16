@@ -1,0 +1,58 @@
+[
+ {
+  "slug": "justine-de-sade",
+  "text": "In 1791, authorities in France suppressed Justine or the Misfortunes of Virtue. In March 1801 the stocks of The New Justine and Juliette were seized when Sade was arrested at his publisher's office. The Cour Royale de Paris ordered the book's destruction on 19 May 1815.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/Marquis_de_Sade",
+    "title": "Marquis de Sade - Wikipedia",
+    "quote": "in March 1801, Sade was arrested at his publisher's office and detained in the Sainte-Pélagie Prison . The stocks of The New Justine and Juliette were seized and the police minister"
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/Justine_(de_Sade_novel)",
+    "title": "Justine (de Sade novel) - Wikipedia",
+    "quote": "The book's destruction was ordered by the Cour Royale de Paris on May 19, 1815."
+   }
+  ],
+  "note": "1801 seizure concerns La Nouvelle Justine (expanded version of Justine) plus Juliette; worded as such."
+ },
+ {
+  "slug": "the-decameron",
+  "text": "The Decameron was among the works burned in Florence in 1497 in a bonfire incited by Girolamo Savonarola. It was placed on the Index of 1559 under the instructions of Paul IV, and its prohibition was confirmed in the Index of 1564. In 1573 Pope Gregory XIII commissioned a revised edition in which the clergymen were replaced with secular people.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/The_Decameron",
+    "title": "The Decameron - Wikipedia",
+    "quote": "The first instance occurred in 1497 when the Dominican Friar Girolamo Savonarola incited a bonfire of 'sinful' art and literature in the centre of Florence"
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/The_Decameron",
+    "title": "The Decameron - Wikipedia",
+    "quote": "The Decameron was among the works known to have been burned that day."
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/The_Decameron",
+    "title": "The Decameron - Wikipedia",
+    "quote": "prompting Pope Gregory XIII to commission a revised edition in 1573 in which the clergymen were replaced with secular people."
+   }
+  ],
+  "note": "Burning at the 1497 Bonfire of the Vanities per Wikipedia (cites McGrath, Heliotropia)."
+ },
+ {
+  "slug": "zhuan-falun",
+  "text": "The Chinese government banned Zhuan Falun and other publications on 24 July 1996. On 26 July 1999 the Ministry of Public Security called for the confiscation and destruction of all publications related to Falun Gong. By 30 July, Xinhua had reported confiscations of over one million Falun Gong books and other materials.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/Persecution_of_Falun_Gong",
+    "title": "Persecution of Falun Gong - Wikipedia",
+    "quote": "On 26 July 1999 the Ministry of Public Security called for the confiscation and destruction of all publications related to Falun Gong."
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/Persecution_of_Falun_Gong",
+    "title": "Persecution of Falun Gong - Wikipedia",
+    "quote": "By 30 July, ten days into the campaign, Xinhua had reported confiscations of over one million Falun Gong books and other materials, hundreds of thousands burned and destroyed."
+   }
+  ],
+  "note": "Falun Gong publications generally, not Zhuan Falun by name."
+ }
+]

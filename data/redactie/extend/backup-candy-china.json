@@ -1,0 +1,21 @@
+[
+ {
+  "id": 5854,
+  "book_id": 6499,
+  "country_code": "CN",
+  "scope_id": 4,
+  "action_type": "banned",
+  "status": "historical",
+  "region": null,
+  "institution": null,
+  "year_started": 2003,
+  "year_ended": null,
+  "actor": null,
+  "description": "Chinese government censored it because it was \"a poster child for spiritual pollution\".",
+  "confidence": "reported",
+  "created_at": "2026-05-15T11:45:21.641683+00:00",
+  "countries": {
+   "name_en": "China"
+  }
+ }
+]
