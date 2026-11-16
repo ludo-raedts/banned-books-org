@@ -1,0 +1,45 @@
+{
+ "slug": "i-am-malala",
+ "title": "I Am Malala",
+ "author": "Malala Yousafzai",
+ "first_published_year": 2013,
+ "current_text": "In a report dated 10 November 2013, the All Pakistan Private Schools Federation, which says it represents more than 152,000 institutions, decided against letting pupils read I Am Malala. The book was not to be included in the schools' curriculum or stocked in school libraries.",
+ "sources": [
+  {
+   "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+   "quote": "The All Pakistan Private Schools Federation, which says it represents more than 152,000 institutions across the country, has decided that allowing pupils to read the book, I am Malala , would have a \"negative\" effect on them.",
+   "title": "The Independent: Private schools in Pakistan ban Malala Yousafzai's book"
+  },
+  {
+   "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+   "quote": "Umair Aziz & Andrew Buncombe Sunday 10 November 2013 00:00 GMT",
+   "title": "The Independent (date line)"
+  },
+  {
+   "url": "https://www.independent.co.uk/news/world/asia/inspiration-or-danger-private-schools-in-pakistan-ban-malala-yousafzais-book-8930925.html",
+   "quote": "The book will not be included in the schools' curriculum, nor will it be stocked in school libraries.",
+   "title": "The Independent"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Pakistan",
+   "year": 2013,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "In Nov 2013 the All Pakistan Private Schools Federation banned the book in its member schools (The Independent, 10 Nov 2013, via Wikipedia)."
+  },
+  {
+   "country": "Afghanistan",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Named among the ~400 titles distributed to Afghan booksellers as banned for being against 'Islamic principles and national interest'."
+  }
+ ],
+ "institution_rows": 2
+}

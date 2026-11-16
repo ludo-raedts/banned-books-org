@@ -1,0 +1,50 @@
+{
+ "slug": "this-book-is-gay",
+ "title": "This Book Is Gay",
+ "author": "Juno Dawson",
+ "first_published_year": 2014,
+ "current_text": "The book was challenged in Wasilla, Alaska, after a boy picked it up from the juvenile non-fiction shelf of the public library, in a report dated 26 Nov 2015. In a survey reported on 19 Aug 2024, Index on Censorship said 53% of librarians polled had been asked to remove books, and This Book Is Gay by Juno Dawson was among the titles complained about.",
+ "sources": [
+  {
+   "url": "https://www.theguardian.com/books/2015/nov/26/james-dawson-criticises-parents-who-attacked-his-lgbt-guide-for-children",
+   "quote": "The book has been challenged in Wasilla, Alaska, after a 10-year-old boy picked it up from the juvenile non-fiction shelf of the public library",
+   "title": "Parents in Alaska challenge decision to keep it on library shelves (The Guardian)"
+  },
+  {
+   "url": "https://www.theguardian.com/books/2015/nov/26/james-dawson-criticises-parents-who-attacked-his-lgbt-guide-for-children",
+   "quote": "Alaska challenge decision to keep it on library shelves Alison Flood Thu 26 Nov 2015 18.06 CET",
+   "title": "same article (date line)"
+  },
+  {
+   "url": "https://www.theguardian.com/books/article/2024/aug/19/uk-school-librarians-asked-remove-lgbtq-books-index-on-censorship",
+   "quote": "Index on Censorship said 53% of librarians polled had been asked to remove books – and that in more than half of those cases books were taken off shelves Ella Creamer Mon 19 Aug 2024",
+   "title": "Dozens of UK school librarians asked to remove LGBTQ+ books, survey finds (The Guardian)"
+  },
+  {
+   "url": "https://www.theguardian.com/books/article/2024/aug/19/uk-school-librarians-asked-remove-lgbtq-books-index-on-censorship",
+   "quote": "Among the titles complained about were This Book Is Gay by Juno Dawson, Julián is a Mermaid by Jessica Love, and ABC Pride by Louie Stowell",
+   "title": "same article"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2015,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United Kingdom",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Removed or formally challenged in UK secondary-school libraries during the 2023-2024 Index on Censorship survey of UK school librarians, in which 53% of respondents had been asked to remove a book and 56% of those requests led to removal. Predominantly anti-LGBTQ+ challenges driven by parents. Source: Index on Censorship — Banned: school librarians shushed over LGBT+ books."
+  }
+ ],
+ "institution_rows": 52
+}

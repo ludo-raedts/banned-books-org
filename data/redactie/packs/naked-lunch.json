@@ -1,0 +1,78 @@
+{
+ "slug": "naked-lunch",
+ "title": "Naked Lunch",
+ "author": "William S. Burroughs",
+ "first_published_year": 1959,
+ "current_text": "In November 1967, the Tribunal held Naked Lunch to be indecent in New Zealand. In February 1960, Customs seized an imported copy of Naked Lunch at Port Adelaide and banned it as “hard-core pornography.” US Customs embargoed Naked Lunch as allegedly obscene under the Tariff Act (1930). In a proceeding initiated by a petition filed on September 17, 1964, the Superior Court adjudged Naked Lunch obscene, but the final decree was reversed and a new decree was ordered declaring that the book could not be declared obscene.",
+ "sources": [
+  {
+   "url": "https://gazette.howison.co.nz/nzg/1971/issue/27/page/668",
+   "quote": "WILLIAM Burroughs' The Soft Machine is the third of his novels to be submitted to the Tribunal. In 1964 Dead Fingers Talk was held to be not indecent, but in November 1967 Naked Lunch was held to be indecent.",
+   "title": "Page 668, No. 27, NZ Gazette 1971"
+  },
+  {
+   "url": "https://artsandculture.google.com/story/banned/3wXRe6KPfhBeJQ",
+   "quote": "First published in 1959 by Olympia Press, Paris, William Burroughs’ ‘Naked Lunch’ (sometimes ‘The Naked Lunch’) provides a fractured account of American homosexual and drug cultures in the 1950s. One of the most provocative and radical novels of the 20th century, it was banned as ‘hard-core pornography’ by Customs after an imported copy was seized at Port Adelaide in February 1960.",
+   "title": "BANNED — Google Arts & Culture"
+  },
+  {
+   "url": "https://www.otago.ac.nz/library/exhibitions/bannedbooks/index.php",
+   "quote": "Drug-addiction, sexual fantasy, and cannibalism re-occur in William Burroughs' \"Naked Lunch\", first published by Olympia Press in Paris in 1959. Using the Tariff Act (1930), US Customs consistently embargoed this work as allegedly obscene.",
+   "title": "Heresy, Sedition, Obscenity: The Book Challenged, Special Collections Exhibition, University of Otago Library, Dunedin, New Zealand"
+  },
+  {
+   "url": "https://www.masscasesarchive.com/masscases.com/cases/sjc/351/351mass298.html",
+   "quote": "The book was adjudged obscene in the Superior Court. G. L. c. 272, Sections 28C, 28E, 28F (each inserted by St. 1945, c. 278, Section 1). The Supreme Court of the United States has held that, to justify a holding of obscenity,",
+   "title": "ATTORNEY GENERAL vs. A BOOK NAMED \"NAKED LUNCH.\", 351 Mass. 298"
+  },
+  {
+   "url": "https://www.masscasesarchive.com/masscases.com/cases/sjc/351/351mass298.html",
+   "quote": "The final decree is reversed and a new final decree is to be entered declaring that (without considering whether the book has been commercially exploited for the sake of prurient appeal) the book cannot be declared to be obscene. This new final decree shall be without prejudice to the bringing of new proceedings with respect to this book",
+   "title": "ATTORNEY GENERAL vs. A BOOK NAMED \"NAKED LUNCH.\", 351 Mass. 298"
+  },
+  {
+   "url": "https://www.masscasesarchive.com/masscases.com/cases/sjc/351/351mass298.html",
+   "quote": "PETITION filed in the Superior Court on September 17, 1964. \n\n\nPage 299\n\n\nThe case was heard by Hudson, J. \n\n\nEdward De Grazia of the District of Columbia (Daniel Klubock with him) for the intervener Grove Press, Inc. \n\n\nWilliam I. Cowin, Assistant Attorney General, for the Attorney General.",
+   "title": "ATTORNEY GENERAL vs. A BOOK NAMED \"NAKED LUNCH.\", 351 Mass. 298"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1959,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by Boston courts in 1962 for obscenity, but that decision was reversed in 1966 by the Massachusetts Supreme Judicial Court."
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1964,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Declared indecent by the NZ Indecent Publications Tribunal in 1967; reclassified in September 1974 as indecent only in the hands of persons under 18."
+  },
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-09-30. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 3
+}

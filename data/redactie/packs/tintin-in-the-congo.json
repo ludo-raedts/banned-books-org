@@ -1,0 +1,26 @@
+{
+ "slug": "tintin-in-the-congo",
+ "title": "The Adventures of Tintin in the Congo",
+ "author": "Hergé",
+ "first_published_year": 1930,
+ "current_text": "In 2007, the Brooklyn Public Library removed The Adventures of Tintin in the Congo from public display and kept it locked in a back room.",
+ "sources": [
+  {
+   "url": "https://www.tintin.com/en/news/450/tintin-in-the-safe",
+   "quote": "An article in the August 19th edition of The New York Times, reported that in 2007 the Brooklyn Public Library removed Tintin in the Congo from display in the public area to a back room where it is kept under lock and key.",
+   "title": "Tintin in the safe !"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belgium",
+   "year": 2007,
+   "end": 2012,
+   "status": "rescinded",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In August 2007 Congolese student Bienvenu Mbutu Mondondo filed a complaint in Brussels demanding the book be banned as an insult to the Congolese people. The case was transferred to civil court in April 2010; in February 2012 the court ruled the book would not be banned."
+  }
+ ],
+ "institution_rows": 3
+}

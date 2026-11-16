@@ -1,0 +1,40 @@
+{
+ "slug": "lajja",
+ "title": "Lajja",
+ "author": "Taslima Nasrin",
+ "first_published_year": 1993,
+ "current_text": "The Bangladeshi government banned Lajja in 1993 on the grounds that it had “created misunderstanding between communities”; writers and human rights activists publicly protested the ban.",
+ "sources": [
+  {
+   "url": "https://www.tandfonline.com/doi/pdf/10.1080/14672715.1993.10416144",
+   "quote": "In July, after months of pressure, the Bangladeshi government banned the book on the grounds that it had “created misunderstanding between communities.” The ban, seen as a sign of the growing influence of religious extremists, was publicly protested by many writers and human rights activists.",
+   "title": null
+  },
+  {
+   "url": "https://thegreatwave.thedailystar.net/news/we-wish-to-inform-you-censorship-in-bangladesh-1972-2024",
+   "quote": "Events began with the 1993 publication of Lajja / Shame, a novel set in the backdrop of anti-Hindu riots in Bangladesh in the aftermath of the Babri Mosque demolition by right-wing Hindu activists in India. The last page of the novel portrays the Hindu protagonist leaving Bangladesh for India: Bangladesh was no longer home to non-Muslims, that was the bleak message of the novel’s finale. The government immediately banned the book.",
+   "title": "We Wish to Inform You: Censorship in Bangladesh (1972-2024)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 2003,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Bangladesh",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

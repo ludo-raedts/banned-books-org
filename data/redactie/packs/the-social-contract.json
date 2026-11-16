@@ -1,0 +1,63 @@
+{
+ "slug": "the-social-contract",
+ "title": "The Social Contract",
+ "author": "Jean-Jacques Rousseau",
+ "first_published_year": 1762,
+ "current_text": "Paris authorities banned The Social Contract in 1762, primarily over Rousseau’s claims about religion; he fled France. Copies of The Social Contract were burned in front of Geneva’s hôtel de ville in 1762.",
+ "sources": [
+  {
+   "url": "https://iep.utm.edu/rousseau/",
+   "quote": "Rousseau’s praise of nature is a theme that continues throughout his later works as well, the most significant of which include his comprehensive work on the philosophy of education, the Emile, and his major work on political philosophy, The Social Contract: both published in 1762. These works caused great controversy in France and were immediately banned by Paris authorities.",
+   "title": "Rousseau, Jean-Jacques | Internet Encyclopedia of Philosophy"
+  },
+  {
+   "url": "https://iep.utm.edu/rousseau/",
+   "quote": "Paris authorities condemned both of these books, primarily for claims Rousseau made in them about religion, which forced him to flee France. He settled in Switzerland and in 1764 he began writing his autobiography, his Confessions.",
+   "title": "Rousseau, Jean-Jacques | Internet Encyclopedia of Philosophy"
+  },
+  {
+   "url": "https://discovery.ucl.ac.uk/id/eprint/1478230/1/Revised%20Article.pdf",
+   "quote": "Books composed by one of Geneva’s most famous residents received such treatment in 1762. Copies of Emile and Du Contrat social, Jean-Jacques Rousseau’s influential treatises on education and politics, both went up in flames in front of Geneva’s hôtel de ville.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Wikipedia says the work was listed on the Index Librorum Prohibitorum; no date given in the article."
+  },
+  {
+   "country": "France",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Wikipedia, citing Wokler (2001), says distribution in France was prohibited upon publication and Rousseau fled to avoid imprisonment."
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1793,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Iran",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

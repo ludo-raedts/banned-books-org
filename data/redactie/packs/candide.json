@@ -1,0 +1,53 @@
+{
+ "slug": "candide",
+ "title": "Candide",
+ "author": "Voltaire",
+ "first_published_year": 1759,
+ "current_text": "Candide was banned in France on 25 February 1759. Candide was banned in Switzerland on 26 February 1759.",
+ "sources": [
+  {
+   "url": "https://candide.bnf.fr/reperes",
+   "quote": "Dès sa publication à Genève, en 1759, alors que le texte est interdit le 25 février en France et le 26 en Suisse, 6 000 exemplaires sont déjà vendus et cinq éditions tirées: le conte est réimprimé 20 fois en 1759.",
+   "title": "Candide ou L'Optimisme - Le Monde"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "France",
+   "year": 1759,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1762,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 1929,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 1929,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 6,
+   "note": "Seized by U.S. Customs in Boston in 1929 en route to a Harvard French class; in 1944 the Post Office barred its listing in a dealer's catalogue."
+  }
+ ],
+ "institution_rows": 2
+}

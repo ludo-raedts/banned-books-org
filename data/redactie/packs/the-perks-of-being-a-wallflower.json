@@ -1,0 +1,58 @@
+{
+ "slug": "the-perks-of-being-a-wallflower",
+ "title": "The Perks of Being a Wallflower",
+ "author": "Stephen Chbosky",
+ "first_published_year": 1999,
+ "current_text": "In 2025 Utah banned The Perks of Being a Wallflower by Stephen Chbosky from all public schools in the state. In April 2025 the Lukashenko regime added the book to its list of printed publications that could harm the national interests of Belarus.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+   "quote": "In 2025, Utah banned the book from all public schools in the state.",
+   "title": "Wikipedia: The Perks of Being a Wallflower (cites Salt Lake Tribune)"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Perks_of_Being_a_Wallflower",
+   "quote": "In April 2025, the Lukashenko regime added the book to its list of printed publications containing information messages and materials, the distribution of which could harm the national interests of Belarus",
+   "title": "Wikipedia: The Perks of Being a Wallflower (cites euroradio.fm, 1 Apr 2025)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2009,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 2025, Utah banned the book from all public schools in the state."
+  },
+  {
+   "country": "United States",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In April 2025, the Lukashenko regime added the book to its list of printed publications containing information messages and materials, the distribution of which could harm the national interests of Belarus."
+  }
+ ],
+ "institution_rows": 153
+}

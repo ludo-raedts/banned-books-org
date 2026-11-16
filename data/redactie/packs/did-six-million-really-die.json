@@ -1,0 +1,40 @@
+{
+ "slug": "did-six-million-really-die",
+ "title": "Did Six Million Really Die?",
+ "author": "Richard Verrall",
+ "first_published_year": 1974,
+ "current_text": "In 1985 the Crown charged Zündel, the publisher of Did Six Million Really Die?, with spreading false news. His conviction was overturned when the case reached the Supreme Court of Canada.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/R_v_Zundel",
+   "quote": "In 1985 the Crown took over the case and Zündel was charged with \"spreading false news\" by publishing the pamphlet",
+   "title": "Wikipedia: R v Zundel"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/R_v_Zundel",
+   "quote": "When Zündel's case reached the Supreme Court of Canada, his conviction was overturned.",
+   "title": "Wikipedia: R v Zundel"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1979,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia, citing Wyman & Rosenzveig (1996), says the pamphlet was banned in Germany; no date given."
+  },
+  {
+   "country": "South Africa",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "The book Did Six Million Really Die? was banned in South Africa."
+  }
+ ],
+ "institution_rows": 0
+}

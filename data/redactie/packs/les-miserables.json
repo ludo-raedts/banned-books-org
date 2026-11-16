@@ -1,0 +1,44 @@
+{
+ "slug": "les-miserables",
+ "title": "Les Misérables",
+ "author": "Victor Hugo",
+ "first_published_year": 1862,
+ "current_text": "The Index listed Les Misérables under Victor Hugo with a decree dated 20 June 1864.",
+ "sources": [
+  {
+   "url": "https://literatureatlas.com/banned-book/les-miserables/",
+   "quote": "The Index's own entry under Hugo, Victor is almost comically terse. It records two lines: Notre-Dame de Paris, decree of 28 July 1834; Les Misérables, decree of 20 June 1864.",
+   "title": "Les Misérables: Condemned by Decree, 20 June 1864 | Literature Atlas"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Spain",
+   "year": 1961,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "On 3 April 1961 Spanish censors denied a publisher's request to print the novel because it was registered on the Church's Index under the decree of 20 June 1864; a censor maintained the refusal in March 1963 (Cultugrafia, citing the censorship files)."
+  },
+  {
+   "country": "Vatican City (Holy See)",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Russia",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

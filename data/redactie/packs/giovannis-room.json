@@ -1,0 +1,49 @@
+{
+ "slug": "giovannis-room",
+ "title": "Giovanni's Room",
+ "author": "James Baldwin",
+ "first_published_year": 1956,
+ "current_text": "In St. Cloud, parents challenged James Baldwin’s Giovanni’s Room, which was used in an eleventh- and twelfth-grade elective English class, alleging that it promoted promiscuity and bisexuality and conflicted with their religious beliefs; after a formal complaint, a review committee voted to retain it in the curriculum. In Russia, publisher AST said it would stop selling Giovanni’s Room after an expert review found that it violated Russia’s expanded ban on “gay propaganda.”",
+ "sources": [
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "INCIDENT: In St. Cloud, objections to Giovanni's Room by James Baldwin. in use\nin an eleventh- and twelfth-grade elective English class, for allegedly promoting\npromiscuity and bisexuality and conflicting with the religious beliefs of the\nobjectors. According to school officials, the objectors stated: \"we want to cleanse\nthe curriculum.\" Removal requested.\nOBJECTOR: Parents.\nRESOLUTION: Following a formal complaint, a review committee voted to retain\nthe book in the curriculum.",
+   "title": null
+  },
+  {
+   "url": "https://meduza.io/en/brief/2024/04/23/the-real-russia-today",
+   "quote": "AST, one of Russia’s biggest book publishers, says it will stop selling several books by Vladimir Sorokin, Michael Cunningham, and James Baldwin after an “expert review” found that the work in question violates Russia’s expanded ban on “gay propaganda.” The books getting the axe: Sorokin’s Heritage, Cunningham’s A Home at the End of the World, and Baldwin’s Giovanni's Room.",
+   "title": "The Real Russia. Today. Monday, April 22, 2024 — Meduza"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Russia",
+   "year": 2023,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "Distribution restricted in Russia after the November 2023 Russian Supreme Court ruling designated the \"international LGBT movement\" as extremist. Baldwin's 1956 novel — long the best-known mainstream gay novel in English — has been pulled or age-walled by Russian retailers under enforcement of the propaganda law."
+  },
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-04-01. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 1
+}

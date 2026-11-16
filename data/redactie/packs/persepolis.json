@@ -1,0 +1,35 @@
+{
+ "slug": "persepolis",
+ "title": "Persepolis",
+ "author": "Marjane Satrapi",
+ "first_published_year": 2000,
+ "current_text": "During the week of March 11, 2013, administrators at Chicago Public Schools’ Fullerton school network and Lane Tech High School directed the removal of Persepolis from school libraries and classrooms, citing inappropriate language and images.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/newly-revealed-records-detail-2013-decision-to-remove-persepolis-from-cps-classrooms/",
+   "quote": "During the week of March 11, 2013, directives were issued by administrators at Chicago Public Schools’ Fullerton school network and Lane Tech High School to remove Marjane Sartrapi’s acclaimed graphic novel Persepolis from school libraries and classrooms on the grounds that the book contained inappropriate language and images.",
+   "title": "Newly Revealed Records Detail 2013 Decision to Remove Persepolis from CPS Classrooms - Intellectual Freedom Blog"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Iran",
+   "year": 2000,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Gambling, offensive language, political viewpoint. Additional reasons: \"politically, racially, and socially offensive,\" \"graphic depictions\""
+  }
+ ],
+ "institution_rows": 1
+}

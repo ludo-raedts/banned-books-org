@@ -1,0 +1,59 @@
+{
+ "slug": "it",
+ "title": "It",
+ "author": "Stephen King",
+ "first_published_year": 1986,
+ "current_text": "It was challenged in Lincoln school libraries in Nebraska in 1987 because of its “corruptive, obscene nature.” In 1992, It was placed on a “closed shelf” at the Franklinville Central High School library in New York because of sexual content, violence, and language; students needed parental permission to check it out. In Russia, publisher AST’s press service announced that the print run of It had been temporarily pulled from sale to “update labeling requirements.”",
+ "sources": [
+  {
+   "url": "https://www.bannedlibrary.com/podcast/2017/9/3/banned-108-stephen-kings-it",
+   "quote": "Stephen King's It\nIt: A Novel\nBy Stephen King\nStephen King's It Part 1\nST Harker\nDownload\nPart 1 - We start at the beginning with the murders of a little boy and a gay man while Stan, Richie, Ben, Eddie, and Beverly are called home because they promised.\nBanned\n1987\nNebraska - Challenged in Lincoln school libraries because of the novel's \"corruptive, obscene nature.\"",
+   "title": "Stephen King's It — Banned Library"
+  },
+  {
+   "url": "https://www.bannedlibrary.com/podcast/2017/9/3/banned-108-stephen-kings-it",
+   "quote": "1992\nNew York - Placed on a \"closed shelf\" a the Franklinville Central High School library for sexual content, violence, and language. Parental permission required to check out by students.",
+   "title": "Stephen King's It — Banned Library"
+  },
+  {
+   "url": "https://www.theins.org/en/news/287182",
+   "quote": "AST’s press service announced on Nov. 20 that the print run of It had been temporarily pulled from sale, saying at the time that the recall was being undertaken in order “to update labeling requirements.” The state news agency RIA Novosti reported that the novel had already disappeared from major online marketplaces.",
+   "title": "Russian publisher AST begins using AI to flag “LGBT propaganda” in books, Stephen King’s “It” first to be reviewed — The Insider in English"
+  },
+  {
+   "url": "https://novayagazeta.eu/amp/en/articles/2025/11/20/stephen-king-novel-it-being-withdrawn-from-sale-in-russia-en-news",
+   "quote": "It, a bestselling novel by American writer Stephen King first published in 1986, is to officially be withdrawn from sale in Russia, state-owned news agency TASS reported on Thursday.\nThe Russian-language version of the book has become “almost impossible” to find either in traditional bookstores or online, although English editions are said to still be available, TASS continued.",
+   "title": "Stephen King novel It being withdrawn from sale in Russia — Novaya Gazeta Europe"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1990,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 2,
+   "note": null
+  },
+  {
+   "country": "Russia",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "One of multiple Stephen King titles named in the December 2024 list of approximately 252 books pulled from major Russian online retailers under Russia's expanded \"LGBT propaganda\" law."
+  },
+  {
+   "country": "Russia",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 2025, the novel was banned in Russia under the LGBT 'propaganda' law as part of a list of over 250 titles removed."
+  }
+ ],
+ "institution_rows": 29
+}

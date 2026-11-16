@@ -1,0 +1,31 @@
+{
+ "slug": "the-handmaids-tale",
+ "title": "The Handmaid's Tale",
+ "author": "Margaret Atwood",
+ "first_published_year": 1985,
+ "current_text": "The Hanover School Board in Virginia flagged The Handmaid’s Tale for removal, and Hanover County school administrators instructed teachers and librarians to remove it from shelves. Goddard school officials reversed their decision to remove The Handmaid’s Tale from circulation and allowed it to be checked out while the district reviewed its vetting policy for library materials.",
+ "sources": [
+  {
+   "url": "https://www.axios.com/local/richmond/2023/11/20/virginia-hanover-county-book-ban-wicked-handmaids-tale",
+   "quote": "Hanover County school administrators on Friday instructed teachers and librarians to remove a list of 75 books from shelves, including an array of well-known titles. What's happening: \"The Handmaid's Tale,\" \"Slaughter House 5,\" and \"Wicked\" (yes, the one about the witch in the \"Wizard of Oz\") are among the books the Hanover School Board flagged for removal.",
+   "title": "Virginia school district bans 75 books, including \"Wicked\" and \"The Handmaid's Tale\" - Axios Richmond"
+  },
+  {
+   "url": "https://www.kcur.org/news/2021-11-09/a-kansas-school-district-ordered-29-books-removed-from-circulation",
+   "quote": "The list of books includes several well-known novels, including “The Handmaid’s Tale” by Margaret Atwood, “Bluest Eye” by Toni Morrison, “The Hate U Give” by Angie Thomas and “The Perks of Being a Wallflower” by Stephen Chbosky.\nUpdated: November 10, 2021 at 5:38 PM CST\nOn Wednesday, Goddard school officials reversed their decision and allowed all books to be checked out while the district reviews its vetting policy for library materials.",
+   "title": "A Kansas school district ordered 29 books removed from circulation | KCUR - Kansas City news and NPR"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2021,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 125
+}

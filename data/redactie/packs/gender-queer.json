@@ -1,0 +1,55 @@
+{
+ "slug": "gender-queer",
+ "title": "Gender Queer: A Memoir",
+ "author": "Maia Kobabe",
+ "first_published_year": 2019,
+ "current_text": "A Virginia court ordered Barnes and Noble and Virginia Beach Public Schools not to publish, sell, rent, lend or exhibit Gender Queer: A Memoir to minors. Fairfax County Public Schools temporarily removed Gender Queer: A Memoir after complaints that it contained sexually explicit language and scenes inappropriate for a juvenile audience, then decided to return it to its high school libraries after a review. Keller ISD officials said administrators removed Gender Queer: A Memoir from a high school library “out of an abundance of caution,” pending an investigation into how it had been selected and made available to students. State Rep. Jeff Cason asked Texas Attorney General Ken Paxton to investigate Gender Queer: A Memoir and other books that might violate laws concerning pornography, child pornography and decency.",
+ "sources": [
+  {
+   "url": "https://www.aclu.org/wp-content/uploads/legal-documents/2022.05.18_Motion_for_a_TRO__In_re_Gender_Queer%2C_a_Memoir_.pdf",
+   "quote": "ORDERED that pursuant to 18.2-384(5) and 18.2-384(11) of the Code of Virginia that Barnes and Noble and Virginia Beach Public Schools are hereby restrained from publishing, selling, renting, lending or exhibiting the book the book Gender Queer, A Memoir to minors.",
+   "title": null
+  },
+  {
+   "url": "https://www.washingtonpost.com/education/2021/11/23/fairfax-schools-gender-queer-lawn-boy/",
+   "quote": "Fairfax County Public Schools temporarily removed the books “Gender Queer: A Memoir” and “Lawn Boy” after complaints.",
+   "title": "Fairfax schools will return ‘Gender Queer,’ ‘Lawn Boy’ to shelves after complaints over sexual content - The Washington Post"
+  },
+  {
+   "url": "https://www.washingtonpost.com/education/2021/11/23/fairfax-schools-gender-queer-lawn-boy/",
+   "quote": "Fairfax County Public Schools has decided to return two books to its high school libraries, following a review into complaints that the books contained sexually explicit language and scenes that weren’t appropriate for a juvenile audience, the school system announced Tuesday.",
+   "title": "Fairfax schools will return ‘Gender Queer,’ ‘Lawn Boy’ to shelves after complaints over sexual content - The Washington Post"
+  },
+  {
+   "url": "https://www.texastribune.org/2021/11/12/gender-queer-texas-books-investigation/",
+   "quote": "Within minutes of hearing from that parent, administrators removed it “out of an abundance of caution,” Keller ISD officials said. The district had one copy of the book in a high school library. It was removed “pending an investigation to determine how the book was selected and ultimately made available to students.”",
+   "title": "Maia Kobabe's \"Gender Queer\" is targeted by conservative Texas politicians"
+  },
+  {
+   "url": "https://www.texastribune.org/2021/11/12/gender-queer-texas-books-investigation/",
+   "quote": "In an Oct. 29 statement, four days after Krause’s letter to school districts and three days after Kobabe’s book was removed from Keller ISD, state Rep. Jeff Cason, R-Bedford, asked Texas Attorney General Ken Paxton “to start a statewide investigation” into the novel “and others that may violate the Penal Code in relation to pornography, child pornography and decency laws.”",
+   "title": "Maia Kobabe's \"Gender Queer\" is targeted by conservative Texas politicians"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2021,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Peru",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Among 21 titles Peru's consumer-protection agency Indecopi (Resolution 2908-2025/CC2) ordered restricted in the secondary library of Colegio Roosevelt, fining the school for 'inappropriate content'. A government-agency action naming specific titles, but scope is one private school, not a national ban."
+  }
+ ],
+ "institution_rows": 101
+}

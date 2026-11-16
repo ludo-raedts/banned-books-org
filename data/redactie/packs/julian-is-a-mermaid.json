@@ -1,0 +1,70 @@
+{
+ "slug": "julian-is-a-mermaid",
+ "title": "Julián Is a Mermaid",
+ "author": "Jessica Love",
+ "first_published_year": 2018,
+ "current_text": "Clay County School District removed Julián Is a Mermaid from all libraries; a Challenge Oversight Committee claimed that the story violated Florida’s obscenity law. At a DoDEA elementary school in Italy, Julián Is a Mermaid was removed from the library in response to the EOs. Darien Public Schools deemed Julián Is a Mermaid appropriate after some in the Darien, CT, community questioned it, and the book remained available to teachers. Olivia Haley petitioned to remove Julián Is a Mermaid, but a committee voted to keep it on shelves after finding no specific references to sex or gender in the book. The St. Tammany Library Board of Conduct voted to keep Julián Is a Mermaid on library shelves after it was challenged for its subject matter.",
+ "sources": [
+  {
+   "url": "https://popular.info/p/the-chaos-in-florida-school-libraries",
+   "quote": "Meanwhile, in Clay County School District, the children’s book Julian is a Mermaid has been removed from all libraries. The story revolves around Julian, a boy who dreams of being a mermaid. His abuela is surprised at first to find him dressed as a mermaid, but she quickly comes around and ends up taking him to a mermaid parade. A District Curriculum Council found that the story had a “ good message,” but a Challenge Oversight Committee claimed that the story violated Florida's obscenity law.",
+   "title": "The chaos in Florida school libraries"
+  },
+  {
+   "url": "https://assets.aclu.org/live/uploads/2025/04/Doc.-24-Joint-Appendix.pdf",
+   "quote": "At a DoDEA elementary school in Italy, twenty-five books were removed from the library in response to the EOs, including children’s books Julian is a Mermaid by Jessica Love and The Antiracist Kid by Tiffany Jewell.",
+   "title": null
+  },
+  {
+   "url": "https://patch.com/connecticut/darien/challenged-picture-book-appropriate-says-darien-public-schools",
+   "quote": "DARIEN, CT — \"Julián is a Mermaid,\" a picture book for second graders that has been questioned by some in the community in recent weeks, has been deemed appropriate by Darien Public Schools, and will remain in circulation and available to teachers.",
+   "title": "Challenged Picture Book Is Appropriate, Says Darien Public Schools | Darien, CT Patch"
+  },
+  {
+   "url": "https://www.wuft.org/education/2024-05-24/at-least-90-of-my-time-book-challenge-policies-continue-to-consume-alachua-county-school-employees-focus?_amp=true",
+   "quote": "The books that were voted to remain on shelves Thursday afternoon are “Julian is a Mermaid” by Jessica Love and “Storm and Fury” by Jennifer L. Armentrout. Olivia Haley petitioned for the removal of all four of these books.",
+   "title": "‘At least 90% of my time’: Book challenge policies continue to consume Alachua County school employees’ focus"
+  },
+  {
+   "url": "https://www.wuft.org/education/2024-05-24/at-least-90-of-my-time-book-challenge-policies-continue-to-consume-alachua-county-school-employees-focus?_amp=true",
+   "quote": "As seen in this most recent advisory meeting, committee members have to consider what sexual references are appropriate for the age group in which the books are intended. The committee saw no specific references to sex or gender in “Julian is a Mermaid” and voted for it to remain.",
+   "title": "‘At least 90% of my time’: Book challenge policies continue to consume Alachua County school employees’ focus"
+  },
+  {
+   "url": "https://www.fox8live.com/2023/03/28/st-tammany-library-board-keeps-lgbtq-themed-books-shelves/",
+   "quote": "The St. Tammany Library Board of Conduct voted Monday (Mar. 23) to keep several books on the shelves that were challenged for their subject matter.",
+   "title": "St. Tammany library board keeps LGBTQ-themed books on shelves"
+  },
+  {
+   "url": "https://www.fox8live.com/2023/03/28/st-tammany-library-board-keeps-lgbtq-themed-books-shelves/",
+   "quote": "The books up for discussion at the meeting were:\nI Am Jazz\nJulian is a Mermaid\nMy Rainbow\nWhen Aiden Became a Brother",
+   "title": "St. Tammany library board keeps LGBTQ-themed books on shelves"
+  },
+  {
+   "url": "https://www.fox8live.com/2023/03/28/st-tammany-library-board-keeps-lgbtq-themed-books-shelves/",
+   "quote": "All four books will remain on the library shelves after Monday’s votes.",
+   "title": "St. Tammany library board keeps LGBTQ-themed books on shelves"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Removed or formally challenged in UK secondary-school libraries during the 2023-2024 Index on Censorship survey of UK school librarians, in which 53% of respondents had been asked to remove a book and 56% of those requests led to removal. Predominantly anti-LGBTQ+ challenges driven by parents. Source: Index on Censorship — Banned: school librarians shushed over LGBT+ books."
+  },
+  {
+   "country": "Malaysia",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2025-08-27 (P.U. (A) 276). Publisher: WALKER BOOKS LTD.. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 15
+}

@@ -1,0 +1,44 @@
+{
+ "slug": "sophies-choice",
+ "title": "Sophie's Choice",
+ "author": "William Styron",
+ "first_published_year": 1979,
+ "current_text": "Sophie's Choice was banned in Lebanon for its positive depiction of Jews.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "Sophie's Choice (1979) |\nWilliam Styron |\n1979 |\nNovel |\nBanned in Lebanon for its positive depiction of Jews.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "South Africa",
+   "year": 1979,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned by censors working for the government of South Africa under apartheid for being a sexually explicit work."
+  },
+  {
+   "country": "Lebanon",
+   "year": 1979,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Poland",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Banned by the censors in the Communist People's Republic of Poland for its unflinching portrait of Polish anti-Semitism."
+  }
+ ],
+ "institution_rows": 8
+}

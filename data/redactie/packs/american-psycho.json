@@ -1,0 +1,54 @@
+{
+ "slug": "american-psycho",
+ "title": "American Psycho",
+ "author": "Bret Easton Ellis",
+ "first_published_year": 1991,
+ "current_text": "In 1991, American Psycho was classified R18 under Australian national censorship legislation, requiring it to be sold in plastic and only to people over 18. In 1991, New Zealand’s Indecent Publications Tribunal gave American Psycho an R18 decision. Police raided an Adelaide bookshop owner for selling copies of American Psycho that were not plastic-wrapped.",
+ "sources": [
+  {
+   "url": "https://www.abc.net.au/news/2015-07-17/american-psycho-removed-from-adelaide-bookshelves/6628846",
+   "quote": "The novel, by American author Bret Easton Ellis, has been classified R18 under national censorship legislation since its release in 1991, requiring it to be sold in plastic and only to those aged over 18.",
+   "title": "Police ask for new edition of American Psycho to be kept from Adelaide bookshelves - ABC News"
+  },
+  {
+   "url": "https://library.victoria.ac.nz/databases/nzgazettearchive/pubs/gazettes/1992/1992%20ISSUE%20010.pdf",
+   "quote": "On 19 August 1991, the Indecent Publications Tribunal considered the following publication :\nDecision\nTitle\nPublisher\nImporter\nNo.\nDate\nPicador\nPam MacMillan\n42/91 12/12/91 American Psycho\n(NZ) Limited\nApplicant\nComptroller of\nCustoms\nDecision\nR18",
+   "title": null
+  },
+  {
+   "url": "https://www.abc.net.au/news/2015-07-17/american-psycho-removed-from-adelaide-bookshelves/6628846",
+   "quote": "An Adelaide bookshop owner has been \"gently raided\" by police for selling copies of the cult novel, American Psycho that were not plastic-wrapped. The novel, by American author Bret Easton Ellis, has been classified R18 under national censorship legislation since its release in 1991, requiring it to be sold in plastic and only to those aged over 18.",
+   "title": "Police ask for new edition of American Psycho to be kept from Adelaide bookshelves - ABC News"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": 1991,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Restricted in Australia because of extreme sexual violence and graphic content; it has been sold under age restrictions, and enforcement has focused on classification and display rules rather than a literary court trial. In Australia, the book is sold shrink-wrapped and is classified 'R18' under national censorship legislation (i.e., the book may not be sold to those under 18 years of age). Along with other Category 1 publications, its sale is theoretically banned in the state of Queensland, and it may only be purchased shrink-wrapped."
+  },
+  {
+   "country": "New Zealand",
+   "year": 1991,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The Indecent Publications Tribunal classified the novel R18 (Decision 42/91, 12 Dec 1991); it was restricted, not banned."
+  },
+  {
+   "country": "Germany",
+   "year": 1995,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Indexed by BPjM for extreme violence and sexual content. Sale restricted to adults. In Germany, the book was deemed 'harmful to minors' and its sales and marketing severely restricted from 1995 to 2000."
+  }
+ ],
+ "institution_rows": 13
+}

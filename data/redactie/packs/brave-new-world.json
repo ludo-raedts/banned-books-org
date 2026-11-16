@@ -1,0 +1,58 @@
+{
+ "slug": "brave-new-world",
+ "title": "Brave New World",
+ "author": "Aldous Huxley",
+ "first_published_year": 1932,
+ "current_text": "Brave New World was banned in Ireland from 1932 to 1967 over allegations of sexual promiscuity. Brave New World was banned in Australia in 1932.",
+ "sources": [
+  {
+   "url": "https://www.cae.edu.au/news/banned-books/",
+   "quote": "Brave New World by Aldous Huxley, 1932 [B2131] – banned in Ireland (1932-1967) for allegations of sexual promiscuity.",
+   "title": "Banned Books | CAE"
+  },
+  {
+   "url": "https://spatial-humanities.library.utoronto.ca/exhibits/show/an-endangered-brave-new-world/context",
+   "quote": "Aldous Huxley’s Brave New World was first published in 1932 by Chatto & Windus in London, England, and was then banned in Australia in the very same year, as the images of digital archival photos below (sourced from the National Archives of Australia’s Search and Retrieve Database) show.",
+   "title": "Context · Schatz - A2 Exhibit - An Endangered Brave New World · Spatial Humanities"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1932,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Australia",
+   "year": 1932,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta as ideologically subversive."
+  },
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 43
+}

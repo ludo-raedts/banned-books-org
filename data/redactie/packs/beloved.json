@@ -1,0 +1,26 @@
+{
+ "slug": "beloved",
+ "title": "Beloved",
+ "author": "Toni Morrison",
+ "first_published_year": 1987,
+ "current_text": "In February 2013, a parent in Fairfax County filed a complaint to remove Beloved from AP English classrooms because she said it had given her son nightmares; the Fairfax County school board did not take up the complaint.",
+ "sources": [
+  {
+   "url": "https://ncac.org/incident/krrp-weighs-in-on-virginia-boe-bid-to-red-flag-books",
+   "quote": "This issue began in February of 2013, when a parent in Fairfax County filed a complaint to have Beloved removed from AP English classrooms because it had given her son nightmares. The Fairfax County school board felt the complaint was not a priority for the large district, and did not take it up.",
+   "title": "KRRP Weighs in on Virginia BOE Bid to Red Flag Books - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2007,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 87
+}

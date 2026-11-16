@@ -1,0 +1,67 @@
+{
+ "slug": "the-anarchist-cookbook",
+ "title": "The Anarchist Cookbook",
+ "author": "William Powell",
+ "first_published_year": 1971,
+ "current_text": "The Classification Board refused classification to The Anarchist Cookbook in Australia on 10 May 1985; the copy had been submitted by NSW.",
+ "sources": [
+  {
+   "url": "https://www.classification.gov.au/titles/anarchist-cookbook-c-1971",
+   "quote": "ANARCHIST COOKBOOK, THE (C) 1971\nCategory\nPublication\nDuration\npages\nClassification date\n10 May 1985\nWhat do the ratings mean?\nIndustry details\nClassification date 10 May 1985\nYear of production Not Specified\nClassification RC",
+   "title": "ANARCHIST COOKBOOK, THE (C) 1971 | Australian Classification"
+  },
+  {
+   "url": "https://www.refused-classification.com/censorship/publication/crime-violence/",
+   "quote": "The Anarchist Cookbook\nAuthor William Powell / 1971 / USA / Wikipedia\nThis controversial title was first published in 1971; however, it was not until 1985 that a copy was refused by the Classification Board.\nDate: May 1985\nTitle: THE ANARCHIST COOKBOOK (C) 1971 (Paperback)\nSubmitted by: NSW",
+   "title": "Banned Crime & Violence Publications - Refused-Classification.com"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "France",
+   "year": 1971,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by French ministerial decree under Article 14 of the Loi n° 49-956 du 16 juillet 1949 sur les publications destinées à la jeunesse. Decree par Raymond Marcellin (gouvernement Jacques Chaban-Delmas - 1969-1972). Citation: JO du 23 juin 1971, p.6051."
+  },
+  {
+   "country": "Australia",
+   "year": 1985,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Refused classification by the Australian Classification Board in May 1985 and re-classified RC on 31 October 2016, on the basis that the book \"could promote, incite or instruct in matters of crime or violence\" — equivalent to a national ban on sale under the National Classification Code Table 1(c)."
+  },
+  {
+   "country": "New Zealand",
+   "year": 1994,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Officially banned in New Zealand in 1994 by the Indecent Publications Tribunal as objectionable matter under New Zealand classification law."
+  },
+  {
+   "country": "United Kingdom",
+   "year": 2021,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "Possession of The Anarchist Cookbook has led to multiple UK terrorism prosecutions under section 58 of the Terrorism Act 2000. Convictions include Oliver Bel (2021, 23-year-old Cambridge mathematics graduate, three years' imprisonment), Ben John (2021, three-year sentence: two custody plus one year on licence), and Claudiu Stefan Cristea (2025). Earlier prosecutions — a 17-year-old arrested in 2007 (acquitted October 2008) and Joshua Walker in 2017 (acquitted on academic-purpose grounds) — did not result in conviction."
+  },
+  {
+   "country": "Canada",
+   "year": null,
+   "end": 2002,
+   "status": "rescinded",
+   "confidence": "verified",
+   "scope": 6,
+   "note": "A long-standing customs restriction on importing The Anarchist Cookbook into Canada was lifted in 2002 by the Canada Customs and Revenue Agency, which concluded the book \"does not violate either hate or obscenity laws.\""
+  }
+ ],
+ "institution_rows": 0
+}

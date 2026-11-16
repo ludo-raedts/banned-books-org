@@ -1,0 +1,86 @@
+{
+ "slug": "madame-bovary",
+ "title": "Madame Bovary",
+ "author": "Gustave Flaubert",
+ "first_published_year": 1857,
+ "current_text": "In 1857, Gustave Flaubert, the owner and the printer of La Revue de Paris were tried before the Tribunal correctionnel de la Seine over the serialised publication of Madame Bovary, accused of insulting public morals and offending decent manners; they were acquitted in February 1857.",
+ "sources": [
+  {
+   "url": "https://www.napoleon.org/en/history-of-the-two-empires/close-up/a-close-up-on-the-flaubert-madame-bovary-trial",
+   "quote": "7 February, 1857, saw the end of the trial involving the writer Gustave Flaubert, the owner, and the printer of La Revue de Paris. The three men had been accused of insulting public morals and offending decent manners by the serialised publication of the novel Madame Bovary.",
+   "title": "A close-up on: the Flaubert Madame Bovary trial - napoleon.org"
+  },
+  {
+   "url": "https://www.napoleon.org/en/history-of-the-two-empires/close-up/a-close-up-on-the-flaubert-madame-bovary-trial",
+   "quote": "7 February, 1857, saw the end of the trial involving the writer Gustave Flaubert, the owner, and the printer of La Revue de Paris. The three men had been accused of insulting public morals and offending decent manners by the serialised publication of the novel Madame Bovary. They were however to be acquitted.",
+   "title": "A close-up on: the Flaubert Madame Bovary trial - napoleon.org"
+  },
+  {
+   "url": "https://www.larousse.fr/encyclopedie/oeuvre/Madame_Bovary/130985",
+   "quote": "La censure pointilleuse du second Empire s'alarme; Flaubert, le gérant et l'imprimeur du journal comparaissent (janvier 1857) devant la 6 chambre du Tribunal correctionnel de la Seine (l'instance qui condamnera les Fleurs du mal de Baudelaire la même année) pour avoir outragé la morale publique et la religion.",
+   "title": "Madame Bovary <I>Mœurs de province</I> - LAROUSSE"
+  },
+  {
+   "url": "https://www.larousse.fr/encyclopedie/oeuvre/Madame_Bovary/130985",
+   "quote": "Les accusés sont acquittés (février 1857), eu égard notamment à la cohérence de l'ensemble, le peu de passages concernés et au fait qu'il s'agisse d'« une œuvre qui paraît avoir été longuement et sérieusement travaillée ». Le roman est un succès.",
+   "title": "Madame Bovary <I>Mœurs de province</I> - LAROUSSE"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "France",
+   "year": 1856,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Flaubert was indicted in France in 1856 for an outrage to good manners and acquitted."
+  },
+  {
+   "country": "France",
+   "year": 1857,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1864,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Prohibited by a decree of 1864, as recorded in the Index Librorum Prohibitorum (Rome, 1877 edition)."
+  },
+  {
+   "country": "Portugal",
+   "year": 1940,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Flaubert's adultery novel; among French-authored works banned in Portugal 1933–1974."
+  },
+  {
+   "country": "United States",
+   "year": 1954,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 7,
+   "note": "Placed on the black list of the National Organization for Decent Literature in 1954."
+  },
+  {
+   "country": "Portugal",
+   "year": 1960,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). The year (1960) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP."
+  }
+ ],
+ "institution_rows": 2
+}

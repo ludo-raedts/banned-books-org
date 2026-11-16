@@ -1,0 +1,63 @@
+{
+ "slug": "open-veins-of-latin-america",
+ "title": "Open Veins of Latin America",
+ "author": "Eduardo Galeano",
+ "first_published_year": 1971,
+ "current_text": "Following its publication in 1971, Open Veins of Latin America was banned by military governments in Chile, Argentina and Uruguay. Open Veins of Latin America was also banned in Brazil.",
+ "sources": [
+  {
+   "url": "https://www.centreforglobaleducation.com/open-veins-latin-america-re-appraisal-50-years",
+   "quote": "In her Foreword to Open Veins, the novelist Isabelle Allende said that Galeano ‘denounced exploitation with uncompromising ferocity’ and following the book’s publication, it was banned by military governments in Chile, Argentina and Uruguay.",
+   "title": "Open Veins of Latin America: A Re-appraisal 50 Years On | Centre for Global Education"
+  },
+  {
+   "url": "https://www.democracynow.org/2013/5/8/eduardo_galeano_on_writing_historical_amnesia_in_latin_america_his_fight_against_cancer",
+   "quote": "Since its publication in 1971, Open Veins has sold over a million copies worldwide despite being banned by the military governments in Chile, Argentina and his native country of Uruguay.",
+   "title": "Eduardo Galeano on Writing, “Historical Amnesia” in Latin America & His Fight Against Cancer | Democracy Now!"
+  },
+  {
+   "url": "https://www.connexions.org/CxLibrary/CX8610.htm",
+   "quote": "Originally banned in Brazil, Uruguay, and Chile, Open Veins of Latin America has undergone multiple printings since its first publication in 1971, a testament to the importance and continued relevance of this work.",
+   "title": "Open Veins of Latin America"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Chile",
+   "year": 1973,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given."
+  },
+  {
+   "country": "Argentina",
+   "year": 1973,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given."
+  },
+  {
+   "country": "Uruguay",
+   "year": 1973,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given."
+  },
+  {
+   "country": "Brazil",
+   "year": 1974,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia's article says the book was banned by right-wing military governments (citing a 2009 Democracy Now interview); no year is given."
+  }
+ ],
+ "institution_rows": 0
+}

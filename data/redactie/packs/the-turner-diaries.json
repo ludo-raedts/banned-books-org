@@ -1,0 +1,49 @@
+{
+ "slug": "the-turner-diaries",
+ "title": "The Turner Diaries",
+ "author": "William Luther Pierce",
+ "first_published_year": 1978,
+ "current_text": "Canada Customs classified The Turner Diaries as hate literature and issued an import prohibition in July 1996. The Turner Diaries was banned in Germany in April 2006.",
+ "sources": [
+  {
+   "url": "https://www.freedomtoread.ca/challenged-works/the-turner-diaries/",
+   "quote": "Update— Canada Customs has never allowed the book into Canada, having stopped it at the border half a dozen times. Since the new edition came out with a mainstream publisher, Canada Customs reviewed the book and classified it as hate literature. The import prohibition was issued in July 1996",
+   "title": "The Turner Diaries - Freedom to Read"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Turner_Diaries",
+   "quote": "It has been banned in Germany since April 2006.",
+   "title": "The Turner Diaries - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Canada",
+   "year": 1996,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Canada Customs reviewed the new mainstream edition, classified it as hate literature and issued an import prohibition in July 1996; earlier copies had been stopped at the border (Freedom to Read)."
+  },
+  {
+   "country": "France",
+   "year": 1999,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "The Turner Diaries was made illegal in France in 1999 due to its advocacy of racism, antisemitism, and the use of violence."
+  },
+  {
+   "country": "Germany",
+   "year": 2006,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Placed on the BPjM index in Germany in April 2006 (German Wikipedia, citing a 2007 federal government answer and Boersenblatt 2006)."
+  }
+ ],
+ "institution_rows": 0
+}

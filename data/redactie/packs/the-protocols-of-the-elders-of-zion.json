@@ -1,0 +1,45 @@
+{
+ "slug": "the-protocols-of-the-elders-of-zion",
+ "title": "The Protocols of the Elders of Zion",
+ "author": "Unknown",
+ "first_published_year": 1903,
+ "current_text": "Between 1933 and 1935, Jewish organizations initiated a trial in Bern against members of the Swiss extreme right-wing National Front who had distributed The Protocols of the Elders of Zion; the plaintiffs won, and in May 1935 the trial judge ruled that the text was plagiarised and a fabrication.",
+ "sources": [
+  {
+   "url": "https://wiener.soutron.net/Portal/Default/en-GB/RecordView/Index/93196",
+   "quote": "The plaintiffs’ case was upheld. Walter Meyer, the trial judge, ruled in May 1935 that the text of the Protocols was plagiarised from an earlier pamphlet by Maurice Joly, published anonymously in Brussels in 1864, proving that the Protocols of the Elders of Zion was a fabrication.",
+   "title": null
+  },
+  {
+   "url": "https://en-cenlib.tau.ac.il/wiener/collection-online",
+   "quote": "The trial, held in Bern, Switzerland, between 1934 and 1935, was the result of a legal action taken by the Swiss Federation of Jewish Communities (SIG). The plaintiffs sued and won against the Bund Nationalsozialistischer Eidgenossen (BNSE) which distributed anti-Semitic pamphlets, notably \"Die zionistischen Protokolle\", during a meeting held by the National Front and the Heimatwehr, on June 13, 1933, in the Casino of Bern.",
+   "title": "The Online Wiener Archive | Wiener Library | Tel Aviv University"
+  },
+  {
+   "url": "https://yivo.org/The-Bern-Trial",
+   "quote": "Between 1933 and 1935, a trial was held in Bern against members of the Swiss extreme right-wing National Front who had distributed “The Protocols of the Elders of Zion,” a widely disseminated antisemitic publication that spread lies about Jews. The real target of the Jewish organizations that initiated the trial, however, was the pamphlet itself, its origin, its dissemination, and its use in Europe's fascist movements.",
+   "title": "\"The Protocols of the Elders of Zion\" in Court: The Bern Trial (1933-1935) and the \"Antisemitic International\" | YIVO Institute for Jewish Research"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1945,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Russia",
+   "year": 1993,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

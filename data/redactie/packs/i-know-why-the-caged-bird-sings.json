@@ -1,0 +1,35 @@
+{
+ "slug": "i-know-why-the-caged-bird-sings",
+ "title": "I Know Why the Caged Bird Sings",
+ "author": "Maya Angelou",
+ "first_published_year": 1969,
+ "current_text": "In 1983, four members of the Alabama State Textbook Committee called for the rejection of I Know Why the Caged Bird Sings, claiming it preached “bitterness and hatred toward white people” and encouraged “deviant behavior” through references to lesbianism, premarital sex and profanity.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1983-i-know-why-the-caged-bird-sings/",
+   "quote": "In 1983, four members of the Alabama State Textbook Committee called for the rejection of “I Know Why the Caged Bird Sings,” claiming the work preaches “bitterness and hatred toward white people and encourages deviant behavior because of references to lesbianism, premarital sex and profanity.”",
+   "title": "Timeline Entry for 1983: I Know Why the Caged Bird Sings - Intellectual Freedom Blog"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1983,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Kuwait",
+   "year": 2016,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Angelou's memoir was among the titles barred by Kuwait's Ministry of Information."
+  }
+ ],
+ "institution_rows": 59
+}

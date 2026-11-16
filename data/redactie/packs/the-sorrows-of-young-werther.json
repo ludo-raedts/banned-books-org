@@ -1,0 +1,35 @@
+{
+ "slug": "the-sorrows-of-young-werther",
+ "title": "The Sorrows of Young Werther",
+ "author": "Johann Wolfgang von Goethe",
+ "first_published_year": 1774,
+ "current_text": "In 1775 both the novel and the Werther clothing style were banned in Leipzig, and the novel was also banned in Denmark and Italy (no date given for those two).",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Sorrows_of_Young_Werther",
+   "quote": "both the novel and the Werther clothing style were banned in Leipzig in 1775; the novel was also banned in Denmark and Italy.",
+   "title": "Wikipedia: The Sorrows of Young Werther"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Italy",
+   "year": 1775,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia, citing Furedi (History Today, 2015), says the novel was banned in Italy and Denmark; Leipzig 1775. No Italian date given."
+  },
+  {
+   "country": "Germany",
+   "year": 1775,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 1775, both the novel and the Werther clothing style were banned in Leipzig due to concerns over the 'Werther effect'."
+  }
+ ],
+ "institution_rows": 0
+}

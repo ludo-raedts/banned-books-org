@@ -1,0 +1,31 @@
+{
+ "slug": "red-white-and-royal-blue",
+ "title": "Red, White, and Royal Blue",
+ "author": "Casey McQuiston",
+ "first_published_year": 2019,
+ "current_text": "Cecil County Public Schools listed Red, White, and Royal Blue for removal from its media center collections on October 12, 2022. The Rockingham County School Board voted to remove Red, White, and Royal Blue from school libraries after Superintendent Dr. Larry Shifflett said it contained sexually explicit content as defined in RCPS Policy IIABA.",
+ "sources": [
+  {
+   "url": "https://www.ccps.org/administration/education-services/reviews",
+   "quote": "Red, White, and Royal Blue\nBy: Casey McQuiston\n|\nRemove from Media Center Collections\n|\nMedia Center\n|\nOctober 12, 2022",
+   "title": "Reviews - Cecil County Public Schools"
+  },
+  {
+   "url": "https://rocktownnow.com/news/218812-rcps-votes-to-remove-six-books-from-school-libraries-keeps-one/",
+   "quote": "ROCKINGHAM COUNTY, VA (Rocktown Now) – The Rockingham County School Board has voted to remove six books from their schools’ libraries during tonight’s meeting.\nSuperintendent Dr. Larry Shifflett recommended to remove Red, White, and Royal Blue, Tilt, and Tricks. Dr. Shifflett said the reason for removal was because the books contain sexually explicit content as defined in RCPS Policy IIABA. The motion for the three books passed unanimously.",
+   "title": "RCPS votes to remove six books from school libraries, keeps one - Rocktown Now"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 46
+}

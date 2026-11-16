@@ -1,0 +1,54 @@
+{
+ "slug": "fifty-shades-of-grey",
+ "title": "Fifty Shades of Grey",
+ "author": "E L James",
+ "first_published_year": 2011,
+ "current_text": "The Home Ministry banned the printing, publication and ownership of the Fifty Shades of Grey trilogy in Malaysia under an order dated February 24, citing morality. In 2012, the Brevard public library removed nineteen copies of Fifty Shades of Grey from circulation on the ground that it was “semi-pornographic”; the Brevard County Library System later decided to return the book to its shelves in response to public demand and after review.",
+ "sources": [
+  {
+   "url": "https://www.malaymail.com/news/malaysia/2015/02/27/after-movie-malaysia-also-bans-fifty-shadesbooks/849119",
+   "quote": "The Home Ministry has banned the popular “Fifty Shades of Grey” erotica trilogy, citing reasons of morality, after previously prohibiting the screening of the movie adaptation locally. The order under the Printing Presses and Publications Act 1984 dated February 24 banned the printing, publication and even ownership of the romance novels by British author EL James",
+   "title": "After movie, Malaysia also bans ‘Fifty Shades’ books | Malay Mail"
+  },
+  {
+   "url": "https://www.aclufl.org/news/fifty-shades-censorship/",
+   "quote": "When the Brevard public library removed from circulation nineteen copies of\nFifty Shades of Grey, based on one individual’s misguided sense of decorum, a resounding chorus of “Really?” was heard across the country: in 2012, would a public library, an arm of the government,\nreally strip a book from its collection on the ground that it was “semi-pornographic”?",
+   "title": "Fifty Shades of Censorship - ACLU of Florida"
+  },
+  {
+   "url": "https://baynews9.com/fl/tampa/news/2012/5/28/controversial_book_t",
+   "quote": "The Brevard County Library System will return “Fifty Shades of Grey” to its library shelves.\nThe decision is in response to public demand, but also comes after considerable review and consideration by the library system.",
+   "title": "Controversial book to return to Brevard public libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Brazil",
+   "year": 2013,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 5,
+   "note": "In January 2013, Judge Raphael Queiroz Campos ruled that bookstores in Macaé must either remove the Fifty Shades of Grey series from their shelves or ensure that the books are wrapped and placed out of the reach of minors."
+  },
+  {
+   "country": "Malaysia",
+   "year": 2015,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2015-02-27 (P.U.(A) 37). Publisher: Vintage Books. Printer: -. Language: INGGERIS."
+  },
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Sexually explicit, unsuited to age group, and other (\"poorly written,\" \"concerns that a group of teenagers will want to try it\")"
+  }
+ ],
+ "institution_rows": 2
+}

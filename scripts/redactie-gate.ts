@@ -16,7 +16,7 @@ async function main() {
   let fail = 0
   for (const s of Object.keys(drafts)) {
     const d = drafts[s]; const pack = JSON.parse(await fs.readFile(`data/redactie/packs/${s}.json`, 'utf8'))
-    const facts = norm([pack.title, pack.author, pack.first_published_year, pack.current_text, ...(pack.sources ?? []).map((x: any) => x.quote), ...pack.ban_rows.map((r: any) => [r.country, r.year, r.end, r.note].join(' '))].join(' '))
+    const facts = norm([pack.title, pack.author, pack.first_published_year, pack.current_text, ...(pack.sources ?? []).map((x: any) => x.quote), ...pack.ban_rows.map((r: any) => [r.country, r.year, r.end, r.note].join(' '))].join(' ')).replace(/(\d),(?=\d{3}\b)/g, '$1')
     const issues: string[] = []; const warns: string[] = []
     const t = String(d.text ?? ''); const wc = t.split(/\s+/).filter(Boolean).length
     if (wc < 15 || wc > 160) issues.push(`length ${wc} words`)

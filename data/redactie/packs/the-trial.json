@@ -1,0 +1,44 @@
+{
+ "slug": "the-trial",
+ "title": "The Trial",
+ "author": "Franz Kafka",
+ "first_published_year": 1925,
+ "current_text": "In 1933, the National Socialists placed Franz Kafka, author of The Trial, on their list of banned authors and publicly burned his works.",
+ "sources": [
+  {
+   "url": "https://www.stadtarchiv-und-bibliothek-trier.de/aktuelles/objekt-des-monats/3439.Objekt-des-Monats-Juni-2024-Benjamin-Balint-Kafkas-letzter-Prozess.-Die-zwei-Prozesse-von-Franz-K..html",
+   "quote": "Exemplarisch kann man das Schicksal des Nachlasses von Kafka am Beispiel des unvollendeten Romans Der Prozess beschreiben, der trotz Anweisungen des Autors nicht vernichtet, sondern 1925 veröffentlicht wurde. 1933 stand Kafka auf der Liste der durch die Nationalsozialisten verbotenen Autoren, seine Werke wurden in der öffentlichkeit verbrannt.",
+   "title": "Objekt des Monats Juni 2024: Benjamin Balint: &bdquo;Kafkas letzter Prozess“. Die zwei Prozesse von Franz K."
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Czechoslovakia",
+   "year": 1948,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta as subversive literature."
+  }
+ ],
+ "institution_rows": 0
+}

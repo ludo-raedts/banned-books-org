@@ -1,0 +1,44 @@
+{
+ "slug": "rangila-rasul",
+ "title": "Rangila Rasul",
+ "author": "M.A. Chamupati",
+ "first_published_year": 1924,
+ "current_text": "In 1924, authorities prosecuted Raj Pal over Rangila Rasul under Section 153A of the Indian Penal Code after Muslim protests against the pamphlet.",
+ "sources": [
+  {
+   "url": "https://www.livelaw.in/columns/the-curious-origin-of-the-crime-of-outraging-religious-feelings-by-insulting-religious-beliefs-163507",
+   "quote": "The pamphlet was published in May, 1924, and by July, Muslim protests against it moved the authorities to act. Raj Pal was prosecuted under Section 153A of the Indian Penal Code.",
+   "title": "The Curious Origin Of The Crime Of Outraging Religious Feelings By Insulting Religious Beliefs"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1924,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Bangladesh",
+   "year": 1924,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Currently banned in India, Pakistan, and Bangladesh due to their penal codes, which include provisions against blasphemy. The book remains difficult to find physically."
+  },
+  {
+   "country": "Pakistan",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Currently banned in India, Pakistan, and Bangladesh."
+  }
+ ],
+ "institution_rows": 0
+}

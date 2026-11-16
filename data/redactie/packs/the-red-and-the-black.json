@@ -1,0 +1,35 @@
+{
+ "slug": "the-red-and-the-black",
+ "title": "The Red and the Black",
+ "author": "Stendhal",
+ "first_published_year": 1830,
+ "current_text": "The Vatican placed The Red and the Black on the Index in 1864, and Pope Leo XIII reconfirmed the decision in 1897.",
+ "sources": [
+  {
+   "url": "https://www.otago.ac.nz/library/exhibitions/bannedbooks/",
+   "quote": "'Everywhere hypocrisy, or at least charlatanism, even among the virtuous, even among the greatest', so said Julien Sorel in Stendhal's The Red and the Black, which was first published in France in 1831. Stendhal's portrayal of God as a 'petty despot' and his anti-clericalism led to the Catholic Church censoring his writings. The Vatican placed this work and all of Stendhal's 'love stories' on the Index in 1864, a decision that was reconfirmed by Pope Leo XIII in 1897.",
+   "title": "Heresy, Sedition, Obscenity: The Book Challenged, Special Collections Exhibition, University of Otago Library, Dunedin, New Zealand"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1864,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Prohibited by a decree of 1864, as recorded in the Index Librorum Prohibitorum (Rome, 1877 edition)."
+  },
+  {
+   "country": "Brazil",
+   "year": 1964,
+   "end": null,
+   "status": "historical",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 1964, General Justino Alves Bastos ordered the burning of all 'subversive books' in Rio Grande do Sul, which included The Red and the Black."
+  }
+ ],
+ "institution_rows": 0
+}

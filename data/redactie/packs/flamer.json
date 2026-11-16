@@ -1,0 +1,40 @@
+{
+ "slug": "flamer",
+ "title": "Flamer",
+ "author": "Mike Curato",
+ "first_published_year": 2020,
+ "current_text": "The Hanover County School Board voted to remove Flamer from circulation on the grounds that it lacked educational suitability and was not age appropriate. In Katy ISD, parents and community members challenged Flamer at board meetings, saying its descriptions of sex constituted “pornography”; a committee had deemed it appropriate for high school students in the district in March.",
+ "sources": [
+  {
+   "url": "https://www.12onyourside.com/2023/06/14/hanover-county-school-board-votes-adopt-new-controversial-book-policy/?outputType=amp",
+   "quote": "After the policy passed 5 to 2, board members went on to unanimously vote to remove several books from circulation on the basis of lack of educational suitability and not being age appropriate.\nBelow is a list of books that were voted to be removed from the shelves:\nA Court of Mist and Fury\nA Court of Silver Flames\nAll Boys Aren’t Blue\nChoke\nFlamer",
+   "title": "Hanover County School Board votes to adopt new controversial book policy"
+  },
+  {
+   "url": "https://www.houstonchronicle.com/news/houston-texas/education/article/Katy-ISD-police-investigated-library-book-17391077.php",
+   "quote": "The book, “Flamer,” by Mike Curato, had been formally reviewed by a committee and deemed appropriate for high school students in the district in March, records show. However, a vocal group of parents and community members continued to speak out against the book at many board meetings, saying the descriptions of sex in the work constitute “pornography.”",
+   "title": "Katy ISD police ‘investigated’ a library book after complaint"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Canada",
+   "year": 2025,
+   "end": 2025,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 1,
+   "note": "Flamer was banned in Alberta and is to be removed from school libraries by October 2025."
+  },
+  {
+   "country": "Peru",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Cited specifically in the same 2025 Indecopi/Colegio Roosevelt ruling as a 'sexually explicit graphic novel'; restricted in one private school's library, not nationally banned."
+  }
+ ],
+ "institution_rows": 67
+}

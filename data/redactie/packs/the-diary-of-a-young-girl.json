@@ -1,0 +1,31 @@
+{
+ "slug": "the-diary-of-a-young-girl",
+ "title": "The Diary of a Young Girl",
+ "author": "Anne Frank",
+ "first_published_year": 1947,
+ "current_text": "In 2010, Culpeper County Public Schools received a parent complaint that The Diary of a Young Girl contained “explicit material and homosexual themes”; the district kept the book in its library but changed the curriculum to use an earlier, less explicit version. Lebanon banned The Diary of a Young Girl for portraying Jews, Israel and Zionism favourably.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/happy-birthday-anne-frank-2/",
+   "quote": "Some notable challenges include in 2010, when Culpeper County Public Schools received a parent complaint that the book contained “explicit material and homosexual themes.” The district kept the book in its library, but changed the curriculum to instead use an earlier, less explicit version of the book.",
+   "title": "Happy Birthday, Anne Frank - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.dawn.com/news/618225",
+   "quote": "Lebanon also banned The Diary of Anne Frank for portraying Jews, Israel and Zionism favourably.",
+   "title": "Banned books - Newspaper - DAWN.COM"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2010,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Discussions of puberty and teenage sexuality"
+  }
+ ],
+ "institution_rows": 4
+}

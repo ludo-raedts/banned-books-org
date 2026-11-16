@@ -1,0 +1,26 @@
+{
+ "slug": "the-jewel-of-medina",
+ "title": "The Jewel of Medina",
+ "author": "Sherry Jones",
+ "first_published_year": 2008,
+ "current_text": "The government banned The Jewel of Medina in Malaysia in 2009.",
+ "sources": [
+  {
+   "url": "https://www.refworld.org/reference/annualreport/usdos/2010/en/76588",
+   "quote": "The government banned 22 books in 2009, at least three due to religious content: The Jewel of Medina, The Trouble with Islam Today, and Ibrahim and Sarah.",
+   "title": "2010 Report on International Religious Freedom - Malaysia | Refworld"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2009,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2009-07-30 (P.U. (A) 271). Publisher: Beaufort Books, New York. Printer: Dicetak di Amerika Syarikat. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 1
+}

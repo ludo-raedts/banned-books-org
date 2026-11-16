@@ -1,0 +1,49 @@
+{
+ "slug": "a-little-life",
+ "title": "A Little Life",
+ "author": "Hanya Yanagihara",
+ "first_published_year": 2008,
+ "current_text": "In 2025 A Little Life by Hanya Yanagihara, together with To Paradise, was banned from distribution in Belarus, citing potential harm to national interests.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/A_Little_Life",
+   "quote": "In 2025, A Little Life along with Yanagihara's subsequent novel, To Paradise , were banned from distribution in Belarus citing potential harm to national interests.",
+   "title": "Wikipedia: A Little Life (cites Reform.news and PEN Belarus Banned Books list)"
+  },
+  {
+   "url": "https://reform.news/v-belarusi-zapretili-knigi-palanika-janagihary-i-zheny-polskogo-glavy-mid",
+   "quote": "В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД Reform.news 24 января 2025",
+   "title": "Reform.news: В Беларуси запретили книги Паланика, Янагихары и жены польского главы МИД"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2022,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Russia",
+   "year": 2023,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "Distribution restricted in Russia following the November 2023 Russian Supreme Court ruling that designated the \"international LGBT movement\" as extremist. Yanagihara's novel was among the high-profile English-language titles pulled or restricted by Russian retailers."
+  },
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 2
+}

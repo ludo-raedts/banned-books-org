@@ -1,0 +1,49 @@
+{
+ "slug": "for-whom-the-bell-tolls",
+ "title": "For Whom the Bell Tolls",
+ "author": "Ernest Hemingway",
+ "first_published_year": 1940,
+ "current_text": "In Spain, censors prohibited publication of For Whom the Bell Tolls until 1968, when a censored Spanish translation was published under the title Por quién doblan las campanas.",
+ "sources": [
+  {
+   "url": "https://journals.sub.uni-hamburg.de/apropos/en/article/view/2222",
+   "quote": "The original English edition was published as early as 1940, but it was not until 1968 that the novel was finally published in Spain in a translated – and censored – version under the title Por quién doblan las campanas. This article deals with the publication, translation, and censorship history of said novel in Francoist Spain.",
+   "title": "Literarische Zensur im Franquismus: Rezeption und Zensur von Ernest Hemingways For Whom the Bell Tolls (1940) | apropos [Perspektiven auf die Romania]"
+  },
+  {
+   "url": "https://www.mataderomadrid.org/programacion/la-censura-franquista-de-hemingway-en-espana",
+   "quote": "Los censores prohibieron la publicación de la novela Por quién doblan las campana s hasta el año 1968.",
+   "title": "LA CENSURA FRANQUISTA DE HEMINGWAY EN ESPAÑA | Matadero Madrid"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Turkey",
+   "year": 1973,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 1973, the book was banned in Turkey because it included 'propaganda unfavorable to the state.'"
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta for its portrayal of the Spanish Civil War and anti-fascist themes."
+  },
+  {
+   "country": "Spain",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

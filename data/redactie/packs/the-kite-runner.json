@@ -1,0 +1,41 @@
+{
+ "slug": "the-kite-runner",
+ "title": "The Kite Runner",
+ "author": "Khaled Hosseini",
+ "first_published_year": 2003,
+ "current_text": "In 2023, Cedarburg High School (WI) removed The Kite Runner from the 10th grade curriculum after a parent complained that its depictions of sexual assault, depression, and attempted suicide were inappropriate. In 2013, The Kite Runner was challenged as optional reading in a 10th grade honors class at Troy (PA) area schools because it depicted rape in graphic detail and used vulgar language. In 2012, The Kite Runner was challenged but retained in Senior Advanced Placement English at Valley High School in Jonesboro (AR) after two patrons objected to a scene depicting male-on-male rape, sexual innuendo, vulgar language, and religious content throughout the book. In Morganton, NC, a school board member and a community member challenged The Kite Runner over sexual content and graphic language.",
+ "sources": [
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/kite-runner/",
+   "quote": "2023\nIn response to one parent’s formal complaint, the Cedarburg High School (WI) removed The Kite Runner from the 10th grade curriculum while it was being used by two teachers. Though their child had been provided an alternate text to read, the parent believed the novel’s depictions of sexual assault, depression, and attempted suicide were inappropriate and requested that teaching of the novel be suspended for all current and future students.",
+   "title": "Banned Books 2026 – The Kite Runner – Marshall University Libraries"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/kite-runner/",
+   "quote": "2013\nChallenged as optional reading in the 10th grade honors class at Troy (PA) area schools because the novel depicts a rape in graphic detail and uses vulgar language.",
+   "title": "Banned Books 2026 – The Kite Runner – Marshall University Libraries"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/kite-runner/",
+   "quote": "2012\nChallenged, but retained as part of Senior Advanced Placement English at the Valley High School in Jonesboro (AR). The issue arose after two patrons disapproved of a scene depicting male-on-male rape, sexual innuendo, and vulgar language, as well as religious content throughout the book.",
+   "title": "Banned Books 2026 – The Kite Runner – Marshall University Libraries"
+  },
+  {
+   "url": "https://ncac.org/update/the-kite-runner-challenged-in-morganton-nc",
+   "quote": "The Kite Runner by Khaled Hosseini was challenged for sexual content and graphic language by a school board member and one community member. The school board member has proposed amending the district’s current media policy to apply standards for audio and visual materials including books.",
+   "title": "The Kite Runner Challenged in Morganton, NC - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2008,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 129
+}

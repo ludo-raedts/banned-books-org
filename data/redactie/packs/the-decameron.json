@@ -1,0 +1,53 @@
+{
+ "slug": "the-decameron",
+ "title": "The Decameron",
+ "author": "Giovanni Boccaccio",
+ "first_published_year": 1353,
+ "current_text": "The Decameron was placed on the Index of 1559 under the instructions of Paul IV, and its prohibition was confirmed in the Index of 1564.",
+ "sources": [
+  {
+   "url": "https://www.cyberlibrary.org/en/books/the-censorship-of-the-church-of-rome-and-its-influence-upon-the-8ee11bef/chapters/13/",
+   "quote": "An instance of a book the censorship of which caused no little difficulty to the authorities of the Index is afforded by the _Decameron_ of Boccaccio. The book had, under the instructions of Paul IV, been placed upon the Index of 1559, and the prohibition was confirmed in that of 1564.",
+   "title": "CHAPTER IX | The censorship of the Church of Rome and its influence upon the production and distribution of literature, volume 2 (of 2)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1559,
+   "end": 1966,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 7,
+   "note": "Listed on the Index Librorum Prohibitorum from its first edition in 1559. The Church objected to explicit sexual content and to Boccaccio's satirical portrayals of lecherous clergy. A bowdlerised edition approved for Catholic readers replaced monks with \"hermits\" and abbesses with \"noblewomen.\" The unexpurgated text remained banned until 1966."
+  },
+  {
+   "country": "United States",
+   "year": 1873,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1939,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "In 1939 a NZ magistrate found the Decameron indecent in a prosecution of a lending-library owner; the finding was overturned on appeal later that year."
+  },
+  {
+   "country": "Russia",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "Boccaccio's medieval novella collection was named in independent reporting on a list of roughly 252 titles pulled from major Russian online retailers in late 2024 under Russia's expanded \"LGBT propaganda\" law."
+  }
+ ],
+ "institution_rows": 1
+}

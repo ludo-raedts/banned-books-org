@@ -1,0 +1,36 @@
+{
+ "slug": "the-god-of-small-things",
+ "title": "The God of Small Things",
+ "author": "Arundhati Roy",
+ "first_published_year": 1997,
+ "current_text": "In an interview published on September 30, 1997, Arundhati Roy was reported to face obscenity charges in Kerala brought by an individual lawyer, Sabu Thomas. She said she had appealed to the high court, and they decided to give the case to a lower court.",
+ "sources": [
+  {
+   "url": "https://www.salon.com/1997/09/30/00roy/",
+   "quote": "The Salon Interview: Arundhati Roy. The author of 'The God of Small Things' talks about India, the obscenity charge she faces and how writing is like architecture. By Reena Jana. By Reena Jana Published September 30, 1997 7:00PM (EDT)",
+   "title": "Salon: The Salon Interview: Arundhati Roy"
+  },
+  {
+   "url": "https://www.salon.com/1997/09/30/00roy/",
+   "quote": "The obscenity charges brought forth by an individual lawyer, Sabu Thomas, that you face are in Kerala, the same Indian region you depict in your book.",
+   "title": "Salon interview (same page)"
+  },
+  {
+   "url": "https://www.salon.com/1997/09/30/00roy/",
+   "quote": "In fact, last week, I made an appeal to the high court, and they decided to give the case to a lower court.",
+   "title": "Salon interview (same page)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 11
+}

@@ -1,0 +1,53 @@
+{
+ "slug": "the-metamorphosis",
+ "title": "The Metamorphosis",
+ "author": "Franz Kafka",
+ "first_published_year": 1915,
+ "current_text": "The Soviet Union banned The Metamorphosis for being decadent and despairing. Nazi Germany banned The Metamorphosis as “degenerate,” in connection with Kafka’s Jewish heritage.",
+ "sources": [
+  {
+   "url": "https://www.indexoncensorship.org/wp-content/uploads/2025/08/Index-on-Censorships-Banned-Books-Week-reading-list.pdf",
+   "quote": "The book was banned by the Soviet Union for being decadent and despairing. It was also banned by Nazi Germany for being “degenerate”, connected to Kafka’s Jewish heritage.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Kafka was Jewish; his works were among those burned on May 10, 1933 and banned under the Third Reich."
+  },
+  {
+   "country": "Spain",
+   "year": 1939,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned under Francisco Franco's dictatorship as part of broad censorship of modernist and leftist literature."
+  },
+  {
+   "country": "Soviet Union",
+   "year": 1950,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Kafka's absurdist vision of bureaucratic oppression was officially frowned upon in the USSR for its perceived \"pessimism\" and lack of socialist realism."
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta as part of systematic censorship of leftist-associated authors."
+  }
+ ],
+ "institution_rows": 1
+}

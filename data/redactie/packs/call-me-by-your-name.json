@@ -1,0 +1,49 @@
+{
+ "slug": "call-me-by-your-name",
+ "title": "Call Me By Your Name",
+ "author": "André Aciman",
+ "first_published_year": 2007,
+ "current_text": "In January 2023 the book was permanently banned from libraries and classrooms in St. Johns County School District, and in September 2023 it was banned from libraries and classrooms in Matanuska-Susitna Borough School District.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(novel)",
+   "quote": "In January 2023, the book was permanently banned from libraries and classrooms in St. Johns County School District",
+   "title": "Call Me by Your Name (novel) - Wikipedia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(novel)",
+   "quote": "In September 2023, the book was banned from libraries and classrooms in Matanuska-Susitna Borough School District",
+   "title": "Call Me by Your Name (novel) - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Russia",
+   "year": 2022,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "Russian online retailer Labirint hid the book from sale in December 2022 amid removals of books that mention LGBT topics (The Bell); distribution was restricted further after the November 2023 Supreme Court ruling designating the \"international LGBT movement\" as extremist."
+  },
+  {
+   "country": "Malaysia",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2025-08-04 (P.U. (A) 247). Publisher: ATLANTIC BOOKS AN IMPRINT OF ATLANTIC BOOKS LTD. Language: INGGERIS."
+  },
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-01-24. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 16
+}

@@ -1,0 +1,44 @@
+{
+ "slug": "justine-de-sade",
+ "title": "Justine",
+ "author": "Marquis de Sade",
+ "first_published_year": 1791,
+ "current_text": "In 1791, authorities in France suppressed Justine or the Misfortunes of Virtue.",
+ "sources": [
+  {
+   "url": "https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/178marquisDeSade.html",
+   "quote": "1791, France: The authorities doggedly suppressed \"Justine or the\nMisfortunes of Virtue\" and Juliette.\"",
+   "title": "Sade, \"Justine or the Misfortunes of Virtue\", \"Juliette\""
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1791,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1965,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "A translation of Justine was considered by the NZ Indecent Publications Tribunal in 1965; Juliette (1969) was held indecent except for bona fide students over 20."
+  },
+  {
+   "country": "Malaysia",
+   "year": 1999,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1999-12-30 (P.U. (A) 517). Publisher: Book of The Month Club, New York. Printer: -. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 0
+}

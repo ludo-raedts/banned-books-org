@@ -1,0 +1,44 @@
+{
+ "slug": "fontamara",
+ "title": "Fontamara",
+ "author": "Ignazio Silone",
+ "first_published_year": 1933,
+ "current_text": "Fontamara could not be published in Fascist Italy in 1933 and was first published in German in Zurich that year; an Italian-language version was circulated by the British to Italian prisoners of war in 1944, and the original Italian edition appeared later.",
+ "sources": [
+  {
+   "url": "https://caponeu.ffzg.unizg.hr/cdp/novels/fontamara",
+   "quote": "Fontamara was first published in German in Zurich in 1933, as it could not be published in Fascist Italy at the time. The original Italian edition appeared later, although an Italian-language version had already been circulated by the British in 1944 to Italian prisoners of war.",
+   "title": "Fontamara - CAPONEU"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Italy",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "First published abroad in 1933 (German, Zurich); not published in Italy until 1945."
+  },
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Portugal",
+   "year": 1959,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). The year (1959) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP."
+  }
+ ],
+ "institution_rows": 0
+}

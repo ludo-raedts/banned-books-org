@@ -1,0 +1,53 @@
+{
+ "slug": "last-exit-to-brooklyn",
+ "title": "Hubert Selby Jr.: Last Exit to Brooklyn",
+ "author": "Hubert Selby Jr.",
+ "first_published_year": 1964,
+ "current_text": "In November 1967, a jury in England judged Last Exit to Brooklyn guilty of being obscene; the British publisher, Calder and Boyars, appealed and won, allowing the book to appear in a complete and unexpurgated edition.",
+ "sources": [
+  {
+   "url": "https://www.otago.ac.nz/library/exhibitions/bannedbooks/",
+   "quote": "Although Hubert Selby's \"Last Exit to Brooklyn\" (1964) is set in Brooklyn in the late 40s, it was in England that the book caused a stir. In November 1967, an all-male jury (sparing women the embarrassment of reading the material) judged the book 'guilty of being obscene.' The British publisher, Calder and Boyars, appealed on the basis that the jury had left too much to 'commonsense' and not enough to law. They won, and Last Exit was free to appear in a complete and unexpurgated edition.",
+   "title": "Heresy, Sedition, Obscenity: The Book Challenged, Special Collections Exhibition, University of Otago Library, Dunedin, New Zealand"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": 1966,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1966,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Publishers were convicted under the Obscene Publications Act at the Old Bailey; the verdict was quashed on appeal in 1968 (per Wikipedia, citing 2004 obituaries)."
+  },
+  {
+   "country": "New Zealand",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "On 1 Nov 1967 the Indecent Publications Tribunal ruled the hardcover indecent except in the hands of adults engaged in work or research in sociological and related fields."
+  },
+  {
+   "country": "Italy",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "The novel was banned in Italy due to its frank portrayals of taboo subjects."
+  }
+ ],
+ "institution_rows": 0
+}

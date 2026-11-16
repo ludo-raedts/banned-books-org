@@ -1,0 +1,31 @@
+{
+ "slug": "more-happy-than-not",
+ "title": "More Happy Than Not",
+ "author": "Adam Silvera",
+ "first_published_year": 2015,
+ "current_text": "In May 2022 a panel of 18 people recommended that More Happy Than Not by Adam Silvera remain in the school district's libraries, after a conservative group complained to the PCPS superintendent that it was among 16 books that contained pornography or were harmful to children. The panel was split on the grade level at which it should be available.",
+ "sources": [
+  {
+   "url": "https://news.yahoo.com/polk-county-book-review-panel-090149294.html",
+   "quote": "Fri, May 13, 2022 at 9:01 AM UTC 12 min read Add Yahoo as a preferred source to see more of our stories on Google. LAKELAND — A panel of 18 people recommended that Adam Silvera",
+   "title": "Polk County book review panel votes to return 'More Happy Than Not' to school library shelves (The Ledger)"
+  },
+  {
+   "url": "https://news.yahoo.com/polk-county-book-review-panel-090149294.html",
+   "quote": "It was the final book among 16 that a conservative group complained to PCPS Superintendent Frederick Heid \"contained pornography\" or was \"harmful to children\" and possibly violated Florida law.",
+   "title": "same article"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belarus",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2024-11-21. Country of origin: USA. Documented by PEN Belarus."
+  }
+ ],
+ "institution_rows": 41
+}

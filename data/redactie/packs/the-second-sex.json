@@ -1,0 +1,44 @@
+{
+ "slug": "the-second-sex",
+ "title": "The Second Sex",
+ "author": "Simone de Beauvoir",
+ "first_published_year": 1949,
+ "current_text": "In 1956, the Vatican placed The Second Sex on the Index librorum prohibitorum, its index of prohibited books.",
+ "sources": [
+  {
+   "url": "https://sedici.unlp.edu.ar/bitstream/handle/10915/171727/Documento_completo.11875.pdf-PDFA.pdf?isAllowed=y&sequence=1",
+   "quote": "Como señala la estudiosa Sylvie Chaperon (1999), desde la publicación de El segundo sexo en Francia —incluso cuando en 1948 salieron a la luz algunos de sus capítulos en la revista Les Temps Modernes—, Beauvoir tuvo que enfrentar diferentes momentos de censura, por ejemplo, cuando el Vaticano lo incluyó en el Index librorum prohibitorum (Índice de los libros prohibidos), en 1956.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "South Africa",
+   "year": 1960,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned under apartheid Publications Act for sexual content."
+  },
+  {
+   "country": "Malawi",
+   "year": 1968,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Named explicitly among the titles banned by the Malawi Censorship Board in Human Rights Watch/Africa Watch's report 'Where Silence Rules' (1990). Exact ban year unknown; 1968 (Censorship Board establishment) used as a placeholder."
+  }
+ ],
+ "institution_rows": 0
+}

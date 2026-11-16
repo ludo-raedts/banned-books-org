@@ -1,0 +1,50 @@
+{
+ "slug": "forever-amber",
+ "title": "Forever Amber",
+ "author": "Kathleen Winsor",
+ "first_published_year": 1944,
+ "current_text": "Forever Amber was banned in Australia from 1945 to 1958; the ban also applied to the expurgated English edition. The New Zealand Customs Department banned the entry of Forever Amber into the Dominion.",
+ "sources": [
+  {
+   "url": "https://recollections.nma.gov.au/issues/volume_9_number_1/commentary/sulabh-international-museum-toilets/peter_stanley?a=387224",
+   "quote": "The exhibition depicts the invariably lurid covers of works such as ‘pulp’ detective novels by Mickey Spillane, ‘True Confession’ magazines and ‘bodice-rippers’ like Kathleen Winsor’s Forever Amber (banned from 1945 to 1958) as well as serious literary works, such as James Baldwin’s Another Country (banned from 1963 to 1966).",
+   "title": "reCollections - Banned"
+  },
+  {
+   "url": "https://www.naa.gov.au/blog/forever-amber-banned-books",
+   "quote": "Customs Minister Senator Richard Keane agreed with the Board, publicly stating, 'The Almighty did not give the people eyes to read that kind of rubbish'. The ban also applied to the expurgated English edition.",
+   "title": "Forever Amber – Banned Books | naa.gov.au"
+  },
+  {
+   "url": "https://paperspast.natlib.govt.nz/newspapers/ESD19450920.2.30",
+   "quote": "It is possible that the banning of this hook would not have' excited general'interest had it not been for tho fact that there has been some controversy in Australia following a similar course of action there.",
+   "title": "Papers Past | Newspapers | Evening Star | 20 September 1945 | BANNED NOVEL."
+  },
+  {
+   "url": "https://paperspast.natlib.govt.nz/newspapers/ESD19450920.2.30",
+   "quote": "The New Zealand Customs Department has banned the entry into the Dominion of Kathleen Wiusor's ' Forever Amber,' a best-selling' novel in America.",
+   "title": "Papers Past | Newspapers | Evening Star | 20 September 1945 | BANNED NOVEL."
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1940,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 1,
+   "note": "Fourteen US states banned 'Forever Amber' as pornography, with Massachusetts being the first state to do so, citing numerous sexual references."
+  },
+  {
+   "country": "Australia",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by Australia in 1945 as \"a collection of bawdiness, amounting to sex obsession.\""
+  }
+ ],
+ "institution_rows": 2
+}

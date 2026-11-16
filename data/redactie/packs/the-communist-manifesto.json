@@ -1,0 +1,62 @@
+{
+ "slug": "the-communist-manifesto",
+ "title": "The Communist Manifesto",
+ "author": "Karl Marx, Friedrich Engels",
+ "first_published_year": 1848,
+ "current_text": "The Australian Minister of Customs drew up a list of 128 publications in December 1927 and submitted it to the Federal Parliament as prohibited, seized and forfeited; the list includes The Communist Manifesto.",
+ "sources": [
+  {
+   "url": "https://www.worldsocialism.org/spgb/?p=24029",
+   "quote": "The Australian Minister of Customs drew up, in December, 1927, and submitted to the Federal Parliament a list of 128 publications which are “prohibited, seized and forfeited.” During 1928 some 40 publications were added to the list. It includes such works as “ The Communist Manifesto, ”",
+   "title": "The Censor in Australia (Socialist Standard, February 1929)"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1940,
+   "end": 1942,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Withheld from circulation in New Zealand under wartime censorship (Controller of Censorship) from about 1939-40; still held June 1942; released November 1942. Also a set book at Victoria University of Wellington in 1941 that students could not access."
+  },
+  {
+   "country": "South Africa",
+   "year": 1950,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned under apartheid as communist literature threatening state security."
+  },
+  {
+   "country": "Portugal",
+   "year": 1974,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). The year (1974) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP."
+  },
+  {
+   "country": "Argentina",
+   "year": 1976,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by military junta as communist literature."
+  }
+ ],
+ "institution_rows": 0
+}

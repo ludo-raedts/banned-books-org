@@ -17,7 +17,7 @@ async function main() {
       const pack = {
         slug: b.slug, title: b.title, author: b.book_authors?.map((a: any) => a.authors?.display_name).filter(Boolean).join(', '), first_published_year: b.first_published_year,
         current_text: b.censorship_context, sources: b.censorship_context_sources,
-        ban_rows: (bans as any[]).filter(x => !x.institution).slice(0, 40).map(x => ({ country: x.countries?.name_en, year: x.year_started, end: x.year_ended, status: x.status, confidence: x.confidence, scope: x.scope_id, note: x.description })),
+        ban_rows: (bans as any[]).filter(x => !x.institution && x.confidence !== 'unverified' && !String(x.description ?? '').startsWith('Source needed')).slice(0, 40).map(x => ({ country: x.countries?.name_en, year: x.year_started, end: x.year_ended, status: x.status, confidence: x.confidence, scope: x.scope_id, note: x.description })),
         institution_rows: (bans as any[]).filter(x => x.institution).length,
       }
       await fs.writeFile(`data/redactie/packs/${b.slug}.json`, JSON.stringify(pack, null, 1)); n++

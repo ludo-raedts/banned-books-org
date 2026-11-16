@@ -1,0 +1,45 @@
+{
+ "slug": "the-naked-and-the-dead",
+ "title": "The Naked and the Dead",
+ "author": "Norman Mailer",
+ "first_published_year": 1948,
+ "current_text": "The Naked and the Dead had been banned in Canada because its author had depicted sex or used profane words; the ban was reported in 1949. The Naked and the Dead was banned in Australia, ostensibly for its language.",
+ "sources": [
+  {
+   "url": "https://www.freedomtoread.ca/wp-content/uploads/2011/12/kit2011.pdf",
+   "quote": "In 1949, in Maclean’s magazine, Blair Fraser revealed the names of some of the banned books: William Faulkner’s Sanctuary, Norman Mailer’s The Naked and the Dead and Radclyffe Hall’s Well of Loneliness. These literary works had been banned because the authors had depicted sex or had used profane words.",
+   "title": null
+  },
+  {
+   "url": "https://bestsellers.lib.virginia.edu/submissions/40.html",
+   "quote": "Interestingly, while The Naked and the Dead did not get banned in England, it was indeed banned in Canada and Australia.",
+   "title": "20th-Century American Bestsellers"
+  },
+  {
+   "url": "https://libguides.hawkeyecollege.edu/bannedbooks/Classics",
+   "quote": "The Naked and the Dead\nby\nNorman Mailer\nCall Number: 813.54 M219n\nISBN: 0805060189\nPublication Date: 1998\n37944100743570\n\nBanned ostensibly for language, in Canada and Australia.",
+   "title": "Banned or Challenged Books - Banned Books - Select List - Research Guides at Hawkeye Community College"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Canada",
+   "year": 1948,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Canada in 1949 for \"obscenity\"."
+  },
+  {
+   "country": "Hungary",
+   "year": 1950,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Deemed undesirable by Kádár-era censors over its sexual content and language. Ban year approximate."
+  }
+ ],
+ "institution_rows": 1
+}

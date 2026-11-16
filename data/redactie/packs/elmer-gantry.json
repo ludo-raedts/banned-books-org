@@ -1,0 +1,49 @@
+{
+ "slug": "elmer-gantry",
+ "title": "Elmer Gantry",
+ "author": "Sinclair Lewis",
+ "first_published_year": 1927,
+ "current_text": "In 1927 the North Dakota State Library decided not to stock Elmer Gantry. In Boston, sales of the novel could be prosecuted under a law prohibiting indecent and obscene books.",
+ "sources": [
+  {
+   "url": "https://news.prairiepublic.org/show/dakota-datebook-archive/2022-06-04/banning-elmer-gantry",
+   "quote": "On this date in 1927, North Dakotans joined in censoring Elmer Gantry when the North Dakota State Library decided not to stock it.",
+   "title": "Banning Elmer Gantry (Dakota Datebook, Prairie Public, 4 Jun 2022)"
+  },
+  {
+   "url": "https://news.prairiepublic.org/show/dakota-datebook-archive/2022-06-04/banning-elmer-gantry",
+   "quote": "banned in some areas around the country, such as Boston, where sales of Elmer Gantry could be prosecuted under a law prohibiting 'indecent and obscene books.'",
+   "title": "Dakota Datebook, same page"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1927,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "United Kingdom",
+   "year": 1927,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Glasgow, Scotland."
+  },
+  {
+   "country": "Ireland",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Elmer Gantry appears on lists of books prohibited in the Irish Free State under the 1929 Censorship of Publications Act (1931 per Notre Dame list)."
+  }
+ ],
+ "institution_rows": 0
+}

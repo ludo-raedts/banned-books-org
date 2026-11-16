@@ -1,0 +1,36 @@
+{
+ "slug": "the-color-purple",
+ "title": "The Color Purple",
+ "author": "Alice Walker",
+ "first_published_year": 1982,
+ "current_text": "In 1984 a parent petitioned against the use of The Color Purple in an Oakland, California classroom, and the Oakland schools ultimately decided not to remove the book from classrooms. In 2013 a parent challenged the book in Brunswick County, North Carolina.",
+ "sources": [
+  {
+   "url": "https://www.nationalgeographic.com/culture/article/the-color-purple-banned-books-school",
+   "quote": "The first major attempt to ban the book occurred in 1984, when a parent petitioned against its use in an Oakland, California classroom.",
+   "title": "Why parents still try to ban 'The Color Purple' in schools (National Geographic, 22 Aug 2023)"
+  },
+  {
+   "url": "https://www.nationalgeographic.com/culture/article/the-color-purple-banned-books-school",
+   "quote": "Though the Oakland schools ultimately decided not to remove the book from classrooms, the book has consistently been challenged nationwide since its publication",
+   "title": "National Geographic, same article"
+  },
+  {
+   "url": "https://www.nationalgeographic.com/culture/article/the-color-purple-banned-books-school",
+   "quote": "“One can eat from a cafeteria or a dumpster…but one would hope those placed in charge of our children would have exercised better oversight,” wrote one parent in a characteristic 2013 challenge in Brunswick County, North Carolina.",
+   "title": "National Geographic, same article"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1984,
+   "end": null,
+   "status": "rescinded",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 69
+}

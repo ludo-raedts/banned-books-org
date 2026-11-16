@@ -1,0 +1,49 @@
+{
+ "slug": "state-and-revolution",
+ "title": "The State and Revolution",
+ "author": "Vladimir Lenin",
+ "first_published_year": 1917,
+ "current_text": "In 1940 an Oklahoma City police detective bought copies of Lenin's The State and Revolution at a bookstore. Police then raided the store and seized more than 10,000 books.",
+ "sources": [
+  {
+   "url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/",
+   "quote": "On July 24, 1940, an Oklahoma City police detective dressed as an oil field worker walked into the bookstore, and purchased copies of: ” Vladimir Lenin’s “The State and Revolution,”",
+   "title": "Oklahoma Gazette: Bookstore arrests of the forties presaged communist scare"
+  },
+  {
+   "url": "https://www.okgazette.com/news/bookstore-arrests-of-the-forties-presaged-communist-scare-2962476/",
+   "quote": "On Aug. 17, police raided the store, arresting about 20 people ” including customers ” and seized more than 10,000 books.",
+   "title": "Oklahoma Gazette: Bookstore arrests of the forties presaged communist scare"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1927,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Seized as obscene in Boston in 1927; in a 1940 Oklahoma City raid copies were seized and burned along with the Declaration of Independence and the U.S. Constitution (convictions reversed on appeal in 1943)."
+  },
+  {
+   "country": "Malaysia",
+   "year": 1952,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1952-06-12 (L.N. 329). Publisher: LITTLE LENIN LIBRARY. Language: INGGERIS."
+  },
+  {
+   "country": "Singapore",
+   "year": null,
+   "end": null,
+   "status": "unclear",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Wikipedia's list records this title as prohibited under Singapore's Internal Security (Prohibition of Publications) (Consolidation) Order (G.N. S 413/1950, extended to Singapore in 1963). The date the title was prohibited and any lifting could not be verified."
+  }
+ ],
+ "institution_rows": 0
+}

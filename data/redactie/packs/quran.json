@@ -1,0 +1,54 @@
+{
+ "slug": "quran",
+ "title": "Quran",
+ "author": "Unknown",
+ "first_published_year": 609,
+ "current_text": "In March 1985, Chandmal Chopra petitioned the Calcutta High Court to ban the Quran, alleging that it incited violence and promoted enmity among different sections; the High Court disallowed the petition on May 17, 1985. A district court in Novorossiysk ruled that a translation of the Quran by Elmir Kuliyev was extremist and should be included on the federal list of banned literature; the Krasnodar regional court overturned that ruling. Malaysia’s Home Ministry prohibited 10 translations of the Quran in Malay, English, Chinese and Korean; the ministry’s chief secretary, Alwi Ibrahim, said they had been printed without the original verses in Arabic.",
+ "sources": [
+  {
+   "url": "https://indianexpress.com/article/explained/quran-unconstitutional-pil-wasim-rizvi-case-judicial-review-7249760/",
+   "quote": "Chandmal Chopra had filed a petition for a ban on the Quran in Calcutta High Court in March 1985 as it allegedly incites violence and promotes enmity among different sections. The petition was disallowed by the High Court on May 17, 1985.",
+   "title": "Explained: Quran case in Supreme Court, and the powers of judicial review | Explained News - The Indian Express"
+  },
+  {
+   "url": "https://2009-2017.state.gov/documents/organization/222473.pdf",
+   "quote": "On December 17, the Krasnodar regional court overturned a September ruling by a district court in Novorossiysk that a translation of the Quran by Elmir Kuliyev was extremist and should be included on the federal list of banned literature. The Krasnodar judge remarked that the initial examination of the translation was made incorrectly by people lacking expertise.",
+   "title": null
+  },
+  {
+   "url": "https://www.malaysiakini.com/news/397823",
+   "quote": "The Home Ministry has gazetted a prohibition order on 22 publications, effective Sept 28 and Oct 3.\nThe ministry’s chief secretary, Alwi Ibrahim, said among the publications were 10 translations of the Quran in Malay, English, Chinese and Korean languages as they were printed without the original verses in Arabic.",
+   "title": "Home Minister gazettes prohibition order on 22 publications | Malaysiakini"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1985,
+   "end": 1985,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "In 1985, Chandmal Chopra filed a writ petition at the Calcutta High Court seeking to ban the Quran, claiming it incited religious disharmony. The petition was dismissed in May 1985 and a review petition was dismissed on 21 June 1985; the Union and West Bengal governments argued against it."
+  },
+  {
+   "country": "Russia",
+   "year": 2013,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "In 2013, a Russian court in Novorossiysk banned a translation of the Quran by Elmir Kuliyev under the country's 'extremism' laws. The ban was soon overturned."
+  },
+  {
+   "country": "Malaysia",
+   "year": 2017,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Edition: Terjemahan Al-qur'an\nBanned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2017-09-28 (P.U. (A) 277). Publisher: KNOWLEDGE INBOUND SDN BHD. Printer: PERCETAKAN ZAFAR SDN BHD. Language: MELAYU.\n---\nEdition: The Meaning of the Glorious Qur'an Korean Edition\nBanned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2017-09-28 (P.U. (A) 277). Publisher: PERSATUAN KEBAJIKAN KHAWAJA MOINUDDIN CHISTI (KUALA LUMPUR & SELANGOR). Printer: PERCETAKAN ZAFAR SDN BHD. Language: KOREA.\n---\nEdition: The Meaning of the Holy Quran ( Chinese Translation Edition)\nBanned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2017-09-28 (P.U.(A) 277). Publisher: KHAWAJA MOINUDDIN CHISTI WELFARE ASSOCIATION (KUALA LUMPUR & SELANGOR ) MALAYSIA. Printer: -. Language: CINA.\n---\nEdition: Terjemahan Al-quran Bahasa Melayu\nBanned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2017-09-28 (P.U.(A) 277). Publisher: SAM SYNERGY MEDIA SDN BHD. Printer: A2Z MEDIA. Language: MELAYU."
+  }
+ ],
+ "institution_rows": 0
+}

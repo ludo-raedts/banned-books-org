@@ -1,0 +1,45 @@
+{
+ "slug": "and-tango-makes-three",
+ "title": "And Tango Makes Three",
+ "author": "Justin Richardson, Peter Parnell",
+ "first_published_year": 2005,
+ "current_text": "In 2006 the book was moved from the children's section of two branches of the Rolling Hills Consolidated Library, in Savannah and St. Joseph in northwest Missouri, after parents complained.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/And_Tango_Makes_Three",
+   "quote": "2014 Singapore Moved Action by the National Library Board removed the book, later moved to the adult section instead of being removed.",
+   "title": "Wikipedia: And Tango Makes Three (cites TheJournal.ie/AFP 11 Jul 2014 and Straits Times 18 Jul 2014)"
+  },
+  {
+   "url": "https://www.nbcnews.com/id/wbna11676978",
+   "quote": "March 4, 2006, 10:50 PM EST / Source : The Associated Press A children’s book about two male penguins that raise a baby penguin has been moved to the nonfiction section of two public library branches after parents complained it had homosexual undertones.",
+   "title": "Penguin book moved from children's section (AP via NBC News, 4 Mar 2006)"
+  },
+  {
+   "url": "https://www.nbcnews.com/id/wbna11676978",
+   "quote": "The book, written by Peter Parnell and Justin Richardson, was moved from the children’s section at two Rolling Hills’ Consolidated Library’s branches in Savannah and St. Joseph in northwest Missouri.",
+   "title": "AP via NBC News, same article"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Singapore",
+   "year": 2014,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 2,
+   "note": "Removed from the children's section of Singapore's National Library Board (NLB) in July 2014 as \"promoting family values contrary to those held by the majority in Singapore.\" After public outcry over the policy of pulping the books, some were moved to the adult section."
+  },
+  {
+   "country": "Italy",
+   "year": 2015,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "One of 49 titles withdrawn from Venice municipal nursery/pre-schools by Mayor Brugnaro in June 2015 (a same-sex-parenting penguin story)."
+  }
+ ],
+ "institution_rows": 21
+}

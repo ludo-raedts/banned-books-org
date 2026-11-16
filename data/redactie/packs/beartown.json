@@ -1,0 +1,45 @@
+{
+ "slug": "beartown",
+ "title": "Beartown",
+ "author": "Fredrik Backman",
+ "first_published_year": 2016,
+ "current_text": "In early March 2026, bookstore co-founder Artem Faustov was fined 50,000 rubles for selling Beartown.",
+ "sources": [
+  {
+   "url": "https://oc-media.org/makhachkala-bookshop-fined-for-lgbt-propaganda-in-books-by-le-guin-and-backman/",
+   "quote": "The Leninsky District Court in Makhachkala fined the bookstore chain, Chitai-Gorod, on 16 March, according to Russian independent media outlet Mediazona",
+   "title": "OC Media: Makhachkala bookshop fined for LGBT propaganda in books by Le Guin and Backman"
+  },
+  {
+   "url": "https://oc-media.org/makhachkala-bookshop-fined-for-lgbt-propaganda-in-books-by-le-guin-and-backman/",
+   "quote": "According to the case materials, the grounds for the protocol were the books Beartown and Us Against You by Swedish author Fredrik Backman",
+   "title": "OC Media (same article)"
+  },
+  {
+   "url": "https://theins.press/en/dispatch/291910",
+   "quote": "in early March 2026, Artem Faustov, co-founder of the bookstore Vse Svobodny, was fined 50,000 rubles ($670) for selling Fredrik Backman’s Beartown even though an expert review by the Russian Book Union had concluded that the book contained nothing prohibited.",
+   "title": "The Insider: In Putin's bad book"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belarus",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Belarus by addition to the Official List of Publications Harmful to National Interests (Ministry of Information). Decision: 2025-04-01. Country of origin: Sweden. Documented by PEN Belarus."
+  },
+  {
+   "country": "Russia",
+   "year": 2026,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Russian booksellers were fined for selling the book: the co-founder of the bookstore Vse Svobodny, Artem Faustov, was fined 50,000 rubles in early March 2026, and a Makhachkala court fined the Chitai-Gorod chain (The Insider; OC Media)."
+  }
+ ],
+ "institution_rows": 3
+}

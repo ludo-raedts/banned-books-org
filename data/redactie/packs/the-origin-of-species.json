@@ -1,0 +1,44 @@
+{
+ "slug": "the-origin-of-species",
+ "title": "On the Origin of Species",
+ "author": "Charles Darwin",
+ "first_published_year": 1859,
+ "current_text": "On the Origin of Species was banned from Trinity College, Cambridge, England, in 1859.",
+ "sources": [
+  {
+   "url": "https://ncac.org/wp-content/uploads/2014/02/banned_books_catalog_2013_2column2.pdf",
+   "quote": "Charles Darwin \nThe Origin of Species \nBanned from Trinity College, Cambridge, England in 1859. In 1925 the state of Tennessee passed a law prohibiting teachers from teaching the theory of evolution in state supported schools.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1925,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Germany",
+   "year": 1933,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned by Nazi regime for conflicting with ideological views on race and creation."
+  },
+  {
+   "country": "Greece",
+   "year": 1937,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

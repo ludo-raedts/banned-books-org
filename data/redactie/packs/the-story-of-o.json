@@ -1,0 +1,35 @@
+{
+ "slug": "the-story-of-o",
+ "title": "The Story of O",
+ "author": "Pauline Réage",
+ "first_published_year": 1954,
+ "current_text": "In New Zealand, the Indecent Publications Tribunal restricted The Story of O to professional psychiatrists in 1967; its permitted circulation expanded to include clinical psychologists in 1976, and the OFLC gave it an R16 classification in 2014.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "quote": "1965 |\nThe Story of O |\nPauline Réage |\nErotic novel |\nIndecent Publications Tribunal |\n1967–2014 |\nRestricted |\nIn 1967 it was restricted to professional psychiatrists. The terms of its circulation was expanded in 1976 to include clinical psychologists. In 2014 it was given an R16 classification by the OFLC.",
+   "title": "List of books banned in New Zealand - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "New Zealand",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The NZ Indecent Publications Tribunal restricted the book in 1967 to professional psychiatrists (expanded 1976); the Classification Office rated it R16 in 2014 (per Wikipedia list)."
+  }
+ ],
+ "institution_rows": 0
+}

@@ -1,0 +1,35 @@
+{
+ "slug": "pedagogy-of-the-oppressed",
+ "title": "Pedagogy of the Oppressed",
+ "author": "Paulo Freire",
+ "first_published_year": 1968,
+ "current_text": "The Brazilian civil-military dictatorship banned Pedagogy of the Oppressed in Brazil, where it remained unpublished until 1974.",
+ "sources": [
+  {
+   "url": "https://www.record.com.br/en/products/pedagogia-do-oprimido",
+   "quote": "Pedagogy of the Oppressed, written between 1964 and 1968, when Paulo Freire was exiled in Chile, was banned by the Brazilian civil-military dictatorship, where it remained unpublished until 1974.",
+   "title": "Pedagogy of the oppressed – Editora Record"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Brazil",
+   "year": 1968,
+   "end": 1985,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Paulo Freire's foundational text in critical pedagogy. Freire had been arrested and exiled from Brazil shortly after the April 1964 military coup for his literacy programmes in Recife. He wrote the book in exile in Chile (1967-1968); it was published in Spanish (1968) and English (1970). The book and Freire's earlier educational work were banned in Brazil throughout the military dictatorship; Freire was forbidden from returning. In several other Latin American military dictatorships the book was both burned and banned. Freire was finally able to return to Brazil in 1980 with the political amnesty."
+  },
+  {
+   "country": "Portugal",
+   "year": 1972,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Portugal under the Estado Novo censorship regime. Listed in José Brandão's compilation of books prohibited between 1933 and 1974 (prior censorship of books instituted by Decreto n.º 22 469 of 11 April 1933). The year (1972) is Brandão's recorded \"data da edição ou da proibição\" (edition or prohibition year, not disambiguated) and is pending per-title verification against PORBASE/BNP."
+  }
+ ],
+ "institution_rows": 1
+}

@@ -1,0 +1,44 @@
+{
+ "slug": "candy",
+ "title": "Candy",
+ "author": "Terry Southern, Mason Hoffenberg",
+ "first_published_year": 1958,
+ "current_text": "The Indecent Publications Tribunal banned Candy in New Zealand in 1969 after ruling it indecent.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_New_Zealand",
+   "quote": "1958 |\nCandy |\nTerry Southern\nMason Hoffenberg\n|\nNovel |\nIndecent Publications Tribunal |\n1969 |\nBanned |\nRuled indecent in 1969.",
+   "title": "List of books banned in New Zealand - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "New Zealand",
+   "year": 1969,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The NZ Indecent Publications Tribunal ruled Candy indecent on 30 January 1969."
+  },
+  {
+   "country": "Malaysia",
+   "year": 1999,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 1999-12-30 (P.U. (A) 517). Publisher: Book of The Month Club, New York. Printer: -. Language: INGGERIS."
+  },
+  {
+   "country": "China",
+   "year": 2003,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Chinese government censored it because it was \"a poster child for spiritual pollution\"."
+  }
+ ],
+ "institution_rows": 2
+}

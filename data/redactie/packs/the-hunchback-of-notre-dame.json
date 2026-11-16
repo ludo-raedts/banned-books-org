@@ -1,0 +1,35 @@
+{
+ "slug": "the-hunchback-of-notre-dame",
+ "title": "The Hunchback of Notre-Dame",
+ "author": "Victor Hugo",
+ "first_published_year": 1831,
+ "current_text": "The novel was placed on the Index in 1834.",
+ "sources": [
+  {
+   "url": "https://fr.wikipedia.org/wiki/Notre-Dame_de_Paris_(roman)",
+   "quote": "Considéré comme une lecture pernicieuse par l'Église catholique, Notre-Dame de Paris fait partie des romans mis à l' Index en 1834",
+   "title": "Notre-Dame de Paris (roman) - Wikipédia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1834,
+   "end": 1966,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 7,
+   "note": "Added to the Index in 1834 for its portrayal of corrupt clergy and anti-clerical subtext. On the Index until 1966."
+  },
+  {
+   "country": "Kuwait",
+   "year": 2016,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The 19th-century French classic was among the ~4,390 titles barred by Kuwait's Ministry of Information censorship committee (2014–2018)."
+  }
+ ],
+ "institution_rows": 2
+}
