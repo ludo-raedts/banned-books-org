@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" role="img" aria-labelledby="t d">
+  <title id="t">How a record of past removals can feed new reviews, and also attract readers</title>
+  <desc id="d">A loop of four steps: a book is removed in one district; the removal is documented on a list; elsewhere the record is read as a risk signal; the title is flagged and reviewed, which may produce another removal and a longer record. A side branch from the documentation step shows that the same attention can bring the book more readers, sales and library loans.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8B2020"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4A6B52"/>
+    </marker>
+  </defs>
+  <rect width="760" height="500" fill="#ffffff"/>
+  <g font-family="Georgia, 'Source Serif 4', serif" fill="#171717">
+    <!-- loop boxes -->
+    <rect x="40" y="40" width="280" height="100" rx="8" fill="#F4E8E2" stroke="#e8d5cc"/>
+    <text x="60" y="72" font-size="13" font-family="Arial, sans-serif" fill="#8B2020" font-weight="700">1 · A DECISION</text>
+    <text x="60" y="98" font-size="17">A book is removed or restricted</text>
+    <text x="60" y="120" font-size="17">in one district</text>
+
+    <rect x="440" y="40" width="280" height="100" rx="8" fill="#EDF1EE" stroke="#D5DED7"/>
+    <text x="460" y="72" font-size="13" font-family="Arial, sans-serif" fill="#5C1010" font-weight="700">2 · A RECORD</text>
+    <text x="460" y="98" font-size="17">It is documented: news, records,</text>
+    <text x="460" y="120" font-size="17">lists, archives (including ours)</text>
+
+    <rect x="440" y="350" width="280" height="100" rx="8" fill="#F4E8E2" stroke="#e8d5cc"/>
+    <text x="460" y="382" font-size="13" font-family="Arial, sans-serif" fill="#8B2020" font-weight="700">3 · A SIGNAL</text>
+    <text x="460" y="408" font-size="17">Elsewhere, the record is read as a</text>
+    <text x="460" y="430" font-size="17">risk signal: "already in trouble"</text>
+
+    <rect x="40" y="350" width="280" height="100" rx="8" fill="#EDF1EE" stroke="#D5DED7"/>
+    <text x="60" y="382" font-size="13" font-family="Arial, sans-serif" fill="#5C1010" font-weight="700">4 · A REVIEW</text>
+    <text x="60" y="408" font-size="17">The title is flagged and assessed,</text>
+    <text x="60" y="430" font-size="17">by people, tools, or both</text>
+
+    <!-- attention branch -->
+    <rect x="230" y="172" width="290" height="92" rx="8" fill="#ffffff" stroke="#4A6B52" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <text x="248" y="196" font-size="13" font-family="Arial, sans-serif" fill="#4A6B52" font-weight="700">ALSO: ATTENTION</text>
+    <text x="248" y="220" font-size="15">The same visibility can bring the</text>
+    <text x="248" y="240" font-size="15">book more readers, sales and loans</text>
+    <text x="248" y="258" font-size="12" font-family="Arial, sans-serif" fill="#555">(research: mostly lesser-known authors)</text>
+
+    <!-- loop arrows -->
+    <g stroke="#8B2020" stroke-width="2.5" fill="none" marker-end="url(#a)">
+      <path d="M320 90 H430"/>
+      <path d="M600 140 V340"/>
+      <path d="M440 400 H330"/>
+      <path d="M180 350 V150"/>
+    </g>
+    <!-- branch arrow -->
+    <path d="M480 140 V162" stroke="#4A6B52" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#b)"/>
+
+    <!-- caption -->
+    <text x="380" y="288" font-size="14" text-anchor="middle" font-style="italic">Another removal restarts the loop</text>
+    <text x="380" y="306" font-size="14" text-anchor="middle" font-style="italic">with a longer record.</text>
+    <text x="380" y="324" font-size="11" text-anchor="middle" font-family="Arial, sans-serif" fill="#555">Possible feedback, not automatic:</text>
+    <text x="380" y="338" font-size="11" text-anchor="middle" font-family="Arial, sans-serif" fill="#555">any step can be broken by someone who reads the book.</text>
+  </g>
+  <text x="40" y="484" font-size="11" font-family="Arial, sans-serif" fill="#777">banned-books.org · diagram by the author</text>
+</svg>

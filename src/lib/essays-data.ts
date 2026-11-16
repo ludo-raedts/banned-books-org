@@ -16,6 +16,15 @@ export type Essay = {
 
 export const ESSAYS: Essay[] = [
   {
+    slug: 'when-a-list-becomes-a-warning-label',
+    href: '/essays/when-a-list-becomes-a-warning-label',
+    title: 'When a banned-books list becomes a warning label',
+    dek: 'AI tools can help schools and campaigners pick books for review. But what happens when a record of past censorship becomes a reason to scrutinise the next book? On Mason City, the new scanners, and the paradox of keeping an open archive of bans.',
+    publishedAt: '2026-11-16',
+    readingTimeMin: 10,
+    relatedBookSlugs: ['maus', 'the-handmaids-tale', 'the-color-purple', 'beloved', 'gender-queer'],
+  },
+  {
     slug: 'censorship-without-a-list',
     href: '/essays/censorship-without-a-list',
     title: 'Censorship without a list',
