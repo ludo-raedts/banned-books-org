@@ -1,0 +1,44 @@
+{
+  "count": 2,
+  "generated": "2026-11-16",
+  "rows": [
+    {
+      "title_english_meaningful": null,
+      "publication_year": null,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "active",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Listed on the Irish Register of Prohibited Publications (Censorship of Publications Board), Part II — prohibited as indecent or obscene and/or advocating abortion; still in force on 31 December 2016.",
+      "source_name": "Irish Censorship of Publications Board — Register of Prohibited Publications (correct to 31 Dec 2016), Department of Justice",
+      "source_url": "https://assets.gov.ie/static/documents/register-of-prohibited-publications-2016-pdf-135kb.pdf",
+      "source_type": "government",
+      "source_row_id": 1,
+      "title": "Book of Love",
+      "authors": [
+        "David Delvin"
+      ],
+      "year": 1983
+    },
+    {
+      "title_english_meaningful": null,
+      "publication_year": null,
+      "country_code": "IE",
+      "scope_slug": "government",
+      "action_type": "banned",
+      "ban_status": "active",
+      "reason_slug": "obscenity",
+      "inclusion_rationale": "Listed on the Irish Register of Prohibited Publications (Censorship of Publications Board), Part II — prohibited as indecent or obscene and/or advocating abortion; still in force on 31 December 2016.",
+      "source_name": "Irish Censorship of Publications Board — Register of Prohibited Publications (correct to 31 Dec 2016), Department of Justice",
+      "source_url": "https://assets.gov.ie/static/documents/register-of-prohibited-publications-2016-pdf-135kb.pdf",
+      "source_type": "government",
+      "source_row_id": 3,
+      "title": "The Love Diseases",
+      "authors": [
+        "Paul Redfern"
+      ],
+      "year": 1983
+    }
+  ]
+}
