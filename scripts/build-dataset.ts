@@ -15,7 +15,8 @@
 
 import archiver from 'archiver'
 import Database from 'better-sqlite3'
-import { createWriteStream, existsSync, mkdirSync, rmSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import {
@@ -26,6 +27,73 @@ import {
 const ROOT = process.cwd()
 const STAGING_DIR = join(ROOT, 'private', '_dataset_build')
 const OUTPUT_ZIP = join(ROOT, 'private', 'dataset.zip')
+
+// ─── Build-cache reuse ───────────────────────────────────────────────────────
+// `next build` runs this script, so every deploy used to re-export the whole
+// catalogue (~30k books, ~50k bans, all link tables) from Supabase and rebuild
+// a 32 MB zip. The finished zip is now also kept in `.next/cache` (which Vercel
+// restores between builds) and reused while it is fresh and the table sizes
+// still match. Staleness is bounded by REUSE_TTL_MS; a missing/evicted cache
+// simply falls back to the full build. `--force` or DATASET_FORCE=1 skips reuse.
+const CACHE_DIR = join(ROOT, '.next', 'cache', 'dataset')
+const CACHE_ZIP = join(CACHE_DIR, 'dataset.zip')
+const CACHE_META = join(CACHE_DIR, 'meta.json')
+const REUSE_TTL_MS = 24 * 60 * 60 * 1000
+const FINGERPRINT_TABLES = [
+  'books', 'authors', 'book_authors', 'bans', 'ban_reason_links', 'ban_source_links', 'ban_sources',
+] as const
+
+type CacheMeta = { builtAt: number; scriptHash: string; counts: Record<string, number> }
+
+function scriptHash(): string {
+  const h = createHash('sha256')
+  for (const f of ['scripts/build-dataset.ts', 'scripts/lib/dataset-io.ts']) {
+    h.update(readFileSync(join(ROOT, f)))
+  }
+  return h.digest('hex')
+}
+
+async function tableCounts(supabase: ReturnType<typeof makeAdminClient>): Promise<Record<string, number>> {
+  const entries = await Promise.all(FINGERPRINT_TABLES.map(async (t) => {
+    const { count, error } = await supabase.from(t).select('*', { count: 'exact', head: true })
+    if (error || count === null) throw new Error(`count(${t}) failed: ${error?.message ?? 'null'}`)
+    return [t, count] as const
+  }))
+  return Object.fromEntries(entries)
+}
+
+/** Copy the cached zip into place when it is still fresh; true = reused. */
+async function tryReuseCachedZip(supabase: ReturnType<typeof makeAdminClient>): Promise<boolean> {
+  if (process.argv.includes('--force') || process.env.DATASET_FORCE === '1') return false
+  if (!existsSync(CACHE_ZIP) || !existsSync(CACHE_META)) return false
+  try {
+    const meta = JSON.parse(readFileSync(CACHE_META, 'utf8')) as CacheMeta
+    if (Date.now() - meta.builtAt > REUSE_TTL_MS) return false
+    if (meta.scriptHash !== scriptHash()) return false
+    const counts = await tableCounts(supabase)
+    if (FINGERPRINT_TABLES.some((t) => counts[t] !== meta.counts[t])) return false
+    mkdirSync(join(ROOT, 'private'), { recursive: true })
+    copyFileSync(CACHE_ZIP, OUTPUT_ZIP)
+    const ageH = ((Date.now() - meta.builtAt) / 3_600_000).toFixed(1)
+    console.log(`✓ Reused cached dataset.zip (${ageH}h old, table counts unchanged) — skipped full export`)
+    return true
+  } catch (err) {
+    // Any doubt (corrupt meta, count query failed) → rebuild rather than ship a stale zip.
+    console.warn('  ! cache check failed, rebuilding:', err instanceof Error ? err.message : err)
+    return false
+  }
+}
+
+async function saveCachedZip(supabase: ReturnType<typeof makeAdminClient>): Promise<void> {
+  try {
+    mkdirSync(CACHE_DIR, { recursive: true })
+    copyFileSync(OUTPUT_ZIP, CACHE_ZIP)
+    const meta: CacheMeta = { builtAt: Date.now(), scriptHash: scriptHash(), counts: await tableCounts(supabase) }
+    writeFileSync(CACHE_META, JSON.stringify(meta))
+  } catch (err) {
+    console.warn('  ! could not write dataset cache:', err instanceof Error ? err.message : err)
+  }
+}
 
 // ─── Public-facing schema ────────────────────────────────────────────────────
 // Anything internal-only (e.g. inclusion_rationale) is filtered before export.
@@ -69,6 +137,8 @@ async function main() {
   console.log('▸ Building dataset…')
 
   const supabase = makeAdminClient()
+
+  if (await tryReuseCachedZip(supabase)) return
 
   // 1. Pull all data in parallel
   console.log('  · Fetching from Supabase')
@@ -145,6 +215,8 @@ async function main() {
     { onConflict: 'key' },
   )
   if (stampError) console.warn('  ! mv_refresh_log update failed:', stampError.message)
+
+  await saveCachedZip(supabase)
 
   const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1)
   console.log(`✓ Built ${OUTPUT_ZIP} in ${elapsed}s`)

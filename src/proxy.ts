@@ -8,26 +8,24 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Markdown content negotiation for prose pages that have a `.md` twin.
+  // The matcher below only runs this proxy for non-admin paths when the request
+  // asks for `text/markdown`, so ordinary browser/crawler traffic never invokes
+  // it (a proxy hit sits in front of the CDN cache, so it used to cost a
+  // function invocation per homepage/essay view). The `Link: rel="alternate"`
+  // discovery header for HTML responses is static — see `headers()` in
+  // next.config.ts.
   const twin = MARKDOWN_TWINS[pathname]
   if (twin) {
     if (prefersMarkdown(request.headers.get('accept'))) {
       // Serve the markdown twin at the same URL. `Vary: Accept` keeps this
       // variant in its own cache slot so a browser never receives markdown.
-      // Middleware runs ahead of the CDN cache, so HTML requests are routed
-      // to the HTML entry below and never read this one.
       const url = request.nextUrl.clone()
       url.pathname = twin
       const res = NextResponse.rewrite(url)
       res.headers.append('Vary', 'Accept')
       return res
     }
-    // HTML request: advertise the markdown alternate so agents can discover
-    // the twin without having to guess the `.md` convention. Deliberately no
-    // `Vary: Accept` here — the HTML page keeps a single cache entry (no
-    // Accept-based fragmentation); markdown requests are intercepted above.
-    const res = NextResponse.next()
-    res.headers.set('Link', `<${twin}>; rel="alternate"; type="text/markdown"`)
-    return res
+    return NextResponse.next()
   }
 
   // /admin pages redirect to the login form; /api/admin gets a plain 401 so
@@ -62,27 +60,16 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Must mirror /admin + every key in MARKDOWN_TWINS (src/lib/markdown-twins.ts).
-  // Next.js requires this to be a static literal, so it cannot be derived.
   matcher: [
+    // Admin gate: every request.
     '/admin/:path*',
     '/api/admin/:path*',
-    '/',
-    '/about',
-    '/data-quality',
-    '/history',
-    '/methodology',
-    '/why-not-amazon',
-    '/essays/first-amendment-paradox',
-    '/essays/forbidden-library',
-    '/essays/forbidden-knowledge-iceberg',
-    '/essays/in-whose-name',
-    '/essays/one-in-ten',
-    '/essays/the-grey-zone',
-    '/essays/the-librarians',
-    '/essays/the-line-we-pretend-not-to-draw',
-    '/essays/what-we-document',
-    '/essays/who-hates-beetles',
-    '/essays/censorship-without-a-list',
+    // Markdown negotiation: only requests that explicitly ask for markdown. The
+    // twin list lives in src/lib/markdown-twins.ts (no second copy to keep in
+    // sync here); non-twin paths just fall through via NextResponse.next().
+    {
+      source: '/(.*)',
+      has: [{ type: 'header', key: 'accept', value: '.*text/markdown.*' }],
+    },
   ],
 }

@@ -14,6 +14,7 @@
 export const revalidate = 604800
 
 import SupportCard from '@/components/support-card'
+import { cachedForBuild } from '@/lib/build-cache'
 import React, { cache } from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -317,7 +318,15 @@ function TombstoneNotice() {
 // timed out on book pages and failed deploys; the next 1,500 render on first
 // visit and are ISR-cached like the rest of the long tail.
 const PREBUILD_LIMIT = 500
+// The hot-set only changes when bans are imported, yet picking it scans the whole
+// `bans` table (~50k rows, ~50 round trips) — so reuse it across deploys for a
+// week via the build cache. A wrong/stale hot set only affects which pages are
+// prebuilt, never which pages exist (dynamicParams stays true).
 export async function generateStaticParams() {
+  return cachedForBuild('books-prebuild-slugs', 7 * 24 * 60 * 60 * 1000, loadPrebuildSlugs)
+}
+
+async function loadPrebuildSlugs(): Promise<{ slug: string }[]> {
   const sb = adminClient()
 
   // Rank books by ban-row count to pick the hot set. v_top_banned_books only

@@ -7,10 +7,9 @@
 // so it never has to know the `.md` naming convention. The homepage maps to
 // /llms.txt, which is the curated markdown entry point for the whole site.
 //
-// IMPORTANT: keep these keys in sync with the `matcher` in src/proxy.ts.
-// Next.js requires the matcher to be a static literal, so it cannot import this
-// map — any path added here must also be added there, or negotiation silently
-// won't run for it.
+// Adding a page here is all it takes: the proxy matcher is generic (any path
+// when the request asks for text/markdown) and next.config.ts derives the
+// `Link: rel="alternate"` header for the HTML response from this map.
 
 export const MARKDOWN_TWINS: Record<string, string> = {
   '/': '/llms.txt',

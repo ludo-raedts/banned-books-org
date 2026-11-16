@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 import { ALLOWED_IMAGE_HOSTS } from "./src/lib/allowed-image-hosts";
 import { NFD_REDIRECTS } from "./src/lib/redirects/nfd-bulk";
+import { MARKDOWN_TWINS } from "./src/lib/markdown-twins";
 
 const nextConfig: NextConfig = {
   experimental: {
-    // /books/[slug] now prebuilds the full ~15.8k indexable catalogue at build
-    // time (see generateStaticParams there). Across that many renders a single
+    // /books/[slug] prebuilds the top PREBUILD_LIMIT (500) books at build time
+    // (see generateStaticParams there; the long tail is ISR on first visit — the
+    // full ~15.8k catalogue broke Vercel's finalize step). Across many renders a single
     // transient Supabase/PostgREST blip shouldn't fail the whole build, so
     // retry a failed page generation before giving up. If a deploy build ever
     // pressures the prod PostgREST pool (it shares the same instance), throttle
@@ -123,6 +125,13 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()' },
         ],
       },
+      // Advertise the markdown alternate on the HTML pages that have a `.md`
+      // twin. Static here (not in the proxy) so these hot pages never invoke a
+      // function just to add a header.
+      ...Object.entries(MARKDOWN_TWINS).map(([source, twin]) => ({
+        source,
+        headers: [{ key: 'Link', value: `<${twin}>; rel="alternate"; type="text/markdown"` }],
+      })),
       {
         source: '/_next/image(.*)',
         headers: [
