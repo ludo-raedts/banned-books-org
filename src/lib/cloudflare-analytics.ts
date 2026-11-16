@@ -141,13 +141,19 @@ const FW_QUERY = `
         ) {
           datetime
           source
+          action
         }
       }
     }
   }
 `
 
-type FWEvent = { datetime: string; source: string }
+function isBlockOrChallenge(action: string): boolean {
+  if (action === 'block') return true
+  return action.includes('challenge') && !/bypass|solved/.test(action)
+}
+
+type FWEvent = { datetime: string; source: string; action: string }
 type FWResponse = {
   data?: { viewer?: { zones?: Array<{ firewallEventsAdaptive: FWEvent[] }> } }
   errors?: Array<{ message: string }>
@@ -156,7 +162,7 @@ type FWResponse = {
 async function fetchThreatBreakdown(token: string, zone: string, since: string): Promise<ThreatBreakdown> {
   const out: ThreatBreakdown = { ownRules: 0, managed: 0, botFight: 0, other: 0, truncated: false }
   let until = new Date().toISOString()
-  const MAX_PAGES = 10 // 10 × 200 = 2000 events ceiling; far above normal daily volume
+  const MAX_PAGES = 25 // 25 × 200 = 5000 events ceiling (was 10 → a busy day hit 2000 exactly and read as a total)
   for (let page = 0; page < MAX_PAGES; page++) {
     const res = await fetch(ENDPOINT, {
       method: 'POST',
@@ -172,6 +178,11 @@ async function fetchThreatBreakdown(token: string, zone: string, since: string):
     }
     const events = json.data?.viewer?.zones?.[0]?.firewallEventsAdaptive ?? []
     for (const e of events) {
+      // Firewall events also log challenges the visitor then passed or that were
+      // bypassed ("managed_challenge_bypassed", "…_solved"). Only requests that
+      // were actually blocked or challenged are threats; counting the rest made
+      // "your bot rules" exceed Cloudflare's own threat total.
+      if (!isBlockOrChallenge(e.action)) continue
       if (e.source === 'firewallCustom') out.ownRules++
       else if (e.source === 'firewallManaged') out.managed++
       else if (e.source === 'botFight') out.botFight++
@@ -411,6 +422,6 @@ async function fetchSnapshot(): Promise<CloudflareSnapshot | null> {
 
 export const getCloudflareSnapshot = unstable_cache(
   fetchSnapshot,
-  ['cloudflare-snapshot-v10'],
+  ['cloudflare-snapshot-v11'],
   { revalidate: 300 },
 )

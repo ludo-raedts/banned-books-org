@@ -228,12 +228,20 @@ async function fetchTopPages(f: StatsFilters, today: string): Promise<TopPageRow
 
   const bookIds = rows.filter(r => r.entity_type === 'book').map(r => Number(r.entity_id))
   const authorIds = rows.filter(r => r.entity_type === 'author').map(r => Number(r.entity_id))
-  const [books, authors] = await Promise.all([
+  // Hub pages are keyed by path (/countries/us, /reasons/political), so their
+  // names come from the code / slug in the path.
+  const countryCodes = rows.filter(r => r.entity_type === 'country').map(r => r.path.split('/')[2]?.toUpperCase()).filter(Boolean) as string[]
+  const reasonSlugs = rows.filter(r => r.entity_type === 'reason').map(r => r.path.split('/')[2]).filter(Boolean) as string[]
+  const [books, authors, countries, reasons] = await Promise.all([
     bookIds.length ? sb.from('books').select('id, title, slug').in('id', bookIds) : Promise.resolve({ data: [] }),
     authorIds.length ? sb.from('authors').select('id, display_name, slug').in('id', authorIds) : Promise.resolve({ data: [] }),
+    countryCodes.length ? sb.from('countries').select('code, name_en').in('code', countryCodes) : Promise.resolve({ data: [] }),
+    reasonSlugs.length ? sb.from('reasons').select('slug, label_en').in('slug', reasonSlugs) : Promise.resolve({ data: [] }),
   ])
   const bookMap = new Map((books.data ?? []).map(b => [Number(b.id), b]))
   const authorMap = new Map((authors.data ?? []).map(a => [Number(a.id), a]))
+  const countryMap = new Map((countries.data ?? []).map(c => [String(c.code).toUpperCase(), String(c.name_en)]))
+  const reasonMap = new Map((reasons.data ?? []).map(r => [String(r.slug), String(r.label_en)]))
 
   return rows.map(r => {
     const id = Number(r.entity_id)
@@ -245,15 +253,44 @@ async function fetchTopPages(f: StatsFilters, today: string): Promise<TopPageRow
       const a = authorMap.get(id)
       if (a?.slug) return { path: r.path, pageviews: Number(r.pageviews), label: a.display_name, href: `/authors/${a.slug}` }
     }
-    return { path: r.path, pageviews: Number(r.pageviews), label: r.path, href: r.path }
+    return { path: r.path, pageviews: Number(r.pageviews), label: pageLabel(r, countryMap, reasonMap), href: r.path }
   })
+}
+
+const STATIC_PAGE_LABELS: Record<string, string> = {
+  '/': 'Homepage',
+  '/search': 'Search',
+  '/news': 'News',
+  '/discover': 'Discover',
+  '/about': 'About',
+  '/stats': 'Statistics',
+}
+
+const titleCase = (slug: string) => slug.replace(/-/g, ' ').replace(/^\w/, c => c.toUpperCase())
+
+// A readable name for non-book/author pages, so the list doesn't mix titles
+// with raw paths. Falls back to the path itself for anything unrecognised.
+function pageLabel(r: RawTopPage, countries: Map<string, string>, reasons: Map<string, string>): string {
+  const [, section, rest] = r.path.split('/')
+  if (r.entity_type === 'country' && rest) {
+    const name = countries.get(rest.toUpperCase())
+    if (name) return `Banned in ${name}`
+  }
+  if (r.entity_type === 'reason' && rest) {
+    const label = reasons.get(rest)
+    if (label) return `Banned for: ${label}`
+  }
+  if (STATIC_PAGE_LABELS[r.path]) return STATIC_PAGE_LABELS[r.path]
+  if (section === 'banned-books' && /^\d{3,4}$/.test(rest ?? '')) return `Banned in ${rest}`
+  if (section === 'essays' && rest) return `Essay: ${titleCase(rest)}`
+  return r.path
 }
 
 export const getTopPages = (f: StatsFilters) => {
   const today = iso(new Date())
   return unstable_cache(
     () => fetchTopPages(f, today),
-    ['admin-top-pages', f.range, f.ref ?? '∅', f.country ?? '∅', today],
+    ['admin-top-pages-v2', f.range, f.ref ?? '∅', f.country ?? '∅', today],
     { revalidate: 300 },
   )()
 }

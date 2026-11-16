@@ -37,11 +37,18 @@ function suspiciousThreats(b: ThreatBreakdown): number {
   return b.managed + b.botFight + b.other
 }
 
-function healthVerdict(threats: number, breakdown: ThreatBreakdown, cacheHitPct: number, requests: number): Verdict {
+function healthVerdict(_threats: number, breakdown: ThreatBreakdown, cacheHitPct: number, requests: number): Verdict {
   if (requests === 0) return { tone: 'info', message: 'No traffic in the last 24h.' }
   const suspicious = suspiciousThreats(breakdown)
   if (suspicious >= 50) return { tone: 'warn', message: `${suspicious} genuinely suspicious requests (CF managed/exploit rules) — worth a look in the firewall events.` }
-  if (threats >= 100) return { tone: 'good', message: `${threats} threats blocked, but ${breakdown.ownRules} are your own bot rules — only ${suspicious} genuinely suspicious. Healthy.` }
+  if (breakdown.ownRules >= 100) {
+    // Two different Cloudflare measures: "Threats" is its own metric (1h groups);
+    // the firewall-event count is every request our custom rules blocked or
+    // challenged. The second can be larger than the first, so don't present one
+    // as a subset of the other.
+    const own = `${breakdown.ownRules.toLocaleString('en')}${breakdown.truncated ? '+' : ''}`
+    return { tone: 'good', message: `Your bot rules blocked or challenged ${own} requests; Cloudflare's own detection flagged ${suspicious}. Healthy.` }
+  }
   if (cacheHitPct < 20) return { tone: 'info', message: 'Low cache hit — expected, the site is mostly dynamic.' }
   return { tone: 'good', message: 'Healthy. CF is doing its job.' }
 }
@@ -185,7 +192,7 @@ export default async function CloudflareCards() {
           />
           <Metric
             label="Threats"
-            tooltip="Requests CF blocked. Split below into your own bot rules (scrapers / AI-training crawlers / empty UA — deliberate policy) vs. genuinely suspicious (CF's managed ruleset & Bot Fight Mode catching exploits)."
+            tooltip="Cloudflare's own threat metric. The line below counts a different thing — every request your custom rules blocked or challenged — so the two numbers need not match. Split below into your own bot rules (scrapers / AI-training crawlers / empty UA — deliberate policy) vs. genuinely suspicious (CF's managed ruleset & Bot Fight Mode catching exploits)."
             value={compactNumber(totals.threats)}
             valueClassName={suspicious > 0 ? 'text-amber-600' : 'text-gray-900'}
             current={totals.threats}
@@ -195,17 +202,17 @@ export default async function CloudflareCards() {
         </dl>
         {totals.threats > 0 && (
           <p className="text-[11px] text-gray-500 leading-snug -mt-1">
-            of which{' '}
+            your rules blocked/challenged{' '}
             <span className="font-medium text-gray-700" title="firewallCustom — scrapers, AI-training crawlers, empty UA. Deliberate policy, not an attack.">
-              {compactNumber(threatBreakdown.ownRules)} your bot rules
+              {compactNumber(threatBreakdown.ownRules)}{threatBreakdown.truncated ? '+' : ''} requests
             </span>{' '}·{' '}
             <span
               className={suspicious > 0 ? 'font-medium text-amber-700' : 'text-gray-700'}
               title="firewallManaged / Bot Fight Mode — Cloudflare's own threat detection (exploits, known-bad). This is the number that matters."
             >
-              {compactNumber(suspicious)} genuinely suspicious
+              {compactNumber(suspicious)} from Cloudflare's own detection
             </span>
-            {threatBreakdown.truncated && <span className="text-gray-400"> (sampled)</span>}
+            {threatBreakdown.truncated && <span className="text-gray-400"> (event list capped — a floor)</span>}
           </p>
         )}
         <VerdictLine verdict={cardOneVerdict} />
