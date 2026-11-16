@@ -18,9 +18,17 @@ export async function GET(req: NextRequest) {
   // Incremental upsert of the last 2 UTC days into the pageviews_daily rollup
   // (admin Traffic chart). Index-scan over ~1 day of rows, a few ms.
   const { error: dailyError } = await adminClient().rpc('refresh_pageviews_daily')
-  if (error || dailyError) {
+  // Same window for the per-day country / referrer rollup behind the admin
+  // Stats breakdowns (yesterday + today; a few thousand raw rows, no sort spill).
+  const today = new Date()
+  const yesterday = new Date(today.getTime() - 86_400_000)
+  const { error: dimError } = await adminClient().rpc('refresh_pageviews_daily_dim', {
+    p_from: yesterday.toISOString().slice(0, 10),
+    p_to: today.toISOString().slice(0, 10),
+  })
+  if (error || dailyError || dimError) {
     return NextResponse.json(
-      { error: [error?.message, dailyError?.message].filter(Boolean).join('; ') },
+      { error: [error?.message, dailyError?.message, dimError?.message].filter(Boolean).join('; ') },
       { status: 500 },
     )
   }
