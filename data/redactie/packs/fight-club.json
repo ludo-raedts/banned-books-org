@@ -1,0 +1,31 @@
+{
+ "slug": "fight-club",
+ "title": "Fight Club",
+ "author": "Chuck Palahniuk",
+ "first_published_year": 1996,
+ "current_text": "In 2012, the Katy, Tex. Independent School District removed Fight Club from its required reading list following parental complaints about the book’s violent nature and explicit undertones; at Seven Lakes High School in Katy, TX, it was replaced by V for Vendetta.",
+ "sources": [
+  {
+   "url": "https://ncac.org/incident/fight-club-nixed-from-ap-english-in-texas-after-parental-complaints",
+   "quote": "Complaints by citizens about several works being taught in AP English classes in Seven Lakes High School in Katy, TX caused those books to be removed or replaced. Fight Club by Chuck Palaniuk, A Thousand Acres by Jane Smiley and Ernest Hemingway’s short story \"Hills Like White Elephants\" were among the objectionable titles. A Thousand Acres was a summer reading selection which originally incited objections. Fight Club was set to be read by students imminently but was replaced by V for Vendetta.",
+   "title": "\"Fight Club\" Nixed from AP English in Texas After Parental Complaints - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://www.oif.ala.org/wp-content/uploads/2020/12/ALAOIF_Field-Report-2012-13.2r.pdf",
+   "quote": "Palahniuk, Chuck\nPolacco, Patricia\nFight Club\nIn Our Mothers’ House\nW.W. noRTon\nPhilomel Books\nRemoved from the Katy, Tex. Independent\nSchool District required reading list\n(2012) following parental complaints\nabout the book’s violent nature and\nexplicit undertones.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1999,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 11
+}

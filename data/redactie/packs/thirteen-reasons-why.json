@@ -1,0 +1,31 @@
+{
+ "slug": "thirteen-reasons-why",
+ "title": "Thirteen Reasons Why",
+ "author": "Jay Asher",
+ "first_published_year": 2007,
+ "current_text": "A school district official in Colorado ordered Thirteen Reasons Why temporarily removed from school-library checkout, citing recent events and media attention on the Netflix adaptation. Parents of the Westwood (NJ) Regional Schools argued that Thirteen Reasons Why could do “irrevocable harm” and should be pulled from the school.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/thirteen-reasons-controversy/",
+   "quote": "Most recently, a school district official in Colorado ordered the book removed from school libraries.\n“Due to recent events and media attention on the Netflix movie 13 Reasons Why, I am going to have this book temporarily removed from any kind of check out,” wrote Leigh Grasso, the district’s executive director of academic achievement and growth, in an email sent to librarians on April 28.",
+   "title": "Thirteen Reasons Why Controversy - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.ala.org/sites/default/files/news/content/BBW-2020_Field-Report_Print_Revised2.pdf",
+   "quote": "Asher, Jay\nThirteen Reasons Why (2007)\nParents of the Westwood (NJ) Regional Schools argued that Thirteen Reasons Why by Jay Asher, and Can’t Get There From Here and Boot Camp by Todd Strasser, had the potential to do “irrevocable harm and should be pulled from the school.”",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2012,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 143
+}

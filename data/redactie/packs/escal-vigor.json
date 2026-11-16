@@ -1,0 +1,36 @@
+{
+ "slug": "escal-vigor",
+ "title": "Escal-Vigor",
+ "author": "Georges Eekhoud",
+ "first_published_year": 1899,
+ "current_text": "Georges Eekhoud was prosecuted in 1900 over the perceived salaciousness of Escal-Vigor and was acquitted of the charges.",
+ "sources": [
+  {
+   "url": "https://consciencebibliotheek.be/en/page/georges-eekhoud-belgian-maxim-gorki",
+   "quote": "This topic was controversial to such a degree, that the novel was considered a press offence against public decency and Eekhoud was summoned to appear in court, where a jury had to decide whether or not the author was guilty of immorality.",
+   "title": "Georges Eekhoud: the Belgian Maxim Gorki | Erfgoedbibliotheek Hendrik Conscience"
+  },
+  {
+   "url": "https://consciencebibliotheek.be/en/page/georges-eekhoud-belgian-maxim-gorki",
+   "quote": "In the end, Eekhoud was acquitted of the charges, but the fear of exposure and social ‘excommunication’ urged him to strongly deny accusations on being a homosexual himself.",
+   "title": "Georges Eekhoud: the Belgian Maxim Gorki | Erfgoedbibliotheek Hendrik Conscience"
+  },
+  {
+   "url": "https://journals.gold.ac.uk/index.php/volupte/article/download/1948/2053/2452",
+   "quote": "Much like his French decadent contemporary Rachilde with Monsieur Vénus (1884), Eekhoud was prosecuted in 1900 for the perceived salaciousness of Escal-Vigor, whose unapologetically positive depiction of male homosexual desire scandalised both the courts and salons.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belgium",
+   "year": 1900,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "One of the first European novels overtly defending homosexuality; prosecuted at Bruges in 1900 as pornography/an affront to morals. Eekhoud was acquitted after a writers' petition (a prosecution rather than a completed ban)."
+  }
+ ],
+ "institution_rows": 0
+}

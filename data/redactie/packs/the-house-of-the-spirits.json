@@ -1,0 +1,41 @@
+{
+ "slug": "the-house-of-the-spirits",
+ "title": "The House of the Spirits",
+ "author": "Isabel Allende",
+ "first_published_year": 1982,
+ "current_text": "The House of the Spirits was challenged in the Watauga County, N.C. High School curriculum in 2013 because of its graphic nature; after a five-month process, it was fully retained at a third and final appeal hearing. The House of the Spirits was challenged on the tenth grade reading list at La Costa Canyon High School in Encinitas, Calif., in 1999 because it allegedly “defames” the Catholic faith and contains “pornographic passages.” The House of the Spirits was challenged but retained in advanced English classes in Modesto, Calif., in 2003; the seven-member Modesto City School Board said administrators should give parents more information about the books their children read. The House of the Spirits was retained on summer reading lists for honors high school students at the Fairfield-Suisun Unified School District, Calif., in 2000 despite objections that it was “immoral and sexually depraved.”",
+ "sources": [
+  {
+   "url": "https://www.ila.org/initiatives/banned-books-week/books-challenged-or-banned-in-2013-2014",
+   "quote": "The House of the Spirits\nDial Press Trade Paperback\nChallenged in the Watauga County, N.C. High School (2013) curriculum because of the book’s graphic nature. After a five-month process, the book was fully retained at a third and final appeal hearing.",
+   "title": "Books Challenged or Banned in 2013-2014, by Robert P. Doyle - Illinois Library Association"
+  },
+  {
+   "url": "https://www.ila.org/content/documents/2000banned.pdf",
+   "quote": "Allende, Isabel. The House of the Spirits. Knopf; Bantam. Challenged on the tenth grade reading list at La Costa Canyon High School in Encinitas, Calif. (1999) because the work “defames” the Catholic faith and contains “pornographic passages.”",
+   "title": null
+  },
+  {
+   "url": "https://www.ila.org/initiatives/banned-books-week/books-challenged-or-banned-in-2003-2004",
+   "quote": "The House of the Spirits\nKnopf; Bantam\nChallenged, but retained in the advanced English classes in Modesto, Calif. (2003). The seven-member Modesto City School Board said administrators should instead give parents more information about the books their children read, including annotations of each text.",
+   "title": "Books Challenged or Banned in 2003-2004, Robert P. Doyle - Illinois Library Association"
+  },
+  {
+   "url": "https://www.ila.org/initiatives/banned-books-week/books-challenged-or-banned-in-2000-2001",
+   "quote": "Allende, Isabel\nThe House of the Spirits\nKnopf; Bantam\nRetained on the summer reading lists for honors high school students at the Fairfield-Suisun Unified School District, Calif. (2000) despite objections that the book is “immoral and sexually depraved.”",
+   "title": "Books Challenged or Banned in 2000–2001, by Robert P. Doyle - Illinois Library Association"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1995,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 10
+}

@@ -1,0 +1,31 @@
+{
+ "slug": "our-bodies-ourselves",
+ "title": "Our Bodies, Ourselves",
+ "author": "Boston Women's Health Book Collective",
+ "first_published_year": 1970,
+ "current_text": "In the 1980s, book banners pressured over 20 public libraries, schools, and community centers across the country to remove Our Bodies, Ourselves from their shelves. The school districts of Renton, Washington, and Ludlow, Massachusetts, removed Our Bodies, Ourselves from their high school curricula.",
+ "sources": [
+  {
+   "url": "https://ourbodiesourselves.org/impact-influence/bans-off-our-book",
+   "quote": "Our Bodies, Ourselves then became a target of the intense censorship movement led by the new Religious Right. Book banners pressured over 20 public libraries, schools, and community centers across the country to remove Our Bodies, Ourselves from their shelves in the 1980s.",
+   "title": "Bans Off Our Book: When the Censors Came for Our Bodies, Ourselves | Our Bodies Ourselves"
+  },
+  {
+   "url": "https://ourbodiesourselves.org/impact-influence/bans-off-our-book",
+   "quote": "Falwell praised the school districts of Renton, Washington and Ludlow, Massachusetts for removing OBOS from their high school curricula.",
+   "title": "Bans Off Our Book: When the Censors Came for Our Bodies, Ourselves | Our Bodies Ourselves"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1977,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Removed from school and public library collections in multiple US states from the late 1970s onward following challenges over its frank treatment of sexuality, abortion and lesbian relationships; the book has reappeared on ALA's most-challenged lists in subsequent decades."
+  }
+ ],
+ "institution_rows": 0
+}

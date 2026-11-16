@@ -1,0 +1,35 @@
+{
+ "slug": "captain-underpants",
+ "title": "Captain Underpants",
+ "author": "Dav Pilkey",
+ "first_published_year": 1997,
+ "current_text": "The Captain Underpants series was challenged in American schools and libraries in 2012 and 2013, mostly for its scatological humor; the American Library Assn. listed it as the nation’s most frequently challenged books in those years.",
+ "sources": [
+  {
+   "url": "https://www.latimes.com/books/jacketcopy/la-et-jc-captain-underpants-banned-gay-character-20151027-story.html",
+   "quote": "The 12 “Captain Underpants” books have been challenged or banned frequently in American schools and libraries, mostly for their scatological humor. According to the American Library Assn., the books were the most frequently challenged ones in the nation in 2012 and 2013.",
+   "title": "'Captain Underpants' banned from school book fair over gay character - Los Angeles Times"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2012,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Offensive language, unsuited for age group, violence"
+  }
+ ],
+ "institution_rows": 2
+}

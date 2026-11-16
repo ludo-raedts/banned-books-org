@@ -1,0 +1,26 @@
+{
+ "slug": "a-child-called-it-one-childs-courage-to-survive",
+ "title": "A Child Called \"It\": One Child's Courage to Survive",
+ "author": "Dave Pelzer",
+ "first_published_year": 1995,
+ "current_text": "A Child Called \"It\" was removed from Sussex, Del. Central Middle School in 2000 pending a committee review because of its profanity and violence.",
+ "sources": [
+  {
+   "url": "https://www.ila.org/content/documents/2001banned.pdf",
+   "quote": "Pelzer, Dave. A Child Called It. Health Communications; Omaha Pr. Pub. Co. Removed from the Sussex, Del. Central Middle School (2000) until the committee completes its review because of the book’s profanity and violence. Source: July 2000, p. 105.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Child abuse"
+  }
+ ],
+ "institution_rows": 15
+}

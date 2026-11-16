@@ -1,0 +1,46 @@
+{
+ "slug": "the-glass-castle",
+ "title": "The Glass Castle",
+ "author": "Jeannette Walls",
+ "first_published_year": 2005,
+ "current_text": "In 2012, parents challenged The Glass Castle over concerns about child neglect, alcoholism, abuse and sexual activity among adolescents; the Traverse City Board of Education voted to retain it after a school board reconsideration committee recommended removal. A parent complained to the Marshfield (Wisconsin) School Board about vulgar language and explicit situational content in The Glass Castle, prompting a formal request to remove it from the curriculum; a committee unanimously recommended retaining it.",
+ "sources": [
+  {
+   "url": "https://ncac.org/incident/glass-castle-stays-in-traverse-city-schools-after-krrp-letter",
+   "quote": "NCAC reached out quickly and effectively on a challenge to Jeannette Walls’ The Glass Castle, a summer reading assignment for 9th graders in the Traverse City school district. Parents of a child in one of the district’s high schools filed a formal complaint with the board because of concerns over the subject matter in the book, which discusses child neglect, alcoholism, abuse and sexual activity among adolescents.",
+   "title": "\"Glass Castle\" Stays in Traverse City Schools After KRRP Letter - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/incident/glass-castle-stays-in-traverse-city-schools-after-krrp-letter",
+   "quote": "A school board reconsideration committee had already supported removing the book, but the school board ultimately voted 4-3 against that recommendation to retain the book.",
+   "title": "\"Glass Castle\" Stays in Traverse City Schools After KRRP Letter - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/news/blog/wisconsin-parent-challenges-the-glass-castle-calls-it-explicit-and-disturbing",
+   "quote": "In 2012, the Traverse City Board of Education (Michican) voted to allow the book to remain in schools following NCAC’s successful intervention.",
+   "title": "NCAC Defends the Glass Castle over Concerns of ‘Disturbing’ Content; UPDATE: Review Committee Votes in Favor of Keeping the Book - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://www.ala.org/sites/default/files/advocacy/content/Field%20Report%202017.pdf",
+   "quote": "After a parent complained about vulgar language and explicit situational content to the Marshfield (Wisconsin) School Board, a formal request was filed with the district to remove the book from the curriculum.",
+   "title": null
+  },
+  {
+   "url": "https://www.ala.org/sites/default/files/advocacy/content/Field%20Report%202017.pdf",
+   "quote": "The nine-person committee reviewed the text in seven days and unanimously recommended to retain the book as one of the school district’s “curriculum-aligned resources.”",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2012,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 41
+}

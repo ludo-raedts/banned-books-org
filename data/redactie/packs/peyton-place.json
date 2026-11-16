@@ -1,0 +1,45 @@
+{
+ "slug": "peyton-place",
+ "title": "Peyton Place",
+ "author": "Grace Metalious",
+ "first_published_year": 1956,
+ "current_text": "In 1956, Customs officials banned Peyton Place in Canada; in 1958, Dell Publishing appealed to the Tariff Board, which found the novel had been misclassified as indecent and allowed it into Canada. In Australia, the original Dell edition of Peyton Place was placed on the banned list on 6 December 1957 and remained there until 11 February 1971.",
+ "sources": [
+  {
+   "url": "https://www.freedomtoread.ca/wp-content/uploads/2011/12/kit2011.pdf",
+   "quote": "In 1956, Customs officials banned Peyton Place, a best-selling novel by Grace Metalious. In 1958, Dell Publishing appealed the ban to the Tariff Board. The board, which rarely heard appeals of book bans, decided that Peyton Place had been misclassified as indecent and allowed the novel into Canada.",
+   "title": null
+  },
+  {
+   "url": "https://www.naa.gov.au/blog/peyton-place-banned-books",
+   "quote": "However, six months later, on 6 December 1957, the original Dell edition of Peyton Place was placed on the banned list, remaining there until 11 February 1971.",
+   "title": "Peyton Place – Banned Books | naa.gov.au"
+  },
+  {
+   "url": "https://artsandculture.google.com/story/3wXRe6KPfhBeJQ",
+   "quote": "Grace Metalious, ‘Peyton Place’, Dell Publications, New York, 1956.\nBanned: 1957 to 1971",
+   "title": "BANNED — Google Arts & Culture"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Canada",
+   "year": 1956,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Australia",
+   "year": 1957,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

@@ -1,0 +1,36 @@
+{
+ "slug": "the-giver",
+ "title": "The Giver",
+ "author": "Lois Lowry",
+ "first_published_year": 1993,
+ "current_text": "In Palm Springs, a library clerk and principal objected to The Giver as inappropriate for a fourth-grade reading class and requested its removal from district elementary school libraries and classrooms; the school board upheld the assistant superintendent’s decision to remove it from those libraries and move it to middle school and high school libraries. In 1996, The Giver was challenged at Glacier Gateway Elementary School in Columbia Falls over questionable values and concerns that it would desensitize students to murder, suicide and infanticide; it was retained. In Elk Grove, an objector requested the removal of The Giver and other materials assigned to a seventh-grade class, alleging that they contained “negative situations” conflicting with “personal moral convictions” and claiming that they aimed to “brainwash” students.",
+ "sources": [
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "In Palm Springs. objections to The Giver by Lois Lowry, in use in a\nfourth-grade reading class. for inappropriate subject matter. Removal from all\ndistrict elementary school libraries and classrooms requested.\nINCIDENT:\nOBJECTOR:\nLibrary clerk and principal.\nRESOLUTION: Thc school board upheld the assistant superintendent's decision to\nremove The Giver. a 1994 Newbery Award winner, from all district elementary\nschool libraries and to move it to middle school and high school libraries.",
+   "title": null
+  },
+  {
+   "url": "https://arc.lib.montana.edu/banned-books-montana/item.php?id=60",
+   "quote": "Title\nThe Giver\nAuthor\nLowry, Lois\nChallenge Location\nGlacier Gateway Elementary School\nCounty\nFlathead\nCity\nColumbia Falls\nChallenge Date\n1996\nChallenge\nQuestionable values; desensitize to murder, suicide, infanticide\nResolution\nRetained",
+   "title": "The Giver"
+  },
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "INCIDENE In Elk Grove. objections to The Giver by Lois Lowry: Caleb's Brother\nby James Baldwin: The Loser by Sam Keith; Harrison Bergeron by Kurt\nVonnegut Jr.: and various classroom projects. assigned to a seventh-grade class.\nfor allegedly containing \"negative situations\" that conflict with \"personal moral\nconvictions.\" One objector claimed that the aim of the materials was to -brainwash\" students. Removal requested.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1994,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 8
+}

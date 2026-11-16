@@ -1,0 +1,31 @@
+{
+ "slug": "the-master-and-margarita",
+ "title": "The Master and Margarita",
+ "author": "Mikhail Bulgakov",
+ "first_published_year": 1967,
+ "current_text": "The first published edition of The Master and Margarita, issued in the journal Moskva in November 1966 and January 1967, was substantially cut, mostly to accommodate Soviet censors but partly for space. The complete text of The Master and Margarita was published in Paris in 1967, and a restored complete edition with the censored passages in italics was published in Germany in 1969.",
+ "sources": [
+  {
+   "url": "https://cr.middlebury.edu/public/russian/bulgakov/public_html/rueditions.html",
+   "quote": "Bulgakov's Master and Margarita, like several of his other works,\nwas never published in his lifetime. The novel was published by Bulgakov's\nwidow, Elena Sergeevna, in Nov. 1966 and Jan. 1967 in the journal Moskva.\nThis first published edition was substantially cut (roughly 12% of the text),\nin part for considerations of space, but mostly to accommodate Soviet censors.",
+   "title": "Master: Russian Editions"
+  },
+  {
+   "url": "https://cr.middlebury.edu/public/russian/bulgakov/public_html/rueditions.html",
+   "quote": "The complete text was published in Paris in 1967 (YMCA Press)\nand in 1969 a restored complete edition was published in Germany by Possev,\nwith the censored parts in italics.",
+   "title": "Master: Russian Editions"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Soviet Union",
+   "year": 1940,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

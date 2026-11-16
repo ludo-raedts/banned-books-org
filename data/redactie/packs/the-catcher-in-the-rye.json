@@ -1,0 +1,35 @@
+{
+ "slug": "the-catcher-in-the-rye",
+ "title": "The Catcher in the Rye",
+ "author": "J.D. Salinger",
+ "first_published_year": 1951,
+ "current_text": "The Catcher in the Rye was accused of being “anti-white” in Columbus, Ohio, in 1963. The Catcher in the Rye was accused of being part of a “communist plot to gain a foothold in schools” in Issaquah, Washington, in 1978.",
+ "sources": [
+  {
+   "url": "https://www.cascadepbs.org/culture/2010/03/why-jd-salingers-catcher-in-rye-still-provokes-boo/",
+   "quote": "As well as containing 'vulgar and obscene language', drunkenness, prostitution, delinquency and references to sex it has also been accused of being: 'anti-white' (1963 - Columbus, Ohio), being part of a 'communist plot to gain a foothold in schools' (1978 - Issaquah, Washington).... Catcher in the Rye gained even more notoriety",
+   "title": "Why J.D. Salinger's 'Catcher in the Rye' still provokes book bans | Cascade PBS"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1951,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Listed by the Irish Censorship of Publications Board on its register of \"Prohibited Publications\" shortly after publication. Salinger's coming-of-age novel, with its frank treatment of adolescent sexuality and profanity, was among the post-war American titles routinely barred under the 1929 Censorship of Publications Act. Most prohibitions of mid-century literary fiction in Ireland were quietly allowed to lapse decades later."
+  },
+  {
+   "country": "United States",
+   "year": 1961,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 1,
+   "note": "In 1960, a teacher in Tulsa, Oklahoma, was fired for assigning the novel in class. She was later reinstated."
+  }
+ ],
+ "institution_rows": 3
+}

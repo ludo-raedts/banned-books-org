@@ -1,0 +1,41 @@
+{
+ "slug": "forever-judy-blume",
+ "title": "Forever",
+ "author": "Judy Blume",
+ "first_published_year": 1975,
+ "current_text": "In 1997, a parent’s complaint led a school board to vote to remove Forever from the one area middle school that carried it in Elgin, Illinois. In 1999, a school librarian asked the school board to reconsider its 1997 decision on Forever, but the book remained off the shelf after a 3-3 vote on lifting the ban. On January 22, 2002, the School District U-46 Board voted 5-2 to reinstate Forever. By 1982, schools in Pennsylvania, Florida, and Ohio had challenged Forever for not promoting abstinence or monogamy.",
+ "sources": [
+  {
+   "url": "https://ncac.org/update/ncac-applauds-decision-to-return-judy-blumes-forever-to-elgin-illinois-middle-school-libraries-shelves",
+   "quote": "In 1997, the book was removed from the one area middle school that carried it at the time because of a parent’s initial complaint and the school board’s resulting vote to remove it.",
+   "title": "NCAC Applauds Decision To Return Judy Blume's \"Forever\" To Elgin, Illinois Middle School Libraries' Shelves - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/update/ncac-applauds-decision-to-return-judy-blumes-forever-to-elgin-illinois-middle-school-libraries-shelves",
+   "quote": "In 1999, after a 2-year waiting period per school district policy, a school librarian asked the school board to reconsider its 1997 decision. The book remained off the shelf after school board members voted 3-3 on whether to lift the ban.",
+   "title": "NCAC Applauds Decision To Return Judy Blume's \"Forever\" To Elgin, Illinois Middle School Libraries' Shelves - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/update/ncac-applauds-decision-to-return-judy-blumes-forever-to-elgin-illinois-middle-school-libraries-shelves",
+   "quote": "The decision to reinstate \"Forever\" came as the result of a 5-2 vote by the School District U-46 Board on January 22, 2002.",
+   "title": "NCAC Applauds Decision To Return Judy Blume's \"Forever\" To Elgin, Illinois Middle School Libraries' Shelves - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://time.com/7283728/forever-judy-blume-book-ban-netflix/",
+   "quote": "By 1982, schools in Pennsylvania, Florida, and Ohio had challenged the book for not promoting abstinence or monogamy. One school district complained that it was “basically a sexual how-to-do book for junior-high students,” while another claimed it “demoralizes marital sex.”",
+   "title": "The History Behind Judy Blume’s Controversial Novel, Forever"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1982,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 42
+}

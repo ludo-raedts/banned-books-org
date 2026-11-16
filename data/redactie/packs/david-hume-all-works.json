@@ -1,0 +1,26 @@
+{
+ "slug": "david-hume-all-works",
+ "title": "David Hume — All works",
+ "author": "David Hume",
+ "first_published_year": null,
+ "current_text": "David Hume’s books were banned starting in 1761 and added to the Index Librorum Prohibitorum, the official list of books Catholics were forbidden to publish or read. After Dialogues was published in 1779 and Hume was identified as its author, it was added to his other banned works.",
+ "sources": [
+  {
+   "url": "https://oll.libertyfund.org/publications/reading-room/2023-10-25-donway-hume-great-work-on-religion-banned",
+   "quote": "Dialogues was published in 1779, without Hume’s name as author. But when the author was identified (it did not take long), the book was added to other works by Hume that had been banned starting in 1761. Hume was one of those authors all of whose books were added to the Index Librorum Prohibitorum, the official list of books, actively maintained until 1948, that Catholics were forbidden to publish or to read.",
+   "title": "David Hume’s Great Work on Religion Is Banned, Along with All His Books | Online Library of Liberty"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1761,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

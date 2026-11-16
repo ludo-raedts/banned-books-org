@@ -1,0 +1,46 @@
+{
+ "slug": "bridge-to-terabithia",
+ "title": "Bridge to Terabithia",
+ "author": "Katherine Paterson",
+ "first_published_year": 1977,
+ "current_text": "Parents challenged Bridge to Terabithia as recommended reading for 6th grade students in the Lincoln, NE schools in 1986, objecting to its “profanity,” including “Oh, Lord” and the use of “Lord” as an expletive. In Coweta County, objections to Bridge to Terabithia and other books used in elementary classrooms and available in school libraries cited profanity, the mention of ghosts, and a reference to an attempted rape; removal was requested, but school and county review committees retained Bridge to Terabithia for classroom and library use while restricting it to middle school classrooms. In Marshalltown, an objector requested the removal of Bridge to Terabithia from a fifth-grade literature class over profanity; after the objector failed to attend a scheduled hearing, the book was not withdrawn from the curriculum.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1986-bridge-to-terabithia/",
+   "quote": "Paterson’s novel for young people was challenged in 1986 as recommended reading for 6th grade students in the Lincoln, NE schools. Parents objected to the book’s “profanity” including the phrase “Oh, Lord” and use of “Lord” used as an expletive.",
+   "title": "Timeline entry for 1986: Bridge to Terabithia - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "INCIDENT In Coweta County, objections to Bridge to Terabithia by Katherine Paterson, Stepping on the Cracks and Wait till Helen Comes by Mary Downing Hahn. James and the Giant Peach by Roald Dahl. Julie Qf the Wolves by Jane Craighead George. and Night of the Twisterv by Ivy Ruckman, in use in elementary classrooms and available in school libraries, for profanity, the mention of ghosts. and a reference to an attempted rape. Removal requested.",
+   "title": null
+  },
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "Following reconsideration by a school review committee, the\nschool media committee and the county media committee, Bridge to Terabithia\nwas retained both for classroom use and in the libraries, but was restricted to middle school classrooms.",
+   "title": null
+  },
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "INCIDENT:\nIn Marshalltown. objections to Bridge to Teribithia by Katherine\nPaterson, in use in a fifth-grade literature class. for profanity. Removal requested.",
+   "title": null
+  },
+  {
+   "url": "https://files.eric.ed.gov/fulltext/ED386217.pdf",
+   "quote": "After the objector filed a formal complaint, a review committee\nwas formed and a hearing was scheduled to evaluate the educational merits of the\nbook. The objector failed to attend the hearing and has not lodged further com-\nplaints. The book was not withdrawn from the curriculum.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1986,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 2
+}

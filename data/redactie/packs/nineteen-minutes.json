@@ -1,0 +1,31 @@
+{
+ "slug": "nineteen-minutes",
+ "title": "Nineteen Minutes",
+ "author": "Jodi Picoult",
+ "first_published_year": 2007,
+ "current_text": "Nineteen Minutes was banned in U.S. schools during the 2023–2024 school year; Jodi Picoult said Moms for Liberty targeted it over what the group called mature or sexually inappropriate content on page 313.",
+ "sources": [
+  {
+   "url": "https://www.kirkusreviews.com/news-and-features/articles/jodi-picoult-talks-book-bans-with-ali-velshi/",
+   "quote": "Her novel Nineteen Minutes, about the aftermath of a New Hampshire school shooting, was the most banned book in U.S. schools during the 2023-2024 school year, according to the literary nonprofit PEN America.",
+   "title": "Jodi Picoult Talks Book Bans With Ali Velshi | Kirkus Reviews"
+  },
+  {
+   "url": "https://www.wgbh.org/culture/books/2025-08-01/meet-three-authors-who-wrote-some-of-the-most-banned-books-in-america",
+   "quote": "“They started targeting — they meaning Moms for Liberty — what they called mature content or anything that they deemed sexually inappropriate. And that was where ‘Nineteen Minutes’ fell into the mix,” Picoult said. “They were not banning it because it is about gun violence; they don’t really care about that. They were banning it because of page 313.”",
+   "title": "Meet three authors who wrote some of the most banned books in America | GBH"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2012,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 151
+}

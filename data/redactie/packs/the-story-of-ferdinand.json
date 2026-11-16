@@ -1,0 +1,31 @@
+{
+ "slug": "the-story-of-ferdinand",
+ "title": "The Story of Ferdinand",
+ "author": "Munro Leaf",
+ "first_published_year": 1936,
+ "current_text": "In Nazi Germany, Hitler ordered The Story of Ferdinand burned as “degenerate democratic propaganda”; after the war, Jewish journalist Jella Lepman, founder of the International Youth Library, worked with the US Army to distribute 30,000 copies to German children. The Story of Ferdinand was banned in Franco’s Spain.",
+ "sources": [
+  {
+   "url": "https://www.nprillinois.org/arts-life/2017-12-14/mediocre-ferdinand-will-have-bored-parents-seeing-red",
+   "quote": "For a simple children's story about a pacifist bull in Spain who would rather smell the flowers than charge a matador, Munro Leaf's The Story of Ferdinand generated tremendous controversy, owing to its worldwide popularity and its date of publication, 1936, which found it caught in political crosswinds. It was banned in Franco's Spain. Hitler ordered it burned as \"degenerate democratic propaganda\" in Nazi Germany",
+   "title": "Mediocre 'Ferdinand' Will Have Bored Parents Seeing Red | NPR Illinois"
+  },
+  {
+   "url": "https://www.nybooks.com/online/2026/05/02/his-moo-was-refined-the-story-of-ferdinand/",
+   "quote": "In Germany, the Nazis had it burned as “degenerate democratic propaganda.” (After the war the Jewish journalist Jella Lepman, founder of the International Youth Library, worked with the US Army to distribute 30,000 copies to German children.)",
+   "title": "His Moo Was Refined | The Story of ‘The Story of Ferdinand’ | The New York Review of Books"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Germany",
+   "year": 1936,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

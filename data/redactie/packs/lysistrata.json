@@ -1,0 +1,35 @@
+{
+ "slug": "lysistrata",
+ "title": "Lysistrata",
+ "author": "Aristophanes",
+ "first_published_year": -411,
+ "current_text": "In 1967, the military clique ruling Greece banned Lysistrata in Athens, presumably because of its independent and antiwar themes.",
+ "sources": [
+  {
+   "url": "https://wiki.ncac.org/Lysistrata",
+   "quote": "1967 Greece-Athens: The military clique then ruling the country banned a number of classic plays, Lysistrata, presumably because of their independent and antiwar themes",
+   "title": "Lysistrata - Censorpedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1954,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 6,
+   "note": "A copy consigned to a Beverly Hills book dealer was intercepted by the U.S. Post Office as obscene and returned only after suit (aided by the ACLU). Year approximate."
+  },
+  {
+   "country": "Greece",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

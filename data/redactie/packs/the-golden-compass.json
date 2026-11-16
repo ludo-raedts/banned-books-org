@@ -1,0 +1,36 @@
+{
+ "slug": "the-golden-compass",
+ "title": "The Golden Compass",
+ "author": "Philip Pullman",
+ "first_published_year": 1995,
+ "current_text": "In 2007, The Golden Compass was pulled from St. John Neumann Middle and Lourdes High School in Oshkosh, WI, over concerns about what critics called its “anti-Christian message.” In 2008, The Golden Compass was removed from library shelves at dozens of schools in the publicly funded Halton (Ontario, Canada) Catholic School District after a challenge alleging that it was “written by an atheist where the characters and text are anti-God, anti-Catholic, and anti-religion”; it was later returned. The Calgary (Alberta, Canada) Catholic School District ordered The Golden Compass removed from its library shelves after detractors accused it of anti-religious content, then returned it two months later.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-2007-the-golden-compass/",
+   "quote": "In 2007, it was pulled from the St. John Neumann Middle and Lourdes High School in Oshkosh, WI because of concerns about what critics call its “anti-Christian message.”",
+   "title": "Timeline entry for 2007: The Golden Compass - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/golden-compass/",
+   "quote": "2008\nRemoved, but later returned to the library shelves at dozens of schools in the publicly funded Halton (Ontario, Canada) Catholic School District despite that the books were challenged as being “written by an atheist where the characters and text are anti-God, anti-Catholic, and anti-religion.”",
+   "title": "Banned Books 2009 – The Golden Compass – Marshall University Libraries"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/golden-compass/",
+   "quote": "The publicly funded Calgary (Alberta, Canada) Catholic School District returned the book to its library shelves two months after ordering its removal. Detractors accused the book of having anti-religious content.",
+   "title": "Banned Books 2009 – The Golden Compass – Marshall University Libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2007,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

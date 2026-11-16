@@ -1,0 +1,51 @@
+{
+ "slug": "bless-me-ultima",
+ "title": "Bless Me, Ultima",
+ "author": "Rudolfo Anaya",
+ "first_published_year": 1972,
+ "current_text": "In November 2008, Newman-Crows Landing Unified School District Superintendent Rick Fauss removed Bless Me, Ultima from district high school classes after a parent objected that it was “anti-Catholic”; on February 2, 2009, the school board voted to uphold the removal from classrooms, while keeping the book in the school library. In 1999, the Laton, Calif. Unified School District removed Bless Me, Ultima because it contained violence and profanity that might harm students. In 2001, former Quincy High School teacher Bob Hiss and parent Tim West challenged Bless Me, Ultima; Hiss objected to its language and anti-Catholic tone, and a school district book review hearing committee voted to keep it on the reading list.",
+ "sources": [
+  {
+   "url": "https://ncac.org/wp-content/uploads/import/KR2R%2008-2010%20Report%20Web%20Copy.pdf",
+   "quote": "Newman-Crows Landing Unified School District Superintendent Rick Fauss removed Bless Me, Ultima from district high school classes in November 2008 after one parent objected to the book as “anti-Catholic.”",
+   "title": null
+  },
+  {
+   "url": "https://ncac.org/wp-content/uploads/import/KR2R%2008-2010%20Report%20Web%20Copy.pdf",
+   "quote": "Despite our efforts, the school board voted 4-1 on February 2, 2009, to uphold the superintendent’s decision to remove the book from classrooms. It will remain in the school library.",
+   "title": null
+  },
+  {
+   "url": "https://www.ila.org/content/documents/2000banned.pdf",
+   "quote": "Anaya, Rudolfo A. Bless Me, Ultima. TQS Pubns. Removed from the Laton, Calif. Unified School District (1999) because it contains violence and profanity that might harm students.",
+   "title": null
+  },
+  {
+   "url": "https://www.lassennews.com/tuesday-april-12-2005-parents-object-to-bless-me-ultima-a-book-written-by-rudolfo-anaya-the-father-of-chicano-literature",
+   "quote": "Former Quincy High School teacher Bob Hiss and parent Tim West challenged the book in 2001. This time around, Chester parents Devin and Jean Duval sought to have the book removed from the approved reading list.",
+   "title": "Tuesday, April 12, 2005 • Parents object to ‘Bless Me, Ultima’— a book written by Rudolfo Anaya, 'the father of Chicano literature' - Lassen News"
+  },
+  {
+   "url": "https://www.lassennews.com/tuesday-april-12-2005-parents-object-to-bless-me-ultima-a-book-written-by-rudolfo-anaya-the-father-of-chicano-literature",
+   "quote": "In 2001, Hiss challenged the book’s language and its anti-Catholicism tone. The matter was brought before the school district’s book review hearing panel. The 14-member panel consisted of teachers, parents, librarians and administrators.",
+   "title": "Tuesday, April 12, 2005 • Parents object to ‘Bless Me, Ultima’— a book written by Rudolfo Anaya, 'the father of Chicano literature' - Lassen News"
+  },
+  {
+   "url": "https://www.lassennews.com/tuesday-april-12-2005-parents-object-to-bless-me-ultima-a-book-written-by-rudolfo-anaya-the-father-of-chicano-literature",
+   "quote": "The committee voted unanimously to maintain the book on the school district’s reading list.",
+   "title": "Tuesday, April 12, 2005 • Parents object to ‘Bless Me, Ultima’— a book written by Rudolfo Anaya, 'the father of Chicano literature' - Lassen News"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1981,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 5
+}

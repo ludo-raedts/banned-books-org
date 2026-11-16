@@ -1,0 +1,31 @@
+{
+ "slug": "an-area-of-darkness",
+ "title": "An Area of Darkness",
+ "author": "V. S. Naipaul",
+ "first_published_year": 1964,
+ "current_text": "The Indian government banned An Area of Darkness nationwide in 1964 for its negative portrayal of India and its people.",
+ "sources": [
+  {
+   "url": "https://scroll.in/article/1074756/vs-naipaul-nissim-ezekiel-and-a-forgotten-literary-debate-on-post-independence-indian-identity",
+   "quote": "The book set off a furore in the literary world. While readers in the West responded well, An Area of Darkness was banned by the Indian government, which inadvertently lent it even more fame and notoriety.",
+   "title": "VS Naipaul, Nissim Ezekiel and a forgotten literary debate on post-independence Indian identity"
+  },
+  {
+   "url": "https://m.thewire.in/article/rights/what-threatens-the-govt-to-ban-25-books-in-kashmir",
+   "quote": "So, what has prompted this unforeseen ban – adding to nearly 40 other books which, post 1947, have been banned throughout India, including V.S. Naipaul’s An Area of Darkness (banned nationwide in 1964 ‘for its negative portrayal of India and its people’) and Salman Rushdie’s The Satanic Verses (banned in 1988 for its ‘blasphemous’ content)?",
+   "title": "What Has Made the Government so Insecure That It Must Now Ban Books? - The Wire"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1964,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

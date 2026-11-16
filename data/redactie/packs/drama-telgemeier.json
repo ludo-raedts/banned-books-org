@@ -1,0 +1,45 @@
+{
+ "slug": "drama-telgemeier",
+ "title": "Drama",
+ "author": "Raina Telgemeier",
+ "first_published_year": 2012,
+ "current_text": "In 2014, Drama was banned at Chapel Hill Elementary School in Mount Pleasant, Texas, after it was claimed to be “sexually explicit”; it was removed from the elementary school’s library, while three copies remained in Chapel Hill Independent School District’s combined middle/high school library. Drama was removed from a Texas junior high school for being described as “politically, racially, or socially offensive.”",
+ "sources": [
+  {
+   "url": "https://cbldf.org/banned-challenged-comics/case-study-drama/",
+   "quote": "In 2014, Drama made the American Library Association’s top 10 list of frequently challenged books due to a ban at Chapel Hill Elementary School in Mount Pleasant, Texas.",
+   "title": "Case Study: Drama – Comic Book Legal Defense Fund"
+  },
+  {
+   "url": "https://cbldf.org/banned-challenged-comics/case-study-drama/",
+   "quote": "We do know that the book was claimed to be “sexually explicit” and was removed from the elementary school’s library, while three copies remain in Chapel Hill Independent School District’s combined middle/high school library.",
+   "title": "Case Study: Drama – Comic Book Legal Defense Fund"
+  },
+  {
+   "url": "https://cbldf.org/banned-challenged-comics/case-study-drama/",
+   "quote": "Drama also earned a spot on ALA’s list of the Top Ten Challenged Books for 2016. The highly acclaimed bestselling book was most likely on ALA’s list because it was removed from a Texas junior high school for being “p olitically, racially, or socially offensive.”",
+   "title": "Case Study: Drama – Comic Book Legal Defense Fund"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2012,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Canada",
+   "year": 2016,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 17
+}

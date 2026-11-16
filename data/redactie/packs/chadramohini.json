@@ -1,0 +1,26 @@
+{
+ "slug": "chadramohini",
+ "title": "Chadramohini",
+ "author": "Ansar Nasiri",
+ "first_published_year": null,
+ "current_text": "In 1952, Chadramohini could not be imported into India.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_in_India",
+   "quote": "1952 |\nChadramohini |\n|\nThis book, originally in Urdu, cannot be imported into India.",
+   "title": "List of books banned in India - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1952,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "This book, originally in Urdu, cannot be imported into India."
+  }
+ ],
+ "institution_rows": 0
+}

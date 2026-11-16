@@ -1,0 +1,31 @@
+{
+ "slug": "breathless-niven",
+ "title": "Breathless",
+ "author": "Jennifer Niven",
+ "first_published_year": 2021,
+ "current_text": "Breathless by Jennifer Niven was among the contested books removed from school libraries in Wilson County.",
+ "sources": [
+  {
+   "url": "https://tennesseeconservativenews.com/books-with-inappropriate-content-removed-from-school-libraries-to-comply-with-updated-tennessee-law/",
+   "quote": "Two other contested books, “Identical” by Ellen Hopkins, and “Breathless” by Jennifer Niven were also removed. Nine other titles by Hopkins were likewise taken out of circulation.",
+   "title": "Books With Inappropriate Content Removed From School Libraries To Comply With Updated Tennessee Law | Tennessee Conservative"
+  },
+  {
+   "url": "https://tennesseeconservativenews.com/books-with-inappropriate-content-removed-from-school-libraries-to-comply-with-updated-tennessee-law/",
+   "quote": "After consulting with the district’s legal personnel, almost four hundred books considered to contain inappropriate content have been removed from school libraries in Wilson County to comply with an update to the Age Appropriate Materials Act of 2022.",
+   "title": "Books With Inappropriate Content Removed From School Libraries To Comply With Updated Tennessee Law | Tennessee Conservative"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 65
+}

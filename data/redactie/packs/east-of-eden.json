@@ -1,0 +1,31 @@
+{
+ "slug": "east-of-eden",
+ "title": "East of Eden",
+ "author": "John Steinbeck",
+ "first_published_year": 1952,
+ "current_text": "East of Eden was removed from school libraries in Anniston, Alabama, in 1982 after being called “ungodly and obscene,” then reinstated on a restricted basis. East of Eden was challenged in the Greenville, South Carolina, schools in 1991.",
+ "sources": [
+  {
+   "url": "https://independentpublisher.com/article.php?page=761",
+   "quote": "Oprah's Book Club's recent selection, John Steinbeck's East of Eden, was called \"ungodly and obscene\" in Anniston, Alabama, where it was removed, then reinstated on a restricted basis in the town's school libraries in 1982.",
+   "title": "Independent Publisher: THE Voice of the Independent Publishing Industry"
+  },
+  {
+   "url": "https://independentpublisher.com/article.php?page=761",
+   "quote": "Oprah's Book Club's recent selection, John Steinbeck's East of Eden, was called \"ungodly and obscene\" in Anniston, Alabama, where it was removed, then reinstated on a restricted basis in the town's school libraries in 1982. In 1991, the book was challenged in the Greenville, South Carolina, schools.",
+   "title": "Independent Publisher: THE Voice of the Independent Publishing Industry"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1953,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 3
+}

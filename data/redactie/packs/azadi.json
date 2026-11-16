@@ -1,0 +1,26 @@
+{
+ "slug": "azadi",
+ "title": "Azadi",
+ "author": "Arundhati Roy",
+ "first_published_year": 2020,
+ "current_text": "The Jammu and Kashmir Home Department banned Arundhati Roy’s Azadi, claiming that the books it ordered forfeited promoted false narratives and incited secessionism.",
+ "sources": [
+  {
+   "url": "https://scroll.in/latest/1085307/j-k-administration-bans-arundhati-roys-book-24-other-titles-for-inciting-secessionism",
+   "quote": "The Jammu and Kashmir Home Department on Tuesday ordered a ban on 25 books, including works by author and activist Arundhati Roy and former Supreme Court lawyer and constitutional expert AG Noorani. The department, headed by Jammu and Kashmir Lieutenant Governor Manoj Sinha, claimed that the books were “forfeited” for allegedly promoting false narratives and inciting secessionism. Among the titles that have been banned are Roy’s Azadi and Noorani’s The Kashmir Dispute 1947–2012.",
+   "title": "J&K administration bans Arundhati Roy’s book, 24 other titles for ‘inciting secessionism’"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "In August 2025 the Jammu and Kashmir Home Department, under Principal Secretary Chandraker Bharti, ordered the seizure of literature it said “propagates false narrative and secessionism in Jammu and Kashmir” and “would deeply impact the psyche of youth by promoting (a) culture of grievance, victimhood and terrorist heroism.” The notification covered roughly two dozen titles in the union territory, followed the central government’s reorganisation of the region, and was widely criticised by Indian writers’ organisations and PEN."
+  }
+ ],
+ "institution_rows": 0
+}

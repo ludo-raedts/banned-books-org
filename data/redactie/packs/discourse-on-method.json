@@ -1,0 +1,31 @@
+{
+ "slug": "discourse-on-method",
+ "title": "Discourse on Method",
+ "author": "René Descartes",
+ "first_published_year": 1637,
+ "current_text": "Jesuits denounced the message of Discourse on Method and officially banned it in 1663. The censors of Rome put Descartes' works, including Discourse on Method, on the Index of Prohibited Books in 1663. French and German universities prohibited students from reading Discourse on Method.",
+ "sources": [
+  {
+   "url": "https://www.ebsco.com/research-starters/literature-and-writing/discourse-method-rene-descartes",
+   "quote": "For their part, Jesuits denounced the message of the Discourse on Method and officially banned it in 1663. Dutch Calvinists likewise opposed it, and many French and German universities prohibited students from reading it.",
+   "title": "Discourse on Method by René Descartes | Literature and Writing | Research Starters | EBSCOhost"
+  },
+  {
+   "url": "https://www.cambridge.org/core/books/abs/descartes-meditations/appendix-condemnations-of-cartesianism/498848319031BD34BDC53D034448D0C5",
+   "quote": "There were condemnations by Catholics at Louvain in 1662, culminating with Descartes' works being put on the Index of Prohibited Books by the censors of Rome in 1663.",
+   "title": "Appendix: Condemnations of Cartesianism - Descartes' Meditations"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1663,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

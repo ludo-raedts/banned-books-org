@@ -1,0 +1,26 @@
+{
+ "slug": "scary-stories-to-tell-in-the-dark",
+ "title": "Scary Stories to Tell in the Dark",
+ "author": "Alvin Schwartz",
+ "first_published_year": 1981,
+ "current_text": "In 1990, Scary Stories to Tell in the Dark was challenged in the Livonia, MI schools because its poems were thought to frighten first grade children.",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1990-scary-stories-to-tell-in-the-dark/",
+   "quote": "In 1990, “Scary Stories to Tell in the Dark” was challenged in the Livonia, MI schools because the poems were thought to frighten first grade children.",
+   "title": "Timeline entry for 1990: Scary Stories to Tell in the Dark - Intellectual Freedom Blog"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1990,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 2
+}

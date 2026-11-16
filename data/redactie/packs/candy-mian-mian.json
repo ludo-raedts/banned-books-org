@@ -1,0 +1,36 @@
+{
+ "slug": "candy-mian-mian",
+ "title": "Candy",
+ "author": "Mian Mian",
+ "first_published_year": 2000,
+ "current_text": "Chinese authorities banned Mian Mian’s Candy in China in 2000, denouncing her as “a poster child for spiritual pollution”; the book subsequently became an underground hit.",
+ "sources": [
+  {
+   "url": "https://www.pbs.org/frontlineworld/stories/china/candy.html",
+   "quote": "Chinese authorities banned Mian Mian's first novel, Candy, when it was published in 2000, denouncing her as \"a poster child for spiritual pollution.\"",
+   "title": "FRONTLINE/WORLD . CHINA - Shanghai Nights . Notorious Writer, Forbidden StoriesRead excerpts from Candy | PBS"
+  },
+  {
+   "url": "https://project.zo.uni-heidelberg.de/DACHS_Leiden/archive/citrep/scheen2008/news.bbc.co.uk/2/hi/entertainment/4326235.stm",
+   "quote": "Censors outlawed the publication of Mian Mian's breakthrough novel Candy - a depiction of sex and drugs amongst the youth of two major cities - five years ago, although this did not prevent it becoming an underground hit.",
+   "title": "BBC NEWS | Entertainment | Author Mian Mian challenges China"
+  },
+  {
+   "url": "https://www.taipeitimes.com/News/feat/archives/2003/06/11/2003054878",
+   "quote": "Ever since Mian Mian's Candy and literary counterpart Zhou Weihui's Shanghai Baby -- both banned books in China -- a growing circle of local and foreign artists and cultural experts have chronicled the city's vibrant underground life.",
+   "title": "Shanghai emerges from `Maoist straitjacket' - Taipei Times"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "China",
+   "year": 2000,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Withdrawn from sale in mainland China shortly after publication and denounced by the Chinese press as \"spiritual pollution\"; the official campaign also targeted Wei Hui's Shanghai Baby. Both novels remained out of print on the mainland for over a decade."
+  }
+ ],
+ "institution_rows": 0
+}

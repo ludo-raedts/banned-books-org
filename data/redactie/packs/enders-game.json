@@ -1,0 +1,26 @@
+{
+ "slug": "enders-game",
+ "title": "Ender's Game",
+ "author": "Orson Scott Card",
+ "first_published_year": 1985,
+ "current_text": "In 2012, a student and a parent characterized Ender's Game as pornographic after a teacher read from it at Schofield Middle School in Aiken (SC); the teacher did not face criminal charges.",
+ "sources": [
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/enders-game/",
+   "quote": "2012\nA teacher at Schofield Middle School in Aiken (SC) will not face criminal charges for reading to his students from the science-fiction book. In addition to the Card novel, the teacher read excerpts from Agatha Christie novel and a young adult novel set in the Old West, officials said. The incident came to light after the materials were characterized by one student and one parent as pornographic, according to a press release issued by the school district.",
+   "title": "Banned Books 2013 – Ender’s Game – Marshall University Libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1999,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

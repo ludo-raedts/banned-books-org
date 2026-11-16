@@ -1,0 +1,40 @@
+{
+ "slug": "the-adventures-of-tom-sawyer",
+ "title": "The Adventures of Tom Sawyer",
+ "author": "Mark Twain",
+ "first_published_year": 1876,
+ "current_text": "In 1876, The Adventures of Tom Sawyer was excluded from the children's room in the Public Library in Brooklyn, N.Y. The Adventures of Tom Sawyer was also excluded from the Denver Public Library. The Adventures of Tom Sawyer was challenged in Richardson’s high schools over “inappropriate language” and text some might find “sensitive or controversial”; an alternate book was allowed.",
+ "sources": [
+  {
+   "url": "https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/261twain.html",
+   "quote": "1876 U.S.A.-Brooklyn, N.Y.: \"The Adventures of Tom Sawyer\" was excluded\nfrom the children's room in the Public Library. Also excluded from the\nDenver Public Library.",
+   "title": "\"Tom Sawyer\" and \"Huckleberry Finn\""
+  },
+  {
+   "url": "https://www.dallasobserver.com/news/how-dallas-area-isds-are-celebrating-banned-books-week-some-by-banning-books-7102847/",
+   "quote": "But in Richardson’s high schools, Mark Twain’s The Adventures of Tom Sawyer was met with a challenge, based on the book’s “inappropriate language” and the fact it “contains text that some might find sensitive or controversial.” Says the ACLU, the book was being taught in a seventh-grade English class — about when I read it in DISD, way back when — and that an “alternate book [was] allowed,” as the district believes the book is suitable for 10-12th grades.",
+   "title": "How Dallas-Area ISDs Are Celebrating \"Banned Books Week.\" Some, By Banning Books. | Dallas Observer"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1876,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": "Challenged repeatedly in US schools for racial slurs and the portrayal of Native American character \"Injun Joe.\" Removed from reading lists in several districts."
+  },
+  {
+   "country": "United States",
+   "year": 1885,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 2,
+   "note": "Barred from the Concord, Massachusetts library in 1885 as 'trash and suitable only for the slums'."
+  }
+ ],
+ "institution_rows": 3
+}

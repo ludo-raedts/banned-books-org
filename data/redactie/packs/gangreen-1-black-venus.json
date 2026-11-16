@@ -1,0 +1,26 @@
+{
+ "slug": "gangreen-1-black-venus",
+ "title": "Gangreen 1: Black Venus",
+ "author": "Jef Geeraerts",
+ "first_published_year": 1968,
+ "current_text": "In November 1969, agents of the B.O.B., a police surveillance and investigation brigade, seized one copy of Gangreen 1: Black Venus from Corman bookshop in Brussels.",
+ "sources": [
+  {
+   "url": "https://letterenhuis.be/nl/pagina/gangreen-1-black-venus-0",
+   "quote": "Krantenartikel 'Gangreen werd in beslag genomen': Artikel in Gazet van Antwerpen over de inbeslagname van enkele boeken door de B.O.B (bewakings- en opsporingsbrigade van de politie) in november 1969. Agenten van de B.O.B. nemen in boekhandel Corman in Brussel één exemplaar van Gangreen mee.",
+   "title": "Gangreen 1: Black Venus | Letterenhuis"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Belgium",
+   "year": 1969,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "A month after winning the Triennial State Prize for Prose, the novel was seized from a Brussels bookshop on the Justice Minister's order as 'morally degenerate'; released roughly a week later."
+  }
+ ],
+ "institution_rows": 0
+}

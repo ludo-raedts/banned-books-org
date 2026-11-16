@@ -1,0 +1,26 @@
+{
+ "slug": "the-bell-jar",
+ "title": "The Bell Jar",
+ "author": "Sylvia Plath",
+ "first_published_year": 1963,
+ "current_text": "In the late 1970s, The Bell Jar was removed from a high school “Women in Literature” course in Indiana after it was deemed unsuitable for high school students because of its profanity, sexuality and rejection of the woman’s role as wife and mother; the teacher was not rehired.",
+ "sources": [
+  {
+   "url": "https://explore.lib.virginia.edu/exhibits/show/censored/walkthrough/minorities",
+   "quote": "In the late 1970s, The Bell Jar was suppressed for not only its profanity and sexuality but for its overt rejection of the woman's role as wife and mother. For these reasons, the book was deemed unsuitable for high school students in Indiana. The Bell Jar ultimately was removed from a high school \"Women in Literature\" course, and the teacher was not rehired.",
+   "title": "University of Virginia Library Online Exhibits | CENSORED: Wielding the Red Pen"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1977,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

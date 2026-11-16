@@ -1,0 +1,26 @@
+{
+ "slug": "borstal-boy",
+ "title": "Borstal Boy",
+ "author": "Brendan Behan",
+ "first_published_year": 1958,
+ "current_text": "Borstal Boy was banned in Ireland in December 1958; copies sent by its London publisher, Hutchinson’s, to Dublin for sale at a Christmas market were confiscated at the port.",
+ "sources": [
+  {
+   "url": "https://www.indexoncensorship.org/2016/09/banned-books-week-what-are-the-censors-so-afraid-of/",
+   "quote": "Brendan Behan’s autobiographical work Borstal Boy was banned in Ireland in December 1958. His London publisher, Hutchinson’s, had sent a batch of copies to Dublin to be sold at a Christmas market but they were confiscated at the port. Behan was outraged that a group of “country yobs” could prevent the distribution of his book.",
+   "title": "Banned Books Week: What are the censors so afraid of? - Index on Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1958,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

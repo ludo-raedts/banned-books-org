@@ -1,0 +1,26 @@
+{
+ "slug": "jane-eyre",
+ "title": "Jane Eyre",
+ "author": "Charlotte Brontë",
+ "first_published_year": 1847,
+ "current_text": "During the Cultural Revolution (1966–1976), Jane Eyre was banned in China for allegedly corrupting youth.",
+ "sources": [
+  {
+   "url": "https://www.cae.edu.au/news/banned-books/",
+   "quote": "Books banned in China:\nDuring the Cultural Revolution (1966-1976), many books from the western literary canon were banned in China. Two notable examples:\nJane Eyre by Charlotte Bronte, 1847 [B0024] – banned for allegedly corrupting youth.",
+   "title": "Banned Books | CAE"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "China",
+   "year": 1966,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 3
+}

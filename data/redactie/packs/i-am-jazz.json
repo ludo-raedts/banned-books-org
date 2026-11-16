@@ -1,0 +1,31 @@
+{
+ "slug": "i-am-jazz",
+ "title": "I am Jazz",
+ "author": "Jazz Jennings",
+ "first_published_year": 2014,
+ "current_text": "In September 2018, a community member in Andover, Kansas challenged I Am Jazz on “moral” grounds; the Andover Public Library kept it in the youth section after a review, and the complainant appealed.",
+ "sources": [
+  {
+   "url": "https://ncac.org/news/blog/kansas-library-defending-lgbtq-stories-from-challengers",
+   "quote": "In September 2018, a community member in Andover, Kansas objected to three books in the public library on “moral” grounds. The books, I Am Jazz by Jessica Herthel, Lily and Dunkin by Donna Gephart, and George by Alex Gino, tell inspiring stories of transgender youth and have been widely lauded.",
+   "title": "Kansas Library Defending LGBTQ Stories from Challengers | UPDATE: VICTORY! - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/news/blog/kansas-library-defending-lgbtq-stories-from-challengers",
+   "quote": "In keeping with established policy on the reconsideration of library materials, the Andover Public Library director convened a committee to review the books and ultimately accepted its recommendation to keep them in their designated sections for youth. The complainant has appealed the decision.",
+   "title": "Kansas Library Defending LGBTQ Stories from Challengers | UPDATE: VICTORY! - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Malaysia",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Malaysia by the Ministry of Home Affairs (KDN) under the Printing Presses and Publications Act. Gazetted 2025-08-04 (P.U. (A) 245). Publisher: PENGUIN GROUP (USA) LLC. Language: INGGERIS."
+  }
+ ],
+ "institution_rows": 16
+}

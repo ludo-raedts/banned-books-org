@@ -1,0 +1,26 @@
+{
+ "slug": "the-lottery",
+ "title": "The Lottery",
+ "author": "Shirley Jackson",
+ "first_published_year": 1948,
+ "current_text": "The Union of South Africa banned “The Lottery”; Shirley Jackson’s husband, Stanley Edgar Hyman, said she was proud of the ban because she felt the authorities understood the story.",
+ "sources": [
+  {
+   "url": "https://www.nybooks.com/articles/2016/10/27/shirley-jackson-in-love-death/",
+   "quote": "In his preface to The Magic of Shirley Jackson (1966), her husband, Stanley Edgar Hyman, remarked that Jackson “was always proud that the Union of South Africa banned ‘The Lottery,’ and she felt that they at least understood the story.”",
+   "title": "Shirley Jackson in Love & Death | Joyce Carol Oates | The New York Review of Books"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "South Africa",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in South Africa during Apartheid."
+  }
+ ],
+ "institution_rows": 0
+}

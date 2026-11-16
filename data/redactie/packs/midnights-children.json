@@ -1,0 +1,26 @@
+{
+ "slug": "midnights-children",
+ "title": "Midnight's Children",
+ "author": "Salman Rushdie",
+ "first_published_year": 1981,
+ "current_text": "In 1984, Prime Minister Indira Gandhi brought an action against Midnight's Children in the British courts, claiming that a sentence defamed her; the case was settled out of court when Salman Rushdie agreed to remove the sentence.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Midnight%27s_Children",
+   "quote": "In 1984 Prime Minister Indira Gandhi brought an action against the book in the British courts, claiming to have been defamed by a single sentence in the penultimate paragraph of chapter 28, in which her son Sanjay Gandhi was said to have had a hold over his mother by his accusing her of contributing to his father Feroze Gandhi 's death through her neglect. The case was settled out of court when Salman Rushdie agreed to remove the offending sentence.",
+   "title": "Midnight's Children - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "India",
+   "year": 1988,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

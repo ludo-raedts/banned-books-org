@@ -1,0 +1,26 @@
+{
+ "slug": "white-snow-red-blood",
+ "title": "White Snow, Red Blood",
+ "author": "Zhang Zhenglong",
+ "first_published_year": null,
+ "current_text": "China's Communist Party Politburo banned White Snow, Red Blood from bookstore shelves for exposing Red Army atrocities and Mao Zedong's tactical blunders during the civil war in the 1940s; it also authorized the detention of its author, People's Liberation Army writer Lt. Col. Zhang Zhenglong.",
+ "sources": [
+  {
+   "url": "https://www.csmonitor.com/1990/0927/ohold.html",
+   "quote": "IN a sign of bitter conflict within the military, China's leaders have detained an Army writer and banned his latest book for exposing Red Army atrocities and tactical blunders by Mao Zedong during the civil war in the 1940s. The Communist Party's ruling Politburo authorized the detention last month of Lt. Col. Zhang Zhenglong, People's Liberation Army (PLA) writer, and outlawed his book, ``White Snow, Red Blood,'' from bookstore shelves, according to Chinese military and party sources.",
+   "title": "Army History Book Angers China's Leaders - CSMonitor.com"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "China",
+   "year": 1989,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in 1990, and both the author and publishers were imprisoned for publishing it. The book includes information about atrocities committed by the Red Army during the siege of Changchun, the smuggling of opium by senior Party leader Wang Zhen during the Chinese Civil War, and claims that China's official description of the Lin Biao affair is inaccurate."
+  }
+ ],
+ "institution_rows": 0
+}

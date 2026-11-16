@@ -1,0 +1,45 @@
+{
+ "slug": "show-me-will-mcbride",
+ "title": "Show Me",
+ "author": "Will McBride, Helga Fleischhauer-Hardt",
+ "first_published_year": 1974,
+ "current_text": "Booksellers in Massachusetts, New Hampshire, and Oklahoma were brought to court for selling Show Me!, but no court had ruled its sale illegal before the U.S. Supreme Court’s decision. The publisher St. Martin’s Press withdrew Show Me! after a July 2 U.S. Supreme Court decision upheld a New York State law banning child pornography.",
+ "sources": [
+  {
+   "url": "https://www.edweek.org/education/ruling-prompts-withdrawal-of-sex-book/1982/10",
+   "quote": "Booksellers in Massachusetts, New Hampshire, and Oklahoma have been brought to court for selling the book, but until the Supreme Court’s decision, no court had ruled it illegal to sell it.",
+   "title": "Ruling Prompts Withdrawal of Sex Book"
+  },
+  {
+   "url": "https://www.edweek.org/education/ruling-prompts-withdrawal-of-sex-book/1982/10",
+   "quote": "St. Martin’s Press has withdrawn Show Me!--a picture book for children about sex--because of a July 2 U.S. Supreme Court decision upholding a New York State law that bans child pornography.",
+   "title": "Ruling Prompts Withdrawal of Sex Book"
+  },
+  {
+   "url": "https://law.justia.com/cases/federal/district-courts/FSupp/440/1196/1817639/",
+   "quote": "Plaintiff St. Martin's Press, Incorporated (\"St. Martin's\") is the publisher of a book entitled Show Me!, and plaintiffs Crutcher and Newman Book Sellers, Inc., and Patricia Ince (\"booksellers\") are in the business of selling books at retail, including the book Show Me!. They instituted this action on October 28, 1977, seeking declaratory and injunctive relief.",
+   "title": "St. Martin's Press, Inc. v. Carey, 440 F. Supp. 1196 (S.D.N.Y. 1977) :: Justia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "New Zealand",
+   "year": 1975,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "The English-language edition was ruled indecent by New Zealand's Indecent Publications Tribunal (IPT) in 1976; the German-language edition was classified as objectionable by the Office of Film and Literature Classification (OFLC) in 1996, with the authority stating that the book \"purports to be a manual for the sexual education of children, but presents children in an erotic manner\"."
+  },
+  {
+   "country": "Australia",
+   "year": 1975,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Australia in 1975 due to explicit photographic depictions of nudity involving children. The publishers and McBride decided to take it off the market in 1996 due to rising pressure from a newly arising 'moral majority'."
+  }
+ ],
+ "institution_rows": 0
+}

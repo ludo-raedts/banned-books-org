@@ -1,0 +1,35 @@
+{
+ "slug": "theologico-political-treatise",
+ "title": "Theologico-Political Treatise",
+ "author": "Baruch Spinoza",
+ "first_published_year": 1670,
+ "current_text": "The provincial Hof van Holland banned Theologico-Political Treatise on 19 July 1674. Theologico-Political Treatise was also banned in a few Dutch towns, where copies were seized from local bookshops.",
+ "sources": [
+  {
+   "url": "https://brill.com/display/book/9789004467996/BP000021.pdf",
+   "quote": "Yet in 1673 La Religion, Stouppe wrongly assumed the work had been proscribed in an official province-wide placard: the provincial Hof van Holland did not ban the ‘Theological-political Treatise’ until 19 July 1674. Stouppe was however correct in claiming the book had however been banned in a few Dutch towns where copies had been seized from local bookshops.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Netherlands",
+   "year": 1674,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Vatican City (Holy See)",
+   "year": 1679,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

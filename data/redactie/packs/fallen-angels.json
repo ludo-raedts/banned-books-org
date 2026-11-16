@@ -1,0 +1,31 @@
+{
+ "slug": "fallen-angels",
+ "title": "Fallen Angels",
+ "author": "Walter Dean Myers",
+ "first_published_year": 1988,
+ "current_text": "In 1999, the Laton, CA Unified School District removed Fallen Angels because it contained violence and profanity. In 1999, the Livonia, MI public schools removed Fallen Angels as required reading because it was found to contain “too many swear words.”",
+ "sources": [
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1999-fallen-angels/",
+   "quote": "In 1999, “Fallen Angels” was removed from the Laton, CA Unified School District because the novel about the Vietnam War contains violence and profanity.",
+   "title": "Timeline entry for 1999: Fallen Angels - Intellectual Freedom Blog"
+  },
+  {
+   "url": "https://www.oif.ala.org/timeline-entry-for-1999-fallen-angels/",
+   "quote": "The same year, it was removed as required reading in the Livonia, MI public schools because it was found to contain “too many swear words.” Set amidst the horror of war, this young adult novel confronts the realities of violence and racism in 1960s America and in the military.",
+   "title": "Timeline entry for 1999: Fallen Angels - Intellectual Freedom Blog"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1990,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

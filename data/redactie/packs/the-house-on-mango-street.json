@@ -1,0 +1,31 @@
+{
+ "slug": "the-house-on-mango-street",
+ "title": "The House on Mango Street",
+ "author": "Sandra Cisneros",
+ "first_published_year": 1984,
+ "current_text": "Leander ISD reportedly removed The House on Mango Street in response to SB 12 after using an AI program to assess books for “DEI content.” Lamar Consolidated ISD listed The House on Mango Street among books under review and prohibited from purchase.",
+ "sources": [
+  {
+   "url": "https://pen.org/press-release/texas-school-district-closes-entire-library-other-remove-dozens-of-books-in-overcomplying-with-new-laws/",
+   "quote": "Another district, Leander ISD, reportedly removed 40 books in response to SB 12, including titles like To Kill a Mockingbird and The House On Mango Street, following the use of an AI program to assess books for “DEI content.”",
+   "title": "Overcomplying With New Laws, Texas School District Closes Entire Library, Others Remove Dozens of Books - PEN America"
+  },
+  {
+   "url": "https://www.txftrp.org/pinkalicious_and_700_other_titles_removed_from_lcisd",
+   "quote": "A few of the titles included on this list of books currently under review and prohibited from purchase in LCISD include Maus 1 and Maus 2 by Art Spiegelman, Drama by Raina Telgemeir, Black Boy Joy by Kwame Alexander and The House on Mango Street by Sandra Cisneros.",
+   "title": "Pinkalicious and 700+ other titles removed from Lamar Consolidated ISD, near Houston - Texas Freedom to Read Project"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2006,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 17
+}

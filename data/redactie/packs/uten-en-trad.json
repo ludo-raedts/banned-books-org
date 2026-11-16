@@ -1,0 +1,31 @@
+{
+ "slug": "uten-en-trad",
+ "title": "Uten en tråd",
+ "author": "Jens Bjørneboe",
+ "first_published_year": 1966,
+ "current_text": "Oslo byrett banned Uten en tråd on 29 June 1967, and Høyesterett upheld the ruling on 15 December 1967. Uten en tråd was confiscated in 1967 because it was considered an obscene publication.",
+ "sources": [
+  {
+   "url": "https://www.nb.no/hva-skjer/kritikken-av-uten-en-trad-tore-rem-anne-saebo-og-ane-farsethas/",
+   "quote": "Jens Bjørneboes Uten en tråd kom ut høsten 1966. Boka ble forbudt i Oslo byrett 29. juni 1967, en dom Høyesterett stadfestet 15. desember samme år.",
+   "title": "Kritikken av Uten en tråd. Tore Rem, Anne Sæbø og Ane Farsethås | Nasjonalbiblioteket"
+  },
+  {
+   "url": "https://www.regjeringen.no/contentassets/753af2a75c21435795cd21bc86faeb2d/no/pdfs/nou202220220009000dddpdfs.pdf",
+   "quote": "Et eksempel er straffedommen mot forfatteren Jens Bjørneboe og inndragningen av boken Uten en tråd i 1967, fordi den ble ansett for å være et «utuktig skrift».",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Norway",
+   "year": 1967,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Bjørneboe and publisher Pax were convicted over the erotic novel 'Without a Stitch'; copies were confiscated and the book banned. Reissued 1988; the ban was never formally lifted."
+  }
+ ],
+ "institution_rows": 0
+}

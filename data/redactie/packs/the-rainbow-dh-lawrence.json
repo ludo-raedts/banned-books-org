@@ -1,0 +1,36 @@
+{
+ "slug": "the-rainbow-dh-lawrence",
+ "title": "The Rainbow",
+ "author": "D.H. Lawrence",
+ "first_published_year": 1915,
+ "current_text": "In November 1915, British authorities prosecuted The Rainbow’s publisher, Methuen, under the Obscene Publications Act of 1857 over the novel’s treatment of sexual love; after the trial, copies were seized and burnt, and the book was banned in Britain for 11 years.",
+ "sources": [
+  {
+   "url": "https://www.theguardian.com/books/2014/jul/14/100-best-novels-the-rainbow-dh-lawrence-robert-mccrum",
+   "quote": "The Rainbow was finally published in Britain on 30 September 1915, whereupon Methuen were almost immediately prosecuted, in November, for Lawrence's frank treatment of sexual love.",
+   "title": "The 100 best novels: No 43 - The Rainbow by DH Lawrence (1915) | DH Lawrence | The Guardian"
+  },
+  {
+   "url": "https://www.theguardian.com/books/2014/jul/14/100-best-novels-the-rainbow-dh-lawrence-robert-mccrum",
+   "quote": "After the trial, all copies of the novel were seized and burnt, and The Rainbow remained banned in Britain for 11 years under the Obscene Publications Act 1857.",
+   "title": "The 100 best novels: No 43 - The Rainbow by DH Lawrence (1915) | DH Lawrence | The Guardian"
+  },
+  {
+   "url": "https://academic.oup.com/book/48647/chapter-abstract/422752910",
+   "quote": "At a brief trial in November 1915, the British authorities invoked the 1857 Obscene Publications Act to suppress D. H. Lawrence’s novel The Rainbow, and in so doing made it virtually impossible for Lawrence to publish fiction in Britain until the Great War ended in 1918.",
+   "title": "Introduction: The Trials of Modernism | Modernism and the Theater of Censorship | Oxford Academic"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1915,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "UK national-level prosecution or injunction under obscenity, blasphemy, or state grounds."
+  }
+ ],
+ "institution_rows": 0
+}

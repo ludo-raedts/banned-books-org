@@ -1,0 +1,26 @@
+{
+ "slug": "in-cold-blood",
+ "title": "In Cold Blood",
+ "author": "Truman Capote",
+ "first_published_year": 1966,
+ "current_text": "In 2000, In Cold Blood was banned at Windsor Forest High School in Savannah, Ga., but was later reinstated after community protests; the controversy had begun in early 1999 when a parent complained about sex, violence, and profanity in the book.",
+ "sources": [
+  {
+   "url": "https://www.ila.org/initiatives/banned-books-week/books-challenged-or-banned-in-2000-2001",
+   "quote": "In Cold Blood: A True Account of a Multiple Murder and its Consequences\nModern Library; Random; Vintage; G.K. Hall; Transaction\nBanned, but later reinstated after community protests at the Windsor Forest High School in Savannah, Ga. (2000). The controversy began in early 1999 when a parent complained about sex, violence, and profanity in the book that was part of an advanced placement English class.",
+   "title": "Books Challenged or Banned in 2000–2001, by Robert P. Doyle - Illinois Library Association"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2000,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

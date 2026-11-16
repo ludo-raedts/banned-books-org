@@ -1,0 +1,31 @@
+{
+ "slug": "mirror-of-the-polish-crown-1618",
+ "title": "Mirror of the Polish Crown",
+ "author": "Sebastian Miczyński",
+ "first_published_year": 1618,
+ "current_text": "In 1618, King Zygmunt III Waza banned the printing and sale of Mirror of the Polish Crown by decree because it provoked unrest.",
+ "sources": [
+  {
+   "url": "https://twojahistoria.pl/encyklopedia/kalendarium/co-sie-zdarzylo-20-sierpnia/",
+   "quote": "„Zwierciadło Korony Polskiej” wywołało w Rzeczpospolitej dużo napięć. Stało się przyczyną wielu wystąpień antysemickich, w tym pogromu Żydów w Krakowie. To właśnie niepokoje społeczne sprawiły, że król Zygmunt III Waza zakazał druku i rozpowszechniania tez Miczyńskiego.",
+   "title": "20 sierpnia. W 1618 roku Zygmunt III Waza zakazał rozpowszechniania antysemickiego „Zwierciadła Korony Polskiej” - TwojaHistoria.pl"
+  },
+  {
+   "url": "https://www.biblioteka.mielec.pl/Common/pobierzPlik/id/585/module_short/news/obj_id/1192/culture/pl/version/pub.html",
+   "quote": "ZWIERCIADŁO KORONY POLSKIEJ / Sebastian Milczyński [1618]\nW 1618 roku Miczyński opublikował Zwierciadło Korony Polskiej, które zostało przesłane do sejmu koronnego i przyczyniło się do pogromu Żydów w Krakowie.\nZygmunt III Waza dekretem (mandatem) z dnia 20 sierpnia 1618 r., przesłanym do Consulibus Cracoviensibus, zabronił drukować i sprzedawać dzieło Miczyńskiego, jako wywołujące tumulty i",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Poland",
+   "year": 1618,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Because this pamphlet published in 1618 was one of the causes of the anti-Jewish riots in Cracow, it was banned by Sigismund III Vasa."
+  }
+ ],
+ "institution_rows": 0
+}

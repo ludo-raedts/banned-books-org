@@ -1,0 +1,31 @@
+{
+ "slug": "the-stranger",
+ "title": "The Stranger",
+ "author": "Albert Camus",
+ "first_published_year": 1942,
+ "current_text": "The Stranger by Albert Camus was challenged but retained at Gateway College Preparatory School, part of the Orenda Charter Schools network in central Texas, over violence or horror and offense to religious sensitivities.",
+ "sources": [
+  {
+   "url": "https://journals.ala.org/index.php/jifp/article/download/6647/8910",
+   "quote": "The Stranger by Albert Camus was\nchallenged but retained at Gateway\nCollege Preparatory School, part of\nthe Orenda Charter Schools network\nin central Texas.",
+   "title": null
+  },
+  {
+   "url": "https://cbldf.org/2017/10/drama-banned-again-in-texas-aclu-report-shows/",
+   "quote": "The Stranger by Albert Camus\nOrenda Charter School District, Gateway College Preparatory School: Violence or horror; offensive to religious sensitivities.\nResolution: retained.",
+   "title": "Drama Banned Again in Texas, ACLU Report Shows – Comic Book Legal Defense Fund"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1980,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

@@ -1,0 +1,26 @@
+{
+ "slug": "cancer-ward",
+ "title": "Cancer Ward",
+ "author": "Aleksandr Solzhenitsyn",
+ "first_published_year": 1966,
+ "current_text": "Cancer Ward was among the books sent to Palestinian security prisoners at the Ketziot detention camp in the Negev that were confiscated.",
+ "sources": [
+  {
+   "url": "https://www.jta.org/2011/09/26/default/when-hobbits-and-hamlet-were-censored-in-israeli-prisons",
+   "quote": "\"Hamlet\" is unsuitable reading matter for Palestinian security prisoners at the Ketziot detention camp in the Negev, according to the military censors.\nSo is \"The Constitutional Law of the State of Israel,\" written by a distinguished jurist and Knesset member, Amnon Rubinstein.\nThey are among the books sent to prisoners which have been confiscated, Hadashot reported Monday. Others include \"The Cancer Ward,\" by Alexander Solzhenitsyn, and \"Lord of the Rings,\" by J.R.R. Tolkien.",
+   "title": "When hobbits and 'Hamlet' were censored in Israeli prisons - Jewish Telegraphic Agency"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Soviet Union",
+   "year": 1966,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

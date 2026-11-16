@@ -1,0 +1,26 @@
+{
+ "slug": "of-mice-and-men",
+ "title": "Of Mice and Men",
+ "author": "John Steinbeck",
+ "first_published_year": 1937,
+ "current_text": "Of Mice and Men was removed from the Suwannee, Fla., High School library in 1991 after claims that the book was indecent.",
+ "sources": [
+  {
+   "url": "https://www.latimes.com/archives/la-xpm-1993-05-10-mn-33606-story.html",
+   "quote": "“Of Mice and Men,” by John Steinbeck\n* Removed from the Suwannee, Fla., High School library in 1991 after claims that the book is indecent.",
+   "title": "COLUMN ONE : Besieged by Book Banners : In record numbers, parents press schools to remove works that offend them, from 'Anne Frank' to 'Where's Waldo?' Some officials will not fight back, choosing th"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1989,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 6
+}

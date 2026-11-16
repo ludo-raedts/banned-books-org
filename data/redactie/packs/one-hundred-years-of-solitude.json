@@ -1,0 +1,50 @@
+{
+ "slug": "one-hundred-years-of-solitude",
+ "title": "One Hundred Years of Solitude",
+ "author": "Gabriel García Márquez",
+ "first_published_year": 1967,
+ "current_text": "In Kuwait, a ministry censorship committee blacklisted One Hundred Years of Solitude; a report said the book was banned because of a scene in which a wife saw her husband naked. In the United States, a principal told English teacher Lee McCarthy that One Hundred Years of Solitude could no longer be used in school; McCarthy filed a lawsuit against school administrators and Wasco Union High School District’s Board of Trustees in 1986, and the book was deleted from the 1986–1987 school year curriculum.",
+ "sources": [
+  {
+   "url": "https://www.businesstimes.com.sg/lifestyle/orwell-little-mermaid-kuwait-steps-book-banning",
+   "quote": "Prize winners are not immune - in fact they seem to be frequent victims. One Hundred Years of Solitude, by Nobel Prize winner Gabriel García Márquez, is banned because of a scene in which a wife sees her husband naked, as is Ch ildren of Gebelawi, by Egyptian author Naguib Mahfouz, the first Arabic-language writer to win the Nobel in literature.",
+   "title": "From Orwell to 'The Little Mermaid', Kuwait steps up book banning - The Business Times"
+  },
+  {
+   "url": "https://www.theguardian.com/books/2020/aug/25/kuwait-relaxes-book-censorship-laws-after-banning-thousands-of-titles",
+   "quote": "Previously, the ministry had blacklisted more than 4,000 books since 2014, with titles including Victor Hugo’s The Hunchback of Notre Dame and One Hundred Years of Solitude by Gabriel García Márquez falling foul of its censorship committee. All books published in the country had to receive prior approval from a 12-member committee that met twice a month before they could be released, with offences ranging from insulting Islam to “inciting unrest” and committing “immoral” acts.",
+   "title": "Kuwait relaxes book censorship laws after banning thousands of titles | Books | The Guardian"
+  },
+  {
+   "url": "https://caselaw.findlaw.com/court/ca-court-of-appeal/1761495.html",
+   "quote": "Thereafter, when the 1986–1987 school year curriculum was adopted, both Grendel and One Hundred Years of Solitude by Gabriel Garcia Marquez were deleted from the curriculum.",
+   "title": "McCARTHY v. FLETCHER (1989) | FindLaw"
+  },
+  {
+   "url": "https://www.latimes.com/archives/la-xpm-1989-01-15-mn-774-story.html",
+   "quote": "The case stems from a 1986 lawsuit filed by English teacher Lee McCarthy against school administrators and Wasco Union High School District’s Board of Trustees after the principal said “Grendel” by John Gardner and “One Hundred Years of Solitude” by Gabriel Garcia Marquez could no longer be used in school.",
+   "title": "The State : Court Opposes Book Banning - Los Angeles Times"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1986,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Kuwait",
+   "year": 2014,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 4
+}

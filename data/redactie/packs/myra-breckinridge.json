@@ -1,0 +1,36 @@
+{
+ "slug": "myra-breckinridge",
+ "title": "Myra Breckinridge",
+ "author": "Gore Vidal",
+ "first_published_year": 1968,
+ "current_text": "In December 1968, the Customs Department seized and confiscated a posted copy of Myra Breckinridge under Section 4A of the Customs Act. Myra Breckinridge was banned in Australia from 1968 to 1973. Gore Vidal’s biographer Fred Kaplan said that a court case in Australia concerning Myra Breckinridge resulted in a ruling that allowed Australian readers to determine what books they would read.",
+ "sources": [
+  {
+   "url": "https://meanjin.com.au/essays/how-i-fought-the-censors-and-partly-won/",
+   "quote": "In December 1968 while on a trip to the United States I bought paperback copies of Gore Vidal’s Myra Breckinridge and Sanford Friedman’s Totempole, the former being the best-selling novel at the time in America. With a large number of other books I posted these back to myself. The Customs Department opened the parcel, seized the books and informed me they were confiscated under Section 4A of the Customs Act.",
+   "title": "How I Fought the Censors and (Partly) Won"
+  },
+  {
+   "url": "https://mountainsrivers.com/2019/06/15/ulysses-and-book-burning-in-australia/",
+   "quote": "Gore Vidal, Myra Breckinridge (banned 1968–1973)",
+   "title": "Ulysses and book burning in Australia | Mountains and rivers"
+  },
+  {
+   "url": "https://www.acarindex.com/en/journal-of-american-studies-of-turkey/myra-in-middle-age-the-creatrix-in-her-contexts-986244",
+   "quote": "As the late Gore Vidal’s biographer, Fred Kaplan, noted, “In distant Australia, Myra itself became the text of a court case resulting in a ruling that allowed Australian readers to determine what books they would read” 589.",
+   "title": "Myra in Middle-Age: The Creatrix in Her Contexts — Journal of American Studies of Turkey | ACARINDEX"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": 1968,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

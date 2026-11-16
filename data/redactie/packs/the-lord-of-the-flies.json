@@ -1,0 +1,44 @@
+{
+ "slug": "the-lord-of-the-flies",
+ "title": "The Lord of the Flies",
+ "author": "William Golding",
+ "first_published_year": 1954,
+ "current_text": "The Lord of the Flies was challenged at Owen High School in North Carolina in 1981 because it was considered “demoralizing inasmuch as it implies that man is little more than an animal.”",
+ "sources": [
+  {
+   "url": "https://www.latimes.com/archives/la-xpm-1988-10-29-li-278-story.html",
+   "quote": "“Lord of the Flies” by William Golding, challenged at Owen High School in North Carolina in 1981 because it was “demoralizing inasmuch as it implies that man is little more than an animal.”",
+   "title": "Banned-Books Displays Focus on the Perils of Censorship - Los Angeles Times"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1974,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "Australia",
+   "year": 1980,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 1981,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 5
+}

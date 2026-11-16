@@ -1,0 +1,36 @@
+{
+ "slug": "ragazzi-di-vita",
+ "title": "Ragazzi di vita",
+ "author": "Pier Paolo Pasolini",
+ "first_published_year": 1955,
+ "current_text": "In 1955, the Servizio spettacolo, informazione e proprietà intellettuale presso la Presidenza del Consiglio referred Ragazzi di vita to the Procura della Repubblica presso il Tribunale di Milano, citing pornographic and obscene content. On 4 July 1956, the Tribunale Civile e Penale di Milano acquitted Pier Paolo Pasolini and Livio Garzanti in the case concerning Ragazzi di vita, ruling that the act did not constitute a crime.",
+ "sources": [
+  {
+   "url": "https://archiviodistatomilano.cultura.gov.it/fileadmin/risorse/Patrimonio_archivistico/Documenti_del_mese/ASMi_Assoluzione_Ragazzi_di_vita.pdf",
+   "quote": "È il 21 aprile del 1955 quando la casa editrice\nGarzanti pubblica il romanzo «Ragazzi di vita»\ndi Pier Paolo Pasolini (1922–1975).\nEsattamente tre mesi dopo, il Servizio\nspettacolo, informazione e proprietà intellettuale\nistituito presso la Presidenza del Consiglio –\nprimo governo di Antonio Segni, DC – segnala\nl’opera alla Procura della Repubblica presso il\nTribunale di Milano, poiché in essa si riscontra\n«contenuto pornografico e osceno».",
+   "title": null
+  },
+  {
+   "url": "https://archiviodistatomilano.cultura.gov.it/fileadmin/risorse/Patrimonio_archivistico/Documenti_del_mese/ASMi_Assoluzione_Ragazzi_di_vita.pdf",
+   "quote": "Interrogati gli imputati, sentiti i pareri di testi del calibro di Carlo Bo, accolta la\ndichiarazione scritta da Giuseppe Ungaretti e raccolte le recensioni e i giudizi criticoletterari sull’opera, il 4 luglio 1956, in contumacia di Aldo Garzanti e presenza di Livio e\ndi Pasolini, il Tribunale Civile e Penale di Milano pronuncia l’assoluzione degli imputati\ncon formula piena, perché «il fatto non costituisce reato».",
+   "title": null
+  },
+  {
+   "url": "https://www.chartasporca.it/il-profumo-del-popolo-pasolini-asor-rosa-e-il-processo-per-ragazzi-di-vita/",
+   "quote": "Il processo inizia e termina lo stesso 4 luglio 1956 nella IV Sezione del Tribunale di Milano, con l’assoluzione di Pasolini e Livio Garzanti. Ma quali furono le ragioni e le cause che portarono i magistrati prima a processare e poi ad assolvere lo scrittore e l’editore?",
+   "title": "Il profumo del popolo: Pasolini, Asor Rosa e il processo per Ragazzi di vita - Charta Sporca"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Italy",
+   "year": 1955,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

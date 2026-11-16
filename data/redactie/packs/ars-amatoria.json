@@ -1,0 +1,26 @@
+{
+ "slug": "ars-amatoria",
+ "title": "Ars Amatoria",
+ "author": "Ovid",
+ "first_published_year": -2,
+ "current_text": "In 1564, Ars Amatoria was added to the Catholic Index for “treating of lascivious or obscene objects.” In 1497, Ovid’s works, including Ars Amatoria, were burned in the Piazza della Signoria, Florence, at the instigation of Savonarola, an Italian Dominican priest who crusaded against “immoral art.”",
+ "sources": [
+  {
+   "url": "https://www.otago.ac.nz/library/exhibitions/bannedbooks/",
+   "quote": "In 1497, Ovid's works, including \"Ars Amatoria\" (\"The Art of Love\"), a poem in three books about choosing, catching and keeping a loved one, were cast into the great bonfire in the Piazza della Signoria, Florence. The book-burning was instigated by Savonarola, an Italian Dominican priest who publically crusaded against 'immoral art'. In 1564, The Art of Love was added to the Catholic Index for 'treating of lascivious or obscene objects.'",
+   "title": "Heresy, Sedition, Obscenity: The Book Challenged, Special Collections Exhibition, University of Otago Library, Dunedin, New Zealand"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Italy",
+   "year": 8,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

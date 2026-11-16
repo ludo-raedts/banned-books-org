@@ -1,0 +1,21 @@
+{
+ "slug": "hamlet",
+ "title": "Hamlet",
+ "author": "William Shakespeare",
+ "first_published_year": 1603,
+ "current_text": "The Israeli army banned Hamlet from Ketziot prison camp in the Negev Desert; an Israeli human rights group reported the ban, and attorney Tamar Peleg was told that reading the play was prohibited there.",
+ "sources": [
+  {
+   "url": "https://www.latimes.com/archives/la-xpm-1989-10-16-mn-248-story.html",
+   "quote": "JERUSALEM — The army has banned William Shakespeare’s classic play “Hamlet” from a detention camp for prisoners arrested during the Palestinian uprising, an Israeli human rights group said today.\nThe army bans books from Ketziot prison camp in the Negev Desert if it believes they could incite violence or contain a subversive message.",
+   "title": "WORLD : Israeli Military Bans 'Hamlet' - Los Angeles Times"
+  },
+  {
+   "url": "https://journals.sagepub.com/doi/pdf/10.1080/03064229008534818?download=true",
+   "quote": "In her visit to the Ketziot detention camp (11 October 1989), attorney Tamar Peleg received from prison officials two packages of books she had brought to prisoners two months earlier. She has been told that reading the books was prohibited in Ketziot. Those banned (all, except one in Hebrew, are in English) are:- Hendrick Willem van Loon’s The Story of Mankind; William Shakespeare’s Hamlet;",
+   "title": null
+  }
+ ],
+ "ban_rows": [],
+ "institution_rows": 2
+}

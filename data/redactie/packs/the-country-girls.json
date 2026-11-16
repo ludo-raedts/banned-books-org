@@ -1,0 +1,26 @@
+{
+ "slug": "the-country-girls",
+ "title": "The Country Girls",
+ "author": "Edna O'Brien",
+ "first_published_year": 1960,
+ "current_text": "The Irish censorship board banned The Country Girls when it was published in 1960 for its “sexually explicit content.”",
+ "sources": [
+  {
+   "url": "https://www.rlf.org.uk/posts/banned-books-week-the-rlf-writers-who-faced-censorship/",
+   "quote": "When Edna O’Brien ‘s The Country Girls was published in 1960 it was immediately banned by the Irish censorship board for its “sexually explicit content.”",
+   "title": "Banned Books Week: The RLF writers who faced censorship - Royal Literary Fund"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Ireland",
+   "year": 1960,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

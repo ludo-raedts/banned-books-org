@@ -1,0 +1,26 @@
+{
+ "slug": "carrie-stephen-king",
+ "title": "Carrie",
+ "author": "Stephen King",
+ "first_published_year": 1974,
+ "current_text": "In 1975, someone challenged Carrie at Clark High School in Las Vegas, calling it “trash” and low-value literature; it was removed from the school library.",
+ "sources": [
+  {
+   "url": "https://www.bostonglobe.com/2024/04/04/arts/stephen-kings-first-horror-novel-carrie-50th-anniversary/",
+   "quote": "The first recorded challenge was in 1975 at Clark High School in Las Vegas. Somebody considered “Carrie” to be low-value literature. They called it “trash” and it was removed from the school library.",
+   "title": "Stephen King exclusive: 'Carrie,' his first horror novel, turns 50"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1975,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 11
+}

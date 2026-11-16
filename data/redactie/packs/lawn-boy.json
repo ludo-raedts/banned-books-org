@@ -1,0 +1,45 @@
+{
+ "slug": "lawn-boy",
+ "title": "Lawn Boy",
+ "author": "Jonathan Evison",
+ "first_published_year": 2018,
+ "current_text": "Fairfax County Public Schools removed Lawn Boy from high school libraries in Fairfax County, Virginia, after speakers at a school board meeting denounced the books for sexually explicit language, scenes and imagery; a committee reviewed a request to reconsider its inclusion in FCPS libraries on October 27, 2021.",
+ "sources": [
+  {
+   "url": "https://www.washingtonpost.com/local/education/fairfax-schools-remove-books-lgbtq/2021/09/28/a3bae2fc-1fc3-11ec-9309-b743b79abc59_story.html",
+   "quote": "Fairfax County Public Schools, Virginia’s largest district, has removed two books from high school libraries after a couple of speakers at a recent school board meeting denounced the texts for sexually explicit language, scenes and imagery including what one speaker called “homoerotic” content.",
+   "title": "Fairfax schools pulls \"Gender Queer\" and \"Lawn Boy\" from libraries - The Washington Post"
+  },
+  {
+   "url": "https://www.fcps.edu/about-fcps/policies-regulations-and-notices/school-library-collections/library-books-challenge-0",
+   "quote": "Per Regulation 3009, a committee made up of a high school administrator, two high school librarians, two parents of high school students, two high school students, and a specialist from the Office of Equity and Family Engagement met on October 27, 2021 to review the request for reconsideration of the book Lawn Boy: A Novel by Jonathan Evison and its inclusion in FCPS libraries.",
+   "title": "Review Committee Recommendation - Lawn Boy: A Novel | Fairfax County Public Schools"
+  },
+  {
+   "url": "https://ncac.org/news/fairfax-virginia-lawn-boy-gender-queer-library",
+   "quote": "The National Coalition Against Censorship has written to district officials in Fairfax County, Virginia, after two books were removed from school libraries pending the results of a challenge filed by a parent. The books, Jonathan Evison’s Lawn Boy, and Gender Queer by Maia Kobabe, are both award winning young adult novels aimed at readers aged 12-18 years.",
+   "title": "NCAC Objects to Removal of Lawn Boy and Gender Queer from Fairfax, Virginia, School Libraries | UPDATED - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2001,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 2019,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 48
+}

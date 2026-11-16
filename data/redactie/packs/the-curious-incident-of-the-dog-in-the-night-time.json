@@ -1,0 +1,41 @@
+{
+ "slug": "the-curious-incident-of-the-dog-in-the-night-time",
+ "title": "The Curious Incident of the Dog in the Night-Time",
+ "author": "Mark Haddon",
+ "first_published_year": 2003,
+ "current_text": "The Wilson County School Board in Tennessee voted to remove The Curious Incident of the Dog in the Night-Time from the school system’s approved reading list over its use of the F-bomb, then overturned the ban. The Curious Incident of the Dog in the Night-Time was removed from the Lake Fenton, Mich. summer reading program in 2010 after parents complained about its “foul language.” After complaints to the school board about “foul language,” “profane use of God’s name,” and a “negative portrayal of a character with autism or a similar disorder,” a curriculum committee recommended that The Curious Incident of the Dog in the Night-Time not be included on the Westmont (PA) Hilltop School District’s voluntary summer reading list. Acting on a parent’s complaints, Olentangy Ohio District Superintendent Scott Davis removed The Curious Incident of the Dog in the Night-Time from Liberty High School’s optional summer reading list.",
+ "sources": [
+  {
+   "url": "https://cbldf.org/2014/05/breaking-tennessee-school-board-restores-the-curious-incident-of-the-dog-in-the-night-time/",
+   "quote": "Just a few days ago, the Wilson County School Board in Tennessee voted 3-1 to removed Mark Haddon’s The Curious Incident of the Dog in the Night-Time from the school system’s approved reading list over the use of the F-bomb. Just this afternoon, CBLDF learned that the school board has overturned the ban.",
+   "title": "BREAKING: Tennessee School Board Restores The Curious Incident of the Dog in the Night-Time – Comic Book Legal Defense Fund"
+  },
+  {
+   "url": "https://www.ila.org/initiatives/banned-books-week/books-challenged-or-banned-in-2010-2011",
+   "quote": "Removed from the Lake Fenton, Mich. summer reading program (2010) after parents complained about its “foul language.”",
+   "title": "Books Challenged or Banned in 2010-2011, by Robert P. Doyle - Illinois Library Association"
+  },
+  {
+   "url": "https://www.ala.org/sites/default/files/news/content/BBW-2020_Field-Report_Print_Revised2.pdf",
+   "quote": "After the book was included on the voluntary summer reading list of the Westmont (PA) Hilltop School District, there were complaints to the school board about “foul language,” “profane use of God’s name,” and a “negative portrayal of a character with autism or a similar disorder.” A curriculum committee recommended that the title not be included on the list.",
+   "title": null
+  },
+  {
+   "url": "https://ncac.org/incident/another-reading-list-restricted",
+   "quote": "Acting on complaints from a parent, Olentangy Ohio District Superintendent Scott Davis removed Mark Haddon's The Curious Incident of the Dog in the Night Time and Alice Sebold's The Lovely Bones from Liberty High School's optional summer reading list.",
+   "title": "Another Reading List Restricted - National Coalition Against Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": null,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 2
+}

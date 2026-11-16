@@ -1,0 +1,46 @@
+{
+ "slug": "a-court-of-frost-and-starlight",
+ "title": "A Court of Frost and Starlight",
+ "author": "Sarah J. Maas",
+ "first_published_year": 2020,
+ "current_text": "A Charlotte-Mecklenburg panel voted to remove A Court of Frost and Starlight from all CMS schools because it decided the book’s literary merit did not offset its sexual content. The Utah state school board ordered A Court of Frost and Starlight removed from every public school in the state under a new law. By October 2025, A Court of Frost and Starlight had been removed from all South Carolina public school classrooms and libraries under Regulation 43-170.",
+ "sources": [
+  {
+   "url": "https://www.wfae.org/education/2023-10-31/cms-panel-removes-one-challenged-book-despite-popularity-keeps-two-despite-sexual-content?_amp=true",
+   "quote": "A Charlotte-Mecklenburg panel created to review book challenges voted Tuesday to remove one challenged book from all schools and keep two others on high school shelves. The one removed, “ A Court of Frost and Starlight ” by Sarah J. Maas, is the only one drawing much interest from student readers, but the panel decided on a split vote that the book didn’t have enough literary merit to offset the sex.",
+   "title": "CMS panel removes one challenged book despite popularity, keeps two despite sexual content | WFAE 90.7 - Charlotte's NPR News Source"
+  },
+  {
+   "url": "https://www.wfae.org/education/2023-10-31/cms-panel-removes-one-challenged-book-despite-popularity-keeps-two-despite-sexual-content?_amp=true",
+   "quote": "Ray said 22 schools have the “Frost and Starlight” book, which has been checked out a total of 62 times. The panel voted 4-3 to remove it from all CMS schools.",
+   "title": "CMS panel removes one challenged book despite popularity, keeps two despite sexual content | WFAE 90.7 - Charlotte's NPR News Source"
+  },
+  {
+   "url": "https://www.kpcw.org/state-regional/2024-08-03/its-official-these-13-books-are-now-banned-from-all-public-schools-in-utah",
+   "quote": "The Utah state school board on Friday ordered the removal of 13 book titles from every public school in the state, in accordance with a new law passed earlier this year.",
+   "title": "It’s official: These 13 books are now banned from all public schools in Utah"
+  },
+  {
+   "url": "https://www.kpcw.org/state-regional/2024-08-03/its-official-these-13-books-are-now-banned-from-all-public-schools-in-utah",
+   "quote": "“A Court of Frost and Starlight” by Sarah J. Maas.",
+   "title": "It’s official: These 13 books are now banned from all public schools in Utah"
+  },
+  {
+   "url": "https://www.aclusc.org/cases/scasl-v-weaver/",
+   "quote": "The following books have been removed from all South Carolina public school classrooms and libraries under Regulation 43-170 as of October 2025, regardless of grade level:\nAll Boys Aren’t Blue by George M. Johnson\nCollateral by Ellen Hopkins\nA Court of Frost and Starlight by Sarah J. Maas",
+   "title": "SCASL v. Weaver - ACLU of South Carolina"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2024,
+   "end": null,
+   "status": "active",
+   "confidence": "verified",
+   "scope": 4,
+   "note": "In 2024, all five books in the series, including A Court of Frost and Starlight, were banned from all Utah public schools by the state school board for containing 'objective sensitive material.'"
+  }
+ ],
+ "institution_rows": 93
+}

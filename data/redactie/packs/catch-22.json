@@ -1,0 +1,41 @@
+{
+ "slug": "catch-22",
+ "title": "Catch-22",
+ "author": "Joseph Heller",
+ "first_published_year": 1961,
+ "current_text": "In 1972, the Strongsville City School District in Strongsville, Ohio, rejected Catch-22 for use as a textbook and ordered it removed from the school library; according to the school, the reason for the removal was profane and inappropriate language. On appeal, a court upheld the school board’s right to reject Catch-22 from the curriculum but found its removal from the library unconstitutional. Catch-22 was challenged in Dallas, TX, in 1974. Catch-22 was challenged in Snoqualmie, WA, in 1979 because of its many references to women as “whores.”",
+ "sources": [
+  {
+   "url": "https://www.acluohio.org/cases/minarcini-v-strongsville-city-school-district-541-f2d-577-6th-cir-1976/",
+   "quote": "In 1972, the Strongsville City School District refused to approve faculty recommendations for using Joseph Heller’s Catch-22 and Kurt Vonnegut’s God Bless You Mr. Rosewater as textbooks. Further, they ordered that Catch 22, along with Vonnegut’s Cat’s Cradle, be removed from the school library.",
+   "title": "Minarcini v. Strongsville City School District 541 F.2d 577 (6th Cir, 1976) - ACLU of Ohio"
+  },
+  {
+   "url": "https://knewman.library.cmu.edu/bannedbooks/2021/12/20/joseph-heller-catch-22/",
+   "quote": "The banning occurred in Strongsville, Ohio, where the book was removed from the school library in 1972. The primary reason for this removal, according to the school, was profane and inappropriate language.",
+   "title": "Joseph Heller, “Catch-22” – The Banned Books Project"
+  },
+  {
+   "url": "https://www.acluohio.org/cases/minarcini-v-strongsville-city-school-district-541-f2d-577-6th-cir-1976/",
+   "quote": "Upon appeal, the court upheld the school board’s right to reject the books as part of the curriculum, but found the removal of the books from the library to be unconstitutional, referring to the library as “a storehouse of knowledge.”",
+   "title": "Minarcini v. Strongsville City School District 541 F.2d 577 (6th Cir, 1976) - ACLU of Ohio"
+  },
+  {
+   "url": "https://knewman.library.cmu.edu/bannedbooks/2021/12/20/joseph-heller-catch-22/",
+   "quote": "The challenges were brought against the book in Dallas, TX in 1974 and Snoqualmie, WA in 1979. The challenge in Snoqualmie was raised due to the many references to women as “whores.”",
+   "title": "Joseph Heller, “Catch-22” – The Banned Books Project"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1972,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 7
+}

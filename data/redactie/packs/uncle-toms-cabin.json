@@ -1,0 +1,31 @@
+{
+ "slug": "uncle-toms-cabin",
+ "title": "Uncle Tom's Cabin",
+ "author": "Harriet Beecher Stowe",
+ "first_published_year": 1852,
+ "current_text": "Southern slaveholders burned copies of Uncle Tom's Cabin and banned it from bookshelves because of its anti-slavery message. In later years, school districts across the United States banned Uncle Tom's Cabin for its use of racist language.",
+ "sources": [
+  {
+   "url": "https://www.nationalgeographic.com/culture/article/history-of-book-bans-in-the-united-states",
+   "quote": "By the 1850s, multiple states had outlawed expressing anti-slavery sentiments—which abolitionist author Harriet Beecher Stowe defied in 1851 with the publication of Uncle Tom’s Cabin, a novel that aimed to expose the evils of slavery. In 1851, Harriet Beecher Stowe agreed to \"paint a word picture of slavery\" for an abolitionist newspaper. Her story, Uncle Tom's Cabin, became an instant bestseller—and drew the ire of Southern slaveholders, who burned copies and banned it from bookshelves.",
+   "title": "The history of book bans in the United States | National Geographic"
+  },
+  {
+   "url": "https://guides.libraries.emory.edu/forbidden-fruit/books",
+   "quote": "In later years, the school districts across the United States banned the book for its use of racist language.",
+   "title": "Banned Books - Are Books Forbidden Fruit? - Research Guides at Emory University Libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1852,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 2
+}

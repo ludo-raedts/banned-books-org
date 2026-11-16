@@ -1,0 +1,55 @@
+{
+ "slug": "maus",
+ "title": "Maus",
+ "author": "Art Spiegelman",
+ "first_published_year": 1991,
+ "current_text": "The McMinn Board of Education voted to remove Maus from McMinn County Schools because of what it described as unnecessary profanity and nudity and depictions of violence and suicide. In Moscow, Biblio Globus, Moskva, and Moskovsky Dom Knigi removed Maus from their shelves and Internet stores. District employees flagged Maus for review by the Nixa, Missouri, school board, which voted to keep it on shelves.",
+ "sources": [
+  {
+   "url": "https://www.wvlt.tv/2022/01/27/board-defends-removing-maus-mcminn-co-schools-holocaust-curriculum/",
+   "quote": "McMinn County Schools officials released a statement on the book banning, saying the text was too violent and graphic for student consumption.\n“The McMinn Board of Education voted to remove the graphic novel Maus from McMinn County Schools because of its unnecessary use of profanity and nudity and its depiction of violence and suicide,” the statement said.",
+   "title": "Board defends removing “Maus” from McMinn Co. Schools Holocaust curriculum"
+  },
+  {
+   "url": "https://www.rferl.org/a/russia-spiegelman-maus-nazis/26981427.html",
+   "quote": "Three of Moscow's largest bookstores -- Biblio Globus, Moskva, and Moskovsky Dom Knigi -- had removed the book from their shelves and Internet stores by April 27.",
+   "title": "Russian Bookstores Remove Holocaust Graphic Novel From Shelves"
+  },
+  {
+   "url": "https://pen.org/press-release/missouri-school-boards-decision-to-retain-maus-is-a-positive-move-but-removing-six-other-books-is-unfortunate-says-pen-america/",
+   "quote": "(NEW YORK) – PEN America on Wednesday responded to the decision by the Nixa, Missouri, school board to retain Art Spiegelman’s graphic novel Maus while banning six other books under a new state law that prohibits providing sexually explicit materials to minors.",
+   "title": "Missouri School Board’s Decision to Retain Maus is a Positive Move But Removing Six Other Books is Unfortunate, Says PEN America - PEN America"
+  },
+  {
+   "url": "https://pen.org/press-release/missouri-school-boards-decision-to-retain-maus-is-a-positive-move-but-removing-six-other-books-is-unfortunate-says-pen-america/",
+   "quote": "Although the board voted to keep Maus on shelves after an email campaign by PEN America, the school board voted to ban a graphic novel version of Margaret Atwood’ The Handmaid’s Tale, Craig Thompson’s illustrated novel, Blankets, and four other books that were challenged by parents or residents.",
+   "title": "Missouri School Board’s Decision to Retain Maus is a Positive Move But Removing Six Other Books is Unfortunate, Says PEN America - PEN America"
+  },
+  {
+   "url": "https://pen.org/press-release/missouri-school-boards-decision-to-retain-maus-is-a-positive-move-but-removing-six-other-books-is-unfortunate-says-pen-america/",
+   "quote": "Maus, Blankets, and The Handmaid’s Tale graphic novel had been flagged by district employees.",
+   "title": "Missouri School Board’s Decision to Retain Maus is a Positive Move But Removing Six Other Books is Unfortunate, Says PEN America - PEN America"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Russia",
+   "year": 2015,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 5,
+   "note": "Pulled from major Russian bookstore chains in April 2015, days before the 70th anniversary of the Soviet WWII victory, after retailers cited a 2014 Russian law restricting Nazi symbols in public display. The swastika on the cover of Spiegelman's Holocaust graphic memoir was the explicit trigger; the author publicly criticised the removal."
+  },
+  {
+   "country": "United States",
+   "year": 2022,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

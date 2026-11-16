@@ -1,0 +1,36 @@
+{
+ "slug": "boy-james-hanley",
+ "title": "Boy",
+ "author": "James Hanley",
+ "first_published_year": 1931,
+ "current_text": "A court case against Boy began in November 1934 and culminated in a trial in March 1935; the prosecuting solicitor, Mr. Jessel Ryecroft, suggested that its cover and review extracts were intended to pollute young people’s minds. Boriswood was forced to withdraw Boy from sale in January 1935.",
+ "sources": [
+  {
+   "url": "https://www.pennilesspress.co.uk/prose/boy.htm",
+   "quote": "The now-famous court case against Boy began in November 1934 and culminated with the trial in March 1935, three years after the book's publication, by which time it had reached its fourth edition.",
+   "title": "BOY"
+  },
+  {
+   "url": "https://www.pennilesspress.co.uk/prose/boy.htm",
+   "quote": "The Manchester Guardian reports that the prosecuting solicitor, Mr. Jessel Ryecroft, \"suggested that the cover of the book and extracts from reviews just inside were most suggestive, and that their purpose was to pollute young people's minds.\"",
+   "title": "BOY"
+  },
+  {
+   "url": "https://www.pennilesspress.co.uk/prose/boy.htm",
+   "quote": "Boriswood was forced to withdraw sales of the novel as of January 1935, after selling just over 1500 copies during the seven months in which it was available.",
+   "title": "BOY"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1934,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

@@ -1,0 +1,31 @@
+{
+ "slug": "flowers-for-algernon",
+ "title": "Flowers for Algernon",
+ "author": "Daniel Keyes",
+ "first_published_year": 1959,
+ "current_text": "Flowers for Algernon was banned in Plant City, Florida, in 1976; explicit, distasteful love scenes were cited among the reasons for opposition. Flowers for Algernon was banned in Emporium, Pennsylvania, in 1977. Flowers for Algernon was banned from the Glen Rose (Arkansas) High School library in 1981. Flowers for Algernon was challenged by Oberlin (Ohio) High School for its “distasteful love scenes.” Flowers for Algernon was challenged by Glenrock (Wyoming) High School for its “distasteful love scenes.”",
+ "sources": [
+  {
+   "url": "https://home.nvg.org/~aga/bulletin43.html",
+   "quote": "FLOWERS FOR ALGERNON\nby Daniel Keyes\nExplicit, distasteful love scenes cited among reasons for opposition.\nBanned by Plant City, Florida, 1976;\nEmporium, Pennsylvania, 1977;\nGlen Rose (Arkansas) High School library, 1981.",
+   "title": "Bulletin 43 over censored books in the USA"
+  },
+  {
+   "url": "https://nmsu.libguides.com/censorship",
+   "quote": "Flowers for Algernon\nISBN: 0156030306\nNebula Award winner for Best Science Fiction Novel in 1966 the book has been has been banned in Plant City, Florida; Emporium, Pennsylvania; and Glen Rose (Arkansas) High School. It has been challenged by Oberlin (Ohio) and Glenrock (Wyoming) High Schools for its \"distasteful love scenes.\"",
+   "title": "Read Banned Books! - Censorship and Banned Books - LibGuides at New Mexico State University"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1981,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 8
+}

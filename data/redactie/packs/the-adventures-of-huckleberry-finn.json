@@ -1,0 +1,40 @@
+{
+ "slug": "the-adventures-of-huckleberry-finn",
+ "title": "The Adventures of Huckleberry Finn",
+ "author": "Mark Twain",
+ "first_published_year": 1884,
+ "current_text": "The committee in charge of Concord's public library voted to remove The Adventures of Huckleberry Finn from its shelves a month after publication, fearing that Huck Finn's irreverence would undermine the morals of young readers. In 1885, several libraries banned The Adventures of Huckleberry Finn from their shelves after the American edition was issued.",
+ "sources": [
+  {
+   "url": "https://www.cambridge.org/core/books/cambridge-companion-to-mark-twain/banned-in-concord/6B50F2DD0F1276E8CB393B96DBDD4FC8",
+   "quote": "Yet a month after the publication of Adventures of Huckleberry Finn, the committee in charge of Concord's public library voted to remove the book from its shelves, fearing that Huck Finn's irreverence would undermine the morals of young readers.",
+   "title": "Banned in Concord (Chapter 5) - The Cambridge Companion to Mark Twain"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Adventures_of_Huckleberry_Finn",
+   "quote": "Upon issue of the American edition in 1885, several libraries banned it from their shelves. The early criticism focused on what was perceived as the book's crudeness. One incident was recounted in the newspaper the Boston Transcript:",
+   "title": "Adventures of Huckleberry Finn - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1885,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  },
+  {
+   "country": "United States",
+   "year": 1957,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 2,
+   "note": null
+  }
+ ],
+ "institution_rows": 1
+}

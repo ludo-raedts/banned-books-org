@@ -1,0 +1,46 @@
+{
+ "slug": "one-flew-over-the-cuckoos-nest",
+ "title": "One Flew Over the Cuckoo's Nest",
+ "author": "Ken Kesey",
+ "first_published_year": 1962,
+ "current_text": "In 1974, five residents of Strongsville, OH, sued the board of education to remove One Flew Over the Cuckoo's Nest, calling it pornographic and alleging that it glorified criminal activity, could corrupt juveniles, and depicted bestiality and violence. In 1975, One Flew Over the Cuckoo's Nest was removed from public school libraries in Randolph, NY. In 1975, One Flew Over the Cuckoo's Nest was removed from public school libraries in Alton, OK. In 1978, One Flew Over the Cuckoo's Nest was banned from St. Anthony, ID Freemont High School classrooms; the instructor was fired and sued, but the decision was never published. In 1982, One Flew Over the Cuckoo's Nest was challenged at Merrimack, NH High School. In 1986, One Flew Over the Cuckoo's Nest was challenged in an Aberdeen, WA High School honors English class on the grounds that it promoted “secular humanism”; the school board voted to retain it.",
+ "sources": [
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?os=___",
+   "quote": "In 1974, five residents of Strongsville, OH, sued the board of education to remove the novel. Labeling it \"pornographic,\" they charged the novel \"glorifies criminal activity, has a tendency to corrupt juveniles and contains descriptions of bestiality, bizarre violence, and torture, dismemberment, death, and human elimination.\"",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?os=___",
+   "quote": "Removed from public school libraries in Randolph, NY, and Alton, OK (1975).",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?os=___",
+   "quote": "Banned from the St. Anthony, ID Freemont High School classrooms (1978) and the instructor fired. The teacher sued. A decision in the case—Fogarty v. Atchley—was never published.",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?os=___",
+   "quote": "Challenged at the Merrimack, NH High School (1982).",
+   "title": "Most Challenged Books | Banned Books"
+  },
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?os=___",
+   "quote": "Challenged as part of the curriculum in an Aberdeen, WA High School honors English class (1986) because the book promotes \"secular humanism.\" The school board voted to retain the title.",
+   "title": "Most Challenged Books | Banned Books"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1974,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 5
+}

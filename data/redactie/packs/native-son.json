@@ -1,0 +1,26 @@
+{
+ "slug": "native-son",
+ "title": "Native Son",
+ "author": "Richard Wright",
+ "first_published_year": 1940,
+ "current_text": "Native Son was challenged in Goffstown, NH, in 1978. Native Son was challenged in Elmwood Park, NJ, in 1978 because of its “objectionable” language. Native Son was challenged in North Adams, MA, in 1981 because of its “violence, sex, and profanity.”",
+ "sources": [
+  {
+   "url": "https://www.ala.org/bbooks/frequentlychallengedbooks/top10?embed=true",
+   "quote": "Native Son, by Richard Wright\nChallenged in Goffstown, NH (1978); Elmwood Park, NJ (1978) due to \"objectionable\" language; and North Adams, MA (1981) due to the book's \"violence, sex, and profanity.\"",
+   "title": "Most Challenged Books | Banned Books"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 1988,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 36
+}

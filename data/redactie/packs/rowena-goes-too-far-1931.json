@@ -1,0 +1,31 @@
+{
+ "slug": "rowena-goes-too-far-1931",
+ "title": "Rowena Goes Too Far",
+ "author": "H. C. Asterley",
+ "first_published_year": 1931,
+ "current_text": "In 1931, Australian customs banned Rowena Goes Too Far in Australia because it believed the novel “lacked sufficient claim to the literary to excuse the obscenity”.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/H._C._Asterley",
+   "quote": "His first novel, Rowena Goes Too Far was published in 1931. A bestseller in the UK, it was banned in Australia due to customs belief that it “lacked sufficient claim to the literary to excuse the obscenity”.",
+   "title": "H. C. Asterley - Wikipedia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Censorship_in_Australia",
+   "quote": "Rowena Goes Too Far (1931) |\nH. C. Asterley |\n1931 |\n*Unknown* |\n*Unknown* |\nNovel |\nBanned in Australia because of customs belief that it \"lacked sufficient claim to the literary to excuse the obscenity\"",
+   "title": "Censorship in Australia - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Banned in Australia because of customs belief that it \"lacked sufficient claim to the literary to excuse the obscenity\""
+  }
+ ],
+ "institution_rows": 0
+}

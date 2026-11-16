@@ -1,0 +1,36 @@
+{
+ "slug": "tricks",
+ "title": "Tricks",
+ "author": "Ellen Hopkins",
+ "first_published_year": 2009,
+ "current_text": "On May 30, 2025, the South Carolina State Board of Education ordered Tricks removed from all public schools in South Carolina under a regulation excluding materials containing descriptions or visual depictions of sexual conduct.",
+ "sources": [
+  {
+   "url": "https://ed.sc.gov/state-board/state-board-of-education/uniform-procedure-for-selection-or-reconsideration-of-instructional-materials/books-reviewed/final-orders/sbe-order-2025-0016-tricks/",
+   "quote": "Order No. 2025-0016\nMay 30, 2025\ns/Rita Allison ______________________\nRita Allison\nChair\nSouth Carolina State Board of Education\nMay 30, 2025",
+   "title": null
+  },
+  {
+   "url": "https://ed.sc.gov/newsroom/school-district-memoranda-archive/regulation-43-170-final-orders-from-the-state-board-of-education1/regulation-43-170-final-orders-from-the-state-board-of-education-memo/",
+   "quote": "Order 2025-0016: Tricks – Ellen Hopkins\nUnder the State Board’s rulings, these materials must be immediately removed from all public schools in South Carolina. Please review the State Board’s written orders for further clarification on these items.",
+   "title": null
+  },
+  {
+   "url": "https://ed.sc.gov/newsroom/school-district-memoranda-archive/regulation-43-170-final-orders-from-the-state-board-of-education1/regulation-43-170-final-orders-from-the-state-board-of-education-memo/",
+   "quote": "As per Regulation 43-170, materials containing “descriptions or visual depictions of ‘sexual conduct’” are not deemed “Age and Developmentally Appropriate” for any age group. Therefore, such materials must be removed from all school libraries, classroom libraries, and other areas on campus where they may be accessible to students.",
+   "title": null
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2025,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 135
+}

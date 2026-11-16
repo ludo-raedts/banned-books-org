@@ -1,0 +1,40 @@
+{
+ "slug": "the-gulag-archipelago",
+ "title": "The Gulag Archipelago",
+ "author": "Aleksandr Solzhenitsyn",
+ "first_published_year": 1973,
+ "current_text": "In 1973, an archive containing the manuscript of The Gulag Archipelago was seized; its holder, Elizaveta Voronyanskaya, died by suicide, and the book was published in Paris that December. In February 1974, Soviet authorities retaliated against the publication of The Gulag Archipelago by arresting Aleksandr Solzhenitsyn, stripping him of his Soviet citizenship and sending him against his will to Frankfurt, West Germany.",
+ "sources": [
+  {
+   "url": "https://www.solzhenitsyncenter.org/timeline",
+   "quote": "1973\nArchive, including the manuscript of Gulag Archipelago, seized. Its holder, Elizaveta Voronyanskaya, commits suicide. Solzhenitsyn hands over the microfilm of Gulag Archipelago to the west. Publication occurs in December 1973 in Paris.",
+   "title": "Aleksandr Solzhenitsyn Center — Timeline"
+  },
+  {
+   "url": "https://www.solzhenitsyncenter.org/his-life-overview/biography",
+   "quote": "The publication in the West of the initial version of August 1914 (the first part of The Red Wheel) and of Gulag Archipelago soon brought retaliation from the Soviet authorities. In February 1974, Solzhenitsyn was arrested, stripped of his Soviet citizenship, and flown against his will to Frankfurt, West Germany.",
+   "title": "Aleksandr Solzhenitsyn Center — Biography"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Soviet Union",
+   "year": 1973,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  },
+  {
+   "country": "Poland",
+   "year": 1974,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "Solzhenitsyn's exposé of the Soviet camp system was suppressed across the Soviet bloc, including the PRL, and circulated in samizdat until 1989."
+  }
+ ],
+ "institution_rows": 0
+}

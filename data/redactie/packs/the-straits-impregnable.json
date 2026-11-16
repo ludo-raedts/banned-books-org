@@ -1,0 +1,31 @@
+{
+ "slug": "the-straits-impregnable",
+ "title": "The Straits Impregnable",
+ "author": "Sydney Loch",
+ "first_published_year": 1916,
+ "current_text": "In 1916, the military censor in Australia banned the second edition of The Straits Impregnable under regulations of the War Precautions Act 1914, and all copies of that edition were pulped.",
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/The_Straits_Impregnable",
+   "quote": "A second edition was printed shortly after the first but this time with a note in the cover that stated \"This book, Written in Australia, Egypt and Gallipoli, Is true\". This time the censor was aware that the book was in fact true and banned the book, all 2nd edition copies being pulped.",
+   "title": "The Straits Impregnable - Wikipedia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "quote": "The Straits Impregnable |\nSydney Loch |\n1916 |\n1916 |\n*Unknown* |\nFictionalised autobiography |\nFirst edition published as a novel, second edition banned by the military censor in Australia under regulations of the War Precautions Act 1914.",
+   "title": "List of books banned by governments - Wikipedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": null,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": "First edition published as a novel, second edition banned by the military censor in Australia under regulations of the War Precautions Act 1914."
+  }
+ ],
+ "institution_rows": 0
+}

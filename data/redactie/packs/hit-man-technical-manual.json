@@ -1,0 +1,36 @@
+{
+ "slug": "hit-man-technical-manual",
+ "title": "Hit Man: A Technical Manual for Independent Contractors",
+ "author": "Rex Feral",
+ "first_published_year": 1983,
+ "current_text": "In 1996, the family of a Maryland murder victim sued the publisher of Hit Man: A Technical Manual for Independent Contractors in U.S. District Court; a federal district court judge dismissed the suit on First Amendment grounds, but the Fourth Circuit reversed, holding that the book’s content was criminal aiding and abetting and was not entitled to First Amendment protection. In 2001, victims of an attempted contract murder sued the publisher of Hit Man: A Technical Manual for Independent Contractors in an Oregon federal court for aiding and abetting and conspiracy to commit murder; the court allowed the claims to go forward.",
+ "sources": [
+  {
+   "url": "https://www.rcfp.org/hit-man-publisher-sued-again-victim-manual-user/",
+   "quote": "The family of a Maryland murder victim sued Paladin in U.S. District Court in 1996 in a similar suit. A federal district court judge dismissed that case, holding that the book’s content was within the purview of the First Amendment. But the Fourth Circuit reversed in Rice v. Paladin Press, holding the book’s content was criminal aiding and abetting and not entitled to First Amendment protection.",
+   "title": "'Hit Man' publisher sued again by a victim of manual user | The Reporters Committee for Freedom of the Press"
+  },
+  {
+   "url": "https://www.rcfp.org/hit-man-publisher-sued-again-victim-manual-user/",
+   "quote": "On Sept. 1, Bobby Joe Wilson sued Paladin Press, the publisher of “Hit Man: A Technical Manual for Independent Contractors,” and its president, Peter Lund, in U.S. District Court in Eugene, Ore., for $4.7 million. This marks the second time the publisher has gone to court to defend the book.",
+   "title": "'Hit Man' publisher sued again by a victim of manual user | The Reporters Committee for Freedom of the Press"
+  },
+  {
+   "url": "https://firstamendment.mtsu.edu/article/hit-man-manual/",
+   "quote": "Paladin was also sued in an Oregon federal court, in 2001, by the victims of an attempted contract murder for aiding and abetting and for conspiracy to commit murder. Like the Fourth Circuit, the Oregon court allowed the claims to go forward.",
+   "title": "Hit Man Manual | The First Amendment Encyclopedia"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "Australia",
+   "year": 1990,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 0
+}

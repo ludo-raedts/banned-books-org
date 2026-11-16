@@ -1,0 +1,31 @@
+{
+ "slug": "tess-of-the-durbervilles",
+ "title": "Tess of the d'Urbervilles",
+ "author": "Thomas Hardy",
+ "first_published_year": 1891,
+ "current_text": "In 1891, the editors of The Graphic required changes to Tess of the d'Urbervilles before serializing it, including replacing a mock marriage for the rape and seduction of Tess and the subsequent birth and death of her child; the novel was serialized that year.",
+ "sources": [
+  {
+   "url": "https://britishonlinearchives.com/posts/category/articles/866/document-of-the-week-tess-of-the-durbervilles-1891",
+   "quote": "Prior to being published in book form, Tess of the D’Urbervilles was serialised in The Graphic, appearing weekly between July and November 1891. It was accepted by The Graphic only after it had been censored, with Hardy omitting or modifying several passages which were considered too shocking for a popular audience.",
+   "title": "Document of the Week: \"Tess of the D’Urbervilles\" (1891) | British Online Archives (BOA)"
+  },
+  {
+   "url": "https://public.gettysburg.edu/academics/english/hardy/contexts/art/censorship.html",
+   "quote": "Tess was finally accepted by the Graphic serial whose editors insisted that further significant changes be made: specifically, that Angel carry the milkmaids across the flooded lane not in his arms but in a wheelbarrow and that a mock marriage be substituted for the rape and seduction of Tess and the subsequent birth and death of her child. Tess was then set to be serialized July 1891.",
+   "title": "Hardy and Victorian Censorship"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United Kingdom",
+   "year": 1891,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 4,
+   "note": null
+  }
+ ],
+ "institution_rows": 3
+}

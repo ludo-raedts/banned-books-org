@@ -1,0 +1,36 @@
+{
+ "slug": "monster-walter-dean-myers",
+ "title": "Monster",
+ "author": "Walter Dean Myers",
+ "first_published_year": 1999,
+ "current_text": "In 2019, Monster was challenged at Gates Middle School (Scituate, MA) for “language, violence, and sexual overtures” and deemed inappropriate for 8th and 9th-graders; after meeting with parents, school administrators removed it from the curriculum, and the ban remained in effect despite protest at a public meeting. After parental complaints about the maturity of language and sexual content in 7th grade reading club selections, a teacher at Signal Mountain (TN) Middle-High School told parents she was removing Monster from the reading list; the principal later said the books were high school reading materials, not 7th grade.",
+ "sources": [
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/monster/",
+   "quote": "2019\nThis New York Times bestselling novel about an incarcerated teen awaiting trial was challenged for “language, violence, and sexual overtures” and deemed inappropriate for 8th and 9th-graders at Gates Middle School (Scituate, MA). After meeting with parents, school administrators decided to remove it from the curriculum. Despite strong protest at a public meeting, the ban remained in effect.",
+   "title": "Banned Books 2021 – Monster – Marshall University Libraries"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/monster/",
+   "quote": "After some parental complaints about the maturity of language and sexual content in some 7th grade reading club selections, a teacher at the Signal Mountain (TN) Middle-High School contacted parents to inform them that she was removing All American Boys and Monster from the reading list.",
+   "title": "Banned Books 2021 – Monster – Marshall University Libraries"
+  },
+  {
+   "url": "https://www.marshall.edu/library/bannedbooks/monster/",
+   "quote": "In a follow-up statement, the principal indicated that the books were high school reading materials, not 7th grade, and affirmed the school’s commitment to diversity.",
+   "title": "Banned Books 2021 – Monster – Marshall University Libraries"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2001,
+   "end": null,
+   "status": "historical",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 7
+}

@@ -1,0 +1,41 @@
+{
+ "slug": "eleanor-and-park",
+ "title": "Eleanor & Park",
+ "author": "Rainbow Rowell",
+ "first_published_year": 2013,
+ "current_text": "The Yamhill-Carlton School District in Western Oregon removed Eleanor & Park in January after parents complained about profanity and passages they said encouraged “bad behavior”; the school board later agreed to convene a Reconsideration Committee, while the book stayed out of middle school classrooms and high school libraries in the interim. In 2013, parents of a high school freshman and the Parents Action League challenged Eleanor & Park in school libraries, citing profanity and sexuality; a committee later voted to retain it in Anoka-Hennepin Public Schools.",
+ "sources": [
+  {
+   "url": "https://ncac.org/news/blog/ncac-protests-oregon-schools-unwarranted-removal-of-eleanor-park",
+   "quote": "The Yamhill-Carlton School District in Western Oregon pulled the New York Times bestseller– without following the school's review process for book challenges– in January. The decision was made after parents complained about the presence of profanity and that passages in the book encouraged \"bad behavior.\"",
+   "title": "NCAC Protests Oregon School’s Unwarranted Removal of Eleanor & Park - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/news/blog/ncac-protests-oregon-schools-unwarranted-removal-of-eleanor-park",
+   "quote": "The school board met in February to discuss the decision, where the vice-chairman apologized for not upholding the official review process but remained staunchly committed to the book’s removal. There, the board agreed to convene an official Reconsideration Committee to issue a recommendation on the future of the book. In the interim, the book will remain out of middle school classrooms and high school libraries",
+   "title": "NCAC Protests Oregon School’s Unwarranted Removal of Eleanor & Park - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://ncac.org/incident/eleanor-park-will-stay-on-school-library-shelves-in-anoka",
+   "quote": "Popular YA novel Eleanor & Park by Rainbow Rowell will remain on school library shelves in Anoka-Hennepin Public Schools, after a committee unanimously voted to retain the book. The book came under fire in July 2013 when it was selected as the county’s \"Rock the Read\" book for summer reading.",
+   "title": "Eleanor & Park Will Stay on School Library Shelves in Anoka - National Coalition Against Censorship"
+  },
+  {
+   "url": "https://www.startribune.com/challenged-book-to-stay-on-anoka-high-library-shelves/233110011",
+   "quote": "The parents of a high school freshman, partnering with the conservative Parents Action League, challenged the book's place in school libraries, calling it \"vile profanity.\" They cited 227 instances of coarse language and sexuality.",
+   "title": "Challenged book to stay on Anoka High library shelves"
+  }
+ ],
+ "ban_rows": [
+  {
+   "country": "United States",
+   "year": 2013,
+   "end": null,
+   "status": "active",
+   "confidence": "reported",
+   "scope": 1,
+   "note": null
+  }
+ ],
+ "institution_rows": 50
+}
