@@ -22,3 +22,7 @@ Pipeline: scripts/verify-censorship-context.ts --with-ban-text --from-sources (l
 - this-book-is-gay [record_conflict]: text: The book was returned to Iowa City school libraries. ↔ records: The Iowa City restriction is listed as active.
 - tropic-of-capricorn [record_conflict]: text: The US ban lasted until 1964. ↔ records: The US ban lasted until a 1961 Justice Department ruling declared the book not obscene.
 - zhuan-falun [record_conflict]: text: The Chinese government banned Zhuan Falun on 24 July 1996. ↔ records: The China ban row says the ban began in 1993. · text: ban in CN 1996 ↔ rows: 1993
+
+## Conflict follow-up (2026-11-16)
+11 ban rows fixed from fetched sources (`scripts/apply-conflict-fixes-2026-11-16.ts`, `LEDGER-conflicts.md`, backup `backup-conflict-fixes-2026-11-16.json`; Animal Farm/UAE scope public_library→school, old row in `backup-ban-952-scope.json`). Re-verified: 10 more sourced histories published (1984, Banquet for Seaweed, Forever Amber, Animal Farm, Lady Chatterley, Les Misérables, Naked Lunch, Handmaid's Tale, Turner Diaries, Zhuan Falun). Top-100 sourced histories: 64/100.
+Still open (sources disagree with each other, rows untouched): For Whom the Bell Tolls (1968 edition censored or not), Lolita (France 1955/1956, lifting 1958/1959), Hunchback of Notre-Dame (Index end 1959/1966), Satanic Verses (country years 1988/1989), Tropic of Capricorn (US ban end 1961 vs 1964; the 1961 row note is unsourced). Insufficient evidence: Call Me by Your Name, One Thousand and One Nights, This Book Is Gay.
