@@ -19,6 +19,14 @@ export const revalidate = false
 // Search / citation agents — OAI-SearchBot, ChatGPT-User, Claude-User,
 // Claude-SearchBot, PerplexityBot, Googlebot, Bingbot, Applebot — are
 // deliberately NOT listed here and remain fully allowed.
+// SEO-tool / scraper crawlers: they send no readers and no citations, but
+// (Vercel metrics, 7 days to 2026-11-16) accounted for ~28k of the ~101k ISR
+// regenerations of /books/[slug] (SemrushBot 13.5k, ShapBot 9.8k, AhrefsBot
+// ~5k on OG images). Each hit on an expired long-tail page is a DB-backed
+// render + ISR write, so ask them to stay out. AI *search/citation* agents
+// (Perplexity, Exa, Linkup, OAI-SearchBot…) are deliberately NOT here.
+const SCRAPER_CRAWLERS = ['SemrushBot', 'ShapBot', 'AhrefsBot']
+
 const TRAINING_CRAWLERS = [
   'GPTBot',
   'ClaudeBot',
@@ -69,6 +77,7 @@ const CONTENT_SIGNALS_PREAMBLE = `# As a condition of accessing this website, yo
 
 function buildRobotsTxt(): string {
   const trainingGroup = TRAINING_CRAWLERS.map((ua) => `User-Agent: ${ua}`).join('\n')
+  const scraperGroup = SCRAPER_CRAWLERS.map((ua) => `User-Agent: ${ua}`).join('\n')
 
   return `${CONTENT_SIGNALS_PREAMBLE}
 
@@ -78,6 +87,9 @@ Disallow: /_next/image/
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 ${trainingGroup}
+Disallow: /
+
+${scraperGroup}
 Disallow: /
 
 Sitemap: ${SITE_URL}/sitemap.xml
