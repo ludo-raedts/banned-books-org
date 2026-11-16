@@ -11,7 +11,8 @@ const APPLY = isApply()
 const BASE = 'https://archive.org/details/bannedbooks387bc0000haig'
 const SRC = (who: string) => `Haight & Grannis, Banned Books 387 B.C. to 1978 A.D., 4th ed. (R. R. Bowker, 1978), entry “${who}”`
 type Row = { book: number; title: string; cc: string; year: number; scope: string; action: 'banned' | 'restricted' | 'challenged'; reason: string; who: string; desc: string; inst?: string }
-const ROWS: Row[] = [
+const SKIP_BOOKS = new Set([16279, 1028]) // weak matches (Genet edition identity; Joy of Sex not named in the entry)
+const ALL_ROWS: Row[] = [
   { book: 20832, title: 'Aphrodite', cc: 'US', year: 1929, scope: 'customs', action: 'banned', reason: 'obscenity', who: 'Louÿs, Pierre',
     desc: 'In 1929 the US Customs Department barred Aphrodite, together with Louÿs’s Songs of Bilitis and Twilight of the Nymphs, as lascivious, corrupting and obscene.' },
   { book: 14, title: 'The Catcher in the Rye', cc: 'AU', year: 1957, scope: 'customs', action: 'banned', reason: 'other', who: 'Salinger, J. D.',
@@ -27,6 +28,7 @@ const ROWS: Row[] = [
   { book: 10, title: 'Lady Chatterley\'s Lover', cc: 'IE', year: 1932, scope: 'government', action: 'banned', reason: 'obscenity', who: 'Lawrence, D. H.',
     desc: 'Lady Chatterley’s Lover was banned in Ireland in 1932.' },
 ]
+const ROWS = ALL_ROWS.filter(r => !SKIP_BOOKS.has(r.book))
 async function main() {
   console.log(`\n── add haight bans ── ${APPLY ? 'APPLY' : 'DRY-RUN (no writes)'}`)
   const pg = newPgClient(); await pg.connect()
