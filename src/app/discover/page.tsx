@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { hasFilterParams, noindexFollow } from '@/lib/filter-variant'
 import Link from '@/components/link'
 import { loadDiscoverData } from '@/lib/discover-data'
 import { REGIONS, type SpinScope } from '@/lib/discover-engine'
@@ -12,7 +13,9 @@ import DiscoverWizard from './discover-wizard'
 // against mv_reason_top_books, so per-request DB work is a cache read.
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
+const FILTER_KEYS = ['r', 'g', 'c', 'region', 'x', 'rc'] as const
+
+const baseMetadata: Metadata = {
   // Root layout adds the "%s | Banned Books" suffix — keep this clean to
   // avoid the duplicated "Banned Books | Banned Books" tail in SERPs.
   title: 'Pick me a banned book — Discover',
@@ -27,6 +30,14 @@ export const metadata: Metadata = {
     'discover banned books',
     'reading club banned books',
   ],
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>
+}): Promise<Metadata> {
+  return { ...baseMetadata, ...noindexFollow(hasFilterParams(await searchParams, FILTER_KEYS)) }
 }
 
 type SearchParams = {

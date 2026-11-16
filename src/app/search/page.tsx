@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import { requireCount } from '@/lib/require-count'
 import PageviewTracker from '@/components/pageview-tracker'
+import { hasFilterParams, noindexFollow } from '@/lib/filter-variant'
 import { unstable_cache } from 'next/cache'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks, parseBookSort, DEFAULT_BOOK_SORT } from '@/lib/book-search'
@@ -70,9 +71,17 @@ const loadDefaultResults = unstable_cache(
   { revalidate: 3600, tags: ['search-default'] },
 )
 
-export async function generateMetadata(): Promise<Metadata> {
+const FILTER_KEYS = ['q', 'country', 'reason', 'scope', 'year', 'active', 'sort'] as const
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>
+}): Promise<Metadata> {
   const { totalBooks: n } = await loadSearchFacets()
+  const variant = hasFilterParams(await searchParams, FILTER_KEYS)
   return {
+    ...noindexFollow(variant),
     title: `Full List of ${n.toLocaleString('en')} Banned Books — Search & Filter`,
     description: `Is a book banned? Search ${n.toLocaleString('en')} banned and challenged books by title or author, filter by country, reason, year and who banned it. Every entry cites its source.`,
     alternates: { canonical: '/search' },
