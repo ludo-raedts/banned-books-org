@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic'
 
 const ZIP_PATH = join(process.cwd(), 'private', 'dataset.zip')
 const DOWNLOAD_FILENAME = 'banned-books-dataset.zip'
+const MAX_DOWNLOADS = 20
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token')
@@ -30,6 +31,13 @@ export async function GET(req: NextRequest) {
     return new Response('This download link has expired. Contact support to renew.', { status: 410 })
   }
 
+  // A paid link is for the buyer; a leaked/shared one would otherwise stream the
+  // full zip unlimited times for 30 days. Generous enough for retries and
+  // re-downloads on a new device.
+  if (order.downloads_count >= MAX_DOWNLOADS) {
+    return new Response('This download link has reached its download limit. Contact support to renew.', { status: 429 })
+  }
+
   if (!existsSync(ZIP_PATH)) {
     console.error('[download] dataset.zip missing at', ZIP_PATH)
     return new Response(
@@ -38,16 +46,20 @@ export async function GET(req: NextRequest) {
     )
   }
 
-  // Best-effort accounting; never block the download on this.
+  // Best-effort accounting; never block the download on this. Compare-and-swap
+  // on the count we read, so two concurrent downloads can't both write n+1.
   void supabase
     .from('dataset_orders')
     .update({
-      downloads_count: (order.downloads_count ?? 0) + 1,
+      downloads_count: order.downloads_count + 1,
       last_downloaded_at: new Date().toISOString(),
     })
     .eq('id', order.id)
-    .then(({ error: updateError }) => {
+    .eq('downloads_count', order.downloads_count)
+    .select('id')
+    .then(({ data, error: updateError }) => {
       if (updateError) console.error('[download] update failed', updateError)
+      else if (!data?.length) console.warn('[download] concurrent download, count not bumped', order.id)
     })
 
   const stat = statSync(ZIP_PATH)

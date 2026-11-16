@@ -33,12 +33,15 @@ export async function proxy(request: NextRequest) {
   // /admin pages redirect to the login form; /api/admin gets a plain 401 so
   // unauthenticated scanners are rejected at the edge instead of invoking a
   // function. Every route still calls requireAdmin() as defense-in-depth.
-  const isAdminPage = pathname.startsWith('/admin')
-  const isAdminApi = pathname.startsWith('/api/admin')
+  // Segment-exact matches: a bare startsWith('/admin') would also gate
+  // '/administrator', and startsWith('/api/admin/login') would wave through
+  // any future '/api/admin/login-*' route without a session check.
+  const isAdminPage = pathname === '/admin' || pathname.startsWith('/admin/')
+  const isAdminApi = pathname === '/api/admin' || pathname.startsWith('/api/admin/')
   if (!isAdminPage && !isAdminApi) return NextResponse.next()
   if (pathname === '/admin/login') return NextResponse.next()
   // login is the gate itself; logout only clears the caller's own cookie.
-  if (pathname.startsWith('/api/admin/login') || pathname.startsWith('/api/admin/logout')) {
+  if (pathname === '/api/admin/login' || pathname === '/api/admin/logout') {
     return NextResponse.next()
   }
 

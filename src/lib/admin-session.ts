@@ -37,11 +37,13 @@ async function hmac(secret: string, message: string): Promise<string> {
   return base64url(sig)
 }
 
-// Length-independent comparison to avoid leaking the signature via timing.
+// Constant-time comparison. Walks the longer string and folds the length
+// difference into the result, so neither content nor length (e.g. of
+// ADMIN_SECRET in the login check) leaks through an early return.
 function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false
-  let mismatch = 0
-  for (let i = 0; i < a.length; i++) mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  const len = Math.max(a.length, b.length)
+  let mismatch = a.length ^ b.length
+  for (let i = 0; i < len; i++) mismatch |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0)
   return mismatch === 0
 }
 

@@ -68,6 +68,38 @@ function visitorHash(headers: Headers): string | null {
   return createHash('sha256').update(`${dailySalt()}|${ip}|${ua}`).digest('hex')
 }
 
+const MAX_ENTITY_ID = 1_000_000_000
+
+// Per-instance abuse guard (resets on cold start — a speed bump, not a ledger):
+//  - the same visitor viewing the same path again within DEDUPE_MS is not a new
+//    view (also stops a script from inflating one book's 'rising' score), and
+//  - one visitor can record at most MAX_PER_WINDOW views per WINDOW_MS.
+const DEDUPE_MS = 30 * 60 * 1000
+const WINDOW_MS = 10 * 60 * 1000
+const MAX_PER_WINDOW = 120
+const MAX_TRACKED = 20_000
+const lastSeen = new Map<string, number>()
+const windows = new Map<string, { count: number; first: number }>()
+
+function allowView(visitor: string, path: string): boolean {
+  const now = Date.now()
+  if (lastSeen.size > MAX_TRACKED) lastSeen.clear()
+  if (windows.size > MAX_TRACKED) windows.clear()
+
+  const key = `${visitor}|${path}`
+  const prev = lastSeen.get(key)
+  if (prev !== undefined && now - prev < DEDUPE_MS) return false
+
+  const win = windows.get(visitor)
+  if (!win || now - win.first > WINDOW_MS) {
+    windows.set(visitor, { count: 1, first: now })
+  } else if (++win.count > MAX_PER_WINDOW) {
+    return false
+  }
+  lastSeen.set(key, now)
+  return true
+}
+
 function looksLikeBrowser(headers: Headers, ua: string): boolean {
   if (!ua.includes('mozilla/')) return false
   if (!headers.get('accept-language')) return false
@@ -113,7 +145,11 @@ export async function POST(request: NextRequest) {
       path = p
       entityId = 0
     } else {
-      if (typeof entityId !== 'number' || !Number.isFinite(entityId)) return new NextResponse(null, { status: 204 })
+      // Real ids are positive integers; reject floats, negatives and absurd
+      // values so the endpoint can't be used to write junk rows.
+      if (typeof entityId !== 'number' || !Number.isSafeInteger(entityId) || entityId < 1 || entityId > MAX_ENTITY_ID) {
+        return new NextResponse(null, { status: 204 })
+      }
       path = `/${entityType}s/${entityId}`
     }
 
@@ -135,13 +171,16 @@ export async function POST(request: NextRequest) {
       request.headers.get('cf-ipcountry') ??
       request.headers.get('x-vercel-ip-country') ?? null
 
+    const visitor = visitorHash(request.headers)
+    if (visitor && !allowView(visitor, path)) return new NextResponse(null, { status: 204 })
+
     await adminClient().from('pageviews').insert({
       path,
       entity_type: entityType,
       entity_id: entityId,
       country,
       referrer_host: extractReferrerHost(body.referrer ?? null),
-      visitor_hash: visitorHash(request.headers),
+      visitor_hash: visitor,
     })
   } catch {
     // swallow
