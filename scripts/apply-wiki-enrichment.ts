@@ -604,7 +604,7 @@ async function applyStaged(staged: Staged): Promise<{
   if (staged.book_description_ban_rewrite || staged.book_censorship_context_rewrite) {
     const { data: book } = await sb
       .from('books')
-      .select('description_ban, censorship_context')
+      .select('description_ban, censorship_context, censorship_context_status')
       .eq('id', staged.book_id)
       .single()
     const updates: Record<string, string> = {}
@@ -617,7 +617,9 @@ async function applyStaged(staged: Staged): Promise<{
         log(`  skip description_ban rewrite: not strictly longer, no new facts`)
       }
     }
-    if (staged.book_censorship_context_rewrite) {
+    if (staged.book_censorship_context_rewrite && ['source_verified', 'narrative_curated'].includes(book?.censorship_context_status ?? '') && !process.argv.includes('--include-protected')) {
+      log(`  skip censorship_context rewrite: history is ${book?.censorship_context_status} (protected; --include-protected to override)`)
+    } else if (staged.book_censorship_context_rewrite) {
       const cur = book?.censorship_context ?? ''
       const newer = staged.book_censorship_context_rewrite
       // Quality gate (added 2026-05-29): the wiki-staging output is also LLM-derived

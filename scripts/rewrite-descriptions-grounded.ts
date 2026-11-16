@@ -270,7 +270,7 @@ async function fetchBookBatch(slugs: string[]): Promise<Book[]> {
       .from('books')
       .select(`
         id, title, slug, first_published_year, description_book,
-        description_ban, censorship_context,
+        description_ban, censorship_context, censorship_context_status,
         book_authors(authors(display_name)),
         bans(
           year_started, year_ended, status, action_type, country_code, region,
@@ -322,6 +322,15 @@ async function main() {
   const slugs = batch.map(b => b.slug)
   const books = await fetchBookBatch(slugs)
   const bookBySlug = new Map(books.map(b => [b.slug, b]))
+  // Protected histories (source_verified / narrative_curated) are never rewritten here (2026-11-16).
+  if (!process.argv.includes('--include-protected')) {
+    let protectedSkipped = 0
+    for (const t of batch) {
+      const st = (bookBySlug.get(t.slug) as unknown as { censorship_context_status?: string | null } | undefined)?.censorship_context_status ?? ''
+      if (t.needCtx && ['source_verified', 'narrative_curated'].includes(st)) { t.needCtx = false; protectedSkipped++ }
+    }
+    if (protectedSkipped) console.log(`  Protected histories left alone: ${protectedSkipped}`)
+  }
 
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
   const backupPath = path.resolve('data', `description-backup-${stamp}.csv`)
@@ -340,6 +349,7 @@ async function main() {
     i++
     if (!book) { skipped++; console.log(`[${i}/${batch.length}] ${t.slug}  → SKIP (not found)`); return }
 
+    if (!t.needBan && !t.needCtx) { skipped++; console.log(`[${i}/${batch.length}] ${t.slug}  → SKIP (protected history, nothing else to rewrite)`); return }
     const gen = await generate(client, book, t.needBan, t.needCtx)
     if (!gen) { errors++; console.log(`[${i}/${batch.length}] ${t.slug}  → ERROR (no usable response)`); return }
 

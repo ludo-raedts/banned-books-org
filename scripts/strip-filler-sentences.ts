@@ -173,12 +173,16 @@ function stripFiller(text: string | null): { stripped: string; removed: number }
   return { stripped: kept.join(' ').replace(/\s{2,}/g, ' ').trim(), removed }
 }
 
+const PROTECTED_CTX_STATUSES = new Set(['source_verified', 'narrative_curated']) // sourced / human-vetted histories: never rewritten here (2026-11-16)
+const INCLUDE_PROTECTED = process.argv.includes('--include-protected')
+
 type Book = {
   id: number
   slug: string
   title: string
   description_ban: string | null
   censorship_context: string | null
+  censorship_context_status: string | null
 }
 
 async function fetchAll(): Promise<Book[]> {
@@ -188,7 +192,7 @@ async function fetchAll(): Promise<Book[]> {
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase
       .from('books')
-      .select('id, slug, title, description_ban, censorship_context')
+      .select('id, slug, title, description_ban, censorship_context, censorship_context_status')
       .order('id')
       .range(from, from + PAGE - 1)
     if (error) { console.error('DB error:', error.message); process.exit(1) }
@@ -252,7 +256,9 @@ async function main() {
 
   for (const b of target) {
     const banResult = stripFiller(b.description_ban)
-    const ctxResult = stripFiller(b.censorship_context)
+    // Protected histories (source_verified / narrative_curated) are left byte-for-byte alone.
+    const ctxProtected = !INCLUDE_PROTECTED && PROTECTED_CTX_STATUSES.has(b.censorship_context_status ?? '')
+    const ctxResult = ctxProtected ? { stripped: b.censorship_context ?? '', removed: 0 } : stripFiller(b.censorship_context)
     const banChanged = banResult.stripped !== (b.description_ban ?? '')
     const ctxChanged = ctxResult.stripped !== (b.censorship_context ?? '')
     if (!banChanged && !ctxChanged) continue

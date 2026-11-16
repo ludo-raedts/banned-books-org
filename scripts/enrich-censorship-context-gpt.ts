@@ -155,6 +155,7 @@ async function main() {
   const SKIP_STATUSES = new Set([
     'insufficient_evidence',
     'narrative_curated',
+    'source_verified',          // sourced histories (2026-11-16): never overwritten by GPT
     'auto_rejected_low_groundedness',
   ])
   const audited = SLUG
