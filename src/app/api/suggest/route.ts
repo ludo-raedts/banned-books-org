@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { adminClient } from '@/lib/supabase'
 import { searchBooks } from '@/lib/book-search'
+import { ilikeContains, orIlikeContains } from '@/lib/postgrest-filter'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = adminClient()
-  const lq = `%${q}%`
+  const lq = ilikeContains(q)
 
   const [authorsRes, countriesRes, booksRes] = await Promise.all([
     supabase
@@ -40,7 +41,10 @@ export async function GET(request: NextRequest) {
       .select('id, slug, display_name, photo_url')
       .eq('is_placeholder', false)
       .or(
-        `display_name.ilike.${lq},name_native.ilike.${lq},name_transliterated.ilike.${lq},name_english.ilike.${lq}`,
+        orIlikeContains(
+          ['display_name', 'name_native', 'name_transliterated', 'name_english'],
+          q,
+        ),
       )
       .order('display_name')
       .limit(AUTHOR_LIMIT),

@@ -31,7 +31,14 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: `Signature verification failed: ${message}` }, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
+  // `completed` fires with payment_status 'unpaid' for delayed payment methods
+  // (bank debits etc.); the money arrives later as `async_payment_succeeded`.
+  // handleCheckoutCompleted skips unpaid sessions, so both events are safe to
+  // route here, and the unique stripe_session_id keeps fulfilment idempotent.
+  if (
+    event.type === 'checkout.session.completed' ||
+    event.type === 'checkout.session.async_payment_succeeded'
+  ) {
     const baseUrl = new URL(req.url).origin
     await handleCheckoutCompleted(event.data.object, baseUrl)
   }
@@ -77,25 +84,69 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, baseUrl
     .select('id, download_token, email, download_token_expires_at')
     .single()
 
+  let order: OrderRow | null = inserted
   // Unique constraint violation = Stripe retried after we already recorded this session.
   // Anything else is a real error worth surfacing in logs.
   if (error) {
-    if (error.code === '23505') return
-    console.error('[webhook] failed to insert dataset_order', { sessionId: session.id, error })
-    throw new Error(`DB insert failed: ${error.message}`)
+    if (error.code !== '23505') {
+      console.error('[webhook] failed to insert dataset_order', { sessionId: session.id, error })
+      throw new Error(`DB insert failed: ${error.message}`)
+    }
+    // Retry of an order we already stored: the first attempt may have saved the
+    // row but failed to deliver the mail. Resend only if it was never marked sent.
+    // (email_sent_at is read here only, so the insert path above keeps working
+    // even before the 20261116120000 migration is applied.)
+    const { data: existing, error: lookupError } = await supabase
+      .from('dataset_orders')
+      .select('id, download_token, email, download_token_expires_at, email_sent_at')
+      .eq('stripe_session_id', session.id)
+      .maybeSingle()
+    if (lookupError || !existing || existing.email_sent_at) return
+    order = existing
   }
 
-  // Email is best-effort: don't fail the webhook (and trigger Stripe retries) if Resend hiccups.
-  if (inserted?.email && inserted.download_token && inserted.download_token_expires_at) {
-    const downloadUrl = `${baseUrl}/api/dataset/download?token=${encodeURIComponent(inserted.download_token)}`
-    const result = await sendDownloadEmail({
-      to: inserted.email,
-      downloadUrl,
-      expiresAt: new Date(inserted.download_token_expires_at),
-      orderId: inserted.id,
+  if (!order) return
+  if (!order.email) {
+    // Paid but no address: nothing to mail. Make it visible instead of silent.
+    console.error('[webhook] paid dataset order has no email — send the link manually', {
+      orderId: order.id,
+      sessionId: session.id,
     })
-    if (!result.skipped && 'error' in result && result.error) {
-      console.error('[webhook] email send failed', { orderId: inserted.id, error: result.error })
-    }
+    return
   }
+
+  // Email stays best-effort: a Resend failure must not 500 the webhook, but it is
+  // no longer lost — email_sent_at stays NULL, so the next Stripe retry (or a
+  // manual replay of the event) delivers it.
+  if (order.download_token && order.download_token_expires_at) {
+    const downloadUrl = `${baseUrl}/api/dataset/download?token=${encodeURIComponent(order.download_token)}`
+    const result = await sendDownloadEmail({
+      to: order.email,
+      downloadUrl,
+      expiresAt: new Date(order.download_token_expires_at),
+      orderId: order.id,
+    })
+    if (result.skipped || ('error' in result && result.error)) {
+      console.error('[webhook] email not sent', {
+        orderId: order.id,
+        skipped: result.skipped,
+        error: 'error' in result ? result.error : undefined,
+      })
+      // Unsent: answer 500 so Stripe retries (it retries for up to 3 days).
+      throw new Error(`Download email not sent for order ${order.id}`)
+    }
+    const { error: markError } = await supabase
+      .from('dataset_orders')
+      .update({ email_sent_at: new Date().toISOString() })
+      .eq('id', order.id)
+    if (markError) console.error('[webhook] could not stamp email_sent_at', { orderId: order.id, markError })
+  }
+}
+
+type OrderRow = {
+  id: string
+  download_token: string | null
+  email: string | null
+  download_token_expires_at: string | null
+  email_sent_at?: string | null
 }

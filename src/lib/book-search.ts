@@ -1,5 +1,6 @@
 import { adminClient } from '@/lib/supabase'
 import { countryCodeForQuery } from '@/lib/country-aliases'
+import { ilikeContains, orIlikeContains } from '@/lib/postgrest-filter'
 
 export type BookSort = 'popular' | 'bans' | 'alpha'
 
@@ -237,12 +238,13 @@ async function searchBooksRaw(params: BookSearchParams): Promise<BookSearchResul
   // PostgREST's `or()` accepts comma-separated conditions; ilike values are
   // wrapped with % wildcards for substring match.
   if (q) {
-    const lq = `%${q}%`
-    const titleOr =
-      `title.ilike.${lq},` +
-      `title_native.ilike.${lq},` +
-      `title_transliterated.ilike.${lq},` +
-      `title_english_meaningful.ilike.${lq}`
+    // q is user input: build the filter via the escaping helpers, never by
+    // string-interpolating it into the .or() expression.
+    const lq = ilikeContains(q)
+    const titleOr = orIlikeContains(
+      ['title', 'title_native', 'title_transliterated', 'title_english_meaningful'],
+      q,
+    )
     // "DDR" / "GDR" / "East Germany": the query names a jurisdiction, so it
     // matches books banned there (ban rows, see country-aliases.ts) INSTEAD of
     // a substring scan: "ddr" would otherwise hit "…unddreissig…" in unrelated titles.
