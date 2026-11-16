@@ -3,12 +3,22 @@
  "title": "Justine",
  "author": "Marquis de Sade",
  "first_published_year": 1791,
- "current_text": "In 1791, authorities in France suppressed Justine or the Misfortunes of Virtue.",
+ "current_text": "In 1791, authorities in France suppressed Justine or the Misfortunes of Virtue. In March 1801 the stocks of The New Justine and Juliette were seized when Sade was arrested at his publisher's office. The Cour Royale de Paris ordered the book's destruction on 19 May 1815.",
  "sources": [
   {
    "url": "https://www.ntticc.or.jp/en/feature/1995/The_Museum_Inside_The_Network/fileroom/documents/Cases/178marquisDeSade.html",
    "quote": "1791, France: The authorities doggedly suppressed \"Justine or the\nMisfortunes of Virtue\" and Juliette.\"",
    "title": "Sade, \"Justine or the Misfortunes of Virtue\", \"Juliette\""
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Marquis_de_Sade",
+   "quote": "in March 1801, Sade was arrested at his publisher's office and detained in the Sainte-Pélagie Prison . The stocks of The New Justine and Juliette were seized and the police minister",
+   "title": "Marquis de Sade - Wikipedia"
+  },
+  {
+   "url": "https://en.wikipedia.org/wiki/Justine_(de_Sade_novel)",
+   "quote": "The book's destruction was ordered by the Cour Royale de Paris on May 19, 1815.",
+   "title": "Justine (de Sade novel) - Wikipedia"
   }
  ],
  "ban_rows": [
