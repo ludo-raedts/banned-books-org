@@ -1,0 +1,197 @@
+[
+ {
+  "ban_id": 1139,
+  "slug": "the-color-purple",
+  "country": "South Africa",
+  "our_year": 1984,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/w/index.php?title=Alice_Walker&action=raw",
+  "source_name": "English Wikipedia: Alice Walker (cites NYT ArtsBeat, Itzkoff, 19 Jun 2012)",
+  "locator": "Israel/Hebrew paragraph",
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No South African ban of the novel found. Wikipedia records that Walker herself refused to let Spielberg's film be shown in South Africa during apartheid (self-imposed boycott, not a state ban). Our year 1984 predates the 1985 film.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=The_Color_Purple&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Alice_Walker&action=raw",
+   "https://esat.sun.ac.za/index.php/Zensur (search result only)"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Could not confirm or rule out a Publications Control Board decision on the book; no SA archive accessible."
+ },
+ {
+  "ban_id": 1141,
+  "slug": "the-handmaids-tale",
+  "country": "Iran",
+  "our_year": 1985,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Search results (not fully read) indicate a Persian translation was published in 2003 and circulates (altered edition), i.e. no outright ban; PDF of Ottawa thesis by Sharifi could not be text-extracted. Treat as unsupported/possibly contradicted.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=The_Handmaid%27s_Tale&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Margaret_Atwood&action=raw",
+   "https://ruor.uottawa.ca/bitstreams/ea0e9d6a-aee2-4384-b415-1fdf6da1a4b9/download (binary, unreadable)"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Thesis claim known only via search snippet. Wikipedia pages mention Iran only as inspiration for Gilead."
+ },
+ {
+  "ban_id": 620,
+  "slug": "the-story-of-o",
+  "country": "Australia",
+  "our_year": 1960,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "No Australian ban of the book found. Only Australian item seen: the 1975 film was reported banned there (search snippet, OFLC; not opened).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=Story_of_O&action=raw",
+   "https://fr.wikipedia.org/w/index.php?title=Histoire_d%27O&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=List_of_books_banned_by_governments&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "AustLit/NAA/Customs Prohibited Imports lists not reachable."
+ },
+ {
+  "ban_id": 1163,
+  "slug": "the-story-of-o",
+  "country": "Denmark",
+  "our_year": 1967,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Nothing found. Barnboken article on Scandinavian porn law does not mention the book; Denmark abolished picture-porn ban in 1969, text ban earlier (1967 not tied to this title).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=Story_of_O&action=raw",
+   "https://barnboken.net/index.php/clr/article/download/332/1003?inline=1",
+   "https://en.wikipedia.org/w/index.php?title=Censorship_in_Denmark&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Danish sources (Retsinformation, Danish newspapers) not searched in Danish."
+ },
+ {
+  "ban_id": 1164,
+  "slug": "the-story-of-o",
+  "country": "Norway",
+  "our_year": 1954,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Nothing found. Norwegian translation reportedly appeared c.1970-72 (search snippet), so a 1954 ban looks implausible; year is suspect.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=Story_of_O&action=raw",
+   "https://fr.wikipedia.org/w/index.php?title=Histoire_d%27O&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "No Norwegian-language search done."
+ },
+ {
+  "ban_id": 827,
+  "slug": "the-origin-of-species",
+  "country": "Yugoslavia",
+  "our_year": 1935,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Full English article (170k chars) and Wikipedia ban list (Yugoslavia section lists other titles, not Darwin) contain no Yugoslav ban.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=On_the_Origin_of_Species&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=List_of_books_banned_by_governments&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Serbian/Croatian sources not read; 1935 plausible context (post-dictatorship) but no evidence."
+ },
+ {
+  "ban_id": 1102,
+  "slug": "the-painted-bird",
+  "country": "Czechoslovakia",
+  "our_year": 1965,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Wikipedia (book + author, full) records only Polish communist criticism, and Polish publication in 1989 (NYT 22 Apr 1989). Aggregator 'Voidly Verboten' (search snippet only) lists CS/USSR 1965 but without documentation.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=The_Painted_Bird&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Jerzy_Kosi%C5%84ski&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Censorship_in_Czechoslovakia&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Jewish Journal snippet says his work was attacked/banned behind Iron Curtain (generic, not opened)."
+ },
+ {
+  "ban_id": 1103,
+  "slug": "the-painted-bird",
+  "country": "Soviet Union",
+  "our_year": 1965,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Same as Czechoslovakia row: nothing documented in fetched pages.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/w/index.php?title=The_Painted_Bird&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Jerzy_Kosi%C5%84ski&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Harmon 2022 volume (Painted Bird in 13 languages, Ukrainian/Russian chapter) is a lead, not read."
+ },
+ {
+  "ban_id": 625,
+  "slug": "one-thousand-and-one-nights",
+  "country": "Saudi Arabia",
+  "our_year": 1985,
+  "verdict": "PARTIAL",
+  "source_url": "https://qantara.de/node/7936",
+  "source_name": "Qantara.de, Samir Grees, 14 May 2010",
+  "locator": "single sentence",
+  "year_found": null,
+  "date_type": "unknown",
+  "status_now": null,
+  "correction": "Qantara states the book is banned in Saudi Arabia, without date or measure; 1985 not supported. Wikipedia's Nights and Censorship in Saudi Arabia pages (full) do not mention it.",
+  "suggested_note": "Qantara (Samir Grees, 14 May 2010) states the book is banned in Saudi Arabia; no date or legal basis given.",
+  "opened_urls": [
+   "https://qantara.de/node/7936",
+   "https://en.wikipedia.org/w/index.php?title=One_Thousand_and_One_Nights&action=raw",
+   "https://en.wikipedia.org/w/index.php?title=Censorship_in_Saudi_Arabia&action=raw"
+  ],
+  "truncated_pages_note": "Full wikitext fetched via action=raw (no truncation).",
+  "uncertainty": "Ban date unknown; Egypt 2010 petition rejected is separate."
+ }
+]

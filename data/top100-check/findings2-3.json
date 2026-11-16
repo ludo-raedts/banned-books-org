@@ -1,0 +1,195 @@
+[
+ {
+  "ban_id": 611,
+  "slug": "les-miserables",
+  "country": "Spain",
+  "our_year": 1939,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Les_Misérables",
+   "https://es.wikipedia.org/wiki/Los_miserables",
+   "https://es.wikipedia.org/wiki/Censura_franquista",
+   "https://en.wikipedia.org/wiki/Censorship_in_Spain",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Full en/es article text and es 'Censura franquista' contain no Franco-era Les Mis ban; es article only notes Catholic Index listing (undated, not Spain-specific). Archival Spanish censorship records (AGA) not checked."
+ },
+ {
+  "ban_id": 1104,
+  "slug": "the-diary-of-a-young-girl",
+  "country": "Lebanon",
+  "our_year": 1986,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.thejc.com/news/world/lebanon-school-bans-zionist-anne-frank-1.12431",
+  "source_name": "The Jewish Chronicle, 13 Nov 2009",
+  "locator": "article body; also en.wikipedia Diary of a Young Girl, 'Bans' section",
+  "year_found": 2009,
+  "date_type": "event",
+  "status_now": "school-level removal; no state ban recorded",
+  "correction": "Year 1986 unsupported. Evidence is 2009: Hezbollah called for a ban in Lebanese schools; a private Beirut English-language school removed a textbook with excerpts. Not a national ban.",
+  "suggested_note": "In 2009 Hezbollah called for the diary to be banned from Lebanese schools; a private Beirut school dropped a textbook with excerpts (The Jewish Chronicle, 13 Nov 2009).",
+  "opened_urls": [
+   "https://www.thejc.com/news/world/lebanon-school-bans-zionist-anne-frank-1.12431",
+   "https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl",
+   "https://en.wikipedia.org/wiki/Censorship_in_Lebanon"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "No 1986 event found anywhere."
+ },
+ {
+  "ban_id": 1142,
+  "slug": "the-diary-of-a-young-girl",
+  "country": "Malaysia",
+  "our_year": 2014,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Diary_of_a_Young_Girl",
+   "https://en.wikipedia.org/wiki/Censorship_in_Malaysia",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Not in Wikipedia diary article, Malaysia censorship article or the government-ban list. Malaysian gazette (KDN) not reachable."
+ },
+ {
+  "ban_id": 628,
+  "slug": "the-protocols-of-the-elders-of-zion",
+  "country": "Germany",
+  "our_year": 1945,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Protocols_of_the_Elders_of_Zion",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "English article records only that a Nazi-era edition was blocked by censorship in 1939 (cause unknown, not a post-1945 ban); list gives Russia only. Allied-zone or BzKJ listing not verified; the de article was not re-fetched in this round. Possibly Allied post-war lists/StGB 130 confiscation exist but unconfirmed."
+ },
+ {
+  "ban_id": 1127,
+  "slug": "the-jewel-of-medina",
+  "country": "Saudi Arabia",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Full article (short) has no Gulf/Saudi mention. Not checked against Saudi ministry lists or press."
+ },
+ {
+  "ban_id": 1128,
+  "slug": "the-jewel-of-medina",
+  "country": "Qatar",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Same as Saudi row."
+ },
+ {
+  "ban_id": 1129,
+  "slug": "the-jewel-of-medina",
+  "country": "Malaysia",
+  "our_year": 2008,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/The_Jewel_of_Medina",
+   "https://en.wikipedia.org/wiki/Censorship_in_Malaysia"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Not in Malaysia censorship article either; KDN gazette not reachable."
+ },
+ {
+  "ban_id": 1138,
+  "slug": "beloved",
+  "country": "South Africa",
+  "our_year": 1987,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Beloved_(novel)",
+   "https://en.wikipedia.org/wiki/Censorship_in_South_Africa"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Full article banning section is US-only; SA censorship article has no mention. Apartheid-era Publications Board records not checked."
+ },
+ {
+  "ban_id": 29817,
+  "slug": "state-and-revolution",
+  "country": "Singapore",
+  "our_year": null,
+  "verdict": "SUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+  "source_name": "Wikipedia list, Singapore table (wikitext); cites Internal Security (Prohibition of Publications) (Consolidation) Order, Cap 143, O 413 (SSO)",
+  "locator": "Singapore section, row 'State and Revolution' (covered by the 27-row Order note)",
+  "year_found": null,
+  "date_type": null,
+  "status_now": "not verified",
+  "correction": null,
+  "suggested_note": "Listed by Wikipedia among titles prohibited under Singapore's Internal Security (Prohibition of Publications) (Consolidation) Order (Cap 143, O 413); date of prohibition not stated.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments",
+   "https://en.wikipedia.org/wiki/Censorship_in_Singapore",
+   "https://sso.agc.gov.sg/SL/ISA1960-OR1 (403)"
+  ],
+  "truncated_pages_note": "Full plain text/wikitext fetched via MediaWiki API, no truncation.",
+  "uncertainty": "Primary order text blocked (403), so inclusion rests on Wikipedia's citation; year and current status unknown."
+ }
+]

@@ -1,0 +1,198 @@
+[
+ {
+  "ban_id": 1100,
+  "slug": "tropic-of-cancer",
+  "country": "Norway",
+  "our_year": 1934,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tropic_of_Cancer_(novel)",
+   "https://en.wikipedia.org/wiki/Henry_Miller",
+   "https://no.wikipedia.org/wiki/Henry_Miller",
+   "https://no.wikipedia.org/wiki/Krepsens_vendekrets",
+   "https://en.wikipedia.org/wiki/List_of_books_banned_by_governments"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Norwegian-language sources (Nasjonalbiblioteket newspapers, Norwegian customs/Statens filmkontroll records) not reachable; no Norway mention in en/no Wikipedia. Norwegian Wikipedia article on the novel does not exist (title returns the latitude article). Absence is not disproof."
+ },
+ {
+  "ban_id": 1101,
+  "slug": "tropic-of-cancer",
+  "country": "Denmark",
+  "our_year": 1934,
+  "verdict": "UNSUPPORTED",
+  "source_url": "https://da.wikipedia.org/wiki/Henry_Miller",
+  "source_name": "Danish Wikipedia, Henry Miller",
+  "locator": "intro",
+  "year_found": "1954",
+  "date_type": "translation (not ban)",
+  "status_now": null,
+  "correction": "Danish Wikipedia only records a Danish translation in 1954; no ban noted. The 1934 date looks like the original publication year, not a Danish measure.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Tropic_of_Cancer_(novel)",
+   "https://en.wikipedia.org/wiki/Henry_Miller",
+   "https://da.wikipedia.org/wiki/Henry_Miller",
+   "https://da.wikipedia.org/wiki/Krebsens_Vendekreds"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Danish court/customs records not reached; absence not disproof."
+ },
+ {
+  "ban_id": 1106,
+  "slug": "brave-new-world",
+  "country": "Canada",
+  "our_year": 1980,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "The only 1980 removal in the English article is Miller, Missouri (US); no Canadian ban found in the article or in a web search (Freedom to Read, school-library lists). Likely country mix-up.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Brave_New_World"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Full article read (50k chars). Canadian school-board records not searched exhaustively; Canadian challenges at other dates may exist."
+ },
+ {
+  "ban_id": 652,
+  "slug": "aristotle-and-dante-discover-the-secrets-of-the-universe",
+  "country": "Russia",
+  "our_year": 2023,
+  "verdict": "PARTIAL",
+  "source_url": "https://bearr.org/regional-news/russia-legal-action-against-publishers-of-lgbt-books/",
+  "source_name": "BEARR, Russia: Legal action against publishers of LGBT books (15 May 2025)",
+  "locator": "list of nine titles in criminal case, per human-rights group Department One",
+  "year_found": "2025",
+  "date_type": "criminal case/enforcement (not formal ban)",
+  "status_now": "active (law in force)",
+  "correction": "No 2023 ban found. The book is named among titles in a May 2025 criminal case against publishing staff under the anti-LGBT extremism framework; bookstores pulled LGBT titles after Sept 2024 law expansion (Moscow Times 21 Sep 2024, search result only). Not an official ban/extremist listing. English Wikipedia records a Belarus listing (April 2025), which may be the source of confusion.",
+  "suggested_note": "Named in a May 2025 Russian criminal case against publishers over alleged LGBT-extremism distribution; not formally banned or listed as extremist (BEARR, 15 May 2025).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Aristotle_and_Dante_Discover_the_Secrets_of_the_Universe",
+   "https://bearr.org/regional-news/russia-legal-action-against-publishers-of-lgbt-books/"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Publisher of Russian edition not stated on BEARR page; Moscow Times page only seen in search snippet."
+ },
+ {
+  "ban_id": 1098,
+  "slug": "lolita",
+  "country": "Norway",
+  "our_year": 1956,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": null,
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita",
+   "https://no.wikipedia.org/wiki/Lolita_(roman)"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Norwegian Wikipedia fetch returned empty; Norwegian archives not reached. English article lists bans in UK, France, Argentina, Austria, Australia, Belgium, Myanmar but not Norway."
+ },
+ {
+  "ban_id": 1099,
+  "slug": "lolita",
+  "country": "Denmark",
+  "our_year": 1956,
+  "verdict": "UNSUPPORTED",
+  "source_url": "https://en.wikipedia.org/wiki/Lolita",
+  "source_name": "English Wikipedia, Lolita",
+  "locator": "publication history",
+  "year_found": "",
+  "date_type": "translation (not ban)",
+  "status_now": null,
+  "correction": "Article says only that Danish and Dutch translations appeared; no Danish ban.",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita",
+   "https://da.wikipedia.org/wiki/Lolita_(roman)"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Danish Wikipedia fetch empty; absence not disproof."
+ },
+ {
+  "ban_id": 1809,
+  "slug": "lolita",
+  "country": "South Africa",
+  "our_year": 1955,
+  "verdict": "PARTIAL",
+  "source_url": "https://www.vreme.com/en/vreme/odiseja-vladimira-nabokova-koji-je-voleo-leptire-5/",
+  "source_name": "Vreme (Serbian weekly), Nabokov odyssey part 5",
+  "locator": "passage on bans abroad",
+  "year_found": "1974 (ban 1974-1982)",
+  "date_type": "ban period per journalism",
+  "status_now": "lifted 1982 (per Vreme)",
+  "correction": "Vreme dates the South African ban 1974-1982, not 1955. Lifting in 1982 is consistent with our note; 1955 start is unsupported (Lolita was only published Sept 1955 in Paris). English Wikipedia and its South Africa censorship article do not mention an SA ban.",
+  "suggested_note": "Banned in South Africa under apartheid censorship; Vreme reports the ban ran 1974-1982. Start year 1955 unconfirmed.",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lolita",
+   "https://en.wikipedia.org/wiki/Censorship_in_South_Africa",
+   "https://www.vreme.com/en/vreme/odiseja-vladimira-nabokova-koji-je-voleo-leptire-5/"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Single secondary source (magazine, no citation seen); original SA Publications Board gazette/Jacobs register not reached; UCT thesis fetch failed."
+ },
+ {
+  "ban_id": 642,
+  "slug": "lajja",
+  "country": "Iran",
+  "our_year": 1994,
+  "verdict": "UNSUPPORTED",
+  "source_url": null,
+  "source_name": null,
+  "locator": null,
+  "year_found": null,
+  "date_type": null,
+  "status_now": null,
+  "correction": "Only a Voidly aggregator database (seen in search results, not verified) claims Iran 1994; Wikipedia articles on Lajja and Taslima Nasrin record bans in Bangladesh only (and Taslima's later books).",
+  "suggested_note": null,
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Lajja_(novel)",
+   "https://en.wikipedia.org/wiki/Taslima_Nasrin"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Voidly page not opened (redirect not followed); aggregator is not independent evidence. Persian-language sources not reached."
+ },
+ {
+  "ban_id": 908,
+  "slug": "quran",
+  "country": "Albania",
+  "our_year": 1967,
+  "verdict": "PARTIAL",
+  "source_url": "https://en.wikipedia.org/wiki/Religion_in_Albania",
+  "source_name": "English Wikipedia, Religion in Albania",
+  "locator": "History: anti-religious campaign section",
+  "year_found": "1967 (campaign); 1977 (law)",
+  "date_type": "campaign start; penal code",
+  "status_now": "historical (post-1991 religion free)",
+  "correction": "Wikipedia records the 1967 anti-religion campaign closing all religious institutions, and the 1977 penal code imposing 3-10 years for production, distribution or storage of religious literature. No page fetched names the Quran specifically in 1967; a Wikipedia mirror seen in search snippets says possession of Quran/religious literature was forbidden.",
+  "suggested_note": "General ban on religious literature (incl. Quran) in Albania: 1967 anti-religion campaign; 1977 penal code criminalised storing religious literature (Wikipedia, Religion in Albania).",
+  "opened_urls": [
+   "https://en.wikipedia.org/wiki/Religion_in_Albania",
+   "https://en.wikipedia.org/wiki/Quran",
+   "https://en.wikipedia.org/wiki/Censorship_in_Albania",
+   "https://en.wikipedia.org/wiki/Censorship_of_the_Quran"
+  ],
+  "truncated_pages_note": "Full article text fetched via MediaWiki API (no truncation).",
+  "uncertainty": "Censorship_of_the_Quran returned nothing. Quran-specific 1967 ban not directly sourced."
+ }
+]

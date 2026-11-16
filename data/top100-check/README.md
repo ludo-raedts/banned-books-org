@@ -56,3 +56,6 @@ Provenance caveat: a first apply run aborted on a unique-key collision after upd
 - 1145 animal-farm / Romania 1947: Communist-era Romanian suppression is plausible but nothing opened records it.
 - 1146 animal-farm / Bulgaria 1947: Same as Romania.
 - 625 one-thousand-and-one-nights / Saudi Arabia 1985: Wikipedia article only read to first 100k chars.
+
+## Round 2 (2026-11-16)
+The 46 UNSUPPORTED rows were redone with full-text Wikipedia (no truncation) and other fetched pages: 2 supported, 11 partial, 33 still nothing. Applied: fetched sources added; partial rows rewritten to what the sources record and marked unverified where the claim differs; rows with no evidence after two rounds marked 'Source needed' (soft label, not deleted; 4 left alone: Jewel of Medina x3 already marked, Protocols/Germany not fully checked). Ledger LEDGER-round2.md, backup backup-round2-2026-11-16.json.
