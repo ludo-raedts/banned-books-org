@@ -107,6 +107,8 @@ function Delta({ now, before }: { now: number; before: number | null }) {
 
 export function KpiRow({ data, scope }: { data: TrafficData; scope: string | null }) {
   const days = data.series.length
+  const hourly = data.granularity === 'hour'
+  const unit = hourly ? 'hour' : 'day'
   const { visitors, pageviews } = data.totals
   const tile = 'border border-gray-200 rounded-xl p-5 bg-white flex flex-col gap-1'
   return (
@@ -115,7 +117,11 @@ export function KpiRow({ data, scope }: { data: TrafficData; scope: string | nul
         <span className="text-xs font-medium text-gray-500">Visitors{scope ? ` · ${scope}` : ''}</span>
         <span className="text-4xl font-bold text-gray-900 tabular-nums leading-tight">{nf(visitors)}</span>
         <Delta now={visitors} before={data.prevTotals?.visitors ?? null} />
-        <span className="text-[11px] text-gray-400">Unique per day, summed over the period</span>
+        <span className="text-[11px] text-gray-400">
+          {hourly
+            ? 'Unique within the 24 hours; a visit either side of 00:00 UTC can count twice'
+            : 'Unique per day, summed over the period'}
+        </span>
       </div>
       <div className={tile}>
         <span className="text-xs font-medium text-gray-500">Pageviews{scope ? ` · ${scope}` : ''}</span>
@@ -124,14 +130,16 @@ export function KpiRow({ data, scope }: { data: TrafficData; scope: string | nul
         <span className="text-[11px] text-gray-400">Bots excluded</span>
       </div>
       <div className={tile}>
-        <span className="text-xs font-medium text-gray-500">Average per day</span>
+        <span className="text-xs font-medium text-gray-500">Average per {unit}</span>
         <span className="text-4xl font-bold text-gray-900 tabular-nums leading-tight">
-          {nf(Math.round(visitors / Math.max(1, days)))}
+          {nf(Math.round((hourly ? pageviews : visitors) / Math.max(1, days)))}
         </span>
         <span className="text-xs text-gray-500 tabular-nums">
-          visitors · {visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} pageviews each
+          {hourly
+            ? `pageviews · ${visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} per visitor`
+            : `visitors · ${visitors > 0 ? (pageviews / visitors).toFixed(1) : '–'} pageviews each`}
         </span>
-        <span className="text-[11px] text-gray-400">{days} day{days === 1 ? '' : 's'}</span>
+        <span className="text-[11px] text-gray-400">{days} {unit}{days === 1 ? '' : 's'}</span>
       </div>
     </div>
   )

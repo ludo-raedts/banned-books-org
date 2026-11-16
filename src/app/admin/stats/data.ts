@@ -5,13 +5,16 @@ import { withDbRetry } from '@/lib/db-retry'
 // ── Filters ──────────────────────────────────────────────────────────────────
 // Everything on /admin/stats that is range-scoped reads from the daily rollups
 // (pageviews_daily, pageviews_daily_dim) — tiny tables, so a range switch never
-// touches the raw pageviews table. Only the top-pages drill-down does, and it is
-// cached per filter combination.
+// touches the raw pageviews table. Two exceptions, both cached 5 min per filter
+// combination: the top-pages drill-down, and the "Last 24h" view, which needs
+// hourly resolution the daily rollups don't have and reads ~3k raw rows
+// (admin_hourly_traffic / admin_window_*; see 20261116170000).
 
-export const RANGES = ['7', '30', '90', 'all'] as const
+export const RANGES = ['24h', '7', '30', '90', 'all'] as const
 export type RangeKey = (typeof RANGES)[number]
 
 export const RANGE_LABEL: Record<RangeKey, string> = {
+  '24h': '24 hours',
   '7': '7 days',
   '30': '30 days',
   '90': '90 days',
@@ -77,6 +80,8 @@ export type TopPageRow = {
 }
 
 export type TrafficData = {
+  /** 'hour' for the Last 24h view: series[].day is then an ISO hour (…THH:00:00.000Z). */
+  granularity: 'day' | 'hour'
   from: string
   to: string
   series: DailyTrafficRow[]
@@ -145,7 +150,69 @@ async function dimTotals(dim: 'country' | 'referrer', from: string, to: string, 
   }))
 }
 
+const HOUR_MS = 3_600_000
+const hourStart = (d: Date) => new Date(Math.floor(d.getTime() / HOUR_MS) * HOUR_MS)
+
+// The 24 hour buckets ending with the current (partial) hour, and the 24 before.
+function windows(now: Date) {
+  const end = new Date(hourStart(now).getTime() + HOUR_MS)
+  const from = new Date(end.getTime() - 24 * HOUR_MS)
+  const prevFrom = new Date(from.getTime() - 24 * HOUR_MS)
+  return { from, end, prevFrom }
+}
+
+async function rpcRows<T>(name: string, args: Record<string, unknown>): Promise<T[]> {
+  const { data, error } = await withDbRetry(() => adminClient().rpc(name, args), name)
+  if (error) throw new Error(`${name}: ${error.message}`)
+  return (data ?? []) as T[]
+}
+
+async function fetchTraffic24h(f: StatsFilters, now: Date): Promise<TrafficData> {
+  const { from, end, prevFrom } = windows(now)
+  const filt = { p_referrer: f.ref, p_country: f.country }
+  const win = (a: Date, b: Date) => ({ p_from: a.toISOString(), p_to: b.toISOString() })
+  type Num = number | string
+  type Dim = { key: string; visitors: Num; pageviews: Num }
+  const dim = (r: Dim): BreakdownRow => ({ key: r.key ?? '', visitors: Number(r.visitors), pageviews: Number(r.pageviews) })
+
+  const [hourly, totals, prevTotals, countries, referrers, prevCountries, prevReferrers] = await Promise.all([
+    rpcRows<{ hour: string; visitors: Num; pageviews: Num }>('admin_hourly_traffic', { ...win(from, end), ...filt }),
+    rpcRows<{ visitors: Num; pageviews: Num }>('admin_window_totals', { ...win(from, end), ...filt }),
+    rpcRows<{ visitors: Num; pageviews: Num }>('admin_window_totals', { ...win(prevFrom, from), ...filt }),
+    rpcRows<Dim>('admin_window_dim', { p_dim: 'country', ...win(from, end), p_limit: 50 }),
+    rpcRows<Dim>('admin_window_dim', { p_dim: 'referrer', ...win(from, end), p_limit: 50 }),
+    rpcRows<Dim>('admin_window_dim', { p_dim: 'country', ...win(prevFrom, from), p_limit: 500 }),
+    rpcRows<Dim>('admin_window_dim', { p_dim: 'referrer', ...win(prevFrom, from), p_limit: 500 }),
+  ])
+
+  const byHour = new Map(hourly.map(r => [new Date(r.hour).toISOString(), r]))
+  const series: DailyTrafficRow[] = []
+  for (let t = from.getTime(); t < end.getTime(); t += HOUR_MS) {
+    const key = new Date(t).toISOString()
+    const r = byHour.get(key)
+    series.push({ day: key, visitors: Number(r?.visitors ?? 0), pageviews: Number(r?.pageviews ?? 0) })
+  }
+  const tot = (r: { visitors: Num; pageviews: Num } | undefined) => ({
+    visitors: Number(r?.visitors ?? 0),
+    pageviews: Number(r?.pageviews ?? 0),
+  })
+
+  return {
+    granularity: 'hour',
+    from: from.toISOString().slice(0, 16).replace('T', ' '),
+    to: 'now',
+    series,
+    totals: tot(totals[0]),
+    prevTotals: tot(prevTotals[0]),
+    countries: countries.map(dim),
+    referrers: referrers.map(dim),
+    prevCountries: Object.fromEntries(prevCountries.map(r => [r.key ?? '', Number(r.visitors)])),
+    prevReferrers: Object.fromEntries(prevReferrers.map(r => [r.key ?? '', Number(r.visitors)])),
+  }
+}
+
 async function fetchTraffic(range: RangeKey, today: string, f: StatsFilters): Promise<TrafficData> {
+  if (range === '24h') return fetchTraffic24h(f, new Date())
   const scope = f.ref !== null ? { dim: 'referrer' as const, key: f.ref }
     : f.country !== null ? { dim: 'country' as const, key: f.country }
     : null
@@ -181,6 +248,7 @@ async function fetchTraffic(range: RangeKey, today: string, f: StatsFilters): Pr
   }
 
   return {
+    granularity: 'day',
     from,
     to: today,
     series,
@@ -196,10 +264,12 @@ async function fetchTraffic(range: RangeKey, today: string, f: StatsFilters): Pr
 // 5-minute cache per range; `today` is part of the key so a new UTC day never
 // serves yesterday's frame. The owner re-checking the page costs no queries.
 export const getTraffic = (f: StatsFilters) => {
-  const today = iso(new Date())
+  const now = iso(new Date())
+  // Last 24h: the frame moves every hour, so the hour is part of the key.
+  const frame = f.range === '24h' ? new Date().toISOString().slice(0, 13) : now
   return unstable_cache(
-    () => fetchTraffic(f.range, today, f),
-    ['admin-traffic', f.range, f.ref ?? '∅', f.country ?? '∅', today],
+    () => fetchTraffic(f.range, now, f),
+    ['admin-traffic', f.range, f.ref ?? '∅', f.country ?? '∅', frame],
     { revalidate: 300 },
   )()
 }
@@ -210,13 +280,22 @@ type RawTopPage = { entity_type: string; entity_id: number | string; path: strin
 
 async function fetchTopPages(f: StatsFilters, today: string): Promise<TopPageRow[]> {
   // The raw table is pruned at 90 days, so "all time" is the last 90 days here.
-  const days = f.range === 'all' ? 90 : Number(f.range)
-  const from = addDays(today, -(days - 1))
+  let pFrom: string
+  let pTo: string
+  if (f.range === '24h') {
+    const { from, end } = windows(new Date())
+    pFrom = from.toISOString()
+    pTo = end.toISOString()
+  } else {
+    const days = f.range === 'all' ? 90 : Number(f.range)
+    pFrom = `${addDays(today, -(days - 1))}T00:00:00Z`
+    pTo = `${addDays(today, 1)}T00:00:00Z`
+  }
   const sb = adminClient()
   const { data, error } = await withDbRetry(
     () => sb.rpc('admin_top_pages', {
-      p_from: `${from}T00:00:00Z`,
-      p_to: `${addDays(today, 1)}T00:00:00Z`,
+      p_from: pFrom,
+      p_to: pTo,
       p_referrer: f.ref,
       p_country: f.country,
       p_limit: 25,
@@ -288,9 +367,10 @@ function pageLabel(r: RawTopPage, countries: Map<string, string>, reasons: Map<s
 
 export const getTopPages = (f: StatsFilters) => {
   const today = iso(new Date())
+  const frame = f.range === '24h' ? new Date().toISOString().slice(0, 13) : today
   return unstable_cache(
     () => fetchTopPages(f, today),
-    ['admin-top-pages-v2', f.range, f.ref ?? '∅', f.country ?? '∅', today],
+    ['admin-top-pages-v2', f.range, f.ref ?? '∅', f.country ?? '∅', frame],
     { revalidate: 300 },
   )()
 }

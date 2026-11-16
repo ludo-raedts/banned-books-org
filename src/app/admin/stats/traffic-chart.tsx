@@ -39,6 +39,18 @@ const fmtDay = (day: string, withYear = false) =>
   new Date(`${day}T00:00:00Z`).toLocaleDateString('en', {
     month: 'short', day: 'numeric', timeZone: 'UTC', ...(withYear ? { year: 'numeric' } : {}),
   })
+// Hour buckets are full ISO timestamps (2026-11-16T14:00:00.000Z).
+const fmtHour = (iso: string, long = false) => {
+  const d = new Date(iso)
+  const hh = `${String(d.getUTCHours()).padStart(2, '0')}:00`
+  // Axis ticks stay short; the tick at midnight carries the date instead.
+  if (!long && d.getUTCHours() === 0) {
+    return d.toLocaleDateString('en', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+  }
+  return long
+    ? `${d.toLocaleDateString('en', { month: 'short', day: 'numeric', timeZone: 'UTC' })}, ${hh} UTC`
+    : hh
+}
 
 function rollingAvg(values: number[], window = 7): number[] {
   return values.map((_, i) => {
@@ -47,7 +59,17 @@ function rollingAvg(values: number[], window = 7): number[] {
   })
 }
 
-export default function TrafficChart({ series, today }: { series: DailyTrafficRow[]; today: string }) {
+export default function TrafficChart({
+  series,
+  today,
+  granularity = 'day',
+}: {
+  series: DailyTrafficRow[]
+  /** UTC day (day mode) or the current ISO hour (hour mode) — marks the partial last bucket. */
+  today: string
+  granularity?: 'day' | 'hour'
+}) {
+  const hourly = granularity === 'hour'
   // Callback ref: the chart <div> is re-created when switching back from the
   // table view, and state (unlike useRef) re-runs the observer effect for it.
   const [wrapEl, setWrapEl] = useState<HTMLDivElement | null>(null)
@@ -65,7 +87,10 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
   }, [wrapEl])
 
   const n = series.length
-  const canSmooth = n >= 14
+  const canSmooth = !hourly && n >= 14
+  const lbl = (key: string, long = false) => (hourly ? fmtHour(key, long) : fmtDay(key, long))
+  const isPartial = (key: string) => (hourly ? key === series[n - 1].day : key === today)
+  const partialNote = hourly ? ' · current hour so far' : ' · today so far'
   const useSmooth = smooth && canSmooth
 
   const visitors = useMemo(() => series.map(d => d.visitors), [series])
@@ -116,7 +141,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
           <table className="w-full text-xs tabular-nums">
             <thead className="sticky top-0 bg-gray-50 text-gray-500">
               <tr>
-                <th className="text-left font-medium px-3 py-2">Day (UTC)</th>
+                <th className="text-left font-medium px-3 py-2">{hourly ? 'Hour (UTC)' : 'Day (UTC)'}</th>
                 <th className="text-right font-medium px-3 py-2">Visitors</th>
                 <th className="text-right font-medium px-3 py-2">Pageviews</th>
               </tr>
@@ -124,7 +149,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
             <tbody>
               {[...series].reverse().map(d => (
                 <tr key={d.day} className="border-t border-gray-100">
-                  <td className="px-3 py-1.5 text-gray-700">{fmtDay(d.day, true)}{d.day === today ? ' · today so far' : ''}</td>
+                  <td className="px-3 py-1.5 text-gray-700">{lbl(d.day, true)}{isPartial(d.day) ? partialNote : ''}</td>
                   <td className="px-3 py-1.5 text-right text-gray-900">{d.visitors.toLocaleString('en')}</td>
                   <td className="px-3 py-1.5 text-right text-gray-600">{d.pageviews.toLocaleString('en')}</td>
                 </tr>
@@ -146,7 +171,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
           role="img"
           // biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard-operable chart (←/→ moves the crosshair); the table view is the non-visual alternative
           tabIndex={0}
-          aria-label={`Daily visitors and pageviews, ${fmtDay(series[0].day)} to ${fmtDay(series[n - 1].day)}. Use the table view for exact numbers.`}
+          aria-label={`${hourly ? 'Hourly' : 'Daily'} visitors and pageviews, ${lbl(series[0].day, true)} to ${lbl(series[n - 1].day, true)}. Use the table view for exact numbers.`}
           className="absolute left-0 top-0 block outline-none focus-visible:ring-2 focus-visible:ring-blue-300 rounded"
           onPointerMove={e => setHover(indexFromX(e.clientX, e.currentTarget.getBoundingClientRect()))}
           onPointerLeave={() => setHover(null)}
@@ -176,7 +201,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
               fontSize={11}
               fill="#6b7280"
             >
-              {fmtDay(series[i].day)}
+              {lbl(series[i].day)}
             </text>
           ))}
 
@@ -188,7 +213,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
 
           {useClip && pageviewsLine.map((v, i) => v > max && (
             <path key={series[i].day} d={`M${x(i) - 4},${M.top + 7} L${x(i) + 4},${M.top + 7} L${x(i)},${M.top}Z`} fill={PAGEVIEWS}>
-              <title>{`${fmtDay(series[i].day)}: ${Math.round(v).toLocaleString('en')} pageviews (above the axis)`}</title>
+              <title>{`${lbl(series[i].day, true)}: ${Math.round(v).toLocaleString('en')} pageviews (above the axis)`}</title>
             </path>
           ))}
 
@@ -211,7 +236,7 @@ export default function TrafficChart({ series, today }: { series: DailyTrafficRo
           style={{ left: tipLeft }}
         >
           <p className="text-gray-500 mb-1 whitespace-nowrap">
-            {fmtDay(row.day, true)}{row.day === today ? ' · today so far' : ''}
+            {lbl(row.day, true)}{isPartial(row.day) ? partialNote : ''}
             {useSmooth ? ' · 7-day avg' : ''}
           </p>
           <p className="flex items-center gap-2 whitespace-nowrap tabular-nums">

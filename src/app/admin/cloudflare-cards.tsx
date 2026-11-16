@@ -42,12 +42,11 @@ function healthVerdict(_threats: number, breakdown: ThreatBreakdown, cacheHitPct
   const suspicious = suspiciousThreats(breakdown)
   if (suspicious >= 50) return { tone: 'warn', message: `${suspicious} genuinely suspicious requests (CF managed/exploit rules) — worth a look in the firewall events.` }
   if (breakdown.ownRules >= 100) {
-    // Two different Cloudflare measures: "Threats" is its own metric (1h groups);
-    // the firewall-event count is every request our custom rules blocked or
-    // challenged. The second can be larger than the first, so don't present one
-    // as a subset of the other.
-    const own = `${breakdown.ownRules.toLocaleString('en')}${breakdown.truncated ? '+' : ''}`
-    return { tone: 'good', message: `Your bot rules blocked or challenged ${own} requests; Cloudflare's own detection flagged ${suspicious}. Healthy.` }
+    // The numbers are on the line under "Threats"; the verdict only says what
+    // they mean, so it doesn't repeat them. (Two different Cloudflare measures:
+    // "Threats" is its own metric, the firewall-event count is every request our
+    // custom rules blocked or challenged — the second can exceed the first.)
+    return { tone: 'good', message: 'Healthy — the blocks are your own bot policy, nothing suspicious.' }
   }
   if (cacheHitPct < 20) return { tone: 'info', message: 'Low cache hit — expected, the site is mostly dynamic.' }
   return { tone: 'good', message: 'Healthy. CF is doing its job.' }

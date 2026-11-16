@@ -221,13 +221,13 @@ export default async function AdminStatsPage({
           <>
             <div className={`${cardCls} col-span-full`}>
               <div>
-                <h2 className="font-semibold text-gray-900">Traffic per day</h2>
+                <h2 className="font-semibold text-gray-900">{traffic.value.granularity === 'hour' ? 'Traffic per hour' : 'Traffic per day'}</h2>
                 <p className="text-sm text-gray-500 mt-0.5">
-                  {filters.ref !== null || filters.country !== null ? 'For the selected filter. ' : ''}Visitors are unique per day. Hover (or use ← →) for the numbers, or switch to the table.
+                  {filters.ref !== null || filters.country !== null ? 'For the selected filter. ' : ''}{traffic.value.granularity === 'hour' ? 'Per hour (UTC); visitors are unique within each hour.' : 'Visitors are unique per day.'} Hover (or use ← →) for the numbers, or switch to the table.
                 </p>
               </div>
               {traffic.value.series.length > 1 ? (
-                <TrafficChart series={traffic.value.series} today={today} />
+                <TrafficChart series={traffic.value.series} today={today} granularity={traffic.value.granularity} />
               ) : (
                 <p className="text-sm text-gray-400 italic py-6">Not enough days yet for a chart.</p>
               )}
