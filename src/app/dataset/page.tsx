@@ -167,6 +167,12 @@ export default async function DatasetPage() {
       blurb:
         'A searchable index and JSON API built on the open core, with per-country pages and a lookup aimed at journalists and AI agents.',
     },
+    {
+      name: 'The Forbidden Library — a data sculpture',
+      href: 'https://library.curiositylab.media/',
+      blurb:
+        'Media artist Evgeniy Afonin turned the open core into a coil of barbed wire whose barbs are banned books, one per country list, with a caption on what the data cannot show.',
+    },
   ]
 
   // What a buyer actually receives, stated next to the price and the button so
