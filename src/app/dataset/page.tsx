@@ -409,6 +409,9 @@ export default async function DatasetPage() {
               <strong className="text-gray-900">Full dataset —</strong> a one-time purchase grants a perpetual personal-use license: cite, analyse, and use the data in your own research, articles, and tools. Redistributing the dataset itself, or using it in a commercial product that resells the data, requires a separate license — get in touch via the{' '}
               <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">About page</Link>.
             </p>
+            <p>
+              <strong className="text-gray-900">No endorsement —</strong> the CC-BY-4.0 licence lets anyone reuse the open core, and we don&rsquo;t review or vouch for what others build with it. Reuse does not mean we are affiliated with, sponsor, or stand behind a project, its products, or anything it says about the data. Only the projects listed under &ldquo;Built with this data&rdquo; below are ones we have looked at and chosen to list.
+            </p>
           </div>
         </div>
       </SectionShell>
@@ -440,6 +443,14 @@ export default async function DatasetPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-8 border-t border-neutral-200 pt-5">
+            <h3 className="font-serif text-base font-semibold text-gray-900 mb-2">
+              Unaffiliated reuse
+            </h3>
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              Some projects reuse the open core without contacting us. They are not listed above and we have no relationship with them. For example, bannedbooks.online, a site promoting a memecoin ($BANNED), uses this dataset under CC-BY-4.0. banned-books.org is not affiliated with that site, the token, or its AI chatbot, and does not endorse or check what they say.
+            </p>
+          </div>
           <p className="mt-7 text-sm text-neutral-600 leading-relaxed">
             Using the open core for your own project?{' '}
             <Link href="/about#get-in-touch" className="text-oxblood font-medium hover:underline">
