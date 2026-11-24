@@ -3,6 +3,7 @@
 // The 1877 importer gave only one volume row the head title; the others became bare "Tom. II. Partis II".
 //   • Angelo da Montepiloso: Sacrae theologiae summa Joan. Duns Scoti, et commentaria (7 rows → #32775)
 //   • Zimmermann: Opuscula theologici, historici, et philosophici argumenti (2 rows → #32881)
+//   • Pape-Carpantier 'Editio altera' → #31443; Raynal 'Eadem italice' → #31756; Hofmann 'Continuatio' renamed (head title)
 // bans_unique_per_scope allows ONE ban per (book, country, year, scope…), so decrees of the same year are
 // merged into one ban whose description names every decree + volume; links are unioned. Slug changes keep the
 // old slug as a book_slug_aliases row. Idempotent: DROP already gone = skip.
@@ -28,6 +29,18 @@ const GROUPS: Group[] = [
   {
     keep: 32881, title: 'Opuscula theologici, historici, et philosophici argumenti', drops: [32882],
     banText: { 1763: `Prohibited by decrees of 8 Jul 1763 (Tom. I, pars I et II) and 14 Dec 1763 (Tom. II, pars I et altera), ${SUFFIX}` },
+  },
+  {
+    keep: 31443, title: "Enseignement pratique dans les salles d'asile", drops: [31444],
+    banText: { 1863: `Prohibited by decrees of 22 Jun 1863 (first edition) and 24 Aug 1863 (second edition, "Editio altera"), ${SUFFIX}` },
+  },
+  {
+    keep: 31756, title: 'Histoire philosophique et politique des établissements, et du commerce des Européens dans les deux Indes', drops: [31757],
+    banText: { 1784: `Prohibited by a decree of 16 Feb 1784 (the Italian edition, "Eadem italice"), ${SUFFIX}` },
+  },
+  {
+    keep: 30373, title: 'Lexicon universale historico-geographico-chronologico-poetico-philologicum', drops: [],
+    banText: { 1688: `Prohibited until expurgated (donec expurgetur) by a decree of 10 Sep 1688 (the Lexicon and its Continuatio), ${SUFFIX}` },
   },
 ]
 async function main() {
@@ -69,6 +82,7 @@ async function main() {
         if (APPLY) await pg.query('update bans set description=$1 where book_id=$2 and year_started=$3', [text, g.keep, Number(y)])
       }
       const newSlug = slugify(g.title)
+      if (g.title === keep.title) { console.log('  title unchanged'); await pg.query(APPLY ? 'commit' : 'rollback'); continue }
       const clash = (await pg.query('select id from books where slug=$1 and id<>$2', [newSlug, g.keep])).rows[0]
       if (clash) throw new Error(`slug ${newSlug} taken by #${clash.id}`)
       console.log(`  rename → ${g.title} (slug ${newSlug}; old ${keep.slug} stays as alias)`)
