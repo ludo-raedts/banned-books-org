@@ -44,6 +44,10 @@ const PAIRS: { keep: number; drop: number; dropBans?: number[]; blanket?: boolea
     keep: 6664, drop: 29757, sameEvent: true,
     note: 'Eriugena: De divisione naturae (VA 1684) ← same title (decree 3 Apr 1685): one condemnation, year conflict reported',
   },
+  {
+    keep: 29553, drop: 29552, dropBans: [51016],
+    note: 'João Antunes Dias: Synopse das religiões (full title, decree 12 Dec 1864) ← short-title row split off by a column break; its 1564 "Ind. Trid." belongs to the next entry (Diazius Ioan.), not this book',
+  },
 ]
 
 const CURATED_BOOK_TABLES = [
