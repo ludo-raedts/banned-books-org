@@ -415,9 +415,15 @@ async function verifyYearWrites() {
 
   // Still-matching guard: only verify rows whose CURRENT value equals the
   // proposal — dry-run leftovers and manually-corrected rows cost nothing.
-  const rows = await paginate('id, slug, title, first_published_year, book_authors(authors(display_name))', (q) =>
-    q.in('id', todoIds).not('first_published_year', 'is', null),
-  )
+  // Chunked: a single .in() with thousands of ids overflows the PostgREST URL
+  // limit ("fetch failed") once the proposals log has accumulated across runs.
+  const rows: any[] = []
+  for (let i = 0; i < todoIds.length; i += 200) {
+    const chunk = todoIds.slice(i, i + 200)
+    rows.push(...await paginate('id, slug, title, first_published_year, book_authors(authors(display_name))', (q) =>
+      q.in('id', chunk).not('first_published_year', 'is', null),
+    ))
+  }
   const applied = rows.filter((r: any) => r.first_published_year === proposed.get(r.id))
   console.log(`  applied & still-matching: ${applied.length}  (capped at --year-limit=${YEAR_LIMIT})`)
 
