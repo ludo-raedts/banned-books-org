@@ -127,6 +127,7 @@ export default function RootLayout({
                   <li><Link href="/top-100-banned-books" className="hover:text-gray-800 transition-colors">Top 100 banned books</Link></li>
                   <li><Link href="/trending-banned-books" className="hover:text-gray-800 transition-colors">Trending</Link></li>
                   <li><Link href="/rising-banned-books" className="hover:text-gray-800 transition-colors">Rising</Link></li>
+                  <li><Link href="/recently-added" className="hover:text-gray-800 transition-colors">Recently added</Link></li>
                   <li><Link href="/banned-classics" className="hover:text-gray-800 transition-colors">Classics</Link></li>
                   <li><Link href="/banned-childrens-books" className="hover:text-gray-800 transition-colors">Children&rsquo;s books</Link></li>
                   <li><Link href="/non-english-banned-books" className="hover:text-gray-800 transition-colors">Non-English books</Link></li>
