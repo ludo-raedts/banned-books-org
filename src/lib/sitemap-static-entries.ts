@@ -130,6 +130,7 @@ export async function getSitemapStaticEntries(): Promise<SitemapEntry[]> {
     { loc: `${base}/reasons`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/themes/lgbtq`, changefreq: 'weekly', priority: 0.8 },
     { loc: `${base}/themes/people-of-color`, changefreq: 'weekly', priority: 0.8 },
+    { loc: `${base}/christmas-banned-books`, changefreq: 'weekly', priority: 0.7 },
     { loc: `${base}/news`, changefreq: 'daily', priority: 0.8 },
     { loc: `${base}/essays`, changefreq: 'monthly', priority: 0.7 },
     { loc: `${base}/podcasts`, changefreq: 'monthly', priority: 0.5 },
