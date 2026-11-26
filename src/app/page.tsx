@@ -304,7 +304,14 @@ export default async function HomePage() {
   // rather than falling back to invented copy, so we drop back to the archive
   // quote in that case.
   const callout: HeroCallout = await timer.wrap('hero-callout', async () => {
-    if (!(await isBannedBooksWeekPromoActive())) return { kind: 'archive', seed }
+    if (!(await isBannedBooksWeekPromoActive())) {
+      // Christmas window: 25 Nov – 26 Dec (UTC), every year. BBW wins when both
+      // are active (they never overlap in practice: BBW is early October).
+      const now = new Date()
+      const md = (now.getUTCMonth() + 1) * 100 + now.getUTCDate()
+      if (md >= 1125 && md <= 1226) return { kind: 'christmas' }
+      return { kind: 'archive', seed }
+    }
     const [bbwConfig, dateRange, isLive, taglineHtml] = await Promise.all([
       getBBWConfig(),
       formatBBWDateRange(),

@@ -3,6 +3,7 @@ import Eyebrow from '@/components/section/Eyebrow'
 import { roundedThousands } from '@/lib/format-count'
 import { ZENODO_CONCEPT_DOI, ZENODO_DOI_URL } from '@/lib/zenodo'
 import BbwCallout from './BbwCallout'
+import ChristmasCallout from './ChristmasCallout'
 import HeroSearch from './HeroSearch'
 
 type Stat = { value: string; label: string }
@@ -28,6 +29,7 @@ export type HeroCallout =
        */
       taglineHtml: string
     }
+  | { kind: 'christmas' }
   | {
       kind: 'archive'
       /** Rotation seed (e.g. day-of-year) — picks one of ARCHIVE_QUOTES. */
@@ -187,7 +189,7 @@ export default function HeroSection({
               reach phones too. */}
           <div
             className={
-              callout.kind === 'bbw'
+              callout.kind === 'bbw' || callout.kind === 'christmas'
                 ? 'mt-8 max-w-[420px] lg:max-w-none'
                 : 'hidden lg:mt-8 lg:block'
             }
@@ -199,6 +201,8 @@ export default function HeroSection({
                 isLive={callout.isLive}
                 taglineHtml={callout.taglineHtml}
               />
+            ) : callout.kind === 'christmas' ? (
+              <ChristmasCallout />
             ) : (
               <ArchiveCallout seed={callout.seed} />
             )}
