@@ -1,6 +1,8 @@
 # Plan: migratie Bookshop.org → Amazon Associates
 
-Status: plan, niets uitgevoerd. Aanleiding: Bookshop.org betaalt alleen uit aan affiliates met een Amerikaans adres en bankrekening. Dit plan geldt alleen als Bookshop.org negatief antwoordt op onze mail. Amazon-tag: `banned-books.org-20`.
+**Status (2026-11-26): op pauze.** Bookshop.org antwoordde dat Stripe een Amerikaanse bank en factuuradres eist, maar dat ze het tegoed handmatig kunnen overmaken per wire zodra het boven $50 komt (nodig: rekeningnummer, routing number, BIC/SWIFT, valuta, factuuradres). Daarmee is migratie niet nodig. Tegoed op dat moment: $8,32, ongeveer $3 per maand, dus de $50-drempel duurt lang; bankkosten voor een internationale wire komen er nog bij. Heropen dit plan als de wire-optie niet werkt, de kosten te hoog blijken of we meer bereik willen dan Bookshop biedt.
+
+Plan, niets uitgevoerd. Aanleiding: Bookshop.org betaalt alleen uit aan affiliates met een Amerikaans adres en bankrekening. Dit plan geldt alleen als Bookshop.org negatief antwoordt op onze mail. Amazon-tag: `banned-books.org-20`.
 
 ## Wat er nu is
 
